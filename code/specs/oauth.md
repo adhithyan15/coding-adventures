@@ -897,6 +897,19 @@ issuer that authenticated the projected child. It does not advance path-length
 state, authenticate another link, route algorithms, validate the whole path,
 recognize or constrain trust, process name constraints or revocation, perform
 TLS or HTTP, authorize OAuth transport, or open a network connection.
+A bounded construction-bound path-length follow-up now consumes that exact
+non-terminal intermediate proof together with one caller-supplied path-length
+state. It derives issuing-CA role, self-issued classification, and any decoded
+`pathLenConstraint` only from the complete intermediate policy retained by the
+ordered proof, then returns distinct non-copyable evidence retaining both the
+construction-bound authenticated link and the advanced state. Terminal
+certificates cannot enter this transition because the consumed proof already
+rejects the construction's final adjacency. The result covers one retained
+non-terminal adjacency only: it does not prove that the input state represents
+earlier construction depths, authenticate another link, route algorithms,
+validate the whole path, recognize or constrain trust, process name constraints
+or revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection.
 Certificate-wide role policy can now bind caller-owned critical-extension
 recognition and algorithm-independent role semantics to the same exact decoded
 certificate. The non-copyable result prevents checking critical extensions on
