@@ -16,6 +16,8 @@ All notable changes to this package will be documented in this file.
   result returned after a resource-limit failure.
 - A per-render aggregate URL-input work budget that charges repeated aliases
   and rejected destinations across links, images, and autolinks.
+- A per-render aggregate table-alignment budget that stops oversized lists and
+  charges repeated immutable aliases before array allocation.
 - Native xUnit coverage plus Unix and Windows repository build fronts.
 - Clean-checkout build fronts prebuild the full project graph before Coverlet
   instrumentation so project-reference copy ordering cannot report false 0%

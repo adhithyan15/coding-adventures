@@ -298,6 +298,30 @@ module DocumentAstToHtmlTests =
         Assert.Contains("URL normalization", error.Message)
 
     [<Fact>]
+    let ``render bounds table alignment metadata across repeated aliases`` () =
+        let acceptedAlignments = List.replicate 50_000 None
+        let accepted =
+            document
+                [ TableNode(acceptedAlignments, [])
+                  TableNode(acceptedAlignments, []) ]
+        let expected = "<table>\n</table>\n<table>\n</table>\n"
+
+        Assert.Equal(expected, DocumentAstToHtml.render accepted)
+        Assert.Equal(expected, DocumentAstToHtml.render accepted)
+
+        let sharedAlignments = List.replicate 50_001 None
+        let tree =
+            document
+                [ TableNode(sharedAlignments, [])
+                  TableNode(sharedAlignments, []) ]
+
+        let error =
+            Assert.Throws<InvalidOperationException>(fun () -> DocumentAstToHtml.render tree |> ignore)
+
+        Assert.Contains("alignment metadata", error.Message)
+        Assert.Equal(expected, DocumentAstToHtml.render accepted)
+
+    [<Fact>]
     let ``render accepts depth 256 and rejects depth 257`` () =
         let rec wrap count node =
             if count = 0 then node else wrap (count - 1) (BlockquoteNode [ node ])

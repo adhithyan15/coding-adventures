@@ -49,8 +49,10 @@ It rejects trees deeper than 256 nodes, trees containing more than 100,000
 rendered nodes, output beyond 1,000,000 UTF-16 characters, and more than
 1,000,000 aggregate UTF-16 destination units normalized by one render. The URL
 budget charges repeated aliases and stripped or blocked values before scanning;
-it resets for every call. Limit failures raise `InvalidOperationException` and
-return no partial result.
+it resets for every call. One render also admits at most 100,000 aggregate table
+alignment entries. Each visit, including a repeated immutable alias, is charged
+before conversion to the row-indexing array. Limit failures raise
+`InvalidOperationException` and return no partial result.
 
 ## Development
 

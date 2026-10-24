@@ -132,9 +132,11 @@ one render charges every link, image, and autolink destination against a shared
 1,000,000 UTF-16 input-unit normalization budget before allocation or scanning.
 The charge includes repeated immutable aliases and values that are later
 stripped or rejected, accepts the exact ceiling, and resets for each public
-render call.  Heading levels outside 1 through 6 are rejected.  Rendering
-performs no filesystem, network, process, environment, clock, randomness, or
-third-party renderer access.
+render call. One render also charges at most 100,000 table-alignment entries
+before converting them for indexed row rendering, including every visit to a
+repeated immutable list alias. Heading levels outside 1 through 6 are rejected.
+Rendering performs no filesystem, network, process, environment, clock,
+randomness, or third-party renderer access.
 
 ### Package evidence
 

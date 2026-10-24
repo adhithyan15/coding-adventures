@@ -25,6 +25,9 @@ module DocumentAstToHtml =
     [<Literal>]
     let private MaxUrlInputCharacters = 1_000_000
 
+    [<Literal>]
+    let private MaxAlignmentMetadataEntries = 100_000
+
     /// The default policy preserves raw HTML nodes.
     let defaultOptions = { SuppressRawHtml = false }
 
@@ -116,6 +119,7 @@ module DocumentAstToHtml =
         let output = StringBuilder()
         let mutable nodeCount = 0
         let mutable urlInputCharacters = 0
+        let mutable alignmentMetadataEntries = 0
 
         member private _.Append(value: string) =
             checkValue "value" value
@@ -284,6 +288,22 @@ module DocumentAstToHtml =
 
             this.Append("</tr>\n")
 
+        member private _.CollectAlignments(alignments: TableAlignment option list) =
+            let result = ResizeArray<TableAlignment option>()
+
+            for alignment in alignments do
+                if alignmentMetadataEntries >= MaxAlignmentMetadataEntries then
+                    raise (
+                        InvalidOperationException(
+                            $"Table alignment metadata exceeds the supported aggregate limit of {MaxAlignmentMetadataEntries} entries."
+                        )
+                    )
+
+                alignmentMetadataEntries <- alignmentMetadataEntries + 1
+                result.Add(alignment)
+
+            result.ToArray()
+
         member private this.RenderTable(alignments: TableAlignment option list, rows: TableRowNode list, depth: int) =
             let mutable rowCount = 0
 
@@ -297,14 +317,7 @@ module DocumentAstToHtml =
                         )
                     )
 
-            if alignments.Length > MaxRenderNodes then
-                raise (
-                    InvalidOperationException(
-                        $"Table alignment metadata exceeds the supported limit of {MaxRenderNodes} entries."
-                    )
-                )
-
-            let alignmentArray = List.toArray alignments
+            let alignmentArray = this.CollectAlignments(alignments)
             this.Append("<table>\n")
 
             if List.exists (fun row -> row.IsHeader) rows then
