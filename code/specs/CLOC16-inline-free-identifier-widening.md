@@ -198,6 +198,37 @@ without discharging the obligation.
 > non-top-level case (obligation 4). This is intended behaviour change, not a
 > regression — call it out explicitly in the Slice A commit message.
 
+## Addendum (#18115): call-bound keywords and arrow bodies
+
+The `this` / `arguments` rejection above was weaker than this spec says.
+Both candidate gates build their name set with `collect_binding_idents_expr`
+(directly, or through `collect_used_idents_stmt`). That walk:
+
+- had no entry for `this`, `super` or `new.target`. They are their own AST
+  nodes, not identifiers, so the expression gate's "every name is a
+  parameter" check and the statement gate's `this` check never fired;
+- recorded an arrow's parameters but not its body, although an arrow reads
+  its enclosing function's `this`, `arguments` and free names;
+- skipped template substitutions (`` `${x}` ``) and tagged-template
+  operands entirely;
+- skipped class methods' computed keys (`class{[this.k](){}}`), which run
+  in the enclosing scope.
+
+So ADVANCED spliced `function t(){return this}` into
+`var o={m:function(){return t()}}`, and `o.m()===o` turned from false to
+true.
+
+The walk now records `this`, `super` and `new.target` under their keyword
+spellings, walks arrow bodies, template and tagged-template operands, and
+class methods' computed keys. A reserved word can never be a parameter, local or declaration
+name, so the expression gate rejects any body that reads one. The statement
+gate rejects `this`, `arguments`, `super` and `new.target` by name.
+
+A `function` or `class` expression nested in the body keeps its own
+`this`, so its body is still not walked. Free names inside it remain
+invisible to both gates. That is a real capture bug (a caller's
+shadowing binding wins), tracked as #18134.
+
 ## Test plan
 
 Extend `closure-pass-inline` unit tests (the harness already has
