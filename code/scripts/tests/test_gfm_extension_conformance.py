@@ -137,6 +137,50 @@ class GfmExtensionConformanceTests(unittest.TestCase):
         fence["value"] = "no-final-line-feed"
         self.reject(changed)
 
+    def test_fence_name_uses_exact_ecmascript_whitespace_boundaries(self) -> None:
+        for separator in (
+            "\t",
+            "\v",
+            "\f",
+            " ",
+            "\n",
+            "\r",
+            "\u00a0",
+            "\ufeff",
+            "\u2000",
+            "\u2028",
+            "\u2029",
+        ):
+            with self.subTest(separator=ascii(separator)):
+                MODULE._validate_block(
+                    {
+                        "type": "fenced_block",
+                        "name": "javascript",
+                        "info": f"javascript{separator}module",
+                        "value": "",
+                    },
+                    {"nodes": 0},
+                    1,
+                    "block",
+                )
+
+        for separator in ("\u001c", "\u001d", "\u001e", "\u001f", "\u0085"):
+            with (
+                self.subTest(separator=ascii(separator)),
+                self.assertRaisesRegex(ValueError, "first info token"),
+            ):
+                MODULE._validate_block(
+                    {
+                        "type": "fenced_block",
+                        "name": "javascript",
+                        "info": f"javascript{separator}module",
+                        "value": "",
+                    },
+                    {"nodes": 0},
+                    1,
+                    "block",
+                )
+
     def test_types_and_resource_bounds_are_not_coerced(self) -> None:
         for value in (True, 1.0, "1", 0, 2, None):
             changed = copy.deepcopy(self.document)
@@ -268,6 +312,27 @@ class GfmExtensionConformanceTests(unittest.TestCase):
             [[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]],
         )
 
+    def test_direct_object_guard_rejects_aliases_and_bounded_work(self) -> None:
+        leaf: list[object] = []
+        alias_dag: object = leaf
+        for _ in range(15):
+            alias_dag = [alias_dag] * 6
+        with self.assertRaisesRegex(ValueError, "must be a tree"):
+            MODULE._guard_tree(alias_dag)
+
+        with self.assertRaisesRegex(ValueError, "exceeds 8192 items"):
+            MODULE._guard_tree([None] * MODULE.MAX_TREE_ITEMS)
+
+        with self.assertRaisesRegex(ValueError, "text exceeds 131072"):
+            MODULE._guard_tree("x" * (MODULE.MAX_BYTES + 1))
+        with self.assertRaisesRegex(ValueError, "text exceeds 131072"):
+            MODULE._guard_tree("\u00e9" * (MODULE.MAX_BYTES // 2 + 1))
+
+        cycle: list[object] = []
+        cycle.append(cycle)
+        with self.assertRaisesRegex(ValueError, "must be a tree"):
+            MODULE._guard_tree(cycle)
+
     def test_loader_and_cli_bound_reads_and_report_count(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             too_large = pathlib.Path(directory) / "too-large.json"
@@ -289,9 +354,9 @@ class GfmExtensionConformanceTests(unittest.TestCase):
         with (
             contextlib.redirect_stdout(stdout),
             mock.patch.object(sys, "argv", [str(SCRIPT)]),
+            self.assertRaises(SystemExit) as exit_result,
         ):
-            with self.assertRaises(SystemExit) as exit_result:
-                runpy.run_path(str(SCRIPT), run_name="__main__")
+            runpy.run_path(str(SCRIPT), run_name="__main__")
         self.assertEqual(exit_result.exception.code, 0)
         self.assertEqual(
             stdout.getvalue(), "validated 16 portable GFM extension cases\n"

@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import unicodedata
 from pathlib import Path
 from typing import Any, NoReturn
 
@@ -14,6 +15,7 @@ DEFAULT_CORPUS = ROOT / "code/specs/fixtures/gfm-extension-v1/cases.json"
 PROFILE = "gfm-extension-v1"
 MAX_BYTES = 131_072
 MAX_JSON_DEPTH = 16
+MAX_TREE_ITEMS = 8_192
 LIMITS = {
     "max_source_bytes": 8_192,
     "max_source_lines": 128,
@@ -85,19 +87,37 @@ def _scan_depth(text: str) -> None:
 
 def _guard_tree(value: Any) -> None:
     pending = [(value, 1)]
+    seen_containers: set[int] = set()
+    visited = 0
+    text_bytes = 0
     while pending:
         item, depth = pending.pop()
+        visited += 1
         if type(item) in (dict, list):
             if depth > MAX_JSON_DEPTH:
                 raise ValueError("JSON container depth exceeds sixteen")
-            children = (
-                list(item.keys()) + list(item.values()) if type(item) is dict else item
-            )
-            pending.extend((child, depth + 1) for child in children)
-        elif isinstance(item, str) and any(
-            0xD800 <= ord(character) <= 0xDFFF for character in item
-        ):
-            raise ValueError("strings must contain Unicode scalar values")
+            identity = id(item)
+            if identity in seen_containers:
+                raise ValueError("decoded object graph must be a tree")
+            seen_containers.add(identity)
+            child_count = len(item) * 2 if type(item) is dict else len(item)
+            if visited + len(pending) + child_count > MAX_TREE_ITEMS:
+                raise ValueError("decoded object graph exceeds 8192 items")
+            if type(item) is dict:
+                for key, child in item.items():
+                    pending.append((key, depth + 1))
+                    pending.append((child, depth + 1))
+            else:
+                pending.extend((child, depth + 1) for child in item)
+        elif isinstance(item, str):
+            if len(item) > MAX_BYTES - text_bytes:
+                raise ValueError("decoded object graph text exceeds 131072 UTF-8 bytes")
+            encoded = item.encode("utf-8", errors="surrogatepass")
+            text_bytes += len(encoded)
+            if text_bytes > MAX_BYTES:
+                raise ValueError("decoded object graph text exceeds 131072 UTF-8 bytes")
+            if any(0xD800 <= ord(character) <= 0xDFFF for character in item):
+                raise ValueError("strings must contain Unicode scalar values")
 
 
 def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -287,10 +307,20 @@ def _validate_block(node: Any, state: dict[str, int], depth: int, where: str) ->
         else:
             name = _text(item["name"], f"{where}.name", 128, empty=False)
             info = _text(item["info"], f"{where}.info", 1024, empty=False)
-            if not info.split() or name != info.split()[0]:
+            if name != _first_ecmascript_whitespace_token(info):
                 raise ValueError(f"{where}: fence name must be the first info token")
     else:
         raise ValueError(f"{where}: unsupported block node {kind!r}")
+
+
+def _first_ecmascript_whitespace_token(value: str) -> str:
+    for index, character in enumerate(value):
+        if (
+            character in "\t\v\f \n\r\u00a0\ufeff\u2028\u2029"
+            or unicodedata.category(character) == "Zs"
+        ):
+            return value[:index]
+    return value
 
 
 def _validate_ast(value: Any, where: str) -> None:

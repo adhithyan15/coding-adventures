@@ -7,17 +7,18 @@ missing language port.
 ## Passing checks
 
 - The strict validator accepts all sixteen ordered cases.
-- Nine independent tests pass. They corrupt each case's source, AST, and HTML
+- Eleven independent tests pass. They corrupt each case's source, AST, and HTML
   separately; reject duplicate keys, ambiguous JSON numbers, invalid UTF-8 and
-  Unicode scalars, excessive depth/size/work, reordered cases, open node fields,
-  malformed table/task/fence structure, and changed normative literals.
-- Measured validator coverage is 220/220 statements and 126/126 branches.
+  Unicode scalars, excessive depth/size/work, aliased or cyclic object graphs,
+  reordered cases, open node fields, malformed table/task/fence structure,
+  host/ECMAScript whitespace drift, and changed normative literals.
+- Measured validator coverage is 248/248 statements and 144/144 branches.
 - The Draft 2020-12 schema is valid and accepts the normative document with no
   errors.
 - Ruff lint and format checks and Python bytecode compilation pass.
 - The package-parity reporter and its ten tests pass: 1,535 established
   identities, 4,817 slots, zero canonical collisions, and zero unknown buckets.
-- All 1,463 lesson shards validate.
+- All 1,465 lesson shards validate.
 - The real Go build tool evaluates 86 Starlark BUILD files and discovers 5,354
   packages. Because this tranche changes only neutral specs and repository
   validation scripts, it correctly reports no changed native package roots.

@@ -57,6 +57,12 @@ byte-order mark, and no non-finite or fractional numbers.  The validator reads
 at most 131,073 bytes to enforce a 131,072-byte transport ceiling and rejects a
 JSON nesting depth above sixteen.
 
+The callable validator applies equivalent limits even when given a decoded
+object directly: the value must be a true tree (no cycles or shared container
+aliases), may contain at most 8,192 visited items, and may contain at most
+131,072 UTF-8 bytes of string data.  These bounds prevent a small aliased
+object graph from expanding into exponential validation work.
+
 The closed corpus contains exactly sixteen ordered cases.  Each case obeys:
 
 | Resource | Maximum |
@@ -80,8 +86,9 @@ documents; it must not silently widen this v1 contract.
 The independent validator checks the exact profile/version, case roster and
 order, closed node field sets, node-specific invariants, scalar/size/depth
 bounds, unique case IDs, table shape, task placement, inert fence metadata, and
-exact published literals.  Tests must falsify coordinated AST/HTML changes, not
-only malformed JSON.
+exact published literals.  Fence-name validation uses the TE04 ECMAScript
+whitespace set rather than the validator host's native whitespace rules. Tests
+must falsify coordinated AST/HTML changes, not only malformed JSON.
 
 A language earns adoption credit only when its real public parser reads the
 committed corpus, compares both AST and HTML through native APIs, retains its
