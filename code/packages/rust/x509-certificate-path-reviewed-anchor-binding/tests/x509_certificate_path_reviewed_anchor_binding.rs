@@ -114,7 +114,13 @@ fn binds_the_exact_constructed_terminal_candidate_to_reviewed_anchor_evidence() 
         bind_constructed_x509_certificate_path_to_reviewed_anchor(path, reviewed_anchor).unwrap();
 
     assert_eq!(bound.constructed_path().certificate_count(), 2);
-    assert_eq!(bound.constructed_path().candidate_indices().collect::<Vec<_>>(), vec![0]);
+    assert_eq!(
+        bound
+            .constructed_path()
+            .candidate_indices()
+            .collect::<Vec<_>>(),
+        vec![0]
+    );
     assert!(std::ptr::eq(
         bound.constructed_path().issuer_certificate(0).unwrap(),
         bound.reviewed_anchor().candidate_certificate()
