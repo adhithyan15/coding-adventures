@@ -4,8 +4,10 @@ use core::fmt;
 
 /// Owned teaching-memory size.
 pub const MEMORY_SIZE: usize = 65_536;
+/// Conservative budget for retained complete-state trace snapshots.
+pub const MAX_RETAINED_BYTES: usize = 8 * 1_024 * 1_024;
 /// Maximum complete-state traces retained by a bounded run.
-pub const MAX_RETAINED_STEPS: usize = 1_024;
+pub const MAX_RETAINED_STEPS: usize = MAX_RETAINED_BYTES / (2 * MEMORY_SIZE);
 /// Stack-pointer register number.
 pub const SP: u8 = 13;
 /// Link-register number.
@@ -18,7 +20,6 @@ const APSR_Z: u32 = 1 << 30;
 const APSR_C: u32 = 1 << 29;
 const APSR_V: u32 = 1 << 28;
 const APSR_MASK: u32 = APSR_N | APSR_Z | APSR_C | APSR_V;
-const EPSR_T: u32 = 1 << 24;
 
 /// Broad Armv6-M decode family.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -107,7 +108,6 @@ pub enum CortexM0Error {
     UnknownInstruction32 { first: u16, second: u16, pc: u32 },
     UnsupportedBreakpoint { immediate: u8, pc: u32 },
     SupervisorCall { immediate: u8, pc: u32 },
-    PrivilegeViolation { raw: u32, pc: u32 },
     RetentionLimitExceeded { requested: usize, limit: usize },
     StepLimitExceeded { limit: usize },
     AllocationFailed,
@@ -173,10 +173,6 @@ impl fmt::Display for CortexM0Error {
                     "SVC #{immediate} at {pc:#010x} requires exception entry"
                 )
             }
-            Self::PrivilegeViolation { raw, pc } => write!(
-                formatter,
-                "instruction {raw:#010x} at {pc:#010x} requires privileged mode"
-            ),
             Self::RetentionLimitExceeded { requested, limit } => write!(
                 formatter,
                 "requested {requested} traces exceeds retention limit {limit}"
@@ -286,7 +282,7 @@ impl CortexM0Simulator {
         if self.state.sleeping {
             return Err(CortexM0Error::Sleeping);
         }
-        let before = self.state.clone();
+        let before = try_clone_state(&self.state)?;
         let pc = before.pc;
         let first = fetch16(&before, pc)?;
         let width = instruction_width(first);
@@ -303,7 +299,7 @@ impl CortexM0Simulator {
             None
         };
         let class = classify_at(first, second, pc)?;
-        let mut next = before.clone();
+        let mut next = try_clone_state(&before)?;
         next.pc = pc.wrapping_add(width as u32);
         let mnemonic = execute_decoded(&mut next, first, second, class, pc)?;
         let mut raw = [0; 4];
@@ -318,7 +314,7 @@ impl CortexM0Simulator {
             width,
             mnemonic,
             state_before: before,
-            state_after: next.clone(),
+            state_after: try_clone_state(&next)?,
         };
         self.state = next;
         Ok(trace)
@@ -326,7 +322,7 @@ impl CortexM0Simulator {
 
     pub fn run(&mut self, max_steps: usize) -> Result<ExecutionResult, CortexM0Error> {
         check_retention(max_steps)?;
-        let before = self.state.clone();
+        let before = try_clone_state(&self.state)?;
         let mut traces = Vec::new();
         traces
             .try_reserve_exact(max_steps)
@@ -340,11 +336,18 @@ impl CortexM0Simulator {
                 }
             }
             if self.state.halted || self.state.sleeping {
+                let final_state = match try_clone_state(&self.state) {
+                    Ok(state) => state,
+                    Err(error) => {
+                        self.state = before;
+                        return Err(error);
+                    }
+                };
                 return Ok(ExecutionResult {
                     stopped: true,
                     steps: traces.len(),
                     traces,
-                    final_state: self.state.clone(),
+                    final_state,
                 });
             }
         }
@@ -359,7 +362,7 @@ impl CortexM0Simulator {
         max_steps: usize,
     ) -> Result<ExecutionResult, CortexM0Error> {
         check_retention(max_steps)?;
-        let before = self.state.clone();
+        let before = try_clone_state(&self.state)?;
         self.load(program, origin)?;
         match self.run(max_steps) {
             Ok(result) => Ok(result),
@@ -369,6 +372,32 @@ impl CortexM0Simulator {
             }
         }
     }
+}
+
+fn try_clone_state(state: &CortexM0State) -> Result<CortexM0State, CortexM0Error> {
+    let mut memory = Vec::new();
+    memory
+        .try_reserve_exact(state.memory.len())
+        .map_err(|_| CortexM0Error::AllocationFailed)?;
+    memory.extend_from_slice(&state.memory);
+    Ok(CortexM0State {
+        registers: state.registers,
+        msp: state.msp,
+        psp: state.psp,
+        lr: state.lr,
+        pc: state.pc,
+        apsr: state.apsr,
+        ipsr: state.ipsr,
+        primask: state.primask,
+        control: state.control,
+        handler_mode: state.handler_mode,
+        memory,
+        halted: state.halted,
+        sleeping: state.sleeping,
+        event_registered: state.event_registered,
+        loaded_origin: state.loaded_origin,
+        loaded_len: state.loaded_len,
+    })
 }
 
 fn check_retention(max_steps: usize) -> Result<(), CortexM0Error> {
@@ -883,6 +912,10 @@ fn branch_exchange(state: &mut CortexM0State, target: u32) -> Result<(), CortexM
     Ok(())
 }
 
+fn branch_write_pc(state: &mut CortexM0State, target: u32) {
+    state.pc = target & !1;
+}
+
 fn execute_special(
     state: &mut CortexM0State,
     raw: u16,
@@ -892,7 +925,7 @@ fn execute_special(
     let rm = ((raw >> 3) & 0xf) as u8;
     let rd = ((((raw >> 7) & 1) << 3) | (raw & 7)) as u8;
     if operation == 3 {
-        if matches!(rm, SP | PC) {
+        if raw & 7 != 0 || matches!(rm, SP | PC) {
             return Err(CortexM0Error::UnknownInstruction16 {
                 raw,
                 pc: instruction_pc,
@@ -919,7 +952,7 @@ fn execute_special(
         0 => {
             let result = left.wrapping_add(right);
             if rd == PC {
-                branch_exchange(state, result)?;
+                branch_write_pc(state, result);
             } else {
                 write_register(state, rd, result)?;
             }
@@ -931,7 +964,7 @@ fn execute_special(
         }
         _ => {
             if rd == PC {
-                branch_exchange(state, right)?;
+                branch_write_pc(state, right);
             } else {
                 write_register(state, rd, right)?;
             }
@@ -1143,14 +1176,10 @@ fn execute_miscellaneous(
         });
     }
     if matches!(raw, 0xb662 | 0xb672) {
-        if state.control & 1 != 0 && !state.handler_mode {
-            return Err(CortexM0Error::PrivilegeViolation {
-                raw: u32::from(raw),
-                pc,
-            });
+        if state.control & 1 == 0 || state.handler_mode {
+            state.primask = raw == 0xb672;
         }
-        state.primask = raw == 0xb672;
-        return Ok(if state.primask { "cpsid" } else { "cpsie" });
+        return Ok(if raw == 0xb672 { "cpsid" } else { "cpsie" });
     }
     if raw & 0xff00 == 0xbe00 {
         let immediate = raw as u8;
@@ -1180,7 +1209,7 @@ fn execute_miscellaneous(
                 state.event_registered = true;
                 Ok("sev")
             }
-            _ => Err(CortexM0Error::UnknownInstruction16 { raw, pc }),
+            _ => Ok("nop"),
         };
     }
     Err(CortexM0Error::UnknownInstruction16 { raw, pc })
@@ -1320,19 +1349,15 @@ fn execute_barrier(second: u16) -> Result<&'static str, CortexM0Error> {
     })
 }
 
-fn xpsr(state: &CortexM0State) -> u32 {
-    state.apsr | EPSR_T | u32::from(state.ipsr)
-}
-
 fn read_special(state: &CortexM0State, sysm: u8) -> Option<u32> {
     match sysm {
         0 => Some(state.apsr),
         1 => Some(state.apsr | u32::from(state.ipsr)),
-        2 => Some(state.apsr | EPSR_T),
-        3 => Some(xpsr(state)),
+        2 => Some(state.apsr),
+        3 => Some(state.apsr | u32::from(state.ipsr)),
         5 => Some(u32::from(state.ipsr)),
-        6 => Some(EPSR_T),
-        7 => Some(EPSR_T | u32::from(state.ipsr)),
+        6 => Some(0),
+        7 => Some(u32::from(state.ipsr)),
         8 => Some(state.msp),
         9 => Some(state.psp),
         16 => Some(u32::from(state.primask)),
@@ -1353,29 +1378,39 @@ fn execute_special_register(
         if rd > 12 {
             return Err(CortexM0Error::UnknownInstruction32 { first, second, pc });
         }
-        let Some(value) = read_special(state, sysm) else {
+        let Some(mut value) = read_special(state, sysm) else {
             return Err(CortexM0Error::UnknownInstruction32 { first, second, pc });
         };
+        if state.control & 1 != 0 && !state.handler_mode && !matches!(sysm, 0 | 20) {
+            value = 0;
+        }
         state.registers[rd as usize] = value;
         return Ok("mrs");
     }
     let rn = (first & 0xf) as u8;
-    if rn > 12 || !matches!(sysm, 0 | 8 | 9 | 16 | 20) {
+    if rn > 12 || !matches!(sysm, 0..=3 | 5..=9 | 16 | 20) {
         return Err(CortexM0Error::UnknownInstruction32 { first, second, pc });
     }
     let value = state.registers[rn as usize];
-    if sysm != 0 && state.control & 1 != 0 && !state.handler_mode {
-        return Err(CortexM0Error::PrivilegeViolation {
-            raw: (u32::from(first) << 16) | u32::from(second),
-            pc,
-        });
+    if matches!(sysm, 0..=3) {
+        state.apsr = value & APSR_MASK;
+        return Ok("msr");
+    }
+    if matches!(sysm, 5..=7) || (state.control & 1 != 0 && !state.handler_mode) {
+        return Ok("msr");
     }
     match sysm {
-        0 => state.apsr = value & APSR_MASK,
         8 => state.msp = value & !3,
         9 => state.psp = value & !3,
         16 => state.primask = value & 1 != 0,
-        _ => state.control = value as u8 & 3,
+        _ => {
+            let requested = value as u8 & 3;
+            state.control = if state.handler_mode {
+                (state.control & 2) | (requested & 1)
+            } else {
+                requested
+            };
+        }
     }
     Ok("msr")
 }

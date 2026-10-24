@@ -56,11 +56,13 @@ consistency, and installed-image bounds before commit.
 
 `step` is atomic. It fetches and fully validates an instruction, executes on a
 candidate snapshot, builds a complete trace, and only then commits. Unknown,
-reserved, unsupported, misaligned, out-of-range, privilege, breakpoint, SVC,
-and halted conditions preserve the entire prior state.
+reserved, unsupported, misaligned, out-of-range, breakpoint, SVC, and halted
+conditions preserve the entire prior state. Architecturally ignored
+unprivileged CPS and special-register writes commit as no-ops.
 
-Bounded `run` retains at most 1,024 complete traces and rolls back the whole
-run on the first fault or on step-limit exhaustion. `execute` preflights the
+Bounded `run` retains at most 64 complete traces under an 8 MiB snapshot budget
+and rolls back the whole run on the first fault or on step-limit exhaustion.
+Nested state snapshots use fallible allocation. `execute` preflights the
 retention bound before cloning, loading, or allocating, then atomically performs
 load plus run.
 
@@ -80,7 +82,7 @@ The cell is complete only when it has:
    control flow, special registers, and typed atomic faults;
 3. transactional load, restore, step, run, execute, fetch, alignment, and
    retention tests;
-4. release line coverage above 80% (completion baseline: 82.28%, 887/1,078);
+4. release line coverage above 80% (completion baseline: 85.66%, 950/1,109);
    and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and security review before publication.

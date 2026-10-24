@@ -254,6 +254,13 @@ fn direct_and_register_control_flow_preserve_thumb_state() {
     bx.write_register(1, ORIGIN + 3).unwrap();
     bx.step().unwrap();
     assert_eq!(bx.get_state().pc, ORIGIN + 2);
+
+    for (raw, expected) in [(0x4487, 0x304), (0x4687, 0x200)] {
+        let mut alu_pc = loaded(&[raw]);
+        alu_pc.write_register(0, 0x200).unwrap();
+        alu_pc.step().unwrap();
+        assert_eq!(alu_pc.get_state().pc, expected, "{raw:#06x}");
+    }
 }
 
 #[test]
@@ -266,6 +273,14 @@ fn invalid_thumb_targets_and_exceptions_are_typed_and_atomic() {
         Err(CortexM0Error::InvalidThumbTarget { target: 0x200 })
     );
     assert_eq!(bx.get_state(), before);
+
+    let mut malformed_bx = loaded(&[0x4709]);
+    let before = malformed_bx.get_state();
+    assert!(matches!(
+        malformed_bx.step(),
+        Err(CortexM0Error::UnknownInstruction16 { .. })
+    ));
+    assert_eq!(malformed_bx.get_state(), before);
 
     for (raw, expected) in [
         (
@@ -306,16 +321,63 @@ fn barriers_special_registers_and_privilege_execute() {
     assert_eq!(simulator.read_register(1).unwrap(), 2);
 
     let encoded = msr(0, 16);
-    let mut unprivileged = loaded(&[encoded[0], encoded[1]]);
+    let reads = [mrs(1, 0), mrs(2, 5), mrs(3, 6), mrs(4, 8), mrs(5, 20)];
+    let mut words = vec![encoded[0], encoded[1]];
+    for read in reads {
+        words.extend(read);
+    }
+    words.extend(msr(0, 3));
+    words.extend(msr(0, 7));
+    let mut unprivileged = loaded(&words);
     let mut state = unprivileged.get_state();
     state.control = 1;
+    state.apsr = 0x5000_0000;
+    state.primask = true;
+    state.msp = 0x400;
+    state.registers[0] = 0xa000_0000;
     unprivileged.restore(state).unwrap();
-    let before = unprivileged.get_state();
-    assert!(matches!(
-        unprivileged.step(),
-        Err(CortexM0Error::PrivilegeViolation { .. })
-    ));
-    assert_eq!(unprivileged.get_state(), before);
+    unprivileged.step().unwrap();
+    assert!(unprivileged.get_state().primask);
+    for _ in 0..5 {
+        unprivileged.step().unwrap();
+    }
+    assert_eq!(unprivileged.read_register(1).unwrap(), 0x5000_0000);
+    assert_eq!(unprivileged.read_register(2).unwrap(), 0);
+    assert_eq!(unprivileged.read_register(3).unwrap(), 0);
+    assert_eq!(unprivileged.read_register(4).unwrap(), 0);
+    assert_eq!(unprivileged.read_register(5).unwrap(), 1);
+    unprivileged.step().unwrap();
+    assert_eq!(unprivileged.get_state().apsr, 0xa000_0000);
+    unprivileged.step().unwrap();
+    assert_eq!(unprivileged.get_state().ipsr, 0);
+
+    let reads = [
+        mrs(0, 1),
+        mrs(1, 2),
+        mrs(2, 3),
+        mrs(3, 5),
+        mrs(4, 6),
+        mrs(5, 7),
+    ];
+    let mut words = Vec::new();
+    for read in reads {
+        words.extend(read);
+    }
+    let mut handler = loaded(&words);
+    let mut state = handler.get_state();
+    state.handler_mode = true;
+    state.ipsr = 7;
+    state.apsr = 0x5000_0000;
+    handler.restore(state).unwrap();
+    for _ in 0..6 {
+        handler.step().unwrap();
+    }
+    assert_eq!(handler.read_register(0).unwrap(), 0x5000_0007);
+    assert_eq!(handler.read_register(1).unwrap(), 0x5000_0000);
+    assert_eq!(handler.read_register(2).unwrap(), 0x5000_0007);
+    assert_eq!(handler.read_register(3).unwrap(), 7);
+    assert_eq!(handler.read_register(4).unwrap(), 0);
+    assert_eq!(handler.read_register(5).unwrap(), 7);
 }
 
 #[test]
@@ -325,6 +387,16 @@ fn cps_and_low_power_hints_track_interrupt_event_and_sleep_state() {
     assert!(cps.get_state().primask);
     cps.step().unwrap();
     assert!(!cps.get_state().primask);
+
+    let mut unprivileged = loaded(&[0xb672, 0xb662, 0xbf50]);
+    let mut state = unprivileged.get_state();
+    state.control = 1;
+    unprivileged.restore(state).unwrap();
+    unprivileged.step().unwrap();
+    assert!(!unprivileged.get_state().primask);
+    unprivileged.step().unwrap();
+    assert!(!unprivileged.get_state().primask);
+    assert_eq!(unprivileged.step().unwrap().mnemonic, "nop");
 
     let mut event = loaded(&[0xbf40, 0xbf20, 0xbf30]);
     event.step().unwrap();
@@ -385,10 +457,10 @@ fn run_and_execute_are_bounded_and_transactional() {
     );
     assert_eq!(simulator.get_state(), before);
     assert_eq!(
-        simulator.run(1025),
+        simulator.run(cortex_m0_simulator::MAX_RETAINED_STEPS + 1),
         Err(CortexM0Error::RetentionLimitExceeded {
-            requested: 1025,
-            limit: 1024,
+            requested: cortex_m0_simulator::MAX_RETAINED_STEPS + 1,
+            limit: cortex_m0_simulator::MAX_RETAINED_STEPS,
         })
     );
 
@@ -403,10 +475,10 @@ fn run_and_execute_are_bounded_and_transactional() {
     assert!(fresh.execute(&[0], 1, 1).is_err());
     assert_eq!(fresh.get_state(), before);
     assert_eq!(
-        fresh.execute(&[0], 1, 1025),
+        fresh.execute(&[0], 1, cortex_m0_simulator::MAX_RETAINED_STEPS + 1,),
         Err(CortexM0Error::RetentionLimitExceeded {
-            requested: 1025,
-            limit: 1024,
+            requested: cortex_m0_simulator::MAX_RETAINED_STEPS + 1,
+            limit: cortex_m0_simulator::MAX_RETAINED_STEPS,
         })
     );
 }

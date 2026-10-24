@@ -20,4 +20,4 @@ The completion suite covers every primary 16-bit family, the supported 32-bit
 BL/barrier/special-register families, flags, scalar and multiple memory,
 branches, stack ordering, dual stack selection, privilege, power hints, typed
 faults, and transactional lifecycle. Release tests, strict Clippy, and rustdoc
-warnings pass. The completion baseline is 82.28% line coverage (887/1,078).
+warnings pass. The completion baseline is 85.66% line coverage (950/1,109).
