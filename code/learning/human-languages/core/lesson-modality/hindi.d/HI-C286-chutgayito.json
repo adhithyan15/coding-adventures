@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C286-chutgayito",
+    "language": "hindi",
+    "chapter": 286,
+    "sequence": 15720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28c70f928b16ea1a"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:da229b84a36ecaf0",
+  "lessonIds": [
+    "HI-C283-agla",
+    "HI-C283-ektikat",
+    "HI-C283-khona",
+    "HI-C283-chutgayi",
+    "HI-R283-at-the-station"
+  ],
+  "tex": "hindi/book/chapters/ch283-tickets-trains-and-trouble.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-R277-what-will-happen",
+  "pathSegment": "HI-PATH-277-FUTURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-277-FUTURE",
+      "order": 1
+    }
+  ]
+}

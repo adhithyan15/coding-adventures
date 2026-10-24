@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C284-khush",
+    "language": "hindi",
+    "chapter": 284,
+    "sequence": 15630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:814aa7daf91f7fbb"
+  },
+  "findings": []
+}

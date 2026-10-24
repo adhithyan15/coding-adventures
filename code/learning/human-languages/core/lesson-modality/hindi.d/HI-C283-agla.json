@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C283-agla",
+    "language": "hindi",
+    "chapter": 283,
+    "sequence": 15580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08a9d690b6d0bd8c"
+  },
+  "findings": []
+}

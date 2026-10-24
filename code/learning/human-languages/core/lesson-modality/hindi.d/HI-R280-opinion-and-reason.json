@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R280-opinion-and-reason",
+    "language": "hindi",
+    "chapter": 280,
+    "sequence": 15480,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4b6de4572691235e"
+  },
+  "findings": []
+}

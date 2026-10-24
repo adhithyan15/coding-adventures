@@ -1,0 +1,17 @@
+{
+  "language": "hindi",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:6f1c1344f6c452a9",
+  "lessonIds": [
+    "HI-C278-padhrahatha",
+    "HI-C278-pichla",
+    "HI-R278-the-scene-and-the-event"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch278.txt",
+  "json": "hindi/narration/ch278.json",
+  "textHash": "fnv1a64:5e83f7c0d506d0df",
+  "jsonHash": "fnv1a64:6081adcbd35c235e",
+  "findings": []
+}

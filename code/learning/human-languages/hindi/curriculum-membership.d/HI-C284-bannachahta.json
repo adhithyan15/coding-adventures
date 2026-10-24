@@ -1,0 +1,11 @@
+{
+  "id": "HI-C284-bannachahta",
+  "pathSegment": "HI-PATH-284-FEELINGSHOPES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-284-FEELINGSHOPES",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "lesson": {
+    "id": "HI-W280-letter-ai",
+    "language": "hindi",
+    "chapter": 280,
+    "sequence": 15450,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:007dabe42ba7b420",
+    "detachableSegments": [
+      "Script you'll notice: ऐ",
+      "Script: two shapes, one sound",
+      "Writing: ऐ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

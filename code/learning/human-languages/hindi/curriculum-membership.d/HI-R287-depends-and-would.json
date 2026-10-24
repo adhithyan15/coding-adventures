@@ -1,0 +1,11 @@
+{
+  "id": "HI-R287-depends-and-would",
+  "pathSegment": "HI-PATH-287-DEPENDSWOULD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-287-DEPENDSWOULD",
+      "order": 4
+    }
+  ]
+}

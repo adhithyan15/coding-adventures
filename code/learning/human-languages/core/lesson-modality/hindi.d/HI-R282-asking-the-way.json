@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R282-asking-the-way",
+    "language": "hindi",
+    "chapter": 282,
+    "sequence": 15570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98fdda533499cfcd"
+  },
+  "findings": []
+}

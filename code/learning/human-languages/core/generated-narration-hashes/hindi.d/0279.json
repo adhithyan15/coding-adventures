@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:9507ebd6e0097f07",
+  "lessonIds": [
+    "HI-C279-khakar",
+    "HI-C279-akhir",
+    "HI-C279-pahlephir",
+    "HI-C279-chuttikadin",
+    "HI-R279-a-story-in-order"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch279.txt",
+  "json": "hindi/narration/ch279.json",
+  "textHash": "fnv1a64:4c71a660004eb880",
+  "jsonHash": "fnv1a64:8d0a58b5751f430b",
+  "findings": []
+}

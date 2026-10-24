@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:fdcba75bcab726b7",
+  "lessonIds": [
+    "HI-C287-nirbharkarna",
+    "HI-C287-nirbharkartahai",
+    "HI-C287-hotatoata",
+    "HI-W287-six-lines",
+    "HI-R287-depends-and-would"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch287.txt",
+  "json": "hindi/narration/ch287.json",
+  "textHash": "fnv1a64:8f48b835559afa69",
+  "jsonHash": "fnv1a64:bed0206e4c61f32b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C280-kivajahse",
+  "pathSegment": "HI-PATH-280-OPINIONREASON",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-280-OPINIONREASON",
+      "order": 4
+    }
+  ]
+}

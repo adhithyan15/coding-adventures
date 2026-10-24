@@ -1,0 +1,11 @@
+{
+  "id": "HI-W280-letter-ai",
+  "pathSegment": "HI-PATH-280-OPINIONREASON",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-280-OPINIONREASON",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C285-sabse",
+    "language": "hindi",
+    "chapter": 285,
+    "sequence": 15670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b52cd1afd1f2e50a"
+  },
+  "findings": []
+}

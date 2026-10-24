@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C281-isliye",
+    "language": "hindi",
+    "chapter": 281,
+    "sequence": 15520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29437bf1316fdd6e"
+  },
+  "findings": []
+}

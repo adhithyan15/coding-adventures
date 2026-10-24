@@ -1,0 +1,11 @@
+{
+  "id": "HI-C280-mujhelagtahai",
+  "pathSegment": "HI-PATH-280-OPINIONREASON",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-280-OPINIONREASON",
+      "order": 3
+    }
+  ]
+}

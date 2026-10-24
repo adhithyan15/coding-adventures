@@ -1,0 +1,426 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 276,
+  "title": "What Happened, and Who Did It",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:3358fa292916264a",
+  "lessons": [
+    {
+      "id": "HI-C276-vahgaya",
+      "sequence": 15300,
+      "title": "वह गया (vah gayā) — the past, by who did it",
+      "headword": "वह गया",
+      "romanization": "vah gayā",
+      "gloss": "he went — the past of a verb with no object, agreeing with the one who went",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:703ac1873de2d7ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say turning over and a stretch. (karvaṭ, aṅgṛāī.) Then the host's question खाना खाया?, \"have you eaten?\" Its खाया is a past, and this chapter builds every past like it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the past, by who did it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कल मैं बाज़ार गया। kal maiṁ bāzār gayā. — \"Yesterday I went to the market.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With a past, कल is yesterday. गया is जाना in the past, with no है after it. Its ending follows the one who went, as अच्छा, अच्छी, अच्छे follow a noun:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who went",
+                "the past"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "who went: a man: मैं, वह. the past: गया (gayā).",
+                "who went: a woman. the past: गई (gaī).",
+                "who went: men, or आप, तुम, हम. the past: गए (gae).",
+                "who went: women. the past: गईं (gaīṁ)."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: how a stem takes the ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Most verbs put the ending on the stem: बैठना becomes वह बैठा, वह बैठी (vah baiṭhā, vah baiṭhī). A stem ending in a vowel adds -या for a man: आना becomes आया, आई (āyā, āī). Two change the stem: जाना becomes गया, and होना becomes हुआ, हुई (huā, huī): क्या हुआ?, \"what happened?\""
+            },
+            {
+              "kind": "speech",
+              "text": "\"Did not\": मैं नहीं गया (maiṁ nahīṁ gayā). A bare stem with गया says the change is complete, as in देर हो गई and वह सो गया (vah so gayā), \"he fell asleep\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She came home in the evening\" — vah śām ko ghar āī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She came home in the evening\" — *vah śām ko ghar āī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We sat down. Then we slept.\" — ham baiṭhe. phir ham soe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We sat down. Then we slept.\" — *ham baiṭhe. phir ham soe.*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C276-vahgaya-r1",
+              "prompt": "Say that you went to the market yesterday, then that she came home in the evening.",
+              "assesses": [
+                "HI-GRAMMAR-C276-PAST-PERSON-01",
+                "HI-GRAMMAR-C276-PAST-STEMS-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "kal maiṁ bāzār gayā; vah śām ko ghar āī",
+                "कल मैं बाज़ार गया। वह शाम को घर आई।",
+                "कल मैं बाज़ार गई। वह शाम को घर आई।",
+                "kal maiṁ bāzār gaī; vah śām ko ghar āī"
+              ],
+              "feedback": {
+                "correct": "gayā or gaī for you; āī because she came.",
+                "incorrect": "The ending follows the one who went: -ā for a man, -ī for a woman, and āyā, āī from ānā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"He came\"? (आया.) \"She went\"? (गई.) \"What happened?\" (क्या हुआ?) \"I didn't go\"? (मैं नहीं गया.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C276-usnekhai",
+      "sequence": 15310,
+      "title": "उसने रोटी खाई (usne roṭī khāī) — the past that follows the thing",
+      "headword": "उसने रोटी खाई",
+      "romanization": "usne roṭī khāī",
+      "gloss": "he ate a roti — with an object, the doer takes ने and the verb agrees with the thing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7962df795f3fa92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"she went\". (vah gaī.) खाना खाया? leaves the eater out; this lesson puts the eater in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the doer takes ने",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उसने खाना खाया। usne khānā khāyā. — \"He (or she) ate the meal.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With a verb that has an object, such as eating, reading or saying, the past changes: the doer takes ने (ne). The pronouns fuse with it: मैंने, तुमने, आपने, उसने, हमने, उन्होंने (maiṁne, tumne, āpne, usne, hamne, unhoṁne). A name takes ने after it: मीरा ने. उसने is \"he\" or \"she\"; the verb no longer says which."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the verb follows the thing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मीरा ने रोटी खाई। Mīrā ne roṭī khāī. — \"Mira ate a roti.\""
+            },
+            {
+              "kind": "speech",
+              "text": "रोटी is feminine, so खाई, whoever ate it. With खाना, masculine, खाया; with books, मैंने किताबें पढ़ीं (maiṁne kitābeṁ paṛhīṁ). When the thing takes को, or there is none, the verb stays -आ: उसने मीरा को देखा (usne Mīrā ko dekhā), \"he saw Mira\"."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "the verb follows"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "sentence: वह गई — no thing. the verb follows: the one who went.",
+                "sentence: उसने रोटी खाई (usne roṭī khāī) — ने and a thing. the verb follows: the thing.",
+                "sentence: उसने मीरा को देखा — the thing has को. the verb follows: nothing: -आ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four verbs make this past their own way, for a masculine thing and a feminine one: किया / की, दिया / दी, लिया / ली, पिया / पी (kiyā / kī, diyā / dī, liyā / lī, piyā / pī), from करना, देना, लेना and पीना."
+            },
+            {
+              "kind": "speech",
+              "text": "कहना (kahnā), \"to say\", is regular. Your क्या कहा? was its past: उसने कहा कि वह कल आएगा (usne kahā ki vah kal āegā), \"he said he would come tomorrow\". लाना, \"to bring\", never takes ने: वह फल लाया (vah phal lāyā)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Mira drank tea\" — Mīrā ne cāy pī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Mira drank tea\" — *Mīrā ne cāy pī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She saw Arun\" — usne Aruṇ ko dekhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She saw Arun\" — *usne Aruṇ ko dekhā*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C276-usnekhai-r1",
+              "prompt": "Say that you ate a roti, then that Arun read a book.",
+              "assesses": [
+                "HI-GRAMMAR-C276-ERGATIVE-NE-01",
+                "HI-GRAMMAR-C276-OBJECT-AGREEMENT-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "maiṁne roṭī khāī; aruṇ ne kitāb paṛhī",
+                "मैंने रोटी खाई। अरुण ने किताब पढ़ी।"
+              ],
+              "feedback": {
+                "correct": "ne on the doer, and the verb follows roṭī and kitāb, both feminine.",
+                "incorrect": "With an object, the doer takes ne and the verb follows the thing: roṭī khāī, kitāb paṛhī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why खाई in उसने रोटी खाई (usne roṭī khāī)? (रोटी is feminine.) Now the other way: \"he ate the meal\"? (उसने खाना खाया.) Why देखा in उसने मीरा को देखा? (The thing has को.) \"He said\"? (उसने कहा.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R276-what-happened",
+      "sequence": 15320,
+      "title": "Review — what happened, and who did it",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what happened and who did it, in one breath",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:167e08c45ad847e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"Yesterday I went to the market\". (kal maiṁ bāzār gayā.) Then \"she came\" and \"what happened?\" (vah āī, kyā huā?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I came home in the evening, and then I slept.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I came home in the evening, and then I slept.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mira ate a roti. Arun ate the meal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Mira ate a roti. Arun ate the meal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What did you do yesterday? I went to the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What did you do yesterday? I went to the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "She saw Arun at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: She saw Arun at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "He said that he would come tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: He said that he would come tomorrow.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which past follows the one who went? (A verb with no thing: वह गई.) Which follows the thing? (The past with ने: मीरा ने रोटी खाई.) Now the other way round: in उसने खाना खाया, which word tells you that खाना is masculine? (खाया.) And when the thing takes को? (The verb stays -आ: उसने मीरा को देखा.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-278-PASTSCENE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "HI-EXT-278-PASTSCENE"
+  ],
+  "after": []
+}

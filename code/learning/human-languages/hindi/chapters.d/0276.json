@@ -1,0 +1,20 @@
+{
+  "chapter": 276,
+  "title": "What Happened, and Who Did It",
+  "label": "ch:hi-what-happened-and-who-did-it",
+  "canDo": "I can say what happened (vah gayā, vah āī) and who did something, with ne and a verb that follows the thing (usne roṭī khāī).",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "HI-R276-what-happened",
+    "kind": "production",
+    "summary": "Complete HI-R276-what-happened: say what happened and who did it, in the past.",
+    "assesses": [
+      "HI-GRAMMAR-C276-PAST-PERSON-01",
+      "HI-GRAMMAR-C276-PAST-STEMS-01",
+      "HI-GRAMMAR-C276-ERGATIVE-NE-01",
+      "HI-GRAMMAR-C276-OBJECT-AGREEMENT-01"
+    ]
+  }
+}

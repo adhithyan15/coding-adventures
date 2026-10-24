@@ -1,0 +1,11 @@
+{
+  "id": "HI-C279-chuttikadin",
+  "pathSegment": "HI-PATH-279-STORYORDER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-279-STORYORDER",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,981 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 280,
+  "title": "What I Think, and Why",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:3a0e7ebab797320e",
+  "lessons": [
+    {
+      "id": "HI-C280-lagna",
+      "sequence": 15430,
+      "title": "लगना (lagnā) — to seem, to be felt",
+      "headword": "लगना",
+      "romanization": "lagnā",
+      "gloss": "to seem; to be felt",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3eaafdca5304565a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"nice to meet you\" the way you say it as you part. (मिलकर अच्छा लगा, milkar acchā lagā.) Then \"I have been hurt\". (मुझे चोट लगी है.) लगा and लगी belong to the verb in this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लगना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लगना — lagnā — \"to seem; to be felt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे भूख लगी है। mujhe bhūkh lagī hai. — \"I'm hungry.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"hunger has struck me\". The one who feels it takes मुझे, as in मुझे चाय चाहिए, and the verb follows the thing felt: भूख is feminine, so लगी."
+            },
+            {
+              "kind": "speech",
+              "text": "यह खाना मुझे अच्छा लगता है। yah khānā mujhe acchā lagtā hai. — \"I like this food.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"this food seems good to me\". खाना is masculine, so लगता. It says much what मुझे … पसंद है says."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लगना (lagnā) is a tadbhava. CDIAL traces it to Sanskrit lagyati, \"adheres to\" (CDIAL 10895), and gives \"to be attached to\" as a Hindi sense: a hunger, a hurt or a liking attaches itself to the one who feels it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lagnā, then mujhe bhūkh lagī hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lagnā*, then *mujhe bhūkh lagī hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I'm thirsty\" — mujhe pyās lagī hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I'm thirsty\" — *mujhe pyās lagī hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like this food\" — yah khānā mujhe acchā lagtā hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like this food\" — *yah khānā mujhe acchā lagtā hai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लगना (lagnā) mean? (\"To seem, to be felt\".) \"I'm hungry\"? (मुझे भूख लगी है.) Why लगी? (भूख is feminine, and the verb follows the thing felt.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C280-aisa",
+      "sequence": 15440,
+      "title": "ऐसा (aisā) — like this, such",
+      "headword": "ऐसा",
+      "romanization": "aisā",
+      "gloss": "like this, such; so",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d4a001cc7dfcfcb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ask \"How are you?\" (आप कैसे हैं?) कैसा asks \"what kind?\". This lesson's word answers it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ऐसा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऐसा — aisā — \"like this, such; so\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे ऐसा लगता है। mujhe aisā lagtā hai. — \"I think so.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"it seems so to me\". ऐसा agrees, as कैसा does: ऐसा, ऐसी, ऐसे (aisā, aisī, aise)."
+            },
+            {
+              "kind": "speech",
+              "text": "ऐसा मत करो। aisā mat karo. — \"Don't do that.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ऐसी बात (aisī bāt) — such a thing; बात is feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "ऐसे लिखिए। (aise likhiye.) — Write it like this."
+            },
+            {
+              "kind": "speech",
+              "text": "Its first letter is new to you: ऐ (ai). The next lesson is about it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऐसा (aisā) is a tadbhava, worn down from Sanskrit īdṛśa, \"such, like this\" (CDIAL 1611). Its question partner has the same history: कैसा goes back to kīdṛśa, \"of what kind?\" (CDIAL 3197)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aisā, aisī, aise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aisā*, *aisī*, *aise*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think so\" — mujhe aisā lagtā hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think so\" — *mujhe aisā lagtā hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Don't do that\" — aisā mat karo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Don't do that\" — *aisā mat karo*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ऐसा (aisā) mean? (\"Like this, such\".) Its question partner? (कैसा.) \"I think so\"? (मुझे ऐसा (aisā) लगता है.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W280-letter-ai",
+      "sequence": 15450,
+      "title": "ऐ (ai) — the vowel you have read since है, standing alone",
+      "headword": "ऐ",
+      "romanization": "ai",
+      "gloss": "the single character ऐ — the standing form of ◌ै, at the start of ऐसा",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:007dabe42ba7b420",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ऐ",
+          "Script: two shapes, one sound",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ऐ, Script: two shapes, one sound, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say ऐसा (aisā), \"like this\". Then look at है. How many strokes sit above its head-line? (Two: ◌ै, ai.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That sign has a standing form, and ऐसा (aisā) opens with it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ऐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऐ — ai."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the independent vowel. ◌ै is how ai looks when it rides on a consonant (है, मैं, पैसा); ऐ is how it looks when it stands on its own, with no consonant to carry it."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "the long stem and descending tail of ए."
+            },
+            {
+              "kind": "speech",
+              "text": "the shorter hooked stem of ए."
+            },
+            {
+              "kind": "speech",
+              "text": "a separate upper arc."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "In print, then, ऐ (ai) is ए with one arc that rises from the right end of the head-line and curves up and over to the left."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: two shapes, one sound",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you see",
+                "where it stands"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you see: ◌ै. where it stands: on a consonant: है, मैं.",
+                "what you see: ऐ (ai). where it stands: alone: ऐसा (aisā)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Count the strokes above the line. ◌े has one and ◌ै two; ए has none and ऐ one. Miscount, and e becomes ai, or the other way round."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing: ऐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. descend the long left stem, curve right through the lower shoulder, and sweep down through the tail without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and descend the shorter right stem into its inward hook."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift at the headline junction and sweep the upper arc upward and left."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The first two strokes are the ones you write for ए; the arc comes third, and the head-line last."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified modern printed teaching form; everyday handwriting may simplify the curves."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ऐ (ai) stroke order.svg’, panels 1–4, Wikimedia Commons, 5 August 2023."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the sign and the letter side by side, and say what they share",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the sign and the letter side by side, and say what they share]"
+            },
+            {
+              "kind": "speech",
+              "text": "◌ै, ऐ (ai)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ऐ three times, saying ai as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ऐ three times, saying *ai* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ऐसा (aisā), then ऐसी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ऐसा**, then **ऐसी**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What sound is ऐ? (ai.) What is its sitting form? (◌ै, as in है.) How is ऐ unlike ए? (One arc rises above its head-line.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "HI-W280-letter-ai-r1",
+              "prompt": "With no model, write the vowel letter at the start of aisā, then the word, then hai with the same vowel sitting on its consonant.",
+              "assesses": [
+                "HI-SCRIPT-C280-AI-01",
+                "HI-SCRIPT-AI-MATRA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "ऐ; ऐसा; है"
+              ],
+              "feedback": {
+                "correct": "The strokes of ए and one arc above the line stand alone; the two strokes of the sign ride on a consonant.",
+                "incorrect": "Write the two strokes of ए, then the arc above the line, then the head-line; on a consonant, ai is two strokes above the line."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C280-mujhelagtahai",
+      "sequence": 15460,
+      "title": "मुझे लगता है कि … (mujhe lagtā hai ki …) — what I think",
+      "headword": "मुझे लगता है कि …",
+      "romanization": "mujhe lagtā hai ki …",
+      "gloss": "I think that … — saying what you think, and asking for an opinion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d62f3b68859cf4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think so\". (मुझे ऐसा (aisā) लगता है.) Then कि, \"that\", the word that turns a sentence into the thing you think or know."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मुझे लगता है कि",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुझे लगता है कि आज बारिश होगी। mujhe lagtā hai ki āj bāriś hogī. — \"I think it will rain today.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"it seems to me that …\". The thinker takes मुझे, and लगता है stays as it is whatever follows कि."
+            },
+            {
+              "kind": "speech",
+              "text": "आपको क्या लगता है? (āpko kyā lagtā hai?) — What do you think?"
+            },
+            {
+              "kind": "speech",
+              "text": "तुम्हें क्या लगता है? (tumhẽ kyā lagtā hai?) — the same, to a friend."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे नहीं लगता कि वह आएगा। (mujhe nahīṁ lagtā ki vah āegā.) — I don't think he will come. With नहीं, the है drops."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे लगा कि तुम नहीं आओगे। (mujhe lagā ki tum nahīṁ āoge.) — I thought you wouldn't come."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: in my opinion",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेरी राय में हिंदी आसान है। merī rāy meṁ hindī āsān hai. — \"In my opinion Hindi is easy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "राय is feminine, so मेरी राय में, \"in my opinion\". विचार is masculine: मेरे विचार से (mere vicār se) says the same, a little more formally. To ask: आपकी क्या राय है? (āpkī kyā rāy hai?), \"What is your opinion?\""
+            },
+            {
+              "kind": "speech",
+              "text": "मैं सोचता हूँ कि … (maiṁ soctā hūṁ ki …) puts the thinker in charge: it is for a thought you are turning over, not for an impression."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What do you think?\" — āpko kyā lagtā hai?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What do you think?\" — *āpko kyā lagtā hai?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I don't think he will come\" — mujhe nahīṁ lagtā ki vah āegā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I don't think he will come\" — *mujhe nahīṁ lagtā ki vah āegā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I thought you wouldn't come\" — mujhe lagā ki tum nahīṁ āoge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I thought you wouldn't come\" — *mujhe lagā ki tum nahīṁ āoge*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C280-mujhelagtahai-r1",
+              "prompt": "Say that you think Mira will come, then that in your opinion the book is good.",
+              "assesses": [
+                "HI-GRAMMAR-C280-LAGTA-KI-01",
+                "HI-GRAMMAR-C280-RAY-MEIN-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "mujhe lagtā hai ki mīrā āegī; merī rāy meṁ kitāb acchī hai",
+                "मुझे लगता है कि मीरा आएगी। मेरी राय में किताब अच्छी है।"
+              ],
+              "feedback": {
+                "correct": "mujhe for the thinker; merī for rāy, which is feminine.",
+                "incorrect": "The thinker takes mujhe: mujhe lagtā hai ki …; rāy is feminine: merī rāy meṁ."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think that …\"? (मुझे लगता है कि … (mujhe lagtā hai ki …)) \"What do you think?\" (आपको क्या लगता है?) \"In my opinion\"? (मेरी राय में: राय is feminine.) \"I thought that …\"? (मुझे लगा कि …)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C280-kivajahse",
+      "sequence": 15470,
+      "title": "की वजह से (kī vajah se) — because of",
+      "headword": "की वजह से",
+      "romanization": "kī vajah se",
+      "gloss": "because of — a reason in one noun, and the reason is that …",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9f87104c51fea5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer a क्यों with क्योंकि: \"Why didn't you come? Because I was ill.\" (तुम क्यों नहीं आए? क्योंकि मैं बीमार था।)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "क्योंकि needs a whole sentence after it. This lesson gives a reason in a single noun."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: की वजह से, के कारण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बारिश की वजह से हम घर पर रहे। bāriś kī vajah se ham ghar par rahe. — \"Because of the rain we stayed at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "वजह (vajah), \"a reason\", is feminine, so की वजह से (kī vajah se): \"from the reason of\". कारण, which you know, is masculine and does the same job a little more formally: के कारण (ke kāraṇ)."
+            },
+            {
+              "kind": "speech",
+              "text": "भीड़ की वजह से मुझे देर हुई। (bhīṛ kī vajah se mujhe der huī.) — Because of the crowd I was late."
+            },
+            {
+              "kind": "speech",
+              "text": "बीमारी के कारण वह नहीं आया। (bīmārī ke kāraṇ vah nahīṁ āyā.) — Because of illness he didn't come."
+            },
+            {
+              "kind": "speech",
+              "text": "A pronoun takes its -की form: मेरी वजह से (merī vajah se), \"because of me\"; उसकी वजह से (uskī vajah se), \"because of him\", or her."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the reason is that …",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वजह यह है कि मैं बीमार था। vajah yah hai ki maiṁ bīmār thā. — \"The reason is that I was ill.\""
+            },
+            {
+              "kind": "speech",
+              "text": "वजह यह है कि … names the reason and then gives it as a whole sentence. Mind the order of the three ways:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the reason",
+                "where it stands"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the reason: बारिश की वजह से (kī vajah se). where it stands: before the result.",
+                "the reason: वजह यह है कि … where it stands: in a sentence of its own, after the result.",
+                "the reason: क्योंकि … where it stands: after the result, in the same sentence."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Because of the crowd I was late\" — bhīṛ kī vajah se mujhe der huī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Because of the crowd I was late\" — *bhīṛ kī vajah se mujhe der huī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He didn't come, because he was ill\" — vah nahīṁ āyā, kyoṁki vah bīmār thā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He didn't come, because he was ill\" — *vah nahīṁ āyā, kyoṁki vah bīmār thā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Because of me she was late\" — merī vajah se use der huī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Because of me she was late\" — *merī vajah se use der huī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C280-kivajahse-r1",
+              "prompt": "Say that because of the rain you stayed at home, then that the reason is that the train came late.",
+              "assesses": [
+                "HI-GRAMMAR-C280-VAJAH-SE-01",
+                "HI-GRAMMAR-C280-REASON-IS-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "bāriś kī vajah se maiṁ ghar par rahā; vajah yah hai ki ṭren der se āī",
+                "बारिश की वजह से मैं घर पर रहा। वजह यह है कि ट्रेन देर से आई।",
+                "बारिश की वजह से मैं घर पर रही। वजह यह है कि ट्रेन देर से आई।",
+                "bāriś ke kāraṇ maiṁ ghar par rahā; vajah yah hai ki ṭren der se āī"
+              ],
+              "feedback": {
+                "correct": "kī, because vajah is feminine; the reason first, then the result.",
+                "incorrect": "Put the noun first, then kī vajah se: bāriś kī vajah se …; then vajah yah hai ki and a whole sentence."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Because of the rain\"? (बारिश की वजह से (kī vajah se).) Why की? (वजह is feminine.) Its formal partner? (के कारण.) \"The reason is that …\"? (वजह यह है कि …) Which one comes after the result, in the same sentence? (क्योंकि.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R280-opinion-and-reason",
+      "sequence": 15480,
+      "title": "Review — what I think, and why",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what you think, and why",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:4b6de4572691235e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I'm hungry\" and \"I think so\". (mujhe bhūkh lagī hai, mujhe aisā lagtā hai.) Then write ऐ (ai) from memory: the strokes of ए, the arc, the head-line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I think it will rain tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I think it will rain tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What do you think? In my opinion this book is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What do you think? In my opinion this book is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Because of the rain the train came late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Because of the rain the train came late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I'm thirsty. I like this tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I'm thirsty. I like this tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ऐसा (aisā), then मुझे ऐसा (aisā) लगता है।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ऐसा**, then **मुझे ऐसा लगता है।**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think that …\"? (मुझे लगता है कि … (mujhe lagtā hai ki …)) \"In my opinion\"? (मेरी राय में.) \"Because of\"? (की वजह से (kī vajah se), or के कारण.) \"The reason is that …\"? (वजह यह है कि …) How is ऐ (ai) unlike ए? (One arc above the head-line.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

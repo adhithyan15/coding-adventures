@@ -1,0 +1,11 @@
+{
+  "id": "HI-C286-varna",
+  "pathSegment": "HI-PATH-286-IFOTHERWISE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-286-IFOTHERWISE",
+      "order": 2
+    }
+  ]
+}

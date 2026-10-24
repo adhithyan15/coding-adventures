@@ -1,0 +1,18 @@
+{
+  "chapter": 277,
+  "title": "What Will Happen",
+  "label": "ch:hi-what-will-happen",
+  "canDo": "I can say what will happen, for every person (karūṅgā, karoge, karegā, kareṅge), and what will be (hogā, hogī).",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "HI-R277-what-will-happen",
+    "kind": "production",
+    "summary": "Complete HI-R277-what-will-happen: say what will happen and what will be.",
+    "assesses": [
+      "HI-GRAMMAR-C277-FUTURE-PERSON-01",
+      "HI-GRAMMAR-C277-WILL-BE-01"
+    ]
+  }
+}

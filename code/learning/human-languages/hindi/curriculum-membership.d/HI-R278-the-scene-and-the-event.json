@@ -1,0 +1,11 @@
+{
+  "id": "HI-R278-the-scene-and-the-event",
+  "pathSegment": "HI-PATH-278-PASTSCENE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-278-PASTSCENE",
+      "order": 2
+    }
+  ]
+}

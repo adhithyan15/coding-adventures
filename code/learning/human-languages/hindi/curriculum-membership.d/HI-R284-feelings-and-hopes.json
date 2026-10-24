@@ -1,0 +1,11 @@
+{
+  "id": "HI-R284-feelings-and-hopes",
+  "pathSegment": "HI-PATH-284-FEELINGSHOPES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-284-FEELINGSHOPES",
+      "order": 3
+    }
+  ]
+}

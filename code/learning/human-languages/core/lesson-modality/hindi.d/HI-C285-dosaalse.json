@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C285-dosaalse",
+    "language": "hindi",
+    "chapter": 285,
+    "sequence": 15690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2a4be530d6428f6"
+  },
+  "findings": []
+}

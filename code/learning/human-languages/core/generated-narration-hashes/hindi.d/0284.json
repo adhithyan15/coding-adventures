@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:d3cde2f1ff49c390",
+  "lessonIds": [
+    "HI-C284-khush",
+    "HI-C284-darlagta",
+    "HI-C284-bannachahta",
+    "HI-R284-feelings-and-hopes"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "hindi/narration/ch284.txt",
+  "json": "hindi/narration/ch284.json",
+  "textHash": "fnv1a64:821208508290dea8",
+  "jsonHash": "fnv1a64:bd21e70aced9d1f3",
+  "findings": []
+}

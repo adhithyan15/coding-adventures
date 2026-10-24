@@ -1,0 +1,17 @@
+{
+  "language": "hindi",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:3358fa292916264a",
+  "lessonIds": [
+    "HI-C276-vahgaya",
+    "HI-C276-usnekhai",
+    "HI-R276-what-happened"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch276.txt",
+  "json": "hindi/narration/ch276.json",
+  "textHash": "fnv1a64:1233cf83ae918d2d",
+  "jsonHash": "fnv1a64:31500d615d60419a",
+  "findings": []
+}

@@ -3,9 +3,10 @@ import { realCorpusTargets as targets } from "./real-corpus-fixture.js";
 
 describe("Devanagari real-corpus figure targets", () => {
   it("draws a Devanagari sign only where a lesson teaches it alone", () => {
-    // 46 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of twelve
+    // 47 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of twelve
     // signs by itself (ा ु ू े ं ़ ् ृ ँ ी ो ः), each cited to native writers
-    // who wrote it alone. Each is one glyph, never a sequence: Devanagari has no
+    // who wrote it alone. The 47th is Hindi's visarga (HI-W281-sign-visarga),
+    // added with the B1 core on its anchor word अतः. Each is one glyph, never a sequence: Devanagari has no
     // written-order table, so no sign is placed against a consonant here
     // (ā joins its consonant only inside a composed word, next cases).
     const devanagari = targets.filter((target) => target.script === "devanagari");
@@ -26,6 +27,7 @@ describe("Devanagari real-corpus figure targets", () => {
       "HI-W12-chandrabindu": "ँ",
       "HI-W12-ii-matra": "ी",
       "HI-W12-u-matra": "ु",
+      "HI-W281-sign-visarga": "ः",
       "MR-W01-aa-matra": "ा",
       "MR-W01-ii-matra": "ी",
       "MR-W01-o-matra": "ो",

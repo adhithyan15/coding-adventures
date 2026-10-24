@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C283-chutgayi",
+    "language": "hindi",
+    "chapter": 283,
+    "sequence": 15610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ade6b621b65a6562"
+  },
+  "findings": []
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 280,
+  "title": "What I Think, and Why",
+  "label": "ch:hi-what-i-think-and-why",
+  "canDo": "I can say what I think with mujhe lagtā hai ki and merī rāy meṁ, give a reason with kī vajah se and ke kāraṇ, and read and write ऐ in aisā.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-R280-opinion-and-reason",
+    "kind": "production",
+    "summary": "Complete HI-R280-opinion-and-reason: say what you think and give a reason for it.",
+    "assesses": [
+      "HI-LEX-C280-LAGNA-01",
+      "HI-LEX-C280-AISA-01",
+      "HI-SCRIPT-C280-AI-01",
+      "HI-GRAMMAR-C280-LAGTA-KI-01",
+      "HI-GRAMMAR-C280-RAY-MEIN-01",
+      "HI-GRAMMAR-C280-VAJAH-SE-01",
+      "HI-GRAMMAR-C280-REASON-IS-01"
+    ]
+  }
+}

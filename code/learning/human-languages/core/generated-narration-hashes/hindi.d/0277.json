@@ -1,0 +1,16 @@
+{
+  "language": "hindi",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:0df86223ff82dfcc",
+  "lessonIds": [
+    "HI-C277-vahkarega",
+    "HI-R277-what-will-happen"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch277.txt",
+  "json": "hindi/narration/ch277.json",
+  "textHash": "fnv1a64:778405b5c2004e72",
+  "jsonHash": "fnv1a64:a56db5ece896e073",
+  "findings": []
+}

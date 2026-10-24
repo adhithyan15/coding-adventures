@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:b1a72d2cbd27d2b4",
+  "lessonIds": [
+    "HI-C286-agarto",
+    "HI-C286-chutgayito",
+    "HI-C286-varna",
+    "HI-R286-if-and-otherwise"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "hindi/narration/ch286.txt",
+  "json": "hindi/narration/ch286.json",
+  "textHash": "fnv1a64:fdd8ee774aa83d5f",
+  "jsonHash": "fnv1a64:dde1687d189b941e",
+  "findings": []
+}

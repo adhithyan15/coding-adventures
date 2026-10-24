@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "What Was Going On",
+  "label": "ch:hi-what-was-going-on",
+  "canDo": "I can set a scene in the past with kar rahā thā and jab … tab, and say last week or last year with pichlā.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-R278-the-scene-and-the-event",
+    "kind": "production",
+    "summary": "Complete HI-R278-the-scene-and-the-event: set a scene in the past and say what happened inside it.",
+    "assesses": [
+      "HI-GRAMMAR-C278-ONGOING-PAST-01",
+      "HI-LEX-C278-PICHLA-01",
+      "HI-GRAMMAR-C278-SCENE-EVENT-01"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 279,
+  "title": "Telling It in Order",
+  "label": "ch:hi-telling-it-in-order",
+  "canDo": "I can tell a story in order with pahle, phir, uske bād and ākhir meṁ, join actions with -kar, and read a short story.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-R279-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete HI-R279-a-story-in-order: tell a short story in order, after reading Mira's holiday in the village.",
+    "assesses": [
+      "HI-GRAMMAR-C279-KAR-SEQUENCE-01",
+      "HI-GRAMMAR-C279-FIRST-THEN-01",
+      "HI-GRAMMAR-C279-NE-KE-BAAD-01",
+      "HI-GRAMMAR-C279-USKE-BAAD-01",
+      "HI-LEX-C279-AKHIR-01",
+      "HI-SKILL-C279-READ-STORY-01"
+    ]
+  }
+}
