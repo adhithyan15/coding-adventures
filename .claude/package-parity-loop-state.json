@@ -3,8 +3,8 @@
   "automation_id": "package-parity-pr-loop",
   "started": "2026-07-29",
   "policy": {
-    "maximum_active_parity_prs": 1,
-    "merge_authority": "external-review-and-merge-only",
+    "maximum_active_parity_prs": 3,
+    "merge_authority": "auto-merge-after-required-checks",
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass",
     "delivery_scope": "portable-packages-and-build-tools-only",
@@ -16,23 +16,24 @@
       "external-approval"
     ]
   },
-  "active_pr": 18105,
+  "active_pr": 18143,
   "last_ci_action": {
-    "observed_at": "2026-10-24T15:28:47.815420+00:00",
-    "pr_number": 18105,
-    "action": "Opened ready-for-review PR18105 at534aa354945bd47f83595dbde743e896c7fe47ef after final-main classification and validation review. GitHub reports MERGEABLE; initial CI jobs in progress. No auto-merge enrollment while checks are pending. Exactly one active parity PR."
+    "observed_at": "2026-10-24T19:42:52Z",
+    "pr_number": 18143,
+    "validated_implementation_head": "758333eb87f1960f23dabcee4d7f9b0d18237491",
+    "action": "Preserved the URL-work and repeatable-Windows hardening plus the 29-receipt post-#18118 audit, while restoring the operator-authorized three-PR ceiling and the bounded TE04 TypeScript adoption scope active in independent PR #18147. PR #18143 remains this branch's active item; await exact-head review and final CI before guarded auto-merge."
   },
   "last_inventory": {
-    "revision": "2a0365e356839e22652717fb213499c4454cb972",
+    "revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1533,
-    "implementation_package_slots": 4815,
-    "all_reported_identities": 1575,
+    "implementation_identities": 1536,
+    "implementation_package_slots": 4818,
+    "all_reported_identities": 1578,
     "completion_bands": {
       "1": {
-        "missing_slots": 14714,
-        "packages": 1051
+        "missing_slots": 14756,
+        "packages": 1054
       },
       "10-15": {
         "missing_slots": 250,
@@ -50,8 +51,8 @@
     "canonical_collisions": 0,
     "unknown_language_buckets": 0,
     "ocaml_packages": 5,
-    "evidence": "code/specs/package-parity-audits/20261024-gfm-resume-classification.json",
-    "audit_notes": "Final main ec0d8fbe refresh: ten newly merged Rust roots assigned to pending documentary classifiers. Four pending follow-ups registered including Node source-export declaration ownership; no new implementation selection, native qualification or exception."
+    "evidence": "code/specs/package-parity-audits/20261024-gfm-neutral-postmerge.json",
+    "audit_notes": "Exact fetched-main tree reporter refresh after verified external PR18118 merge; all29 integrity-pinned receipts incorporated. Native adopters and authority classifier remain pending. C/C++/OCaml remain emerging; no source-only or native execution credit."
   },
   "items": [
     {
@@ -17183,10 +17184,11 @@
     {
       "id": "gfm-fenced-block-ast-and-consumer-contract-repair",
       "title": "Repair the TE04 fenced-block AST and consumer contract",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-gfm-fenced-ast-20261022",
       "pr_number": 18105,
+      "merge_revision": "8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738",
       "notes": "TE04 requires source-preserving fenced_block nodes, but inspected ASTs do not define FencedBlockNode and the TypeScript reference lowers fences to code_block. Reconcile the AST, parser, and downstream rendering contract before using it as a four-lane GFM oracle.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/gfm-fenced-block-ast-and-consumer-contract-repair"
@@ -17233,29 +17235,50 @@
         "coverage_target_review": "Fullsource globs retained;14runtimepackages83.17%-100% statements,95%library target not universally reached;ASTtypeonly no executable credit",
         "validation_completed_at": "2026-10-24T15:21:55.943416+00:00"
       },
-      "pr_opened_at": "2026-10-24T15:28:47.815420+00:00"
+      "pr_opened_at": "2026-10-24T15:28:47.815420+00:00",
+      "merged_at": "2026-10-24T16:50:14Z",
+      "merge_revision": "8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738",
+      "merge_notes": "GitHub merged PR #18105 after every reported required check reached terminal success. The exact merge receipt is 8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738; this state reconciliation clears the stale active-PR pointer before publishing the next independent parity tranche."
     },
     {
       "id": "gfm-language-neutral-conformance-fixture",
       "title": "Define the language-neutral GFM parser conformance fixture",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "gfm-fenced-block-ast-and-consumer-contract-repair"
       ],
-      "branch": null,
-      "pr_number": null,
-      "notes": "The existing 652-example corpus covers CommonMark, while GFM strike, task, and table behavior is only separately tested. Freeze those extensions, fenced source retention, stable errors, and AST/rendering vectors for native lane consumers.",
+      "branch": "codex/parity-gfm-neutral-20261024",
+      "pr_number": 18118,
+      "notes": "Merged PR #18118 freezes sixteen source/AST/HTML vectors for strikethrough, task items, tables, and source-preserving fences behind a strict schema and bounded validator. The neutral foundation itself grants no native-lane credit. All required checks passed before guarded auto-merge; a separate preserved 67-case draft does not replace or qualify this published corpus.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/gfm-language-neutral-conformance-fixture"
       ],
-      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited.",
+      "merged_at": "2026-10-24T18:59:25Z",
+      "merge_revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
+      "merge_notes": "Guarded squash auto-merge completed only after seven reported checks passed, twenty-eight intentional checks skipped, no check failed or remained pending, and GitHub reported the exact reviewed head conflict-free."
+    },
+    {
+      "id": "gfm-typescript-neutral-conformance-adoption",
+      "title": "Adopt the neutral GFM extension corpus in TypeScript",
+      "status": "pending",
+      "depends_on": [
+        "gfm-language-neutral-conformance-fixture"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Run all sixteen published TE04 vectors through the real public TypeScript parser and HTML renderer, compare complete AST and HTML, retain bounded dynamic reading plus independent source/AST/HTML corruption witnesses, and route exact corpus changes to the native package on all three platform plans. This bounded adoption is active in independent PR #18147 and does not claim the broader GFM behaviors owned by gfm-remaining-extension-contract-classification or credit the separate unpublished 67-case draft.",
+      "legacy_ids": [
+        "gfm-typescript-extension-v1-native-adoption"
+      ]
     },
     {
       "id": "gfm-swift-lane-parity",
       "title": "Implement GFM parser parity in Swift",
       "status": "pending",
       "depends_on": [
-        "gfm-language-neutral-conformance-fixture"
+        "gfm-language-neutral-conformance-fixture",
+        "gfm-remaining-extension-contract-classification"
       ],
       "branch": null,
       "pr_number": null,
@@ -17286,7 +17309,8 @@
       "status": "pending",
       "depends_on": [
         "gfm-language-neutral-conformance-fixture",
-        "gfm-java-kotlin-dart-commonmark-renderer-prerequisites"
+        "gfm-java-kotlin-dart-commonmark-renderer-prerequisites",
+        "gfm-remaining-extension-contract-classification"
       ],
       "branch": null,
       "pr_number": null,
@@ -19807,16 +19831,21 @@
       "title": "Port CommonMark parser and document AST HTML renderer to C#",
       "status": "pending",
       "depends_on": [
-        "gfm-fenced-block-ast-and-consumer-contract-repair"
+        "document-ast-to-html-csharp-lane-parity",
+        "commonmark-parser-csharp-652-reconciliation",
+        "commonmark-csharp-facade-lane-parity"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Two missing portable C# roots in the 9/15 CommonMark and document-ast-to-html families; consume shared parser/renderer fixtures before GFM extensions.",
-      "classification_refresh": "Current inventory commonmark and document-ast-to-html are actual missing nine-lane facade/renderer families; commonmark-parser is present12including this lane. Qualify existing parser where required, deliver actual owned CommonMark facade and HTML renderer with upstream fixtures; do not invent absent parser root or add duplicate facade/renderer owner. No native tests/merged receipt in this refresh.",
+      "delivery_class": "aggregate",
+      "selection_blocked": true,
+      "notes": "Selection-blocked aggregate retained for historical dependency references. Its concrete children separately own the missing renderer, the measured 233/652 parser reconciliation, and the facade that follows both; do not select this aggregate as one implementation PR.",
+      "classification_refresh": "Current inventory shows commonmark and document-ast-to-html as actual nine-lane facade/renderer families with missing C# roots; commonmark-parser is present in 12 lanes including C#. Native execution on 2026-10-24 ran all 652 official CommonMark 0.31.2 records through the public parser/renderer seam: 233 exact matches and 419 mismatches. This is qualification evidence, not conformance. Ownership is split across three exact children to avoid a renderer PR growing into a parser rewrite or shipping a misleading facade.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/commonmark-html-csharp-lane-prerequisites"
       ],
-      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited.",
+      "split_at": "2026-10-24T18:13:58Z"
     },
     {
       "id": "commonmark-html-fsharp-lane-prerequisites",
@@ -19856,11 +19885,12 @@
       "status": "pending",
       "depends_on": [
         "gfm-language-neutral-conformance-fixture",
-        "commonmark-html-csharp-lane-prerequisites"
+        "commonmark-html-csharp-lane-prerequisites",
+        "gfm-remaining-extension-contract-classification"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Missing C# GFM extension over CommonMark and HTML renderer prerequisites; preserve TE04 fenced-block source.",
+      "notes": "Present native csharp GFM parser front enables the same-language CommonMark engine. Pending neutral-fixture and TE04 semantic qualification; HTML renderer and convenience facade roots remain absent. Reconcile actual grammar/AST behavior over qualified prerequisites; directory presence grants no native credit.",
       "present_root_classification_refresh": {
         "report": "eight-nine-lane-document-lattice-five-audit.md",
         "source_head": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -19878,11 +19908,12 @@
       "status": "pending",
       "depends_on": [
         "gfm-language-neutral-conformance-fixture",
-        "commonmark-html-fsharp-lane-prerequisites"
+        "commonmark-html-fsharp-lane-prerequisites",
+        "gfm-remaining-extension-contract-classification"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Missing F# GFM extension over CommonMark and HTML renderer prerequisites; verify the native front door.",
+      "notes": "Present native fsharp GFM parser front enables the same-language CommonMark engine. Pending neutral-fixture and TE04 semantic qualification; HTML renderer and convenience facade roots remain absent. Reconcile actual grammar/AST behavior over qualified prerequisites; directory presence grants no native credit.",
       "present_root_classification_refresh": {
         "report": "eight-nine-lane-document-lattice-five-audit.md",
         "source_head": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -19900,11 +19931,12 @@
       "status": "pending",
       "depends_on": [
         "gfm-language-neutral-conformance-fixture",
-        "commonmark-html-haskell-lane-prerequisites"
+        "commonmark-html-haskell-lane-prerequisites",
+        "gfm-remaining-extension-contract-classification"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Missing Haskell GFM extension over CommonMark and HTML renderer prerequisites.",
+      "notes": "A GFM parser directory exists, but its generic token-parser wrapper is not Markdown-to-Document-AST GFM behavior. Real grammar/TE04 qualification, renderer and convenience facades remain pending under existing owners; no directory or skip-success credit.",
       "present_root_classification_refresh": {
         "report": "eight-nine-lane-document-lattice-five-audit.md",
         "source_head": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -25764,6 +25796,309 @@
       "postmerge_preparation_evidence": [
         "code/specs/gfm-fenced-block-v1/VALIDATION.md"
       ]
+    },
+    {
+      "id": "commonmark-language-neutral-conformance-centralization",
+      "title": "Centralize CommonMark parser and renderer conformance fixtures",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-conformance-foundation",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T18:13:58Z",
+      "discovered_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+      "package_paths": [
+        "code/specs/fixtures",
+        "code/packages/typescript/commonmark/tests/fixtures/spec.json"
+      ],
+      "notes": "The official CommonMark 0.31.2 652-case corpus is duplicated under established language packages, while renderer vectors remain package-local. Specify one provenance-pinned, bounded language-neutral parser/facade corpus plus independently authored AST-to-HTML vectors and exact native-reader CI routing. This is not required for the C# lane tranche, does not replace its vendored fixture, and must not absorb the separate GFM extension corpus."
+    },
+    {
+      "id": "document-ast-to-html-csharp-lane-parity",
+      "title": "Add the document AST HTML renderer to C#",
+      "status": "pr-open",
+      "depends_on": [],
+      "branch": "codex/parity-csharp-commonmark-html-20261024",
+      "pr_number": 18143,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18143",
+      "delivery_class": "portable-lane-adoption",
+      "selection_blocked": false,
+      "started_at": "2026-10-24T18:13:58Z",
+      "base_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+      "package_paths": [
+        "code/packages/csharp/document-ast-to-html"
+      ],
+      "notes": "Deliver the missing pure C# renderer root through its public TE00 API with independently authored vectors for every existing C# AST node, raw routing, URL hardening, ownership/resource limits, native coverage and Unix/Windows build fronts. Rendering extension-shaped AST data does not claim GFM parser adoption.",
+      "pr_opened_at": "2026-10-24T18:55:24Z",
+      "publication_head": "d5e6ad5f8372294611ac51b2569a6a6ecb448c21",
+      "publication_notes": "Draft PR #18143 was opened only to obtain the durable PR number after exact-head security and evidence review passed. This lifecycle commit advances the owner from in-progress to pr-open; the PR remains draft until this receipt is pushed and revalidated."
+    },
+    {
+      "id": "commonmark-parser-csharp-652-reconciliation",
+      "title": "Reconcile the C# parser with all 652 CommonMark 0.31.2 examples",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-lane-reconciliation",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T18:13:58Z",
+      "discovered_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+      "package_paths": [
+        "code/packages/csharp/commonmark-parser"
+      ],
+      "notes": "Native qualification executed every official CommonMark 0.31.2 record through the current public C# parser and TE00 renderer: 233 / 652 exact HTML matches and 419 mismatches. Reconcile the existing substantive parser without a fixture lookup, third-party engine, external process or cross-language bridge; preserve current resource guards and qualify the full corpus plus production coverage before claiming conformance."
+    },
+    {
+      "id": "commonmark-csharp-facade-lane-parity",
+      "title": "Add the thin CommonMark facade to C#",
+      "status": "pending",
+      "depends_on": [
+        "commonmark-parser-csharp-652-reconciliation",
+        "document-ast-to-html-csharp-lane-parity"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-lane-adoption",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T18:13:58Z",
+      "discovered_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+      "package_paths": [
+        "code/packages/csharp/commonmark"
+      ],
+      "notes": "Add only the thin public parse/to-HTML composition package after the C# parser passes all 652 official cases and the renderer merges. Re-run all 652 through the facade, preserve AST access and raw-HTML security documentation, and do not absorb GFM adoption."
+    },
+    {
+      "id": "x509-ocsp-response-data-profile-classification",
+      "title": "Classify bounded OCSP ResponseData structure",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "package_paths": [
+        "code/packages/rust/x509-ocsp-response-data"
+      ],
+      "discovered_revision": "4531144ad9d4d2cfcff2cb86e721e8f1c7ffc0a6",
+      "notes": "Distinct signed-data container: omitted-only defaultv1; explicit responder Name/key; strict producedAt; ordered1..16 SingleResponses; optional generic unique-OID extensions; borrowed canonical DER; shared budgets and redacted errors. Exclude authentication/authorization/hash policy/path binding/freshness/ambient authority. Future native children need structural OCSP, Name, Extensions, DER/ASN1 and time prerequisites.",
+      "delivery_class": "documentary-profile-classification",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261024-gfm-postmerge.json"
+      ],
+      "qualification_credit": false
+    },
+    {
+      "id": "x509-ocsp-basic-response-profile-classification",
+      "title": "Classify bounded BasicOCSPResponse structure",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "package_paths": [
+        "code/packages/rust/x509-ocsp-basic-response"
+      ],
+      "discovered_revision": "4531144ad9d4d2cfcff2cb86e721e8f1c7ffc0a6",
+      "notes": "Ordered ResponseData, generic signature AlgorithmIdentifier and canonical borrowed BIT STRING; optional explicit certificate sequence capped at one complete certificate, including structurally empty sequence; shared nested budgets, exact signed-data DER/offsets/redacted errors. Exclude algorithm enabling, verification, responder selection/authorization, path/role/critical-extension policy, freshness and ambient authority. Future native children require proven composition prerequisites.",
+      "delivery_class": "documentary-profile-classification",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261024-gfm-postmerge.json"
+      ],
+      "qualification_credit": false
+    },
+    {
+      "id": "gfm-remaining-extension-contract-classification",
+      "title": "Classify GFM contracts outside the four-feature TE04 profile",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "package_paths": [],
+      "discovered_revision": "4531144ad9d4d2cfcff2cb86e721e8f1c7ffc0a6",
+      "notes": "Review extended autolinks, tagfilter/raw-HTML policy, broader task marker/following whitespace and pipe-free single-column/setext ambiguity against governing references. Create exact fixture/native children after review. Preserve te04-gfm-extensions-v1 scope; no full-GFM or reviewed-exception credit. Publication18118 also exposes disputed paired-single-tilde behavior and canonical adjacent-text policy; review authority/versioning before treating the published16 and preserved67 corpora as interchangeable. Native adoption must never silently substitute or regenerate literals.",
+      "delivery_class": "documentary-profile-classification",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261024-gfm-postmerge.json"
+      ],
+      "qualification_credit": false
+    },
+    {
+      "id": "gfm-go-extension-v1-native-adoption",
+      "title": "Adopt the reviewed GFM extension corpus in Go",
+      "status": "pending",
+      "depends_on": [
+        "gfm-language-neutral-conformance-fixture",
+        "gfm-remaining-extension-contract-classification"
+      ],
+      "delivery_class": "portable",
+      "package_paths": [
+        "code/packages/go/gfm-parser",
+        "code/packages/go/gfm",
+        "code/packages/go/document-ast-to-html"
+      ],
+      "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+    },
+    {
+      "id": "gfm-python-extension-v1-native-adoption",
+      "title": "Adopt the reviewed GFM extension corpus in Python",
+      "status": "pending",
+      "depends_on": [
+        "gfm-language-neutral-conformance-fixture",
+        "gfm-remaining-extension-contract-classification"
+      ],
+      "delivery_class": "portable",
+      "package_paths": [
+        "code/packages/python/gfm-parser",
+        "code/packages/python/gfm",
+        "code/packages/python/document-ast-to-html"
+      ],
+      "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+    },
+    {
+      "id": "gfm-ruby-extension-v1-native-adoption",
+      "title": "Adopt the reviewed GFM extension corpus in Ruby",
+      "status": "pending",
+      "depends_on": [
+        "gfm-language-neutral-conformance-fixture",
+        "gfm-remaining-extension-contract-classification"
+      ],
+      "delivery_class": "portable",
+      "package_paths": [
+        "code/packages/ruby/gfm_parser",
+        "code/packages/ruby/gfm",
+        "code/packages/ruby/document_ast_to_html"
+      ],
+      "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+    },
+    {
+      "id": "gfm-rust-extension-v1-native-adoption",
+      "title": "Adopt the reviewed GFM extension corpus in Rust",
+      "status": "pending",
+      "depends_on": [
+        "gfm-language-neutral-conformance-fixture",
+        "gfm-remaining-extension-contract-classification"
+      ],
+      "delivery_class": "portable",
+      "package_paths": [
+        "code/packages/rust/gfm-parser",
+        "code/packages/rust/gfm",
+        "code/packages/rust/document-ast-to-html"
+      ],
+      "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+    },
+    {
+      "id": "gfm-perl-extension-v1-native-adoption",
+      "title": "Adopt the reviewed GFM extension corpus in Perl",
+      "status": "pending",
+      "depends_on": [
+        "gfm-language-neutral-conformance-fixture",
+        "gfm-remaining-extension-contract-classification"
+      ],
+      "delivery_class": "portable",
+      "package_paths": [
+        "code/packages/perl/gfm-parser",
+        "code/packages/perl/gfm",
+        "code/packages/perl/document-ast-to-html"
+      ],
+      "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+    },
+    {
+      "id": "gfm-lua-extension-v1-native-adoption",
+      "title": "Adopt the reviewed GFM extension corpus in Lua",
+      "status": "pending",
+      "depends_on": [
+        "gfm-language-neutral-conformance-fixture",
+        "gfm-remaining-extension-contract-classification"
+      ],
+      "delivery_class": "portable",
+      "package_paths": [
+        "code/packages/lua/gfm_parser",
+        "code/packages/lua/gfm",
+        "code/packages/lua/document_ast_to_html"
+      ],
+      "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+    },
+    {
+      "id": "gfm-elixir-extension-v1-native-adoption",
+      "title": "Adopt the reviewed GFM extension corpus in Elixir",
+      "status": "pending",
+      "depends_on": [
+        "gfm-language-neutral-conformance-fixture",
+        "gfm-remaining-extension-contract-classification"
+      ],
+      "delivery_class": "portable",
+      "package_paths": [
+        "code/packages/elixir/gfm_parser",
+        "code/packages/elixir/gfm",
+        "code/packages/elixir/document_ast_to_html"
+      ],
+      "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+    },
+    {
+      "id": "x509-ocsp-response-envelope-profile-classification",
+      "title": "Classify the portable outer OCSP response-envelope profile",
+      "status": "pending",
+      "depends_on": [],
+      "delivery_class": "portable",
+      "package_paths": [
+        "code/packages/rust/x509-ocsp-response"
+      ],
+      "discovered_at_revision": "cc710ef23c7bb7c336043bb530f8aff4793f4440",
+      "future_delivery_prerequisites": [
+        "der-tlv-portable-conformance",
+        "der-asn1-portable-conformance"
+      ],
+      "notes": "Documentary applicability review only: bounded outer RFC6960 response status and ResponseBytes structure, assigned statuses, success/error cardinality, opaque response-type OID and borrowed OCTET STRING, exact framing, shared DER budgets and redacted errors. Existing OCSP structural-fields owner excludes larger containers; ResponseData and BasicResponse are different structures. Future fixture/native children must depend explicitly on merged DER TLV/ASN.1 prerequisites and reviewed profile. Exclude inner dispatch, signatures, responder authorization, certificate/path binding, freshness/revocation decisions and network authority. Empty capability declarations and package presence grant no native, full-protocol or reviewed-exception credit."
+    },
+    {
+      "id": "cpp-text-stack-applicability-classification",
+      "title": "Classify C++ document AST, CommonMark, HTML and GFM scope before portable lane promotion",
+      "status": "pending",
+      "depends_on": [
+        "c-cpp-graduation"
+      ],
+      "delivery_class": "portable",
+      "branch": null,
+      "pr_number": null,
+      "notes": "C++ is emerging outside the established 15-language denominator. At ab2822a2cdad3ee2f7f6318ea36c540a986c96b3 its142 roots contain no document-ast, commonmark-parser, commonmark, document-ast-to-html, gfm-parser or gfm front. Existing c-cpp-graduation owns build-tool maturity/applicability, not text-stack classification or a reviewed text-stack exception. After that bounded lane decision, explicitly classify TE00/TE01/TE04 package scope, register separate dependency-shaped native delivery children for applicable portable contracts, or document any narrow reviewed exception with evidence. Do not automatically activate a new denominator or claim this documentary owner supplies an engine, native adoption, or promotion. Future prerequisites: typed immutable AST, independent HTML rendering, native CommonMark parser with652 regression cases, reviewed GFM/fence corpus and real BUILD/coverage/fixture-only routing."
+    },
+    {
+      "id": "csharp-document-ast-windows-build-repeatability",
+      "title": "Make the existing C# document AST Windows build execute on repeated runs",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-build-front",
+      "package_paths": [
+        "code/packages/csharp/document-ast"
+      ],
+      "notes": "Native validation of rendererPR18143 reproduced the existing document-ast BUILD_windows returning success with no output when .dotnet/.artifacts already exist, using a verified short PATH with dotnet9available. Its ungrouped if-not-exist setup captures the following command chain. Repair this existing package front separately and require real native tests/coverage on consecutive invocations. Four dependency tests passed directly; no repeat-front or measured dependency-coverage credit. New renderer BUILD_windows is repaired in18143; do not absorb unrelated package source here."
+    }
+  ],
+  "postmerge_refresh": {
+    "pr_number": 18118,
+    "revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
+    "receipt_count": 29,
+    "evidence": "code/specs/package-parity-audits/20261024-gfm-neutral-postmerge.json",
+    "native_qualification": false,
+    "successor_selected": true,
+    "external_successor_observed": 18143
+  },
+  "pending_inventory_deltas": [
+    {
+      "from_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+      "to_revision": "cc710ef23c7bb7c336043bb530f8aff4793f4440",
+      "new_roots": [
+        "code/packages/rust/x509-ocsp-response"
+      ],
+      "removed_roots": [],
+      "raw_roots_before": 5226,
+      "raw_roots_after": 5227,
+      "canonical_collisions": 0,
+      "registered_owner": "x509-ocsp-response-envelope-profile-classification",
+      "full_reporter_refresh_required_after_active_pr_merge": false,
+      "native_credit": false,
+      "incorporated_at_revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6"
     }
   ]
 }

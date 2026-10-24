@@ -23,7 +23,7 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, Expression, ProgramItem, Statement,
 };
 use coding_adventures_javascript_parser::{
-    parse_javascript_cst_division_only, parse_javascript_program, parse_javascript_typed,
+    parse_javascript_cst_bounded, parse_javascript_program, parse_javascript_typed,
 };
 use coding_adventures_javascript_tokens::EsVersion;
 use javascript_iir_compiler::{compile_ast, compile_source, run_source};
@@ -96,10 +96,7 @@ fn compiler_source_never_names_the_typed_ast_or_the_bridge() {
 fn compiler_source_imports_only_cst_entry_points_from_the_parser_crate() {
     // Every item the compiler names from the parser crate must be on this
     // list: the two public CST parses. The typed entries are absent.
-    let allowed = [
-        "parse_javascript_cst_division_only",
-        "parse_javascript_typed",
-    ];
+    let allowed = ["parse_javascript_cst_bounded", "parse_javascript_typed"];
     let prefix = "coding_adventures_javascript_parser::";
     let mut seen = 0;
     for line in code_lines() {
@@ -154,8 +151,8 @@ fn the_typed_ast_crate_is_a_dev_dependency_only() {
 // 2. compile_ast — the CST entry point
 // ============================================================
 
-fn division_only(source: &str) -> GrammarASTNode {
-    parse_javascript_cst_division_only(source, EsVersion::Es2020).unwrap()
+fn bounded(source: &str) -> GrammarASTNode {
+    parse_javascript_cst_bounded(source, EsVersion::Es2020).unwrap()
 }
 
 fn regex_aware(source: &str) -> GrammarASTNode {
@@ -173,20 +170,20 @@ fn compile_ast_agrees_with_compile_source_on_both_cst_parses() {
         "",
     ] {
         let expected = format!("{:?}", compile_source(source, "m").unwrap());
-        let module = compile_ast(&division_only(source), "m").unwrap();
-        assert_eq!(format!("{module:?}"), expected, "division-only: {source:?}");
-        // The regex-aware parse reads `/ … /` as a regex literal, so only
-        // slash-free sources mean the same thing under both goals.
-        if !source.contains('/') {
-            let module = compile_ast(&regex_aware(source), "m").unwrap();
-            assert_eq!(format!("{module:?}"), expected, "regex-aware: {source:?}");
-        }
+        let module = compile_ast(&bounded(source), "m").unwrap();
+        assert_eq!(format!("{module:?}"), expected, "bounded: {source:?}");
+        // Before LANG84 phase 6a the regex-aware parse read `8 / 2 / 2` as
+        // `8`, regex `/ 2 /`, `2`, so only slash-free sources meant the same
+        // thing under both. With the F10 mode table in es2020.tokens both
+        // parses lex division identically, slashes included.
+        let module = compile_ast(&regex_aware(source), "m").unwrap();
+        assert_eq!(format!("{module:?}"), expected, "regex-aware: {source:?}");
     }
 }
 
 #[test]
 fn compile_ast_rejects_a_non_program_root_in_the_old_wording() {
-    let cst = division_only("console.log(1);");
+    let cst = bounded("console.log(1);");
     let ASTNodeOrToken::Node(element) = &cst.children[0] else {
         panic!("expected a source_element node");
     };

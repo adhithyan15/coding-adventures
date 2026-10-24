@@ -42,6 +42,8 @@ export type {
   BuiltinKindName,
   KindName,
   KindDescriptor,
+  RegisteredKind,
+  KindRegistry,
 } from "./kinds.js";
 
 export {
