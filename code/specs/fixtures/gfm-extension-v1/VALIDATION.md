@@ -1,7 +1,7 @@
 # Portable GFM extension v1 validation
 
 This receipt covers the neutral fixture and validator on branch source
-`662d887135`. It does not grant native parser adoption credit or qualify a
+`4d338a318c`. It does not grant native parser adoption credit or qualify a
 missing language port.
 
 ## Passing checks
