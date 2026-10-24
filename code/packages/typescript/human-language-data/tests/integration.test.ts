@@ -334,7 +334,9 @@ describe("real curriculum", () => {
       // agent نے) and the full future, which A2 had said only in romanization;
       // 266-275 realize the five B1 spine nodes, with letter lessons for ؤ ع غ
       // ذ ث ڈ ص, the first Urdu reading and the six-line writing task.
-      ...Array.from({ length: 188 }, (_, i) => 88 + i)]);
+      // 275 -> 547: the B1 vocabulary, 1,360 headwords (370 verbs) in five
+      // tranches; Urdu attains B1.
+      ...Array.from({ length: 460 }, (_, i) => 88 + i)]);
     expect(
       books.books
         .find((book) => book.language === "russian")

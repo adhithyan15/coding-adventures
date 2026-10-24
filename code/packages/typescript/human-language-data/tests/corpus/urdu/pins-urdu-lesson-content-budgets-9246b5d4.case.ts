@@ -80,7 +80,9 @@ it("pins Urdu lesson-content budgets", () =>
     // 1353 -> 1413: the B1 core, chapters 264-275: 22 grammar, 17 word, 7
     // letter, 1 reading, 1 writing and 12 review lessons. No idiom, sense or
     // culture claim.
-    lessons: 1413,
+    // 1413 -> 2813: the B1 vocabulary, chapters 276-547: 1,360 word lessons (370
+    // verbs) and 40 reviews. No idiom, sense or culture claim.
+    lessons: 2813,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,
