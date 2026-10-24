@@ -103,7 +103,7 @@ it("adds a bounded Punjabi A2 vala direct-oblique prerequisite without mock cred
   expect(learnerCopy).not.toMatch(/seller|occupation|about to|the ones|infinitive/is);
   expect(learnerCopy).toMatch(/earring.*separate lexical homograph/is);
   expect(learnerCopy).toContain("https://pt.learnpunjabi.org/assets/");
-  expect(learnerCopy).toMatch(/Gill.*Gleason.*pp\. 71–72.*174–175/is);
+  expect(learnerCopy).toMatch(/Gill.*Gleason.*pp\. 71–72.*107/is);
   expect(learnerCopy).toMatch(/eighteenth prerequisite tranche|does not unblock.*mock 1/is);
   expect(learnerCopy).toMatch(/not.*A2 mock|not A2 readiness/is);
 

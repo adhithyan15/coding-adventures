@@ -33,7 +33,7 @@ homograph and supplies no grammatical feminine form here.
 The grammatical boundary follows Gill and Gleason's masculine adjective
 direct/oblique paradigm and their discussion of noun or conditional-infinitive
 plus **ਵਾਲਾ** as an adjective phrase in *A Reference Grammar of Punjabi*
-(1969), pp. 71–72 and 174–175:
+(1969), pp. 71–72 and 107:
 <https://pt.learnpunjabi.org/assets/A%20Reference%20Grammar_Final.pdf>.
 This source supports the bounded analysis, not a complete **ਵਾਲਾ** paradigm.
 

@@ -52,10 +52,10 @@ broader pattern.
 
 Gill and Gleason describe noun plus **ਵਾਲਾ** as an adjective phrase and show
 the masculine adjective direct–oblique pattern. This chapter follows only one
-room contrast. It is not a rule for every noun or postposition. Chapter 121's
-**ਵਾਲੀ**, “earring,” is a separate lexical homograph, not a grammatical form
+room contrast. It is not a rule for every noun or postposition. The earlier
+**ਵਾਲੀ**, “earring,” word lesson owns a separate lexical homograph, not a grammatical form
 licensed by that old word lesson. Source: Harjeet Singh Gill and Henry A.
-Gleason, Jr., *A Reference Grammar of Punjabi* (1969), pp. 71–72 and 174–175,
+Gleason, Jr., *A Reference Grammar of Punjabi* (1969), pp. 71–72 and 107,
 [adjective phrases](https://pt.learnpunjabi.org/assets/A%20Reference%20Grammar_Final.pdf).
 
 ## Guided Practice

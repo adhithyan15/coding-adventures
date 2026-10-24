@@ -4,7 +4,7 @@
   "chapter": 195,
   "title": "A Room with a Window",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6b61533c713c43c7",
+  "sourceHash": "fnv1a64:31081c25f89f1725",
   "lessons": [
     {
       "id": "PA-C195-window-room-return",
@@ -115,7 +115,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a6517a27f2fba8e",
+      "sourceHash": "fnv1a64:bb5c200c5d0fb2b2",
       "notice": null,
       "blocks": [
         {
@@ -157,7 +157,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Gill and Gleason describe noun plus ਵਾਲਾ as an adjective phrase and show the masculine adjective direct–oblique pattern. This chapter follows only one room contrast. It is not a rule for every noun or postposition. Chapter 121's ਵਾਲੀ, “earring,” is a separate lexical homograph, not a grammatical form licensed by that old word lesson. Source: Harjeet Singh Gill and Henry A. Gleason, Jr., A Reference Grammar of Punjabi (1969), pp. 71–72 and 174–175, adjective phrases."
+              "text": "Gill and Gleason describe noun plus ਵਾਲਾ as an adjective phrase and show the masculine adjective direct–oblique pattern. This chapter follows only one room contrast. It is not a rule for every noun or postposition. The earlier ਵਾਲੀ, “earring,” word lesson owns a separate lexical homograph, not a grammatical form licensed by that old word lesson. Source: Harjeet Singh Gill and Henry A. Gleason, Jr., A Reference Grammar of Punjabi (1969), pp. 71–72 and 107, adjective phrases."
             }
           ]
         },
@@ -324,7 +324,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b52f62cdcbd8dbcc",
+      "sourceHash": "fnv1a64:cabcceefec472c46",
       "notice": null,
       "blocks": [
         {
