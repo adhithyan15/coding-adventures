@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Who Governs",
+  "label": "ch:ur-who-governs",
+  "canDo": "I can say who holds power and who is to blame.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C341-thahrana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can say who holds power and who is to blame.",
+    "assesses": [
+      "UR-LEX-C341-HUKMRAN341-03",
+      "UR-LEX-C341-HUKMRAN341-04",
+      "UR-LEX-C341-HUKMRAN341-05"
+    ]
+  }
+}

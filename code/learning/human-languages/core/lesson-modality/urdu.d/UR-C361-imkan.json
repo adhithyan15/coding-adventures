@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C361-imkan",
+    "language": "urdu",
+    "chapter": 361,
+    "sequence": 21530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5152e48ad4263f3d"
+  },
+  "findings": []
+}

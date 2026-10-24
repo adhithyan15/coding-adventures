@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C342-ummidvar",
+    "language": "urdu",
+    "chapter": 342,
+    "sequence": 20590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43328426e7eb0f8f"
+  },
+  "findings": []
+}

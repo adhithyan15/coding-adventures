@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C508-bagharna",
+    "language": "urdu",
+    "chapter": 508,
+    "sequence": 29710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c4985c8c952dd64"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:6edc0f2327794f98",
+  "lessonIds": [
+    "UR-C509-chhachh",
+    "UR-C509-bilona",
+    "UR-C509-jamana",
+    "UR-C509-handi",
+    "UR-C509-chhalkana",
+    "UR-R509-review-502-509"
+  ],
+  "tex": "urdu/book/chapters/ch509-milk-and-curd.tex"
+}

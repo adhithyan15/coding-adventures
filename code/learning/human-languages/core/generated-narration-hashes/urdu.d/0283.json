@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:33540f3544ae0631",
+  "lessonIds": [
+    "UR-C283-giraftar-karna",
+    "UR-C283-adalat",
+    "UR-C283-muqaddama",
+    "UR-C283-saza",
+    "UR-C283-hathkari",
+    "UR-R283-review-276-283"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch283.txt",
+  "json": "urdu/narration/ch283.json",
+  "textHash": "fnv1a64:ff57bef55d9eb51c",
+  "jsonHash": "fnv1a64:26a4bd2348f4e179",
+  "findings": []
+}

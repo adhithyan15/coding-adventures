@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:06e250de2c5837d2",
+  "lessonIds": [
+    "UR-C407-kharab",
+    "UR-C407-tutna",
+    "UR-C407-shor",
+    "UR-C407-marammat",
+    "UR-C407-hatana"
+  ],
+  "tex": "urdu/book/chapters/ch407-repairs-and-complaints.tex"
+}

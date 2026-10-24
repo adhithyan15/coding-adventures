@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:a54588356d6e659c",
+  "lessonIds": [
+    "UR-C326-lanat",
+    "UR-C326-kosna",
+    "UR-C326-pachhtana",
+    "UR-C326-ruthna",
+    "UR-C326-azab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch326.txt",
+  "json": "urdu/narration/ch326.json",
+  "textHash": "fnv1a64:f9a0d40b33a0c8ce",
+  "jsonHash": "fnv1a64:725986072511c601",
+  "findings": []
+}

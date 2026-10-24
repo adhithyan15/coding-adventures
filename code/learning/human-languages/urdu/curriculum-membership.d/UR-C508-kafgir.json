@@ -1,0 +1,11 @@
+{
+  "id": "UR-C508-kafgir",
+  "pathSegment": "UR-PATH-508-DHAKKAN508",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-508-DHAKKAN508",
+      "order": 4
+    }
+  ]
+}

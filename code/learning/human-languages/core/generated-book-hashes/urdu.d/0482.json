@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:0fb072fb590241bc",
+  "lessonIds": [
+    "UR-C482-nahlana",
+    "UR-C482-mundna",
+    "UR-C482-shev",
+    "UR-C482-katvana",
+    "UR-C482-tarashna"
+  ],
+  "tex": "urdu/book/chapters/ch482-washing-and-grooming.tex"
+}

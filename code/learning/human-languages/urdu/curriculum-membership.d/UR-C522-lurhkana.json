@@ -1,0 +1,11 @@
+{
+  "id": "UR-C522-lurhkana",
+  "pathSegment": "UR-PATH-522-PHURTI522",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-522-PHURTI522",
+      "order": 2
+    }
+  ]
+}

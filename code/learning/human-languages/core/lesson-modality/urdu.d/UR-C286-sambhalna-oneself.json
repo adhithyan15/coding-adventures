@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C286-sambhalna-oneself",
+    "language": "urdu",
+    "chapter": 286,
+    "sequence": 17550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ec024d522b6ca10"
+  },
+  "findings": []
+}

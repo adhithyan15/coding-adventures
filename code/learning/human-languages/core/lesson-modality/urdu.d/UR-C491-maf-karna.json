@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C491-maf-karna",
+    "language": "urdu",
+    "chapter": 491,
+    "sequence": 28650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb3abc6f8b0c60ac"
+  },
+  "findings": []
+}

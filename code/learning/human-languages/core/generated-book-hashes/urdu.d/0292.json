@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:27d360233653ebc3",
+  "lessonIds": [
+    "UR-C292-andhera",
+    "UR-C292-garajna",
+    "UR-C292-chamakna",
+    "UR-C292-tabahi",
+    "UR-C292-asar"
+  ],
+  "tex": "urdu/book/chapters/ch292-the-storm.tex"
+}

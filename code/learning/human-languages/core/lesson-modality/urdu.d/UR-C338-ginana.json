@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C338-ginana",
+    "language": "urdu",
+    "chapter": 338,
+    "sequence": 20380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02074790f8f1533c"
+  },
+  "findings": []
+}

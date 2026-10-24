@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:9e2e0777ab7fb856",
+  "lessonIds": [
+    "UR-C381-kamyab",
+    "UR-C381-karnama",
+    "UR-C381-fakhr",
+    "UR-C381-kamal",
+    "UR-C381-shabash"
+  ],
+  "tex": "urdu/book/chapters/ch381-success.tex"
+}

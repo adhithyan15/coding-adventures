@@ -1,0 +1,21 @@
+{
+  "chapter": 283,
+  "title": "The Case in Court",
+  "label": "ch:ur-the-case-in-court",
+  "canDo": "I can tell how a case ended and say what happens if someone is guilty.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-R283-review-276-283",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can tell how a case ended and say what happens if someone is guilty.",
+    "assesses": [
+      "UR-LEX-C283-ADALAT283-01",
+      "UR-LEX-C283-ADALAT283-02",
+      "UR-LEX-C283-ADALAT283-03",
+      "UR-LEX-C283-ADALAT283-04",
+      "UR-LEX-C283-ADALAT283-05"
+    ]
+  }
+}

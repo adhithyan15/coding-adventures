@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:55a38824441caf25",
+  "lessonIds": [
+    "UR-C472-hazm-karna",
+    "UR-C472-hazma",
+    "UR-C472-badhazmi",
+    "UR-C472-ubkai",
+    "UR-C472-ghiza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch472.txt",
+  "json": "urdu/narration/ch472.json",
+  "textHash": "fnv1a64:1a7ebf4758cd1dde",
+  "jsonHash": "fnv1a64:c7d4bbe16590cb77",
+  "findings": []
+}

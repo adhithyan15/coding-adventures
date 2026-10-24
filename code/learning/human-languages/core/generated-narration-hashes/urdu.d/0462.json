@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:b2d9c8957b099a68",
+  "lessonIds": [
+    "UR-C462-aql",
+    "UR-C462-dana",
+    "UR-C462-nadan",
+    "UR-C462-masum",
+    "UR-C462-bahakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch462.txt",
+  "json": "urdu/narration/ch462.json",
+  "textHash": "fnv1a64:b294e4556ef2d3cf",
+  "jsonHash": "fnv1a64:a33a96fdca0aacf6",
+  "findings": []
+}

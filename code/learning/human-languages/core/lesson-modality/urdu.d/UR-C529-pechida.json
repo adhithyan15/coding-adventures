@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C529-pechida",
+    "language": "urdu",
+    "chapter": 529,
+    "sequence": 30820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdc0fcc31c9e80f5"
+  },
+  "findings": []
+}

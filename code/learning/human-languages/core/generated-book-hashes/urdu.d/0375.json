@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:4188a941b3b2bccc",
+  "lessonIds": [
+    "UR-C375-bahut",
+    "UR-C375-intihai",
+    "UR-C375-khub",
+    "UR-C375-zabardast",
+    "UR-C375-shadid"
+  ],
+  "tex": "urdu/book/chapters/ch375-very-extremely.tex"
+}

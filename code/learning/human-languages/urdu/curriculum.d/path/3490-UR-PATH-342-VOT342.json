@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-342-VOT342",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "UR-EXT-342-VOT342"
+  ],
+  "after": []
+}

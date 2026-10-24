@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:46ad01d5a619e73a",
+  "lessonIds": [
+    "UR-C322-roza",
+    "UR-C322-sahri",
+    "UR-C322-iftari",
+    "UR-C322-dua",
+    "UR-C322-khairat"
+  ],
+  "tex": "urdu/book/chapters/ch322-the-month-of-fasting.tex"
+}

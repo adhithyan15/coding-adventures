@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:c37eb3871d46f4b1",
+  "lessonIds": [
+    "UR-C460-diler",
+    "UR-C460-janbaz",
+    "UR-C460-jokham",
+    "UR-C460-larna",
+    "UR-C460-dilavar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch460.txt",
+  "json": "urdu/narration/ch460.json",
+  "textHash": "fnv1a64:2fd43f47633318c4",
+  "jsonHash": "fnv1a64:804525fb9e169f5c",
+  "findings": []
+}

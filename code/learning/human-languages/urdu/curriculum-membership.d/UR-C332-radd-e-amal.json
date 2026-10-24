@@ -1,0 +1,11 @@
+{
+  "id": "UR-C332-radd-e-amal",
+  "pathSegment": "UR-PATH-332-NUQSAN332",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-332-NUQSAN332",
+      "order": 2
+    }
+  ]
+}

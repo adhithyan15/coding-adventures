@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:7d1b4d5fc58d1b23",
+  "lessonIds": [
+    "UR-C419-munafa",
+    "UR-C419-khasara",
+    "UR-C419-sarmaya",
+    "UR-C419-asasa",
+    "UR-C419-sametna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch419.txt",
+  "json": "urdu/narration/ch419.json",
+  "textHash": "fnv1a64:a9912726e3615ebf",
+  "jsonHash": "fnv1a64:d26c34425f9319ba",
+  "findings": []
+}

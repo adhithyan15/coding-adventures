@@ -1,0 +1,11 @@
+{
+  "id": "UR-C293-dubna",
+  "pathSegment": "UR-PATH-293-SAILAB293",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-293-SAILAB293",
+      "order": 2
+    }
+  ]
+}

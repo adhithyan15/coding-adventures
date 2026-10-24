@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:2d85d4cb543e2345",
+  "lessonIds": [
+    "UR-C337-tasdiq-karna",
+    "UR-C337-taslim-karna",
+    "UR-C337-jhutlana",
+    "UR-C337-qabul-karna",
+    "UR-C337-ghalat-fahmi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch337.txt",
+  "json": "urdu/narration/ch337.json",
+  "textHash": "fnv1a64:6248bae42d7e1e46",
+  "jsonHash": "fnv1a64:279f0657567ca5a1",
+  "findings": []
+}

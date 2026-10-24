@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "What Follows From It",
+  "label": "ch:ur-what-follows-from-it",
+  "canDo": "I can say what an event led to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C332-phailna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can say what an event led to.",
+    "assesses": [
+      "UR-LEX-C332-NUQSAN332-03",
+      "UR-LEX-C332-NUQSAN332-04",
+      "UR-LEX-C332-NUQSAN332-05"
+    ]
+  }
+}

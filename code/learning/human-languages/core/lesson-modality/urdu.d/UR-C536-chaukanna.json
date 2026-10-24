@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C536-chaukanna",
+    "language": "urdu",
+    "chapter": 536,
+    "sequence": 31160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f07ff9d7a6a64eb1"
+  },
+  "findings": []
+}

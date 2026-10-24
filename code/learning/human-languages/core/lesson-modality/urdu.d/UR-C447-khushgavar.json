@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C447-khushgavar",
+    "language": "urdu",
+    "chapter": 447,
+    "sequence": 26390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71a470a513eb4990"
+  },
+  "findings": []
+}

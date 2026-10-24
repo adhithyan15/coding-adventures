@@ -1,0 +1,11 @@
+{
+  "id": "UR-C343-darkhast",
+  "pathSegment": "UR-PATH-343-MAHKAMA343",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-343-MAHKAMA343",
+      "order": 1
+    }
+  ]
+}

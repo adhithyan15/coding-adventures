@@ -1,0 +1,11 @@
+{
+  "id": "UR-C503-lipna",
+  "pathSegment": "UR-PATH-503-SILAN503",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-503-SILAN503",
+      "order": 4
+    }
+  ]
+}

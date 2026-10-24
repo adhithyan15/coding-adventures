@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C276-vardat",
+    "language": "urdu",
+    "chapter": 276,
+    "sequence": 17040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1aabaaac18b1a111"
+  },
+  "findings": []
+}

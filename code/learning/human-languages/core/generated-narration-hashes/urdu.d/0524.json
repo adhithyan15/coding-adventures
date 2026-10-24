@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:f4d6ea6b615a9a30",
+  "lessonIds": [
+    "UR-C524-fehrist",
+    "UR-C524-musavvada",
+    "UR-C524-chhapvana",
+    "UR-C524-tadbir",
+    "UR-C524-banvana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch524.txt",
+  "json": "urdu/narration/ch524.json",
+  "textHash": "fnv1a64:4f15ced16be2c879",
+  "jsonHash": "fnv1a64:1b08919ba3079200",
+  "findings": []
+}

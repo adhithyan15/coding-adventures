@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:dda3fcb87f690ac0",
+  "lessonIds": [
+    "UR-C483-hamila",
+    "UR-C483-janna",
+    "UR-C483-paida-hona",
+    "UR-C483-paidaish",
+    "UR-C483-naumaulud"
+  ],
+  "tex": "urdu/book/chapters/ch483-a-new-baby.tex"
+}

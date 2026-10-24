@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:24f289810d572f36",
+  "lessonIds": [
+    "UR-C520-pahalvan",
+    "UR-C520-mugdar",
+    "UR-C520-dao",
+    "UR-C520-bhirana",
+    "UR-C520-langot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch520.txt",
+  "json": "urdu/narration/ch520.json",
+  "textHash": "fnv1a64:e381eecf98e4046c",
+  "jsonHash": "fnv1a64:ed078e5bc23ce05a",
+  "findings": []
+}

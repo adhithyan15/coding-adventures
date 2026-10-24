@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Leaning on Others",
+  "label": "ch:ur-leaning-on-others",
+  "canDo": "I can say what will happen if someone leaves, stays or insists.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C374-israr-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can say what will happen if someone leaves, stays or insists.",
+    "assesses": [
+      "UR-LEX-C374-SAHARA374-03",
+      "UR-LEX-C374-SAHARA374-04",
+      "UR-LEX-C374-SAHARA374-05"
+    ]
+  }
+}

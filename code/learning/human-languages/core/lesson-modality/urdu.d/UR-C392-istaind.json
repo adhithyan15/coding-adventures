@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C392-istaind",
+    "language": "urdu",
+    "chapter": 392,
+    "sequence": 23300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65ebab75d56f5791"
+  },
+  "findings": []
+}

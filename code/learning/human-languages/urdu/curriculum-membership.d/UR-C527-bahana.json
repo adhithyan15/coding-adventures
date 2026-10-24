@@ -1,0 +1,11 @@
+{
+  "id": "UR-C527-bahana",
+  "pathSegment": "UR-PATH-527-MASRUF527",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-527-MASRUF527",
+      "order": 3
+    }
+  ]
+}

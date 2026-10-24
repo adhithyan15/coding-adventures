@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C302-charcha",
+    "language": "urdu",
+    "chapter": 302,
+    "sequence": 18340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0269acae37bc28d1"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Departures and Arrivals",
+  "label": "ch:ur-departures-and-arrivals",
+  "canDo": "I can say when a train leaves, when it arrives, and whether it is late or cancelled.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C390-utaarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can say when a train leaves, when it arrives, and whether it is late or cancelled.",
+    "assesses": [
+      "UR-LEX-C390-RAVANA390-03",
+      "UR-LEX-C390-RAVANA390-04",
+      "UR-LEX-C390-RAVANA390-05"
+    ]
+  }
+}

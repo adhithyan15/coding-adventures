@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:54e79c9cbcd03518",
+  "lessonIds": [
+    "UR-C538-tazabzub",
+    "UR-C538-mutaraddid",
+    "UR-C538-guman",
+    "UR-C538-dagmagana",
+    "UR-C538-atal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch538.txt",
+  "json": "urdu/narration/ch538.json",
+  "textHash": "fnv1a64:82e6df15b7a5ced0",
+  "jsonHash": "fnv1a64:dc035ca1d3604f4a",
+  "findings": []
+}

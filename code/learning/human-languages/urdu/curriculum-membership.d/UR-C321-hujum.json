@@ -1,0 +1,11 @@
+{
+  "id": "UR-C321-hujum",
+  "pathSegment": "UR-PATH-321-MELA321",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-321-MELA321",
+      "order": 2
+    }
+  ]
+}

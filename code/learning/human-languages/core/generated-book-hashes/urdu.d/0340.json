@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:b0725b9b45bb3bcd",
+  "lessonIds": [
+    "UR-C340-faisla",
+    "UR-C340-zamanat",
+    "UR-C340-mulzim",
+    "UR-C340-munsif",
+    "UR-C340-gavahi-dena"
+  ],
+  "tex": "urdu/book/chapters/ch340-in-court.tex"
+}

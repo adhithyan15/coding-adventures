@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:af3b4ad580876cfa",
+  "lessonIds": [
+    "UR-C445-khauf",
+    "UR-C445-darana",
+    "UR-C445-sahamna",
+    "UR-C445-dubakna",
+    "UR-C445-simatna"
+  ],
+  "tex": "urdu/book/chapters/ch445-fear.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:cfbac5070de298ae",
+  "lessonIds": [
+    "UR-C306-dhamaka",
+    "UR-C306-bam",
+    "UR-C306-gunjna",
+    "UR-C306-tharrana",
+    "UR-C306-sadma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch306.txt",
+  "json": "urdu/narration/ch306.json",
+  "textHash": "fnv1a64:5e8bf1922f765d23",
+  "jsonHash": "fnv1a64:78dd14467ff285cb",
+  "findings": []
+}

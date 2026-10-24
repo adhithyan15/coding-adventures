@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C454-adat",
+    "language": "urdu",
+    "chapter": 454,
+    "sequence": 26730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:174e0e077b4e593a"
+  },
+  "findings": []
+}

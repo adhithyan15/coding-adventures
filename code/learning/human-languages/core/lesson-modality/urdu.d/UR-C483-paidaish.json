@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C483-paidaish",
+    "language": "urdu",
+    "chapter": 483,
+    "sequence": 28230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b0da0337d719986"
+  },
+  "findings": []
+}

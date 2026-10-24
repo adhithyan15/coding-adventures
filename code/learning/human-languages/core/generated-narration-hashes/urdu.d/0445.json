@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:9eee1c21047a8eca",
+  "lessonIds": [
+    "UR-C445-khauf",
+    "UR-C445-darana",
+    "UR-C445-sahamna",
+    "UR-C445-dubakna",
+    "UR-C445-simatna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch445.txt",
+  "json": "urdu/narration/ch445.json",
+  "textHash": "fnv1a64:755dab42438893dd",
+  "jsonHash": "fnv1a64:efa6e091b61b528e",
+  "findings": []
+}

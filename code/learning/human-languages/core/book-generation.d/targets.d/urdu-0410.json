@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 410,
+  "output": "urdu/book/chapters/ch410-landmarks.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

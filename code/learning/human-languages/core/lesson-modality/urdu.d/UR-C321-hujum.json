@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C321-hujum",
+    "language": "urdu",
+    "chapter": 321,
+    "sequence": 19320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a31f8a69bc8c69f8"
+  },
+  "findings": []
+}

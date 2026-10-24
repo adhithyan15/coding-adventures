@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:8f01ece63b5e78bb",
+  "lessonIds": [
+    "UR-C525-mohlat",
+    "UR-C525-iltiva",
+    "UR-C525-muattal",
+    "UR-C525-barqarar",
+    "UR-C525-atkana",
+    "UR-R525-review-518-525"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch525.txt",
+  "json": "urdu/narration/ch525.json",
+  "textHash": "fnv1a64:dcc41603566bd20d",
+  "jsonHash": "fnv1a64:68becc637fa45c50",
+  "findings": []
+}

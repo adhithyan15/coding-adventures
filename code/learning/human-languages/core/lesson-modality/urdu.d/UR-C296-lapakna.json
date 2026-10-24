@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C296-lapakna",
+    "language": "urdu",
+    "chapter": 296,
+    "sequence": 18050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ce87e5e50d50044"
+  },
+  "findings": []
+}

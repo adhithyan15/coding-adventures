@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C440-ehsas",
+    "language": "urdu",
+    "chapter": 440,
+    "sequence": 26010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b23e8d5dab05edab"
+  },
+  "findings": []
+}

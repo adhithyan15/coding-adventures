@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:87f2dac8f73ab17b",
+  "lessonIds": [
+    "UR-C431-abr",
+    "UR-C431-ghirna",
+    "UR-C431-chhana",
+    "UR-C431-dhund",
+    "UR-C431-thamna-let-up"
+  ],
+  "tex": "urdu/book/chapters/ch431-clouds-gather-and-clear.tex"
+}

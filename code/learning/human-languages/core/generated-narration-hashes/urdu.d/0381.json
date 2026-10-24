@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:e1e486ca24826437",
+  "lessonIds": [
+    "UR-C381-kamyab",
+    "UR-C381-karnama",
+    "UR-C381-fakhr",
+    "UR-C381-kamal",
+    "UR-C381-shabash"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch381.txt",
+  "json": "urdu/narration/ch381.json",
+  "textHash": "fnv1a64:67166f879761ec5a",
+  "jsonHash": "fnv1a64:795f17600f825b8a",
+  "findings": []
+}

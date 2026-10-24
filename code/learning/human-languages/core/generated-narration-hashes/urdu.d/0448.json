@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:9ce8544efdc9d090",
+  "lessonIds": [
+    "UR-C448-bezar",
+    "UR-C448-dilchasp",
+    "UR-C448-tajassus",
+    "UR-C448-betab",
+    "UR-C448-tohna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch448.txt",
+  "json": "urdu/narration/ch448.json",
+  "textHash": "fnv1a64:60d63707a1ba064f",
+  "jsonHash": "fnv1a64:c8ae90e40cfeffd7",
+  "findings": []
+}

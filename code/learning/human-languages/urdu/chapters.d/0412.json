@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Towns and Villages",
+  "label": "ch:ur-towns-and-villages",
+  "canDo": "I can say where I live: a small town, the countryside, the people next door.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C412-paros",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can say where I live: a small town, the countryside, the people next door.",
+    "assesses": [
+      "UR-LEX-C412-QASBA412-03",
+      "UR-LEX-C412-QASBA412-04",
+      "UR-LEX-C412-QASBA412-05"
+    ]
+  }
+}

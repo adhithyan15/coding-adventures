@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Trouble in the Town",
+  "label": "ch:ur-trouble-in-the-town",
+  "canDo": "I can tell how trouble broke out and was brought under control.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C304-karfyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can tell how trouble broke out and was brought under control.",
+    "assesses": [
+      "UR-LEX-C304-FASAD304-03",
+      "UR-LEX-C304-FASAD304-04",
+      "UR-LEX-C304-FASAD304-05"
+    ]
+  }
+}

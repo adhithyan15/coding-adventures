@@ -1,0 +1,11 @@
+{
+  "id": "UR-C368-hal",
+  "pathSegment": "UR-PATH-368-HAL368",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-368-HAL368",
+      "order": 2
+    }
+  ]
+}

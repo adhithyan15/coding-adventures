@@ -1,0 +1,11 @@
+{
+  "id": "UR-C356-saliqa",
+  "pathSegment": "UR-PATH-356-ISLAH356",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-356-ISLAH356",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C537-mutabadil",
+    "language": "urdu",
+    "chapter": 537,
+    "sequence": 31200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50d944f36eba4658"
+  },
+  "findings": []
+}

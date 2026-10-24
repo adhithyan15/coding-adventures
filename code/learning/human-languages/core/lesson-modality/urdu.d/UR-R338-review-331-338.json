@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R338-review-331-338",
+    "language": "urdu",
+    "chapter": 338,
+    "sequence": 20400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f79988ecf12a09b7"
+  },
+  "findings": []
+}

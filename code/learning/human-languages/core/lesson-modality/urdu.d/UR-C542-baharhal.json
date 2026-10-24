@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C542-baharhal",
+    "language": "urdu",
+    "chapter": 542,
+    "sequence": 31460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56299c19d74c5d17"
+  },
+  "findings": []
+}

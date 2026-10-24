@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 445,
+  "output": "urdu/book/chapters/ch445-fear.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C502-qabza",
+  "pathSegment": "UR-PATH-502-ZANG502",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-502-ZANG502",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C467-chusna",
+    "language": "urdu",
+    "chapter": 467,
+    "sequence": 27410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:139ee9058b667f1a"
+  },
+  "findings": []
+}

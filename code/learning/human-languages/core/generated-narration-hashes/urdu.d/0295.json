@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:2633821132b74fa1",
+  "lessonIds": [
+    "UR-C295-phansna",
+    "UR-C295-pukarna",
+    "UR-C295-sannata",
+    "UR-C295-nikaalna",
+    "UR-C295-be-hal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch295.txt",
+  "json": "urdu/narration/ch295.json",
+  "textHash": "fnv1a64:e9555fb5f98b63cc",
+  "jsonHash": "fnv1a64:97cbc7fb314f811c",
+  "findings": []
+}

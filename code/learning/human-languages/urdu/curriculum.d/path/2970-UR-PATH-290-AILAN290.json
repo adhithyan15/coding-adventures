@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-290-AILAN290",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "UR-EXT-290-AILAN290"
+  ],
+  "after": []
+}

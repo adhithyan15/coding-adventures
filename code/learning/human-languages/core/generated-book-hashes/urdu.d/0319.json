@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:ca60f91eb64037ca",
+  "lessonIds": [
+    "UR-C319-basant",
+    "UR-C319-dor",
+    "UR-C319-charkhi",
+    "UR-C319-urana",
+    "UR-C319-katna-cut-loose"
+  ],
+  "tex": "urdu/book/chapters/ch319-kites-in-spring.tex"
+}

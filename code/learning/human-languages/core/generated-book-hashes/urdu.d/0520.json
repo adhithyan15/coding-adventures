@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:7416fd4a5b12314e",
+  "lessonIds": [
+    "UR-C520-pahalvan",
+    "UR-C520-mugdar",
+    "UR-C520-dao",
+    "UR-C520-bhirana",
+    "UR-C520-langot"
+  ],
+  "tex": "urdu/book/chapters/ch520-in-the-wrestling-pit.tex"
+}

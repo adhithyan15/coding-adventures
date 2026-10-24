@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Rights and Duties",
+  "label": "ch:ur-rights-and-duties",
+  "canDo": "I can talk about rights and duties.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C339-ada-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can talk about rights and duties.",
+    "assesses": [
+      "UR-LEX-C339-IKHTIYAR339-03",
+      "UR-LEX-C339-IKHTIYAR339-04",
+      "UR-LEX-C339-IKHTIYAR339-05"
+    ]
+  }
+}

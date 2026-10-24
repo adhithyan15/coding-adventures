@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:873cda258df11cdc",
+  "lessonIds": [
+    "UR-C536-mohtat",
+    "UR-C536-chaukanna",
+    "UR-C536-intibah",
+    "UR-C536-ar",
+    "UR-C536-emarjansi"
+  ],
+  "tex": "urdu/book/chapters/ch536-being-careful.tex"
+}

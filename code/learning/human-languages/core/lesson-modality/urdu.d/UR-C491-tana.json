@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C491-tana",
+    "language": "urdu",
+    "chapter": 491,
+    "sequence": 28630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c769cd0e7d8dcfea"
+  },
+  "findings": []
+}

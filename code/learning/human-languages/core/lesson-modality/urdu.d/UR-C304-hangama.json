@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C304-hangama",
+    "language": "urdu",
+    "chapter": 304,
+    "sequence": 18440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3a8413c4cd9a7f5"
+  },
+  "findings": []
+}

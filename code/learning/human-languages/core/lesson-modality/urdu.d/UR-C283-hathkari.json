@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C283-hathkari",
+    "language": "urdu",
+    "chapter": 283,
+    "sequence": 17390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eae6d75ef0077939"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C533-pansa",
+    "language": "urdu",
+    "chapter": 533,
+    "sequence": 31000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52706440c8135464"
+  },
+  "findings": []
+}

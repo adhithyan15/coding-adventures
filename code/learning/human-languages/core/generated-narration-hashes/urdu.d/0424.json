@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:a322248244542369",
+  "lessonIds": [
+    "UR-C424-mal",
+    "UR-C424-zakhira",
+    "UR-C424-bori",
+    "UR-C424-paikat",
+    "UR-C424-lapetna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch424.txt",
+  "json": "urdu/narration/ch424.json",
+  "textHash": "fnv1a64:adb1260324f4c773",
+  "jsonHash": "fnv1a64:fbdbcfae50c619cc",
+  "findings": []
+}

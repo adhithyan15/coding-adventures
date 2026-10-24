@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:e322a332255b822f",
+  "lessonIds": [
+    "UR-C300-rediyo",
+    "UR-C300-nashr-karna",
+    "UR-C300-surkhi",
+    "UR-C300-ittila",
+    "UR-C300-sansani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch300.txt",
+  "json": "urdu/narration/ch300.json",
+  "textHash": "fnv1a64:5cc2db5a4a5eb8b6",
+  "jsonHash": "fnv1a64:cbba91484f2cc4ae",
+  "findings": []
+}

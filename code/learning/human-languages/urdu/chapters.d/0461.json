@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Manners",
+  "label": "ch:ur-manners",
+  "canDo": "I can say whether someone is polite or rude.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C461-ehtiram-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can say whether someone is polite or rude.",
+    "assesses": [
+      "UR-LEX-C461-MANNERS461-03",
+      "UR-LEX-C461-MANNERS461-04",
+      "UR-LEX-C461-MANNERS461-05"
+    ]
+  }
+}

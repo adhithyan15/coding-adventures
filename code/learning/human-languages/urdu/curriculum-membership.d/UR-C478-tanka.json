@@ -1,0 +1,11 @@
+{
+  "id": "UR-C478-tanka",
+  "pathSegment": "UR-PATH-478-CUT478",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-478-CUT478",
+      "order": 2
+    }
+  ]
+}

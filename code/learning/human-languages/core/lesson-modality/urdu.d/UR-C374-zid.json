@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C374-zid",
+    "language": "urdu",
+    "chapter": 374,
+    "sequence": 22210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ebfa273a68ef7bf"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C350-ausat",
+  "pathSegment": "UR-PATH-350-AUSAT350",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-350-AUSAT350",
+      "order": 0
+    }
+  ]
+}
