@@ -595,6 +595,22 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 		changed["go/compiler-ir"] = true
 	}
+	// TE04's bounded fenced-node corpus is outside the reader package. Seed
+	// the actual TypeScript reader without statting the fixture so deletion
+	// and rename-old paths still exercise native tests and ordinary consumers.
+	if containsPath(changedFiles, "code/specs/gfm-fenced-block-v1/cases.json") && (language == "all" || language == "typescript") {
+		found := false
+		for _, pkg := range packages {
+			if pkg.Name == "typescript/gfm-parser" && pkg.Language == "typescript" {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return nil, fmt.Errorf("TE04 fenced fixture consumer %q is missing from discovered packages", "typescript/gfm-parser")
+		}
+		changed["typescript/gfm-parser"] = true
+	}
 	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
 	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)

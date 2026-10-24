@@ -174,3 +174,12 @@ const theme: DocumentLayoutTheme = {
   },
 };
 ```
+
+## TE04 fenced-block compatibility
+
+Renders `fenced_block` using the existing preformatted monospace code layout, including empty payloads. Language metadata has no layout or execution authority.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

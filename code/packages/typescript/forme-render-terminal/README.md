@@ -47,3 +47,12 @@ npm run test:coverage
 
 Coverage exceeds 85% for statements and branches and 90% for functions and
 lines.
+
+## TE04 fenced-block compatibility
+
+Accepts exact canonical fenced fields through existing bounded snapshots. Info/name must agree, nonempty payload must end with LF, and terminal text uses the existing escape/control filtering. Metadata is never executed or printed.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.
