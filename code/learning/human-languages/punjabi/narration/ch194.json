@@ -4,7 +4,7 @@
   "chapter": 194,
   "title": "He or She Is a Student",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d5ced470f5894391",
+  "sourceHash": "fnv1a64:a62f013ec1a91a6f",
   "lessons": [
     {
       "id": "PA-C194-identity-return",
@@ -116,7 +116,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:087c91c051f6edbe",
+      "sourceHash": "fnv1a64:627ea79cd4bb6317",
       "notice": null,
       "blocks": [
         {
@@ -153,6 +153,17 @@
         },
         {
           "index": 2,
+          "type": "cognates",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Wiktionary records the Punjabi noun as a borrowing from Sanskrit vidyārthī. The Punjabi University dictionary defines the Punjabi word as “student, pupil, learner.” Keep the source history separate from today's Punjabi pronunciation, vidiārthī, and learn the Punjabi form as one whole. Sources: Wiktionary: ਵਿਦਿਆਰਥੀ (vidiarthii); Punjabi University Punjabi-English Dictionary."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -186,7 +197,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

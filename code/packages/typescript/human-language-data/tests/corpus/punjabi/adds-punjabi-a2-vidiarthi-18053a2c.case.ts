@@ -80,7 +80,8 @@ it("adds a slow Punjabi A2 student-noun prerequisite without mock credit", () =>
   expect(learnerCopy).not.toContain("ਵਿਦਿਆਰਥੀਆਂ");
   expect(learnerCopy).toMatch(/gender-neutral|does not mark.*gender/is);
   expect(learnerCopy).toMatch(/vidiārthī/is);
-  expect(learnerCopy).not.toMatch(/vidyārthī/is);
+  expect(learnerCopy).toMatch(/source history separate.*Punjabi pronunciation.*vidiārthī/is);
+  expect(learnerCopy).not.toMatch(/YOU HEAR:\s*\*vidyārthī\*/is);
   expect(learnerCopy).toMatch(/seventeenth prerequisite tranche|does not unblock.*mock 1/is);
   expect(learnerCopy).toMatch(/not.*A2 mock|not A2 readiness/is);
 

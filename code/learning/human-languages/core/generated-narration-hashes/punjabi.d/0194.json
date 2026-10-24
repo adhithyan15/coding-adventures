@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 194,
-  "sourceHash": "fnv1a64:d5ced470f5894391",
+  "sourceHash": "fnv1a64:a62f013ec1a91a6f",
   "lessonIds": [
     "PA-C194-identity-return",
     "PA-C194-vidiarthi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "punjabi/narration/ch194.txt",
   "json": "punjabi/narration/ch194.json",
-  "textHash": "fnv1a64:b269d19bab0c73b6",
-  "jsonHash": "fnv1a64:c8a96a6c0de0427f",
+  "textHash": "fnv1a64:1a8e71ae59ddacf4",
+  "jsonHash": "fnv1a64:81d9f76c53fcb5d5",
   "findings": []
 }
