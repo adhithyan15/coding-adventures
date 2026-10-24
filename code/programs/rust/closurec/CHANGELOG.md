@@ -26,6 +26,25 @@ An empty body (`l:{}`) still keeps its braces, although upstream prints
 checks with `node` that those shapes, and 32 shapes deliberately left
 braced, parse, and it times the nested case. Six unit tests cover the rule.
 
+### Fixed - WHITESPACE_ONLY keeps the `;` body of `with(...)` and of a label (#17883)
+
+`function f(){with(a);}` printed as `function f(){with(a)}` and `{l2:;}` as
+`{l2:}`, and neither parses. The `;` before `}` is dropped by gap-030 Rule A
+unless it is a body slot, and only `if`/`while`/`for` headers marked one.
+
+- `with(...)` now marks a body slot like `while(...)`. Its body follows the
+  same rules as upstream: `with(o){}` → `with(o);`, `with(o){a()}` →
+  `with(o)a();`.
+- A label's `:` before `;` marks a body slot (`l:;`). `case 1:;` and
+  `default:;` still print as `case 1:` and `default:`, as upstream does.
+- A keyword used as a property name no longer marks the next `(` as a
+  control-flow head. `x={if:1};function g(){}` used to print as the
+  invalid `x={if:1};function g();`.
+
+`tests/regression_ws_empty_body_semi.rs` pins 26 shapes to the jar's bytes
+and checks with `node` that each output parses. Seven unit tests cover the
+rules.
+
 ### Fixed - a `function`/`class` declaration in a block no longer becomes an expression (#17877)
 
 `if(true){function g(){return 7}⏎console.log(g())}` compiled at SIMPLE and

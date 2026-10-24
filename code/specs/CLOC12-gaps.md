@@ -235,6 +235,33 @@ historical context with status `RESOLVED` and a link to the fix PR.
   - 10 inline tests pin every rule + edge case (function-expression doesn't get trailing `;`, if/while/for body slots preserved, dedup works, multi-stmt drops only last `;`, top-level `var` unchanged).
   - The pre-existing `tests/diff/whitespace-only/expected.stdout` was updated — its hand-written golden predicted `function add(a,b){return a+b;}` (closurec's old shape), but upstream Closure actually emits `function add(a,b){return a+b};`. Re-captured from upstream JAR to match the now-correct output.
 
+### #17883 — Rule A keeps a `with(...)` or label body `;` (exception to gap-030 rule A)
+
+- **The bug.** Rule A drops a `;` before `}` unless `body_position_next` says
+  it is a body slot. Only `if`/`while`/`for` armed that flag, so
+  `function f(){with(a);}` printed as `function f(){with(a)}` and `{l2:;}`
+  as `{l2:}`. Neither parses.
+- **Upstream rule (v20260915, probed on the jar).** `with` prints exactly
+  like `while`: `with(o);` keeps its `;`, `with(o){}` becomes `with(o);`,
+  and `with(o){a()}` becomes `with(o)a();`. A label keeps its `;` (`l:;`),
+  and a `case`/`default` clause drops it (`case 1:}`).
+- **Resolution (WHITESPACE_ONLY).** `with` arms the control-flow head like
+  `while`, so gap-031 and gap-032 apply to its body too. `is_label_body`
+  keeps a `;` that follows a label's `:`. A label is a word followed by `:`
+  where the token before the word is a statement boundary (start, `;`,
+  `{`, `}`, `)`, `:`, `else`, `do`). That excludes `case x:` and
+  `case a.b:`.
+- **Related fix.** `opens_control_flow_head` arms `if`/`while`/`for`/`with`
+  only when a `(` follows (or `await (` for `for`), the keyword is not
+  after `.`/`?.`, and it is not a string token. Before, a keyword used as a
+  property name (`{if:1}`) left the flag armed for the next `(`, which
+  could be a function's parameter list:
+  `x={if:1};function g(){}` printed as the invalid `x={if:1};function g();`.
+  `with` would have widened that bug, so it is fixed in the same change.
+- **Tests.** Seven unit tests, and
+  `closurec/tests/regression_ws_empty_body_semi.rs`, which pins 26 shapes
+  to the jar's bytes and checks with `node` that each output parses.
+
 ### CCR-084 (#15919) — a block-final `throw` keeps its `;` (exception to gap-030 rule A)
 
 - **Upstream rule.** At the audited commit `10ca677a`, `CodeGenerator` ends

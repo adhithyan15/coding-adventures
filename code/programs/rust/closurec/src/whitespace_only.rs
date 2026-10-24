@@ -3622,7 +3622,7 @@ pub fn whitespace_only_minify(
         // Rule A: drop `;` directly before `}`, UNLESS the
         // `;` is a body slot (body_position_next), or it ends a `throw`:
         // upstream forces that one (CCR-084, `function f(){throw 1;}`).
-        if val == ";" && !body_position_next && !throw_terminator[idx] {
+        if val == ";" && !body_position_next && !throw_terminator[idx] && !is_label_body(&kept, idx) {
             if let Some(next) = kept.get(idx + 1) {
                 if next.value == "}" {
                     // Skip this `;`. We are still at a stmt
@@ -4082,8 +4082,15 @@ pub fn whitespace_only_minify(
                 next_block_is_try_chain = true;
             }
             at_stmt_boundary = false;
-        } else if matches!(val, "if" | "while" | "for") {
-            // The next `(` is a control-flow head.
+        } else if matches!(val, "if" | "while" | "for" | "with")
+            && opens_control_flow_head(&kept, idx, prev_before_this_emit)
+        {
+            // The next `(` is a control-flow head. #17883 adds `with`:
+            // `with(o)` has a body slot exactly like `while(o)`, and upstream
+            // prints it the same way (`with(o){}` → `with(o);`,
+            // `with(o){a()}` → `with(o)a();`). Arming it protects the
+            // empty-statement body in `with(a);}`, which Rule A used to drop,
+            // leaving the invalid `with(a)}`.
             next_paren_is_control_flow_head = true;
             at_stmt_boundary = false;
         } else if val == "switch" {
@@ -6165,6 +6172,92 @@ fn is_plain_identifier(tok: &lexer::token::Token) -> bool {
         );
     }
     matches!(tok.type_, lexer::token::TokenType::Name)
+}
+
+/// #17883: does the keyword at `idx` (`if`/`while`/`for`/`with`) really
+/// open a control-flow head?
+///
+/// The flag it arms stays set until the next `(`. So a keyword that is only
+/// a property name used to arm the parameter list of the next function, and
+/// its body then went through the body-slot rules:
+///
+/// | Source                        | before               | now                    |
+/// |-------------------------------|----------------------|------------------------|
+/// | `x={if:1};function g(){}`     | `…function g();`     | `…function g(){};`     |
+/// | `x={while:1};function g(){a}` | `…function g()a;`    | `…function g(){a};`    |
+///
+/// A real head is the keyword followed by `(`, or `for await (`. A keyword
+/// after `.` or `?.` (`o.with(a)`) is a member name, and a string token
+/// (`{"if":1}`) is never a keyword.
+fn opens_control_flow_head(
+    kept: &[&lexer::token::Token],
+    idx: usize,
+    prev: Option<&lexer::token::Token>,
+) -> bool {
+    let tok = kept[idx];
+    if is_string_literal(tok) || prev.is_some_and(|p| matches!(p.value.as_str(), "." | "?.")) {
+        return false;
+    }
+    let paren_at = |k: usize| kept.get(k).is_some_and(|t| is_structural_punct(t, "("));
+    paren_at(idx + 1)
+        || (tok.value == "for"
+            && kept.get(idx + 1).is_some_and(|t| !is_string_literal(t) && t.value == "await")
+            && paren_at(idx + 2))
+}
+
+/// #17883: is the `;` at `idx` the empty-statement body of a label (`l:;`)?
+///
+/// Rule A drops a `;` before `}`, but a label must have a body, so `{l:;}`
+/// would become the invalid `{l:}`. A `case`/`default` clause takes no body,
+/// and upstream does drop the `;` there:
+///
+/// | Source                    | Upstream WHITESPACE_ONLY   |
+/// |---------------------------|----------------------------|
+/// | `{l2:;}`                  | `{l2:;};`                  |
+/// | `function f(){a:b:;}`     | `function f(){a:b:;};`     |
+/// | `switch(x){case 1:;}`     | `switch(x){case 1:};`      |
+/// | `switch(x){case a.b:;}`   | `switch(x){case a.b:};`    |
+/// | `switch(x){default:;}`    | `switch(x){default:};`     |
+///
+/// A `:` right before `;` ends either a label or a clause head. No other
+/// `:` can be followed by `;` in valid code: an object value and a ternary
+/// branch both need an expression there. The colon is a label's when the
+/// token before it is an identifier that starts a statement, which means
+/// the token before *that* is a statement boundary:
+///
+/// | before the word        | example         | label? |
+/// |------------------------|-----------------|--------|
+/// | nothing (start)        | `l:;`           | yes    |
+/// | `;` `{` `}`            | `{l:;}`         | yes    |
+/// | `)` `else` `do`        | `if(x)l:;`      | yes    |
+/// | `:` (stacked label)    | `a:b:;`         | yes    |
+/// | `case`                 | `case b:;`      | no     |
+/// | `.` or an operator     | `case a.b:;`    | no     |
+///
+/// A wrong "yes" only keeps a `;` that upstream drops, which is still
+/// valid. A wrong "no" is the bug, so the boundary set errs wide.
+fn is_label_body(kept: &[&lexer::token::Token], idx: usize) -> bool {
+    let Some(colon_at) = idx.checked_sub(1) else {
+        return false;
+    };
+    if !is_structural_punct(kept[colon_at], ":") {
+        return false;
+    }
+    let Some(word) = colon_at.checked_sub(1).map(|k| kept[k]) else {
+        return false;
+    };
+    if !is_word_like(word) || is_string_literal(word) || word.value == "default" {
+        return false;
+    }
+    match colon_at.checked_sub(2).map(|k| kept[k]) {
+        None => true,
+        Some(before) => {
+            [";", "{", "}", ")", ":"]
+                .iter()
+                .any(|p| is_structural_punct(before, p))
+                || (!is_string_literal(before) && matches!(before.value.as_str(), "else" | "do"))
+        }
+    }
 }
 
 /// What gap-067/CCR-087 needs to know about one `{ … }` block.
@@ -10769,6 +10862,70 @@ mod tests {
         assert_eq!(
             minify("var{a}=tag`hi`;"),
             "var {a}=tag`hi`;"
+        );
+    }
+
+    // ---- #17883: an empty-statement body keeps its `;` before `}` ---
+    // Every expectation is upstream v20260915's WHITESPACE_ONLY output.
+
+    #[test]
+    fn issue17883_with_keeps_its_empty_body() {
+        assert_eq!(minify("function f(){with(a);}"), "function f(){with(a);};");
+        assert_eq!(minify("function f(){l:{with(a);}}"), "function f(){l:with(a);};");
+        assert_eq!(minify("switch(x){case 1:with(a);}"), "switch(x){case 1:with(a);};");
+    }
+
+    #[test]
+    fn issue17883_with_body_follows_the_while_rules() {
+        // gap-031 and gap-032 now apply to `with`, as upstream does.
+        assert_eq!(minify("with(o){}"), "with(o);");
+        assert_eq!(minify("with(o){a()}"), "with(o)a();");
+        assert_eq!(minify("function f(){with(o){a()}}"), "function f(){with(o)a()};");
+    }
+
+    #[test]
+    fn issue17883_a_member_named_with_is_not_a_head() {
+        assert_eq!(minify("o.with(a);if(c){d;}"), "o.with(a);if(c)d;");
+    }
+
+    #[test]
+    fn issue17883_label_keeps_its_empty_body() {
+        assert_eq!(minify("{l2:;}"), "{l2:;};");
+        assert_eq!(minify("function f(){l:;}"), "function f(){l:;};");
+        assert_eq!(minify("function f(){a:b:;}"), "function f(){a:b:;};");
+        assert_eq!(minify("switch(x){case 1:l:;}"), "switch(x){case 1:l:;};");
+        assert_eq!(minify("function f(){if(a)l:;}"), "function f(){if(a)l:;};");
+    }
+
+    #[test]
+    fn issue17883_case_and_default_still_drop_the_semi() {
+        assert_eq!(minify("switch(x){case 1:;}"), "switch(x){case 1:};");
+        assert_eq!(minify("switch(x){case a.b:;}"), "switch(x){case a.b:};");
+        assert_eq!(minify("switch(x){case f():;}"), "switch(x){case f():};");
+        assert_eq!(minify("switch(x){default:;}"), "switch(x){default:};");
+    }
+
+    #[test]
+    fn issue17883_a_keyword_property_name_arms_nothing() {
+        // `{if:1}` used to arm the next `(`, here a function's parameter
+        // list, so its body was treated as a body slot.
+        assert_eq!(minify("x={if:1};function g(){}"), "x={if:1};function g(){};");
+        assert_eq!(minify("x={with:1};function g(){}"), "x={with:1};function g(){};");
+        assert_eq!(
+            minify("x={while:1};function g(){a;}"),
+            "x={while:1};function g(){a};"
+        );
+        assert_eq!(
+            minify("var o={with:1},p=function(){};"),
+            "var o={with:1},p=function(){};"
+        );
+    }
+
+    #[test]
+    fn issue17883_for_await_is_still_a_head() {
+        assert_eq!(
+            minify("async function f(){for await(x of y){}}"),
+            "async function f(){for await(x of y);};"
         );
     }
 }
