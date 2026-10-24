@@ -5,6 +5,8 @@
 - Derive reserved and accepted kernel kind names from `forme-types`' canonical
   `KINDS` roster, admitting the shipped `TerminalBuffer` kind and preventing
   future manifest/kernel inventory drift.
+- Keep validation membership on the immutable canonical roster so mutating the
+  exported reserved-name compatibility set cannot make unknown kinds fail open.
 
 ## 1.0.0 — 2026-10-05
 

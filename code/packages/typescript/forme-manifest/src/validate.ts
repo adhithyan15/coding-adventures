@@ -54,6 +54,15 @@ export const EXT_KIND_NAME_REGEX = /^ext:[a-z0-9][a-z0-9-]*$/;
 /** Kernel kind names that plugins are NOT allowed to redefine. */
 export const RESERVED_KIND_NAMES = Object.freeze(new Set<string>(KINDS));
 
+/**
+ * Admission consults the immutable canonical roster directly.  JavaScript's
+ * Object.freeze does not prevent callers from mutating a Set through add/delete,
+ * so the exported compatibility view above must never be an authority boundary.
+ */
+function isKernelKindName(kind: string): boolean {
+  return KINDS.some((kernelKind) => kernelKind === kind);
+}
+
 /** Hard ceiling for `[resources]` values.  Host MAY narrow these
  *  further in policy; these are absolute upper bounds. */
 export const RESOURCE_CEILINGS = Object.freeze({
@@ -350,7 +359,7 @@ function validateBareKindReference(
       add({ code: "STAGE_KIND_NAME_INVALID", path,
         message: `ext kind name "${kind}" must match ${EXT_KIND_NAME_REGEX}` });
     }
-  } else if (!RESERVED_KIND_NAMES.has(kind)) {
+  } else if (!isKernelKindName(kind)) {
     add({ code: "STAGE_KIND_NAME_INVALID", path,
       message: `unknown kind "${kind}"; must be a kernel kind or "ext:<name>"` });
   }
@@ -375,7 +384,7 @@ function validateKind(
     add({ code: "FIELD_TYPE_MISMATCH", path: `${path}.version`,
       message: `kind.version "${k.version}" must be MAJOR.MINOR` });
   }
-  if (k.subtypeOf && !RESERVED_KIND_NAMES.has(k.subtypeOf) && !k.subtypeOf.startsWith("ext:")) {
+  if (k.subtypeOf && !isKernelKindName(k.subtypeOf) && !k.subtypeOf.startsWith("ext:")) {
     add({ code: "STAGE_KIND_NAME_INVALID", path: `${path}.subtypeOf`,
       message: `subtypeOf "${k.subtypeOf}" must be a kernel kind or ext:<name>` });
   }
