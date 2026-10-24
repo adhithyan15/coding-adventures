@@ -40,26 +40,19 @@ let ast = parser.parse().expect("parse failed");
 
 ## Grammar rules
 
-`parse_javascript_program_division_only(source, EsVersion)` returns a typed AST
-using an explicit regex-free token goal for restricted numeric frontends. It
-retains the existing ASI and parser-depth protection and checks flat operator,
-member and call spines before constructing recursively dropped typed nodes.
-The conservative construction measure is limited to 512; ordinary list breadth
-does not consume spine depth. Callers still enforce
-source and AST budgets and reject unsupported constructs. General parser APIs
-retain their regex rules; full context-sensitive lexical goals remain open.
-This restricted numeric entry also rejects exponentiation operator tokens before
-ASI parsing, preventing recursive exponent-chain stack overflow. Quoted spelling
-and comment trivia do not trigger that operator check.
-
-`parse_javascript_cst_division_only(source, EsVersion)` runs exactly the same
-steps — the regex-free token goal, the exponentiation-token rejection, the ASI
-parse with its depth guard, and the 512 spine bound, with the same error
-texts — and stops there, returning the post-ASI `GrammarASTNode` instead of a
-typed AST. It is the input of `javascript-iir-compiler` (LANG84 decision 6:
-the IIR compiler walks the parse tree). `parse_javascript_program_division_only`
-is now that function followed by the typed bridge, so the two always agree on
-which sources parse.
+`parse_javascript_cst_bounded(source, EsVersion)` returns the post-ASI
+`GrammarASTNode` with the bounds `javascript-iir-compiler` relies on (LANG84
+decision 6: the IIR compiler walks the parse tree). It lexes with the ordinary
+moded lexer, so the edition's F10 table decides regex versus division; it
+rejects `**`/`**=` tokens before parsing (exponentiation's rule is
+right-recursive, so a hostile chain could exhaust the stack first; quoted
+spelling and comments do not trigger the check); it runs the ASI parse with
+its depth guard; and it bounds flat operator, member and call spines to 512
+(ordinary list breadth does not count). Callers still enforce source budgets
+and reject unsupported constructs. Since 0.65.0 it replaces
+`parse_javascript_cst_division_only` and
+`parse_javascript_program_division_only`, which lexed with `REGEX` deleted
+from the compiled grammar (LANG84 phase 6a).
 
 The JavaScript grammar covers:
 

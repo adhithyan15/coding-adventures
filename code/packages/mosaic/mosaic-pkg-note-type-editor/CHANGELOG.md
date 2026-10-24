@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
+
 ### Added — the card templates save on Ctrl/Cmd+Enter (UI25 §4)
 
 The front and back template text areas take `onCommit : emit: onSaveNoteType`:

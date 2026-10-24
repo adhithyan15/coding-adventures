@@ -11,6 +11,8 @@
   ASN.1 schemas such as RFC 5280 unique identifiers.
 - Added bounded schema-selected context-specific IMPLICIT constructed cursors
   for fields such as RFC 5280 NameConstraints subtree sets.
+- Added transactional exact embedded-document framing that derives depth from
+  its source container and retains the shared total-element budget.
 
 ## 0.1.0 — 2026-09-19
 

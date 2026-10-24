@@ -125,8 +125,9 @@ A frontend on the IIR path MUST NOT contain any of the following:
   other consumers (twigc tooling, closurec, LSP), but not on the IIR path.
 - **Runtime grammar mutation.** No editing of a compiled grammar before use,
   such as `grammar.definitions.retain(|r| r.name != "REGEX")` in
-  `tokenize_javascript_division_only`. A different lexical behaviour needs a
-  different grammar construct or a different release pair, never surgery.
+  `tokenize_javascript_division_only` (deleted in phase 6a). A different
+  lexical behaviour needs a different grammar construct or a different
+  release pair, never surgery.
 - **Structural post-parse hooks.** `GrammarParser::add_post_parse` and other
   tree-rewriting hooks MUST NOT be registered on the IIR path.
 - **Version comparisons in the compiler.** The IIR compiler MUST NOT parse,
@@ -1009,7 +1010,7 @@ noted.
 | MacroOct, MacroNib | GL + Oct/Nib GP | GP | CST | — | Base parse compliant; directive layer is a preprocessor | See [Preprocessor dialects](#preprocessor-dialects) |
 | McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
 | Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
-| JavaScript | GL with runtime `REGEX`/`BAD_REGEX` deletion | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_division_only`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). Still non-compliant under C2: the runtime `REGEX` deletion in the lexer and `asi.rs`, which is longer than a small hook, remain until 6a/6b replace them | Phase 6c CST rewrite done; 6a, 6b, 6d, 6e remain |
+| JavaScript | GL with the F10 regex/division table (es2015–es2025; es3/es5 pending) | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_bounded`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). The runtime `REGEX` deletion is gone since 6a (`javascript-lexer` 0.10.0). Still non-compliant under C2: `asi.rs`, which is longer than a small hook, remains until 6b replaces it | Phases 6c and 6a done; 6b, 6d, 6e remain (6d must first add the table to es3/es5) |
 | Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends, `--lang ruby@<release>` since 5b slice 1; release sweep and B for 3.3.5 and 3.3.7 in 5b slice 2. The hand-written lexer remains only for non-IIR consumers | R1–R7 (phase 3) |
 
 ### Ruby: port the lexer to `ruby<release>.tokens`
@@ -1275,6 +1276,57 @@ Divergences from this spec in 5b/7b slice 2:
    subset's `console.log(-0, 1 / 0, 0 / 0)` lexes correctly under the table,
    because `NUMBER` sets `div` mode. The existing division-chain, regex and
    hostile-spine probes are the gate.
+
+   **6a result (2026-10-24).** Landed for es2015–es2024, with three
+   divergences from the plan above:
+   - *es1, es3 and es5 have no table.* es1 has no `REGEX` rule, so its `/`
+     is always division and it needs none. es3 and es5 are deferred: their
+     `.tokens` are also embedded in the Swift and Haskell
+     `ecmascript-es{3,5}-lexer` packages, which cannot be regenerated without
+     those toolchains, so changing the source now would leave them silently
+     stale. 6d must add the table to es3/es5, regenerating those packages,
+     before it lets a release select them on the IIR path.
+   - *Per-edition tables.* Each table is es2025's, restricted to the token
+     names (including `-> ALIAS` targets such as `NUMBER` and `STRING`) and
+     keywords the edition defines, so es2015 has no `OPTIONAL_CHAIN` or
+     `STAR_STAR`. `template_div` copies the edition's own `group template`
+     patterns.
+   - *`BIGINT` is a value.* es2025's value list had `NUMBER` but not `BIGINT`,
+     so `10n / 2n` lexed `/ 2n…` as a regex attempt. It is added to es2025 and
+     every edition with bigints. test262 gains
+     `language/expressions/division/bigint-arithmetic.js` (sloppy and
+     strict): 69,209 pass, 0 regressions.
+
+   `tokenize_javascript_division_only` (`javascript-lexer` 0.10.0) and both
+   division-only parser entries (`javascript-parser` 0.65.0) are deleted.
+   The IIR path parses with the new `parse_javascript_cst_bounded`: the
+   ordinary moded lexer, the `**` rejection, ASI and the 512 spine bound.
+   Compiled grammars were regenerated with the repository tools: the Rust
+   lexer `_grammar.rs` (the parser's `_grammar.rs` is untouched, because no
+   `.grammar` changed) and the Ruby lane. The Perl, TypeScript and Lua
+   embedded copies were already out of date with their `.tokens` sources
+   before this phase, and no check pins them, so they were left alone.
+   Python, Go and Elixir read the `.tokens` at run time; their JavaScript
+   lexer and parser suites pass. (Elixir is not available in the authoring
+   container. Its lexer implements F10 and already loads es2025's table.)
+
+   Gate: `javascript-iir-compiler`'s old and new `compile_source` were diffed
+   over 18,775 inputs:
+   - the sources: 996 repository `.js` files, 11,651 Rust string literals
+     from the JavaScript, closure and lang-aot crates, and 6,128 generated
+     `/`-heavy edge cases;
+   - 18,039 matched exactly (2,673 compiled, 15,366 identical errors);
+   - no module differed, no input switched between compiling and failing,
+     and nothing panicked;
+   - the other 737 are rejected by both sides with different text. 52 are
+     the reworded spine and exponent messages. The rest contain a `/…/` that
+     used to split into three tokens, and now lexes as one `REGEX` that
+     fails later.
+
+   Other suites: `cst_walk.rs` (13), and every JavaScript lexer/parser
+   dependent in the Rust workspace (856 tests, 0 failed). closurec: 1,115
+   tests. `compile_ast` now agrees with `compile_source` on the regex-aware
+   `parse_javascript_typed` CST for sources with slashes, too.
 2. **6b.** E6: add `@asi`/`@no_newline_before` to the `es*.grammar` files, and
    stop using `asi.rs` on the IIR path.
 3. **6c.** Rewrite `javascript-iir-compiler` (636 lines) to walk the
@@ -1960,7 +2012,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | | 3.10 | Ruby R4, R6; delete the `ruby-lexer` state machine | ~1,500 lines |
 | 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b done:** default on the inventory release `5.38.0` (new pair grounded in tag `v5.38.0`); `IIRModule.release`; lang-aot release API; `cst_contract`; child-process hostile probes. **4c done:** `pl-int-print` corpus, `ReleaseProfile`s, release sweep (3 IIR-identity classes), `Prog.release`/`case`, I and B for all 118 checked releases. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
 | 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs. **5a done:** `rb_int_div` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer`; I(rb-int-puts) for 3.3.5–3.3.7, B for 3.3.6. **5b slice 1 done:** lang-aot release selection (`--lang ruby@<release>`, `IIRModule.release`). **5b slice 2 done:** release sweep (one IIR-identity class, representative 3.3.5), matrix rows on it, B for 3.3.5 and 3.3.7 | ~1,200 lines over 2 PRs |
-| 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0) | ~3,000 lines over 5 PRs |
+| 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0; 6a, the F10 table in es2015–es2024 replacing the `REGEX` deletion, done in `javascript-iir-compiler` 0.4.0) | ~3,000 lines over 5 PRs |
 | 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b slice 1 done:** lang-aot release selection (`--lang python@<release>`, `IIRModule.release`). **7b slice 2 done:** release sweep (two classes, representatives 3.0a1 and 3.12.3), matrix rows on them, B for all five. **7c:** Python 2 (print statement, classic `/`), more releases, and the float subset after LANG83 float formatting | ~2,000 lines over 3 PRs |
 | 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
