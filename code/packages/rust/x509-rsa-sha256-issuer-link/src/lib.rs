@@ -17,14 +17,14 @@
 //! construction-bound entry point also retains complete intermediate policy
 //! for the identical projected non-terminal issuer. It rejects the terminal
 //! adjacency before RSA work so terminal trust-anchor semantics cannot be
-//! represented as intermediate-policy evidence. Recognition is not semantic
-//! validation of other critical extensions, and an algorithm profile neither
-//! chooses nor enables this crate's fixed verifier. No result establishes path
-//! length, name constraints, revocation, trust anchors, complete path
-//! validation, TLS, HTTP, or network effects. A bounded follow-up can apply the
-//! existing path-length transition while retaining the selection-bound
-//! authenticated intermediate, but it still proves only one caller-ordered
-//! step.
+//! represented as intermediate-policy evidence. A bounded follow-up can apply
+//! the existing path-length transition while retaining either the selection-
+//! bound or construction-bound authenticated intermediate, but each result
+//! still proves only one caller-supplied state transition. Recognition is not
+//! semantic validation of other critical extensions, and an algorithm profile
+//! neither chooses nor enables this crate's fixed verifier. No result
+//! establishes a complete path-length traversal, name constraints, revocation,
+//! trust anchors, complete path validation, TLS, HTTP, or network effects.
 
 #![deny(unsafe_code)]
 
@@ -479,6 +479,67 @@ impl fmt::Debug
     }
 }
 
+/// Non-copyable evidence for one construction-bound intermediate path-length step.
+///
+/// The retained authenticated-intermediate proof binds complete policy to one
+/// exact non-terminal adjacency and keeps its construction order available.
+/// The retained state is the result of applying the existing path-length
+/// transition from that policy. The caller supplies the starting state; this
+/// result does not prove that it represents every earlier construction depth,
+/// authenticate another adjacency, or establish complete validation or trust.
+pub struct ValidatedX509RsaSha256ConstructedPathIntermediatePathLength<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    authenticated_intermediate: VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    path_length_state: X509CertificatePathLengthState,
+}
+
+impl<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    ValidatedX509RsaSha256ConstructedPathIntermediatePathLength<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the consumed construction-bound authenticated intermediate.
+    pub const fn authenticated_intermediate(
+        &self,
+    ) -> &VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.authenticated_intermediate
+    }
+
+    /// Return the advanced path-length state.
+    pub const fn path_length_state(&self) -> &X509CertificatePathLengthState {
+        &self.path_length_state
+    }
+}
+
+impl fmt::Debug
+    for ValidatedX509RsaSha256ConstructedPathIntermediatePathLength<'_, '_, '_, '_, '_>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedX509RsaSha256ConstructedPathIntermediatePathLength")
+    }
+}
+
 /// Non-copyable evidence that retains both an authenticated selected link and
 /// certificate-wide issuing-CA role-policy evidence for its exact issuer.
 ///
@@ -902,6 +963,51 @@ pub fn verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link<
         VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink {
             verified_link,
             intermediate_policy,
+        },
+    )
+}
+
+/// Advance path-length state from one construction-bound intermediate proof.
+///
+/// The transition derives role, self-issued classification, and any decoded
+/// `pathLenConstraint` only from the complete intermediate policy retained by
+/// `authenticated_intermediate`. Success consumes and retains the ordered proof
+/// with the advanced state, so this boundary cannot discard path order or apply
+/// detached policy. The caller-supplied starting state is not itself bound to a
+/// construction depth, and this function does not authenticate another link,
+/// establish trust, or validate a complete path.
+pub fn advance_constructed_x509_rsa_sha256_intermediate_path_length<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    path_length_state: X509CertificatePathLengthState,
+    authenticated_intermediate: VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> Result<
+    ValidatedX509RsaSha256ConstructedPathIntermediatePathLength<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509CertificatePathLengthError,
+> {
+    let path_length_state = path_length_state
+        .advance_validated_intermediate_ca(authenticated_intermediate.intermediate_policy())?;
+
+    Ok(
+        ValidatedX509RsaSha256ConstructedPathIntermediatePathLength {
+            authenticated_intermediate,
+            path_length_state,
         },
     )
 }
