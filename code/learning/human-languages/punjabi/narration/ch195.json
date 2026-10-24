@@ -1,0 +1,726 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 195,
+  "title": "A Room with a Window",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:31081c25f89f1725",
+  "lessons": [
+    {
+      "id": "PA-C195-window-room-return",
+      "sequence": 10600,
+      "title": "Return to window and room",
+      "headword": "ਖਿੜਕੀ · ਕਮਰਾ · ਕਮਰੇ ਵਿੱਚ",
+      "romanization": "khirkii; kamraa; kamre vich",
+      "gloss": "retrieve window, room, and in the room",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f925839a531d937",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "khirkii; kamraa; YOU SAY: ਖਿੜਕੀ; ਕਮਰਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *khirkii; kamraa*; YOU SAY: **ਖਿੜਕੀ; ਕਮਰਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the familiar room contrast small: ਕਮਰਾ on its own; ਕਮਰੇ ਵਿੱਚ for “in the room.” This opener adds no new form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "khirkii; YOU SAY: ਖਿੜਕੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *khirkii*; YOU SAY: **ਖਿੜਕੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kamraa; YOU SAY: ਕਮਰਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kamraa*; YOU SAY: **ਕਮਰਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kamre vich; YOU SAY: ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kamre vich*; YOU SAY: **ਕਮਰੇ ਵਿੱਚ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “window,” “room,” and “in the room.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C195-vala",
+      "sequence": 10610,
+      "title": "Add one bounded association to room",
+      "headword": "ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ",
+      "romanization": "khirkii vaalaa kamraa",
+      "gloss": "a room with a window",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb5c200c5d0fb2b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਖਿੜਕੀ, then ਕਮਰਾ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ (khirkii vaalaa kamraa) — khiṛkī vālā kamrā — a room with a window."
+            },
+            {
+              "kind": "speech",
+              "text": "Here noun ਖਿੜਕੀ plus ਵਾਲਾ forms an adjective phrase describing the masculine singular noun ਕਮਰਾ. Learn this one direct room phrase before any broader pattern."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: source and scope boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gill and Gleason describe noun plus ਵਾਲਾ as an adjective phrase and show the masculine adjective direct–oblique pattern. This chapter follows only one room contrast. It is not a rule for every noun or postposition. The earlier ਵਾਲੀ, “earring,” word lesson owns a separate lexical homograph, not a grammatical form licensed by that old word lesson. Source: Harjeet Singh Gill and Henry A. Gleason, Jr., A Reference Grammar of Punjabi (1969), pp. 71–72 and 107, adjective phrases."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "khirkii vaalaa kamraa; YOU SAY: ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *khirkii vaalaa kamraa*; YOU SAY: **ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ (khirkii vaalaa kamraa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਵਾਲਾ once, then rebuild the whole phrase",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਵਾਲਾ** once, then rebuild the whole phrase]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “a room with a window.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C195-vala-review",
+      "sequence": 10620,
+      "title": "Retrieve the direct room phrase",
+      "headword": "ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ",
+      "romanization": "khirkii vaalaa kamraa",
+      "gloss": "retrieve a room with a window",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8fae48a5aa23d779",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the new direct form ਵਾਲਾ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "khirkii vaalaa kamraa; YOU SAY: ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *khirkii vaalaa kamraa*; YOU SAY: **ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ (khirkii vaalaa kamraa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਵਾਲਾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਵਾਲਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the meaning and form together inside this one room phrase."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “a room with a window.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C195-vale",
+      "sequence": 10630,
+      "title": "Change the association inside one location frame",
+      "headword": "ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ",
+      "romanization": "khirkii vaale kamre vich",
+      "gloss": "in the room with a window",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cabcceefec472c46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ (khirkii vaalaa kamraa), then ਕਮਰੇ ਵਿੱਚ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ (khirkii vaalaa kamraa) — khiṛkī vālā kamrā — a room with a window."
+            },
+            {
+              "kind": "speech",
+              "text": "ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ (khirkii vaale kamre vich) — khiṛkī vāle kamre vicc — in the room with a window."
+            },
+            {
+              "kind": "speech",
+              "text": "In this second phrase, ਵਾਲੇ is masculine singular oblique. It agrees with masculine singular oblique ਕਮਰੇ before ਵਿੱਚ. Here ਵਾਲੇ is not a plural or honorific form. This chapter does not extend the pattern to every noun or postposition."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "khirkii vaale kamre vich; YOU SAY: ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *khirkii vaale kamre vich*; YOU SAY: **ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ (khirkii vaale kamre vich)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਵਾਲੇ once, then compare it with ਵਾਲਾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਵਾਲੇ** once, then compare it with **ਵਾਲਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “in the room with a window.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C195-vale-review",
+      "sequence": 10640,
+      "title": "Retrieve the location phrase",
+      "headword": "ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ",
+      "romanization": "khirkii vaale kamre vich",
+      "gloss": "retrieve in the room with a window",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9edb8e72c2a1ba5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the new form ਵਾਲੇ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "khirkii vaale kamre vich; YOU SAY: ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *khirkii vaale kamre vich*; YOU SAY: **ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ (khirkii vaale kamre vich)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਵਾਲੇ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਵਾਲੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ਵਾਲੇ beside ਕਮਰੇ ਵਿੱਚ in this bounded masculine singular oblique location frame."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the complete location phrase."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C195-direct-oblique-contrast",
+      "sequence": 10650,
+      "title": "Put the two room phrases side by side",
+      "headword": "ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ · ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ",
+      "romanization": "khirkii vaalaa kamraa; khirkii vaale kamre vich",
+      "gloss": "contrast a room with a window and in that room",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:58ce92aeba607a9b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਵਾਲਾ, then ਵਾਲੇ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Direct room phrase",
+                "Oblique location phrase"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "Direct room phrase: ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ (khirkii vaalaa kamraa). Oblique location phrase: ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ (khirkii vaale kamre vich)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read the direct phrase first. Then move to the one familiar location frame. The chapter claims only this contrast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "khirkii vaalaa kamraa; YOU SAY: ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *khirkii vaalaa kamraa*; YOU SAY: **ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "khirkii vaale kamre vich; YOU SAY: ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *khirkii vaale kamre vich*; YOU SAY: **ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the table and write both complete phrases",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the table and write both complete phrases]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the direct phrase, then the location phrase."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C195-payoff",
+      "sequence": 10660,
+      "title": "A bounded room-association payoff",
+      "headword": "ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ · ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ",
+      "romanization": "khirkii vaalaa kamraa; khirkii vaale kamre vich",
+      "gloss": "use one room association across direct and oblique frames",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05b25026fc762323",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the direct form, then the form in the location frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "khirkii vaalaa kamraa; khirkii vaale kamre vich; YOU SAY: ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ; ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *khirkii vaalaa kamraa; khirkii vaale kamre vich*; YOU SAY: **ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ; ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ (khirkii vaalaa kamraa), ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ (khirkii vaale kamre vich)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਖਿੜਕੀ ਵਾਲਾ ਕਮਰਾ · ਖਿੜਕੀ ਵਾਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write both phrases",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write both phrases]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce both complete room phrases."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the eighteenth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

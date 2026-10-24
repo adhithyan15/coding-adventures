@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:31081c25f89f1725",
+  "lessonIds": [
+    "PA-C195-window-room-return",
+    "PA-C195-vala",
+    "PA-C195-vala-review",
+    "PA-C195-vale",
+    "PA-C195-vale-review",
+    "PA-C195-direct-oblique-contrast",
+    "PA-C195-payoff"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch195.txt",
+  "json": "punjabi/narration/ch195.json",
+  "textHash": "fnv1a64:2e75c495e96ed74c",
+  "jsonHash": "fnv1a64:3c8b822c7c74b9c4",
+  "findings": []
+}

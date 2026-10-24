@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C195-direct-oblique-contrast",
+    "language": "punjabi",
+    "chapter": 195,
+    "sequence": 10650,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:58ce92aeba607a9b"
+  },
+  "findings": []
+}
