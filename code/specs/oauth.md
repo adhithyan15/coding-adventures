@@ -1149,6 +1149,22 @@ and caller-limit exhaustion continue to fail closed with redacted categories.
 This remains fixed-path DNS policy only: it does not implement other name
 forms, generalized path construction or validation, revocation, TLS, HTTP,
 OAuth transport, or network authority.
+A bounded `x509-revocation-policy` prerequisite now evaluates one explicit
+caller-supplied certificate-status observation at one explicit validated time.
+The status must be `good`; `revoked` and `unknown` fail closed. A successful
+observation must carry both `thisUpdate` and `nextUpdate`, those endpoints must
+form an ordered inclusive interval, and the caller's observation time must lie
+inside it. Missing observations, missing freshness endpoints, future
+`thisUpdate` values, and stale `nextUpdate` values fail with stable payload-free
+categories. The package reads no clock and accepts no tolerance or unbounded
+freshness mode. Its caller-owned observation is policy input only: the package
+does not parse or authenticate OCSP responses or CRLs, bind status to a
+certificate or constructed path, fetch revocation data, define responder or
+distribution-point authorization, implement nonce or cache policy, or grant
+path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
+therefore remains unavailable until authenticated revocation evidence is
+composed with the exact certificate/path boundary and the other remaining TLS
+work.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
