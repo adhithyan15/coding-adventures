@@ -49726,6 +49726,8 @@ language/expressions/division/S11.5.2_A4_T9.js#sloppy
 language/expressions/division/S11.5.2_A4_T9.js#strict
 language/expressions/division/bigint-and-number.js#sloppy
 language/expressions/division/bigint-and-number.js#strict
+language/expressions/division/bigint-arithmetic.js#sloppy
+language/expressions/division/bigint-arithmetic.js#strict
 language/expressions/division/bigint-complex-infinity.js#sloppy
 language/expressions/division/bigint-complex-infinity.js#strict
 language/expressions/division/bigint-errors.js#sloppy

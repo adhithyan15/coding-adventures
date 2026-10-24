@@ -15,6 +15,12 @@
     (sloppy and strict), a block followed by a regex. F12 phase 3 brings them
     back.
 
+- **2 more tests parse: `language/expressions/division/bigint-arithmetic.js`
+  (sloppy and strict).** LANG84 phase 6a adds `BIGINT` to es2025's
+  regex/division mode table as a value-producing token, so the `/` in
+  `1n / 2n` is division instead of the start of a regex. The full run at
+  7ab7faf: 102,955 results, 69,209 pass, 0 regressions.
+
 - **165 more tests parse: #17840's 38, plus block-level declarations and
   their redeclaration early errors (#17877).** Blocks and case clauses now
   hold function and class declarations, and javascript-parser enforces

@@ -8,9 +8,10 @@
 //!
 //! ```text
 //! source
-//!   │  coding_adventures_javascript_parser::parse_javascript_cst_division_only
-//!   │    GrammarLexer over es2020.tokens (REGEX off) → GrammarParser over
-//!   │    es2020.grammar, with the ASI retry loop and the flat-spine bound
+//!   │  coding_adventures_javascript_parser::parse_javascript_cst_bounded
+//!   │    GrammarLexer over es2020.tokens (its F10 mode table tells a regex
+//!   │    from a division) → GrammarParser over es2020.grammar, with the ASI
+//!   │    retry loop, the flat-spine bound and no exponent tokens
 //!   ▼
 //! GrammarASTNode  (the CST: one node per grammar rule that matched)
 //!   │  compile_ast — this crate
@@ -113,7 +114,7 @@
 //! `lexical_declaration`; and a rule this file does not know classifies as
 //! "unsupported", never as something it is not.
 
-use coding_adventures_javascript_parser::parse_javascript_cst_division_only;
+use coding_adventures_javascript_parser::parse_javascript_cst_bounded;
 #[cfg(test)]
 use coding_adventures_javascript_parser::parse_javascript_typed;
 use coding_adventures_javascript_tokens::EsVersion;
@@ -236,9 +237,11 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Stri
             "JavaScript source exceeds the {MAX_SOURCE_BYTES}-byte native pilot limit"
         ));
     }
-    // Regex literals are outside the native subset. Select the division goal
-    // before tokenization so two arithmetic slashes cannot become one regex.
-    let cst = parse_javascript_cst_division_only(source, SOURCE_EDITION)?;
+    // Regex literals are outside the native subset, but telling one from a
+    // division is the grammar's job, not ours: es2020.tokens carries the F10
+    // mode table (LANG84 phase 6a), so `8 / 2 / 2` lexes as two divisions and
+    // a real `/re/` becomes one REGEX leaf that `check_cst` rejects.
+    let cst = parse_javascript_cst_bounded(source, SOURCE_EDITION)?;
     compile_ast(&cst, module_name)
 }
 
@@ -246,7 +249,7 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Stri
 ///
 /// `ast` is the `GrammarASTNode` that the generic `GrammarParser` builds from
 /// an `es*.grammar` file — for instance from
-/// `coding_adventures_javascript_parser::parse_javascript_cst_division_only`
+/// `coding_adventures_javascript_parser::parse_javascript_cst_bounded`
 /// or `parse_javascript_typed`. Compilation runs three passes:
 ///
 /// 0. **Validation** ([`check_cst`]). Read every top-level item off the tree
@@ -1771,7 +1774,7 @@ mod tests {
     }
 
     #[test]
-    fn native_division_goal_rejects_regex_and_malformed_operands() {
+    fn native_subset_rejects_regex_and_malformed_operands() {
         for source in [
             "console.log(/1/);",
             "console.log(/1/ / 2);",
