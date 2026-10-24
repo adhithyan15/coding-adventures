@@ -5,6 +5,7 @@
  * corpus case automatically adds a native parse-and-render assertion.
  */
 import { readFileSync } from "node:fs";
+import { TextDecoder } from "node:util";
 import type { DocumentNode } from "@coding-adventures/document-ast";
 import { toHtml } from "@coding-adventures/document-ast-to-html";
 import { describe, expect, it } from "vitest";
@@ -27,9 +28,21 @@ const corpusUrl = new URL(
   "../../../../specs/fixtures/gfm-extension-v1/cases.json",
   import.meta.url,
 );
+const MAX_CORPUS_BYTES = 131_072;
+
+function parseCorpus(raw: Buffer): PortableCorpus {
+  if (raw.byteLength > MAX_CORPUS_BYTES) {
+    throw new Error("portable GFM corpus exceeds 131072 bytes");
+  }
+  if (raw.subarray(0, 3).equals(Buffer.from([0xef, 0xbb, 0xbf]))) {
+    throw new Error("portable GFM corpus must not start with a byte-order mark");
+  }
+  const text = new TextDecoder("utf-8", { fatal: true }).decode(raw);
+  return JSON.parse(text) as PortableCorpus;
+}
 
 function loadCorpus(): PortableCorpus {
-  return JSON.parse(readFileSync(corpusUrl, "utf8")) as PortableCorpus;
+  return parseCorpus(readFileSync(corpusUrl));
 }
 
 /** Exercise only the two public APIs named by the adoption contract. */
@@ -54,6 +67,16 @@ describe("TE04 portable GFM extension conformance", () => {
     expect(corpus.schema_version).toBe(1);
     expect(corpus.profile).toBe("gfm-extension-v1");
     expect(corpus.cases).toHaveLength(16);
+  });
+
+  it("bounds and strictly decodes the native fixture read", () => {
+    expect(() => parseCorpus(Buffer.alloc(MAX_CORPUS_BYTES + 1))).toThrow(
+      /exceeds 131072 bytes/,
+    );
+    expect(() => parseCorpus(Buffer.from([0xef, 0xbb, 0xbf, 0x7b, 0x7d]))).toThrow(
+      /byte-order mark/,
+    );
+    expect(() => parseCorpus(Buffer.from([0xff]))).toThrow();
   });
 
   for (const testCase of corpus.cases) {

@@ -9,7 +9,10 @@ The package test suite dynamically reads all sixteen cases from the shared
 corpus. Every source is parsed through the public `parse()` API, and the
 resulting complete Document AST and public `toHtml()` output are compared with
 the language-neutral oracle. The suite also proves that independent source,
-AST, and HTML corruption cannot pass unnoticed.
+AST, and HTML corruption cannot pass unnoticed. Its native reader caps the
+corpus at 131,072 bytes and rejects a byte-order mark or malformed UTF-8. The
+repository's always-run contract job separately applies the strict
+duplicate-key, depth, shape, resource, roster, and literal-digest validator.
 
 The fixture remains test-only: it is not bundled into the published parser and
 fenced payloads remain inert strings. An exact corpus change schedules this
