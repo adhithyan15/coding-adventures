@@ -279,6 +279,9 @@ whose composed reduction exceeds `2^53` remain conservative.
 Exact integral local real snapshots may supply the same leaves through built-in
 `entier`. Fractional, non-finite, oversized, dynamic, captured, array-backed,
 and by-name real values remain conservative.
+Built-in `sqrt` may normalize a nonnegative checked reduction when its value is
+an exact perfect square. Non-square, negative, dynamic, and user-overridden
+roots remain conservative.
 Positive variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
 exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and

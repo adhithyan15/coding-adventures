@@ -6566,6 +6566,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - exact square roots of integral tracked-real snapshots may
+    // participate in checked static integer reductions.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure rightvalue; rightvalue := 3.5; real factor, result; factor := 81.0; result := entier((entier(sqrt(factor)) div 3) * ((2 * sign(rightvalue())) + 2)); output(result) end",
+        expect: Expect::Stdout("12"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -25971,6 +25982,32 @@ fn algol_integral_tracked_real_reduction_runtime_real_output_runs_on_every_avail
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the integral tracked-real reduction program did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_exact_root_integer_reduction_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier((entier(sqrt(factor)) div 3) * ((2 * sign(rightvalue())) + 2))",
+                )
+        })
+        .expect("the exact-root integer reduction ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the exact-root integer reduction program did not run"
             );
             continue;
         };

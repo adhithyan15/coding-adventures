@@ -38,6 +38,9 @@ by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.
 Exact integral straight-line local real snapshots may enter those reductions
 through built-in `entier`; fractional, oversized, dynamic, captured, array-backed,
 and by-name real values fail closed.
+Exact perfect-square roots of those checked reductions may also pass through
+built-in `sqrt`; non-square, negative, dynamic, and overridden roots fail
+closed.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
