@@ -144,7 +144,7 @@ fn shifts_rotates_extensions_and_bit_search_execute() {
         imm(0x2e, 3, 1, 0x41),
         imm(0x2e, 4, 1, 0x81),
         imm(0x2e, 5, 1, 0xc1),
-        reg(6, 1, 0, 0x10c),
+        reg(6, 1, 0, 0x00c),
         reg(7, 1, 0, 0x00f),
         reg(8, 1, 0, 0x04f),
         HALT,
@@ -162,16 +162,16 @@ fn shifts_rotates_extensions_and_bit_search_execute() {
 #[test]
 fn signed_and_unsigned_compares_control_branches() {
     let mut simulator = loaded(&[
-        imm(0x2b, 1, 0, 1),
+        imm(0x2b, 1, 0, 0xffff),
         compare_imm(0x0c, 1, 0),
         (0x04 << 26) | 2,
         imm(0x2a, 2, 0, 1),
-        compare(0x02, 2, 1),
+        compare(0x04, 2, 1),
         (0x03 << 26) | 2,
         imm(0x2a, 3, 0, 7),
         HALT,
     ]);
-    let result = simulator.run(6).unwrap();
+    let result = simulator.run(7).unwrap();
     assert_eq!(result.final_state.gpr[2], 0);
     assert_eq!(result.final_state.gpr[3], 7);
     assert_ne!(result.traces[3].state_after.sr & SR_F, 0);
@@ -279,13 +279,14 @@ fn divide_faults_preserve_complete_state() {
 fn sprs_gprs_and_mac_registers_round_trip() {
     let mtspr_sr = (0x30 << 26) | (1 << 16) | (2 << 11) | 17;
     let mfspr_sr = imm(0x2d, 3, 1, 17);
-    let mtspr_maclo = (0x30 << 26) | (1 << 16) | (2 << 11) | 1 | (5 << 16);
+    let mtspr_maclo = (0x30 << 26) | (5 << 21) | (1 << 16) | (2 << 11) | 1;
     let mut simulator = loaded(&[mtspr_sr, mfspr_sr, mtspr_maclo, HALT]);
     simulator.write_register(1, 0).unwrap();
     simulator.write_register(2, SR_FO | SR_F | SR_CY).unwrap();
     let state = simulator.run(4).unwrap().final_state;
     assert_eq!(state.gpr[3] & (SR_FO | SR_F | SR_CY), SR_FO | SR_F | SR_CY);
     assert_eq!(state.sr & SR_FO, SR_FO);
+    assert_eq!(state.maclo, SR_FO | SR_F | SR_CY);
 }
 
 #[test]
@@ -415,5 +416,201 @@ fn every_error_has_stable_nonempty_display_text() {
     ];
     for error in errors {
         assert!(!error.to_string().is_empty());
+    }
+}
+
+#[test]
+fn every_register_alu_subfamily_decodes_and_executes() {
+    let families = [
+        (0x000, "l.add"),
+        (0x001, "l.addc"),
+        (0x002, "l.sub"),
+        (0x003, "l.and"),
+        (0x004, "l.or"),
+        (0x005, "l.xor"),
+        (0x008, "l.sll"),
+        (0x048, "l.srl"),
+        (0x088, "l.sra"),
+        (0x0c8, "l.ror"),
+        (0x00e, "l.cmov"),
+        (0x00f, "l.ff1"),
+        (0x04f, "l.fl1"),
+        (0x00c, "l.exths"),
+        (0x00d, "l.extws"),
+        (0x04c, "l.extbs"),
+        (0x04d, "l.extwz"),
+        (0x08c, "l.exthz"),
+        (0x0cc, "l.extbz"),
+        (0x306, "l.mul"),
+        (0x307, "l.muld"),
+        (0x309, "l.div"),
+        (0x30a, "l.divu"),
+        (0x30b, "l.mulu"),
+        (0x30c, "l.muldu"),
+    ];
+    for (function, mnemonic) in families {
+        let mut simulator = loaded(&[reg(3, 1, 2, function), HALT]);
+        simulator.write_register(1, 0x8001_8001).unwrap();
+        simulator.write_register(2, 3).unwrap();
+        let trace = simulator.step().unwrap();
+        assert_eq!(trace.mnemonic, mnemonic, "function {function:#05x}");
+    }
+
+    let mut simulator = loaded(&[reg(3, 1, 2, 0x309), HALT]);
+    simulator.write_register(1, i32::MIN as u32).unwrap();
+    simulator.write_register(2, u32::MAX).unwrap();
+    assert_eq!(
+        simulator.step(),
+        Err(OpenRisc1000Error::SignedDivisionOverflow)
+    );
+}
+
+#[test]
+fn every_compare_subfamily_decodes_and_sets_flag() {
+    let immediate_families = [
+        (0x00, "l.sfeqi"),
+        (0x01, "l.sfnei"),
+        (0x02, "l.sfgtui"),
+        (0x03, "l.sfgeui"),
+        (0x04, "l.sfltui"),
+        (0x05, "l.sfleui"),
+        (0x0a, "l.sfgtsi"),
+        (0x0b, "l.sfgesi"),
+        (0x0c, "l.sfltsi"),
+        (0x0d, "l.sflesi"),
+    ];
+    for (condition, mnemonic) in immediate_families {
+        let mut simulator = loaded(&[compare_imm(condition, 1, 3), HALT]);
+        simulator.write_register(1, 4).unwrap();
+        assert_eq!(simulator.step().unwrap().mnemonic, mnemonic);
+    }
+
+    let register_families = [
+        (0x00, "l.sfeq"),
+        (0x01, "l.sfne"),
+        (0x02, "l.sfgtu"),
+        (0x03, "l.sfgeu"),
+        (0x04, "l.sfltu"),
+        (0x05, "l.sfleu"),
+        (0x0a, "l.sfgts"),
+        (0x0b, "l.sfges"),
+        (0x0c, "l.sflts"),
+        (0x0d, "l.sfles"),
+    ];
+    for (condition, mnemonic) in register_families {
+        let mut simulator = loaded(&[compare(condition, 1, 2), HALT]);
+        simulator.write_register(1, 4).unwrap();
+        simulator.write_register(2, 3).unwrap();
+        assert_eq!(simulator.step().unwrap().mnemonic, mnemonic);
+    }
+}
+
+#[test]
+fn synchronization_mac_and_trap_subfamilies_execute() {
+    for (word, mnemonic) in [
+        (0x2200_0000, "l.msync"),
+        (0x2280_0000, "l.psync"),
+        (0x2300_0000, "l.csync"),
+    ] {
+        let mut simulator = loaded(&[word, HALT]);
+        assert_eq!(simulator.step().unwrap().mnemonic, mnemonic);
+    }
+
+    for (function, mnemonic) in [(1, "l.mac"), (2, "l.msb"), (3, "l.macu"), (4, "l.msbu")] {
+        let word = (0x31 << 26) | (1 << 16) | (2 << 11) | function;
+        let mut simulator = loaded(&[word, HALT]);
+        simulator.write_register(1, 7).unwrap();
+        simulator.write_register(2, 3).unwrap();
+        assert_eq!(simulator.step().unwrap().mnemonic, mnemonic);
+    }
+
+    let mut simulator = loaded(&[(0x08 << 26) | (1 << 24) | 9, HALT]);
+    assert_eq!(simulator.step().unwrap().mnemonic, "l.trap");
+    assert_eq!(simulator.get_state().pc, 0x0e00);
+}
+
+#[test]
+fn special_register_fixed_and_mapped_surfaces_are_visible() {
+    let readable = [
+        0_u16, 1, 2, 3, 9, 10, 16, 17, 18, 32, 48, 64, 128, 129, 1024, 1055, 0x2801, 0x2802,
+    ];
+    for address in readable {
+        let mut simulator = loaded(&[imm(0x2d, 2, 1, address), HALT]);
+        simulator.write_register(1, 0).unwrap();
+        assert_eq!(simulator.step().unwrap().mnemonic, "l.mfspr");
+    }
+
+    let mut simulator = loaded(&[imm(0x2d, 2, 1, 0x222), HALT]);
+    assert!(matches!(
+        simulator.step(),
+        Err(OpenRisc1000Error::InvalidSprRead { address: 0x222 })
+    ));
+    let read_only_write = (0x30 << 26) | (1 << 16) | (2 << 11);
+    let mut simulator = loaded(&[read_only_write, HALT]);
+    assert!(matches!(
+        simulator.step(),
+        Err(OpenRisc1000Error::InvalidSprWrite { address: 0 })
+    ));
+}
+
+#[test]
+fn public_validation_and_reset_cover_all_boundaries() {
+    let mut simulator = loaded(&[HALT]);
+    assert!(matches!(
+        simulator.load(&words(&[NOP]), 0x1_0000),
+        Err(OpenRisc1000Error::ProgramOutOfRange { .. })
+    ));
+    assert!(matches!(
+        simulator.read_memory(0x1_0000, 1),
+        Err(OpenRisc1000Error::DataOutOfRange { .. })
+    ));
+    assert_eq!(
+        simulator.read_register(32),
+        Err(OpenRisc1000Error::InvalidRegister { register: 32 })
+    );
+    assert_eq!(
+        simulator.write_register(32, 1),
+        Err(OpenRisc1000Error::InvalidRegister { register: 32 })
+    );
+
+    let mut state = simulator.get_state();
+    state.pc = 3;
+    assert!(matches!(
+        simulator.restore(state),
+        Err(OpenRisc1000Error::InvalidState { .. })
+    ));
+    simulator.reset();
+    assert_eq!(simulator.get_state(), OpenRisc1000State::default());
+}
+
+#[test]
+fn unsupported_and_malformed_subfamilies_are_typed() {
+    for word in [
+        0x0a_u32 << 26,
+        0x1a_u32 << 26,
+        0x20_u32 << 26,
+        0x32_u32 << 26,
+        0x1c_u32 << 26,
+        0x3f_u32 << 26,
+    ] {
+        let mut simulator = loaded(&[word, HALT]);
+        assert!(matches!(
+            simulator.step(),
+            Err(OpenRisc1000Error::UnsupportedInstruction { .. })
+        ));
+    }
+
+    for word in [
+        (0x2e_u32 << 26) | 0x100,
+        (0x2f_u32 << 26) | (6 << 21),
+        (0x31_u32 << 26) | 5,
+        (0x38_u32 << 26) | 0x3ff,
+        (0x39_u32 << 26) | (6 << 21),
+    ] {
+        let mut simulator = loaded(&[word, HALT]);
+        assert!(matches!(
+            simulator.step(),
+            Err(OpenRisc1000Error::UnknownInstruction { .. })
+        ));
     }
 }
