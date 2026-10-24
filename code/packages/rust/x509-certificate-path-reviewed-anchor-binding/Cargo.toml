@@ -1,0 +1,15 @@
+[package]
+name = "x509-certificate-path-reviewed-anchor-binding"
+version = "0.1.0"
+edition = "2021"
+description = "Exact reviewed-root terminal binding for constructed X.509 certificate paths"
+license = "MIT"
+
+[dependencies]
+x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }
+x509-webpki-root-anchor-selection = { path = "../x509-webpki-root-anchor-selection" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }
+x509-webpki-roots-snapshot = { path = "../x509-webpki-roots-snapshot" }

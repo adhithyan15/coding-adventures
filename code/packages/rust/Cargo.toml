@@ -1294,5 +1294,6 @@ members = [
   "x509-intermediate-certificate-policy",
   "x509-certificate-issuer-candidate-selection",
   "x509-certificate-path-construction",
+  "x509-certificate-path-reviewed-anchor-binding",
   "x509-certificate-path-length-policy",
 ]
