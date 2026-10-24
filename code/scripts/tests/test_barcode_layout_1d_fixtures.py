@@ -160,6 +160,76 @@ def _target_package_path(entry: dict[str, Any], field: str) -> Path:
     return native_path
 
 
+# Dependency lockfiles a package may refresh after its lane was verified.
+#
+# `package_tree` binds a lane's evidence to the exact git tree that was tested
+# at `verified_revision`, so the implementation, tests, manifests, and
+# capability files cannot drift without re-verification. A lockfile is
+# different: security tooling (Dependabot, or a repo-wide advisory sweep)
+# rewrites it across hundreds of packages at once, and the lane's own CI still
+# re-runs the conformance suite against the new lock on that same PR. Pinning
+# the lock too would make every such sweep fail this test with no way to pass
+# in one PR — the new tree only exists on main after the squash merge, and
+# evidence pinned to a PR-head commit breaks main (see lessons.d
+# "evidence-pinned-to-a-pr-s-head-commit-breaks-main-once-the").
+#
+#   changed since verified_revision        verdict
+#   ------------------------------------   -----------------------------------
+#   nothing                                tree matches package_tree exactly
+#   only files named below                 accepted: dependency refresh
+#   anything else (src, tests, manifests)  rejected: re-verify, repoint the pin
+#
+# The manifests that *declare* dependency ranges (package.json, Cargo.toml,
+# ...) are deliberately absent: a range change is a reviewed design change.
+DEPENDENCY_LOCK_FILES = frozenset(
+    {
+        "package-lock.json",
+        "npm-shrinkwrap.json",
+        "yarn.lock",
+        "pnpm-lock.yaml",
+        "Cargo.lock",
+        "Gemfile.lock",
+        "go.sum",
+        "mix.lock",
+        "uv.lock",
+        "poetry.lock",
+        "Package.resolved",
+        "pubspec.lock",
+        "packages.lock.json",
+        "gradle.lockfile",
+    }
+)
+
+
+def _paths_changed_since(revision: str, package_root: str) -> list[str]:
+    """Paths under package_root whose content differs between revision and HEAD."""
+
+    return subprocess.run(
+        [
+            "git",
+            "diff",
+            "--name-only",
+            "--no-renames",
+            revision,
+            "HEAD",
+            "--",
+            package_root,
+        ],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.split()
+
+
+def _non_lockfile_changes(paths: list[str]) -> list[str]:
+    """The changed paths that are not dependency lockfiles (empty = lock-only)."""
+
+    return [
+        path for path in paths if PurePosixPath(path).name not in DEPENDENCY_LOCK_FILES
+    ]
+
+
 class BarcodeLayoutFixtureTests(unittest.TestCase):
     document: ClassVar[dict[str, Any]]
     by_id: ClassVar[dict[str, dict[str, Any]]]
@@ -452,7 +522,20 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
                 text=True,
             ).stdout.strip()
             self.assertEqual(entry["package_tree"], verified_package_tree)
-            self.assertEqual(entry["package_tree"], current_package_tree)
+            if current_package_tree != entry["package_tree"]:
+                # Only a dependency-lockfile refresh may move the tree; see
+                # DEPENDENCY_LOCK_FILES for why and for what is excluded.
+                drift = _paths_changed_since(
+                    entry["verified_revision"], entry["package_root"]
+                )
+                self.assertTrue(drift, entry["language"])
+                self.assertEqual(
+                    _non_lockfile_changes(drift),
+                    [],
+                    f"{entry['language']} lane changed after verified_revision "
+                    "outside dependency lockfiles; re-verify the lane and repoint "
+                    "verified_revision/package_tree at the durable merge commit",
+                )
             for relative_path in (
                 entry["conformance_test_path"],
                 entry["capability_manifest"],
@@ -542,6 +625,29 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(FixtureLoadError, "target-path-outside-package"):
             _target_package_path(pending_traversal, "native_test_path")
+
+    def test_post_verification_drift_admits_only_dependency_lockfiles(self) -> None:
+        root = "code/packages/typescript/barcode-layout-1d"
+        self.assertEqual(_non_lockfile_changes([]), [])
+        self.assertEqual(
+            _non_lockfile_changes(
+                [f"{root}/package-lock.json", "code/packages/rust/x/Cargo.lock"]
+            ),
+            [],
+        )
+        for path in (
+            f"{root}/package.json",
+            f"{root}/src/index.ts",
+            f"{root}/tests/conformance.test.ts",
+            f"{root}/required_capabilities.json",
+            f"{root}/package-lock.json.orig",
+            f"{root}/not-a-package-lock.json",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(
+                    _non_lockfile_changes([f"{root}/package-lock.json", path]),
+                    [path],
+                )
 
     def test_generator_is_byte_for_byte_clean(self) -> None:
         namespace = runpy.run_path(str(FIXTURE_ROOT / "generate_cases.py"))

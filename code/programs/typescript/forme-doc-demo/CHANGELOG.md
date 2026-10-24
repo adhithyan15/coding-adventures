@@ -4,6 +4,11 @@
 
 ### Fixed
 
+- Give the suite's `beforeAll` hooks a stated 60 s budget
+  (`hookTimeout` in `vitest.config.ts`). The `writeBundle` and JSDOM search
+  hooks build the whole demo site, and the JSDOM hook also bundles the search
+  client. On a loaded `macos-latest` runner (#17972) both overran vitest's 10 s
+  default and their suites failed unrun. They take ~5 s together when idle.
 - Resolve the `safeJoin` base before containment comparisons so relative or
   POSIX-style base spellings map to the same drive-qualified root on Windows.
   The portable regression test now exercises a relative base explicitly.

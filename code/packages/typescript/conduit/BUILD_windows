@@ -1,0 +1,10 @@
+# Windows: TypeScript native Node.js addons require node.lib to link against.
+# conduit_native_node declares the N-API symbols (napi_wrap, napi_unwrap, ...)
+# through node-bridge's extern "C" block and expects the host node process to
+# supply them at load time. ELF (Linux) allows that by default and macOS gets
+# `-undefined dynamic_lookup` from build.rs, but the Windows linker must resolve
+# every import at link time, so without node.lib the cdylib fails to link
+# (`rust-lld: error: undefined symbol: napi_wrap`). Providing node.lib on
+# Windows CI is not configured; this package is covered by the Linux and macOS
+# runners, matching typescript/irc-server-native.
+echo Skipping typescript/conduit on Windows — Node.js import library not configured for CI

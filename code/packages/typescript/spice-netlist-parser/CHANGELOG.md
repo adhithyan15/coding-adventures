@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Fix the CLI on Windows: `dist/cli.js` decided whether it was the entry point
+  by comparing `import.meta.url` with a hand-built `file://${argv[1]}` string,
+  which never matches a Windows path, so `main()` never ran and every command
+  printed nothing with exit status 0. It now compares against
+  `pathToFileURL(argv[1]).href`. Found by `tests/cli-contract.test.ts` on
+  `build (windows-2025)` in #17972.
 - Lower JFET `B` into the Parker-Skellern doping-tail field instead of treating
   it as a beta alias, while retaining `BETA` and `BET` transconductance inputs.
 - Give canonical MOS Level-1 `CBD` precedence over the `CJD` alias.

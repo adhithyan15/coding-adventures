@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Give the integration suite's trusted-Python fixture room on a loaded
+  Windows runner: the toolcache copy's budget rises from 60 s to 180 s and the
+  first Python test's from 75 s to 240 s. Under a full `build (windows-2025)`
+  plan (#17972) the copy was killed at 60 s and both Python tests failed.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.

@@ -49,6 +49,16 @@ export default defineConfig({
     // is byte-for-byte what a fresh parse returns, which
     // `tests/lesson-cache.test.ts` checks for every real track.)
     globalSetup: ["./tests/setup/warm-lesson-cache.ts"],
+    // A 4 GB old-space ceiling for every test worker, stated rather than
+    // inherited. Node sizes its default heap from the machine's RAM: about
+    // 4 GB on a 16 GB Linux runner but only about 2 GB on the 7 GB
+    // `macos-latest` runner. With ~42,000 lessons a corpus-wide worker crosses
+    // 2 GB, so on macOS one worker died with "Reached heap limit ... JavaScript
+    // heap out of memory", vitest reported "Worker exited unexpectedly", and
+    // the cases queued behind it timed out (#17522, #17972). Linux never got
+    // near its larger default, which is why only macOS failed. Pinning the
+    // ceiling makes every platform run the suite under the same limit.
+    execArgv: ["--max-old-space-size=4096"],
     setupFiles: ["./tests/setup/lesson-cache.ts"],
     coverage: {
       provider: "v8",
