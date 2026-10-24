@@ -46,8 +46,11 @@ deliberately preserves caller-supplied markup.
 
 The renderer borrows the immutable input tree and returns a newly owned string.
 It rejects trees deeper than 256 nodes, trees containing more than 100,000
-rendered nodes, and output beyond 1,000,000 UTF-16 characters. Limit failures
-raise `InvalidOperationException` and return no partial result.
+rendered nodes, output beyond 1,000,000 UTF-16 characters, and more than
+1,000,000 aggregate UTF-16 destination units normalized by one render. The URL
+budget charges repeated aliases and stripped or blocked values before scanning;
+it resets for every call. Limit failures raise `InvalidOperationException` and
+return no partial result.
 
 ## Development
 

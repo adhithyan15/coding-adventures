@@ -240,6 +240,64 @@ module DocumentAstToHtmlTests =
         |> ignore
 
     [<Fact>]
+    let ``render bounds URL normalization across repeated aliases`` () =
+        for image in [ false; true ] do
+            for blocked in [ false; true ] do
+                let destination =
+                    if blocked then
+                        "javascript:" + String('x', 9_989)
+                    else
+                        String('\000', 10_000)
+
+                let alias =
+                    if image then
+                        ImageNode(destination, None, "")
+                    else
+                        LinkNode(destination, None, [])
+
+                let tree = document [ paragraph (List.replicate 101 alias) ]
+                let error =
+                    Assert.Throws<InvalidOperationException>(fun () -> DocumentAstToHtml.render tree |> ignore)
+
+                Assert.Contains("URL normalization", error.Message)
+
+    [<Fact>]
+    let ``render URL normalization budget is inclusive and resets per call`` () =
+        let alias = LinkNode(String('\000', 10_000), None, [])
+        let accepted = document [ paragraph (List.replicate 100 alias) ]
+        let expected = "<p>" + String.concat "" (List.replicate 100 "<a href=\"\"></a>") + "</p>\n"
+
+        Assert.Equal(expected, DocumentAstToHtml.render accepted)
+        Assert.Equal(expected, DocumentAstToHtml.render accepted)
+
+        let rejected = document [ paragraph (List.replicate 100 alias @ [ LinkNode("\000", None, []) ]) ]
+        let error =
+            Assert.Throws<InvalidOperationException>(fun () -> DocumentAstToHtml.render rejected |> ignore)
+
+        Assert.Contains("URL normalization", error.Message)
+        Assert.Equal(expected, DocumentAstToHtml.render accepted)
+
+    [<Fact>]
+    let ``render shares one UTF-16 URL budget across every URL node`` () =
+        let astral = "\U0001F600"
+        let nodes =
+            [ LinkNode(String('\000', 499_999), None, [])
+              ImageNode(String('\000', 499_999), None, "")
+              AutolinkNode(astral, false) ]
+
+        Assert.Equal(
+            "<p><a href=\"\"></a><img src=\"\" alt=\"\" /><a href=\"%F0%9F%98%80\">"
+            + astral
+            + "</a></p>\n",
+            DocumentAstToHtml.render (document [ paragraph nodes ]))
+
+        let rejected = document [ paragraph (nodes @ [ ImageNode("\000", None, "") ]) ]
+        let error =
+            Assert.Throws<InvalidOperationException>(fun () -> DocumentAstToHtml.render rejected |> ignore)
+
+        Assert.Contains("URL normalization", error.Message)
+
+    [<Fact>]
     let ``render accepts depth 256 and rejects depth 257`` () =
         let rec wrap count node =
             if count = 0 then node else wrap (count - 1) (BlockquoteNode [ node ])

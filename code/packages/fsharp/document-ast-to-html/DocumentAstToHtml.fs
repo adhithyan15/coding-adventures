@@ -22,6 +22,9 @@ module DocumentAstToHtml =
     [<Literal>]
     let private MaxOutputCharacters = 1_000_000
 
+    [<Literal>]
+    let private MaxUrlInputCharacters = 1_000_000
+
     /// The default policy preserves raw HTML nodes.
     let defaultOptions = { SuppressRawHtml = false }
 
@@ -68,12 +71,7 @@ module DocumentAstToHtml =
            | 0x25 -> true // %
            | _ -> false
 
-    let private sanitizeUrl (value: string) =
-        checkValue "value" value
-
-        if value.Length > MaxOutputCharacters then
-            raise (InvalidOperationException($"URL exceeds the supported limit of {MaxOutputCharacters} characters."))
-
+    let private stripUnsafeUrl (value: string) =
         let stripped = StringBuilder(value.Length)
 
         for rune in value.EnumerateRunes() do
@@ -117,6 +115,7 @@ module DocumentAstToHtml =
     type private RenderContext(options: RenderOptions) =
         let output = StringBuilder()
         let mutable nodeCount = 0
+        let mutable urlInputCharacters = 0
 
         member private _.Append(value: string) =
             checkValue "value" value
@@ -168,6 +167,22 @@ module DocumentAstToHtml =
                 this.AppendEscaped(value)
                 this.Append("\"")
 
+        member private _.SanitizeUrl(value: string) =
+            checkValue "value" value
+
+            // Stripped and rejected destinations can produce tiny output after
+            // an arbitrarily expensive scan. Charge every visit, including a
+            // repeated immutable alias, before allocating or inspecting it.
+            if value.Length > MaxUrlInputCharacters - urlInputCharacters then
+                raise (
+                    InvalidOperationException(
+                        $"URL normalization exceeds the supported limit of {MaxUrlInputCharacters} input characters."
+                    )
+                )
+
+            urlInputCharacters <- urlInputCharacters + value.Length
+            stripUnsafeUrl value
+
         member private this.RenderInlines(nodes: InlineNode list, depth: int) =
             this.CheckDepth(depth)
 
@@ -197,7 +212,7 @@ module DocumentAstToHtml =
                 this.Append("</code>")
             | LinkNode(destination, title, children) ->
                 this.Append("<a href=\"")
-                this.AppendEscaped(sanitizeUrl destination)
+                this.AppendEscaped(this.SanitizeUrl(destination))
                 this.Append("\"")
                 this.AppendTitle(title)
                 this.Append(">")
@@ -205,14 +220,14 @@ module DocumentAstToHtml =
                 this.Append("</a>")
             | ImageNode(destination, title, alt) ->
                 this.Append("<img src=\"")
-                this.AppendEscaped(sanitizeUrl destination)
+                this.AppendEscaped(this.SanitizeUrl(destination))
                 this.Append("\" alt=\"")
                 this.AppendEscaped(alt)
                 this.Append("\"")
                 this.AppendTitle(title)
                 this.Append(" />")
             | AutolinkNode(destination, isEmail) ->
-                let safeDestination = sanitizeUrl destination
+                let safeDestination = this.SanitizeUrl(destination)
                 let href = if isEmail then "mailto:" + safeDestination else normalizeAutolink safeDestination
                 this.Append("<a href=\"")
                 this.AppendEscaped(href)

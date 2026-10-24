@@ -127,9 +127,14 @@ The document root is depth zero.  Each rendered child node increases depth by
 one.  Rendering fails with `InvalidOperationException` before returning any
 partial result when depth exceeds 256, rendered nodes exceed 100,000, or HTML
 output exceeds 1,000,000 UTF-16 characters.  URL stripping, autolink expansion,
-and the public escaping helper obey the same character ceiling.  Heading levels
-outside 1 through 6 are rejected.  Rendering performs no filesystem, network,
-process, environment, clock, randomness, or third-party renderer access.
+and the public escaping helper obey the same character ceiling.  In addition,
+one render charges every link, image, and autolink destination against a shared
+1,000,000 UTF-16 input-unit normalization budget before allocation or scanning.
+The charge includes repeated immutable aliases and values that are later
+stripped or rejected, accepts the exact ceiling, and resets for each public
+render call.  Heading levels outside 1 through 6 are rejected.  Rendering
+performs no filesystem, network, process, environment, clock, randomness, or
+third-party renderer access.
 
 ### Package evidence
 
