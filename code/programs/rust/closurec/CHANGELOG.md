@@ -25,6 +25,17 @@ rather than inserting `;`, because without a parse generator `yield⏎7` (needs
 `whitespace_only_keeps_restricted_semicolons_when_the_parse_fails` covers
 `return`, `break`, `yield` (both kinds) and a method named `return`.
 
+### Fixed - ADVANCED no longer inlines a function that reads `this` (#18115)
+
+`function t(){return this}var o={m:function(){return t()}};console.log(o.m()===o)`
+prints `false`. ADVANCED spliced `t` into `m`, and the output printed
+`true`. The fix is in `closure-pass-inline` 0.31.0: its capture guards now
+see `this`, `super` and `new.target`, the bodies of arrows (which inherit
+`this`), and template substitutions.
+
+`tests/regression_inline_this.rs` checks with `node` that seven programs
+print the same after SIMPLE and ADVANCED as before.
+
 ### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
 
 `lbl:{a()}` now prints as `lbl:a();`, matching upstream. The rule:
