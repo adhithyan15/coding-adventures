@@ -23,6 +23,8 @@ const MAX_CONFIG_SCHEMA_BYTES = 1024 * 1024;
 const MAX_DISCOVERY_ROOTS = 64;
 const MAX_DISCOVERY_CANDIDATES = 1_024;
 const MAX_DISCOVERY_ENTRIES = 4_096;
+const MAX_KINDS_PER_PLUGIN = 1_024;
+const MAX_DISCOVERED_KINDS = 4_096;
 // The host retains one private snapshot and one defensive public copy, and may
 // hold one launch copy. Keeping source snapshots below 128 MiB bounds the
 // worst-case live entry-byte footprint below 384 MiB.
@@ -37,6 +39,7 @@ export async function discoverPlugins(
   let snapshotBytes = 0;
   let examinedCandidates = 0;
   let examinedEntries = 0;
+  let discoveredKinds = 0;
   if (roots.length > MAX_DISCOVERY_ROOTS) {
     throw new PluginHostError(
       "RESOURCE_LIMIT_EXCEEDED",
@@ -91,6 +94,14 @@ export async function discoverPlugins(
       }
       namesInRoot.add(candidate.manifest.plugin.name);
       if (!discovered.has(candidate.manifest.plugin.name)) {
+        const nextKindCount = discoveredKinds + candidate.manifest.contributes.kinds.length;
+        if (nextKindCount > MAX_DISCOVERED_KINDS) {
+          throw new PluginHostError(
+            "RESOURCE_LIMIT_EXCEEDED",
+            `plugin discovery exceeds the ${MAX_DISCOVERED_KINDS} contributed kind limit`,
+          );
+        }
+        discoveredKinds = nextKindCount;
         snapshotBytes += snapshotByteLength(candidate);
         discovered.set(candidate.manifest.plugin.name, candidate);
       }
@@ -108,16 +119,27 @@ async function loadPlugin(
   const rootDirectory = await realpath(directory);
   const manifestPath = await resolveContainedFile(rootDirectory, "plugin.toml", "plugin manifest");
   let manifest: Manifest;
+  let manifestByteLength = 0;
   try {
+    if (remainingSnapshotBytes <= 0) {
+      throw new PluginHostError("RESOURCE_LIMIT_EXCEEDED", "plugin discovery exhausted its snapshot budget");
+    }
     const manifestBytes = await readBoundedRegularFile(
       manifestPath,
-      MAX_MANIFEST_BYTES,
+      Math.min(MAX_MANIFEST_BYTES, remainingSnapshotBytes),
       "plugin.toml",
       rootDirectory,
       signal,
     );
+    manifestByteLength = manifestBytes.byteLength;
     manifest = parseManifest(manifestBytes.toString("utf8"));
     validateManifest(manifest);
+    if (manifest.contributes.kinds.length > MAX_KINDS_PER_PLUGIN) {
+      throw new PluginHostError(
+        "RESOURCE_LIMIT_EXCEEDED",
+        `plugin manifest exceeds the ${MAX_KINDS_PER_PLUGIN} contributed kind limit`,
+      );
+    }
   } catch (cause) {
     if (cause instanceof PluginHostError) throw cause;
     throw new PluginHostError("MANIFEST_INVALID", "plugin.toml failed validation", {
@@ -126,14 +148,15 @@ async function loadPlugin(
   }
   const entryRelative = runtimeEntry(manifest);
   const entryPath = await resolveContainedFile(rootDirectory, entryRelative, "runtime entry");
-  if (remainingSnapshotBytes <= 0) {
+  const remainingEntryBytes = remainingSnapshotBytes - manifestByteLength;
+  if (remainingEntryBytes <= 0) {
     throw new PluginHostError("RESOURCE_LIMIT_EXCEEDED", "plugin discovery exhausted its snapshot budget");
   }
   const entryBytes = await readBoundedRegularFile(
-    entryPath, Math.min(MAX_ENTRY_BYTES, remainingSnapshotBytes), "runtime entry", rootDirectory,
+    entryPath, Math.min(MAX_ENTRY_BYTES, remainingEntryBytes), "runtime entry", rootDirectory,
     signal,
   );
-  let retainedBytes = entryBytes.byteLength;
+  let retainedBytes = manifestByteLength + entryBytes.byteLength;
   const configSchemas: Record<string, {
     readonly relativePath: string;
     readonly bytes: Uint8Array;
@@ -192,6 +215,7 @@ async function loadPlugin(
   return Object.freeze({
     rootDirectory,
     manifestPath,
+    manifestByteLength,
     entryPath,
     entryBytes,
     configSchemas: Object.freeze(configSchemas),
@@ -202,7 +226,8 @@ async function loadPlugin(
 
 function snapshotByteLength(plugin: DiscoveredPlugin): number {
   const uniqueSchemas = new Set(Object.values(plugin.configSchemas).map(schema => schema.bytes));
-  return plugin.entryBytes.byteLength
+  return plugin.manifestByteLength
+    + plugin.entryBytes.byteLength
     + [...uniqueSchemas].reduce((total, bytes) => total + bytes.byteLength, 0);
 }
 
