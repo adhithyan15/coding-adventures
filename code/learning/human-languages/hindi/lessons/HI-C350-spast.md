@@ -48,7 +48,7 @@ reviews_of: [HI-C350-yani]
 >
 > *niyam bilkul spaṣṭ hai.*
 >
-> The rule is perfectly clear.
+> This rule is perfectly clear.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -66,7 +66,7 @@ One more word for giving reasons and opinions.
 [PAUSE 1s]
 - [YOU SAY: *spaṣṭ*]
 - [YOU SAY: *spaṣṭ*, once more]
-- [YOU SAY: *niyam bilkul spaṣṭ hai.* — The rule is perfectly clear.]
+- [YOU SAY: *niyam bilkul spaṣṭ hai.* — This rule is perfectly clear.]
 - [YOU RECALL: say the Hindi for for instance, then the Hindi for that is to say, then say *spaṣṭ* again]
 
 ## Wrap-up Recall

@@ -55,7 +55,7 @@ sentence: वह गई — no thing. the verb follows: the one who went.
 sentence: उसने रोटी खाई (usne roṭī khāī) — ने and a thing. the verb follows: the thing.
 sentence: उसने मीरा को देखा — the thing has को. the verb follows: nothing: -आ.
 Four verbs make this past their own way, for a masculine thing and a feminine one: किया / की, दिया / दी, लिया / ली, पिया / पी (kiyā / kī, diyā / dī, liyā / lī, piyā / pī), from करना, देना, लेना and पीना.
-कहना (kahnā), "to say", is regular. Your क्या कहा? was its past: उसने कहा कि वह कल आएगा (usne kahā ki vah kal āegā), "he said he would come tomorrow". लाना, "to bring", never takes ने: वह फल लाया (vah phal lāyā).
+कहना (kahnā), "to say", is regular. Your क्या कहा? was its past: उसने कहा कि वह कल आएगा (usne kahā ki vah kal āegā), "he said he would come tomorrow". लाना, "to bring", does not take ने: वह फल लाया (vah phal lāyā).
 
 Guided Practice.
 [pause 1 second]

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 276,
-  "sourceHash": "fnv1a64:64e0feed9f9b44e0",
+  "sourceHash": "fnv1a64:7f8bee9c8d24cf7f",
   "lessonIds": [
     "HI-C276-vahgaya",
     "HI-C276-usnekhai",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch276.txt",
   "json": "hindi/narration/ch276.json",
-  "textHash": "fnv1a64:9d0016f2c98f03ef",
-  "jsonHash": "fnv1a64:93dc462023520ade",
+  "textHash": "fnv1a64:21e7344d570a7d9a",
+  "jsonHash": "fnv1a64:b263c3944788e7b7",
   "findings": []
 }

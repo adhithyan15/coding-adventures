@@ -64,7 +64,7 @@ With a verb that has an object, such as eating, reading or saying, the past chan
 
 Four verbs make this past their own way, for a masculine thing and a feminine one: **किया** / **की**, **दिया** / **दी**, **लिया** / **ली**, **पिया** / **पी** (*kiyā* / *kī*, *diyā* / *dī*, *liyā* / *lī*, *piyā* / *pī*), from **करना**, **देना**, **लेना** and **पीना**.
 
-**कहना** (*kahnā*), "to say", is regular. Your **क्या कहा?** was its past: **उसने कहा कि वह कल आएगा** (*usne kahā ki vah kal āegā*), "he said he would come tomorrow". **लाना**, "to bring", never takes **ने**: **वह फल लाया** (*vah phal lāyā*).
+**कहना** (*kahnā*), "to say", is regular. Your **क्या कहा?** was its past: **उसने कहा कि वह कल आएगा** (*usne kahā ki vah kal āegā*), "he said he would come tomorrow". **लाना**, "to bring", does not take **ने**: **वह फल लाया** (*vah phal lāyā*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-GRAMMAR-C276-ERGATIVE-NE-01, HI-GRAMMAR-C276-OBJECT-AGREEMENT-01, HI-LEX-C73-EATING-05, HI-CONCEPT-C05-KARNA-01] -->

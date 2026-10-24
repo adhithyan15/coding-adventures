@@ -4,7 +4,7 @@
   "chapter": 540,
   "title": "Ways and Means",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7b0a5969bd5535cd",
+  "sourceHash": "fnv1a64:e0318edbcf524936",
   "lessons": [
     {
       "id": "HI-C540-tajurba",
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f3ec21207b2fca3",
+      "sourceHash": "fnv1a64:03794885cf9356cd",
       "notice": null,
       "blocks": [
         {
@@ -476,7 +476,7 @@
             },
             {
               "kind": "speech",
-              "text": "मीरा के पास हर समस्या की कोई तरकीब होती है। Mīrā ke pās har samasyā kī koī tarkīb hotī hai. Mira always has some trick for every problem."
+              "text": "मीरा के पास हर समस्या की कोई तरकीब होती है। Mīrā ke pās har samasyā kī koī tarkīb hotī hai. Mira has some trick for every problem."
             },
             {
               "kind": "speech",
@@ -538,11 +538,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "Mīrā ke pās har samasyā kī koī tarkīb hotī hai. — Mira always has some trick for every problem.",
+              "instruction": "Mīrā ke pās har samasyā kī koī tarkīb hotī hai. — Mira has some trick for every problem.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *Mīrā ke pās har samasyā kī koī tarkīb hotī hai.* — Mira always has some trick for every problem.]"
+              "source": "[YOU SAY: *Mīrā ke pās har samasyā kī koī tarkīb hotī hai.* — Mira has some trick for every problem.]"
             },
             {
               "kind": "prompt",

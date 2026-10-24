@@ -4,7 +4,7 @@
   "chapter": 354,
   "title": "Citizens and Votes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0bc96c11c29018f6",
+  "sourceHash": "fnv1a64:48367223e521eee0",
   "lessons": [
     {
       "id": "HI-C354-vot",
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33f1d0bc9b68cccb",
+      "sourceHash": "fnv1a64:c1c1d88bc2f255d7",
       "notice": null,
       "blocks": [
         {
@@ -491,7 +491,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "लोकतंत्र (loktantra) is a tatsama, borrowed from Sanskrit lokatantra, \"the course of the world\" (Monier-Williams). Modern Hindi gives the compound of loka, \"people\", and tantra, \"system\", a new sense: rule by the people."
+              "text": "लोकतंत्र (loktantra) is a tatsama, borrowed from Sanskrit lokatantra, \"the system of the world\" (Monier-Williams). Modern Hindi gives the compound of loka, \"people\", and tantra, \"system\", a new sense: rule by the people."
             }
           ]
         },

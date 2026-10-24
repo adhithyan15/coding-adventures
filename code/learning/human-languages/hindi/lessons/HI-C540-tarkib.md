@@ -48,7 +48,7 @@ reviews_of: [HI-C540-zariya]
 >
 > *Mīrā ke pās har samasyā kī koī tarkīb hotī hai.*
 >
-> Mira always has some trick for every problem.
+> Mira has some trick for every problem.
 
 Feminine.
 
@@ -68,7 +68,7 @@ One more word for saying what happens if.
 [PAUSE 1s]
 - [YOU SAY: *tarkīb*]
 - [YOU SAY: *tarkīb*, once more]
-- [YOU SAY: *Mīrā ke pās har samasyā kī koī tarkīb hotī hai.* — Mira always has some trick for every problem.]
+- [YOU SAY: *Mīrā ke pās har samasyā kī koī tarkīb hotī hai.* — Mira has some trick for every problem.]
 - [YOU RECALL: say the Hindi for a clever way, then the Hindi for a means, a way (of doing something), then say *tarkīb* again]
 
 ## Wrap-up Recall

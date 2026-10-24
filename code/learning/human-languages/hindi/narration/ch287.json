@@ -4,7 +4,7 @@
   "chapter": 287,
   "title": "It Depends, and What Would Be",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:feff7a7370d1b431",
+  "sourceHash": "fnv1a64:6299d0eb37bf0fbc",
   "lessons": [
     {
       "id": "HI-C287-nirbharkarna",
@@ -446,7 +446,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:2c345b96c0dc504c",
+      "sourceHash": "fnv1a64:2403d152df855a54",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -587,7 +587,7 @@
             },
             {
               "kind": "speech",
-              "text": "Then three checks. A plain past with a thing takes ने on its doer and follows the thing: मैंने टिकट लिया, मैंने चाय पी. A -रहा था verb never takes ने. ऐ has one arc above its head-line, and ः has its upper dot drawn first."
+              "text": "Then three checks. A plain past with a thing takes ने on its doer and follows the thing: मैंने टिकट लिया, मैंने चाय पी. A -रहा था verb does not take ने. ऐ has one arc above its head-line, and ः has its upper dot drawn first."
             },
             {
               "kind": "pause",

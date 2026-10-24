@@ -4,7 +4,7 @@
   "chapter": 276,
   "title": "What Happened, and Who Did It",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:64e0feed9f9b44e0",
+  "sourceHash": "fnv1a64:7f8bee9c8d24cf7f",
   "lessons": [
     {
       "id": "HI-C276-vahgaya",
@@ -169,7 +169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:136a44a1e7beed2e",
+      "sourceHash": "fnv1a64:faf92f39f6622d0c",
       "notice": null,
       "blocks": [
         {
@@ -237,7 +237,7 @@
             },
             {
               "kind": "speech",
-              "text": "कहना (kahnā), \"to say\", is regular. Your क्या कहा? was its past: उसने कहा कि वह कल आएगा (usne kahā ki vah kal āegā), \"he said he would come tomorrow\". लाना, \"to bring\", never takes ने: वह फल लाया (vah phal lāyā)."
+              "text": "कहना (kahnā), \"to say\", is regular. Your क्या कहा? was its past: उसने कहा कि वह कल आएगा (usne kahā ki vah kal āegā), \"he said he would come tomorrow\". लाना, \"to bring\", does not take ने: वह फल लाया (vah phal lāyā)."
             }
           ]
         },

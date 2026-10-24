@@ -15,7 +15,7 @@ concept_tag: HI-NAGRIK354-LOKTANTRA
 prerequisites: [HI-C354-nagrik, HI-C354-janmat]
 sounds: []
 roots: [sanskrit-lokatantra]
-etymology_hook: 'loktantra ← Sanskrit lokatantra ''the course of the world'', a tatsama (Monier-Williams)'
+etymology_hook: 'loktantra ← Sanskrit lokatantra ''the system of the world'', a tatsama (Monier-Williams)'
 duration:
   max_seconds: 200
 requires:
@@ -55,7 +55,7 @@ Masculine.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**लोकतंत्र** (*loktantra*) is a tatsama, borrowed from Sanskrit *lokatantra*, "the course of the world" (Monier-Williams). Modern Hindi gives the compound of *loka*, "people", and *tantra*, "system", a new sense: rule by the people.
+**लोकतंत्र** (*loktantra*) is a tatsama, borrowed from Sanskrit *lokatantra*, "the system of the world" (Monier-Williams). Modern Hindi gives the compound of *loka*, "people", and *tantra*, "system", a new sense: rule by the people.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -67,6 +67,6 @@ reviews_of: [HI-C279-chuttikadin, HI-C280-aisa, HI-C281-atah]
 
 [PAUSE 2s] Now read your lines as you read Mira's holiday. Mark every past verb **s** for scene and **e** for event. Line one should be mostly **s**; lines two and three mostly **e**.
 
-[PAUSE 2s] Then three checks. A plain past with a thing takes **ने** on its doer and follows the thing: **मैंने टिकट लिया**, **मैंने चाय पी**. A **-रहा था** verb never takes **ने**. **ऐ** has one arc above its head-line, and **ः** has its upper dot drawn first.
+[PAUSE 2s] Then three checks. A plain past with a thing takes **ने** on its doer and follows the thing: **मैंने टिकट लिया**, **मैंने चाय पी**. A **-रहा था** verb does not take **ने**. **ऐ** has one arc above its head-line, and **ः** has its upper dot drawn first.
 
 [PAUSE 2s] Last, read line six alone. Do both halves wear **-ता**?

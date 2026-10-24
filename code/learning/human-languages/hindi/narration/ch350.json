@@ -4,7 +4,7 @@
   "chapter": 350,
   "title": "For Example",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:6b4ec0f753020502",
+  "sourceHash": "fnv1a64:42252c0c6aaae088",
   "lessons": [
     {
       "id": "HI-C350-udaharan",
@@ -437,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43f7490adc3f0916",
+      "sourceHash": "fnv1a64:8e2c30681be63910",
       "notice": null,
       "blocks": [
         {
@@ -468,7 +468,7 @@
             },
             {
               "kind": "speech",
-              "text": "नियम बिलकुल स्पष्ट है। niyam bilkul spaṣṭ hai. The rule is perfectly clear."
+              "text": "नियम बिलकुल स्पष्ट है। niyam bilkul spaṣṭ hai. This rule is perfectly clear."
             }
           ]
         },
@@ -526,11 +526,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "niyam bilkul spaṣṭ hai. — The rule is perfectly clear.",
+              "instruction": "niyam bilkul spaṣṭ hai. — This rule is perfectly clear.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *niyam bilkul spaṣṭ hai.* — The rule is perfectly clear.]"
+              "source": "[YOU SAY: *niyam bilkul spaṣṭ hai.* — This rule is perfectly clear.]"
             },
             {
               "kind": "prompt",
