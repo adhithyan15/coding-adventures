@@ -18,21 +18,21 @@
   },
   "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-22T03:53:53.409460+00:00",
-    "pr_number": 17905,
-    "action": "Verified external merge of exact final Go BF03 head; postmerge inventory and saved-audit reconciliation before selection. No active PR."
+    "observed_at": "2026-10-24T15:10:18.352788+00:00",
+    "pr_number": null,
+    "action": "No active PR. C: recovered above5GB; clean rebase onto currentmain; native closure resumed serial implementation. Nine new Rust roots queued for collision-checked classification before next selection. Native closure completed105PASS13FAIL;15changedBUILDfrontsPASS;baseline failures assigned existing owners plus one pending transitive Node declaration follow-up. No second implementation selected."
   },
   "last_inventory": {
-    "revision": "df4354995b29f2e04cb78abf360962ef551dd3ef",
+    "revision": "0bf46aac85cc62de387fe7f297dff4095feec3b9",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1523,
-    "implementation_package_slots": 4805,
-    "all_reported_identities": 1565,
+    "implementation_identities": 1532,
+    "implementation_package_slots": 4814,
+    "all_reported_identities": 1574,
     "completion_bands": {
       "1": {
-        "missing_slots": 14574,
-        "packages": 1041
+        "missing_slots": 14700,
+        "packages": 1050
       },
       "10-15": {
         "missing_slots": 250,
@@ -50,8 +50,8 @@
     "canonical_collisions": 0,
     "unknown_language_buckets": 0,
     "ocaml_packages": 5,
-    "evidence": "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json",
-    "audit_notes": "Two newly discovered Rust X509 roots assigned to existing classifier before selection. 205 pinned audits plus seven formerly unregistered references reconciled as documentary preparation; no native parity credit. OCaml remains emerging."
+    "evidence": "code/specs/package-parity-audits/20261024-gfm-resume-classification.json",
+    "audit_notes": "Fresh main rebase: nine new Rust roots assigned to pending documentary classifiers (five existing memberships, three new classifiers). No native qualification or exception; OCaml remains emerging."
   },
   "items": [
     {
@@ -2949,7 +2949,7 @@
       "merged_head_revision": "2b991cffd982c359935d38017103f3b673c22534",
       "merged_at": "2026-09-01T06:43:28Z",
       "merge_revision": "bbba51a7d4a7a3d2a3338bc6c15458eba39db82f",
-      "merge_notes": "The first hosted macOS run exposed pre-10.15 unavailability of JSONSerialization.WritingOptions.withoutEscapingSlashes; the focused same-branch repair normalized only JSON's escaped slash spelling and added a literal-backslash regression. The next macOS run exposed APFS normalization of the decomposable test-only filename é.swift; the smallest repair used non-decomposable β.swift while preserving Unicode ordering and raw-byte coverage. All 45 final-head checks then reached terminal acceptable conclusions, GitHub reported the branch clean and mergeable, the loop enabled squash auto-merge, and GitHub merged PR #13799 without a manual merge command.",
+      "merge_notes": "The first hosted macOS run exposed pre-10.15 unavailability of JSONSerialization.WritingOptions.withoutEscapingSlashes; the focused same-branch repair normalized only JSON's escaped slash spelling and added a literal-backslash regression. The next macOS run exposed APFS normalization of the decomposable test-only filename Ã©.swift; the smallest repair used non-decomposable Î².swift while preserving Unicode ordering and raw-byte coverage. All 45 final-head checks then reached terminal acceptable conclusions, GitHub reported the branch clean and mergeable, the loop enabled squash auto-merge, and GitHub merged PR #13799 without a manual merge command.",
       "notes": "Production Swift has the strongest existing 23-language package-local registry but still omits reviewed Rust companions in several hybrid lanes, Swift C-family headers and module maps, path-scoped resources, and universal required_capabilities.json. Project the complete neutral language registry into production and preserve its checked package-root filesystem boundaries. Read-only conformance and security audits discovered that the separate repository-relative boundary registry also needs native hashing and reverse-diff integration; that newly classified behavior belongs to the dependent build-tool-swift-repository-source-input-boundary-adoption owner rather than widening this finite package-local slice.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/build-tool-swift-language-source-input-registry-adoption"
@@ -6927,7 +6927,10 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": false,
-      "notes": "The roadmap records the TypeScript-led forme-* static-site family, including pure graph, routing, content-model, rendering, provenance, deploy-planning, immutable theme, asset/MIME, and deploy-runner-core behavior. The exact-main 91d191d Git-tree inventory registers eleven new TypeScript-only identities under this existing owner before selecting another tranche: `forme-authoring-core`, `forme-authoring-editor`, `forme-authoring-preview`, `forme-authoring-publish`, `forme-authoring-shell`, `forme-interactivity-ir`, `forme-render-terminal`, `forme-sandbox-core`, `forme-sandbox-linux`, `forme-sandbox-macos`, and `forme-sandbox-windows`. Authoring core, preview and publish coordinators, interactivity IR, and terminal projection are portable candidates needing a neutral fixture and applicability review. Editor and shell are React UI products. Sandbox core and the three OS launchers control native process isolation and require reviewed host-bound exceptions outside autonomous parity selection; only a separately demonstrated process-free projection could enter the portable denominator. Preserve the earlier coverage of `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, `forme-emit-site-fs`, `forme-cli`, `forme-dev-server`, `forme-deploy-runner-core`, `forme-deploy-runner-fs-adapter`, and `forme-deploy-runner-github-pages-adapter`; filesystem, network, credential, CLI, and UI authority remains out of scope. Governing specs include FM02, FM05, and FM09."
+      "notes": "The roadmap records the TypeScript-led forme-* static-site family, including pure graph, routing, content-model, rendering, provenance, deploy-planning, immutable theme, asset/MIME, and deploy-runner-core behavior. The exact-main 91d191d Git-tree inventory registers eleven new TypeScript-only identities under this existing owner before selecting another tranche: `forme-authoring-core`, `forme-authoring-editor`, `forme-authoring-preview`, `forme-authoring-publish`, `forme-authoring-shell`, `forme-interactivity-ir`, `forme-render-terminal`, `forme-sandbox-core`, `forme-sandbox-linux`, `forme-sandbox-macos`, and `forme-sandbox-windows`. Authoring core, preview and publish coordinators, interactivity IR, and terminal projection are portable candidates needing a neutral fixture and applicability review. Editor and shell are React UI products. Sandbox core and the three OS launchers control native process isolation and require reviewed host-bound exceptions outside autonomous parity selection; only a separately demonstrated process-free projection could enter the portable denominator. Preserve the earlier coverage of `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, `forme-emit-site-fs`, `forme-cli`, `forme-dev-server`, `forme-deploy-runner-core`, `forme-deploy-runner-fs-adapter`, and `forme-deploy-runner-github-pages-adapter`; filesystem, network, credential, CLI, and UI authority remains out of scope. Governing specs include FM02, FM05, and FM09. Fresh GFM closure reproduces91baseline forme-doc-demo strict consumer diagnostics (directed-graph7,grammar-tools25,lexer35,parser15,state-machine7,ownTOC/treeAPI2). Distinguish own TocResult.entries/readonly children mismatches from transitive failures. Cross-reference AsciiDoc and layout foundation owners plus typescript-transitive-node-builtin-declaration-ownership. Node source-exporting emitters remain part of this family; no new readiness edges or native credit.",
+      "postmerge_preparation_evidence": [
+        "code/specs/gfm-fenced-block-v1/VALIDATION.md"
+      ]
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -17037,7 +17040,7 @@
       "rebase_notes": "Rebased conflict-free over merged unrelated ALGOL PR #17116. Re-ran the exact-main schema-3 inventory: all package, slot, band, OCaml, collision, and unknown-bucket counts remain unchanged. No other open parity PR exists.",
       "selection_notes": "Selected only after #17117 merged, exact-main inventory refresh and new gap registration. This spec/fixture prerequisite prevents the downstream Java/Kotlin/Dart Arc2D port from inheriting sampled off-grid bounds or unbounded center-form cubic allocation. No active parity PR exists; the Go and existing-lane implementation owners remain separate.",
       "validation_notes": "Neutral validator accepts 23 cases; 11 focused schema/oracle tests pass with 97% validator line coverage. Ruff check/format, Python 3.13 Arc2D (19 tests), Rust Arc2D (20 tests), TypeScript Arc2D tsc plus Vitest (19 tests), collision-gated inventory, diff hygiene, and independent security/contract review pass. No BUILD front changed; native readers filter prior operation families. Initial CI is queued.",
-      "notes": "New post-#17117 cross-lane contract gap: G2D03's raw candidate-angle quotient omits extrema across 2π and negative sweeps, while direct CenterArc cubic conversion has no finite or one-turn bound before allocating. Add a closed additive neutral corpus/schema with two off-grid wrapped analytic bounds, zero/full/over-turn segment cases, an independent analytic validator, native nonfinite guidance, and explicit 1-4 cubic fail-stop contract. Preserve existing Go implementation ownership separately."
+      "notes": "New post-#17117 cross-lane contract gap: G2D03's raw candidate-angle quotient omits extrema across 2Ï€ and negative sweeps, while direct CenterArc cubic conversion has no finite or one-turn bound before allocating. Add a closed additive neutral corpus/schema with two off-grid wrapped analytic bounds, zero/full/over-turn segment cases, an independent analytic validator, native nonfinite guidance, and explicit 1-4 cubic fail-stop contract. Preserve existing Go implementation ownership separately."
     },
     {
       "id": "geometry-arc2d-go-center-form-spec-reconciliation",
@@ -17194,7 +17197,7 @@
       "base_revision": "df4354995b29f2e04cb78abf360962ef551dd3ef",
       "selection_notes": "Selected exactly one dependency-ready foundation after external Go merge, fresh15-lane collision inventory, two new X509 memberships and205+7 saved audits incorporated. Live25-PR source overlap review clear; shared journal/lock PR17185 remains potential rebase surface. Five direct dependents; preserve HTML/layout/sanitizer/Forme consumers, no language ports or full neutral GFM closure.",
       "local_validation_partial": {
-        "status": "incomplete; no parity qualification or ready PR",
+        "status": "Scoped implementation fronts PASS; downstream closure attempted with documented baseline/Windows failures",
         "changed_packages": 15,
         "fronts": "Actual local build scripts where provided and Vitest production-coverage fronts exit0; package-local installs, full production include globs retained. document-ast is types-only0/0.",
         "fixture_cases": 21,
@@ -17204,15 +17207,31 @@
         "authoring_editor": "54tests;98.76%statements91.27%branches; fullinfo editing plus exact unchanged LF/CR/CRLF and empty/blank payload roundtrips",
         "terminal": "91.83%statements87.68%branches; canonical name/info and finalLF checks plus existing control filtering",
         "other_coverage": "Remaining changed runtime packages83.17%to100%statements; target95review remains open.",
-        "remaining": "Full74reverse/118prerequisite native closure and actual BUILD fronts;17unvalidated targets have no local node_modules and need installs. Baseline verification for AsciiDoc/layout-block/nodecrypto candidates; coverage target review; full-scope final security and live main/PR overlap before publication.",
+        "remaining": "Final-head GitHub CI and review;13local downstream targets remain failed/unqualified as documented in bounded fixture VALIDATION.md.",
         "fixture_ci_gap": "Repaired exact cases.json all/typescript native selection; RED then source, full Go module tests, go vet and executable build PASS. Three-platform facade propagation, source union, wrong-lane/missing-reader fail-closed, and atomic plan output regressions pass. Bounded security review: no findings.",
-        "blocker": "C: space insufficient for full closure; partial space used only for already-installed focused checks and durable source checkpoint. No new installs, pushes or PR.",
+        "blocker": null,
         "metadata_validation": "Current executable all-language dry-run with BUILD validation and plan emission PASS at ccfa7c79eec;115affected roots, including prerequisite closure. Collision inventory PASS at same head; not native behavioral qualification.",
         "validated_at": "2026-10-22T15:08:32.828329+00:00",
-        "go_coverage": "Final root package tests with production coverage PASS62.5%; all new selector blocks exercised. Internal package coverage run passed71.6%-97.7% except initial new-test map-order assertion; final main rerun and30focused repetitions pass after set-membership correction. Existing broad build-tool coverage remains below80%; no full coverage qualification claimed.",
+        "go_coverage": "84.6%module aggregate;62.5%root;modified selector98.8%,alladdedblocks exercised",
         "go_test_lesson": "Coverage exposed nondeterministic affected-array order. Test now compares sorted membership; dependency edges retain execution ordering. Recorded lesson; production scheduling unchanged.",
         "full_scope_review": "Full initial implementation diff review found3P2metadata/payload data-loss gaps: browser info newline stripping, blankpayload collapse and parser Unicode/opposite-fence extraction. Reproduced RED5editor/4parser; fixes and finalproductioncoveragePASS. Corrected-diff security rereview complete: no remaining actionable findings; reviewed source/fixture/spec hashes verified.",
-        "consumer_source_audit": "Bounded readonly382sourcefile/74affectedroot audit found no remaining unmodified code_block-only consumer requiring migration; source only, no native closure credit."
+        "consumer_source_audit": "Bounded readonly382sourcefile/74affectedroot audit found no remaining unmodified code_block-only consumer requiring migration; source only, no native closure credit.",
+        "resumed_at": "2026-10-24T15:10:18.352788+00:00",
+        "resumed_head": "0bf46aac85cc62de387fe7f297dff4095feec3b9",
+        "resume_audit_receipt": "gfm-resume-audit.json (local operational evidence)",
+        "baseline_diagnostic_proof": {
+          "agent": "gfm_resume_baseline",
+          "method": "TS5.9.3 createProgram/noEmit; in-memory restore all21changedproductionTS/TSXmodules from df4354995b29f2e04cb78abf360962ef551dd3ef; identical baseline/current diagnostics under installed dependencies",
+          "asciidoc-parser": "5xTS2353url inline-parser.ts288/306/328/360/375",
+          "asciidoc": "same5 imported parser diagnostics",
+          "layout-block": "33xTS18047/2339/2345 nullable dimensions/SizeValue.value/nullable args",
+          "forme-doc-site-emitter": "TS2307 missing node:crypto at forme-aot-page-bundle-emitter/src/hash.ts10",
+          "limit": "Not independently clean baseline installation; fresh rebased lock validation in progress"
+        },
+        "native_closure_receipt": "code/specs/gfm-fenced-block-v1/VALIDATION.md",
+        "actual_BUILD_fronts": "15of15PASS; independent cmd shells/package cwd",
+        "coverage_target_review": "Fullsource globs retained;14runtimepackages83.17%-100% statements,95%library target not universally reached;ASTtypeonly no executable credit",
+        "validation_completed_at": "2026-10-24T15:21:55.943416+00:00"
       }
     },
     {
@@ -17538,10 +17557,11 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current immutable3774 inventory has12 established parser roots including C#, F# and Haskell; only Dart/Java/Kotlin parser roots are absent. This owner reconciles document-ast parsing and neutral fixtures; present-lane children require semantic adoption/qualification, remaining compound child owns three missing parser lanes. Renderer and actual AsciiDoc facade coverage remain separate. Root presence is not behavioral conformance or a merge receipt.",
+      "notes": "Current immutable3774 inventory has12 established parser roots including C#, F# and Haskell; only Dart/Java/Kotlin parser roots are absent. This owner reconciles document-ast parsing and neutral fixtures; present-lane children require semantic adoption/qualification, remaining compound child owns three missing parser lanes. Renderer and actual AsciiDoc facade coverage remain separate. Root presence is not behavioral conformance or a merge receipt. Fresh GFM native closure reproduces five baseline AsciiDoc inline-parser url/destination TS2353 errors in parser, facade and demo. Restore parser-to-DocumentAST contract under this existing owner before native qualification; downstream witnesses do not establish facade parity.",
       "historical_classification_notes": "AsciiDoc parser is missing C#, Dart, F#, Haskell, Java, and Kotlin. Constrain this owner to document-ast parsing and neutral fixtures; existing Dart/JVM and separate .NET/Haskell children consume it, while renderer and facade coverage remain separate.",
       "postmerge_preparation_evidence": [
-        "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/asciidoc-parser-te03-neutral-conformance"
+        "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/asciidoc-parser-te03-neutral-conformance",
+        "code/specs/gfm-fenced-block-v1/VALIDATION.md"
       ],
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
@@ -19078,7 +19098,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Audit includes diagram IR/DOT/layout/paint, document AST→layout, layout IR→paint, HTML→layout, CFB, OPC, DOCX/PPTX, format-doc. Split pure fixtures from host painting/storage. Bounded UI06/UI04 review at0fba2a5: document-ast-to-layout is Rust/TS supplied DocumentAST+theme to LayoutNode; the requested layout-ir-to-paint name is descriptive only, actual manifest/spec/root identity is layout-to-paint (Rust/TS). Preserve existing owner and do not register alias as a package. Reconcile TS styled inline/image/table handling versus Rust flatten-to-text/link-URL/image-placeholder/table/raw placeholders and theme/data/ID/ext/copy/error/resource projections; comments may understate current task-item support. UI04 Rust caller-supplied matched TXT00 resolver/metrics/shaper emits real glyph runs and propagates binding data; TS historical glyph mode substitutes codepoint IDs and0.6em/0.8em metrics, with separate canvas:text mode. Freeze named geometry-only, supplied-shaping transcript and intentional legacy profiles before lane qualification; never normalize them as identical glyphs. Preserve silent Rust resolver failure versus spec propagated errors, DPR/order/clip/layer/binding/fontref/resource limits. No paragraph/line layout algorithm, host font discovery/file/image/network load, CoreText/Canvas/native paint execution or whole rendering/adopter credit. Existing diagnostic Rust rust-cargo declarations and TS empty capabilities require policy review, not automatic pure/native approval. Source conversion and inert scene data remain distinct from supplied callback execution or downstream backend authority.",
+      "notes": "Audit includes diagram IR/DOT/layout/paint, document ASTâ†’layout, layout IRâ†’paint, HTMLâ†’layout, CFB, OPC, DOCX/PPTX, format-doc. Split pure fixtures from host painting/storage. Bounded UI06/UI04 review at0fba2a5: document-ast-to-layout is Rust/TS supplied DocumentAST+theme to LayoutNode; the requested layout-ir-to-paint name is descriptive only, actual manifest/spec/root identity is layout-to-paint (Rust/TS). Preserve existing owner and do not register alias as a package. Reconcile TS styled inline/image/table handling versus Rust flatten-to-text/link-URL/image-placeholder/table/raw placeholders and theme/data/ID/ext/copy/error/resource projections; comments may understate current task-item support. UI04 Rust caller-supplied matched TXT00 resolver/metrics/shaper emits real glyph runs and propagates binding data; TS historical glyph mode substitutes codepoint IDs and0.6em/0.8em metrics, with separate canvas:text mode. Freeze named geometry-only, supplied-shaping transcript and intentional legacy profiles before lane qualification; never normalize them as identical glyphs. Preserve silent Rust resolver failure versus spec propagated errors, DPR/order/clip/layer/binding/fontref/resource limits. No paragraph/line layout algorithm, host font discovery/file/image/network load, CoreText/Canvas/native paint execution or whole rendering/adopter credit. Existing diagnostic Rust rust-cargo declarations and TS empty capabilities require policy review, not automatic pure/native approval. Source conversion and inert scene data remain distinct from supplied callback execution or downstream backend authority. Fresh GFM closure reproduces33baseline layout-block nullable SizeValue/.value narrowing diagnostics, also33identical canvas-demo errors. Include shared sizing-contract reconciliation in foundation review; no native qualification.",
       "pending_main_spline_classification": "parity-pending-main-e7c6-inventory-audit.md: newest immutable Mermaid/DG04 delta adds cardinal/catmullRom/natural parsing and curve IR/collinear cubic paint lowering. Existing classifier owns diagram IR/layout/paint and Mermaid frontend splitting; exact pure spline contract/case/decomposition coverage is still unqualified. Narrow Swimlane quoted/entity/class owners do not imply spline behavior closure; layout typed-IR geometry/metadata excludes parsing/paint backend. No native backend/security delivery or new overlapping umbrella/selection in this refresh.",
       "reference_refresh_5526f94f": {
         "revision": "5526f94f956ac390fc667af525dabef602ec7fce",
@@ -19091,7 +19111,8 @@
         "diagram-to-paint-dg03-geometry-projection-classification"
       ],
       "postmerge_preparation_evidence": [
-        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-document-layout-paint-scope-review.json"
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-document-layout-paint-scope-review.json",
+        "code/specs/gfm-fenced-block-v1/VALIDATION.md"
       ]
     },
     {
@@ -19101,7 +19122,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Audit includes RAW/TIFF/camera RAW, GIF/JPEG/JXL/ICO/PNG; DSP complex→FFT→filters/STFT/DCT/wavelets; range/RANS. Split malformed-input security bounds, native GPU/FFI exceptions and lane ports. Audit finite MUS05 musical-instruments catalog/profile data boundary before any whole synthesis/rendering/lane delivery: Python-only128literal1-based GM-style entries and built-in preset lookup, strict program admission and explicit naive recipe identity. This umbrella has broad codec/DSP pure-chain scope with non-exhaustive includes; its Rust-containing ID does not prove Python/audio exclusion. Clarify applicability here rather than creating an unproven missing classifier. Preserve OSC00 sampler, MUS02 PCM/no-op sink, PHY/trig and whole render/device scopes. Review complete table/preset references, strings/coercions/custom inputs, tuples/shared ownership, current sine/additive/silence versus spec future sample/physical vocabulary and independently sourced provenance. No General MIDI standard fidelity/hardware clone/physical acoustics/sample/real-time/native playback guarantee. No new prerequisite/owner/selection.",
+      "notes": "Audit includes RAW/TIFF/camera RAW, GIF/JPEG/JXL/ICO/PNG; DSP complexâ†’FFTâ†’filters/STFT/DCT/wavelets; range/RANS. Split malformed-input security bounds, native GPU/FFI exceptions and lane ports. Audit finite MUS05 musical-instruments catalog/profile data boundary before any whole synthesis/rendering/lane delivery: Python-only128literal1-based GM-style entries and built-in preset lookup, strict program admission and explicit naive recipe identity. This umbrella has broad codec/DSP pure-chain scope with non-exhaustive includes; its Rust-containing ID does not prove Python/audio exclusion. Clarify applicability here rather than creating an unproven missing classifier. Preserve OSC00 sampler, MUS02 PCM/no-op sink, PHY/trig and whole render/device scopes. Review complete table/preset references, strings/coercions/custom inputs, tuples/shared ownership, current sine/additive/silence versus spec future sample/physical vocabulary and independently sourced provenance. No General MIDI standard fidelity/hardware clone/physical acoustics/sample/real-time/native playback guarantee. No new prerequisite/owner/selection.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-musical-instruments-classification.json",
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/codec-and-dsp-rust-singleton-foundation"
@@ -19225,7 +19246,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Audit includes numeric/date/number-format, lookup, FSRS→Engram→Anki, engineering/financial core and R-vector NA. Split clock/storage host seams; resolve SML02 serial-60 conflict.",
+      "notes": "Audit includes numeric/date/number-format, lookup, FSRSâ†’Engramâ†’Anki, engineering/financial core and R-vector NA. Split clock/storage host seams; resolve SML02 serial-60 conflict.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/spreadsheet-and-business-rust-singleton-foundation"
       ],
@@ -25646,13 +25667,101 @@
       "delivery_class": "boundary-classification",
       "selection_blocked": false,
       "discovered_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
-      "notes": "Classify 13 new Rust-only supplied-data components before native or lane delivery: complete certificate structural composition; five DirectoryString encodings, opaque Teletex and exact scalar comparison; supplied-equivalence structural Name comparison; explicit critical-extension, role, algorithm, purpose, SAN, time, issuer-link and self-issued policies; unique issuer selection and exact-certificate-bound evidence; path-length state; RSA SPKI, modulus and exponent admission; fixed-width public RSA operation; exact PKCS #1 v1.5 SHA-256 encoded-message validation; certificate-signature and selected-issuer composition; pinned 121-entry Web PKI snapshot bytes, provenance and exact membership. Reuse existing DER TLV, ASN.1, X.509 field, tls-server-identity, numeric foundations/bignum and SHA-256 contracts. Neutral callback fixtures must contain inert equivalence/result records, never executable code. Classifier dependencies are empty because this is applicability review only; future profile and native children require exact proven prerequisites. Empty capabilities and static presence prove no native conformance, cryptographic correctness, production security, live trust or snapshot freshness. Exclude private keys, signing, secret constant-time claims, root acquisition or updating, platform trust, clocks, revocation, path validation, name constraints, TLS, HTTP, OAuth, network, native authority and external approval. No reviewed exception or multi-lane port bundle is delivered. Fresh main df435499 adds Rust-only x509-rsa-sha256-reviewed-anchor-link and x509-server-certificate-policy to this existing supplied-data classifier. Classify exact issuer/SPKI/name/signature link versus server role/algorithm/purpose/SAN/time policy and deterministic rejection boundaries; no trust-store/network/native credential authority or qualification follows. Earlier 13-root roster is historical, now 15 roots in this stack.",
+      "notes": "Classify 13 new Rust-only supplied-data components before native or lane delivery: complete certificate structural composition; five DirectoryString encodings, opaque Teletex and exact scalar comparison; supplied-equivalence structural Name comparison; explicit critical-extension, role, algorithm, purpose, SAN, time, issuer-link and self-issued policies; unique issuer selection and exact-certificate-bound evidence; path-length state; RSA SPKI, modulus and exponent admission; fixed-width public RSA operation; exact PKCS #1 v1.5 SHA-256 encoded-message validation; certificate-signature and selected-issuer composition; pinned 121-entry Web PKI snapshot bytes, provenance and exact membership. Reuse existing DER TLV, ASN.1, X.509 field, tls-server-identity, numeric foundations/bignum and SHA-256 contracts. Neutral callback fixtures must contain inert equivalence/result records, never executable code. Classifier dependencies are empty because this is applicability review only; future profile and native children require exact proven prerequisites. Empty capabilities and static presence prove no native conformance, cryptographic correctness, production security, live trust or snapshot freshness. Exclude private keys, signing, secret constant-time claims, root acquisition or updating, platform trust, clocks, revocation, path validation, name constraints, TLS, HTTP, OAuth, network, native authority and external approval. No reviewed exception or multi-lane port bundle is delivered. Fresh main df435499 adds Rust-only x509-rsa-sha256-reviewed-anchor-link and x509-server-certificate-policy to this existing supplied-data classifier. Classify exact issuer/SPKI/name/signature link versus server role/algorithm/purpose/SAN/time policy and deterministic rejection boundaries; no trust-store/network/native credential authority or qualification follows. Earlier 13-root roster is historical, now 15 roots in this stack. Fresh main ddcf1f81 adds five supplied-data components: x509-certificate-path-construction, x509-certificate-path-reviewed-anchor-binding, x509-certificate-path-server-policy-binding, x509-intermediate-certificate-policy, x509-rsa-sha256-reviewed-server-link. Review deterministic at-most64certificate construction, exact-DER cycles/unique issuer/callback ordering/candidate indices, terminal and target-policy evidence bindings, intermediate policies and fixed-two-link RSA proof retention. These bounded construction/evidence components do not implement complete path validation; preserve that exclusion. Historical15root roster now20. Use inert result records, never executable neutral callbacks.",
       "registered_at": "2026-10-21T05:55:30.688172+00:00",
       "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
       "postmerge_preparation_evidence": [
-        "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/x509-rsa-public-verification-stack-profile-classification"
+        "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/x509-rsa-public-verification-stack-profile-classification",
+        "code/specs/package-parity-audits/20261024-gfm-resume-classification.json#x509-rsa-public-verification-stack-profile-classification"
       ],
-      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited.",
+      "package_paths": [
+        "code/packages/rust/x509-certificate-path-construction",
+        "code/packages/rust/x509-certificate-path-reviewed-anchor-binding",
+        "code/packages/rust/x509-certificate-path-server-policy-binding",
+        "code/packages/rust/x509-intermediate-certificate-policy",
+        "code/packages/rust/x509-rsa-sha256-reviewed-server-link"
+      ]
+    },
+    {
+      "id": "x509-name-constraints-profile-classification",
+      "title": "Classify bounded DNS NameConstraints decoding and supplied-name evaluation",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "boundary-classification",
+      "selection_blocked": false,
+      "discovered_revision": "ddcf1f81c30710201a3fdfedd4de85c73ef5ae21",
+      "registered_at": "2026-10-24T15:12:06.314674+00:00",
+      "package_paths": [
+        "code/packages/rust/x509-name-constraints"
+      ],
+      "notes": "Review snapshot-contents and complete-extension decoder differences, exact DER tags/order, permitted/excluded dNSName subtrees, absent distance fields, shared budgets/256-entry bounds, strict ASCII labels and leading-dot semantics, label boundaries, wildcards, exclusion overlap and permitted containment. Exclude non-DNS forms, certificate binding, signature/trust/path decisions and revocation. Documentary applicability review only; future fixture/native children require exact proven prerequisites. No clocks, network, trust acquisition, TLS/HTTP/OAuth/native authority, qualification or reviewed exception.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261024-gfm-resume-classification.json#x509-name-constraints-profile-classification"
+      ]
+    },
+    {
+      "id": "x509-ocsp-structural-components-profile-classification",
+      "title": "Classify bounded OCSP CertID and CertStatus structural components",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "boundary-classification",
+      "selection_blocked": false,
+      "discovered_revision": "ddcf1f81c30710201a3fdfedd4de85c73ef5ae21",
+      "registered_at": "2026-10-24T15:12:06.314674+00:00",
+      "package_paths": [
+        "code/packages/rust/x509-ocsp-cert-id",
+        "code/packages/rust/x509-ocsp-cert-status"
+      ],
+      "notes": "Review RFC6960 CertID structural composition with generic AlgorithmIdentifier/opaque hashes/positive serial, and CertStatus good/unknown/revoked CHOICE with clock-free GeneralizedTime and optional CRLReason. Preserve shared DER budgets, offsets and transactional payload-free failures. Exclude full response parsing, hash computation/policy, authentication, responder authorization, certificate/path binding, freshness or revocation decisions. Documentary applicability review only; future fixture/native children require exact proven prerequisites. No clocks, network, trust acquisition, TLS/HTTP/OAuth/native authority, qualification or reviewed exception.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261024-gfm-resume-classification.json#x509-ocsp-structural-components-profile-classification"
+      ]
+    },
+    {
+      "id": "x509-revocation-observation-policy-profile-classification",
+      "title": "Classify explicit revocation-observation freshness policy",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "boundary-classification",
+      "selection_blocked": false,
+      "discovered_revision": "ddcf1f81c30710201a3fdfedd4de85c73ef5ae21",
+      "registered_at": "2026-10-24T15:12:06.314674+00:00",
+      "package_paths": [
+        "code/packages/rust/x509-revocation-policy"
+      ],
+      "notes": "Review pure supplied-observation gate: Good status, both thisUpdate/nextUpdate, ordered inclusive interval, explicit validated caller time inside interval, rejection categories and exact observation/time retention. Observation is unauthenticated input. Exclude OCSP/CRL parsing/verification, responder authorization, certificate/path binding, ambient clock, tolerance, caches and fetch policy. Documentary applicability review only; future fixture/native children require exact proven prerequisites. No clocks, network, trust acquisition, TLS/HTTP/OAuth/native authority, qualification or reviewed exception.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261024-gfm-resume-classification.json#x509-revocation-observation-policy-profile-classification"
+      ]
+    },
+    {
+      "id": "typescript-transitive-node-builtin-declaration-ownership",
+      "title": "Repair declaration-provider ownership for transitive Node source consumers",
+      "status": "pending",
+      "depends_on": [
+        "typescript-node-builtin-type-declarations"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-build-contract",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T15:22:36.000559+00:00",
+      "discovered_revision": "0bf46aac85cc62de387fe7f297dff4095feec3b9",
+      "package_paths": [
+        "code/packages/typescript/forme-doc-site-emitter",
+        "code/packages/typescript/forme-aot-page-bundle-emitter"
+      ],
+      "notes": "The direct-source declaration ownership repair is merged, but a clean native consumer build of forme-doc-site-emitter still fails TS2307 for node:crypto in its source-exported file dependency forme-aot-page-bundle-emitter. Audit and specify declaration-provider ownership across transitive source exports, reproduce with declared dependencies, repair the smallest closure and extend witnesses. Keep runtime behavior, sandbox or Windows security, broad lock upgrades and native/parity qualification out of scope.",
+      "postmerge_preparation_evidence": [
+        "code/specs/gfm-fenced-block-v1/VALIDATION.md"
+      ]
     }
   ]
 }

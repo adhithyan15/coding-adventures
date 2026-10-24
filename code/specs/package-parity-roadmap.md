@@ -17642,3 +17642,29 @@ unblocks the neutral GFM fixture and five direct prerequisite owners. Arithmetic
 contract reconciliation and build-tool dependency/digest adoption remain ready
 alternatives. Repair the TypeScript reference seam and its affected consumers
 before treating it as a cross-language oracle; language ports remain separate.
+
+## October 24, 2026 resumed GFM audit
+
+After rebasing the single in-progress GFM contract repair onto `ddcf1f81`, the
+collision-checked ownership refresh registers nine new Rust package roots. Five
+supplied-data path-construction and evidence-composition roots extend
+`x509-rsa-public-verification-stack-profile-classification`; its complete-path-
+validation exclusion remains. Three pending documentary classifiers cover
+`x509-name-constraints-profile-classification`,
+`x509-ocsp-structural-components-profile-classification` (CertID and CertStatus),
+and `x509-revocation-observation-policy-profile-classification`. Their empty
+readiness dependencies permit applicability review only. Future fixture/native
+children require exact prerequisites; no native qualification or exception is
+credited. See [the preserved audit](package-parity-audits/20261024-gfm-resume-classification.json).
+
+GFM remains the only in-progress delivery item. Its native prerequisite and
+consumer validation resumes after local disk recovery; source-level baseline
+diagnostics do not count as successful native tests.
+
+The completed local GFM closure also preserves proven baseline build gaps under
+the existing AsciiDoc TE03, document/layout foundation and Forme family owners.
+A single pending `typescript-transitive-node-builtin-declaration-ownership`
+follow-up depends on the merged direct-provider repair and owns the smallest
+Node source-export consumer declaration boundary. Windows permission/readiness
+failures are validation limits; they do not become security implementation work
+for this portable parity loop. See the bounded fixture validation receipt.
