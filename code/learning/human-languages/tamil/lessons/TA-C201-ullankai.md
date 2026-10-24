@@ -14,7 +14,7 @@ romanization: "uḷḷaṅkai"
 concept_tag: TA-NALAM201-ULLANKAI
 prerequisites: [TA-C201-tati, TA-C201-micai]
 sounds: []
-roots: [dravidian-ul-inside, dravidian-talai-kai]
+roots: [dravidian-ul-inside, dravidian-kai-hand]
 etymology_hook: "உள்ளங்கை — native: uḷ 'inside' (DEDR 698) + kai 'hand' (DEDR 2023)"
 duration:
   max_seconds: 200

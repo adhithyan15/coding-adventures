@@ -14,7 +14,7 @@ romanization: "kayyaṭi"
 concept_tag: ML-RANGAM563-KAYYATI
 prerequisites: [ML-C563-vedi, ML-C563-kani]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-adi-beat]
+roots: [dravidian-kai-hand, dravidian-adi-beat]
 etymology_hook: 'kayyaṭi: native, kai ''hand'' (DEDR 2023) + aṭi ''a blow'' (DEDR 77)'
 duration:
   max_seconds: 200

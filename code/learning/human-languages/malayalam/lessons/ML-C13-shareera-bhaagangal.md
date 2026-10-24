@@ -11,7 +11,7 @@ romanization: "tala kai"
 concept_tag: ML-BODY-BASIC
 prerequisites: [ML-C12-kudumbam, ML-C08-dayavayi]
 sounds: [malayalam-vowel-sign-ai]
-roots: [dravidian-tala-kai]
+roots: [dravidian-talai-head, dravidian-kai-hand]
 etymology_hook: "തല tala (head) and കൈ kai (hand) are native Dravidian, matching Tamil's talai/kai closely — unlike the family words, Malayalam stays close to Tamil here"
 duration:
   max_seconds: 240

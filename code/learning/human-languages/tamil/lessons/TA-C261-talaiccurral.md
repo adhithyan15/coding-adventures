@@ -14,7 +14,7 @@ romanization: "talaiccuṟṟal"
 concept_tag: TA-NALAM261-TALAICCURRAL
 prerequisites: [TA-C261-yoka, TA-C261-arippu]
 sounds: []
-roots: [dravidian-talai-kai, dravidian-curru-revolve]
+roots: [dravidian-talai-head, dravidian-curru-revolve]
 etymology_hook: "தலைச்சுற்றல் — native: talai 'head' (DEDR 3103) + cuṟṟal 'spinning' (DEDR 2715)"
 duration:
   max_seconds: 200

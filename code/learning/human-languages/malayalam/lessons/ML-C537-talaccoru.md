@@ -14,7 +14,7 @@ romanization: "talaccōṟŭ"
 concept_tag: ML-SARIRAM537-TALACCORU
 prerequisites: [ML-C536-svasakosam, ML-C536-visramikkuka]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-coru-rice]
+roots: [dravidian-talai-head, dravidian-coru-rice]
 etymology_hook: 'talaccōṟŭ: native, tala ''head'' (DEDR 3103) + cōṟŭ ''rice; brain'' (DEDR 2897)'
 duration:
   max_seconds: 200

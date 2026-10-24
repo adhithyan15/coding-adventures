@@ -1,4 +1,5 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
+import { readFile, readdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -30,6 +31,14 @@ const CASES: Record<string, Record<string, readonly string[]>> = {
     "ML-C237-talennu": [HEAD],
     "ML-C252-kainittam": [HAND],
     "ML-C267-kaimaruka": [HAND],
+    "ML-C350-talakkettu": [HEAD],
+    "ML-C354-kayyatikkuka": [HAND],
+    "ML-C430-kaikkuli": [HAND],
+    "ML-C473-kaikanikkuka": [HAND],
+    "ML-C490-kaipparruka": [HAND],
+    "ML-C537-talaccoru": [HEAD],
+    "ML-C551-kaivarikkuka": [HAND],
+    "ML-C563-kayyati": [HAND],
   },
   tamil: {
     "TA-C13-udal-uruppugal": [HEAD, HAND],
@@ -54,7 +63,7 @@ const CASES: Record<string, Record<string, readonly string[]>> = {
 
 describe("DEDR 3103 head and DEDR 2023 hand root identities", () => {
   for (const [language, cases] of Object.entries(CASES)) {
-    it(`keeps ${language} lesson roots distinct`, () => {
+    it(`keeps ${language} lesson roots distinct`, async () => {
       const lessonsDir = join(ROOT, language, "lessons");
       for (const [id, expected] of Object.entries(cases)) {
         const roots = rootsOf(readFileSync(join(lessonsDir, `${id}.md`), "utf8"));
@@ -62,11 +71,17 @@ describe("DEDR 3103 head and DEDR 2023 hand root identities", () => {
       }
       // The old pair-slugs joined unrelated head and hand derivatives. Scan the
       // whole track so a newly authored lesson cannot quietly revive that join.
-      const collisions = readdirSync(lessonsDir)
-        .filter((file) => file.endsWith(".md"))
-        .flatMap((file) => rootsOf(readFileSync(join(lessonsDir, file), "utf8"))
-          .filter((root) => LEGACY.includes(root))
-          .map((root) => `${file}: ${root}`));
+      const files = (await readdir(lessonsDir)).filter((file) => file.endsWith(".md"));
+      const collisions: string[] = [];
+      // Bound open descriptors: each track has thousands of authored lessons.
+      for (let offset = 0; offset < files.length; offset += 32) {
+        const batch = files.slice(offset, offset + 32);
+        const matches = await Promise.all(batch.map(async (file) => {
+          const roots = rootsOf(await readFile(join(lessonsDir, file), "utf8"));
+          return roots.filter((root) => LEGACY.includes(root)).map((root) => `${file}: ${root}`);
+        }));
+        collisions.push(...matches.flat());
+      }
       expect(collisions).toEqual([]);
     });
   }

@@ -14,7 +14,7 @@ romanization: "kainīṭṭaṁ"
 concept_tag: ML-VASTU252-KAINITTAM
 prerequisites: [ML-C252-vallamkali, ML-C252-kani]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-nil-long]
+roots: [dravidian-kai-hand, dravidian-nil-long]
 etymology_hook: "kainīṭṭaṁ: native Dravidian, 'hand-stretching': kai (DEDR 2023) + a noun from nīṭṭuka 'to stretch out' (DEDR 3692)"
 duration:
   max_seconds: 200

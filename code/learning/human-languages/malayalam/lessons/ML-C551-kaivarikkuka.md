@@ -14,7 +14,7 @@ romanization: "kaivarikkuka"
 concept_tag: ML-VERB-KAIVARIKKUKA
 prerequisites: [ML-C551-elppikkuka, ML-C551-erretukkuka]
 sounds: []
-roots: [dravidian-tala-kai]
+roots: [dravidian-kai-hand]
 etymology_hook: 'kaivarikkuka: holds native kai ''hand'' (DEDR 2023); the second part is not settled'
 duration:
   max_seconds: 200

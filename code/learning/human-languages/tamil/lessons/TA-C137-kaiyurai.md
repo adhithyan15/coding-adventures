@@ -14,7 +14,7 @@ romanization: "kaiyuṟai"
 concept_tag: TA-THINGS137-KAIYURAI
 prerequisites: [TA-C137-valaiyal, TA-C137-kalurai]
 sounds: []
-roots: [dravidian-talai-kai, dravidian-urai-sheath]
+roots: [dravidian-kai-hand, dravidian-urai-sheath]
 etymology_hook: "கையுறை — native: kai 'hand' (DEDR 2023) + uṟai 'sheath, case' (DEDR 723)"
 duration:
   max_seconds: 200

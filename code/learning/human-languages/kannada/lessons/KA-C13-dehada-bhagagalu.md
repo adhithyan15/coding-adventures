@@ -11,7 +11,7 @@ romanization: "tale kai"
 concept_tag: KA-BODY-BASIC
 prerequisites: [KA-C12-kutumba, KA-C10-vaara]
 sounds: [kannada-vowel-sign-ai]
-roots: [dravidian-tale-kai, dravidian-talai-head, dravidian-kai-hand]
+roots: [dravidian-talai-head, dravidian-kai-hand]
 etymology_hook: "ತಲೆ tale (head) and ಕೈ kai (hand) are native Dravidian, matching Tamil talai/kai and Malayalam thala/kai closely — a shared core across three of the four languages"
 reviews_of: [KA-C12-kutumba]
 duration:

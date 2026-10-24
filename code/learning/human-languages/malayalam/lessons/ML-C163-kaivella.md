@@ -14,7 +14,7 @@ romanization: "kaiveḷḷa"
 concept_tag: ML-THINGS163-KAIVELLA
 prerequisites: [ML-C162-munna, ML-C163-purikam, ML-C24-rathri]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-vel-white]
+roots: [dravidian-kai-hand, dravidian-vel-white]
 etymology_hook: "kaiveḷḷa: native Dravidian, 'the hand's white': kai (DEDR 2023) + veḷḷa 'white' (DEDR 5496)"
 duration:
   max_seconds: 200

@@ -14,7 +14,7 @@ romanization: "talakkeṭṭŭ"
 concept_tag: ML-PATRAM350-TALAKKETTU
 prerequisites: [ML-C349-sambhavikkuka, ML-C349-prakhyapikkuka]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-kattu-bind]
+roots: [dravidian-talai-head, dravidian-kattu-bind]
 etymology_hook: 'talakkeṭṭŭ = tala ''head'' (DEDR 3103) + keṭṭŭ ''a tying, a band'' (DEDR 1147)'
 duration:
   max_seconds: 200
