@@ -927,9 +927,12 @@ impl System360Simulator {
             }
             0x86 | 0x87 => {
                 let compare = if r3.is_multiple_of(2) { r3 + 1 } else { r3 };
-                let v = self.state.gprs[r1].wrapping_add(self.state.gprs[r3]);
+                let first = self.state.gprs[r1];
+                let increment = self.state.gprs[r3];
+                let limit = self.state.gprs[compare];
+                let v = first.wrapping_add(increment);
                 self.state.gprs[r1] = v;
-                let high = (v as i32) > self.state.gprs[compare] as i32;
+                let high = (v as i32) > limit as i32;
                 if (op == 0x86 && high) || (op == 0x87 && !high) {
                     self.state.pc = ea;
                 }

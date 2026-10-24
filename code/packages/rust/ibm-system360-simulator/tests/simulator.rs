@@ -268,6 +268,31 @@ fn condition_count_link_and_index_branches_cover_both_paths() {
 }
 
 #[test]
+fn index_branches_use_original_comparands_when_registers_overlap() {
+    for (opcode, r1, r3, should_branch) in [
+        (0x86, 1, 1, true),
+        (0x86, 3, 2, true),
+        (0x87, 1, 1, false),
+        (0x87, 3, 2, false),
+    ] {
+        let mut cpu = System360Simulator::new();
+        cpu.load(&program(&[rs(opcode, r1, r3, 0, 8), halt(), halt()]), 0)
+            .unwrap();
+        cpu.write_gpr(r1 as usize, 1).unwrap();
+        if r3 != r1 {
+            cpu.write_gpr(r3 as usize, 1).unwrap();
+        }
+        let trace = cpu.step().unwrap();
+        assert_eq!(
+            trace.pc_after,
+            if should_branch { 8 } else { 4 },
+            "opcode {opcode:#04x}, R1={r1}, R3={r3}"
+        );
+        assert_eq!(cpu.read_gpr(r1 as usize), Ok(2));
+    }
+}
+
+#[test]
 fn hexadecimal_floating_point_load_arithmetic_compare_store_and_sign_are_exact() {
     let image = program(&[
         rx(0x68, 0, 0, 3, 0),

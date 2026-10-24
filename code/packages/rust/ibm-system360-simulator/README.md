@@ -51,5 +51,5 @@ RUSTDOCFLAGS="-D warnings" cargo doc -p ibm-system360-simulator --no-deps
 cargo llvm-cov -p ibm-system360-simulator --summary-only
 ```
 
-The package has eighteen passing tests, 100% function coverage, and 93.24%
-line coverage (966/1,036 lines).
+The package has nineteen passing tests, 100% function coverage, and 93.46%
+line coverage (971/1,039 lines).
