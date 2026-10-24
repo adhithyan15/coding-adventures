@@ -1,7 +1,7 @@
 use edsac_gatelevel::{EdsacGateLevel, ESTIMATED_GATE_COUNT, FLIP_FLOP_COUNT};
 use edsac_simulator::{
-    encode_order, encode_raw_order, EdsacError, EdsacSimulator, Length, Opcode,
-    EVEN_CELL_MASK, MEMORY_CELLS,
+    encode_order, encode_raw_order, EdsacError, EdsacSimulator, Length, Opcode, EVEN_CELL_MASK,
+    MEMORY_CELLS,
 };
 
 fn orders(values: &[(Opcode, usize, Length)]) -> Vec<u32> {
@@ -11,11 +11,7 @@ fn orders(values: &[(Opcode, usize, Length)]) -> Vec<u32> {
         .collect()
 }
 
-fn assert_lockstep(
-    functional: &mut EdsacSimulator,
-    gate: &mut EdsacGateLevel,
-    max_steps: usize,
-) {
+fn assert_lockstep(functional: &mut EdsacSimulator, gate: &mut EdsacGateLevel, max_steps: usize) {
     for _ in 0..max_steps {
         assert_eq!(gate.state(), functional.state());
         if gate.state().halted {
@@ -25,7 +21,7 @@ fn assert_lockstep(
         let actual = gate.step();
         assert_eq!(actual, expected);
         assert_eq!(gate.state(), functional.state());
-        if actual.is_err() {
+        if actual.is_err() || gate.state().halted {
             return;
         }
     }
@@ -45,10 +41,7 @@ fn topology_and_power_on_state_are_exact() {
 
 #[test]
 fn checked_transport_memory_restore_and_reset_match_the_oracle() {
-    let image = orders(&[
-        (Opcode::X, 0, Length::Short),
-        (Opcode::Z, 0, Length::Short),
-    ]);
+    let image = orders(&[(Opcode::X, 0, Length::Short), (Opcode::Z, 0, Length::Short)]);
     let bytes = image
         .iter()
         .flat_map(|word| word.to_le_bytes())
@@ -95,11 +88,9 @@ fn arithmetic_store_multiplier_collate_round_and_shift_paths_lockstep() {
     let mut gate = EdsacGateLevel::new();
     functional.load_words(&image, 0).unwrap();
     gate.load_words(&image, 0).unwrap();
-    for machine in [&mut functional] {
-        machine.write_memory(100, 0x12_345).unwrap();
-        machine.write_long(104, 0x0800_0000).unwrap();
-        machine.write_long(106, 0x0780_0000).unwrap();
-    }
+    functional.write_memory(100, 0x12_345).unwrap();
+    functional.write_long(104, 0x0800_0000).unwrap();
+    functional.write_long(106, 0x0780_0000).unwrap();
     gate.write_memory(100, 0x12_345).unwrap();
     gate.write_long(104, 0x0800_0000).unwrap();
     gate.write_long(106, 0x0780_0000).unwrap();
@@ -128,9 +119,7 @@ fn branch_and_io_paths_lockstep_with_complete_peripheral_state() {
     gate.write_memory(101, 0x1b000).unwrap();
     functional.write_memory(102, 5).unwrap();
     gate.write_memory(102, 5).unwrap();
-    functional
-        .set_accumulator([0x4000, 0, 0, 0, 0])
-        .unwrap();
+    functional.set_accumulator([0x4000, 0, 0, 0, 0]).unwrap();
     gate.set_accumulator([0x4000, 0, 0, 0, 0]).unwrap();
     assert_lockstep(&mut functional, &mut gate, image.len());
 }
@@ -150,20 +139,14 @@ fn decode_fetch_input_halt_and_run_faults_are_atomic() {
     }
 
     let mut gate = EdsacGateLevel::new();
-    gate.load_words(
-        &[encode_order(Opcode::I, 10, Length::Short)],
-        0,
-    )
-    .unwrap();
+    gate.load_words(&[encode_order(Opcode::I, 10, Length::Short)], 0)
+        .unwrap();
     let before = gate.state();
     assert_eq!(gate.step(), Err(EdsacError::InputExhausted));
     assert_eq!(gate.state(), before);
 
-    gate.load_words(
-        &[encode_order(Opcode::E, 0, Length::Short)],
-        0,
-    )
-    .unwrap();
+    gate.load_words(&[encode_order(Opcode::E, 0, Length::Short)], 0)
+        .unwrap();
     let before = gate.state();
     assert_eq!(
         gate.run(3),
@@ -174,10 +157,7 @@ fn decode_fetch_input_halt_and_run_faults_are_atomic() {
 
 #[test]
 fn execute_variants_are_transactional_and_return_oracle_results() {
-    let image = orders(&[
-        (Opcode::X, 0, Length::Short),
-        (Opcode::Z, 0, Length::Short),
-    ]);
+    let image = orders(&[(Opcode::X, 0, Length::Short), (Opcode::Z, 0, Length::Short)]);
     let bytes = image
         .iter()
         .flat_map(|word| word.to_le_bytes())
