@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "PA-C193-ordinal-contrast",
+    "language": "punjabi",
+    "chapter": 193,
+    "sequence": 10520,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:31ffb18fe5994d2c"
+  },
+  "findings": []
+}

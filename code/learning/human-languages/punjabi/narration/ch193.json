@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 193,
+  "title": "First and Second in a Room",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8559b56e7d9cde6b",
+  "lessons": [
+    {
+      "id": "PA-C193-ordinal-return",
+      "sequence": 10470,
+      "title": "Return to first, second, and room",
+      "headword": "ਪਹਿਲਾ · ਦੂਜਾ · ਕਮਰਾ · ਕਮਰੇ ਵਿੱਚ",
+      "romanization": "pahilaa; duujaa; kamraa; kamre vich",
+      "gloss": "retrieve first, second, room, and in the room",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c06b5e1bccb80b82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "pahilaa; duujaa; YOU SAY: ਪਹਿਲਾ; ਦੂਜਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *pahilaa; duujaa*; YOU SAY: **ਪਹਿਲਾ; ਦੂਜਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep two familiar room frames separate: ਕਮਰਾ on its own and ਕਮਰੇ ਵਿੱਚ for “in the room.” No new ordinal form enters this opener."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kamraa; YOU SAY: ਕਮਰਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kamraa*; YOU SAY: **ਕਮਰਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kamre vich; YOU SAY: ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kamre vich*; YOU SAY: **ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "pahilaa; duujaa; YOU SAY: ਪਹਿਲਾ; ਦੂਜਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *pahilaa; duujaa*; YOU SAY: **ਪਹਿਲਾ; ਦੂਜਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “first,” “second,” “room,” and “in the room.” This opener owns no new form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C193-pahile",
+      "sequence": 10480,
+      "title": "Change first inside one familiar room frame",
+      "headword": "ਪਹਿਲੇ",
+      "romanization": "pahile",
+      "gloss": "first in one masculine oblique room frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed067512efd13a68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਪਹਿਲਾ, then ਕਮਰਾ, then ਕਮਰੇ ਵਿੱਚ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਹਿਲਾ ਕਮਰਾ — pahilā kamrā — the first room."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ — pahile kamre vicc — in the first room."
+            },
+            {
+              "kind": "speech",
+              "text": "The familiar direct form has the final -aa sound. In this masculine singular phrase, the noun is oblique before ਵਿੱਚ, and the ordinal takes final -e."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: source boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gill and Gleason's masculine adjective table contrasts the singular direct and singular oblique patterns. Here that contrast is ਪਹਿਲਾ beside ਪਹਿਲੇ (pahile). Their following numeral section lists first ਪਹਿਲਾ and second ਦੂਜਾ among Punjabi ordinals. This chapter follows these two ordinals, not a claim that every Punjabi adjective changes this way. Source: Harjeet Singh Gill and Henry A. Gleason, Jr., A Reference Grammar of Punjabi (1969), pp. 71–73, adjectives and numerals."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "pahilaa kamraa; YOU SAY: ਪਹਿਲਾ ਕਮਰਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *pahilaa kamraa*; YOU SAY: **ਪਹਿਲਾ ਕਮਰਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "pahile kamre vich; YOU SAY: ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *pahile kamre vich*; YOU SAY: **ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਪਹਿਲਾ ਕਮਰਾ, ਪਹਿਲੇ (pahile) ਕਮਰੇ ਵਿੱਚ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਪਹਿਲਾ ਕਮਰਾ · ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਹਿਲੇ (pahile) once, then compare it with ਪਹਿਲਾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਹਿਲੇ** once, then compare it with **ਪਹਿਲਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “in the first room.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C193-pahile-review",
+      "sequence": 10490,
+      "title": "Retrieve first in two small frames",
+      "headword": "ਪਹਿਲਾ · ਪਹਿਲੇ",
+      "romanization": "pahilaa; pahile",
+      "gloss": "retrieve first across direct and oblique room frames",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6e8e540e6ac4a53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the familiar direct form ਪਹਿਲਾ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep one contrast: ਪਹਿਲਾ ਕਮਰਾ; ਪਹਿਲੇ (pahile) ਕਮਰੇ ਵਿੱਚ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "pahilaa kamraa; pahile kamre vich; YOU SAY: ਪਹਿਲਾ ਕਮਰਾ; ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *pahilaa kamraa; pahile kamre vich*; YOU SAY: **ਪਹਿਲਾ ਕਮਰਾ; ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਪਹਿਲੇ (pahile) ਕਮਰੇ ਵਿੱਚ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਪਹਿਲੇ (pahile)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਪਹਿਲੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the form of “first” used in the ਕਮਰੇ ਵਿੱਚ frame."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C193-duje",
+      "sequence": 10500,
+      "title": "Apply the same bounded change to second",
+      "headword": "ਦੂਜੇ",
+      "romanization": "duuje",
+      "gloss": "second in one masculine oblique room frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb5634fc73907502",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਦੂਜਾ, then the room-frame change you just practised."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦੂਜਾ ਕਮਰਾ — dūjā kamrā — the second room."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦੂਜੇ (duuje) ਕਮਰੇ ਵਿੱਚ — dūje kamre vicc — in the second room."
+            },
+            {
+              "kind": "speech",
+              "text": "The boundary stays narrow: the familiar direct ordinal changes from final -aa to -e in this same masculine singular oblique room frame."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "duujaa kamraa; YOU SAY: ਦੂਜਾ ਕਮਰਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *duujaa kamraa*; YOU SAY: **ਦੂਜਾ ਕਮਰਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "duuje kamre vich; YOU SAY: ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *duuje kamre vich*; YOU SAY: **ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਦੂਜਾ ਕਮਰਾ, ਦੂਜੇ (duuje) ਕਮਰੇ ਵਿੱਚ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਦੂਜਾ ਕਮਰਾ · ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਦੂਜੇ (duuje) once, then compare it with ਦੂਜਾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਦੂਜੇ** once, then compare it with **ਦੂਜਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “in the second room.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C193-duje-review",
+      "sequence": 10510,
+      "title": "Retrieve second in two small frames",
+      "headword": "ਦੂਜਾ · ਦੂਜੇ",
+      "romanization": "duujaa; duuje",
+      "gloss": "retrieve second across direct and oblique room frames",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a8f5589f0d86ff2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the familiar direct form ਦੂਜਾ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep one contrast: ਦੂਜਾ ਕਮਰਾ; ਦੂਜੇ (duuje) ਕਮਰੇ ਵਿੱਚ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "duujaa kamraa; duuje kamre vich; YOU SAY: ਦੂਜਾ ਕਮਰਾ; ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *duujaa kamraa; duuje kamre vich*; YOU SAY: **ਦੂਜਾ ਕਮਰਾ; ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਦੂਜੇ (duuje) ਕਮਰੇ ਵਿੱਚ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਦੂਜੇ (duuje)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਦੂਜੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the form of “second” used in the ਕਮਰੇ ਵਿੱਚ frame."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C193-ordinal-contrast",
+      "sequence": 10520,
+      "title": "Put both ordinal contrasts side by side",
+      "headword": "ਪਹਿਲਾ · ਪਹਿਲੇ · ਦੂਜਾ · ਦੂਜੇ",
+      "romanization": "pahilaa; pahile; duujaa; duuje",
+      "gloss": "contrast two direct and oblique ordinal forms",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:31ffb18fe5994d2c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Grammar Lens",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Grammar Lens and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਪਹਿਲਾ and ਦੂਜਾ without a following noun."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Direct room frame",
+                "Oblique room frame"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Direct room frame: ਪਹਿਲਾ ਕਮਰਾ. Oblique room frame: ਪਹਿਲੇ (pahile) ਕਮਰੇ ਵਿੱਚ.",
+                "Direct room frame: ਦੂਜਾ ਕਮਰਾ. Oblique room frame: ਦੂਜੇ (duuje) ਕਮਰੇ ਵਿੱਚ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read down one column before crossing to the other. The ending change belongs to this bounded masculine room contrast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "pahilaa kamraa; pahile kamre vich; YOU SAY: ਪਹਿਲਾ ਕਮਰਾ; ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *pahilaa kamraa; pahile kamre vich*; YOU SAY: **ਪਹਿਲਾ ਕਮਰਾ; ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "duujaa kamraa; duuje kamre vich; YOU SAY: ਦੂਜਾ ਕਮਰਾ; ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *duujaa kamraa; duuje kamre vich*; YOU SAY: **ਦੂਜਾ ਕਮਰਾ; ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the table and write the two location-frame ordinal forms",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the table and write the two location-frame ordinal forms]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say both “in the room” ordinal phrases."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C193-ordinal-frames",
+      "sequence": 10530,
+      "title": "Choose first or second in the same location frame",
+      "headword": "ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ · ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ",
+      "romanization": "pahile kamre vich; duuje kamre vich",
+      "gloss": "choose first or second inside one familiar location frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:519e45a2251fa638",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the two new forms without adding the room phrase."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "pahile kamre vich; YOU SAY: ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *pahile kamre vich*; YOU SAY: **ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "duuje kamre vich; YOU SAY: ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *duuje kamre vich*; YOU SAY: **ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਪਹਿਲੇ (pahile) ਕਮਰੇ ਵਿੱਚ, ਦੂਜੇ (duuje) ਕਮਰੇ ਵਿੱਚ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ · ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write one phrase, then the other",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write one phrase, then the other]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The choice changes the ordinal meaning. The familiar ਕਮਰੇ ਵਿੱਚ frame and the final -e stay stable."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “in the first room,” then “in the second room.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C193-payoff",
+      "sequence": 10540,
+      "title": "A bounded first-and-second payoff",
+      "headword": "ਪਹਿਲਾ ਕਮਰਾ · ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ · ਦੂਜਾ ਕਮਰਾ · ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ",
+      "romanization": "pahilaa kamraa; pahile kamre vich; duujaa kamraa; duuje kamre vich",
+      "gloss": "contrast first and second across direct and oblique room frames",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a0ff344abe2e059",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall both direct ordinals, then both forms used in the familiar location frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "pahilaa kamraa; pahile kamre vich; duujaa kamraa; duuje kamre vich; YOU SAY: ਪਹਿਲਾ ਕਮਰਾ; ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ; ਦੂਜਾ ਕਮਰਾ; ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *pahilaa kamraa; pahile kamre vich; duujaa kamraa; duuje kamre vich*; YOU SAY: **ਪਹਿਲਾ ਕਮਰਾ; ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ; ਦੂਜਾ ਕਮਰਾ; ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਪਹਿਲਾ ਕਮਰਾ, ਪਹਿਲੇ (pahile) ਕਮਰੇ ਵਿੱਚ, ਦੂਜਾ ਕਮਰਾ, ਦੂਜੇ (duuje) ਕਮਰੇ ਵਿੱਚ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਪਹਿਲਾ ਕਮਰਾ · ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ · ਦੂਜਾ ਕਮਰਾ · ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write the two location phrases",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write the two location phrases]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce both direct room phrases, then both location phrases."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the sixteenth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
