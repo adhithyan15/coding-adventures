@@ -6599,6 +6599,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - a pure runtime conditional may feed an exact normalizer when
+    // every branch maps to the same checked integer result.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure rightvalue; rightvalue := 3.5; boolean flag; real result; flag := rightvalue() > 0; result := entier(abs(if flag then -3 else 3) * sign(rightvalue())); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -26082,6 +26093,32 @@ fn algol_exact_standard_function_identity_runtime_real_output_runs_on_every_avai
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the exact standard-function identity program did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_normalized_conditional_reduction_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(abs(if flag then -3 else 3) * sign(rightvalue()))",
+                )
+        })
+        .expect("the normalized conditional reduction ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the normalized conditional reduction program did not run"
             );
             continue;
         };

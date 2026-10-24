@@ -47,6 +47,9 @@ Exact built-in real identities `sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and
 `ln(1)` may also supply checked integer leaves, including when their arguments
 are checked reductions. Non-identity, dynamic, and user-overridden calls fail
 closed.
+Exact built-in normalizers may consume a pure runtime conditional when every
+branch maps independently to the same checked integer result. Unequal mapped
+results, procedure-calling selectors, and dynamic branches fail closed.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
