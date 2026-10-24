@@ -80,7 +80,7 @@ The cell is complete only when it has:
    control flow, special registers, and typed atomic faults;
 3. transactional load, restore, step, run, execute, fetch, alignment, and
    retention tests;
-4. release line coverage above 80%; and
+4. release line coverage above 80% (completion baseline: 82.28%, 887/1,078);
+   and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and security review before publication.
-
