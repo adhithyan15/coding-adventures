@@ -8,8 +8,10 @@
   presence relationship.
 - Retain the generic response-type OID, borrowed response OCTET STRING, and
   exact complete outer encoding under shared DER budgets.
+- Explicitly dispatch only the exact `id-pkix-ocsp-basic` OID into the
+  repository-owned `BasicOCSPResponse` decoder without resetting the caller's
+  DER budget; reject unknown types before parsing their body.
 - Reject malformed, reordered, missing, unassigned, and trailing values with
   payload-free error categories and whole-response offsets.
-- Keep response-type dispatch, inner decoding, authentication, responder
-  authorization, certificate/path binding, freshness, revocation policy,
-  HTTP, and TLS explicitly out of scope.
+- Keep authentication, responder authorization, certificate/path binding,
+  freshness, revocation policy, HTTP, and TLS explicitly out of scope.
