@@ -503,13 +503,17 @@ and trailing data in exact mode. It does not interpret ASN.1 types, recurse
 through constructed values, parse X.509, validate certificate paths, verify
 signatures, or select trust roots, so it does not unblock concrete HTTPS by
 itself. The typed `der-asn1` layer is now shipped above that framing primitive:
-it provides allocation-free canonical BOOLEAN, INTEGER, BIT STRING, OCTET
-STRING, NULL, and OBJECT IDENTIFIER decoding plus exact SEQUENCE, SET, and
+it provides allocation-free canonical BOOLEAN, INTEGER, ENUMERATED, BIT STRING,
+OCTET STRING, NULL, and OBJECT IDENTIFIER decoding plus exact SEQUENCE, SET, and
 explicit context-wrapper traversal under one shared depth and total-element
 budget. It also validates universal IA5String and schema-selected implicit BIT
 STRING, OCTET STRING, IA5String, and OBJECT IDENTIFIER values under exact
 primitive context-specific tags, providing typed value prerequisites for
-later X.509 schemas without claiming their semantics. A separate
+later X.509 schemas without claiming their semantics. The generic ENUMERATED
+decoder requires the exact primitive universal tag and canonical non-empty
+two's-complement contents, preserves signed values as borrowed bytes, and
+offers checked conversion to `u64`; it does not define an enum registry or
+grant CRL, OCSP, revocation, or freshness semantics. A separate
 `x509-time` profile layer now validates exact RFC 5280
 UTCTime and GeneralizedTime tags, fixed Zulu forms, the 1950/2050 century
 split, and Gregorian fields without a clock or platform calendar. A separate
