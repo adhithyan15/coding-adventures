@@ -517,7 +517,7 @@ fn parse_node_shape_token(token: &Token) -> Result<(String, DiagramShape), Parse
 }
 
 fn direction_from_token(token: &Token) -> Result<DiagramDirection, ParseError> {
-    match token.value.as_str() {
+    match token.value.to_ascii_uppercase().as_str() {
         "TB" | "TD" => Ok(DiagramDirection::Tb),
         "BT" => Ok(DiagramDirection::Bt),
         "LR" => Ok(DiagramDirection::Lr),
@@ -760,6 +760,9 @@ pub fn detect_mermaid_type(source: &str) -> Result<MermaidDiagramType, ParseErro
     if first.eq_ignore_ascii_case("requirement") || first.eq_ignore_ascii_case("requirementDiagram")
     {
         return Ok(MermaidDiagramType::Requirement);
+    }
+    if first.eq_ignore_ascii_case("erDiagram") {
+        return Ok(MermaidDiagramType::Er);
     }
     let diagram_type = match first.as_str() {
         "flowchart" | "graph" | "flowchart-elk" => MermaidDiagramType::Flowchart,
@@ -13551,18 +13554,21 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
             }
             _ => {}
         }
-        if matches!(cursor.current().value.as_str(), "title" | "direction" | "classDef" | "class" | "style") {
-            match cursor.current().value.as_str() {
-                "title" => {
+        if matches!(
+            token_name(cursor.current()),
+            "TITLE_KW" | "DIRECTION_KW" | "CLASSDEF_KW" | "CLASS_KW" | "STYLE_KW"
+        ) {
+            match token_name(cursor.current()) {
+                "TITLE_KW" => {
                     cursor.advance();
                     title = Some(parse_er_line_text(&mut cursor));
                 }
-                "direction" => {
+                "DIRECTION_KW" => {
                     cursor.advance();
                     direction = Some(direction_from_token(cursor.current())?);
                     cursor.advance();
                 }
-                "classDef" => {
+                "CLASSDEF_KW" => {
                     let token = cursor.advance().clone();
                     let class_names = parse_er_id_list(&mut cursor)?;
                     let style = parse_er_style_tail(&mut cursor, &token)?;
@@ -13570,13 +13576,13 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                         class_styles.insert(class_name, style.clone());
                     }
                 }
-                "class" => {
+                "CLASS_KW" => {
                     cursor.advance();
                     let node_ids = parse_er_id_list(&mut cursor)?;
                     let class_names = parse_er_id_list(&mut cursor)?;
                     class_assignments.push((node_ids, class_names));
                 }
-                "style" => {
+                "STYLE_KW" => {
                     let token = cursor.advance().clone();
                     let node_ids = parse_er_id_list(&mut cursor)?;
                     direct_styles.push((node_ids, parse_er_style_tail(&mut cursor, &token)?));

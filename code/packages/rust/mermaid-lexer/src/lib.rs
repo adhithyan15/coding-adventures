@@ -1471,6 +1471,29 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_keywords_case_insensitively() {
+        let tokens = tokenize_mermaid_er(
+            "ErDiAgRaM\nTiTlE Library model\nDiReCtIoN lR\nBOOK OnE oR mOrE To OnLy OnE AUTHOR : written by\n",
+        );
+        let names: Vec<&str> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+
+        for expected in [
+            "HEADER",
+            "TITLE_KW",
+            "DIRECTION_KW",
+            "DIRECTION",
+            "ONE_OR_MORE",
+            "IDENTIFYING",
+            "ONLY_ONE",
+        ] {
+            assert!(names.contains(&expected));
+        }
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",

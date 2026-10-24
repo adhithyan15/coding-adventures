@@ -128,7 +128,9 @@ compartment before structural layout and paint. Statement keywords remain valid
 attribute names inside an entity block, matching Mermaid's block-scoped lexer,
 and reach the same structural and paint pipeline. Bracketed attribute names with
 parenthesized suffixes preserve their complete source spelling through semantic
-IR, layout, and paint. ER remains partial while the
+IR, layout, and paint. ER headers, statements, directions, and word-form
+relationships match case-insensitively from family detection through paint,
+while authored entity text retains its original case. ER remains partial while the
 rest of the pinned upstream syntax and visual corpus is incomplete.
 
 ## Required New Semantic Families
