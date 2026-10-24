@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R513-review-506-513
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 29500
+chapter: 513
+type: review
+headword: (dialogue)
+gloss: a review of the words from Getting Hired to People at Work
+concept_tag: REVIEW
+prerequisites: [TA-C506-uttiyokam, TA-C506-cuyavivaram, TA-C506-amarttu, TA-C506-mulunera, TA-C506-utaviyalar, TA-C507-paniyitam, TA-C507-panipuri, TA-C507-ceyalalar, TA-C507-koppu, TA-C507-merparvaiyitu, TA-C508-utiyam, TA-C508-vituppu, TA-C508-kututal-neram, TA-C508-kanakkalar, TA-C508-eluttar, TA-C509-patavi-uyarvu, TA-C509-latciyam, TA-C509-ulai, TA-C509-ukkuvi, TA-C509-nipunar, TA-C510-urpatti, TA-C510-poruttu, TA-C510-orunkinai, TA-C510-atukku, TA-C510-ala, TA-C511-errumati, TA-C511-irakkumati, TA-C511-vanikam, TA-C511-tolilatipar, TA-C511-kuttali, TA-C512-paninikkam, TA-C512-patavi-vilaku, TA-C512-oyvu-peru, TA-C512-itamarram, TA-C512-totanku, TA-C513-tolilmunaivor, TA-C513-alocakar, TA-C513-kollar, TA-C513-necavalar, TA-C513-panippen]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C506-VELAI506-01, TA-LEX-C506-VELAI506-02, TA-LEX-C506-VELAI506-03, TA-LEX-C506-VELAI506-04, TA-LEX-C506-VELAI506-05, TA-LEX-C507-ALUVALAKAM507-01, TA-LEX-C507-ALUVALAKAM507-02, TA-LEX-C507-ALUVALAKAM507-03, TA-LEX-C507-ALUVALAKAM507-04, TA-LEX-C507-ALUVALAKAM507-05, TA-LEX-C508-OOTHIYAM508-01, TA-LEX-C508-OOTHIYAM508-02, TA-LEX-C508-OOTHIYAM508-03, TA-LEX-C508-OOTHIYAM508-04, TA-LEX-C508-OOTHIYAM508-05, TA-LEX-C509-MUNNERRAM509-01, TA-LEX-C509-MUNNERRAM509-02, TA-LEX-C509-MUNNERRAM509-03, TA-LEX-C509-MUNNERRAM509-04, TA-LEX-C509-MUNNERRAM509-05, TA-LEX-C510-THOZHIRSALAI510-01, TA-LEX-C510-THOZHIRSALAI510-02, TA-LEX-C510-THOZHIRSALAI510-03, TA-LEX-C510-THOZHIRSALAI510-04, TA-LEX-C510-THOZHIRSALAI510-05, TA-LEX-C511-VANIKAM511-01, TA-LEX-C511-VANIKAM511-02, TA-LEX-C511-VANIKAM511-03, TA-LEX-C511-VANIKAM511-04, TA-LEX-C511-VANIKAM511-05, TA-LEX-C512-VILAKAL512-01, TA-LEX-C512-VILAKAL512-02, TA-LEX-C512-VILAKAL512-03, TA-LEX-C512-VILAKAL512-04, TA-LEX-C512-VILAKAL512-05, TA-LEX-C513-THOZHILALAR513-01, TA-LEX-C513-THOZHILALAR513-02, TA-LEX-C513-THOZHILALAR513-03, TA-LEX-C513-THOZHILALAR513-04, TA-LEX-C513-THOZHILALAR513-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C506-VELAI506-01, TA-LEX-C506-VELAI506-02, TA-LEX-C506-VELAI506-03, TA-LEX-C506-VELAI506-04, TA-LEX-C506-VELAI506-05, TA-LEX-C507-ALUVALAKAM507-01, TA-LEX-C507-ALUVALAKAM507-02, TA-LEX-C507-ALUVALAKAM507-03, TA-LEX-C507-ALUVALAKAM507-04, TA-LEX-C507-ALUVALAKAM507-05, TA-LEX-C508-OOTHIYAM508-01, TA-LEX-C508-OOTHIYAM508-02, TA-LEX-C508-OOTHIYAM508-03, TA-LEX-C508-OOTHIYAM508-04, TA-LEX-C508-OOTHIYAM508-05, TA-LEX-C509-MUNNERRAM509-01, TA-LEX-C509-MUNNERRAM509-02, TA-LEX-C509-MUNNERRAM509-03, TA-LEX-C509-MUNNERRAM509-04, TA-LEX-C509-MUNNERRAM509-05, TA-LEX-C510-THOZHIRSALAI510-01, TA-LEX-C510-THOZHIRSALAI510-02, TA-LEX-C510-THOZHIRSALAI510-03, TA-LEX-C510-THOZHIRSALAI510-04, TA-LEX-C510-THOZHIRSALAI510-05, TA-LEX-C511-VANIKAM511-01, TA-LEX-C511-VANIKAM511-02, TA-LEX-C511-VANIKAM511-03, TA-LEX-C511-VANIKAM511-04, TA-LEX-C511-VANIKAM511-05, TA-LEX-C512-VILAKAL512-01, TA-LEX-C512-VILAKAL512-02, TA-LEX-C512-VILAKAL512-03, TA-LEX-C512-VILAKAL512-04, TA-LEX-C512-VILAKAL512-05, TA-LEX-C513-THOZHILALAR513-01, TA-LEX-C513-THOZHILALAR513-02, TA-LEX-C513-THOZHILALAR513-03, TA-LEX-C513-THOZHILALAR513-04, TA-LEX-C513-THOZHILALAR513-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C506-uttiyokam, TA-C506-cuyavivaram, TA-C506-amarttu, TA-C506-mulunera, TA-C506-utaviyalar, TA-C507-paniyitam, TA-C507-panipuri, TA-C507-ceyalalar, TA-C507-koppu, TA-C507-merparvaiyitu, TA-C508-utiyam, TA-C508-vituppu, TA-C508-kututal-neram, TA-C508-kanakkalar, TA-C508-eluttar, TA-C509-patavi-uyarvu, TA-C509-latciyam, TA-C509-ulai, TA-C509-ukkuvi, TA-C509-nipunar, TA-C510-urpatti, TA-C510-poruttu, TA-C510-orunkinai, TA-C510-atukku, TA-C510-ala, TA-C511-errumati, TA-C511-irakkumati, TA-C511-vanikam, TA-C511-tolilatipar, TA-C511-kuttali, TA-C512-paninikkam, TA-C512-patavi-vilaku, TA-C512-oyvu-peru, TA-C512-itamarram, TA-C512-totanku, TA-C513-tolilmunaivor, TA-C513-alocakar, TA-C513-kollar, TA-C513-necavalar, TA-C513-panippen]
+---
+
+# Looking back at work and careers
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C506-VELAI506-01, TA-LEX-C506-VELAI506-02] -->
+
+[PAUSE 3s] Say the Tamil for a salaried job and a CV.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C506-VELAI506-01, TA-LEX-C506-VELAI506-02, TA-LEX-C506-VELAI506-03, TA-LEX-C506-VELAI506-04, TA-LEX-C506-VELAI506-05, TA-LEX-C507-ALUVALAKAM507-01, TA-LEX-C507-ALUVALAKAM507-02, TA-LEX-C507-ALUVALAKAM507-03, TA-LEX-C507-ALUVALAKAM507-04, TA-LEX-C507-ALUVALAKAM507-05, TA-LEX-C508-OOTHIYAM508-01, TA-LEX-C508-OOTHIYAM508-02, TA-LEX-C508-OOTHIYAM508-03, TA-LEX-C508-OOTHIYAM508-04, TA-LEX-C508-OOTHIYAM508-05, TA-LEX-C509-MUNNERRAM509-01, TA-LEX-C509-MUNNERRAM509-02, TA-LEX-C509-MUNNERRAM509-03, TA-LEX-C509-MUNNERRAM509-04, TA-LEX-C509-MUNNERRAM509-05, TA-LEX-C510-THOZHIRSALAI510-01, TA-LEX-C510-THOZHIRSALAI510-02, TA-LEX-C510-THOZHIRSALAI510-03, TA-LEX-C510-THOZHIRSALAI510-04, TA-LEX-C510-THOZHIRSALAI510-05, TA-LEX-C511-VANIKAM511-01, TA-LEX-C511-VANIKAM511-02, TA-LEX-C511-VANIKAM511-03, TA-LEX-C511-VANIKAM511-04, TA-LEX-C511-VANIKAM511-05, TA-LEX-C512-VILAKAL512-01, TA-LEX-C512-VILAKAL512-02, TA-LEX-C512-VILAKAL512-03, TA-LEX-C512-VILAKAL512-04, TA-LEX-C512-VILAKAL512-05, TA-LEX-C513-THOZHILALAR513-01, TA-LEX-C513-THOZHILALAR513-02, TA-LEX-C513-THOZHILALAR513-03, TA-LEX-C513-THOZHILALAR513-04, TA-LEX-C513-THOZHILALAR513-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a salaried job, a CV, to hire, full-time, an assistant]
+- [YOU SAY: a workplace, to be employed, a secretary, a file, to supervise]
+- [YOU SAY: wages, leave from work, overtime, an accountant, a clerk]
+- [YOU SAY: a promotion, an ambition, to work hard, to encourage, an expert]
+- [YOU SAY: production, to fit, to coordinate, to stack, to take measurements]
+- [YOU SAY: exports, imports, business, a businessman, a partner]
+- [YOU SAY: dismissal, to resign, to retire, a transfer, to start]
+- [YOU SAY: an entrepreneur, an adviser, a blacksmith, a weaver, a maid]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C506-VELAI506-01, TA-LEX-C506-VELAI506-02, TA-LEX-C506-VELAI506-03, TA-LEX-C506-VELAI506-04, TA-LEX-C506-VELAI506-05, TA-LEX-C507-ALUVALAKAM507-01, TA-LEX-C507-ALUVALAKAM507-02, TA-LEX-C507-ALUVALAKAM507-03, TA-LEX-C507-ALUVALAKAM507-04, TA-LEX-C507-ALUVALAKAM507-05, TA-LEX-C508-OOTHIYAM508-01, TA-LEX-C508-OOTHIYAM508-02, TA-LEX-C508-OOTHIYAM508-03, TA-LEX-C508-OOTHIYAM508-04, TA-LEX-C508-OOTHIYAM508-05, TA-LEX-C509-MUNNERRAM509-01, TA-LEX-C509-MUNNERRAM509-02, TA-LEX-C509-MUNNERRAM509-03, TA-LEX-C509-MUNNERRAM509-04, TA-LEX-C509-MUNNERRAM509-05, TA-LEX-C510-THOZHIRSALAI510-01, TA-LEX-C510-THOZHIRSALAI510-02, TA-LEX-C510-THOZHIRSALAI510-03, TA-LEX-C510-THOZHIRSALAI510-04, TA-LEX-C510-THOZHIRSALAI510-05, TA-LEX-C511-VANIKAM511-01, TA-LEX-C511-VANIKAM511-02, TA-LEX-C511-VANIKAM511-03, TA-LEX-C511-VANIKAM511-04, TA-LEX-C511-VANIKAM511-05, TA-LEX-C512-VILAKAL512-01, TA-LEX-C512-VILAKAL512-02, TA-LEX-C512-VILAKAL512-03, TA-LEX-C512-VILAKAL512-04, TA-LEX-C512-VILAKAL512-05, TA-LEX-C513-THOZHILALAR513-01, TA-LEX-C513-THOZHILALAR513-02, TA-LEX-C513-THOZHILALAR513-03, TA-LEX-C513-THOZHILALAR513-04, TA-LEX-C513-THOZHILALAR513-05] -->
+
+[PAUSE 3s] A salaried job? (**உத்தியோகம்**, *uttiyōkam*.) A CV? (**சுயவிவரம்**, *cuyavivaram*.) To hire? (**அமர்த்து**, *amarttu*.) Full-time? (**முழுநேர**, *muḻunēra*.) An assistant? (**உதவியாளர்**, *utaviyāḷar*.) A workplace? (**பணியிடம்**, *paṇiyiṭam*.) To be employed? (**பணிபுரி**, *paṇipuri*.) A secretary? (**செயலாளர்**, *ceyalāḷar*.) A file? (**கோப்பு**, *kōppu*.) To supervise? (**மேற்பார்வையிடு**, *mēṟpārvaiyiṭu*.) Wages? (**ஊதியம்**, *ūtiyam*.) Leave from work? (**விடுப்பு**, *viṭuppu*.) Overtime? (**கூடுதல் நேரம்**, *kūṭutal nēram*.) An accountant? (**கணக்காளர்**, *kaṇakkāḷar*.) A clerk? (**எழுத்தர்**, *eḻuttar*.) A promotion? (**பதவி உயர்வு**, *patavi uyarvu*.) An ambition? (**லட்சியம்**, *laṭciyam*.) To work hard? (**உழை**, *uḻai*.) To encourage? (**ஊக்குவி**, *ūkkuvi*.) An expert? (**நிபுணர்**, *nipuṇar*.) Production? (**உற்பத்தி**, *uṟpatti*.) To fit? (**பொருத்து**, *poruttu*.) To coordinate? (**ஒருங்கிணை**, *oruṅkiṇai*.) To stack? (**அடுக்கு**, *aṭukku*.) To take measurements? (**அள**, *aḷa*.) Exports? (**ஏற்றுமதி**, *ēṟṟumati*.) Imports? (**இறக்குமதி**, *iṟakkumati*.) Business? (**வணிகம்**, *vaṇikam*.) A businessman? (**தொழிலதிபர்**, *toḻilatipar*.) A partner? (**கூட்டாளி**, *kūṭṭāḷi*.) Dismissal? (**பணிநீக்கம்**, *paṇinīkkam*.) To resign? (**பதவி விலகு**, *patavi vilaku*.) To retire? (**ஓய்வு பெறு**, *ōyvu peṟu*.) A transfer? (**இடமாற்றம்**, *iṭamāṟṟam*.) To start? (**தொடங்கு**, *toṭaṅku*.) An entrepreneur? (**தொழில்முனைவோர்**, *toḻilmuṉaivōr*.) An adviser? (**ஆலோசகர்**, *ālōcakar*.) A blacksmith? (**கொல்லர்**, *kollar*.) A weaver? (**நெசவாளர்**, *necavāḷar*.) A maid? (**பணிப்பெண்**, *paṇippeṇ*.)
+`;export{t};

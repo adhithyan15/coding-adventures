@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R378-review-371-378
+spine_node: SPINE-GIVE-REASONS
+sequence: 21730
+chapter: 378
+type: review
+headword: (dialogue)
+gloss: a review of the words from Equal Rights to Organisations
+concept_tag: REVIEW
+prerequisites: [TA-C371-camattuvam, TA-C371-pakupatu, TA-C371-cirupanmai, TA-C371-perumpanmai, TA-C371-otukku, TA-C372-cattam, TA-C372-miru, TA-C372-kataippiti, TA-C372-tanti, TA-C372-inanku, TA-C373-araciyal, TA-C373-amaiccar, TA-C373-piratamar, TA-C373-alunar, TA-C373-natalumanram, TA-C374-tertal, TA-C374-vetpalar, TA-C374-vakkali, TA-C374-tokuti, TA-C374-piraccaram, TA-C375-katci, TA-C375-kuttani, TA-C375-atikaram, TA-C375-celvakku, TA-C375-kavar, TA-C376-poratu, TA-C376-arppattam, TA-C376-perani, TA-C376-koru, TA-C376-manu, TA-C377-vanmurai, TA-C377-akimcai, TA-C377-orrumai, TA-C377-verrumai, TA-C377-pilavupatu, TA-C378-amaippu, TA-C378-cankam, TA-C378-uruppinar, TA-C378-talaivar, TA-C378-porulalar]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C371-CAMATTUVAM371-01, TA-LEX-C371-CAMATTUVAM371-02, TA-LEX-C371-CAMATTUVAM371-03, TA-LEX-C371-CAMATTUVAM371-04, TA-LEX-C371-CAMATTUVAM371-05, TA-LEX-C372-CATTAM372-01, TA-LEX-C372-CATTAM372-02, TA-LEX-C372-CATTAM372-03, TA-LEX-C372-CATTAM372-04, TA-LEX-C372-CATTAM372-05, TA-LEX-C373-ARACIYAL373-01, TA-LEX-C373-ARACIYAL373-02, TA-LEX-C373-ARACIYAL373-03, TA-LEX-C373-ARACIYAL373-04, TA-LEX-C373-ARACIYAL373-05, TA-LEX-C374-TERTAL374-01, TA-LEX-C374-TERTAL374-02, TA-LEX-C374-TERTAL374-03, TA-LEX-C374-TERTAL374-04, TA-LEX-C374-TERTAL374-05, TA-LEX-C375-KATCI375-01, TA-LEX-C375-KATCI375-02, TA-LEX-C375-KATCI375-03, TA-LEX-C375-KATCI375-04, TA-LEX-C375-KATCI375-05, TA-LEX-C376-PORATU376-01, TA-LEX-C376-PORATU376-02, TA-LEX-C376-PORATU376-03, TA-LEX-C376-PORATU376-04, TA-LEX-C376-PORATU376-05, TA-LEX-C377-VANMURAI377-01, TA-LEX-C377-VANMURAI377-02, TA-LEX-C377-VANMURAI377-03, TA-LEX-C377-VANMURAI377-04, TA-LEX-C377-VANMURAI377-05, TA-LEX-C378-AMAIPPU378-01, TA-LEX-C378-AMAIPPU378-02, TA-LEX-C378-AMAIPPU378-03, TA-LEX-C378-AMAIPPU378-04, TA-LEX-C378-AMAIPPU378-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C371-CAMATTUVAM371-01, TA-LEX-C371-CAMATTUVAM371-02, TA-LEX-C371-CAMATTUVAM371-03, TA-LEX-C371-CAMATTUVAM371-04, TA-LEX-C371-CAMATTUVAM371-05, TA-LEX-C372-CATTAM372-01, TA-LEX-C372-CATTAM372-02, TA-LEX-C372-CATTAM372-03, TA-LEX-C372-CATTAM372-04, TA-LEX-C372-CATTAM372-05, TA-LEX-C373-ARACIYAL373-01, TA-LEX-C373-ARACIYAL373-02, TA-LEX-C373-ARACIYAL373-03, TA-LEX-C373-ARACIYAL373-04, TA-LEX-C373-ARACIYAL373-05, TA-LEX-C374-TERTAL374-01, TA-LEX-C374-TERTAL374-02, TA-LEX-C374-TERTAL374-03, TA-LEX-C374-TERTAL374-04, TA-LEX-C374-TERTAL374-05, TA-LEX-C375-KATCI375-01, TA-LEX-C375-KATCI375-02, TA-LEX-C375-KATCI375-03, TA-LEX-C375-KATCI375-04, TA-LEX-C375-KATCI375-05, TA-LEX-C376-PORATU376-01, TA-LEX-C376-PORATU376-02, TA-LEX-C376-PORATU376-03, TA-LEX-C376-PORATU376-04, TA-LEX-C376-PORATU376-05, TA-LEX-C377-VANMURAI377-01, TA-LEX-C377-VANMURAI377-02, TA-LEX-C377-VANMURAI377-03, TA-LEX-C377-VANMURAI377-04, TA-LEX-C377-VANMURAI377-05, TA-LEX-C378-AMAIPPU378-01, TA-LEX-C378-AMAIPPU378-02, TA-LEX-C378-AMAIPPU378-03, TA-LEX-C378-AMAIPPU378-04, TA-LEX-C378-AMAIPPU378-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C371-camattuvam, TA-C371-pakupatu, TA-C371-cirupanmai, TA-C371-perumpanmai, TA-C371-otukku, TA-C372-cattam, TA-C372-miru, TA-C372-kataippiti, TA-C372-tanti, TA-C372-inanku, TA-C373-araciyal, TA-C373-amaiccar, TA-C373-piratamar, TA-C373-alunar, TA-C373-natalumanram, TA-C374-tertal, TA-C374-vetpalar, TA-C374-vakkali, TA-C374-tokuti, TA-C374-piraccaram, TA-C375-katci, TA-C375-kuttani, TA-C375-atikaram, TA-C375-celvakku, TA-C375-kavar, TA-C376-poratu, TA-C376-arppattam, TA-C376-perani, TA-C376-koru, TA-C376-manu, TA-C377-vanmurai, TA-C377-akimcai, TA-C377-orrumai, TA-C377-verrumai, TA-C377-pilavupatu, TA-C378-amaippu, TA-C378-cankam, TA-C378-uruppinar, TA-C378-talaivar, TA-C378-porulalar]
+---
+
+# Looking back: from Equal Rights to Organisations
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C371-CAMATTUVAM371-01, TA-LEX-C371-CAMATTUVAM371-02] -->
+
+[PAUSE 3s] Say the Tamil for equality and discrimination.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C371-CAMATTUVAM371-01, TA-LEX-C371-CAMATTUVAM371-02, TA-LEX-C371-CAMATTUVAM371-03, TA-LEX-C371-CAMATTUVAM371-04, TA-LEX-C371-CAMATTUVAM371-05, TA-LEX-C372-CATTAM372-01, TA-LEX-C372-CATTAM372-02, TA-LEX-C372-CATTAM372-03, TA-LEX-C372-CATTAM372-04, TA-LEX-C372-CATTAM372-05, TA-LEX-C373-ARACIYAL373-01, TA-LEX-C373-ARACIYAL373-02, TA-LEX-C373-ARACIYAL373-03, TA-LEX-C373-ARACIYAL373-04, TA-LEX-C373-ARACIYAL373-05, TA-LEX-C374-TERTAL374-01, TA-LEX-C374-TERTAL374-02, TA-LEX-C374-TERTAL374-03, TA-LEX-C374-TERTAL374-04, TA-LEX-C374-TERTAL374-05, TA-LEX-C375-KATCI375-01, TA-LEX-C375-KATCI375-02, TA-LEX-C375-KATCI375-03, TA-LEX-C375-KATCI375-04, TA-LEX-C375-KATCI375-05, TA-LEX-C376-PORATU376-01, TA-LEX-C376-PORATU376-02, TA-LEX-C376-PORATU376-03, TA-LEX-C376-PORATU376-04, TA-LEX-C376-PORATU376-05, TA-LEX-C377-VANMURAI377-01, TA-LEX-C377-VANMURAI377-02, TA-LEX-C377-VANMURAI377-03, TA-LEX-C377-VANMURAI377-04, TA-LEX-C377-VANMURAI377-05, TA-LEX-C378-AMAIPPU378-01, TA-LEX-C378-AMAIPPU378-02, TA-LEX-C378-AMAIPPU378-03, TA-LEX-C378-AMAIPPU378-04, TA-LEX-C378-AMAIPPU378-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: equality, discrimination, a minority, a majority, to oppress]
+- [YOU SAY: a law, to violate, to observe, to punish, to comply]
+- [YOU SAY: politics, a minister, a prime minister, a governor, a parliament]
+- [YOU SAY: an election, a candidate, to vote, a constituency, a campaign]
+- [YOU SAY: a political party, an alliance, authority, influence, to attract]
+- [YOU SAY: to struggle, a demonstration, a rally, to demand, a petition]
+- [YOU SAY: violence, non-violence, unity, diversity, to be divided]
+- [YOU SAY: an organisation, an association, a member, a leader, a treasurer]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C371-CAMATTUVAM371-01, TA-LEX-C371-CAMATTUVAM371-02, TA-LEX-C371-CAMATTUVAM371-03, TA-LEX-C371-CAMATTUVAM371-04, TA-LEX-C371-CAMATTUVAM371-05, TA-LEX-C372-CATTAM372-01, TA-LEX-C372-CATTAM372-02, TA-LEX-C372-CATTAM372-03, TA-LEX-C372-CATTAM372-04, TA-LEX-C372-CATTAM372-05, TA-LEX-C373-ARACIYAL373-01, TA-LEX-C373-ARACIYAL373-02, TA-LEX-C373-ARACIYAL373-03, TA-LEX-C373-ARACIYAL373-04, TA-LEX-C373-ARACIYAL373-05, TA-LEX-C374-TERTAL374-01, TA-LEX-C374-TERTAL374-02, TA-LEX-C374-TERTAL374-03, TA-LEX-C374-TERTAL374-04, TA-LEX-C374-TERTAL374-05, TA-LEX-C375-KATCI375-01, TA-LEX-C375-KATCI375-02, TA-LEX-C375-KATCI375-03, TA-LEX-C375-KATCI375-04, TA-LEX-C375-KATCI375-05, TA-LEX-C376-PORATU376-01, TA-LEX-C376-PORATU376-02, TA-LEX-C376-PORATU376-03, TA-LEX-C376-PORATU376-04, TA-LEX-C376-PORATU376-05, TA-LEX-C377-VANMURAI377-01, TA-LEX-C377-VANMURAI377-02, TA-LEX-C377-VANMURAI377-03, TA-LEX-C377-VANMURAI377-04, TA-LEX-C377-VANMURAI377-05, TA-LEX-C378-AMAIPPU378-01, TA-LEX-C378-AMAIPPU378-02, TA-LEX-C378-AMAIPPU378-03, TA-LEX-C378-AMAIPPU378-04, TA-LEX-C378-AMAIPPU378-05] -->
+
+[PAUSE 3s] Equality? (**சமத்துவம்**, *camattuvam*.) Discrimination? (**பாகுபாடு**, *pākupāṭu*.) A minority? (**சிறுபான்மை**, *ciṟupāṉmai*.) A majority? (**பெரும்பான்மை**, *perumpāṉmai*.) To oppress? (**ஒடுக்கு**, *oṭukku*.) A law? (**சட்டம்**, *caṭṭam*.) To violate? (**மீறு**, *mīṟu*.) To observe? (**கடைப்பிடி**, *kaṭaippiṭi*.) To punish? (**தண்டி**, *taṇṭi*.) To comply? (**இணங்கு**, *iṇaṅku*.) Politics? (**அரசியல்**, *araciyal*.) A minister? (**அமைச்சர்**, *amaiccar*.) A prime minister? (**பிரதமர்**, *piratamar*.) A governor? (**ஆளுநர்**, *āḷunar*.) A parliament? (**நாடாளுமன்றம்**, *nāṭāḷumaṉṟam*.) An election? (**தேர்தல்**, *tērtal*.) A candidate? (**வேட்பாளர்**, *vēṭpāḷar*.) To vote? (**வாக்களி**, *vākkaḷi*.) A constituency? (**தொகுதி**, *tokuti*.) A campaign? (**பிரச்சாரம்**, *piraccāram*.) A political party? (**கட்சி**, *kaṭci*.) An alliance? (**கூட்டணி**, *kūṭṭaṇi*.) Authority? (**அதிகாரம்**, *atikāram*.) Influence? (**செல்வாக்கு**, *celvākku*.) To attract? (**கவர்**, *kavar*.) To struggle? (**போராடு**, *pōrāṭu*.) A demonstration? (**ஆர்ப்பாட்டம்**, *ārppāṭṭam*.) A rally? (**பேரணி**, *pēraṇi*.) To demand? (**கோரு**, *kōru*.) A petition? (**மனு**, *maṉu*.) Violence? (**வன்முறை**, *vaṉmuṟai*.) Non-violence? (**அகிம்சை**, *akimcai*.) Unity? (**ஒற்றுமை**, *oṟṟumai*.) Diversity? (**வேற்றுமை**, *vēṟṟumai*.) To be divided? (**பிளவுபடு**, *piḷavupaṭu*.) An organisation? (**அமைப்பு**, *amaippu*.) An association? (**சங்கம்**, *caṅkam*.) A member? (**உறுப்பினர்**, *uṟuppiṉar*.) A leader? (**தலைவர்**, *talaivar*.) A treasurer? (**பொருளாளர்**, *poruḷāḷar*.)
+`;export{t};

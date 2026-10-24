@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R392-review-386-392
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 22450
+chapter: 392
+type: review
+headword: (dialogue)
+gloss: a review of the words from Planning Ahead to Clean Government
+concept_tag: REVIEW
+prerequisites: [TA-C386-utti, TA-C386-munneccarikkai, TA-C386-varaivu, TA-C386-munnetu, TA-C386-kurikkol, TA-C387-oppantam, TA-C387-utanpatikkai, TA-C387-vakkuruti, TA-C387-urutimoli, TA-C387-niraiverru, TA-C388-opputal, TA-C388-ankikari, TA-C388-niyami, TA-C388-terivi, TA-C388-amarvu, TA-C389-ceyalpatuttu, TA-C389-nataimurai, TA-C389-valimurai, TA-C389-natavatikkai, TA-C389-nirvaki, TA-C390-cirtiruttam, TA-C390-munnerram, TA-C390-mempatuttu, TA-C390-ciramai, TA-C390-valuppatuttu, TA-C391-porulataram, TA-C391-maniyam, TA-C391-parrakkurai, TA-C391-viniyoki, TA-C391-nirnayi, TA-C392-ulal, TA-C392-lancam, TA-C392-velippataiyaka, TA-C392-maraimukamaka, TA-C392-kankani]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C386-UTTI386-01, TA-LEX-C386-UTTI386-02, TA-LEX-C386-UTTI386-03, TA-LEX-C386-UTTI386-04, TA-LEX-C386-UTTI386-05, TA-LEX-C387-OPPANTAM387-01, TA-LEX-C387-OPPANTAM387-02, TA-LEX-C387-OPPANTAM387-03, TA-LEX-C387-OPPANTAM387-04, TA-LEX-C387-OPPANTAM387-05, TA-LEX-C388-OPPUTAL388-01, TA-LEX-C388-OPPUTAL388-02, TA-LEX-C388-OPPUTAL388-03, TA-LEX-C388-OPPUTAL388-04, TA-LEX-C388-OPPUTAL388-05, TA-LEX-C389-CEYALPATUTTU389-01, TA-LEX-C389-CEYALPATUTTU389-02, TA-LEX-C389-CEYALPATUTTU389-03, TA-LEX-C389-CEYALPATUTTU389-04, TA-LEX-C389-CEYALPATUTTU389-05, TA-LEX-C390-CIRTIRUTTAM390-01, TA-LEX-C390-CIRTIRUTTAM390-02, TA-LEX-C390-CIRTIRUTTAM390-03, TA-LEX-C390-CIRTIRUTTAM390-04, TA-LEX-C390-CIRTIRUTTAM390-05, TA-LEX-C391-PORULATARAM391-01, TA-LEX-C391-PORULATARAM391-02, TA-LEX-C391-PORULATARAM391-03, TA-LEX-C391-PORULATARAM391-04, TA-LEX-C391-PORULATARAM391-05, TA-LEX-C392-ULAL392-01, TA-LEX-C392-ULAL392-02, TA-LEX-C392-ULAL392-03, TA-LEX-C392-ULAL392-04, TA-LEX-C392-ULAL392-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C386-UTTI386-01, TA-LEX-C386-UTTI386-02, TA-LEX-C386-UTTI386-03, TA-LEX-C386-UTTI386-04, TA-LEX-C386-UTTI386-05, TA-LEX-C387-OPPANTAM387-01, TA-LEX-C387-OPPANTAM387-02, TA-LEX-C387-OPPANTAM387-03, TA-LEX-C387-OPPANTAM387-04, TA-LEX-C387-OPPANTAM387-05, TA-LEX-C388-OPPUTAL388-01, TA-LEX-C388-OPPUTAL388-02, TA-LEX-C388-OPPUTAL388-03, TA-LEX-C388-OPPUTAL388-04, TA-LEX-C388-OPPUTAL388-05, TA-LEX-C389-CEYALPATUTTU389-01, TA-LEX-C389-CEYALPATUTTU389-02, TA-LEX-C389-CEYALPATUTTU389-03, TA-LEX-C389-CEYALPATUTTU389-04, TA-LEX-C389-CEYALPATUTTU389-05, TA-LEX-C390-CIRTIRUTTAM390-01, TA-LEX-C390-CIRTIRUTTAM390-02, TA-LEX-C390-CIRTIRUTTAM390-03, TA-LEX-C390-CIRTIRUTTAM390-04, TA-LEX-C390-CIRTIRUTTAM390-05, TA-LEX-C391-PORULATARAM391-01, TA-LEX-C391-PORULATARAM391-02, TA-LEX-C391-PORULATARAM391-03, TA-LEX-C391-PORULATARAM391-04, TA-LEX-C391-PORULATARAM391-05, TA-LEX-C392-ULAL392-01, TA-LEX-C392-ULAL392-02, TA-LEX-C392-ULAL392-03, TA-LEX-C392-ULAL392-04, TA-LEX-C392-ULAL392-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C386-utti, TA-C386-munneccarikkai, TA-C386-varaivu, TA-C386-munnetu, TA-C386-kurikkol, TA-C387-oppantam, TA-C387-utanpatikkai, TA-C387-vakkuruti, TA-C387-urutimoli, TA-C387-niraiverru, TA-C388-opputal, TA-C388-ankikari, TA-C388-niyami, TA-C388-terivi, TA-C388-amarvu, TA-C389-ceyalpatuttu, TA-C389-nataimurai, TA-C389-valimurai, TA-C389-natavatikkai, TA-C389-nirvaki, TA-C390-cirtiruttam, TA-C390-munnerram, TA-C390-mempatuttu, TA-C390-ciramai, TA-C390-valuppatuttu, TA-C391-porulataram, TA-C391-maniyam, TA-C391-parrakkurai, TA-C391-viniyoki, TA-C391-nirnayi, TA-C392-ulal, TA-C392-lancam, TA-C392-velippataiyaka, TA-C392-maraimukamaka, TA-C392-kankani]
+---
+
+# Looking back: from Planning Ahead to Clean Government
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C386-UTTI386-01, TA-LEX-C386-UTTI386-02] -->
+
+[PAUSE 3s] Say the Tamil for a strategy and a precaution.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C386-UTTI386-01, TA-LEX-C386-UTTI386-02, TA-LEX-C386-UTTI386-03, TA-LEX-C386-UTTI386-04, TA-LEX-C386-UTTI386-05, TA-LEX-C387-OPPANTAM387-01, TA-LEX-C387-OPPANTAM387-02, TA-LEX-C387-OPPANTAM387-03, TA-LEX-C387-OPPANTAM387-04, TA-LEX-C387-OPPANTAM387-05, TA-LEX-C388-OPPUTAL388-01, TA-LEX-C388-OPPUTAL388-02, TA-LEX-C388-OPPUTAL388-03, TA-LEX-C388-OPPUTAL388-04, TA-LEX-C388-OPPUTAL388-05, TA-LEX-C389-CEYALPATUTTU389-01, TA-LEX-C389-CEYALPATUTTU389-02, TA-LEX-C389-CEYALPATUTTU389-03, TA-LEX-C389-CEYALPATUTTU389-04, TA-LEX-C389-CEYALPATUTTU389-05, TA-LEX-C390-CIRTIRUTTAM390-01, TA-LEX-C390-CIRTIRUTTAM390-02, TA-LEX-C390-CIRTIRUTTAM390-03, TA-LEX-C390-CIRTIRUTTAM390-04, TA-LEX-C390-CIRTIRUTTAM390-05, TA-LEX-C391-PORULATARAM391-01, TA-LEX-C391-PORULATARAM391-02, TA-LEX-C391-PORULATARAM391-03, TA-LEX-C391-PORULATARAM391-04, TA-LEX-C391-PORULATARAM391-05, TA-LEX-C392-ULAL392-01, TA-LEX-C392-ULAL392-02, TA-LEX-C392-ULAL392-03, TA-LEX-C392-ULAL392-04, TA-LEX-C392-ULAL392-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a strategy, a precaution, a draft, to take forward, an aim]
+- [YOU SAY: a contract, a treaty, a promise, a pledge, to fulfil]
+- [YOU SAY: approval, to recognise officially, to appoint, to inform, a session]
+- [YOU SAY: to implement, practice, a procedure, a course of action, to administer]
+- [YOU SAY: a reform, progress, to improve, to restructure, to strengthen]
+- [YOU SAY: the economy, a subsidy, a deficit, to distribute, to fix]
+- [YOU SAY: corruption, a bribe, frankly, indirectly, to monitor]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C386-UTTI386-01, TA-LEX-C386-UTTI386-02, TA-LEX-C386-UTTI386-03, TA-LEX-C386-UTTI386-04, TA-LEX-C386-UTTI386-05, TA-LEX-C387-OPPANTAM387-01, TA-LEX-C387-OPPANTAM387-02, TA-LEX-C387-OPPANTAM387-03, TA-LEX-C387-OPPANTAM387-04, TA-LEX-C387-OPPANTAM387-05, TA-LEX-C388-OPPUTAL388-01, TA-LEX-C388-OPPUTAL388-02, TA-LEX-C388-OPPUTAL388-03, TA-LEX-C388-OPPUTAL388-04, TA-LEX-C388-OPPUTAL388-05, TA-LEX-C389-CEYALPATUTTU389-01, TA-LEX-C389-CEYALPATUTTU389-02, TA-LEX-C389-CEYALPATUTTU389-03, TA-LEX-C389-CEYALPATUTTU389-04, TA-LEX-C389-CEYALPATUTTU389-05, TA-LEX-C390-CIRTIRUTTAM390-01, TA-LEX-C390-CIRTIRUTTAM390-02, TA-LEX-C390-CIRTIRUTTAM390-03, TA-LEX-C390-CIRTIRUTTAM390-04, TA-LEX-C390-CIRTIRUTTAM390-05, TA-LEX-C391-PORULATARAM391-01, TA-LEX-C391-PORULATARAM391-02, TA-LEX-C391-PORULATARAM391-03, TA-LEX-C391-PORULATARAM391-04, TA-LEX-C391-PORULATARAM391-05, TA-LEX-C392-ULAL392-01, TA-LEX-C392-ULAL392-02, TA-LEX-C392-ULAL392-03, TA-LEX-C392-ULAL392-04, TA-LEX-C392-ULAL392-05] -->
+
+[PAUSE 3s] A strategy? (**உத்தி**, *utti*.) A precaution? (**முன்னெச்சரிக்கை**, *muṉṉeccarikkai*.) A draft? (**வரைவு**, *varaivu*.) To take forward? (**முன்னெடு**, *muṉṉeṭu*.) An aim? (**குறிக்கோள்**, *kuṟikkōḷ*.) A contract? (**ஒப்பந்தம்**, *oppantam*.) A treaty? (**உடன்படிக்கை**, *uṭaṉpaṭikkai*.) A promise? (**வாக்குறுதி**, *vākkuṟuti*.) A pledge? (**உறுதிமொழி**, *uṟutimoḻi*.) To fulfil? (**நிறைவேற்று**, *niṟaivēṟṟu*.) Approval? (**ஒப்புதல்**, *opputal*.) To recognise officially? (**அங்கீகரி**, *aṅkīkari*.) To appoint? (**நியமி**, *niyami*.) To inform? (**தெரிவி**, *terivi*.) A session? (**அமர்வு**, *amarvu*.) To implement? (**செயல்படுத்து**, *ceyalpaṭuttu*.) Practice? (**நடைமுறை**, *naṭaimuṟai*.) A procedure? (**வழிமுறை**, *vaḻimuṟai*.) A course of action? (**நடவடிக்கை**, *naṭavaṭikkai*.) To administer? (**நிர்வகி**, *nirvaki*.) A reform? (**சீர்திருத்தம்**, *cīrtiruttam*.) Progress? (**முன்னேற்றம்**, *muṉṉēṟṟam*.) To improve? (**மேம்படுத்து**, *mēmpaṭuttu*.) To restructure? (**சீரமை**, *cīramai*.) To strengthen? (**வலுப்படுத்து**, *valuppaṭuttu*.) The economy? (**பொருளாதாரம்**, *poruḷātāram*.) A subsidy? (**மானியம்**, *māṉiyam*.) A deficit? (**பற்றாக்குறை**, *paṟṟākkuṟai*.) To distribute? (**விநியோகி**, *viniyōki*.) To fix? (**நிர்ணயி**, *nirṇayi*.) Corruption? (**ஊழல்**, *ūḻal*.) A bribe? (**லஞ்சம்**, *lañcam*.) Frankly? (**வெளிப்படையாக**, *veḷippaṭaiyāka*.) Indirectly? (**மறைமுகமாக**, *maṟaimukamāka*.) To monitor? (**கண்காணி**, *kaṇkāṇi*.)
+`;export{t};

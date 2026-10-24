@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R301-review-294-301
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 17500
+chapter: 301
+type: review
+headword: (dialogue)
+gloss: a review of the words from A Witness and a Theft to A Rescue
+concept_tag: REVIEW
+prerequisites: [TA-C294-catci, TA-C294-campavam, TA-C294-tirutu, TA-C294-kollai, TA-C294-nikal, TA-C295-tuppu, TA-C295-tatayam, TA-C295-canteki, TA-C295-kurram, TA-C295-kurravali, TA-C296-kavalturai, TA-C296-kaitu-cey, TA-C296-currivalai, TA-C296-kaiti, TA-C296-oppukkol, TA-C297-katattu, TA-C297-tappiyotu, TA-C297-kallanottu, TA-C297-pulanayvu, TA-C297-kurrancattu, TA-C298-vipattu, TA-C298-patukayamatai, TA-C298-urukkulai, TA-C298-uyirtappu, TA-C298-mutalutavi, TA-C299-tippiti, TA-C299-parriyeri, TA-C299-tikkiraiyaku, TA-C299-tiyanaippu-virar, TA-C299-muccuttinaru, TA-C300-avacaranilai, TA-C300-uratanku, TA-C300-mutanku, TA-C300-nilaikulai, TA-C300-itintuvilu, TA-C301-mitpu, TA-C301-itipatu, TA-C301-vituvi, TA-C301-uyir-pilai, TA-C301-mittetu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C294-NIKAZHVU294-01, TA-LEX-C294-NIKAZHVU294-02, TA-LEX-C294-NIKAZHVU294-03, TA-LEX-C294-NIKAZHVU294-04, TA-LEX-C294-NIKAZHVU294-05, TA-LEX-C295-THUPPU295-01, TA-LEX-C295-THUPPU295-02, TA-LEX-C295-THUPPU295-03, TA-LEX-C295-THUPPU295-04, TA-LEX-C295-THUPPU295-05, TA-LEX-C296-KAVAL296-01, TA-LEX-C296-KAVAL296-02, TA-LEX-C296-KAVAL296-03, TA-LEX-C296-KAVAL296-04, TA-LEX-C296-KAVAL296-05, TA-LEX-C297-KADATHAL297-01, TA-LEX-C297-KADATHAL297-02, TA-LEX-C297-KADATHAL297-03, TA-LEX-C297-KADATHAL297-04, TA-LEX-C297-KADATHAL297-05, TA-LEX-C298-VIBATHU298-01, TA-LEX-C298-VIBATHU298-02, TA-LEX-C298-VIBATHU298-03, TA-LEX-C298-VIBATHU298-04, TA-LEX-C298-VIBATHU298-05, TA-LEX-C299-THEE299-01, TA-LEX-C299-THEE299-02, TA-LEX-C299-THEE299-03, TA-LEX-C299-THEE299-04, TA-LEX-C299-THEE299-05, TA-LEX-C300-AVASARAM300-01, TA-LEX-C300-AVASARAM300-02, TA-LEX-C300-AVASARAM300-03, TA-LEX-C300-AVASARAM300-04, TA-LEX-C300-AVASARAM300-05, TA-LEX-C301-MEETPU301-01, TA-LEX-C301-MEETPU301-02, TA-LEX-C301-MEETPU301-03, TA-LEX-C301-MEETPU301-04, TA-LEX-C301-MEETPU301-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C294-NIKAZHVU294-01, TA-LEX-C294-NIKAZHVU294-02, TA-LEX-C294-NIKAZHVU294-03, TA-LEX-C294-NIKAZHVU294-04, TA-LEX-C294-NIKAZHVU294-05, TA-LEX-C295-THUPPU295-01, TA-LEX-C295-THUPPU295-02, TA-LEX-C295-THUPPU295-03, TA-LEX-C295-THUPPU295-04, TA-LEX-C295-THUPPU295-05, TA-LEX-C296-KAVAL296-01, TA-LEX-C296-KAVAL296-02, TA-LEX-C296-KAVAL296-03, TA-LEX-C296-KAVAL296-04, TA-LEX-C296-KAVAL296-05, TA-LEX-C297-KADATHAL297-01, TA-LEX-C297-KADATHAL297-02, TA-LEX-C297-KADATHAL297-03, TA-LEX-C297-KADATHAL297-04, TA-LEX-C297-KADATHAL297-05, TA-LEX-C298-VIBATHU298-01, TA-LEX-C298-VIBATHU298-02, TA-LEX-C298-VIBATHU298-03, TA-LEX-C298-VIBATHU298-04, TA-LEX-C298-VIBATHU298-05, TA-LEX-C299-THEE299-01, TA-LEX-C299-THEE299-02, TA-LEX-C299-THEE299-03, TA-LEX-C299-THEE299-04, TA-LEX-C299-THEE299-05, TA-LEX-C300-AVASARAM300-01, TA-LEX-C300-AVASARAM300-02, TA-LEX-C300-AVASARAM300-03, TA-LEX-C300-AVASARAM300-04, TA-LEX-C300-AVASARAM300-05, TA-LEX-C301-MEETPU301-01, TA-LEX-C301-MEETPU301-02, TA-LEX-C301-MEETPU301-03, TA-LEX-C301-MEETPU301-04, TA-LEX-C301-MEETPU301-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C294-catci, TA-C294-campavam, TA-C294-tirutu, TA-C294-kollai, TA-C294-nikal, TA-C295-tuppu, TA-C295-tatayam, TA-C295-canteki, TA-C295-kurram, TA-C295-kurravali, TA-C296-kavalturai, TA-C296-kaitu-cey, TA-C296-currivalai, TA-C296-kaiti, TA-C296-oppukkol, TA-C297-katattu, TA-C297-tappiyotu, TA-C297-kallanottu, TA-C297-pulanayvu, TA-C297-kurrancattu, TA-C298-vipattu, TA-C298-patukayamatai, TA-C298-urukkulai, TA-C298-uyirtappu, TA-C298-mutalutavi, TA-C299-tippiti, TA-C299-parriyeri, TA-C299-tikkiraiyaku, TA-C299-tiyanaippu-virar, TA-C299-muccuttinaru, TA-C300-avacaranilai, TA-C300-uratanku, TA-C300-mutanku, TA-C300-nilaikulai, TA-C300-itintuvilu, TA-C301-mitpu, TA-C301-itipatu, TA-C301-vituvi, TA-C301-uyir-pilai, TA-C301-mittetu]
+---
+
+# Looking back: witnesses, thieves and the police
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C294-NIKAZHVU294-01, TA-LEX-C294-NIKAZHVU294-02] -->
+
+[PAUSE 3s] Say the Tamil for a witness and an incident.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C294-NIKAZHVU294-01, TA-LEX-C294-NIKAZHVU294-02, TA-LEX-C294-NIKAZHVU294-03, TA-LEX-C294-NIKAZHVU294-04, TA-LEX-C294-NIKAZHVU294-05, TA-LEX-C295-THUPPU295-01, TA-LEX-C295-THUPPU295-02, TA-LEX-C295-THUPPU295-03, TA-LEX-C295-THUPPU295-04, TA-LEX-C295-THUPPU295-05, TA-LEX-C296-KAVAL296-01, TA-LEX-C296-KAVAL296-02, TA-LEX-C296-KAVAL296-03, TA-LEX-C296-KAVAL296-04, TA-LEX-C296-KAVAL296-05, TA-LEX-C297-KADATHAL297-01, TA-LEX-C297-KADATHAL297-02, TA-LEX-C297-KADATHAL297-03, TA-LEX-C297-KADATHAL297-04, TA-LEX-C297-KADATHAL297-05, TA-LEX-C298-VIBATHU298-01, TA-LEX-C298-VIBATHU298-02, TA-LEX-C298-VIBATHU298-03, TA-LEX-C298-VIBATHU298-04, TA-LEX-C298-VIBATHU298-05, TA-LEX-C299-THEE299-01, TA-LEX-C299-THEE299-02, TA-LEX-C299-THEE299-03, TA-LEX-C299-THEE299-04, TA-LEX-C299-THEE299-05, TA-LEX-C300-AVASARAM300-01, TA-LEX-C300-AVASARAM300-02, TA-LEX-C300-AVASARAM300-03, TA-LEX-C300-AVASARAM300-04, TA-LEX-C300-AVASARAM300-05, TA-LEX-C301-MEETPU301-01, TA-LEX-C301-MEETPU301-02, TA-LEX-C301-MEETPU301-03, TA-LEX-C301-MEETPU301-04, TA-LEX-C301-MEETPU301-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a witness, an incident, to steal, a robbery, to happen]
+- [YOU SAY: a clue, a trace, to suspect, a crime, a culprit]
+- [YOU SAY: the police, to arrest, to cordon off, a prisoner, to confess]
+- [YOU SAY: to smuggle, to flee, a counterfeit note, an investigation, to accuse]
+- [YOU SAY: an accident, to be badly hurt, to be wrecked, to escape alive, first aid]
+- [YOU SAY: to catch fire, to blaze, to burn down, a firefighter, to suffocate]
+- [YOU SAY: an emergency, a curfew, to stall, to fall apart, to collapse]
+- [YOU SAY: a rescue, rubble, to set free, to survive, to retrieve]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C294-NIKAZHVU294-01, TA-LEX-C294-NIKAZHVU294-02, TA-LEX-C294-NIKAZHVU294-03, TA-LEX-C294-NIKAZHVU294-04, TA-LEX-C294-NIKAZHVU294-05, TA-LEX-C295-THUPPU295-01, TA-LEX-C295-THUPPU295-02, TA-LEX-C295-THUPPU295-03, TA-LEX-C295-THUPPU295-04, TA-LEX-C295-THUPPU295-05, TA-LEX-C296-KAVAL296-01, TA-LEX-C296-KAVAL296-02, TA-LEX-C296-KAVAL296-03, TA-LEX-C296-KAVAL296-04, TA-LEX-C296-KAVAL296-05, TA-LEX-C297-KADATHAL297-01, TA-LEX-C297-KADATHAL297-02, TA-LEX-C297-KADATHAL297-03, TA-LEX-C297-KADATHAL297-04, TA-LEX-C297-KADATHAL297-05, TA-LEX-C298-VIBATHU298-01, TA-LEX-C298-VIBATHU298-02, TA-LEX-C298-VIBATHU298-03, TA-LEX-C298-VIBATHU298-04, TA-LEX-C298-VIBATHU298-05, TA-LEX-C299-THEE299-01, TA-LEX-C299-THEE299-02, TA-LEX-C299-THEE299-03, TA-LEX-C299-THEE299-04, TA-LEX-C299-THEE299-05, TA-LEX-C300-AVASARAM300-01, TA-LEX-C300-AVASARAM300-02, TA-LEX-C300-AVASARAM300-03, TA-LEX-C300-AVASARAM300-04, TA-LEX-C300-AVASARAM300-05, TA-LEX-C301-MEETPU301-01, TA-LEX-C301-MEETPU301-02, TA-LEX-C301-MEETPU301-03, TA-LEX-C301-MEETPU301-04, TA-LEX-C301-MEETPU301-05] -->
+
+[PAUSE 3s] A witness? (**சாட்சி**, *cāṭci*.) An incident? (**சம்பவம்**, *campavam*.) To steal? (**திருடு**, *tiruṭu*.) A robbery? (**கொள்ளை**, *koḷḷai*.) To happen? (**நிகழ்**, *nikaḻ*.) A clue? (**துப்பு**, *tuppu*.) A trace? (**தடயம்**, *taṭayam*.) To suspect? (**சந்தேகி**, *cantēki*.) A crime? (**குற்றம்**, *kuṟṟam*.) A culprit? (**குற்றவாளி**, *kuṟṟavāḷi*.) The police? (**காவல்துறை**, *kāvaltuṟai*.) To arrest? (**கைது செய்**, *kaitu cey*.) To cordon off? (**சுற்றிவளை**, *cuṟṟivaḷai*.) A prisoner? (**கைதி**, *kaiti*.) To confess? (**ஒப்புக்கொள்**, *oppukkoḷ*.) To smuggle? (**கடத்து**, *kaṭattu*.) To flee? (**தப்பியோடு**, *tappiyōṭu*.) A counterfeit note? (**கள்ளநோட்டு**, *kaḷḷanōṭṭu*.) An investigation? (**புலனாய்வு**, *pulaṉāyvu*.) To accuse? (**குற்றஞ்சாட்டு**, *kuṟṟañcāṭṭu*.) An accident? (**விபத்து**, *vipattu*.) To be badly hurt? (**படுகாயமடை**, *paṭukāyamaṭai*.) To be wrecked? (**உருக்குலை**, *urukkulai*.) To escape alive? (**உயிர்தப்பு**, *uyirtappu*.) First aid? (**முதலுதவி**, *mutalutavi*.) To catch fire? (**தீப்பிடி**, *tīppiṭi*.) To blaze? (**பற்றியெரி**, *paṟṟiyeri*.) To burn down? (**தீக்கிரையாகு**, *tīkkiraiyāku*.) A firefighter? (**தீயணைப்பு வீரர்**, *tīyaṇaippu vīrar*.) To suffocate? (**மூச்சுத்திணறு**, *mūccuttiṇaṟu*.) An emergency? (**அவசரநிலை**, *avacaranilai*.) A curfew? (**ஊரடங்கு**, *ūraṭaṅku*.) To stall? (**முடங்கு**, *muṭaṅku*.) To fall apart? (**நிலைகுலை**, *nilaikulai*.) To collapse? (**இடிந்துவிழு**, *iṭintuviḻu*.) A rescue? (**மீட்பு**, *mīṭpu*.) Rubble? (**இடிபாடு**, *iṭipāṭu*.) To set free? (**விடுவி**, *viṭuvi*.) To survive? (**உயிர் பிழை**, *uyir piḻai*.) To retrieve? (**மீட்டெடு**, *mīṭṭeṭu*.)
+`;export{t};

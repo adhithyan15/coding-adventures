@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R460-review-453-460
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 26500
+chapter: 460
+type: review
+headword: (dialogue)
+gloss: a review of the words from Rage and Irritation to Wonder and Awe
+concept_tag: REVIEW
+prerequisites: [TA-C453-attiram, TA-C453-ericcal, TA-C453-ciru, TA-C453-kontali, TA-C453-munumunu, TA-C454-tikil, TA-C454-piti, TA-C454-atircci, TA-C454-titukkitu, TA-C454-natunku, TA-C455-cancalam, TA-C455-ulaiccal, TA-C455-atankam, TA-C455-ankalay, TA-C455-tavi, TA-C456-muccu, TA-C456-perumuccu, TA-C456-nimmati, TA-C456-arutal, TA-C456-tani, TA-C457-karunai, TA-C457-parivu, TA-C457-anutapam, TA-C457-paritapam, TA-C457-akkarai, TA-C458-kataru, TA-C458-vimmu, TA-C458-vicumpu, TA-C458-pulampu, TA-C458-alaru, TA-C459-anantam, TA-C459-inpam, TA-C459-purippu, TA-C459-kutukalam, TA-C459-ullacam, TA-C460-viyappu, TA-C460-malaippu, TA-C460-tikai, TA-C460-paravacam, TA-C460-cilir]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C453-KOPAM453-01, TA-LEX-C453-KOPAM453-02, TA-LEX-C453-KOPAM453-03, TA-LEX-C453-KOPAM453-04, TA-LEX-C453-KOPAM453-05, TA-LEX-C454-PAYAM454-01, TA-LEX-C454-PAYAM454-02, TA-LEX-C454-PAYAM454-03, TA-LEX-C454-PAYAM454-04, TA-LEX-C454-PAYAM454-05, TA-LEX-C455-KAVALAI455-01, TA-LEX-C455-KAVALAI455-02, TA-LEX-C455-KAVALAI455-03, TA-LEX-C455-KAVALAI455-04, TA-LEX-C455-KAVALAI455-05, TA-LEX-C456-NIMMATI456-01, TA-LEX-C456-NIMMATI456-02, TA-LEX-C456-NIMMATI456-03, TA-LEX-C456-NIMMATI456-04, TA-LEX-C456-NIMMATI456-05, TA-LEX-C457-KARUNAI457-01, TA-LEX-C457-KARUNAI457-02, TA-LEX-C457-KARUNAI457-03, TA-LEX-C457-KARUNAI457-04, TA-LEX-C457-KARUNAI457-05, TA-LEX-C458-AZHUKAI458-01, TA-LEX-C458-AZHUKAI458-02, TA-LEX-C458-AZHUKAI458-03, TA-LEX-C458-AZHUKAI458-04, TA-LEX-C458-AZHUKAI458-05, TA-LEX-C459-MAKIZHCCI459-01, TA-LEX-C459-MAKIZHCCI459-02, TA-LEX-C459-MAKIZHCCI459-03, TA-LEX-C459-MAKIZHCCI459-04, TA-LEX-C459-MAKIZHCCI459-05, TA-LEX-C460-VIYAPPU460-01, TA-LEX-C460-VIYAPPU460-02, TA-LEX-C460-VIYAPPU460-03, TA-LEX-C460-VIYAPPU460-04, TA-LEX-C460-VIYAPPU460-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C453-KOPAM453-01, TA-LEX-C453-KOPAM453-02, TA-LEX-C453-KOPAM453-03, TA-LEX-C453-KOPAM453-04, TA-LEX-C453-KOPAM453-05, TA-LEX-C454-PAYAM454-01, TA-LEX-C454-PAYAM454-02, TA-LEX-C454-PAYAM454-03, TA-LEX-C454-PAYAM454-04, TA-LEX-C454-PAYAM454-05, TA-LEX-C455-KAVALAI455-01, TA-LEX-C455-KAVALAI455-02, TA-LEX-C455-KAVALAI455-03, TA-LEX-C455-KAVALAI455-04, TA-LEX-C455-KAVALAI455-05, TA-LEX-C456-NIMMATI456-01, TA-LEX-C456-NIMMATI456-02, TA-LEX-C456-NIMMATI456-03, TA-LEX-C456-NIMMATI456-04, TA-LEX-C456-NIMMATI456-05, TA-LEX-C457-KARUNAI457-01, TA-LEX-C457-KARUNAI457-02, TA-LEX-C457-KARUNAI457-03, TA-LEX-C457-KARUNAI457-04, TA-LEX-C457-KARUNAI457-05, TA-LEX-C458-AZHUKAI458-01, TA-LEX-C458-AZHUKAI458-02, TA-LEX-C458-AZHUKAI458-03, TA-LEX-C458-AZHUKAI458-04, TA-LEX-C458-AZHUKAI458-05, TA-LEX-C459-MAKIZHCCI459-01, TA-LEX-C459-MAKIZHCCI459-02, TA-LEX-C459-MAKIZHCCI459-03, TA-LEX-C459-MAKIZHCCI459-04, TA-LEX-C459-MAKIZHCCI459-05, TA-LEX-C460-VIYAPPU460-01, TA-LEX-C460-VIYAPPU460-02, TA-LEX-C460-VIYAPPU460-03, TA-LEX-C460-VIYAPPU460-04, TA-LEX-C460-VIYAPPU460-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C453-attiram, TA-C453-ericcal, TA-C453-ciru, TA-C453-kontali, TA-C453-munumunu, TA-C454-tikil, TA-C454-piti, TA-C454-atircci, TA-C454-titukkitu, TA-C454-natunku, TA-C455-cancalam, TA-C455-ulaiccal, TA-C455-atankam, TA-C455-ankalay, TA-C455-tavi, TA-C456-muccu, TA-C456-perumuccu, TA-C456-nimmati, TA-C456-arutal, TA-C456-tani, TA-C457-karunai, TA-C457-parivu, TA-C457-anutapam, TA-C457-paritapam, TA-C457-akkarai, TA-C458-kataru, TA-C458-vimmu, TA-C458-vicumpu, TA-C458-pulampu, TA-C458-alaru, TA-C459-anantam, TA-C459-inpam, TA-C459-purippu, TA-C459-kutukalam, TA-C459-ullacam, TA-C460-viyappu, TA-C460-malaippu, TA-C460-tikai, TA-C460-paravacam, TA-C460-cilir]
+---
+
+# Looking back at feelings
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C453-KOPAM453-01, TA-LEX-C453-KOPAM453-02] -->
+
+[PAUSE 3s] Say the Tamil for rage and irritation.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C453-KOPAM453-01, TA-LEX-C453-KOPAM453-02, TA-LEX-C453-KOPAM453-03, TA-LEX-C453-KOPAM453-04, TA-LEX-C453-KOPAM453-05, TA-LEX-C454-PAYAM454-01, TA-LEX-C454-PAYAM454-02, TA-LEX-C454-PAYAM454-03, TA-LEX-C454-PAYAM454-04, TA-LEX-C454-PAYAM454-05, TA-LEX-C455-KAVALAI455-01, TA-LEX-C455-KAVALAI455-02, TA-LEX-C455-KAVALAI455-03, TA-LEX-C455-KAVALAI455-04, TA-LEX-C455-KAVALAI455-05, TA-LEX-C456-NIMMATI456-01, TA-LEX-C456-NIMMATI456-02, TA-LEX-C456-NIMMATI456-03, TA-LEX-C456-NIMMATI456-04, TA-LEX-C456-NIMMATI456-05, TA-LEX-C457-KARUNAI457-01, TA-LEX-C457-KARUNAI457-02, TA-LEX-C457-KARUNAI457-03, TA-LEX-C457-KARUNAI457-04, TA-LEX-C457-KARUNAI457-05, TA-LEX-C458-AZHUKAI458-01, TA-LEX-C458-AZHUKAI458-02, TA-LEX-C458-AZHUKAI458-03, TA-LEX-C458-AZHUKAI458-04, TA-LEX-C458-AZHUKAI458-05, TA-LEX-C459-MAKIZHCCI459-01, TA-LEX-C459-MAKIZHCCI459-02, TA-LEX-C459-MAKIZHCCI459-03, TA-LEX-C459-MAKIZHCCI459-04, TA-LEX-C459-MAKIZHCCI459-05, TA-LEX-C460-VIYAPPU460-01, TA-LEX-C460-VIYAPPU460-02, TA-LEX-C460-VIYAPPU460-03, TA-LEX-C460-VIYAPPU460-04, TA-LEX-C460-VIYAPPU460-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: rage, irritation, to flare up, to seethe, to mutter]
+- [YOU SAY: terror, panic, shock, to be startled, to tremble]
+- [YOU SAY: unease, anguish, frustration, to bemoan, to suffer]
+- [YOU SAY: breath, a sigh, relief, consolation, to subside]
+- [YOU SAY: mercy, tenderness, sympathy, pitifulness, concern]
+- [YOU SAY: to wail, to sob, to whimper, to lament, to scream]
+- [YOU SAY: bliss, pleasure, elation, glee, merriment]
+- [YOU SAY: amazement, awe, to be stunned, ecstasy, to tingle]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C453-KOPAM453-01, TA-LEX-C453-KOPAM453-02, TA-LEX-C453-KOPAM453-03, TA-LEX-C453-KOPAM453-04, TA-LEX-C453-KOPAM453-05, TA-LEX-C454-PAYAM454-01, TA-LEX-C454-PAYAM454-02, TA-LEX-C454-PAYAM454-03, TA-LEX-C454-PAYAM454-04, TA-LEX-C454-PAYAM454-05, TA-LEX-C455-KAVALAI455-01, TA-LEX-C455-KAVALAI455-02, TA-LEX-C455-KAVALAI455-03, TA-LEX-C455-KAVALAI455-04, TA-LEX-C455-KAVALAI455-05, TA-LEX-C456-NIMMATI456-01, TA-LEX-C456-NIMMATI456-02, TA-LEX-C456-NIMMATI456-03, TA-LEX-C456-NIMMATI456-04, TA-LEX-C456-NIMMATI456-05, TA-LEX-C457-KARUNAI457-01, TA-LEX-C457-KARUNAI457-02, TA-LEX-C457-KARUNAI457-03, TA-LEX-C457-KARUNAI457-04, TA-LEX-C457-KARUNAI457-05, TA-LEX-C458-AZHUKAI458-01, TA-LEX-C458-AZHUKAI458-02, TA-LEX-C458-AZHUKAI458-03, TA-LEX-C458-AZHUKAI458-04, TA-LEX-C458-AZHUKAI458-05, TA-LEX-C459-MAKIZHCCI459-01, TA-LEX-C459-MAKIZHCCI459-02, TA-LEX-C459-MAKIZHCCI459-03, TA-LEX-C459-MAKIZHCCI459-04, TA-LEX-C459-MAKIZHCCI459-05, TA-LEX-C460-VIYAPPU460-01, TA-LEX-C460-VIYAPPU460-02, TA-LEX-C460-VIYAPPU460-03, TA-LEX-C460-VIYAPPU460-04, TA-LEX-C460-VIYAPPU460-05] -->
+
+[PAUSE 3s] Rage? (**ஆத்திரம்**, *āttiram*.) Irritation? (**எரிச்சல்**, *ericcal*.) To flare up? (**சீறு**, *cīṟu*.) To seethe? (**கொந்தளி**, *kontaḷi*.) To mutter? (**முணுமுணு**, *muṇumuṇu*.) Terror? (**திகில்**, *tikil*.) Panic? (**பீதி**, *pīti*.) Shock? (**அதிர்ச்சி**, *atircci*.) To be startled? (**திடுக்கிடு**, *tiṭukkiṭu*.) To tremble? (**நடுங்கு**, *naṭuṅku*.) Unease? (**சஞ்சலம்**, *cañcalam*.) Anguish? (**உளைச்சல்**, *uḷaiccal*.) Frustration? (**ஆதங்கம்**, *ātaṅkam*.) To bemoan? (**அங்கலாய்**, *aṅkalāy*.) To suffer? (**தவி**, *tavi*.) Breath? (**மூச்சு**, *mūccu*.) A sigh? (**பெருமூச்சு**, *perumūccu*.) Relief? (**நிம்மதி**, *nimmati*.) Consolation? (**ஆறுதல்**, *āṟutal*.) To subside? (**தணி**, *taṇi*.) Mercy? (**கருணை**, *karuṇai*.) Tenderness? (**பரிவு**, *parivu*.) Sympathy? (**அனுதாபம்**, *aṉutāpam*.) Pitifulness? (**பரிதாபம்**, *paritāpam*.) Concern? (**அக்கறை**, *akkaṟai*.) To wail? (**கதறு**, *kataṟu*.) To sob? (**விம்மு**, *vimmu*.) To whimper? (**விசும்பு**, *vicumpu*.) To lament? (**புலம்பு**, *pulampu*.) To scream? (**அலறு**, *alaṟu*.) Bliss? (**ஆனந்தம்**, *āṉantam*.) Pleasure? (**இன்பம்**, *iṉpam*.) Elation? (**பூரிப்பு**, *pūrippu*.) Glee? (**குதூகலம்**, *kutūkalam*.) Merriment? (**உல்லாசம்**, *ullācam*.) Amazement? (**வியப்பு**, *viyappu*.) Awe? (**மலைப்பு**, *malaippu*.) To be stunned? (**திகை**, *tikai*.) Ecstasy? (**பரவசம்**, *paravacam*.) To tingle? (**சிலிர்**, *cilir*.)
+`;export{t};

@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R399-review-393-399
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 22810
+chapter: 399
+type: review
+headword: (dialogue)
+gloss: a review of the words from Facts and Figures to Whatever Happens
+concept_tag: REVIEW
+prerequisites: [TA-C393-arikkai, TA-C393-kanakketuppu, TA-C393-kantari, TA-C393-cumar, TA-C393-perumpalum, TA-C394-orutalaippatcam, TA-C394-ulnokkam, TA-C394-natunilai, TA-C394-carpaka, TA-C394-kurittu, TA-C395-natattu, TA-C395-uruvakku, TA-C395-nikku, TA-C395-oli-abolish, TA-C395-kaivitu, TA-C396-tuntu, TA-C396-etirvinai, TA-C396-cumattu, TA-C396-piratipali, TA-C396-porutpatuttu, TA-C397-makkalatci, TA-C397-pattimanram, TA-C397-orumanataka, TA-C397-tanippatta, TA-C397-pakuttarivu, TA-C398-pokku, TA-C398-caval, TA-C398-catanai, TA-C398-nilaittanmai, TA-C398-vivakaram, TA-C399-eppatiyum, TA-C399-kututal, TA-C399-mulam, TA-C399-ullatakku, TA-C399-kariyam]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C393-ARIKKAI393-01, TA-LEX-C393-ARIKKAI393-02, TA-LEX-C393-ARIKKAI393-03, TA-LEX-C393-ARIKKAI393-04, TA-LEX-C393-ARIKKAI393-05, TA-LEX-C394-ORUTALAIPPAT394-01, TA-LEX-C394-ORUTALAIPPAT394-02, TA-LEX-C394-ORUTALAIPPAT394-03, TA-LEX-C394-ORUTALAIPPAT394-04, TA-LEX-C394-ORUTALAIPPAT394-05, TA-LEX-C395-NATATTU395-01, TA-LEX-C395-NATATTU395-02, TA-LEX-C395-NATATTU395-03, TA-LEX-C395-NATATTU395-04, TA-LEX-C395-NATATTU395-05, TA-LEX-C396-TUNTU396-01, TA-LEX-C396-TUNTU396-02, TA-LEX-C396-TUNTU396-03, TA-LEX-C396-TUNTU396-04, TA-LEX-C396-TUNTU396-05, TA-LEX-C397-MAKKALATCI397-01, TA-LEX-C397-MAKKALATCI397-02, TA-LEX-C397-MAKKALATCI397-03, TA-LEX-C397-MAKKALATCI397-04, TA-LEX-C397-MAKKALATCI397-05, TA-LEX-C398-POKKU398-01, TA-LEX-C398-POKKU398-02, TA-LEX-C398-POKKU398-03, TA-LEX-C398-POKKU398-04, TA-LEX-C398-POKKU398-05, TA-LEX-C399-EPPATIYUM399-01, TA-LEX-C399-EPPATIYUM399-02, TA-LEX-C399-EPPATIYUM399-03, TA-LEX-C399-EPPATIYUM399-04, TA-LEX-C399-EPPATIYUM399-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C393-ARIKKAI393-01, TA-LEX-C393-ARIKKAI393-02, TA-LEX-C393-ARIKKAI393-03, TA-LEX-C393-ARIKKAI393-04, TA-LEX-C393-ARIKKAI393-05, TA-LEX-C394-ORUTALAIPPAT394-01, TA-LEX-C394-ORUTALAIPPAT394-02, TA-LEX-C394-ORUTALAIPPAT394-03, TA-LEX-C394-ORUTALAIPPAT394-04, TA-LEX-C394-ORUTALAIPPAT394-05, TA-LEX-C395-NATATTU395-01, TA-LEX-C395-NATATTU395-02, TA-LEX-C395-NATATTU395-03, TA-LEX-C395-NATATTU395-04, TA-LEX-C395-NATATTU395-05, TA-LEX-C396-TUNTU396-01, TA-LEX-C396-TUNTU396-02, TA-LEX-C396-TUNTU396-03, TA-LEX-C396-TUNTU396-04, TA-LEX-C396-TUNTU396-05, TA-LEX-C397-MAKKALATCI397-01, TA-LEX-C397-MAKKALATCI397-02, TA-LEX-C397-MAKKALATCI397-03, TA-LEX-C397-MAKKALATCI397-04, TA-LEX-C397-MAKKALATCI397-05, TA-LEX-C398-POKKU398-01, TA-LEX-C398-POKKU398-02, TA-LEX-C398-POKKU398-03, TA-LEX-C398-POKKU398-04, TA-LEX-C398-POKKU398-05, TA-LEX-C399-EPPATIYUM399-01, TA-LEX-C399-EPPATIYUM399-02, TA-LEX-C399-EPPATIYUM399-03, TA-LEX-C399-EPPATIYUM399-04, TA-LEX-C399-EPPATIYUM399-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C393-arikkai, TA-C393-kanakketuppu, TA-C393-kantari, TA-C393-cumar, TA-C393-perumpalum, TA-C394-orutalaippatcam, TA-C394-ulnokkam, TA-C394-natunilai, TA-C394-carpaka, TA-C394-kurittu, TA-C395-natattu, TA-C395-uruvakku, TA-C395-nikku, TA-C395-oli-abolish, TA-C395-kaivitu, TA-C396-tuntu, TA-C396-etirvinai, TA-C396-cumattu, TA-C396-piratipali, TA-C396-porutpatuttu, TA-C397-makkalatci, TA-C397-pattimanram, TA-C397-orumanataka, TA-C397-tanippatta, TA-C397-pakuttarivu, TA-C398-pokku, TA-C398-caval, TA-C398-catanai, TA-C398-nilaittanmai, TA-C398-vivakaram, TA-C399-eppatiyum, TA-C399-kututal, TA-C399-mulam, TA-C399-ullatakku, TA-C399-kariyam]
+---
+
+# Looking back: conditions and possibilities
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C393-ARIKKAI393-01, TA-LEX-C393-ARIKKAI393-02] -->
+
+[PAUSE 3s] Say the Tamil for a report and a census.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C393-ARIKKAI393-01, TA-LEX-C393-ARIKKAI393-02, TA-LEX-C393-ARIKKAI393-03, TA-LEX-C393-ARIKKAI393-04, TA-LEX-C393-ARIKKAI393-05, TA-LEX-C394-ORUTALAIPPAT394-01, TA-LEX-C394-ORUTALAIPPAT394-02, TA-LEX-C394-ORUTALAIPPAT394-03, TA-LEX-C394-ORUTALAIPPAT394-04, TA-LEX-C394-ORUTALAIPPAT394-05, TA-LEX-C395-NATATTU395-01, TA-LEX-C395-NATATTU395-02, TA-LEX-C395-NATATTU395-03, TA-LEX-C395-NATATTU395-04, TA-LEX-C395-NATATTU395-05, TA-LEX-C396-TUNTU396-01, TA-LEX-C396-TUNTU396-02, TA-LEX-C396-TUNTU396-03, TA-LEX-C396-TUNTU396-04, TA-LEX-C396-TUNTU396-05, TA-LEX-C397-MAKKALATCI397-01, TA-LEX-C397-MAKKALATCI397-02, TA-LEX-C397-MAKKALATCI397-03, TA-LEX-C397-MAKKALATCI397-04, TA-LEX-C397-MAKKALATCI397-05, TA-LEX-C398-POKKU398-01, TA-LEX-C398-POKKU398-02, TA-LEX-C398-POKKU398-03, TA-LEX-C398-POKKU398-04, TA-LEX-C398-POKKU398-05, TA-LEX-C399-EPPATIYUM399-01, TA-LEX-C399-EPPATIYUM399-02, TA-LEX-C399-EPPATIYUM399-03, TA-LEX-C399-EPPATIYUM399-04, TA-LEX-C399-EPPATIYUM399-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a report, a census, to find out, roughly, mostly]
+- [YOU SAY: one-sidedness, a hidden motive, neutrality, on behalf of, about]
+- [YOU SAY: to conduct, to create, to remove, to abolish, to abandon]
+- [YOU SAY: to incite, a reaction, to impose, to reflect, to take into account]
+- [YOU SAY: democracy, a public debate, unanimously, personal, rational thought]
+- [YOU SAY: a trend, a challenge, an achievement, stability, a matter]
+- [YOU SAY: anyway, additional, through, to include, a task]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C393-ARIKKAI393-01, TA-LEX-C393-ARIKKAI393-02, TA-LEX-C393-ARIKKAI393-03, TA-LEX-C393-ARIKKAI393-04, TA-LEX-C393-ARIKKAI393-05, TA-LEX-C394-ORUTALAIPPAT394-01, TA-LEX-C394-ORUTALAIPPAT394-02, TA-LEX-C394-ORUTALAIPPAT394-03, TA-LEX-C394-ORUTALAIPPAT394-04, TA-LEX-C394-ORUTALAIPPAT394-05, TA-LEX-C395-NATATTU395-01, TA-LEX-C395-NATATTU395-02, TA-LEX-C395-NATATTU395-03, TA-LEX-C395-NATATTU395-04, TA-LEX-C395-NATATTU395-05, TA-LEX-C396-TUNTU396-01, TA-LEX-C396-TUNTU396-02, TA-LEX-C396-TUNTU396-03, TA-LEX-C396-TUNTU396-04, TA-LEX-C396-TUNTU396-05, TA-LEX-C397-MAKKALATCI397-01, TA-LEX-C397-MAKKALATCI397-02, TA-LEX-C397-MAKKALATCI397-03, TA-LEX-C397-MAKKALATCI397-04, TA-LEX-C397-MAKKALATCI397-05, TA-LEX-C398-POKKU398-01, TA-LEX-C398-POKKU398-02, TA-LEX-C398-POKKU398-03, TA-LEX-C398-POKKU398-04, TA-LEX-C398-POKKU398-05, TA-LEX-C399-EPPATIYUM399-01, TA-LEX-C399-EPPATIYUM399-02, TA-LEX-C399-EPPATIYUM399-03, TA-LEX-C399-EPPATIYUM399-04, TA-LEX-C399-EPPATIYUM399-05] -->
+
+[PAUSE 3s] A report? (**அறிக்கை**, *aṟikkai*.) A census? (**கணக்கெடுப்பு**, *kaṇakkeṭuppu*.) To find out? (**கண்டறி**, *kaṇṭaṟi*.) Roughly? (**சுமார்**, *cumār*.) Mostly? (**பெரும்பாலும்**, *perumpālum*.) One-sidedness? (**ஒருதலைப்பட்சம்**, *orutalaippaṭcam*.) A hidden motive? (**உள்நோக்கம்**, *uḷnōkkam*.) Neutrality? (**நடுநிலை**, *naṭunilai*.) On behalf of? (**சார்பாக**, *cārpāka*.) About? (**குறித்து**, *kuṟittu*.) To conduct? (**நடத்து**, *naṭattu*.) To create? (**உருவாக்கு**, *uruvākku*.) To remove? (**நீக்கு**, *nīkku*.) To abolish? (**ஒழி**, *oḻi*.) To abandon? (**கைவிடு**, *kaiviṭu*.) To incite? (**தூண்டு**, *tūṇṭu*.) A reaction? (**எதிர்வினை**, *etirviṉai*.) To impose? (**சுமத்து**, *cumattu*.) To reflect? (**பிரதிபலி**, *piratipali*.) To take into account? (**பொருட்படுத்து**, *poruṭpaṭuttu*.) Democracy? (**மக்களாட்சி**, *makkaḷāṭci*.) A public debate? (**பட்டிமன்றம்**, *paṭṭimaṉṟam*.) Unanimously? (**ஒருமனதாக**, *orumaṉatāka*.) Personal? (**தனிப்பட்ட**, *taṉippaṭṭa*.) Rational thought? (**பகுத்தறிவு**, *pakuttaṟivu*.) A trend? (**போக்கு**, *pōkku*.) A challenge? (**சவால்**, *cavāl*.) An achievement? (**சாதனை**, *cātaṉai*.) Stability? (**நிலைத்தன்மை**, *nilaittaṉmai*.) A matter? (**விவகாரம்**, *vivakāram*.) Anyway? (**எப்படியும்**, *eppaṭiyum*.) Additional? (**கூடுதல்**, *kūṭutal*.) Through? (**மூலம்**, *mūlam*.) To include? (**உள்ளடக்கு**, *uḷḷaṭakku*.) A task? (**காரியம்**, *kāriyam*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R399-review-final-399
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 22820
+chapter: 399
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [TA-C399-eppatiyum, TA-C399-kututal, TA-C399-mulam, TA-C399-ullatakku, TA-C399-kariyam]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C399-EPPATIYUM399-01, TA-LEX-C399-EPPATIYUM399-02, TA-LEX-C399-EPPATIYUM399-03, TA-LEX-C399-EPPATIYUM399-04, TA-LEX-C399-EPPATIYUM399-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C399-EPPATIYUM399-01, TA-LEX-C399-EPPATIYUM399-02, TA-LEX-C399-EPPATIYUM399-03, TA-LEX-C399-EPPATIYUM399-04, TA-LEX-C399-EPPATIYUM399-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C399-eppatiyum, TA-C399-kututal, TA-C399-mulam, TA-C399-ullatakku, TA-C399-kariyam]
+---
+
+# Whatever Happens — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C399-EPPATIYUM399-01, TA-LEX-C399-EPPATIYUM399-02] -->
+
+[PAUSE 3s] Say the Tamil for anyway and additional.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C399-EPPATIYUM399-01, TA-LEX-C399-EPPATIYUM399-02, TA-LEX-C399-EPPATIYUM399-03, TA-LEX-C399-EPPATIYUM399-04, TA-LEX-C399-EPPATIYUM399-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: anyway, additional, through, to include, a task]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C399-EPPATIYUM399-01, TA-LEX-C399-EPPATIYUM399-02, TA-LEX-C399-EPPATIYUM399-03, TA-LEX-C399-EPPATIYUM399-04, TA-LEX-C399-EPPATIYUM399-05] -->
+
+[PAUSE 3s] Anyway? (**எப்படியும்**, *eppaṭiyum*.) Additional? (**கூடுதல்**, *kūṭutal*.) Through? (**மூலம்**, *mūlam*.) To include? (**உள்ளடக்கு**, *uḷḷaṭakku*.) A task? (**காரியம்**, *kāriyam*.)
+`;export{t as n,r as t};

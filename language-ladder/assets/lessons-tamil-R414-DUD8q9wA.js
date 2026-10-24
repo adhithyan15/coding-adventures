@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R415-review-408-415
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23910
+chapter: 415
+type: review
+headword: (dialogue)
+gloss: a review of the words from Bends and Slopes to Renewing the Papers
+concept_tag: REVIEW
+prerequisites: [TA-C408-valaivu, TA-C408-carivu, TA-C408-erram, TA-C408-kavil, TA-C408-culal, TA-C409-kuli, TA-C409-pallam, TA-C409-katavai, TA-C409-kurukkuvali, TA-C409-cikku, TA-C410-patacari, TA-C410-valippokkar, TA-C410-palakai, TA-C410-ulavu, TA-C410-tantu, TA-C411-kolaru, TA-C411-ceyalila, TA-C411-nacunku, TA-C411-uracu, TA-C411-muttu, TA-C412-ataiyalam, TA-C412-valitavaru, TA-C412-pintanku, TA-C412-munneru, TA-C412-vilaku, TA-C413-vimani, TA-C413-taraiyiranku, TA-C413-irakkai, TA-C413-cunkam, TA-C413-kutivaravu, TA-C414-vica, TA-C414-ellai, TA-C414-cavati, TA-C414-nulaivayil, TA-C414-parimutal-cey, TA-C415-kalavatiyaku, TA-C415-putuppi, TA-C415-alaiccal, TA-C415-oppukai, TA-C415-erpatu-cey]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C408-VALAIVU408-01, TA-LEX-C408-VALAIVU408-02, TA-LEX-C408-VALAIVU408-03, TA-LEX-C408-VALAIVU408-04, TA-LEX-C408-VALAIVU408-05, TA-LEX-C409-KUZHI409-01, TA-LEX-C409-KUZHI409-02, TA-LEX-C409-KUZHI409-03, TA-LEX-C409-KUZHI409-04, TA-LEX-C409-KUZHI409-05, TA-LEX-C410-THERU410-01, TA-LEX-C410-THERU410-02, TA-LEX-C410-THERU410-03, TA-LEX-C410-THERU410-04, TA-LEX-C410-THERU410-05, TA-LEX-C411-KOLARU411-01, TA-LEX-C411-KOLARU411-02, TA-LEX-C411-KOLARU411-03, TA-LEX-C411-KOLARU411-04, TA-LEX-C411-KOLARU411-05, TA-LEX-C412-VAZHI412-01, TA-LEX-C412-VAZHI412-02, TA-LEX-C412-VAZHI412-03, TA-LEX-C412-VAZHI412-04, TA-LEX-C412-VAZHI412-05, TA-LEX-C413-VIMANI413-01, TA-LEX-C413-VIMANI413-02, TA-LEX-C413-VIMANI413-03, TA-LEX-C413-VIMANI413-04, TA-LEX-C413-VIMANI413-05, TA-LEX-C414-ELLAI414-01, TA-LEX-C414-ELLAI414-02, TA-LEX-C414-ELLAI414-03, TA-LEX-C414-ELLAI414-04, TA-LEX-C414-ELLAI414-05, TA-LEX-C415-AVANAM415-01, TA-LEX-C415-AVANAM415-02, TA-LEX-C415-AVANAM415-03, TA-LEX-C415-AVANAM415-04, TA-LEX-C415-AVANAM415-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C408-VALAIVU408-01, TA-LEX-C408-VALAIVU408-02, TA-LEX-C408-VALAIVU408-03, TA-LEX-C408-VALAIVU408-04, TA-LEX-C408-VALAIVU408-05, TA-LEX-C409-KUZHI409-01, TA-LEX-C409-KUZHI409-02, TA-LEX-C409-KUZHI409-03, TA-LEX-C409-KUZHI409-04, TA-LEX-C409-KUZHI409-05, TA-LEX-C410-THERU410-01, TA-LEX-C410-THERU410-02, TA-LEX-C410-THERU410-03, TA-LEX-C410-THERU410-04, TA-LEX-C410-THERU410-05, TA-LEX-C411-KOLARU411-01, TA-LEX-C411-KOLARU411-02, TA-LEX-C411-KOLARU411-03, TA-LEX-C411-KOLARU411-04, TA-LEX-C411-KOLARU411-05, TA-LEX-C412-VAZHI412-01, TA-LEX-C412-VAZHI412-02, TA-LEX-C412-VAZHI412-03, TA-LEX-C412-VAZHI412-04, TA-LEX-C412-VAZHI412-05, TA-LEX-C413-VIMANI413-01, TA-LEX-C413-VIMANI413-02, TA-LEX-C413-VIMANI413-03, TA-LEX-C413-VIMANI413-04, TA-LEX-C413-VIMANI413-05, TA-LEX-C414-ELLAI414-01, TA-LEX-C414-ELLAI414-02, TA-LEX-C414-ELLAI414-03, TA-LEX-C414-ELLAI414-04, TA-LEX-C414-ELLAI414-05, TA-LEX-C415-AVANAM415-01, TA-LEX-C415-AVANAM415-02, TA-LEX-C415-AVANAM415-03, TA-LEX-C415-AVANAM415-04, TA-LEX-C415-AVANAM415-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C408-valaivu, TA-C408-carivu, TA-C408-erram, TA-C408-kavil, TA-C408-culal, TA-C409-kuli, TA-C409-pallam, TA-C409-katavai, TA-C409-kurukkuvali, TA-C409-cikku, TA-C410-patacari, TA-C410-valippokkar, TA-C410-palakai, TA-C410-ulavu, TA-C410-tantu, TA-C411-kolaru, TA-C411-ceyalila, TA-C411-nacunku, TA-C411-uracu, TA-C411-muttu, TA-C412-ataiyalam, TA-C412-valitavaru, TA-C412-pintanku, TA-C412-munneru, TA-C412-vilaku, TA-C413-vimani, TA-C413-taraiyiranku, TA-C413-irakkai, TA-C413-cunkam, TA-C413-kutivaravu, TA-C414-vica, TA-C414-ellai, TA-C414-cavati, TA-C414-nulaivayil, TA-C414-parimutal-cey, TA-C415-kalavatiyaku, TA-C415-putuppi, TA-C415-alaiccal, TA-C415-oppukai, TA-C415-erpatu-cey]
+---
+
+# Looking back: from Bends and Slopes to Renewing the Papers
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C408-VALAIVU408-01, TA-LEX-C408-VALAIVU408-02] -->
+
+[PAUSE 3s] Say the Tamil for a curve and a slope.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C408-VALAIVU408-01, TA-LEX-C408-VALAIVU408-02, TA-LEX-C408-VALAIVU408-03, TA-LEX-C408-VALAIVU408-04, TA-LEX-C408-VALAIVU408-05, TA-LEX-C409-KUZHI409-01, TA-LEX-C409-KUZHI409-02, TA-LEX-C409-KUZHI409-03, TA-LEX-C409-KUZHI409-04, TA-LEX-C409-KUZHI409-05, TA-LEX-C410-THERU410-01, TA-LEX-C410-THERU410-02, TA-LEX-C410-THERU410-03, TA-LEX-C410-THERU410-04, TA-LEX-C410-THERU410-05, TA-LEX-C411-KOLARU411-01, TA-LEX-C411-KOLARU411-02, TA-LEX-C411-KOLARU411-03, TA-LEX-C411-KOLARU411-04, TA-LEX-C411-KOLARU411-05, TA-LEX-C412-VAZHI412-01, TA-LEX-C412-VAZHI412-02, TA-LEX-C412-VAZHI412-03, TA-LEX-C412-VAZHI412-04, TA-LEX-C412-VAZHI412-05, TA-LEX-C413-VIMANI413-01, TA-LEX-C413-VIMANI413-02, TA-LEX-C413-VIMANI413-03, TA-LEX-C413-VIMANI413-04, TA-LEX-C413-VIMANI413-05, TA-LEX-C414-ELLAI414-01, TA-LEX-C414-ELLAI414-02, TA-LEX-C414-ELLAI414-03, TA-LEX-C414-ELLAI414-04, TA-LEX-C414-ELLAI414-05, TA-LEX-C415-AVANAM415-01, TA-LEX-C415-AVANAM415-02, TA-LEX-C415-AVANAM415-03, TA-LEX-C415-AVANAM415-04, TA-LEX-C415-AVANAM415-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a curve, a slope, an ascent, to overturn, to spin]
+- [YOU SAY: a pit, a pothole, a level crossing, a shortcut, to get stuck]
+- [YOU SAY: a pedestrian, a passer-by, a board, to stroll, to cross over]
+- [YOU SAY: a fault, to stop working, to get dented, to scrape, to bump]
+- [YOU SAY: a landmark, to lose one's way, to lag behind, to move forward, to move away]
+- [YOU SAY: a pilot, to make a landing, a wing, customs, immigration]
+- [YOU SAY: a visa, a border, a checkpoint booth, an entrance, to confiscate]
+- [YOU SAY: to expire, to renew, running around, an acknowledgement, to arrange]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C408-VALAIVU408-01, TA-LEX-C408-VALAIVU408-02, TA-LEX-C408-VALAIVU408-03, TA-LEX-C408-VALAIVU408-04, TA-LEX-C408-VALAIVU408-05, TA-LEX-C409-KUZHI409-01, TA-LEX-C409-KUZHI409-02, TA-LEX-C409-KUZHI409-03, TA-LEX-C409-KUZHI409-04, TA-LEX-C409-KUZHI409-05, TA-LEX-C410-THERU410-01, TA-LEX-C410-THERU410-02, TA-LEX-C410-THERU410-03, TA-LEX-C410-THERU410-04, TA-LEX-C410-THERU410-05, TA-LEX-C411-KOLARU411-01, TA-LEX-C411-KOLARU411-02, TA-LEX-C411-KOLARU411-03, TA-LEX-C411-KOLARU411-04, TA-LEX-C411-KOLARU411-05, TA-LEX-C412-VAZHI412-01, TA-LEX-C412-VAZHI412-02, TA-LEX-C412-VAZHI412-03, TA-LEX-C412-VAZHI412-04, TA-LEX-C412-VAZHI412-05, TA-LEX-C413-VIMANI413-01, TA-LEX-C413-VIMANI413-02, TA-LEX-C413-VIMANI413-03, TA-LEX-C413-VIMANI413-04, TA-LEX-C413-VIMANI413-05, TA-LEX-C414-ELLAI414-01, TA-LEX-C414-ELLAI414-02, TA-LEX-C414-ELLAI414-03, TA-LEX-C414-ELLAI414-04, TA-LEX-C414-ELLAI414-05, TA-LEX-C415-AVANAM415-01, TA-LEX-C415-AVANAM415-02, TA-LEX-C415-AVANAM415-03, TA-LEX-C415-AVANAM415-04, TA-LEX-C415-AVANAM415-05] -->
+
+[PAUSE 3s] A curve? (**வளைவு**, *vaḷaivu*.) A slope? (**சரிவு**, *carivu*.) An ascent? (**ஏற்றம்**, *ēṟṟam*.) To overturn? (**கவிழ்**, *kaviḻ*.) To spin? (**சுழல்**, *cuḻal*.) A pit? (**குழி**, *kuḻi*.) A pothole? (**பள்ளம்**, *paḷḷam*.) A level crossing? (**கடவை**, *kaṭavai*.) A shortcut? (**குறுக்குவழி**, *kuṟukkuvaḻi*.) To get stuck? (**சிக்கு**, *cikku*.) A pedestrian? (**பாதசாரி**, *pātacāri*.) A passer-by? (**வழிப்போக்கர்**, *vaḻippōkkar*.) A board? (**பலகை**, *palakai*.) To stroll? (**உலாவு**, *ulāvu*.) To cross over? (**தாண்டு**, *tāṇṭu*.) A fault? (**கோளாறு**, *kōḷāṟu*.) To stop working? (**செயலிழ**, *ceyaliḻa*.) To get dented? (**நசுங்கு**, *nacuṅku*.) To scrape? (**உரசு**, *uracu*.) To bump? (**முட்டு**, *muṭṭu*.) A landmark? (**அடையாளம்**, *aṭaiyāḷam*.) To lose one's way? (**வழிதவறு**, *vaḻitavaṟu*.) To lag behind? (**பின்தங்கு**, *piṉtaṅku*.) To move forward? (**முன்னேறு**, *muṉṉēṟu*.) To move away? (**விலகு**, *vilaku*.) A pilot? (**விமானி**, *vimāṉi*.) To make a landing? (**தரையிறங்கு**, *taraiyiṟaṅku*.) A wing? (**இறக்கை**, *iṟakkai*.) Customs? (**சுங்கம்**, *cuṅkam*.) Immigration? (**குடிவரவு**, *kuṭivaravu*.) A visa? (**விசா**, *vicā*.) A border? (**எல்லை**, *ellai*.) A checkpoint booth? (**சாவடி**, *cāvaṭi*.) An entrance? (**நுழைவாயில்**, *nuḻaivāyil*.) To confiscate? (**பறிமுதல் செய்**, *paṟimutal cey*.) To expire? (**காலாவதியாகு**, *kālāvatiyāku*.) To renew? (**புதுப்பி**, *putuppi*.) Running around? (**அலைச்சல்**, *alaiccal*.) An acknowledgement? (**ஒப்புகை**, *oppukai*.) To arrange? (**ஏற்பாடு செய்**, *ēṟpāṭu cey*.)
+`;export{t};

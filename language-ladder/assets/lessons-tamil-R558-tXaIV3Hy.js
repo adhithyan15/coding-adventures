@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R558-review-552-558
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 31810
+chapter: 558
+type: review
+headword: (dialogue)
+gloss: a review of the words from Safety at Home to Booking Musicians
+concept_tag: REVIEW
+prerequisites: [TA-C552-tiyanaippan, TA-C552-cilintar, TA-C552-mitavai, TA-C552-turitappatuttu, TA-C552-avakacam, TA-C553-tarkalika, TA-C553-nirantara, TA-C553-inriyamaiyata, TA-C553-marruvali, TA-C553-torayamaka, TA-C554-atikapatcam, TA-C554-mutintavarai, TA-C554-malaiyerram, TA-C554-minpiti, TA-C554-pommalattam, TA-C555-kaittattal, TA-C555-arankam, TA-C555-virutu, TA-C555-vimarcanam, TA-C555-katapattiram, TA-C556-cirukatai, TA-C556-ilakkiyam, TA-C556-kaivinai, TA-C556-necavu, TA-C556-carikai, TA-C557-parutti, TA-C557-kampali, TA-C557-cayam, TA-C557-kittar, TA-C557-vayalin, TA-C558-natasvaram, TA-C558-melam, TA-C558-rakam, TA-C558-talam, TA-C558-piyano]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C552-PATHUKAPPU552-01, TA-LEX-C552-PATHUKAPPU552-02, TA-LEX-C552-PATHUKAPPU552-03, TA-LEX-C552-PATHUKAPPU552-04, TA-LEX-C552-PATHUKAPPU552-05, TA-LEX-C553-THARKALIKAM553-01, TA-LEX-C553-THARKALIKAM553-02, TA-LEX-C553-THARKALIKAM553-03, TA-LEX-C553-THARKALIKAM553-04, TA-LEX-C553-THARKALIKAM553-05, TA-LEX-C554-VARAIRUTHI554-01, TA-LEX-C554-VARAIRUTHI554-02, TA-LEX-C554-VARAIRUTHI554-03, TA-LEX-C554-VARAIRUTHI554-04, TA-LEX-C554-VARAIRUTHI554-05, TA-LEX-C555-VIRUTHU555-01, TA-LEX-C555-VIRUTHU555-02, TA-LEX-C555-VIRUTHU555-03, TA-LEX-C555-VIRUTHU555-04, TA-LEX-C555-VIRUTHU555-05, TA-LEX-C556-POTTI556-01, TA-LEX-C556-POTTI556-02, TA-LEX-C556-POTTI556-03, TA-LEX-C556-POTTI556-04, TA-LEX-C556-POTTI556-05, TA-LEX-C557-KAMPALI557-01, TA-LEX-C557-KAMPALI557-02, TA-LEX-C557-KAMPALI557-03, TA-LEX-C557-KAMPALI557-04, TA-LEX-C557-KAMPALI557-05, TA-LEX-C558-MELAM558-01, TA-LEX-C558-MELAM558-02, TA-LEX-C558-MELAM558-03, TA-LEX-C558-MELAM558-04, TA-LEX-C558-MELAM558-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C552-PATHUKAPPU552-01, TA-LEX-C552-PATHUKAPPU552-02, TA-LEX-C552-PATHUKAPPU552-03, TA-LEX-C552-PATHUKAPPU552-04, TA-LEX-C552-PATHUKAPPU552-05, TA-LEX-C553-THARKALIKAM553-01, TA-LEX-C553-THARKALIKAM553-02, TA-LEX-C553-THARKALIKAM553-03, TA-LEX-C553-THARKALIKAM553-04, TA-LEX-C553-THARKALIKAM553-05, TA-LEX-C554-VARAIRUTHI554-01, TA-LEX-C554-VARAIRUTHI554-02, TA-LEX-C554-VARAIRUTHI554-03, TA-LEX-C554-VARAIRUTHI554-04, TA-LEX-C554-VARAIRUTHI554-05, TA-LEX-C555-VIRUTHU555-01, TA-LEX-C555-VIRUTHU555-02, TA-LEX-C555-VIRUTHU555-03, TA-LEX-C555-VIRUTHU555-04, TA-LEX-C555-VIRUTHU555-05, TA-LEX-C556-POTTI556-01, TA-LEX-C556-POTTI556-02, TA-LEX-C556-POTTI556-03, TA-LEX-C556-POTTI556-04, TA-LEX-C556-POTTI556-05, TA-LEX-C557-KAMPALI557-01, TA-LEX-C557-KAMPALI557-02, TA-LEX-C557-KAMPALI557-03, TA-LEX-C557-KAMPALI557-04, TA-LEX-C557-KAMPALI557-05, TA-LEX-C558-MELAM558-01, TA-LEX-C558-MELAM558-02, TA-LEX-C558-MELAM558-03, TA-LEX-C558-MELAM558-04, TA-LEX-C558-MELAM558-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C552-tiyanaippan, TA-C552-cilintar, TA-C552-mitavai, TA-C552-turitappatuttu, TA-C552-avakacam, TA-C553-tarkalika, TA-C553-nirantara, TA-C553-inriyamaiyata, TA-C553-marruvali, TA-C553-torayamaka, TA-C554-atikapatcam, TA-C554-mutintavarai, TA-C554-malaiyerram, TA-C554-minpiti, TA-C554-pommalattam, TA-C555-kaittattal, TA-C555-arankam, TA-C555-virutu, TA-C555-vimarcanam, TA-C555-katapattiram, TA-C556-cirukatai, TA-C556-ilakkiyam, TA-C556-kaivinai, TA-C556-necavu, TA-C556-carikai, TA-C557-parutti, TA-C557-kampali, TA-C557-cayam, TA-C557-kittar, TA-C557-vayalin, TA-C558-natasvaram, TA-C558-melam, TA-C558-rakam, TA-C558-talam, TA-C558-piyano]
+---
+
+# Looking back at plans, risks and rules
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C552-PATHUKAPPU552-01, TA-LEX-C552-PATHUKAPPU552-02] -->
+
+[PAUSE 3s] Say the Tamil for a fire extinguisher and a gas cylinder.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C552-PATHUKAPPU552-01, TA-LEX-C552-PATHUKAPPU552-02, TA-LEX-C552-PATHUKAPPU552-03, TA-LEX-C552-PATHUKAPPU552-04, TA-LEX-C552-PATHUKAPPU552-05, TA-LEX-C553-THARKALIKAM553-01, TA-LEX-C553-THARKALIKAM553-02, TA-LEX-C553-THARKALIKAM553-03, TA-LEX-C553-THARKALIKAM553-04, TA-LEX-C553-THARKALIKAM553-05, TA-LEX-C554-VARAIRUTHI554-01, TA-LEX-C554-VARAIRUTHI554-02, TA-LEX-C554-VARAIRUTHI554-03, TA-LEX-C554-VARAIRUTHI554-04, TA-LEX-C554-VARAIRUTHI554-05, TA-LEX-C555-VIRUTHU555-01, TA-LEX-C555-VIRUTHU555-02, TA-LEX-C555-VIRUTHU555-03, TA-LEX-C555-VIRUTHU555-04, TA-LEX-C555-VIRUTHU555-05, TA-LEX-C556-POTTI556-01, TA-LEX-C556-POTTI556-02, TA-LEX-C556-POTTI556-03, TA-LEX-C556-POTTI556-04, TA-LEX-C556-POTTI556-05, TA-LEX-C557-KAMPALI557-01, TA-LEX-C557-KAMPALI557-02, TA-LEX-C557-KAMPALI557-03, TA-LEX-C557-KAMPALI557-04, TA-LEX-C557-KAMPALI557-05, TA-LEX-C558-MELAM558-01, TA-LEX-C558-MELAM558-02, TA-LEX-C558-MELAM558-03, TA-LEX-C558-MELAM558-04, TA-LEX-C558-MELAM558-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a fire extinguisher, a gas cylinder, a buoy, to speed up, time to act]
+- [YOU SAY: temporary, permanent, essential, an alternative, approximately]
+- [YOU SAY: at most, as far as possible, trekking, to go fishing, a puppet show]
+- [YOU SAY: applause, an auditorium, an award, a review, a story character]
+- [YOU SAY: a short story, literature, a craft, weaving, gold thread]
+- [YOU SAY: cotton, wool, a dye, a guitar, a violin]
+- [YOU SAY: a nagaswaram, a drum, a raga, rhythm, a piano]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C552-PATHUKAPPU552-01, TA-LEX-C552-PATHUKAPPU552-02, TA-LEX-C552-PATHUKAPPU552-03, TA-LEX-C552-PATHUKAPPU552-04, TA-LEX-C552-PATHUKAPPU552-05, TA-LEX-C553-THARKALIKAM553-01, TA-LEX-C553-THARKALIKAM553-02, TA-LEX-C553-THARKALIKAM553-03, TA-LEX-C553-THARKALIKAM553-04, TA-LEX-C553-THARKALIKAM553-05, TA-LEX-C554-VARAIRUTHI554-01, TA-LEX-C554-VARAIRUTHI554-02, TA-LEX-C554-VARAIRUTHI554-03, TA-LEX-C554-VARAIRUTHI554-04, TA-LEX-C554-VARAIRUTHI554-05, TA-LEX-C555-VIRUTHU555-01, TA-LEX-C555-VIRUTHU555-02, TA-LEX-C555-VIRUTHU555-03, TA-LEX-C555-VIRUTHU555-04, TA-LEX-C555-VIRUTHU555-05, TA-LEX-C556-POTTI556-01, TA-LEX-C556-POTTI556-02, TA-LEX-C556-POTTI556-03, TA-LEX-C556-POTTI556-04, TA-LEX-C556-POTTI556-05, TA-LEX-C557-KAMPALI557-01, TA-LEX-C557-KAMPALI557-02, TA-LEX-C557-KAMPALI557-03, TA-LEX-C557-KAMPALI557-04, TA-LEX-C557-KAMPALI557-05, TA-LEX-C558-MELAM558-01, TA-LEX-C558-MELAM558-02, TA-LEX-C558-MELAM558-03, TA-LEX-C558-MELAM558-04, TA-LEX-C558-MELAM558-05] -->
+
+[PAUSE 3s] A fire extinguisher? (**தீயணைப்பான்**, *tīyaṇaippāṉ*.) A gas cylinder? (**சிலிண்டர்**, *ciliṇṭar*.) A buoy? (**மிதவை**, *mitavai*.) To speed up? (**துரிதப்படுத்து**, *turitappaṭuttu*.) Time to act? (**அவகாசம்**, *avakācam*.) Temporary? (**தற்காலிக**, *taṟkālika*.) Permanent? (**நிரந்தர**, *nirantara*.) Essential? (**இன்றியமையாத**, *iṉṟiyamaiyāta*.) An alternative? (**மாற்றுவழி**, *māṟṟuvaḻi*.) Approximately? (**தோராயமாக**, *tōrāyamāka*.) At most? (**அதிகபட்சம்**, *atikapaṭcam*.) As far as possible? (**முடிந்தவரை**, *muṭintavarai*.) Trekking? (**மலையேற்றம்**, *malaiyēṟṟam*.) To go fishing? (**மீன்பிடி**, *mīṉpiṭi*.) A puppet show? (**பொம்மலாட்டம்**, *pommalāṭṭam*.) Applause? (**கைத்தட்டல்**, *kaittaṭṭal*.) An auditorium? (**அரங்கம்**, *araṅkam*.) An award? (**விருது**, *virutu*.) A review? (**விமர்சனம்**, *vimarcaṉam*.) A story character? (**கதாபாத்திரம்**, *katāpāttiram*.) A short story? (**சிறுகதை**, *ciṟukatai*.) Literature? (**இலக்கியம்**, *ilakkiyam*.) A craft? (**கைவினை**, *kaiviṉai*.) Weaving? (**நெசவு**, *necavu*.) Gold thread? (**சரிகை**, *carikai*.) Cotton? (**பருத்தி**, *parutti*.) Wool? (**கம்பளி**, *kampaḷi*.) A dye? (**சாயம்**, *cāyam*.) A guitar? (**கிட்டார்**, *kiṭṭār*.) A violin? (**வயலின்**, *vayaliṉ*.) A nagaswaram? (**நாதஸ்வரம்**, *nātasvaram*.) A drum? (**மேளம்**, *mēḷam*.) A raga? (**ராகம்**, *rākam*.) Rhythm? (**தாளம்**, *tāḷam*.) A piano? (**பியானோ**, *piyāṉō*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R558-review-final-558
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 31820
+chapter: 558
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [TA-C558-natasvaram, TA-C558-melam, TA-C558-rakam, TA-C558-talam, TA-C558-piyano]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C558-MELAM558-01, TA-LEX-C558-MELAM558-02, TA-LEX-C558-MELAM558-03, TA-LEX-C558-MELAM558-04, TA-LEX-C558-MELAM558-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C558-MELAM558-01, TA-LEX-C558-MELAM558-02, TA-LEX-C558-MELAM558-03, TA-LEX-C558-MELAM558-04, TA-LEX-C558-MELAM558-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C558-natasvaram, TA-C558-melam, TA-C558-rakam, TA-C558-talam, TA-C558-piyano]
+---
+
+# Booking Musicians — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C558-MELAM558-01, TA-LEX-C558-MELAM558-02] -->
+
+[PAUSE 3s] Say the Tamil for a nagaswaram and a drum.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C558-MELAM558-01, TA-LEX-C558-MELAM558-02, TA-LEX-C558-MELAM558-03, TA-LEX-C558-MELAM558-04, TA-LEX-C558-MELAM558-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a nagaswaram, a drum, a raga, rhythm, a piano]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C558-MELAM558-01, TA-LEX-C558-MELAM558-02, TA-LEX-C558-MELAM558-03, TA-LEX-C558-MELAM558-04, TA-LEX-C558-MELAM558-05] -->
+
+[PAUSE 3s] A nagaswaram? (**நாதஸ்வரம்**, *nātasvaram*.) A drum? (**மேளம்**, *mēḷam*.) A raga? (**ராகம்**, *rākam*.) Rhythm? (**தாளம்**, *tāḷam*.) A piano? (**பியானோ**, *piyāṉō*.)
+`;export{t as n,r as t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R317-review-310-317
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 18320
+chapter: 317
+type: review
+headword: (dialogue)
+gloss: a review of the words from Pictures and Posters to Again and Again
+concept_tag: REVIEW
+prerequisites: [TA-C310-keliccittiram, TA-C310-cuvarotti, TA-C310-avanappatam, TA-C310-cittari, TA-C310-utakam, TA-C311-mulakkam, TA-C311-unnaviratam, TA-C311-kilarntelu, TA-C311-elucci, TA-C311-pirakatanam, TA-C312-virivaka, TA-C312-neratiyaka, TA-C312-varni, TA-C312-oppi, TA-C312-vaymoli, TA-C313-itarkitaiyil, TA-C313-utanatiyaka, TA-C313-patippatiyaka, TA-C313-oruvaliyaka, TA-C313-munnataka, TA-C314-tarunam, TA-C314-ninaivukur, TA-C314-nalataivil, TA-C314-atarkul, TA-C314-itaiyatuttu, TA-C315-nataiperu, TA-C315-erpatu, TA-C315-nikalvu, TA-C315-tarpotu, TA-C315-eppotavatu, TA-C316-pinnar, TA-C316-anraiya, TA-C316-muntaiya, TA-C316-atanpin, TA-C316-ate-camayam, TA-C317-mutanmuraiyaka, TA-C317-tirumpattirumpa, TA-C317-totarcciyaka, TA-C317-utanukkutan, TA-C317-atuttatuttu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C310-OODAKAM310-01, TA-LEX-C310-OODAKAM310-02, TA-LEX-C310-OODAKAM310-03, TA-LEX-C310-OODAKAM310-04, TA-LEX-C310-OODAKAM310-05, TA-LEX-C311-MUZHAKKAM311-01, TA-LEX-C311-MUZHAKKAM311-02, TA-LEX-C311-MUZHAKKAM311-03, TA-LEX-C311-MUZHAKKAM311-04, TA-LEX-C311-MUZHAKKAM311-05, TA-LEX-C312-VIRIVAKA312-01, TA-LEX-C312-VIRIVAKA312-02, TA-LEX-C312-VIRIVAKA312-03, TA-LEX-C312-VIRIVAKA312-04, TA-LEX-C312-VIRIVAKA312-05, TA-LEX-C313-NERAM313-01, TA-LEX-C313-NERAM313-02, TA-LEX-C313-NERAM313-03, TA-LEX-C313-NERAM313-04, TA-LEX-C313-NERAM313-05, TA-LEX-C314-NINAIVU314-01, TA-LEX-C314-NINAIVU314-02, TA-LEX-C314-NINAIVU314-03, TA-LEX-C314-NINAIVU314-04, TA-LEX-C314-NINAIVU314-05, TA-LEX-C315-NADAIPERU315-01, TA-LEX-C315-NADAIPERU315-02, TA-LEX-C315-NADAIPERU315-03, TA-LEX-C315-NADAIPERU315-04, TA-LEX-C315-NADAIPERU315-05, TA-LEX-C316-ANNAAL316-01, TA-LEX-C316-ANNAAL316-02, TA-LEX-C316-ANNAAL316-03, TA-LEX-C316-ANNAAL316-04, TA-LEX-C316-ANNAAL316-05, TA-LEX-C317-MURAI317-01, TA-LEX-C317-MURAI317-02, TA-LEX-C317-MURAI317-03, TA-LEX-C317-MURAI317-04, TA-LEX-C317-MURAI317-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C310-OODAKAM310-01, TA-LEX-C310-OODAKAM310-02, TA-LEX-C310-OODAKAM310-03, TA-LEX-C310-OODAKAM310-04, TA-LEX-C310-OODAKAM310-05, TA-LEX-C311-MUZHAKKAM311-01, TA-LEX-C311-MUZHAKKAM311-02, TA-LEX-C311-MUZHAKKAM311-03, TA-LEX-C311-MUZHAKKAM311-04, TA-LEX-C311-MUZHAKKAM311-05, TA-LEX-C312-VIRIVAKA312-01, TA-LEX-C312-VIRIVAKA312-02, TA-LEX-C312-VIRIVAKA312-03, TA-LEX-C312-VIRIVAKA312-04, TA-LEX-C312-VIRIVAKA312-05, TA-LEX-C313-NERAM313-01, TA-LEX-C313-NERAM313-02, TA-LEX-C313-NERAM313-03, TA-LEX-C313-NERAM313-04, TA-LEX-C313-NERAM313-05, TA-LEX-C314-NINAIVU314-01, TA-LEX-C314-NINAIVU314-02, TA-LEX-C314-NINAIVU314-03, TA-LEX-C314-NINAIVU314-04, TA-LEX-C314-NINAIVU314-05, TA-LEX-C315-NADAIPERU315-01, TA-LEX-C315-NADAIPERU315-02, TA-LEX-C315-NADAIPERU315-03, TA-LEX-C315-NADAIPERU315-04, TA-LEX-C315-NADAIPERU315-05, TA-LEX-C316-ANNAAL316-01, TA-LEX-C316-ANNAAL316-02, TA-LEX-C316-ANNAAL316-03, TA-LEX-C316-ANNAAL316-04, TA-LEX-C316-ANNAAL316-05, TA-LEX-C317-MURAI317-01, TA-LEX-C317-MURAI317-02, TA-LEX-C317-MURAI317-03, TA-LEX-C317-MURAI317-04, TA-LEX-C317-MURAI317-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C310-keliccittiram, TA-C310-cuvarotti, TA-C310-avanappatam, TA-C310-cittari, TA-C310-utakam, TA-C311-mulakkam, TA-C311-unnaviratam, TA-C311-kilarntelu, TA-C311-elucci, TA-C311-pirakatanam, TA-C312-virivaka, TA-C312-neratiyaka, TA-C312-varni, TA-C312-oppi, TA-C312-vaymoli, TA-C313-itarkitaiyil, TA-C313-utanatiyaka, TA-C313-patippatiyaka, TA-C313-oruvaliyaka, TA-C313-munnataka, TA-C314-tarunam, TA-C314-ninaivukur, TA-C314-nalataivil, TA-C314-atarkul, TA-C314-itaiyatuttu, TA-C315-nataiperu, TA-C315-erpatu, TA-C315-nikalvu, TA-C315-tarpotu, TA-C315-eppotavatu, TA-C316-pinnar, TA-C316-anraiya, TA-C316-muntaiya, TA-C316-atanpin, TA-C316-ate-camayam, TA-C317-mutanmuraiyaka, TA-C317-tirumpattirumpa, TA-C317-totarcciyaka, TA-C317-utanukkutan, TA-C317-atuttatuttu]
+---
+
+# Looking back: from Pictures and Posters to Again and Again
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C310-OODAKAM310-01, TA-LEX-C310-OODAKAM310-02] -->
+
+[PAUSE 3s] Say the Tamil for a cartoon and a poster.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C310-OODAKAM310-01, TA-LEX-C310-OODAKAM310-02, TA-LEX-C310-OODAKAM310-03, TA-LEX-C310-OODAKAM310-04, TA-LEX-C310-OODAKAM310-05, TA-LEX-C311-MUZHAKKAM311-01, TA-LEX-C311-MUZHAKKAM311-02, TA-LEX-C311-MUZHAKKAM311-03, TA-LEX-C311-MUZHAKKAM311-04, TA-LEX-C311-MUZHAKKAM311-05, TA-LEX-C312-VIRIVAKA312-01, TA-LEX-C312-VIRIVAKA312-02, TA-LEX-C312-VIRIVAKA312-03, TA-LEX-C312-VIRIVAKA312-04, TA-LEX-C312-VIRIVAKA312-05, TA-LEX-C313-NERAM313-01, TA-LEX-C313-NERAM313-02, TA-LEX-C313-NERAM313-03, TA-LEX-C313-NERAM313-04, TA-LEX-C313-NERAM313-05, TA-LEX-C314-NINAIVU314-01, TA-LEX-C314-NINAIVU314-02, TA-LEX-C314-NINAIVU314-03, TA-LEX-C314-NINAIVU314-04, TA-LEX-C314-NINAIVU314-05, TA-LEX-C315-NADAIPERU315-01, TA-LEX-C315-NADAIPERU315-02, TA-LEX-C315-NADAIPERU315-03, TA-LEX-C315-NADAIPERU315-04, TA-LEX-C315-NADAIPERU315-05, TA-LEX-C316-ANNAAL316-01, TA-LEX-C316-ANNAAL316-02, TA-LEX-C316-ANNAAL316-03, TA-LEX-C316-ANNAAL316-04, TA-LEX-C316-ANNAAL316-05, TA-LEX-C317-MURAI317-01, TA-LEX-C317-MURAI317-02, TA-LEX-C317-MURAI317-03, TA-LEX-C317-MURAI317-04, TA-LEX-C317-MURAI317-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a cartoon, a poster, a documentary, to portray, the media]
+- [YOU SAY: a slogan, a hunger strike, to rise up, an uprising, a proclamation]
+- [YOU SAY: in detail, directly, to describe vividly, to recite, oral tradition]
+- [YOU SAY: meanwhile, immediately, gradually, at long last, earlier]
+- [YOU SAY: a moment, to recall, over time, by then, following this]
+- [YOU SAY: to take place, to arise, an event, at present, once in a while]
+- [YOU SAY: later on, of that day, previous, after that, at the same time]
+- [YOU SAY: for the first time, again and again, continuously, then and there, one after another]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C310-OODAKAM310-01, TA-LEX-C310-OODAKAM310-02, TA-LEX-C310-OODAKAM310-03, TA-LEX-C310-OODAKAM310-04, TA-LEX-C310-OODAKAM310-05, TA-LEX-C311-MUZHAKKAM311-01, TA-LEX-C311-MUZHAKKAM311-02, TA-LEX-C311-MUZHAKKAM311-03, TA-LEX-C311-MUZHAKKAM311-04, TA-LEX-C311-MUZHAKKAM311-05, TA-LEX-C312-VIRIVAKA312-01, TA-LEX-C312-VIRIVAKA312-02, TA-LEX-C312-VIRIVAKA312-03, TA-LEX-C312-VIRIVAKA312-04, TA-LEX-C312-VIRIVAKA312-05, TA-LEX-C313-NERAM313-01, TA-LEX-C313-NERAM313-02, TA-LEX-C313-NERAM313-03, TA-LEX-C313-NERAM313-04, TA-LEX-C313-NERAM313-05, TA-LEX-C314-NINAIVU314-01, TA-LEX-C314-NINAIVU314-02, TA-LEX-C314-NINAIVU314-03, TA-LEX-C314-NINAIVU314-04, TA-LEX-C314-NINAIVU314-05, TA-LEX-C315-NADAIPERU315-01, TA-LEX-C315-NADAIPERU315-02, TA-LEX-C315-NADAIPERU315-03, TA-LEX-C315-NADAIPERU315-04, TA-LEX-C315-NADAIPERU315-05, TA-LEX-C316-ANNAAL316-01, TA-LEX-C316-ANNAAL316-02, TA-LEX-C316-ANNAAL316-03, TA-LEX-C316-ANNAAL316-04, TA-LEX-C316-ANNAAL316-05, TA-LEX-C317-MURAI317-01, TA-LEX-C317-MURAI317-02, TA-LEX-C317-MURAI317-03, TA-LEX-C317-MURAI317-04, TA-LEX-C317-MURAI317-05] -->
+
+[PAUSE 3s] A cartoon? (**கேலிச்சித்திரம்**, *kēliccittiram*.) A poster? (**சுவரொட்டி**, *cuvaroṭṭi*.) A documentary? (**ஆவணப்படம்**, *āvaṇappaṭam*.) To portray? (**சித்தரி**, *cittari*.) The media? (**ஊடகம்**, *ūṭakam*.) A slogan? (**முழக்கம்**, *muḻakkam*.) A hunger strike? (**உண்ணாவிரதம்**, *uṇṇāviratam*.) To rise up? (**கிளர்ந்தெழு**, *kiḷarnteḻu*.) An uprising? (**எழுச்சி**, *eḻucci*.) A proclamation? (**பிரகடனம்**, *pirakaṭaṉam*.) In detail? (**விரிவாக**, *virivāka*.) Directly? (**நேரடியாக**, *nēraṭiyāka*.) To describe vividly? (**வர்ணி**, *varṇi*.) To recite? (**ஒப்பி**, *oppi*.) Oral tradition? (**வாய்மொழி**, *vāymoḻi*.) Meanwhile? (**இதற்கிடையில்**, *itaṟkiṭaiyil*.) Immediately? (**உடனடியாக**, *uṭaṉaṭiyāka*.) Gradually? (**படிப்படியாக**, *paṭippaṭiyāka*.) At long last? (**ஒருவழியாக**, *oruvaḻiyāka*.) Earlier? (**முன்னதாக**, *muṉṉatāka*.) A moment? (**தருணம்**, *taruṇam*.) To recall? (**நினைவுகூர்**, *niṉaivukūr*.) Over time? (**நாளடைவில்**, *nāḷaṭaivil*.) By then? (**அதற்குள்**, *ataṟkuḷ*.) Following this? (**இதையடுத்து**, *itaiyaṭuttu*.) To take place? (**நடைபெறு**, *naṭaipeṟu*.) To arise? (**ஏற்படு**, *ēṟpaṭu*.) An event? (**நிகழ்வு**, *nikaḻvu*.) At present? (**தற்போது**, *taṟpōtu*.) Once in a while? (**எப்போதாவது**, *eppōtāvatu*.) Later on? (**பின்னர்**, *piṉṉar*.) Of that day? (**அன்றைய**, *aṉṟaiya*.) Previous? (**முந்தைய**, *muntaiya*.) After that? (**அதன்பின்**, *ataṉpiṉ*.) At the same time? (**அதே சமயம்**, *atē camayam*.) For the first time? (**முதன்முறையாக**, *mutaṉmuṟaiyāka*.) Again and again? (**திரும்பத்திரும்ப**, *tirumpattirumpa*.) Continuously? (**தொடர்ச்சியாக**, *toṭarcciyāka*.) Then and there? (**உடனுக்குடன்**, *uṭaṉukkuṭaṉ*.) One after another? (**அடுத்தடுத்து**, *aṭuttaṭuttu*.)
+`;export{t};

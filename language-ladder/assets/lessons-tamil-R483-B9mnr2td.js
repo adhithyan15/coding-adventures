@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R484-review-477-484
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27730
+chapter: 484
+type: review
+headword: (dialogue)
+gloss: a review of the words from Serious Illness to Hair and Scalp
+concept_tag: REVIEW
+prerequisites: [TA-C477-marataippu, TA-C477-purrunoy, TA-C477-pakkavatam, TA-C477-astuma, TA-C477-kamalai, TA-C478-uruppu, TA-C478-nuraiyiral, TA-C478-kalliral, TA-C478-cirunirakam, TA-C478-kutal, TA-C479-tacai, TA-C479-narampu, TA-C479-nencu, TA-C479-vila, TA-C479-tuti, TA-C480-mantai, TA-C480-tatai, TA-C480-puruvam, TA-C480-imai, TA-C480-cimittu, TA-C481-totai, TA-C481-kutikal, TA-C481-nontu, TA-C481-itaru, TA-C481-tatumaru, TA-C482-culukku, TA-C482-picaku, TA-C482-atipatu, TA-C482-muri, TA-C482-kaci, TA-C483-pun, TA-C483-koppulam, TA-C483-paru, TA-C483-cori, TA-C483-maccam, TA-C484-potuku, TA-C484-pen, TA-C484-valukkai, TA-C484-utir, TA-C484-narai]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C477-NOYKAL477-01, TA-LEX-C477-NOYKAL477-02, TA-LEX-C477-NOYKAL477-03, TA-LEX-C477-NOYKAL477-04, TA-LEX-C477-NOYKAL477-05, TA-LEX-C478-UTAL478-01, TA-LEX-C478-UTAL478-02, TA-LEX-C478-UTAL478-03, TA-LEX-C478-UTAL478-04, TA-LEX-C478-UTAL478-05, TA-LEX-C479-TACAI479-01, TA-LEX-C479-TACAI479-02, TA-LEX-C479-TACAI479-03, TA-LEX-C479-TACAI479-04, TA-LEX-C479-TACAI479-05, TA-LEX-C480-MUKAM480-01, TA-LEX-C480-MUKAM480-02, TA-LEX-C480-MUKAM480-03, TA-LEX-C480-MUKAM480-04, TA-LEX-C480-MUKAM480-05, TA-LEX-C481-KAL481-01, TA-LEX-C481-KAL481-02, TA-LEX-C481-KAL481-03, TA-LEX-C481-KAL481-04, TA-LEX-C481-KAL481-05, TA-LEX-C482-KAYAM482-01, TA-LEX-C482-KAYAM482-02, TA-LEX-C482-KAYAM482-03, TA-LEX-C482-KAYAM482-04, TA-LEX-C482-KAYAM482-05, TA-LEX-C483-TOL483-01, TA-LEX-C483-TOL483-02, TA-LEX-C483-TOL483-03, TA-LEX-C483-TOL483-04, TA-LEX-C483-TOL483-05, TA-LEX-C484-MUTI484-01, TA-LEX-C484-MUTI484-02, TA-LEX-C484-MUTI484-03, TA-LEX-C484-MUTI484-04, TA-LEX-C484-MUTI484-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C477-NOYKAL477-01, TA-LEX-C477-NOYKAL477-02, TA-LEX-C477-NOYKAL477-03, TA-LEX-C477-NOYKAL477-04, TA-LEX-C477-NOYKAL477-05, TA-LEX-C478-UTAL478-01, TA-LEX-C478-UTAL478-02, TA-LEX-C478-UTAL478-03, TA-LEX-C478-UTAL478-04, TA-LEX-C478-UTAL478-05, TA-LEX-C479-TACAI479-01, TA-LEX-C479-TACAI479-02, TA-LEX-C479-TACAI479-03, TA-LEX-C479-TACAI479-04, TA-LEX-C479-TACAI479-05, TA-LEX-C480-MUKAM480-01, TA-LEX-C480-MUKAM480-02, TA-LEX-C480-MUKAM480-03, TA-LEX-C480-MUKAM480-04, TA-LEX-C480-MUKAM480-05, TA-LEX-C481-KAL481-01, TA-LEX-C481-KAL481-02, TA-LEX-C481-KAL481-03, TA-LEX-C481-KAL481-04, TA-LEX-C481-KAL481-05, TA-LEX-C482-KAYAM482-01, TA-LEX-C482-KAYAM482-02, TA-LEX-C482-KAYAM482-03, TA-LEX-C482-KAYAM482-04, TA-LEX-C482-KAYAM482-05, TA-LEX-C483-TOL483-01, TA-LEX-C483-TOL483-02, TA-LEX-C483-TOL483-03, TA-LEX-C483-TOL483-04, TA-LEX-C483-TOL483-05, TA-LEX-C484-MUTI484-01, TA-LEX-C484-MUTI484-02, TA-LEX-C484-MUTI484-03, TA-LEX-C484-MUTI484-04, TA-LEX-C484-MUTI484-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C477-marataippu, TA-C477-purrunoy, TA-C477-pakkavatam, TA-C477-astuma, TA-C477-kamalai, TA-C478-uruppu, TA-C478-nuraiyiral, TA-C478-kalliral, TA-C478-cirunirakam, TA-C478-kutal, TA-C479-tacai, TA-C479-narampu, TA-C479-nencu, TA-C479-vila, TA-C479-tuti, TA-C480-mantai, TA-C480-tatai, TA-C480-puruvam, TA-C480-imai, TA-C480-cimittu, TA-C481-totai, TA-C481-kutikal, TA-C481-nontu, TA-C481-itaru, TA-C481-tatumaru, TA-C482-culukku, TA-C482-picaku, TA-C482-atipatu, TA-C482-muri, TA-C482-kaci, TA-C483-pun, TA-C483-koppulam, TA-C483-paru, TA-C483-cori, TA-C483-maccam, TA-C484-potuku, TA-C484-pen, TA-C484-valukkai, TA-C484-utir, TA-C484-narai]
+---
+
+# Looking back: from Serious Illness to Hair and Scalp
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C477-NOYKAL477-01, TA-LEX-C477-NOYKAL477-02] -->
+
+[PAUSE 3s] Say the Tamil for a heart attack and cancer.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C477-NOYKAL477-01, TA-LEX-C477-NOYKAL477-02, TA-LEX-C477-NOYKAL477-03, TA-LEX-C477-NOYKAL477-04, TA-LEX-C477-NOYKAL477-05, TA-LEX-C478-UTAL478-01, TA-LEX-C478-UTAL478-02, TA-LEX-C478-UTAL478-03, TA-LEX-C478-UTAL478-04, TA-LEX-C478-UTAL478-05, TA-LEX-C479-TACAI479-01, TA-LEX-C479-TACAI479-02, TA-LEX-C479-TACAI479-03, TA-LEX-C479-TACAI479-04, TA-LEX-C479-TACAI479-05, TA-LEX-C480-MUKAM480-01, TA-LEX-C480-MUKAM480-02, TA-LEX-C480-MUKAM480-03, TA-LEX-C480-MUKAM480-04, TA-LEX-C480-MUKAM480-05, TA-LEX-C481-KAL481-01, TA-LEX-C481-KAL481-02, TA-LEX-C481-KAL481-03, TA-LEX-C481-KAL481-04, TA-LEX-C481-KAL481-05, TA-LEX-C482-KAYAM482-01, TA-LEX-C482-KAYAM482-02, TA-LEX-C482-KAYAM482-03, TA-LEX-C482-KAYAM482-04, TA-LEX-C482-KAYAM482-05, TA-LEX-C483-TOL483-01, TA-LEX-C483-TOL483-02, TA-LEX-C483-TOL483-03, TA-LEX-C483-TOL483-04, TA-LEX-C483-TOL483-05, TA-LEX-C484-MUTI484-01, TA-LEX-C484-MUTI484-02, TA-LEX-C484-MUTI484-03, TA-LEX-C484-MUTI484-04, TA-LEX-C484-MUTI484-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a heart attack, cancer, a stroke, asthma, jaundice]
+- [YOU SAY: an organ, a lung, the liver, a kidney, the intestines]
+- [YOU SAY: a muscle, a nerve, the bosom, a rib, to throb]
+- [YOU SAY: the skull, the jaw, an eyebrow, an eyelid, to blink]
+- [YOU SAY: a thigh, the heel, to limp, to trip, to falter]
+- [YOU SAY: a sprain, to be dislocated, to get hurt, to snap, to ooze]
+- [YOU SAY: a sore, a blister, a pimple, to scratch an itch, a mole]
+- [YOU SAY: dandruff, a louse, baldness, to fall out, to turn grey]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C477-NOYKAL477-01, TA-LEX-C477-NOYKAL477-02, TA-LEX-C477-NOYKAL477-03, TA-LEX-C477-NOYKAL477-04, TA-LEX-C477-NOYKAL477-05, TA-LEX-C478-UTAL478-01, TA-LEX-C478-UTAL478-02, TA-LEX-C478-UTAL478-03, TA-LEX-C478-UTAL478-04, TA-LEX-C478-UTAL478-05, TA-LEX-C479-TACAI479-01, TA-LEX-C479-TACAI479-02, TA-LEX-C479-TACAI479-03, TA-LEX-C479-TACAI479-04, TA-LEX-C479-TACAI479-05, TA-LEX-C480-MUKAM480-01, TA-LEX-C480-MUKAM480-02, TA-LEX-C480-MUKAM480-03, TA-LEX-C480-MUKAM480-04, TA-LEX-C480-MUKAM480-05, TA-LEX-C481-KAL481-01, TA-LEX-C481-KAL481-02, TA-LEX-C481-KAL481-03, TA-LEX-C481-KAL481-04, TA-LEX-C481-KAL481-05, TA-LEX-C482-KAYAM482-01, TA-LEX-C482-KAYAM482-02, TA-LEX-C482-KAYAM482-03, TA-LEX-C482-KAYAM482-04, TA-LEX-C482-KAYAM482-05, TA-LEX-C483-TOL483-01, TA-LEX-C483-TOL483-02, TA-LEX-C483-TOL483-03, TA-LEX-C483-TOL483-04, TA-LEX-C483-TOL483-05, TA-LEX-C484-MUTI484-01, TA-LEX-C484-MUTI484-02, TA-LEX-C484-MUTI484-03, TA-LEX-C484-MUTI484-04, TA-LEX-C484-MUTI484-05] -->
+
+[PAUSE 3s] A heart attack? (**மாரடைப்பு**, *māraṭaippu*.) Cancer? (**புற்றுநோய்**, *puṟṟunōy*.) A stroke? (**பக்கவாதம்**, *pakkavātam*.) Asthma? (**ஆஸ்துமா**, *āstumā*.) Jaundice? (**காமாலை**, *kāmālai*.) An organ? (**உறுப்பு**, *uṟuppu*.) A lung? (**நுரையீரல்**, *nuraiyīral*.) The liver? (**கல்லீரல்**, *kallīral*.) A kidney? (**சிறுநீரகம்**, *ciṟunīrakam*.) The intestines? (**குடல்**, *kuṭal*.) A muscle? (**தசை**, *tacai*.) A nerve? (**நரம்பு**, *narampu*.) The bosom? (**நெஞ்சு**, *neñcu*.) A rib? (**விலா**, *vilā*.) To throb? (**துடி**, *tuṭi*.) The skull? (**மண்டை**, *maṇṭai*.) The jaw? (**தாடை**, *tāṭai*.) An eyebrow? (**புருவம்**, *puruvam*.) An eyelid? (**இமை**, *imai*.) To blink? (**சிமிட்டு**, *cimiṭṭu*.) A thigh? (**தொடை**, *toṭai*.) The heel? (**குதிகால்**, *kutikāl*.) To limp? (**நொண்டு**, *noṇṭu*.) To trip? (**இடறு**, *iṭaṟu*.) To falter? (**தடுமாறு**, *taṭumāṟu*.) A sprain? (**சுளுக்கு**, *cuḷukku*.) To be dislocated? (**பிசகு**, *picaku*.) To get hurt? (**அடிபடு**, *aṭipaṭu*.) To snap? (**முறி**, *muṟi*.) To ooze? (**கசி**, *kaci*.) A sore? (**புண்**, *puṇ*.) A blister? (**கொப்புளம்**, *koppuḷam*.) A pimple? (**பரு**, *paru*.) To scratch an itch? (**சொறி**, *coṟi*.) A mole? (**மச்சம்**, *maccam*.) Dandruff? (**பொடுகு**, *poṭuku*.) A louse? (**பேன்**, *pēṉ*.) Baldness? (**வழுக்கை**, *vaḻukkai*.) To fall out? (**உதிர்**, *utir*.) To turn grey? (**நரை**, *narai*.)
+`;export{t};

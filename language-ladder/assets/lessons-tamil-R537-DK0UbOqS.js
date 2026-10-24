@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R537-review-530-537
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 30730
+chapter: 537
+type: review
+headword: (dialogue)
+gloss: a review of the words from Children's Games to Clay and Stone
+concept_tag: REVIEW
+prerequisites: [TA-C530-kannamucci, TA-C530-pamparam, TA-C530-koli, TA-C530-keram, TA-C530-karrati, TA-C531-kutaippantu, TA-C531-irakuppantu, TA-C531-kaippantu, TA-C531-tennis, TA-C531-kapati, TA-C532-kuttuccantai, TA-C532-malyuttam, TA-C532-cilampam, TA-C532-utai-kick, TA-C532-eri-throw, TA-C533-pantayam, TA-C533-turattu, TA-C533-carukku, TA-C533-tavu, TA-C533-mukkuli, TA-C534-torkati, TA-C534-camanilai, TA-C534-natuvar, TA-C534-patakkam, TA-C534-vakaiyalar, TA-C535-panketu, TA-C535-atukalam, TA-C535-kol, TA-C535-kurivai, TA-C535-mattai, TA-C536-kalai-art, TA-C536-oviyam, TA-C536-turikai, TA-C536-tittu-paint, TA-C536-kankatci, TA-C537-cirpam, TA-C537-cetukku, TA-C537-uli, TA-C537-merukerru, TA-C537-cutu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C530-KUZHANTHAI530-01, TA-LEX-C530-KUZHANTHAI530-02, TA-LEX-C530-KUZHANTHAI530-03, TA-LEX-C530-KUZHANTHAI530-04, TA-LEX-C530-KUZHANTHAI530-05, TA-LEX-C531-PANTHU531-01, TA-LEX-C531-PANTHU531-02, TA-LEX-C531-PANTHU531-03, TA-LEX-C531-PANTHU531-04, TA-LEX-C531-PANTHU531-05, TA-LEX-C532-SANDAI532-01, TA-LEX-C532-SANDAI532-02, TA-LEX-C532-SANDAI532-03, TA-LEX-C532-SANDAI532-04, TA-LEX-C532-SANDAI532-05, TA-LEX-C533-OTTAM533-01, TA-LEX-C533-OTTAM533-02, TA-LEX-C533-OTTAM533-03, TA-LEX-C533-OTTAM533-04, TA-LEX-C533-OTTAM533-05, TA-LEX-C534-VETRI534-01, TA-LEX-C534-VETRI534-02, TA-LEX-C534-VETRI534-03, TA-LEX-C534-VETRI534-04, TA-LEX-C534-VETRI534-05, TA-LEX-C535-AADUKALAM535-01, TA-LEX-C535-AADUKALAM535-02, TA-LEX-C535-AADUKALAM535-03, TA-LEX-C535-AADUKALAM535-04, TA-LEX-C535-AADUKALAM535-05, TA-LEX-C536-OVIYAM536-01, TA-LEX-C536-OVIYAM536-02, TA-LEX-C536-OVIYAM536-03, TA-LEX-C536-OVIYAM536-04, TA-LEX-C536-OVIYAM536-05, TA-LEX-C537-SIRPAM537-01, TA-LEX-C537-SIRPAM537-02, TA-LEX-C537-SIRPAM537-03, TA-LEX-C537-SIRPAM537-04, TA-LEX-C537-SIRPAM537-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C530-KUZHANTHAI530-01, TA-LEX-C530-KUZHANTHAI530-02, TA-LEX-C530-KUZHANTHAI530-03, TA-LEX-C530-KUZHANTHAI530-04, TA-LEX-C530-KUZHANTHAI530-05, TA-LEX-C531-PANTHU531-01, TA-LEX-C531-PANTHU531-02, TA-LEX-C531-PANTHU531-03, TA-LEX-C531-PANTHU531-04, TA-LEX-C531-PANTHU531-05, TA-LEX-C532-SANDAI532-01, TA-LEX-C532-SANDAI532-02, TA-LEX-C532-SANDAI532-03, TA-LEX-C532-SANDAI532-04, TA-LEX-C532-SANDAI532-05, TA-LEX-C533-OTTAM533-01, TA-LEX-C533-OTTAM533-02, TA-LEX-C533-OTTAM533-03, TA-LEX-C533-OTTAM533-04, TA-LEX-C533-OTTAM533-05, TA-LEX-C534-VETRI534-01, TA-LEX-C534-VETRI534-02, TA-LEX-C534-VETRI534-03, TA-LEX-C534-VETRI534-04, TA-LEX-C534-VETRI534-05, TA-LEX-C535-AADUKALAM535-01, TA-LEX-C535-AADUKALAM535-02, TA-LEX-C535-AADUKALAM535-03, TA-LEX-C535-AADUKALAM535-04, TA-LEX-C535-AADUKALAM535-05, TA-LEX-C536-OVIYAM536-01, TA-LEX-C536-OVIYAM536-02, TA-LEX-C536-OVIYAM536-03, TA-LEX-C536-OVIYAM536-04, TA-LEX-C536-OVIYAM536-05, TA-LEX-C537-SIRPAM537-01, TA-LEX-C537-SIRPAM537-02, TA-LEX-C537-SIRPAM537-03, TA-LEX-C537-SIRPAM537-04, TA-LEX-C537-SIRPAM537-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C530-kannamucci, TA-C530-pamparam, TA-C530-koli, TA-C530-keram, TA-C530-karrati, TA-C531-kutaippantu, TA-C531-irakuppantu, TA-C531-kaippantu, TA-C531-tennis, TA-C531-kapati, TA-C532-kuttuccantai, TA-C532-malyuttam, TA-C532-cilampam, TA-C532-utai-kick, TA-C532-eri-throw, TA-C533-pantayam, TA-C533-turattu, TA-C533-carukku, TA-C533-tavu, TA-C533-mukkuli, TA-C534-torkati, TA-C534-camanilai, TA-C534-natuvar, TA-C534-patakkam, TA-C534-vakaiyalar, TA-C535-panketu, TA-C535-atukalam, TA-C535-kol, TA-C535-kurivai, TA-C535-mattai, TA-C536-kalai-art, TA-C536-oviyam, TA-C536-turikai, TA-C536-tittu-paint, TA-C536-kankatci, TA-C537-cirpam, TA-C537-cetukku, TA-C537-uli, TA-C537-merukerru, TA-C537-cutu]
+---
+
+# Looking back: from Children's Games to Clay and Stone
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C530-KUZHANTHAI530-01, TA-LEX-C530-KUZHANTHAI530-02] -->
+
+[PAUSE 3s] Say the Tamil for hide and seek and a spinning top.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C530-KUZHANTHAI530-01, TA-LEX-C530-KUZHANTHAI530-02, TA-LEX-C530-KUZHANTHAI530-03, TA-LEX-C530-KUZHANTHAI530-04, TA-LEX-C530-KUZHANTHAI530-05, TA-LEX-C531-PANTHU531-01, TA-LEX-C531-PANTHU531-02, TA-LEX-C531-PANTHU531-03, TA-LEX-C531-PANTHU531-04, TA-LEX-C531-PANTHU531-05, TA-LEX-C532-SANDAI532-01, TA-LEX-C532-SANDAI532-02, TA-LEX-C532-SANDAI532-03, TA-LEX-C532-SANDAI532-04, TA-LEX-C532-SANDAI532-05, TA-LEX-C533-OTTAM533-01, TA-LEX-C533-OTTAM533-02, TA-LEX-C533-OTTAM533-03, TA-LEX-C533-OTTAM533-04, TA-LEX-C533-OTTAM533-05, TA-LEX-C534-VETRI534-01, TA-LEX-C534-VETRI534-02, TA-LEX-C534-VETRI534-03, TA-LEX-C534-VETRI534-04, TA-LEX-C534-VETRI534-05, TA-LEX-C535-AADUKALAM535-01, TA-LEX-C535-AADUKALAM535-02, TA-LEX-C535-AADUKALAM535-03, TA-LEX-C535-AADUKALAM535-04, TA-LEX-C535-AADUKALAM535-05, TA-LEX-C536-OVIYAM536-01, TA-LEX-C536-OVIYAM536-02, TA-LEX-C536-OVIYAM536-03, TA-LEX-C536-OVIYAM536-04, TA-LEX-C536-OVIYAM536-05, TA-LEX-C537-SIRPAM537-01, TA-LEX-C537-SIRPAM537-02, TA-LEX-C537-SIRPAM537-03, TA-LEX-C537-SIRPAM537-04, TA-LEX-C537-SIRPAM537-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: hide and seek, a spinning top, marbles, carrom, a pinwheel]
+- [YOU SAY: basketball, badminton, volleyball, tennis, kabaddi]
+- [YOU SAY: boxing, wrestling, stick fencing, to kick, to hurl]
+- [YOU SAY: a race, to chase, to slide, to leap, to dive]
+- [YOU SAY: to beat a rival, a draw, a referee, a medal, a champion]
+- [YOU SAY: to take part, a pitch, a goal in sport, to take aim, a bat]
+- [YOU SAY: an art, a painting, a paintbrush, to paint a picture, an exhibition]
+- [YOU SAY: a sculpture, to carve, a chisel, to polish, to bake]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C530-KUZHANTHAI530-01, TA-LEX-C530-KUZHANTHAI530-02, TA-LEX-C530-KUZHANTHAI530-03, TA-LEX-C530-KUZHANTHAI530-04, TA-LEX-C530-KUZHANTHAI530-05, TA-LEX-C531-PANTHU531-01, TA-LEX-C531-PANTHU531-02, TA-LEX-C531-PANTHU531-03, TA-LEX-C531-PANTHU531-04, TA-LEX-C531-PANTHU531-05, TA-LEX-C532-SANDAI532-01, TA-LEX-C532-SANDAI532-02, TA-LEX-C532-SANDAI532-03, TA-LEX-C532-SANDAI532-04, TA-LEX-C532-SANDAI532-05, TA-LEX-C533-OTTAM533-01, TA-LEX-C533-OTTAM533-02, TA-LEX-C533-OTTAM533-03, TA-LEX-C533-OTTAM533-04, TA-LEX-C533-OTTAM533-05, TA-LEX-C534-VETRI534-01, TA-LEX-C534-VETRI534-02, TA-LEX-C534-VETRI534-03, TA-LEX-C534-VETRI534-04, TA-LEX-C534-VETRI534-05, TA-LEX-C535-AADUKALAM535-01, TA-LEX-C535-AADUKALAM535-02, TA-LEX-C535-AADUKALAM535-03, TA-LEX-C535-AADUKALAM535-04, TA-LEX-C535-AADUKALAM535-05, TA-LEX-C536-OVIYAM536-01, TA-LEX-C536-OVIYAM536-02, TA-LEX-C536-OVIYAM536-03, TA-LEX-C536-OVIYAM536-04, TA-LEX-C536-OVIYAM536-05, TA-LEX-C537-SIRPAM537-01, TA-LEX-C537-SIRPAM537-02, TA-LEX-C537-SIRPAM537-03, TA-LEX-C537-SIRPAM537-04, TA-LEX-C537-SIRPAM537-05] -->
+
+[PAUSE 3s] Hide and seek? (**கண்ணாமூச்சி**, *kaṇṇāmūcci*.) A spinning top? (**பம்பரம்**, *pamparam*.) Marbles? (**கோலி**, *kōli*.) Carrom? (**கேரம்**, *kēram*.) A pinwheel? (**காற்றாடி**, *kāṟṟāṭi*.) Basketball? (**கூடைப்பந்து**, *kūṭaippantu*.) Badminton? (**இறகுப்பந்து**, *iṟakuppantu*.) Volleyball? (**கைப்பந்து**, *kaippantu*.) Tennis? (**டென்னிஸ்**, *ṭeṉṉis*.) Kabaddi? (**கபடி**, *kapaṭi*.) Boxing? (**குத்துச்சண்டை**, *kuttuccaṇṭai*.) Wrestling? (**மல்யுத்தம்**, *malyuttam*.) Stick fencing? (**சிலம்பம்**, *cilampam*.) To kick? (**உதை**, *utai*.) To hurl? (**எறி**, *eṟi*.) A race? (**பந்தயம்**, *pantayam*.) To chase? (**துரத்து**, *turattu*.) To slide? (**சறுக்கு**, *caṟukku*.) To leap? (**தாவு**, *tāvu*.) To dive? (**முக்குளி**, *mukkuḷi*.) To beat a rival? (**தோற்கடி**, *tōṟkaṭi*.) A draw? (**சமநிலை**, *camanilai*.) A referee? (**நடுவர்**, *naṭuvar*.) A medal? (**பதக்கம்**, *patakkam*.) A champion? (**வாகையாளர்**, *vākaiyāḷar*.) To take part? (**பங்கெடு**, *paṅkeṭu*.) A pitch? (**ஆடுகளம்**, *āṭukaḷam*.) A goal in sport? (**கோல்**, *kōl*.) To take aim? (**குறிவை**, *kuṟivai*.) A bat? (**மட்டை**, *maṭṭai*.) An art? (**கலை**, *kalai*.) A painting? (**ஓவியம்**, *ōviyam*.) A paintbrush? (**தூரிகை**, *tūrikai*.) To paint a picture? (**தீட்டு**, *tīṭṭu*.) An exhibition? (**கண்காட்சி**, *kaṇkāṭci*.) A sculpture? (**சிற்பம்**, *ciṟpam*.) To carve? (**செதுக்கு**, *cetukku*.) A chisel? (**உளி**, *uḷi*.) To polish? (**மெருகேற்று**, *merukēṟṟu*.) To bake? (**சுடு**, *cuṭu*.)
+`;export{t};
