@@ -249,6 +249,13 @@
 % where the last word ended. Block callouts set ragged right is ordinary
 % typography, and it is what \chapteropening already does above.
 \tcbset{before upper=\raggedright}
+% Quotes too (HL-C88): a quote in a narrow column set justified stretches the
+% few interword spaces it has into underfull lines. Ragged right is the same
+% remedy as for the callouts above: the line ends where its last word ends.
+% \hbadness and \hfuzz stay at their defaults, so the CI log scanner still
+% sees every box that remains.
+\let\hlorigquote\quote
+\def\quote{\hlorigquote\raggedright}
 \emergencystretch=2em
 
 % ---------------------------------------------------------------------------

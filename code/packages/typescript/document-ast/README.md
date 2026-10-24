@@ -128,3 +128,12 @@ This package is the foundation of a three-package pipeline:
 - [`@coding-adventures/commonmark-parser`](../commonmark-parser/) — Markdown → Document AST
 - [`@coding-adventures/document-ast-to-html`](../document-ast-to-html/) — Document AST → HTML
 - [`@coding-adventures/commonmark`](../commonmark/) — convenience pipeline (parse + render)
+
+## TE04 fenced-block compatibility
+
+Exports the distinct readonly `FencedBlockNode` (`type`, `name`, `info`, `value`) in `BlockNode`. Legacy `CodeBlockNode` remains available for indented code and existing CommonMark/AsciiDoc producers.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

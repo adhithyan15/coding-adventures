@@ -1,0 +1,11 @@
+{
+  "id": "GU-C278-etle",
+  "pathSegment": "GU-PATH-278-REASON-ADVICE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-278-REASON-ADVICE",
+      "order": 1
+    }
+  ]
+}

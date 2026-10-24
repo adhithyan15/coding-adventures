@@ -235,9 +235,22 @@ pub fn decode_x509_certificate(
             error.offset(),
         )
     })?;
-    let value_offset = root.header().len();
-    let value_length = root.value().len();
-    let mut fields = decoder.sequence(root).map_err(|error| {
+    decode_x509_certificate_element(&mut decoder, root)
+}
+
+/// Decode one RFC 5280 certificate element through a caller-owned decoder.
+///
+/// This composable entry point consumes the caller's existing depth and
+/// element budgets. It is intended for enclosing structures such as the
+/// optional certificate sequence in an RFC 6960 `BasicOCSPResponse`.
+pub fn decode_x509_certificate_element<'a>(
+    decoder: &mut Asn1Decoder,
+    element: Asn1Element<'a>,
+) -> Result<X509Certificate<'a>, X509CertificateError> {
+    let encoded = element.encoded();
+    let value_offset = element.header().len();
+    let value_length = element.value().len();
+    let mut fields = decoder.sequence(element).map_err(|error| {
         X509CertificateError::new(
             X509CertificateErrorKind::Structure(error.kind()),
             error.offset(),
@@ -246,13 +259,13 @@ pub fn decode_x509_certificate(
 
     let tbs_offset = child_offset(value_offset, value_length, fields.remaining().len());
     let tbs_element = read_required(
-        &mut decoder,
+        decoder,
         &mut fields,
         value_offset,
         tbs_offset,
         X509CertificateErrorKind::MissingTbsCertificate,
     )?;
-    let tbs_certificate = decode_tbs_certificate(&mut decoder, tbs_element).map_err(|error| {
+    let tbs_certificate = decode_tbs_certificate(decoder, tbs_element).map_err(|error| {
         X509CertificateError::new(
             X509CertificateErrorKind::InvalidTbsCertificate(error.kind),
             tbs_offset + error.offset,
@@ -262,14 +275,14 @@ pub fn decode_x509_certificate(
     let signature_algorithm_offset =
         child_offset(value_offset, value_length, fields.remaining().len());
     let signature_algorithm_element = read_required(
-        &mut decoder,
+        decoder,
         &mut fields,
         value_offset,
         signature_algorithm_offset,
         X509CertificateErrorKind::MissingSignatureAlgorithm,
     )?;
     let signature_algorithm =
-        decode_x509_algorithm_identifier(&mut decoder, signature_algorithm_element)
+        decode_x509_algorithm_identifier(decoder, signature_algorithm_element)
             .map_err(|error| algorithm_error(error, signature_algorithm_offset))?;
 
     if tbs_certificate.signature_algorithm_encoded != signature_algorithm_element.encoded() {
@@ -281,7 +294,7 @@ pub fn decode_x509_certificate(
 
     let signature_value_offset = child_offset(value_offset, value_length, fields.remaining().len());
     let signature_value_element = read_required(
-        &mut decoder,
+        decoder,
         &mut fields,
         value_offset,
         signature_value_offset,
@@ -296,7 +309,7 @@ pub fn decode_x509_certificate(
 
     let trailing_offset = child_offset(value_offset, value_length, fields.remaining().len());
     if fields
-        .read(&mut decoder)
+        .read(decoder)
         .map_err(|error| outer_child_structure(error, value_offset, trailing_offset))?
         .is_some()
     {
@@ -307,7 +320,7 @@ pub fn decode_x509_certificate(
     }
 
     Ok(X509Certificate {
-        encoded: input,
+        encoded,
         tbs_certificate,
         signature_algorithm,
         signature_value,

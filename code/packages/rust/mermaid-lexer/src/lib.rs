@@ -1712,6 +1712,60 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_mixed_relationship_operators() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER 1.-one or more DELIVERY_ADDRESS : mixed left\nCUSTOMER 1-.one or more POSTAL_ADDRESS : mixed right\n",
+        );
+        let operators: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("NON_IDENTIFYING"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(operators, [".-", "-."]);
+    }
+
+    #[test]
+    fn tokenizes_complete_er_symbolic_cardinality_matrix() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nA ||--|{ B : a\nC |o..o{ D : b\nE }|--|| F : c\nG }o..o| H : d\n",
+        );
+        let cardinalities: Vec<&str> = tokens
+            .iter()
+            .filter(|token| matches!(
+                token.type_name.as_deref(),
+                Some("ZERO_OR_ONE" | "ZERO_OR_MORE" | "ONE_OR_MORE" | "ONLY_ONE")
+            ))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(cardinalities, ["||", "|{", "|o", "o{", "}|", "||", "}o", "o|"]);
+    }
+
+    #[test]
+    fn tokenizes_er_cardinality_word_and_numeric_aliases() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nA one or zero to many B : a\nC many(0) to many(1) D : b\nE only one optionally to 1+ F : c\nG 0+ optionally to 1 H : d\n",
+        );
+        let cardinalities: Vec<&str> = tokens
+            .iter()
+            .filter(|token| {
+                token.type_ == TokenType::Number
+                    || matches!(
+                        token.type_name.as_deref(),
+                        Some("ZERO_OR_ONE" | "ZERO_OR_MORE" | "ONE_OR_MORE" | "ONLY_ONE")
+                    )
+            })
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(
+            cardinalities,
+            ["one or zero", "many", "many(0)", "many(1)", "only one", "1+", "0+", "1"]
+        );
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",

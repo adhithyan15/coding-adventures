@@ -359,6 +359,21 @@ digests, and downloaded metadata hashes match. All six payload jobs and the
 publisher passed. #17999 reconciles these receipts in the README and backlog;
 it does not expand artifact coverage or prepare another release.
 
+### Next fidelity slice — board column width floor (#18030)
+
+Both themes must retain a 260-pixel minimum board-column width when the
+available row is narrower than its columns. Qt's single-container `For`
+delegate must derive that floor from the existing scalar width paired with
+exact `flex-shrink: 0`; the inner column keeps its preferred width. Reject
+state overrides, multi-child bodies, invalid widths, and other shrink factors.
+Keep the unsupported flex-shrink diagnostic and style-drop budget unchanged:
+this narrow delegate repair does not claim general native flexbox support.
+
+Release validation found that an authored cross-backend `min-width` creates
+an additional unsupported SwiftUI declaration. Do not raise the ratchet or
+broaden this slice into SwiftUI: preserve the existing authored styles and
+derive the Qt wrapper floor from their existing non-shrink intent instead.
+
 ### Tier C — reach, stated honestly
 
 14. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,

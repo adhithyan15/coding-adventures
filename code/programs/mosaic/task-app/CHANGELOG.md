@@ -4,11 +4,21 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve the 260-pixel board-column minimum in both themes and across Qt's
+  repeated-column delegate wrapper (#18030). Unsupported flex-shrink remains
+  reported; the style-drop budget and release artifact coverage are unchanged.
+
 ### Documentation
 
 - Record the completed immutable v0.5.9 publication and independent asset audit
   in the README, completion spec, and backlog (#17999); artifact coverage and
   unsigned-platform limitations remain unchanged.
+
+### Changed
+
+- Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
 
 Entries added after `task-app-v0.5.9` accumulate here until the next version is
 cut.

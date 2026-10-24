@@ -1234,6 +1234,47 @@ authorize a responder, bind any response to a certificate or constructed path,
 decide freshness or revocation, fetch or cache data, read a clock, or grant
 path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
 remains unavailable.
+A bounded `x509-ocsp-basic-response` prerequisite now composes exactly one RFC
+6960 `BasicOCSPResponse` SEQUENCE under a shared caller-owned DER depth,
+element, length, OID-arc, extension-count, response-count, and fixed
+certificate-count budget. It requires one structural `ResponseData`, one
+generic signature `AlgorithmIdentifier`, and one canonical signature BIT
+STRING in schema order, followed by an optional explicit `certs [0]` sequence.
+Each present certificate is decoded by the complete repository-owned RFC 5280
+certificate structure layer through the same enclosing DER decoder; no nested
+budget is reset. Success retains the exact complete response encoding, the
+exact signed `ResponseData` bytes, the generic algorithm identifier, the
+borrowed signature bits, and the ordered bounded certificate values without
+reserialization. The structural layer does not recognize or enable a signature
+algorithm, verify the signature, authorize or select a responder certificate,
+match `ResponderID`, build or validate a certificate path, apply certificate
+role or critical-extension policy, decide freshness or revocation, fetch or
+cache data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS remains unavailable.
+
+A bounded `x509-ocsp-response` prerequisite decodes exactly one RFC 6960
+`OCSPResponse` SEQUENCE under a shared caller-owned DER depth, element,
+length, and OID-arc budget. It recognizes only the assigned
+`OCSPResponseStatus` values 0, 1, 2, 3, 5, and 6; rejects negative,
+non-canonical, unassigned, and oversized ENUMERATED values; requires a
+successful response to carry one terminal `[0] EXPLICIT ResponseBytes`; and
+requires every error response to omit that field. `ResponseBytes` retains one
+generic response-type OBJECT IDENTIFIER and the borrowed contents of one OCTET
+STRING without interpreting either. Success retains the exact complete outer
+response encoding without reserialization. An explicit structural dispatch
+accepts only the exact `id-pkix-ocsp-basic` OID `1.3.6.1.5.5.7.48.1.1`, frames
+the OCTET STRING contents as exactly one canonical DER document, and composes
+the repository-owned `BasicOCSPResponse` decoder through the same caller-owned
+decoder so no depth, element, length, OID-arc, extension-count,
+response-count, or certificate-count authority is reset. An unrecognized OID
+is rejected before its payload is parsed. Dispatch failures are payload-free;
+their offsets are local to the embedded response body because `ResponseBytes`
+exposes that body as an independently framed OCTET STRING. This structural
+layer does not select or enable an algorithm, verify a signature, authorize a
+responder, bind status to a certificate or constructed path, interpret
+extensions, decide freshness or revocation, fetch or cache data, read a clock,
+or grant path, trust, TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

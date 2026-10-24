@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:56626790d9817e35",
+  "lessonIds": [
+    "GU-C276-khaine",
+    "GU-C276-chevte",
+    "GU-C276-pahela-pachi",
+    "GU-C276-ek-ravivar",
+    "GU-R276-a-story-in-order"
+  ],
+  "tex": "gujarati/book/chapters/ch276-a-story-in-order.tex"
+}

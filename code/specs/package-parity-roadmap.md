@@ -17620,3 +17620,168 @@ projection and pre-hash file-read bounds fixes. Both changed modules have
 zero reachable govulncheck findings; imported/module advisories with no call
 path remain reported. Windows execution and three-platform selection plans
 are measured; current-head hosted CI remains required before merge.
+
+## October 22 Go BF03 postmerge refresh
+
+PR #17905 merged externally at `df4354995b29f2e04cb78abf360962ef551dd3ef`.
+The collision-checked inventory now has 1,523 established identities and 4,805
+slots across all 15 lanes, with no canonical collisions or unknown buckets.
+OCaml has five roots and remains emerging until all promotion gates pass.
+The two new Rust X509 identities extend the existing supplied-data stack
+classifier; neither directory presence nor supplied evidence establishes trust
+or native qualification.
+
+[The postmerge audit](package-parity-audits/20261022-go-bf03-postmerge.json)
+incorporates 205 hash-verified saved receipts and reconciles seven previously
+unregistered references. Its owner notes preserve profile questions, independent
+fixture proposals, validation requirements and authority limits. Synthesis is
+not additional evidence; classification counts confer no qualification.
+
+The selected next item is the TE04 fenced-block AST and consumer repair. It
+unblocks the neutral GFM fixture and five direct prerequisite owners. Arithmetic
+contract reconciliation and build-tool dependency/digest adoption remain ready
+alternatives. Repair the TypeScript reference seam and its affected consumers
+before treating it as a cross-language oracle; language ports remain separate.
+
+## October 24, 2026 resumed GFM audit
+
+After rebasing the single in-progress GFM contract repair onto `ddcf1f81`, the
+collision-checked ownership refresh registers nine new Rust package roots. Five
+supplied-data path-construction and evidence-composition roots extend
+`x509-rsa-public-verification-stack-profile-classification`; its complete-path-
+validation exclusion remains. Three pending documentary classifiers cover
+`x509-name-constraints-profile-classification`,
+`x509-ocsp-structural-components-profile-classification` (CertID and CertStatus),
+and `x509-revocation-observation-policy-profile-classification`. Their empty
+readiness dependencies permit applicability review only. Future fixture/native
+children require exact prerequisites; no native qualification or exception is
+credited. See [the preserved audit](package-parity-audits/20261024-gfm-resume-classification.json).
+
+GFM remains the only in-progress delivery item. Its native prerequisite and
+consumer validation resumes after local disk recovery; source-level baseline
+diagnostics do not count as successful native tests.
+
+The completed local GFM closure also preserves proven baseline build gaps under
+the existing AsciiDoc TE03, document/layout foundation and Forme family owners.
+A single pending `typescript-transitive-node-builtin-declaration-ownership`
+follow-up depends on the merged direct-provider repair and owns the smallest
+Node source-export consumer declaration boundary. Windows permission/readiness
+failures are validation limits; they do not become security implementation work
+for this portable parity loop. See the bounded fixture validation receipt.
+
+Final publication refresh at `ec0d8fbe` adds the newly merged structural OCSP
+SingleResponse root to the same pending OCSP owner, explicitly keeping larger
+response containers and authentication out of scope. The regenerated inventory
+now has 1,533 identities / 4,815 slots in the same 15 established lanes, with
+zero collisions or unknown buckets. No new implementation is selected.
+
+## C# CommonMark prerequisite split and renderer selection (2026-10-24)
+
+PR #18105 merged the fenced-block contract prerequisite as
+`8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738`. The independent C# lane audit
+confirms that `commonmark-parser` is already a substantive package root, while
+`document-ast-to-html` and the thin `commonmark` facade are the two actual
+missing C# identities. Native qualification executed every official CommonMark
+0.31.2 example through the public parser/renderer seam: 233 of 652 outputs
+matched exactly and 419 did not. That evidence forbids a facade conformance
+claim and makes a full parser rewrite too broad for the renderer tranche.
+
+Split the former `commonmark-html-csharp-lane-prerequisites` owner into three
+dependency-shaped children and retain the former owner only as a
+selection-blocked aggregate:
+
+- `document-ast-to-html-csharp-lane-parity` owns the missing renderer root;
+- `commonmark-parser-csharp-652-reconciliation` owns the measured parser gap;
+- `commonmark-csharp-facade-lane-parity` depends on both and owns the facade.
+
+Select only `document-ast-to-html-csharp-lane-parity` on branch
+`codex/parity-csharp-commonmark-html-20261024` from `ce1fe9b5`.
+
+This tranche adds a pure C# TE00 renderer with independent public-API vectors,
+bounded traversal/output, raw-node routing, URL hardening, coverage and both
+platform build fronts. It leaves the existing parser untouched and adds no
+facade. It does not adopt the GFM fixture or claim sanitizer/browser authority.
+
+The audit also discovered that CommonMark corpora and renderer vectors remain
+duplicated inside language packages rather than owned by a central neutral
+fixture. Register `commonmark-language-neutral-conformance-centralization` as
+a separate pending foundation. It should pin provenance, resource limits,
+native-reader routing, and independently authored renderer vectors without
+absorbing GFM. That centralization is not a prerequisite for this already
+established per-language corpus pattern and is not selected in this tranche.
+## Post-#18105 GFM parity-loop restart (October 24, 2026)
+
+PR #18105 merged the TE04 fenced-block AST and consumer repair as
+`8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738`.  The prerequisite is therefore no
+longer the in-progress parity item.  The loop had not selected its successor,
+which left the durable queue present but idle.
+
+The fresh collision-checked report at `2949f52059` contains 1,535 established
+implementation identities and 4,817 occupied slots across fifteen languages.
+Rust has 1,293 identities, Python 507, TypeScript 474, and every other lane fewer
+than 302.  There are zero canonical collisions and zero unknown buckets.  Of
+178 high-consensus identities, Dart is missing 92, Swift 51, Java and Kotlin 48
+each, and Haskell four.  Structural counts remain planning evidence, not
+behavioral qualification or an instruction to clone native-only Rust packages.
+
+Select exactly `gfm-language-neutral-conformance-fixture`.  Its fenced-node
+prerequisite is merged, it unblocks the existing Swift, Java/Kotlin/Dart, C#,
+F#, and Haskell owners, and it fixes one deterministic contract before any new
+lane copies parser behavior.  [TE04 portable GFM extension conformance](TE04-gfm-portable-conformance.md)
+defines the closed source/AST/HTML corpus, finite fixture bounds, inert fence
+policy, independent validator, and adoption order.  The neutral foundation
+earns no native-lane credit; TypeScript adoption and missing-language ports stay
+separate delivery items.
+
+### Prioritized continuation queue
+
+The October 24 operator continuation replaces the former one-PR waiting policy
+with at most three dependency-safe parity PRs in flight. A PR may enter guarded
+auto-merge only after every required check passes and GitHub reports no merge
+conflict. Dependent work may be prepared on a stacked local branch, while a
+merge-independent owner may proceed in its own main-based worktree. Reprioritize
+after every merge and whenever an audit registers new work.
+
+The dependency-aware queue is:
+
+1. Complete `gfm-language-neutral-conformance-fixture` in PR #18118.
+2. Adopt it through `gfm-typescript-neutral-conformance-adoption`: all sixteen
+   vectors through the public parser and HTML renderer, with dynamic fixture
+   reading, corruption witnesses, coverage, and fixture-to-package CI selection.
+3. In parallel, take `commonmark-html-csharp-lane-prerequisites`; it depends on
+   already-merged #18105 rather than #18118 and is the smallest ready foundation
+   that closes two missing C# roots. Follow with the equivalent F# owner.
+4. Take `gfm-swift-lane-parity`, including the required same-lane fenced-node
+   AST/renderer reconciliation, then the Swift facade owner.
+5. Reconcile C#, F#, and Haskell GFM separately after both their same-lane
+   CommonMark/HTML prerequisites and the neutral corpus merge. Haskell remains
+   last in this group because its current CommonMark and GFM roots are starter
+   generic-token wrappers, not native Markdown implementations.
+6. Before selection, split the combined Java/Kotlin/Dart prerequisite and GFM
+   records into per-language owners. Each lane lacks CommonMark, HTML rendering,
+   and GFM behavior; the current aggregate hides six or more reviewable package
+   steps and must not be selected as one tranche.
+
+This prioritization distinguishes structural roots from behavior. C# and F#
+already expose substantive CommonMark parsers but lack the portable facade and
+HTML families; Haskell's similarly named roots do not yet establish Markdown
+semantics. Java, Kotlin, and Dart currently have only document AST foundations.
+
+## October 24, 2026: C# security follow-up and preserved audit owners
+
+Keep the operator-authorized ceiling of three dependency-safe parity PRs in
+flight. PR #18143 now bounds aggregate URL normalization work and executes its
+Windows native tests on repeated builds. Six genuine RED regressions became
+GREEN; all 33 renderer tests pass with 100% line and 98.82% branch coverage,
+including installed-package checks. No CommonMark/GFM parser qualification or
+facade completion follows; exact-head review and hosted CI remain required.
+
+Carry the 29 post-#18118 audit receipts and twelve pending classification/native
+adoption owners from the preserved parity journal into this public successor.
+The bounded sixteen-case TE04 TypeScript adoption proceeds independently in
+PR #18147; the pending authority classifier owns broader GFM behavior and does
+not retroactively block that published-corpus adoption. C++ remains emerging,
+and the fresh main inventory remains 15 established lanes, 1,536 identities
+and 4,818 slots with no collisions.
+The existing C# document-AST Windows repeat-build gap has a separate pending
+owner; its four directly executed native tests grant no build-front credit.

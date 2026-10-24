@@ -1,0 +1,11 @@
+{
+  "id": "GU-C281-iccha",
+  "pathSegment": "GU-PATH-281-FEEL-HOPE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-281-FEEL-HOPE",
+      "order": 3
+    }
+  ]
+}

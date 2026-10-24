@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Renders `fenced_block` using the existing preformatted monospace code layout, including empty payloads. Language metadata has no layout or execution authority.
+
 ## 0.1.0 — Initial release
 
 ### Added

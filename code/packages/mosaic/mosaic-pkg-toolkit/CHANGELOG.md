@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
+
 ### Fixed — the README describes every export, and a test keeps it that way
 
 The README said "11 of 13 Tier-1 components shipped" while the manifest

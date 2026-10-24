@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R275-the-scene",
+    "language": "gujarati",
+    "chapter": 275,
+    "sequence": 14880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7462b608c11f2480"
+  },
+  "findings": []
+}

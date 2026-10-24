@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 mixed ER relationship operator vertical slice",
+  "fixtures": [
+    {
+      "name": "mixed-identifying-operators",
+      "source": "erDiagram\ntitle Relationship types\nCUSTOMER {\n  string id PK\n}\nORDER {\n  string id PK\n}\nCUSTOMER 1.-one or more ORDER : mixed left\nCUSTOMER 1-.one or more ORDER : mixed right\nCUSTOMER 1--one or more ORDER : identifies"
+    }
+  ]
+}

@@ -24,7 +24,7 @@
 import { isStageRef } from "@coding-adventures/forme-pipeline-config";
 import type { ResolvedPipelineConfig } from "@coding-adventures/forme-pipeline-config";
 import type { Capability } from "@coding-adventures/forme-capability";
-import type { KindDescriptor } from "@coding-adventures/forme-types";
+import type { KindDescriptor, KindRegistry } from "@coding-adventures/forme-types";
 import type { InputPortMap, Stage } from "@coding-adventures/forme-stage";
 import { areKindsCompatible } from "./typecheck.js";
 
@@ -59,7 +59,10 @@ export interface PipelineDag {
  * Build a `PipelineDag` from a validated config.  Throws `Error` on
  * type-incompatibility or unresolvable producer.
  */
-export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
+export function buildDag(
+  resolved: ResolvedPipelineConfig,
+  kindRegistry?: KindRegistry,
+): PipelineDag {
   const instances = new Map<string, ResolvedInstance>();
   const ids = resolved.resolvedIds;
 
@@ -141,7 +144,7 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
       const index = declarationIndex.get(id)!;
       for (let priorIndex = index - 1; priorIndex >= 0; priorIndex--) {
         const priorId = ids[priorIndex]!;
-        if (areKindsCompatible(effectiveKind(priorId), consumes)) {
+        if (areKindsCompatible(effectiveKind(priorId), consumes, kindRegistry)) {
           producerId = priorId;
           break;
         }
@@ -157,8 +160,8 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
 
     const producerKind = effectiveKind(producerId);
     const compatible = inst.stage.inputPorts !== undefined
-      ? arePortKindsCompatible(producerKind, consumes)
-      : areKindsCompatible(producerKind, consumes);
+      ? arePortKindsCompatible(producerKind, consumes, kindRegistry)
+      : areKindsCompatible(producerKind, consumes, kindRegistry);
     if (!compatible) {
       const edgeDescription = wiredProducer === undefined ? "inferred edge" : "explicit wire";
       throw new Error(
@@ -190,7 +193,7 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
         );
       }
       const producerKind = effectiveKind(producerId);
-      if (!arePortKindsCompatible(producerKind, consumes)) {
+      if (!arePortKindsCompatible(producerKind, consumes, kindRegistry)) {
         throw new Error(
           `buildDag: explicit wire ${JSON.stringify(producerId)} → ` +
           `${JSON.stringify(id)}.${port} is incompatible: ` +
@@ -320,7 +323,8 @@ function describeKind(k: KindDescriptor): string {
 function arePortKindsCompatible(
   produces: KindDescriptor,
   consumes: KindDescriptor,
+  registry?: KindRegistry,
 ): boolean {
   if ((produces.name === "Stream") !== (consumes.name === "Stream")) return false;
-  return areKindsCompatible(produces, consumes);
+  return areKindsCompatible(produces, consumes, registry);
 }
