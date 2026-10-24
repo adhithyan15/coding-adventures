@@ -343,23 +343,14 @@ impl<'a> DerInteger<'a> {
     }
 
     pub fn to_u64(self) -> Result<u64, Asn1Error> {
-        canonical_signed_to_u64(
-            self.bytes,
-            self.value_offset,
-            Asn1ErrorKind::NegativeInteger,
-            Asn1ErrorKind::IntegerOverflow,
-        )
+        canonical_signed_to_u64(self.bytes, self.value_offset)
     }
 }
 
 /// Validate and borrow one canonical INTEGER value.
 pub fn decode_integer(element: Asn1Element<'_>) -> Result<DerInteger<'_>, Asn1Error> {
     expect_universal_primitive(element, INTEGER_TAG)?;
-    let bytes = canonical_signed_contents(
-        element,
-        Asn1ErrorKind::EmptyInteger,
-        Asn1ErrorKind::NonMinimalInteger,
-    )?;
+    let bytes = canonical_signed_contents(element)?;
     Ok(DerInteger {
         bytes,
         value_offset: element.value_offset(),
@@ -370,7 +361,9 @@ pub fn decode_integer(element: Asn1Element<'_>) -> Result<DerInteger<'_>, Asn1Er
 ///
 /// ASN.1 permits signed ENUMERATED encodings. Schema-specific consumers decide
 /// which non-negative values they recognize; this generic DER layer preserves
-/// every canonical value and offers a checked unsigned conversion.
+/// every canonical value and offers a checked unsigned conversion. Because
+/// X.690 applies the same signed-integer content rules to both types, content
+/// and conversion failures use the existing INTEGER error categories.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct DerEnumerated<'a> {
     bytes: &'a [u8],
@@ -387,60 +380,48 @@ impl<'a> DerEnumerated<'a> {
     }
 
     pub fn to_u64(self) -> Result<u64, Asn1Error> {
-        canonical_signed_to_u64(
-            self.bytes,
-            self.value_offset,
-            Asn1ErrorKind::NegativeInteger,
-            Asn1ErrorKind::IntegerOverflow,
-        )
+        canonical_signed_to_u64(self.bytes, self.value_offset)
     }
 }
 
 /// Validate and borrow one canonical ENUMERATED value.
 pub fn decode_enumerated(element: Asn1Element<'_>) -> Result<DerEnumerated<'_>, Asn1Error> {
     expect_universal_primitive(element, ENUMERATED_TAG)?;
-    let bytes = canonical_signed_contents(
-        element,
-        Asn1ErrorKind::EmptyInteger,
-        Asn1ErrorKind::NonMinimalInteger,
-    )?;
+    let bytes = canonical_signed_contents(element)?;
     Ok(DerEnumerated {
         bytes,
         value_offset: element.value_offset(),
     })
 }
 
-fn canonical_signed_contents(
-    element: Asn1Element<'_>,
-    empty_kind: Asn1ErrorKind,
-    non_minimal_kind: Asn1ErrorKind,
-) -> Result<&[u8], Asn1Error> {
+fn canonical_signed_contents(element: Asn1Element<'_>) -> Result<&[u8], Asn1Error> {
     let bytes = element.value();
     if bytes.is_empty() {
-        return Err(Asn1Error::new(empty_kind, element.value_offset()));
+        return Err(Asn1Error::new(
+            Asn1ErrorKind::EmptyInteger,
+            element.value_offset(),
+        ));
     }
     if bytes.len() > 1 {
         let redundant_positive = bytes[0] == 0x00 && bytes[1] & 0x80 == 0;
         let redundant_negative = bytes[0] == 0xff && bytes[1] & 0x80 != 0;
         if redundant_positive || redundant_negative {
-            return Err(Asn1Error::new(non_minimal_kind, element.value_offset()));
+            return Err(Asn1Error::new(
+                Asn1ErrorKind::NonMinimalInteger,
+                element.value_offset(),
+            ));
         }
     }
     Ok(bytes)
 }
 
-fn canonical_signed_to_u64(
-    bytes: &[u8],
-    value_offset: usize,
-    negative_kind: Asn1ErrorKind,
-    overflow_kind: Asn1ErrorKind,
-) -> Result<u64, Asn1Error> {
+fn canonical_signed_to_u64(bytes: &[u8], value_offset: usize) -> Result<u64, Asn1Error> {
     if bytes[0] & 0x80 != 0 {
-        return Err(Asn1Error::new(negative_kind, value_offset));
+        return Err(Asn1Error::new(Asn1ErrorKind::NegativeInteger, value_offset));
     }
     let magnitude = if bytes[0] == 0 { &bytes[1..] } else { bytes };
     if magnitude.len() > std::mem::size_of::<u64>() {
-        return Err(Asn1Error::new(overflow_kind, value_offset));
+        return Err(Asn1Error::new(Asn1ErrorKind::IntegerOverflow, value_offset));
     }
     Ok(magnitude
         .iter()
