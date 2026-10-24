@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:2e115aaf2ff71c25",
+  "lessonIds": [
+    "GU-C335-sadhu",
+    "GU-C335-srap",
+    "GU-C335-bodh",
+    "GU-C335-kahevat",
+    "GU-C335-sambhalavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch335-the-wise-old-man.tex"
+}

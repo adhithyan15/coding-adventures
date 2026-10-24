@@ -1,0 +1,11 @@
+{
+  "id": "GU-C426-karod",
+  "pathSegment": "GU-PATH-426-LAKH426",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-426-LAKH426",
+      "order": 1
+    }
+  ]
+}

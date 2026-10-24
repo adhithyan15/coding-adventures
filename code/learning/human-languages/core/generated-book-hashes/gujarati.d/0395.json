@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:49ca3d0c445a1f3d",
+  "lessonIds": [
+    "GU-C395-barth",
+    "GU-C395-rijharvesan",
+    "GU-C395-bhathu",
+    "GU-C395-thasvu",
+    "GU-C395-besadvu"
+  ],
+  "tex": "gujarati/book/chapters/ch395-berths-and-reservations.tex"
+}

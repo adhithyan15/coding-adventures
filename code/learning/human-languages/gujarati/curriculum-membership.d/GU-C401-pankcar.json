@@ -1,0 +1,11 @@
+{
+  "id": "GU-C401-pankcar",
+  "pathSegment": "GU-PATH-401-TYRE401",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-401-TYRE401",
+      "order": 1
+    }
+  ]
+}

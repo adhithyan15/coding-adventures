@@ -1,0 +1,11 @@
+{
+  "id": "GU-C293-ghayal",
+  "pathSegment": "GU-PATH-293-AKASMAT293",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-293-AKASMAT293",
+      "order": 2
+    }
+  ]
+}

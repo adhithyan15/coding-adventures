@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C289-saja",
+    "language": "gujarati",
+    "chapter": 289,
+    "sequence": 16230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3c8f0e727bdabb7"
+  },
+  "findings": []
+}

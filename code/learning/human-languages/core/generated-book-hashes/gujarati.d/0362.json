@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:ad5992531b4605ae",
+  "lessonIds": [
+    "GU-C362-sansodhan",
+    "GU-C362-prayog",
+    "GU-C362-paddhati",
+    "GU-C362-namuno",
+    "GU-C362-taravvu",
+    "GU-R362-review-355-362"
+  ],
+  "tex": "gujarati/book/chapters/ch362-research.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Fears",
+  "label": "ch:gu-fears",
+  "canDo": "I can say what I am afraid might happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C369-daravvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can say what I am afraid might happen.",
+    "assesses": [
+      "GU-LEX-C369-BHAY369-03",
+      "GU-LEX-C369-BHAY369-04",
+      "GU-LEX-C369-BHAY369-05"
+    ]
+  }
+}

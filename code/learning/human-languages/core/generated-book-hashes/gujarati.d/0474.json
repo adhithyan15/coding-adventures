@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:1ff1f2e6eb337f2e",
+  "lessonIds": [
+    "GU-C474-lal",
+    "GU-C474-cavvu",
+    "GU-C474-cusvu",
+    "GU-C474-thukvu",
+    "GU-C474-talvu"
+  ],
+  "tex": "gujarati/book/chapters/ch474-eating-slowly.tex"
+}

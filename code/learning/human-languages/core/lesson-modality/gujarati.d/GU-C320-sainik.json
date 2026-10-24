@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C320-sainik",
+    "language": "gujarati",
+    "chapter": 320,
+    "sequence": 17810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6472d6f0cb755c15"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C312-kisso",
+  "pathSegment": "GU-PATH-312-PATRAKAR312",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-312-PATRAKAR312",
+      "order": 2
+    }
+  ]
+}

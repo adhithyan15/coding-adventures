@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:fe83f895040b87fc",
+  "lessonIds": [
+    "GU-C339-asar",
+    "GU-C339-prabhav",
+    "GU-C339-nipajvu",
+    "GU-C339-paristhiti",
+    "GU-C339-sanjog"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch339.txt",
+  "json": "gujarati/narration/ch339.json",
+  "textHash": "fnv1a64:64a562f473d7cff0",
+  "jsonHash": "fnv1a64:ac58b827ce64d2eb",
+  "findings": []
+}

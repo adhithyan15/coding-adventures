@@ -1,0 +1,11 @@
+{
+  "id": "GU-C342-takrar",
+  "pathSegment": "GU-PATH-342-VIVAD342",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-342-VIVAD342",
+      "order": 1
+    }
+  ]
+}

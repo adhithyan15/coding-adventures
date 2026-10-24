@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:846ce2ef791d401f",
+  "lessonIds": [
+    "GU-C423-nagar",
+    "GU-C423-jillo",
+    "GU-C423-gatar",
+    "GU-C423-durgandh",
+    "GU-C423-vasavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch423-towns-and-drains.tex"
+}

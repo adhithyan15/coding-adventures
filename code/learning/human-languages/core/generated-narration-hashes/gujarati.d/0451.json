@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:befa67942204469c",
+  "lessonIds": [
+    "GU-C451-valagvu",
+    "GU-C451-cumvu",
+    "GU-C451-bajhvu",
+    "GU-C451-pyar",
+    "GU-C451-capvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch451.txt",
+  "json": "gujarati/narration/ch451.json",
+  "textHash": "fnv1a64:50f3e378cba88a96",
+  "jsonHash": "fnv1a64:832876fb4d873f7d",
+  "findings": []
+}

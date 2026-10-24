@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:c4ddcca2b92ed9a9",
+  "lessonIds": [
+    "GU-C543-apvad",
+    "GU-C543-yogya",
+    "GU-C543-layak",
+    "GU-C543-kabel",
+    "GU-C543-khas"
+  ],
+  "tex": "gujarati/book/chapters/ch543-fit-for-the-job.tex"
+}

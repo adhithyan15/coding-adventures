@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:faae1d9997c6bdd6",
+  "lessonIds": [
+    "GU-C393-enjin",
+    "GU-C393-lain",
+    "GU-C393-janksan",
+    "GU-C393-siti",
+    "GU-C393-jodvu"
+  ],
+  "tex": "gujarati/book/chapters/ch393-engines-and-lines.tex"
+}

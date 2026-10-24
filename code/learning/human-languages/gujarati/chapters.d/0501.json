@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "The Craftsman's Bench",
+  "label": "ch:gu-the-craftsman-s-bench",
+  "canDo": "I can say what a craftsman makes and what he knows how to do.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C501-vyavsay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can say what a craftsman makes and what he knows how to do.",
+    "assesses": [
+      "GU-LEX-C501-KARIGAR501-03",
+      "GU-LEX-C501-KARIGAR501-04",
+      "GU-LEX-C501-KARIGAR501-05"
+    ]
+  }
+}

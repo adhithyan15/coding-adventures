@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C408-saphar",
+    "language": "gujarati",
+    "chapter": 408,
+    "sequence": 22760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f79738a5227bdae"
+  },
+  "findings": []
+}

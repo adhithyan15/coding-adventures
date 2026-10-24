@@ -1,0 +1,11 @@
+{
+  "id": "GU-C446-goval",
+  "pathSegment": "GU-PATH-446-HERD446",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-446-HERD446",
+      "order": 2
+    }
+  ]
+}

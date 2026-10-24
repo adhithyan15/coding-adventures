@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C472-khopri",
+    "language": "gujarati",
+    "chapter": 472,
+    "sequence": 26300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4d680e01b938701"
+  },
+  "findings": []
+}

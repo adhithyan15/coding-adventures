@@ -1,0 +1,21 @@
+{
+  "chapter": 516,
+  "title": "Lime and Paint",
+  "label": "ch:gu-lime-and-paint",
+  "canDo": "I can talk about whitewashing and painting a house.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R516-review-509-516",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about whitewashing and painting a house.",
+    "assesses": [
+      "GU-LEX-C516-CHUNO516-01",
+      "GU-LEX-C516-CHUNO516-02",
+      "GU-LEX-C516-CHUNO516-03",
+      "GU-LEX-C516-CHUNO516-04",
+      "GU-LEX-C516-CHUNO516-05"
+    ]
+  }
+}

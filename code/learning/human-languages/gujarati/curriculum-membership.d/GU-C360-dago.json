@@ -1,0 +1,11 @@
+{
+  "id": "GU-C360-dago",
+  "pathSegment": "GU-PATH-360-IMAN360",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-360-IMAN360",
+      "order": 3
+    }
+  ]
+}

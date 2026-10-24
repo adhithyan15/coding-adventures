@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:38c53ae785321f35",
+  "lessonIds": [
+    "GU-C468-juthu",
+    "GU-C468-gappu",
+    "GU-C468-dambh",
+    "GU-C468-sekhi",
+    "GU-C468-bholavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch468-lies-and-boasts.tex"
+}

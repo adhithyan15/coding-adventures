@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 490,
+  "title": "My Husband's Family",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f635e28d659536e6",
+  "lessons": [
+    {
+      "id": "GU-C490-sasro",
+      "sequence": 27200,
+      "title": "સસરો (sasro) — a father-in-law",
+      "headword": "સસરો",
+      "romanization": "sasro",
+      "gloss": "a father-in-law",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c58f827ce6f33dbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to recall, then the Gujarati for sympathy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સસરો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સસરો — sasro — \"a father-in-law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારા સસરા રોજ સવારે મંદિરે જાય છે. mārā sasrā roj savāre mandire jāy che. My father-in-law goes to the temple every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સસરો (sasro) is inherited from Sanskrit śvaśura, \"husband's father\"; CDIAL lists the Gujarati word (CDIAL 12753). One's own father-in-law is spoken of in the respectful plural, મારા સસરા (mārā sasrā)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sasro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sasro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sasro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sasro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārā sasrā roj savāre mandire jāy che. — My father-in-law goes to the temple every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārā sasrā roj savāre mandire jāy che.* — My father-in-law goes to the temple every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to recall, then the Gujarati for sympathy, then say sasro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to recall, then the Gujarati for sympathy, then say *sasro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સસરો (sasro) mean? (\"A father-in-law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C490-diyar",
+      "sequence": 27210,
+      "title": "દિયર (diyar) — a husband's younger brother",
+      "headword": "દિયર",
+      "romanization": "diyar",
+      "gloss": "a husband's younger brother",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1b53cdeb01334ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for sympathy, then the Gujarati for a father-in-law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: દિયર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દિયર — diyar — \"a husband's younger brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરાનો દિયર શાળામાં ભણે છે. Mīrāno diyar śāḷāmā̃ bhaṇe che. Mira's husband's younger brother is at school."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દિયર (diyar) is inherited from Sanskrit dēvṛ, \"husband's younger brother\", by way of dēvara-; CDIAL lists the Gujarati word (CDIAL 6546)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diyar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diyar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diyar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diyar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrāno diyar śāḷāmā̃ bhaṇe che. — Mira's husband's younger brother is at school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrāno diyar śāḷāmā̃ bhaṇe che.* — Mira's husband's younger brother is at school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for sympathy, then the Gujarati for a father-in-law, then say diyar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for sympathy, then the Gujarati for a father-in-law, then say *diyar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does દિયર (diyar) mean? (\"A husband's younger brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C490-nanand",
+      "sequence": 27220,
+      "title": "નણંદ (naṇand) — a husband's sister",
+      "headword": "નણંદ",
+      "romanization": "naṇand",
+      "gloss": "a husband's sister",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa3d95350ced18e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a father-in-law, then the Gujarati for a husband's younger brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નણંદ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નણંદ — naṇand — \"a husband's sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારી નણંદ દિવાળીમાં અમારા ઘરે આવશે. mārī naṇand divāḷīmā̃ amārā ghare āvśe. My husband's sister will come to our house at Diwali."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નણંદ (naṇand) is inherited from Sanskrit nanāndṛ, \"husband's sister\"; CDIAL lists the Gujarati naṇãd (CDIAL 6946)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṇand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṇand*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṇand, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṇand*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārī naṇand divāḷīmā̃ amārā ghare āvśe. — My husband's sister will come to our house at Diwali.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārī naṇand divāḷīmā̃ amārā ghare āvśe.* — My husband's sister will come to our house at Diwali.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a father-in-law, then the Gujarati for a husband's younger brother, then say naṇand again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a father-in-law, then the Gujarati for a husband's younger brother, then say *naṇand* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નણંદ (naṇand) mean? (\"A husband's sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C490-jethani",
+      "sequence": 27230,
+      "title": "જેઠાણી (jeṭhāṇī) — a husband's elder brother's wife",
+      "headword": "જેઠાણી",
+      "romanization": "jeṭhāṇī",
+      "gloss": "a husband's elder brother's wife",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3fa77ff431c01db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a husband's younger brother, then the Gujarati for a husband's sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: જેઠાણી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જેઠાણી — jeṭhāṇī — \"a husband's elder brother's wife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જેઠાણી રોજ મને રસોડામાં મદદ કરે છે. jeṭhāṇī roj mane rasoḍāmā̃ madad kare che. My husband's elder brother's wife helps me in the kitchen every day."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જેઠાણી (jeṭhāṇī) goes back to a reconstructed jyēṣṭhajāni-, \"senior wife, elder brother's wife\", built from jyēṣṭha, \"eldest\", and jāni, \"wife\"; CDIAL lists the Gujarati word (CDIAL 5287)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭhāṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭhāṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭhāṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭhāṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭhāṇī roj mane rasoḍāmā̃ madad kare che. — My husband's elder brother's wife helps me in the kitchen every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭhāṇī roj mane rasoḍāmā̃ madad kare che.* — My husband's elder brother's wife helps me in the kitchen every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a husband's younger brother, then the Gujarati for a husband's sister, then say jeṭhāṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a husband's younger brother, then the Gujarati for a husband's sister, then say *jeṭhāṇī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does જેઠાણી (jeṭhāṇī) mean? (\"A husband's elder brother's wife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C490-gharsansar",
+      "sequence": 27240,
+      "title": "ઘરસંસાર (gharsansār) — married life; running a household",
+      "headword": "ઘરસંસાર",
+      "romanization": "gharsansār",
+      "gloss": "married life; running a household",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e311df4b5b6b1ca5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a husband's sister, then the Gujarati for a husband's elder brother's wife."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઘરસંસાર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘરસંસાર — gharsansār — \"married life; running a household\"."
+            },
+            {
+              "kind": "speech",
+              "text": "લગ્ન પછી મીરાનો ઘરસંસાર સારો ચાલે છે. lagna pachī Mīrāno gharsansār sāro cāle che. Mira's married life is going well."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘરસંસાર (gharsansār) is built from ઘર (ghar), \"home\", and sansār, Sanskrit saṃsāra, \"worldly existence\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharsansār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharsansār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharsansār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharsansār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lagna pachī Mīrāno gharsansār sāro cāle che. — Mira's married life is going well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lagna pachī Mīrāno gharsansār sāro cāle che.* — Mira's married life is going well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a husband's sister, then the Gujarati for a husband's elder brother's wife, then say gharsansār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a husband's sister, then the Gujarati for a husband's elder brother's wife, then say *gharsansār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઘરસંસાર (gharsansār) mean? (\"Married life; running a household\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

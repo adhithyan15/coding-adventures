@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:3c3ba3ffa874df52",
+  "lessonIds": [
+    "GU-C301-imarat",
+    "GU-C301-sidi",
+    "GU-C301-guglavu",
+    "GU-C301-phatvu",
+    "GU-C301-dhadako"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch301.txt",
+  "json": "gujarati/narration/ch301.json",
+  "textHash": "fnv1a64:b7aa3e6ce9916b61",
+  "jsonHash": "fnv1a64:8f8a49a4bb6008c3",
+  "findings": []
+}

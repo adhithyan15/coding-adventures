@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:eefa46ceed89465c",
+  "lessonIds": [
+    "GU-C308-tarapo",
+    "GU-C308-sahas",
+    "GU-C308-vir",
+    "GU-C308-dhiraj",
+    "GU-C308-kargarvu",
+    "GU-R308-review-301-308"
+  ],
+  "tex": "gujarati/book/chapters/ch308-a-brave-swimmer.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:0bd7ca78e65cb56d",
+  "lessonIds": [
+    "GU-C490-sasro",
+    "GU-C490-diyar",
+    "GU-C490-nanand",
+    "GU-C490-jethani",
+    "GU-C490-gharsansar"
+  ],
+  "tex": "gujarati/book/chapters/ch490-my-husband-s-family.tex"
+}

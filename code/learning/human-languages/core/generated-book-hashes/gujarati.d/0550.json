@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:608e13128b9b58f4",
+  "lessonIds": [
+    "GU-C550-tir",
+    "GU-C550-nisan",
+    "GU-C550-taakvu",
+    "GU-C550-bhedvu",
+    "GU-C550-dodvir"
+  ],
+  "tex": "gujarati/book/chapters/ch550-taking-aim.tex"
+}

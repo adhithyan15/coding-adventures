@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:f4f8094cfc813df8",
+  "lessonIds": [
+    "GU-C292-thag",
+    "GU-C292-kaubhad",
+    "GU-C292-lac",
+    "GU-C292-jasus",
+    "GU-C292-jhadapvu",
+    "GU-R292-review-285-292"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch292.txt",
+  "json": "gujarati/narration/ch292.json",
+  "textHash": "fnv1a64:f6ae2e97107d659d",
+  "jsonHash": "fnv1a64:71bd792d8c8f7932",
+  "findings": []
+}

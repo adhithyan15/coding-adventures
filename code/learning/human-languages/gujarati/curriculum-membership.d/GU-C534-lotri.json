@@ -1,0 +1,11 @@
+{
+  "id": "GU-C534-lotri",
+  "pathSegment": "GU-PATH-534-JUGAR534",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-534-JUGAR534",
+      "order": 3
+    }
+  ]
+}

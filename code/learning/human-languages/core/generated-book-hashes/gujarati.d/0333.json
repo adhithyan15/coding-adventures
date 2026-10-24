@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:23e54d80edb64324",
+  "lessonIds": [
+    "GU-C333-pari",
+    "GU-C333-jadu",
+    "GU-C333-camatkar",
+    "GU-C333-gayab",
+    "GU-C333-dekhavu"
+  ],
+  "tex": "gujarati/book/chapters/ch333-fairies-and-magic.tex"
+}

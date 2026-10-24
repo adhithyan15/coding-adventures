@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:8bc580bb769ac9fd",
+  "lessonIds": [
+    "GU-C497-kankotri",
+    "GU-C497-pithi",
+    "GU-C497-jan",
+    "GU-C497-varghodo",
+    "GU-C497-parnavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch497.txt",
+  "json": "gujarati/narration/ch497.json",
+  "textHash": "fnv1a64:79b20a70284f4301",
+  "jsonHash": "fnv1a64:2204e4daa4ce0556",
+  "findings": []
+}

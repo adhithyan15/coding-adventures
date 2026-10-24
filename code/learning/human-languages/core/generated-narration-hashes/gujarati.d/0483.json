@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:366fa4422de03007",
+  "lessonIds": [
+    "GU-C483-vedna",
+    "GU-C483-casko",
+    "GU-C483-khucvu",
+    "GU-C483-tarphadvu",
+    "GU-C483-dah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch483.txt",
+  "json": "gujarati/narration/ch483.json",
+  "textHash": "fnv1a64:bf1816e808c4df98",
+  "jsonHash": "fnv1a64:e01e7250c8d97cd9",
+  "findings": []
+}

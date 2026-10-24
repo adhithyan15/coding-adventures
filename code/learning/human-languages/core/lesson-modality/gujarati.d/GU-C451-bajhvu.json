@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C451-bajhvu",
+    "language": "gujarati",
+    "chapter": 451,
+    "sequence": 25220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32e2c17150b28d32"
+  },
+  "findings": []
+}

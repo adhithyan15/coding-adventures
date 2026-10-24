@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "The Strike",
+  "label": "ch:gu-the-strike",
+  "canDo": "I can say why people went on strike and marched.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C314-gunjvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can say why people went on strike and marched.",
+    "assesses": [
+      "GU-LEX-C314-HADTAL314-03",
+      "GU-LEX-C314-HADTAL314-04",
+      "GU-LEX-C314-HADTAL314-05"
+    ]
+  }
+}

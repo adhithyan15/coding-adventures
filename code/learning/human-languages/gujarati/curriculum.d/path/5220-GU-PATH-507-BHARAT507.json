@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-507-BHARAT507",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-507-BHARAT507"
+  ],
+  "after": []
+}

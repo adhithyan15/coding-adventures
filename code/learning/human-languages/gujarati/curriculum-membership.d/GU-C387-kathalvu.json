@@ -1,0 +1,11 @@
+{
+  "id": "GU-C387-kathalvu",
+  "pathSegment": "GU-PATH-387-BAHETAR387",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-387-BAHETAR387",
+      "order": 4
+    }
+  ]
+}

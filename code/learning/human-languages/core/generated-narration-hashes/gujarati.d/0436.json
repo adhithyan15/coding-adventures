@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:822f4d32ed97cc94",
+  "lessonIds": [
+    "GU-C436-lu",
+    "GU-C436-bapharo",
+    "GU-C436-paro",
+    "GU-C436-dajhadvu",
+    "GU-C436-sekavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch436.txt",
+  "json": "gujarati/narration/ch436.json",
+  "textHash": "fnv1a64:a837ae1eaa975378",
+  "jsonHash": "fnv1a64:46f9bc4b8192eb4c",
+  "findings": []
+}

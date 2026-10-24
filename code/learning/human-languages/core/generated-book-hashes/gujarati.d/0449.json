@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:5804df3f6beabb2b",
+  "lessonIds": [
+    "GU-C449-atur",
+    "GU-C449-utsuk",
+    "GU-C449-utkantha",
+    "GU-C449-rijhvu",
+    "GU-C449-prasann"
+  ],
+  "tex": "gujarati/book/chapters/ch449-waiting-eagerly.tex"
+}

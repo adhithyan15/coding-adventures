@@ -1,0 +1,11 @@
+{
+  "id": "GU-C513-pittal",
+  "pathSegment": "GU-PATH-513-KARKHANU513",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-513-KARKHANU513",
+      "order": 3
+    }
+  ]
+}

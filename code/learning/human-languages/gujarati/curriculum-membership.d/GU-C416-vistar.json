@@ -1,0 +1,11 @@
+{
+  "id": "GU-C416-vistar",
+  "pathSegment": "GU-PATH-416-AREA416",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-416-AREA416",
+      "order": 1
+    }
+  ]
+}

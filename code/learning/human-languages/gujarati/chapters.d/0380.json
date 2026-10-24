@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Enough or Not",
+  "label": "ch:gu-enough-or-not",
+  "canDo": "I can say whether there will be enough.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C380-pahoci-valvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can say whether there will be enough.",
+    "assesses": [
+      "GU-LEX-C380-PURTU380-03",
+      "GU-LEX-C380-PURTU380-04",
+      "GU-LEX-C380-PURTU380-05"
+    ]
+  }
+}

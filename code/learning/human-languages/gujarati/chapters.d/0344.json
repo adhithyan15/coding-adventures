@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Proof",
+  "label": "ch:gu-proof",
+  "canDo": "I can ask for proof and give it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C344-darsavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can ask for proof and give it.",
+    "assesses": [
+      "GU-LEX-C344-SABITI344-03",
+      "GU-LEX-C344-SABITI344-04",
+      "GU-LEX-C344-SABITI344-05"
+    ]
+  }
+}

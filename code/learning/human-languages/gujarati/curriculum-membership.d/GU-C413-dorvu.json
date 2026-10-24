@@ -1,0 +1,11 @@
+{
+  "id": "GU-C413-dorvu",
+  "pathSegment": "GU-PATH-413-WAY413",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-413-WAY413",
+      "order": 3
+    }
+  ]
+}

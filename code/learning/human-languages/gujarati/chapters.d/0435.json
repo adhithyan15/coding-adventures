@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Thunder and Cyclones",
+  "label": "ch:gu-thunder-and-cyclones",
+  "canDo": "I can talk about a storm and the forecast.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C435-jhabakvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can talk about a storm and the forecast.",
+    "assesses": [
+      "GU-LEX-C435-STORM435-03",
+      "GU-LEX-C435-STORM435-04",
+      "GU-LEX-C435-STORM435-05"
+    ]
+  }
+}

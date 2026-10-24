@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 403,
+  "title": "On the Highway",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c468f379a2cfa5bc",
+  "lessons": [
+    {
+      "id": "GU-C403-dhorimarg",
+      "sequence": 22510,
+      "title": "ધોરીમાર્ગ (dhorīmārg) — a highway; a main road",
+      "headword": "ધોરીમાર્ગ",
+      "romanization": "dhorīmārg",
+      "gloss": "a highway; a main road",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7b7f3910528d853",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a bus conductor, then the Gujarati for to drive a cart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ધોરીમાર્ગ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધોરીમાર્ગ — dhorīmārg — \"a highway; a main road\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ ધોરીમાર્ગ પર ઘણી ટ્રકો ચાલે છે. ā dhorīmārg par ghaṇī ṭrako cāle che. Many trucks run on this highway."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધોરીમાર્ગ (dhorīmārg) is built from ધોરી, \"main\", which CDIAL lists under Sanskrit dhaurēya, \"a beast of burden; foremost\" (CDIAL 6884), and Sanskrit mārga, \"a road\": the road that carries the load."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhorīmārg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhorīmārg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhorīmārg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhorīmārg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā dhorīmārg par ghaṇī ṭrako cāle che. — Many trucks run on this highway.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā dhorīmārg par ghaṇī ṭrako cāle che.* — Many trucks run on this highway.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a bus conductor, then the Gujarati for to drive a cart, then say dhorīmārg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a bus conductor, then the Gujarati for to drive a cart, then say *dhorīmārg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ધોરીમાર્ગ (dhorīmārg) mean? (\"A highway; a main road\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C403-mail",
+      "sequence": 22520,
+      "title": "માઈલ (māīl) — a mile",
+      "headword": "માઈલ",
+      "romanization": "māīl",
+      "gloss": "a mile",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07278cf6041b80d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to drive a cart, then the Gujarati for a highway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: માઈલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "માઈલ — māīl — \"a mile\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સ્ટેશન અહીંથી બે માઈલ દૂર છે. sṭeśan ahī̃thī be māīl dūr che. The station is two miles from here."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "માઈલ (māīl) is borrowed from English mile."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māīl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māīl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māīl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māīl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sṭeśan ahī̃thī be māīl dūr che. — The station is two miles from here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sṭeśan ahī̃thī be māīl dūr che.* — The station is two miles from here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to drive a cart, then the Gujarati for a highway, then say māīl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to drive a cart, then the Gujarati for a highway, then say *māīl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does માઈલ (māīl) mean? (\"A mile\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C403-kilomitar",
+      "sequence": 22530,
+      "title": "કિલોમીટર (kilomīṭar) — a kilometre",
+      "headword": "કિલોમીટર",
+      "romanization": "kilomīṭar",
+      "gloss": "a kilometre",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c17296e8769640e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a highway, then the Gujarati for a mile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કિલોમીટર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કિલોમીટર — kilomīṭar — \"a kilometre\"."
+            },
+            {
+              "kind": "speech",
+              "text": "રોજ હું પાંચ કિલોમીટર ચાલું છું. roj hũ pā̃c kilomīṭar cālũ chũ. I walk five kilometres every day."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કિલોમીટર (kilomīṭar) is borrowed from English kilometre."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kilomīṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kilomīṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kilomīṭar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kilomīṭar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roj hũ pā̃c kilomīṭar cālũ chũ. — I walk five kilometres every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roj hũ pā̃c kilomīṭar cālũ chũ.* — I walk five kilometres every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a highway, then the Gujarati for a mile, then say kilomīṭar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a highway, then the Gujarati for a mile, then say *kilomīṭar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કિલોમીટર (kilomīṭar) mean? (\"A kilometre\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C403-phantavu",
+      "sequence": 22540,
+      "title": "ફંટાવું (phanṭāvũ) — to branch off (of a road)",
+      "headword": "ફંટાવું",
+      "romanization": "phanṭāvũ",
+      "gloss": "to branch off (of a road)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e696263e8f839c32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a mile, then the Gujarati for a kilometre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ફંટાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફંટાવું — phanṭāvũ — \"to branch off (of a road)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આગળ જઈને રસ્તો બે બાજુ ફંટાય છે. āgaḷ jaīne rasto be bāju phanṭāy che. Further on, the road branches off two ways."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે રસ્તો ફંટાયો, te rasto phanṭāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફંટાવું (phanṭāvũ) goes back to phāṇṭ, \"to separate by beating or cutting\", a form CDIAL reconstructs; CDIAL lists the Gujarati verb, \"to be divided\" (CDIAL 9071)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phanṭāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phanṭāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phanṭāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phanṭāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgaḷ jaīne rasto be bāju phanṭāy che. — Further on, the road branches off two ways.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgaḷ jaīne rasto be bāju phanṭāy che.* — Further on, the road branches off two ways.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a mile, then the Gujarati for a kilometre, then say phanṭāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a mile, then the Gujarati for a kilometre, then say *phanṭāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ફંટાવું (phanṭāvũ) mean? (\"To branch off (of a road)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C403-takravu",
+      "sequence": 22550,
+      "title": "ટકરાવું (ṭakrāvũ) — to crash (into); to collide head-on",
+      "headword": "ટકરાવું",
+      "romanization": "ṭakrāvũ",
+      "gloss": "to crash (into); to collide head-on",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e720909f0080b975",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a kilometre, then the Gujarati for to branch off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટકરાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટકરાવું — ṭakrāvũ — \"to crash (into); to collide head-on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ધુમ્મસમાં બે ટ્રક ટકરાઈ. dhummasmā̃ be ṭrak ṭakrāī. Two trucks crashed into each other in the fog."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે ટ્રક ટકરાઈ, te ṭrak ṭakrāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટકરાવું (ṭakrāvũ) goes back to Sanskrit ṭakkarā, \"a blow on the head\" (CDIAL 5424); CDIAL lists the Gujarati verb, \"to collide\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭakrāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭakrāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭakrāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭakrāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhummasmā̃ be ṭrak ṭakrāī. — Two trucks crashed into each other in the fog.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhummasmā̃ be ṭrak ṭakrāī.* — Two trucks crashed into each other in the fog.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a kilometre, then the Gujarati for to branch off, then say ṭakrāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a kilometre, then the Gujarati for to branch off, then say *ṭakrāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટકરાવું (ṭakrāvũ) mean? (\"To crash (into); to collide head-on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

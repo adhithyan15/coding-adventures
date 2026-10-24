@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:370046b2a2a316e9",
+  "lessonIds": [
+    "GU-C458-virah",
+    "GU-C458-ekat",
+    "GU-C458-sunu",
+    "GU-C458-tarasvu",
+    "GU-C458-sabharvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch458.txt",
+  "json": "gujarati/narration/ch458.json",
+  "textHash": "fnv1a64:219941a6d3f9aedd",
+  "jsonHash": "fnv1a64:9cb607105b6649fd",
+  "findings": []
+}

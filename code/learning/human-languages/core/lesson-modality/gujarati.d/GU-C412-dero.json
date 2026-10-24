@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C412-dero",
+    "language": "gujarati",
+    "chapter": 412,
+    "sequence": 22970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad23734715e3d3a2"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Pound, Grate and Soak",
+  "label": "ch:gu-pound-grate-and-soak",
+  "canDo": "I can say how food is pounded, grated, soaked and ground.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C522-dalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can say how food is pounded, grated, soaked and ground.",
+    "assesses": [
+      "GU-LEX-C522-KHAYNI522-03",
+      "GU-LEX-C522-KHAYNI522-04",
+      "GU-LEX-C522-KHAYNI522-05"
+    ]
+  }
+}

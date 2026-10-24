@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:6287aa21f56b4f24",
+  "lessonIds": [
+    "GU-C314-hadtal",
+    "GU-C314-morco",
+    "GU-C314-sutra",
+    "GU-C314-pravacan",
+    "GU-C314-gunjvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch314.txt",
+  "json": "gujarati/narration/ch314.json",
+  "textHash": "fnv1a64:de7810b77ba909a9",
+  "jsonHash": "fnv1a64:43b11a0645182083",
+  "findings": []
+}

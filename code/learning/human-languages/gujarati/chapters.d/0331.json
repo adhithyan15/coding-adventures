@@ -1,0 +1,21 @@
+{
+  "chapter": 331,
+  "title": "Fasts and Vows",
+  "label": "ch:gu-fasts-and-vows",
+  "canDo": "I can say who keeps a fast and what they pray for.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-R331-review-325-331",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can say who keeps a fast and what they pray for.",
+    "assesses": [
+      "GU-LEX-C331-UPVAS331-01",
+      "GU-LEX-C331-UPVAS331-02",
+      "GU-LEX-C331-UPVAS331-03",
+      "GU-LEX-C331-UPVAS331-04",
+      "GU-LEX-C331-UPVAS331-05"
+    ]
+  }
+}

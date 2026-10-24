@@ -1,0 +1,11 @@
+{
+  "id": "GU-C296-pato",
+  "pathSegment": "GU-PATH-296-AMBULANS296",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-296-AMBULANS296",
+      "order": 2
+    }
+  ]
+}

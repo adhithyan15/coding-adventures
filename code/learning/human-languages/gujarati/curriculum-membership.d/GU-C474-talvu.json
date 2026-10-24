@@ -1,0 +1,11 @@
+{
+  "id": "GU-C474-talvu",
+  "pathSegment": "GU-PATH-474-CAVVU474",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-474-CAVVU474",
+      "order": 4
+    }
+  ]
+}

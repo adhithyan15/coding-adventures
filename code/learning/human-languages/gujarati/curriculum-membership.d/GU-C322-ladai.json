@@ -1,0 +1,11 @@
+{
+  "id": "GU-C322-ladai",
+  "pathSegment": "GU-PATH-322-HUMLO322",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-322-HUMLO322",
+      "order": 1
+    }
+  ]
+}

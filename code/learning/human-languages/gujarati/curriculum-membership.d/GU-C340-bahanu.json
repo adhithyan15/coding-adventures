@@ -1,0 +1,11 @@
+{
+  "id": "GU-C340-bahanu",
+  "pathSegment": "GU-PATH-340-HETU340",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-340-HETU340",
+      "order": 3
+    }
+  ]
+}

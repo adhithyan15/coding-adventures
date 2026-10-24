@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:60449face2788efc",
+  "lessonIds": [
+    "GU-C534-jugar",
+    "GU-C534-satto",
+    "GU-C534-hod",
+    "GU-C534-lotri",
+    "GU-C534-joganujog"
+  ],
+  "tex": "gujarati/book/chapters/ch534-bets-and-lotteries.tex"
+}

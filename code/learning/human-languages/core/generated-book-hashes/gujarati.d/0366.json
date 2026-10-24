@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:c45a50f7ee6e90d0",
+  "lessonIds": [
+    "GU-C366-sarat",
+    "GU-C366-sakya",
+    "GU-C366-sambhavna",
+    "GU-C366-atkal",
+    "GU-C366-cahvu"
+  ],
+  "tex": "gujarati/book/chapters/ch366-on-one-condition.tex"
+}

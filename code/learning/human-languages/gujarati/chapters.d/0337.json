@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Turning the Pages",
+  "label": "ch:gu-turning-the-pages",
+  "canDo": "I can talk about the parts and people of a book.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C337-vacak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can talk about the parts and people of a book.",
+    "assesses": [
+      "GU-LEX-C337-PANU337-03",
+      "GU-LEX-C337-PANU337-04",
+      "GU-LEX-C337-PANU337-05"
+    ]
+  }
+}

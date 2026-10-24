@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "The Fire Engine",
+  "label": "ch:gu-the-fire-engine",
+  "canDo": "I can say how the fire was put out.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C302-bhadko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can say how the fire was put out.",
+    "assesses": [
+      "GU-LEX-C302-BAMBO302-03",
+      "GU-LEX-C302-BAMBO302-04",
+      "GU-LEX-C302-BAMBO302-05"
+    ]
+  }
+}

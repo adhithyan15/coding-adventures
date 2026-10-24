@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "The Ambulance Arrives",
+  "label": "ch:gu-the-ambulance-arrives",
+  "canDo": "I can say how the injured were helped on the spot.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C296-halat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can say how the injured were helped on the spot.",
+    "assesses": [
+      "GU-LEX-C296-AMBULANS296-03",
+      "GU-LEX-C296-AMBULANS296-04",
+      "GU-LEX-C296-AMBULANS296-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:d32170976f3aeebd",
+  "lessonIds": [
+    "GU-C416-kendra",
+    "GU-C416-vistar",
+    "GU-C416-paru",
+    "GU-C416-bhagol",
+    "GU-C416-bhamvu",
+    "GU-R416-review-409-416"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch416.txt",
+  "json": "gujarati/narration/ch416.json",
+  "textHash": "fnv1a64:1b1d78da08ba82c7",
+  "jsonHash": "fnv1a64:a4eaaf1d4c475e2d",
+  "findings": []
+}

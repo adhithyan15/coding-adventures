@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:f471f8236427f0b6",
+  "lessonIds": [
+    "GU-C338-granth",
+    "GU-C338-samayik",
+    "GU-C338-chapavvu",
+    "GU-C338-bhajavvu",
+    "GU-C338-adbhut",
+    "GU-R338-review-332-338",
+    "GU-R338-review-final-338"
+  ],
+  "tex": "gujarati/book/chapters/ch338-a-book-comes-out.tex"
+}

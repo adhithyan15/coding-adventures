@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C328-puja",
+    "language": "gujarati",
+    "chapter": 328,
+    "sequence": 18200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21ee5988605722a2"
+  },
+  "findings": []
+}

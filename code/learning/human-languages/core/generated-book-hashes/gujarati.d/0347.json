@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:206d14b5c6646582",
+  "lessonIds": [
+    "GU-C347-kaydo",
+    "GU-C347-ullanghan",
+    "GU-C347-palan",
+    "GU-C347-lagu",
+    "GU-C347-uthapvu"
+  ],
+  "tex": "gujarati/book/chapters/ch347-the-law.tex"
+}

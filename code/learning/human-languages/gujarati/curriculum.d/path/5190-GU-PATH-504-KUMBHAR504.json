@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-504-KUMBHAR504",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-504-KUMBHAR504"
+  ],
+  "after": []
+}

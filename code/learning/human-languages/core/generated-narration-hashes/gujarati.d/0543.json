@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:0cd62feb4af1e8e6",
+  "lessonIds": [
+    "GU-C543-apvad",
+    "GU-C543-yogya",
+    "GU-C543-layak",
+    "GU-C543-kabel",
+    "GU-C543-khas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch543.txt",
+  "json": "gujarati/narration/ch543.json",
+  "textHash": "fnv1a64:11a85cc31029afb6",
+  "jsonHash": "fnv1a64:e46c63949817844b",
+  "findings": []
+}

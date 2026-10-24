@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:789cd6f59053b68e",
+  "lessonIds": [
+    "GU-C350-karar",
+    "GU-C350-dastavej",
+    "GU-C350-mukt",
+    "GU-C350-japt",
+    "GU-C350-vasulvu"
+  ],
+  "tex": "gujarati/book/chapters/ch350-contracts-and-papers.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C372-kavac",
+  "pathSegment": "GU-PATH-372-VIMO372",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-372-VIMO372",
+      "order": 2
+    }
+  ]
+}

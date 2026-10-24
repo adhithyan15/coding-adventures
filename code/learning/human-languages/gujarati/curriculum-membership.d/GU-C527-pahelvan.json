@@ -1,0 +1,11 @@
+{
+  "id": "GU-C527-pahelvan",
+  "pathSegment": "GU-PATH-527-AKHADO527",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-527-AKHADO527",
+      "order": 1
+    }
+  ]
+}

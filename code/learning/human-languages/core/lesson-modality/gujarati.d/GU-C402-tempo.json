@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C402-tempo",
+    "language": "gujarati",
+    "chapter": 402,
+    "sequence": 22470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6574c995ad3d6cd1"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:2b9cc25e717e7917",
+  "lessonIds": [
+    "GU-C366-sarat",
+    "GU-C366-sakya",
+    "GU-C366-sambhavna",
+    "GU-C366-atkal",
+    "GU-C366-cahvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch366.txt",
+  "json": "gujarati/narration/ch366.json",
+  "textHash": "fnv1a64:48a3a0ed46b3bcb8",
+  "jsonHash": "fnv1a64:62d68b373bc4aaed",
+  "findings": []
+}

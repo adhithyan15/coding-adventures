@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "What Must Come First",
+  "label": "ch:gu-what-must-come-first",
+  "canDo": "I can say what is needed before something can happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C375-puru-padvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say what is needed before something can happen.",
+    "assesses": [
+      "GU-LEX-C375-JARURI375-03",
+      "GU-LEX-C375-JARURI375-04",
+      "GU-LEX-C375-JARURI375-05"
+    ]
+  }
+}

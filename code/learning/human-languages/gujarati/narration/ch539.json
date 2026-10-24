@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 539,
+  "title": "Making Up My Mind",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:03dd2edd4dc17ac4",
+  "lessons": [
+    {
+      "id": "GU-C539-makkam",
+      "sequence": 29940,
+      "title": "મક્કમ (makkam) — resolute",
+      "headword": "મક્કમ",
+      "romanization": "makkam",
+      "gloss": "resolute",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86ba3027a01cc56d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to mull over, then the Gujarati for a settlement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મક્કમ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મક્કમ — makkam — \"resolute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે મક્કમ રહેશો તો તમે જીતશો. jo tame makkam raheśo to tame jītśo. If you stay firm, you will win."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મક્કમ (makkam) is usually traced to Arabic muḥkam, \"made firm, strong\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame makkam raheśo to tame jītśo. — If you stay firm, you will win.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame makkam raheśo to tame jītśo.* — If you stay firm, you will win.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to mull over, then the Gujarati for a settlement, then say makkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to mull over, then the Gujarati for a settlement, then say *makkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મક્કમ (makkam) mean? (\"Resolute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C539-tharavvu",
+      "sequence": 29950,
+      "title": "ઠરાવવું (ṭharāvvũ) — to settle on (a decision)",
+      "headword": "ઠરાવવું",
+      "romanization": "ṭharāvvũ",
+      "gloss": "to settle on (a decision)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9dc6fc78276084b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a settlement, then the Gujarati for resolute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઠરાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઠરાવવું — ṭharāvvũ — \"to settle on (a decision)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમે ઠરાવ્યું છે કે જો વરસાદ પડશે તો અમે નહીં જઈએ. ame ṭharāvyũ che ke jo varsād paḍśe to ame nahī̃ jaīe. We have decided that if it rains we won't go."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ઠરાવ્યું, teṇe ṭharāvyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઠરાવવું (ṭharāvvũ) is the causative of ઠરવું, \"to settle, to become fixed\", which CDIAL lists under stharati, \"is firm\" (CDIAL 13742): to make a decision firm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭharāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭharāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭharāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭharāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame ṭharāvyũ che ke jo varsād paḍśe to ame nahī̃ jaīe. — We have decided that if it rains we won't go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame ṭharāvyũ che ke jo varsād paḍśe to ame nahī̃ jaīe.* — We have decided that if it rains we won't go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a settlement, then the Gujarati for resolute, then say ṭharāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a settlement, then the Gujarati for resolute, then say *ṭharāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઠરાવવું (ṭharāvvũ) mean? (\"To settle on (a decision)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C539-kasoti",
+      "sequence": 29960,
+      "title": "કસોટી (kasoṭī) — a touchstone; a hard test",
+      "headword": "કસોટી",
+      "romanization": "kasoṭī",
+      "gloss": "a touchstone; a hard test",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4aa42ef7b98099aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for resolute, then the Gujarati for to settle on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કસોટી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કસોટી — kasoṭī — \"a touchstone; a hard test\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે આ કસોટીમાં મક્કમ રહેશો તો તમને આ નોકરી મળશે. jo tame ā kasoṭīmā̃ makkam raheśo to tamne ā nokrī maḷśe. If you stand firm through this test, you will get this job."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કસોટી (kasoṭī) is first the touchstone, the dark stone on which gold is rubbed to show its worth, and so any hard test. CDIAL lists the Gujarati word, \"a touchstone\", under Sanskrit kaṣapaṭṭikā (CDIAL 2973); the sense of a trial it does not give."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasoṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasoṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasoṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasoṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame ā kasoṭīmā̃ makkam raheśo to tamne ā nokrī maḷśe. — If you stand firm through this test, you will get this job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame ā kasoṭīmā̃ makkam raheśo to tamne ā nokrī maḷśe.* — If you stand firm through this test, you will get this job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for resolute, then the Gujarati for to settle on, then say kasoṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for resolute, then the Gujarati for to settle on, then say *kasoṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કસોટી (kasoṭī) mean? (\"A touchstone; a hard test\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C539-jhamplavvu",
+      "sequence": 29970,
+      "title": "ઝંપલાવવું (jhamplāvvũ) — to take the plunge",
+      "headword": "ઝંપલાવવું",
+      "romanization": "jhamplāvvũ",
+      "gloss": "to take the plunge",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4a77ad49e701df0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to settle on, then the Gujarati for a hard test."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝંપલાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝંપલાવવું — jhamplāvvũ — \"to take the plunge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો હું ત્યારે ધંધામાં ઝંપલાવત તો આજે હું અમીર હોત. jo hũ tyāre dhandhāmā̃ jhamplāvat to āje hũ amīr hot. If I had taken the plunge into business then, I would be rich today."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ધંધામાં ઝંપલાવ્યું, teṇe dhandhāmā̃ jhamplāvyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝંપલાવવું (jhamplāvvũ) is perhaps related to a reconstructed jhapp, \"sudden movement\", with a variant jhamp-, \"a jump\", under which CDIAL lists a Gujarati verb, \"to throw headlong\" (CDIAL 5336); this form is not listed, so its history is not settled. One plunges into water, or into a venture."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhamplāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhamplāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhamplāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhamplāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo hũ tyāre dhandhāmā̃ jhamplāvat to āje hũ amīr hot. — If I had taken the plunge into business then, I would be rich today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo hũ tyāre dhandhāmā̃ jhamplāvat to āje hũ amīr hot.* — If I had taken the plunge into business then, I would be rich today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to settle on, then the Gujarati for a hard test, then say jhamplāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to settle on, then the Gujarati for a hard test, then say *jhamplāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝંપલાવવું (jhamplāvvũ) mean? (\"To take the plunge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C539-niscay",
+      "sequence": 29980,
+      "title": "નિશ્ચય (niścay) — resolve (a firm decision)",
+      "headword": "નિશ્ચય",
+      "romanization": "niścay",
+      "gloss": "resolve (a firm decision)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8e70d780f866c53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a hard test, then the Gujarati for to take the plunge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નિશ્ચય",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નિશ્ચય — niścay — \"resolve (a firm decision)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમારો નિશ્ચય મક્કમ હશે તો તમે આ કામ પતાવી દેશો. jo tamāro niścay makkam haśe to tame ā kām patāvī deśo. If your resolve is firm, you will finish this work."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નિશ્ચય (niścay) is a tatsama, taken from Sanskrit niścaya, \"certainty; resolve, a fixed intention\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niścay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niścay*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niścay, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niścay*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tamāro niścay makkam haśe to tame ā kām patāvī deśo. — If your resolve is firm, you will finish this work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tamāro niścay makkam haśe to tame ā kām patāvī deśo.* — If your resolve is firm, you will finish this work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a hard test, then the Gujarati for to take the plunge, then say niścay again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a hard test, then the Gujarati for to take the plunge, then say *niścay* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નિશ્ચય (niścay) mean? (\"Resolve (a firm decision)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

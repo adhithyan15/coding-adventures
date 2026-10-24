@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:1db1d6c96a2a363c",
+  "lessonIds": [
+    "GU-C433-posak",
+    "GU-C433-jholi",
+    "GU-C433-kothlo",
+    "GU-C433-sobhvu",
+    "GU-C433-sankocavu"
+  ],
+  "tex": "gujarati/book/chapters/ch433-outfits-and-bags.tex"
+}

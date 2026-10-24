@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C423-vasavvu",
+    "language": "gujarati",
+    "chapter": 423,
+    "sequence": 23570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:888f0cebcb35340b"
+  },
+  "findings": []
+}

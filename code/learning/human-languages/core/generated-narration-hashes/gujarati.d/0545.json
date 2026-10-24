@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:b7328eaf7860582d",
+  "lessonIds": [
+    "GU-C545-asan",
+    "GU-C545-jatil",
+    "GU-C545-mahattva",
+    "GU-C545-ajmayas",
+    "GU-C545-yukti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch545.txt",
+  "json": "gujarati/narration/ch545.json",
+  "textHash": "fnv1a64:2e500286e2347d13",
+  "jsonHash": "fnv1a64:2e145994d629261a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:b249010a6649fd26",
+  "lessonIds": [
+    "GU-C412-dero",
+    "GU-C412-padav",
+    "GU-C412-ratvaso",
+    "GU-C412-khodvu-peg",
+    "GU-C412-galvu-spend"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch412.txt",
+  "json": "gujarati/narration/ch412.json",
+  "textHash": "fnv1a64:ad7deac71876bdbd",
+  "jsonHash": "fnv1a64:470422a6e514ae70",
+  "findings": []
+}

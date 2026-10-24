@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "At the Border",
+  "label": "ch:gu-at-the-border",
+  "canDo": "I can get across a border with a visa and my luggage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C406-thalavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can get across a border with a visa and my luggage.",
+    "assesses": [
+      "GU-LEX-C406-BORDER406-03",
+      "GU-LEX-C406-BORDER406-04",
+      "GU-LEX-C406-BORDER406-05"
+    ]
+  }
+}

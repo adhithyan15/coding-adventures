@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Flights and Gates",
+  "label": "ch:gu-flights-and-gates",
+  "canDo": "I can find my gate and talk about the flight.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C405-cakravo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can find my gate and talk about the flight.",
+    "assesses": [
+      "GU-LEX-C405-FLIGHT405-03",
+      "GU-LEX-C405-FLIGHT405-04",
+      "GU-LEX-C405-FLIGHT405-05"
+    ]
+  }
+}

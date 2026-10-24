@@ -1,0 +1,11 @@
+{
+  "id": "GU-C435-cakravat",
+  "pathSegment": "GU-PATH-435-STORM435",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-435-STORM435",
+      "order": 1
+    }
+  ]
+}

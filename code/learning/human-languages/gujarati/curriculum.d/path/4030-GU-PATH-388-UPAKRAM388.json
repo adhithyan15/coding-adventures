@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-388-UPAKRAM388",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GU-EXT-388-UPAKRAM388"
+  ],
+  "after": []
+}

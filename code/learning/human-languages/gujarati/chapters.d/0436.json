@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Hot Winds and Mercury",
+  "label": "ch:gu-hot-winds-and-mercury",
+  "canDo": "I can talk about a very hot day.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C436-sekavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can talk about a very hot day.",
+    "assesses": [
+      "GU-LEX-C436-HEAT436-03",
+      "GU-LEX-C436-HEAT436-04",
+      "GU-LEX-C436-HEAT436-05"
+    ]
+  }
+}

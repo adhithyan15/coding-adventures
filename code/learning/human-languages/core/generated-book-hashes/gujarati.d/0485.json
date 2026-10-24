@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:452fa56331c6a5d7",
+  "lessonIds": [
+    "GU-C485-opresan",
+    "GU-C485-dakhal",
+    "GU-C485-tapkavvu",
+    "GU-C485-matra",
+    "GU-C485-pareji"
+  ],
+  "tex": "gujarati/book/chapters/ch485-a-stay-in-hospital.tex"
+}

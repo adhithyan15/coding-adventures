@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:66a0d331921976ec",
+  "lessonIds": [
+    "GU-C478-kaph",
+    "GU-C478-udhras",
+    "GU-C478-kharas",
+    "GU-C478-khansvu",
+    "GU-C478-kabjiyat",
+    "GU-R478-review-471-478"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch478.txt",
+  "json": "gujarati/narration/ch478.json",
+  "textHash": "fnv1a64:5aa47a4091768530",
+  "jsonHash": "fnv1a64:075695fac8e2db2d",
+  "findings": []
+}

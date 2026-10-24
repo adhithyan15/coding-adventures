@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Clearing Out the Loft",
+  "label": "ch:gu-clearing-out-the-loft",
+  "canDo": "I can talk about clearing out old paper, cobwebs and mould.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C518-cotadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about clearing out old paper, cobwebs and mould.",
+    "assesses": [
+      "GU-LEX-C518-PASTI518-03",
+      "GU-LEX-C518-PASTI518-04",
+      "GU-LEX-C518-PASTI518-05"
+    ]
+  }
+}

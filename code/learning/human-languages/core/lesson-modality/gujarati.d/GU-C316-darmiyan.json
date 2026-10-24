@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C316-darmiyan",
+    "language": "gujarati",
+    "chapter": 316,
+    "sequence": 17580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c7bd9ce6caf0427"
+  },
+  "findings": []
+}

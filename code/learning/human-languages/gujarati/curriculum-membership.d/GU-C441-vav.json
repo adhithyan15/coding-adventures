@@ -1,0 +1,11 @@
+{
+  "id": "GU-C441-vav",
+  "pathSegment": "GU-PATH-441-LAKE441",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-441-LAKE441",
+      "order": 2
+    }
+  ]
+}

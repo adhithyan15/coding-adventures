@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "In Court",
+  "label": "ch:gu-in-court",
+  "canDo": "I can say what the court decided and what the sentence was.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C289-bhogavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can say what the court decided and what the sentence was.",
+    "assesses": [
+      "GU-LEX-C289-ADALAT289-03",
+      "GU-LEX-C289-ADALAT289-04",
+      "GU-LEX-C289-ADALAT289-05"
+    ]
+  }
+}

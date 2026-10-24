@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Cotton and the Spinning Wheel",
+  "label": "ch:gu-cotton-and-the-spinning-wheel",
+  "canDo": "I can talk about cotton, spinning and handspun cloth.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C505-khadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about cotton, spinning and handspun cloth.",
+    "assesses": [
+      "GU-LEX-C505-RENTIYO505-03",
+      "GU-LEX-C505-RENTIYO505-04",
+      "GU-LEX-C505-RENTIYO505-05"
+    ]
+  }
+}
