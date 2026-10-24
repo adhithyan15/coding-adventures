@@ -1284,6 +1284,7 @@ members = [
   "manchester-baby-gatelevel",
   "ibm704-simulator",
   "ibm704-gatelevel",
+  "ibm-system360-simulator",
   "ge225-gatelevel",
   "cdc6600-simulator",
   "cdc6600-gatelevel",
