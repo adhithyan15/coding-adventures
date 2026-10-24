@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 49940,
+    "totalLessons": 49945,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -30,7 +30,7 @@
     "scriptExposureExemptedGlyphs": 1719,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
-    "wordLessons": 44814,
+    "wordLessons": 44815,
     "wordLessonsWithoutEtymologyHook": 0,
     "wordLessonsWithoutVisibleEtymology": 0,
     "wordLessonsWithEmptyEtymologyBlock": 0,
@@ -44,7 +44,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 17,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 47976,
+    "drivableLessons": 47980,
     "drivablePercent": 96,
     "chaptersWithoutDrivablePrefix": 210,
     "chaptersWithoutDrivablePrefixByType": 202,
@@ -15044,7 +15044,8 @@
           190,
           191,
           192,
-          193
+          193,
+          194
         ],
         "bookChapters": [
           1,
@@ -15239,7 +15240,8 @@
           190,
           191,
           192,
-          193
+          193,
+          194
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -20298,9 +20300,9 @@
       {
         "language": "punjabi",
         "status": "version-2",
-        "lessonCount": 1053,
+        "lessonCount": 1058,
         "versions": {
-          "2": 1053
+          "2": 1058
         }
       },
       {
@@ -20502,8 +20504,8 @@
       },
       {
         "language": "punjabi",
-        "bookChapters": 193,
-        "declaredChapters": 193,
+        "bookChapters": 194,
+        "declaredChapters": 194,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -20558,8 +20560,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 9839,
-      "declaredChapters": 9839,
+      "bookChapters": 9840,
+      "declaredChapters": 9840,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 0,
@@ -20571,11 +20573,11 @@
     }
   },
   "levels": {
-    "totalLessons": 49940,
+    "totalLessons": 49945,
     "byLevel": {
       "pre-A1": 9460,
       "A1": 18617,
-      "A2": 2868,
+      "A2": 2873,
       "B1": 18950,
       "B2": 17,
       "C1": 10,
@@ -20826,11 +20828,11 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 1053,
+        "lessonCount": 1058,
         "byLevel": {
           "pre-A1": 489,
           "A1": 418,
-          "A2": 146,
+          "A2": 151,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -21504,9 +21506,9 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 1053,
-        "measurable": 1008,
-        "unmeasurable": 45,
+        "lessonCount": 1058,
+        "measurable": 1012,
+        "unmeasurable": 46,
         "lessonViolations": 0,
         "chapterViolations": 8
       },
@@ -21731,7 +21733,7 @@
           "language": "punjabi",
           "script": "gurmukhi",
           "latinScript": false,
-          "lessonCount": 1053,
+          "lessonCount": 1058,
           "totalGlyphs": 54,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -21809,7 +21811,7 @@
     "summary": {
       "lessonViolations": 0,
       "chapterViolations": 62,
-      "unmeasurableLessons": 188,
+      "unmeasurableLessons": 189,
       "measurablePercent": 100,
       "steepestLesson": null
     }
@@ -116884,6 +116886,30 @@
         "revisits": 1
       },
       {
+        "atom": "PA-FORM-AGLE-184",
+        "language": "punjabi",
+        "introducedBy": "PA-C184-agle",
+        "introducedAt": 975,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PA-FORM-AGLI-184",
+        "language": "punjabi",
+        "introducedBy": "PA-C184-agli",
+        "introducedAt": 974,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "PA-FORM-DEKHDA-183",
         "language": "punjabi",
         "introducedBy": "PA-C183-dekhda",
@@ -116996,6 +117022,18 @@
         "language": "punjabi",
         "introducedBy": "PA-W08-phone-repair",
         "introducedAt": 207,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-FORM-PICHHLE-184",
+        "language": "punjabi",
+        "introducedBy": "PA-C184-pichhle",
+        "introducedAt": 976,
         "missed": [
           "R2",
           "R3",
@@ -118561,7 +118599,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 16
+        "revisits": 20
       },
       {
         "atom": "PA-SCRIPT-ACHCHHA-01",
@@ -412551,28 +412589,6 @@
         "revisits": 3
       },
       {
-        "atom": "PA-FORM-AGLE-184",
-        "language": "punjabi",
-        "introducedBy": "PA-C184-agle",
-        "introducedAt": 975,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PA-FORM-AGLI-184",
-        "language": "punjabi",
-        "introducedBy": "PA-C184-agli",
-        "introducedAt": 974,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "PA-FORM-APNE-185",
         "language": "punjabi",
         "introducedBy": "PA-C185-apne",
@@ -412683,6 +412699,17 @@
         "revisits": 2
       },
       {
+        "atom": "PA-FORM-MAHINE-184",
+        "language": "punjabi",
+        "introducedBy": "PA-C184-mahine",
+        "introducedAt": 973,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
         "atom": "PA-FORM-MERE-185",
         "language": "punjabi",
         "introducedBy": "PA-C185-mere",
@@ -412769,17 +412796,6 @@
           "R4"
         ],
         "revisits": 11
-      },
-      {
-        "atom": "PA-FORM-PICHHLE-184",
-        "language": "punjabi",
-        "introducedBy": "PA-C184-pichhle",
-        "introducedAt": 976,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
       },
       {
         "atom": "PA-FORM-RESIDENCE-REPAIR-01",
@@ -417641,7 +417657,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 12
+        "revisits": 16
       },
       {
         "atom": "PA-LEX-HONA",
@@ -554461,6 +554477,16 @@
         "revisits": 4
       },
       {
+        "atom": "PA-FORM-DUJE-ORDINAL-193",
+        "language": "punjabi",
+        "introducedBy": "PA-C193-duje",
+        "introducedAt": 1048,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "PA-FORM-HOVEGA-186",
         "language": "punjabi",
         "introducedBy": "PA-C186-hovega",
@@ -554529,16 +554555,6 @@
           "R4"
         ],
         "revisits": 9
-      },
-      {
-        "atom": "PA-FORM-MAHINE-184",
-        "language": "punjabi",
-        "introducedBy": "PA-C184-mahine",
-        "introducedAt": 973,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 5
       },
       {
         "atom": "PA-FORM-MILDE-188",
@@ -554708,7 +554724,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 9
+        "revisits": 13
       },
       {
         "atom": "PA-JOIN-ATE-01",
@@ -570980,11 +570996,11 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 1053,
+        "lessonCount": 1058,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 960,
+        "atomsTaught": 961,
         "atomsNeverRevisited": 0,
         "forwardReferences": 2
       },
@@ -571054,14 +571070,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 49763,
+      "atomsTaught": 49764,
       "atomsNeverRevisited": 2,
       "neverRevisitedPercent": 0,
       "missedByWindow": {
         "R1": 1563,
-        "R2": 33459,
+        "R2": 33460,
         "R3": 25979,
-        "R4": 44014
+        "R4": 44018
       },
       "forwardReferences": 788
     }
@@ -571214,7 +571230,7 @@
       {
         "language": "punjabi",
         "script": "gurmukhi",
-        "lessonCount": 1053,
+        "lessonCount": 1058,
         "scriptLessons": 204,
         "taughtGlyphs": 54,
         "shownGlyphs": 54,
@@ -571434,7 +571450,7 @@
       },
       {
         "language": "punjabi",
-        "wordLessons": 626,
+        "wordLessons": 627,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
@@ -571490,7 +571506,7 @@
       }
     ],
     "summary": {
-      "wordLessons": 44814,
+      "wordLessons": 44815,
       "wordLessonsWithoutEtymologyHook": 0,
       "wordLessonsWithoutVisibleEtymology": 0,
       "wordLessonsWithoutAnyEtymology": 0,
@@ -593918,9 +593934,9 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 1053,
-        "atomMeasurableLessons": 1008,
-        "atomMeasurementBlindLessons": 45,
+        "lessonCount": 1058,
+        "atomMeasurableLessons": 1012,
+        "atomMeasurementBlindLessons": 46,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 8,
@@ -593934,14 +593950,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 2,
-        "atomsTaught": 960,
+        "atomsTaught": 961,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 1848,
+        "reinforcementWindowMisses": 1853,
         "reinforcementMissesByWindow": {
           "R1": 60,
-          "R2": 600,
+          "R2": 601,
           "R3": 570,
-          "R4": 618
+          "R4": 622
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 257,
@@ -593965,14 +593981,14 @@
           {
             "language": "punjabi",
             "kind": "reinforcement",
-            "count": 1848,
+            "count": 1853,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
           {
             "language": "punjabi",
             "kind": "measurement-blind",
-            "count": 45,
+            "count": 46,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -594712,7 +594728,7 @@
       {
         "language": "punjabi",
         "kind": "reinforcement",
-        "count": 1848,
+        "count": 1853,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -594733,7 +594749,7 @@
       {
         "language": "punjabi",
         "kind": "measurement-blind",
-        "count": 45,
+        "count": 46,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -594890,7 +594906,7 @@
       "tracksWithDetectedCliffs": 23,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 0,
-      "atomMeasurementBlindLessons": 188,
+      "atomMeasurementBlindLessons": 189,
       "findings": 74
     }
   },
@@ -595413,11 +595429,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 49940,
-    "voice": 47405,
-    "sight": 971,
+    "totalLessons": 49945,
+    "voice": 47409,
+    "sight": 972,
     "pen": 1564,
-    "coreVoice": 47976,
+    "coreVoice": 47980,
     "lessonsWithWritingSegments": 1029,
     "drivablePercent": 96,
     "tracks": [
@@ -696706,13 +696722,13 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 1053,
-        "voice": 748,
-        "sight": 84,
+        "lessonCount": 1058,
+        "voice": 752,
+        "sight": 85,
         "pen": 221,
-        "coreVoice": 798,
+        "coreVoice": 802,
         "drivablePercent": 76,
-        "drivablePrefixTotal": 709,
+        "drivablePrefixTotal": 711,
         "chapters": [
           {
             "language": "punjabi",
@@ -699708,6 +699724,22 @@
             ],
             "drivablePrefix": 5,
             "firstNonVoiceLesson": "PA-C193-ordinal-contrast",
+            "unstartable": null
+          },
+          {
+            "language": "punjabi",
+            "chapter": 194,
+            "lessonCount": 5,
+            "voice": 4,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "PA-C194-vidiarthi-review",
             "unstartable": null
           }
         ]
@@ -745001,7 +745033,7 @@
     "underspentPercent": 92
   },
   "infoDump": {
-    "lessons": 49940,
+    "lessons": 49945,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -745009,11 +745041,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 49940,
-    "measuredLessons": 44176,
-    "idiomMeasuredLessons": 44176,
-    "senseMeasuredLessons": 44177,
-    "cultureClaimMeasuredLessons": 44176,
+    "lessons": 49945,
+    "measuredLessons": 44181,
+    "idiomMeasuredLessons": 44181,
+    "senseMeasuredLessons": 44182,
+    "cultureClaimMeasuredLessons": 44181,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -745022,10 +745054,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 49212,
-    "usesBeforeIntroduction": 94304,
-    "technicalUsesBeforeIntroduction": 16771,
-    "technicalLessons": 12261,
+    "lessonsUsingTerms": 49217,
+    "usesBeforeIntroduction": 94315,
+    "technicalUsesBeforeIntroduction": 16779,
+    "technicalLessons": 12266,
     "worstTerms": [
       {
         "term": "verb",
@@ -745033,7 +745065,7 @@
       },
       {
         "term": "noun",
-        "lessons": 3704
+        "lessons": 3709
       },
       {
         "term": "participle",
@@ -745045,7 +745077,7 @@
       },
       {
         "term": "case",
-        "lessons": 514
+        "lessons": 515
       },
       {
         "term": "declension",
@@ -745054,12 +745086,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 49940,
+    "lessonsScanned": 49945,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 9908,
+    "filesScanned": 9909,
     "mainCharacters": 162,
     "scriptCharacters": 842,
     "gaps": 0
