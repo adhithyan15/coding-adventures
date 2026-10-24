@@ -1373,6 +1373,18 @@ fn primary_token<'a>(token: &'a Token, primary: &GrammarASTNode) -> Result<Shape
         return Ok(Shape::Other);
     }
     match kind {
+        // A spelling no JavaScript edition accepts is a SyntaxError (C6
+        // category Parse), as node reports it, not a bridge failure. The
+        // es2021+ patterns never produce one; es2016–es2020 still lex a
+        // legacy octal with a fraction (`017.5`) as one NUMBER.
+        "NUMBER" if !separators_well_placed(&token.value)
+            || is_legacy_octal_with_fraction(&token.value) =>
+        {
+            Err(format!(
+                "SyntaxError: Invalid numeric literal '{}'",
+                token.value.escape_debug()
+            ))
+        }
         "NUMBER" => decode_number(&token.value)
             .map(Shape::Number)
             .map_err(|()| {
@@ -1408,6 +1420,13 @@ fn primary_token<'a>(token: &'a Token, primary: &GrammarASTNode) -> Result<Shape
 /// A radix literal wider than 64 bits is an error, not an approximation;
 /// that is the typed stage's rule and is kept so errors stay the same.
 fn decode_number(spelling: &str) -> Result<f64, ()> {
+    // Defence in depth behind the edition's token patterns: only strip the
+    // `_`s ES2021's NumericLiteralSeparator allows. A spelling the lexer
+    // should never have produced (`0_17`, `1__0`, `1_.5`) is refused rather
+    // than silently given a value (review M1).
+    if !separators_well_placed(spelling) || is_legacy_octal_with_fraction(spelling) {
+        return Err(());
+    }
     let cleaned: String = spelling.chars().filter(|&c| c != '_').collect();
     for (prefixes, radix) in [(["0x", "0X"], 16), (["0b", "0B"], 2), (["0o", "0O"], 8)] {
         if let Some(digits) = prefixes.iter().find_map(|p| cleaned.strip_prefix(p)) {
@@ -1427,6 +1446,65 @@ fn decode_number(spelling: &str) -> Result<f64, ()> {
             .map_err(|_| ());
     }
     cleaned.parse::<f64>().map_err(|_| ())
+}
+
+/// Whether every `_` in a number spelling is a legal ES2021
+/// NumericLiteralSeparator:
+///
+/// | spelling  | ok? | why                                              |
+/// |-----------|-----|--------------------------------------------------|
+/// | `1_000`   | yes | one `_` between two decimal digits               |
+/// | `0x_F`    | no  | `_` right after the radix prefix                 |
+/// | `0xF_F`   | yes | between two hex digits                           |
+/// | `1__0`    | no  | two in a row                                     |
+/// | `0_1`     | no  | `0` alone is DecimalIntegerLiteral; no separator |
+/// | `01_7`    | no  | legacy octal/NonOctalDecimal take no separators  |
+/// | `1_.5`    | no  | next to `.`                                      |
+/// | `1e_5`    | no  | next to the exponent marker                      |
+fn separators_well_placed(spelling: &str) -> bool {
+    if !spelling.contains('_') {
+        return true;
+    }
+    let lower = spelling.to_ascii_lowercase();
+    let (body, is_digit): (&str, fn(u8) -> bool) =
+        if let Some(rest) = lower.strip_prefix("0x") {
+            (rest, |b| b.is_ascii_hexdigit())
+        } else if let Some(rest) = lower.strip_prefix("0o") {
+            (rest, |b| (b'0'..=b'7').contains(&b))
+        } else if let Some(rest) = lower.strip_prefix("0b") {
+            (rest, |b| b == b'0' || b == b'1')
+        } else {
+            // A decimal literal: a leading `0` followed by anything but `.`
+            // or an exponent is `0` itself, legacy octal or NonOctalDecimal,
+            // none of which admit separators.
+            let bytes = lower.as_bytes();
+            if bytes[0] == b'0' && bytes.len() > 1 && bytes[1] != b'.' && bytes[1] != b'e' {
+                return false;
+            }
+            (lower.as_str(), |b| b.is_ascii_digit())
+        };
+    let bytes = body.as_bytes();
+    bytes.iter().enumerate().all(|(i, &b)| {
+        b != b'_' || (i > 0 && i + 1 < bytes.len() && is_digit(bytes[i - 1]) && is_digit(bytes[i + 1]))
+    })
+}
+
+/// Whether `spelling` is a legacy octal integer (`0` then only octal digits,
+/// like `017`) carrying a fraction or exponent. JavaScript has no such
+/// literal: node rejects `017.5` and `017e1` as SyntaxErrors. A
+/// NonOctalDecimal (`08.5`, `08e1`) is a different literal and stays valid.
+/// The es2016–es2020 token patterns still lex these spellings as one
+/// NUMBER, so the decoder refuses them for every edition.
+fn is_legacy_octal_with_fraction(spelling: &str) -> bool {
+    let bytes = spelling.as_bytes();
+    if bytes.len() < 2 || bytes[0] != b'0' || !bytes[1].is_ascii_digit() {
+        return false;
+    }
+    let integer_end = bytes
+        .iter()
+        .position(|&b| !b.is_ascii_digit())
+        .unwrap_or(bytes.len());
+    integer_end < bytes.len() && bytes[1..integer_end].iter().all(|&b| b < b'8')
 }
 
 /// VM failure with console output completed by earlier JavaScript statements.

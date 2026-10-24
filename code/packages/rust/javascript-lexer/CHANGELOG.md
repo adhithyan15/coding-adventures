@@ -4,6 +4,15 @@ All notable changes to the `coding-adventures-javascript-lexer` crate will be do
 
 ## 0.10.1 — Unreleased — LANG84 phase 6d: pair headers cite their releases
 
+### Fixed
+
+- es2021–es2025 number patterns follow ECMA-262's NumericLiteralSeparator
+  grammar: one `_` between two digits; none after a lone leading `0` or in a
+  legacy octal / NonOctalDecimal literal; none beside `.`, an exponent or a
+  radix prefix. `5.`, `5.e1` and `1.e3` lex as one NUMBER again (the fraction
+  digits are optional, as in es2020), and a legacy octal no longer takes a
+  fraction or exponent (`017.5`), while `08.5` does. Tables regenerated.
+
 ### Changed
 
 - `_grammar.rs` regenerated after the es2016–es2025 `.tokens` headers

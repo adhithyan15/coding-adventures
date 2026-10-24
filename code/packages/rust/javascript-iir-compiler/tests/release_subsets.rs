@@ -167,3 +167,47 @@ fn the_source_budget_is_a_typed_budget_error() {
     assert_eq!(error.release(), Some("es2017"));
     assert!(error.message().contains("native pilot limit"), "{error}");
 }
+
+/// Review L1: an error's category comes from the producer's fixed text, so
+/// source that *quotes* a budget phrase is still an ordinary Parse error.
+/// Before, `console.log(1 "spine limit")` was reported as a Budget refusal,
+/// because the parse message echoed the string and was matched by substring.
+#[test]
+fn source_text_cannot_choose_an_error_category() {
+    for release in supported_releases() {
+        for source in [
+            "console.log(1 \"spine limit\");",
+            "console.log(1 'nests deeper than the supported limit');",
+            "console.log(1 'input within the supported nesting limit');",
+            "console.log(1 'JavaScript expression chain ');",
+            "console.log(1 'node limit');",
+            "console.log(1 'depth limit');",
+        ] {
+            let error = compile_source_at(source, Some(release), "m").unwrap_err();
+            assert_eq!(error.category(), "Parse", "{release} {source:?}: {error}");
+        }
+    }
+    // The real budget refusals keep their category.
+    let deep = format!("console.log({}1{});", "(".repeat(400), ")".repeat(400));
+    let error = compile_source_at(&deep, Some("es2021"), "m").unwrap_err();
+    assert_eq!(error.category(), "Budget", "{error}");
+}
+
+/// Review M1: on every claiming edition, a numeric spelling node rejects is
+/// refused (as the SyntaxError node reports, category Parse), and every
+/// spelling node accepts gets node's value. Before, es2021+ printed
+/// `console.log(0_17)` as 15 and `1__0` as 10.
+#[test]
+fn numeric_literals_follow_node_on_every_edition() {
+    for release in supported_releases() {
+        for invalid in ["0_17", "01_7", "0_8", "1__0", "0x_F", "1_.5", "1._5", "1e_5", "1_e5", "100_", "017.5", "017e1", "0_0", "09_1"] {
+            let source = format!("console.log({invalid});");
+            let error = compile_source_at(&source, Some(release), "m").unwrap_err();
+            assert_eq!(error.category(), "Parse", "{release} {invalid}: {error}");
+        }
+        for (valid, shown) in [("5.", "5"), ("5.e1", "50"), ("1.e3", "1000"), ("08.5", "8.5"), ("08e1", "80"), ("017", "15"), ("00", "0"), ("0e1", "0")] {
+            let output = run_source_at(&format!("console.log({valid});"), Some(release)).unwrap();
+            assert_eq!(output, format!("{shown}\n"), "{release} {valid}");
+        }
+    }
+}

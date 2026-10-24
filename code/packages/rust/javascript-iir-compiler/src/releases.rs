@@ -100,7 +100,7 @@ pub fn resolve_release(release: Option<&str>) -> Result<(&'static str, EsVersion
     let requested = release.unwrap_or(DEFAULT_RELEASE);
     if requested.len() > MAX_RELEASE_ID_BYTES {
         return Err(FrontendError::UnknownRelease {
-            requested: format!("{}...", echo(truncate(requested, MAX_RELEASE_ID_BYTES))),
+            requested: echo(requested),
             suggestions: Vec::new(),
         });
     }
@@ -157,19 +157,29 @@ fn suggestions(requested: &str) -> Vec<String> {
 }
 
 /// Escape control characters (and quotes) so an echoed request cannot
-/// forge terminal output or log lines.
+/// forge terminal output or log lines, then bound the *escaped* text.
+///
+/// Escaping comes first because it grows the text: one ESC byte becomes the
+/// six bytes `\u{1b}`. Truncating first and escaping after (the old order)
+/// let 64 ESC bytes echo as 384. Each character's escape is kept or dropped
+/// whole, so a cut never leaves half an escape like `\u{1`:
+///
+/// | request             | echoed                                  |
+/// |---------------------|-----------------------------------------|
+/// | `es201`             | `es201`                                 |
+/// | 100 × ESC           | 10 × `\u{1b}` then `...` (63 + 3 bytes) |
+/// | 200 × `é`           | 32 × `é` then `...` (64 + 3 bytes)      |
 fn echo(text: &str) -> String {
-    text.chars().flat_map(char::escape_debug).collect()
-}
-
-/// The longest prefix of `text` that is at most `max` bytes and ends on a
-/// character boundary.
-fn truncate(text: &str, max: usize) -> &str {
-    let mut end = max.min(text.len());
-    while !text.is_char_boundary(end) {
-        end -= 1;
+    let mut shown = String::new();
+    for c in text.chars() {
+        let escaped: String = c.escape_debug().collect();
+        if shown.len() + escaped.len() > MAX_RELEASE_ID_BYTES {
+            shown.push_str("...");
+            return shown;
+        }
+        shown.push_str(&escaped);
     }
-    &text[..end]
+    shown
 }
 
 #[cfg(test)]
@@ -227,6 +237,24 @@ mod tests {
         assert!(requested.len() <= MAX_RELEASE_ID_BYTES + 3, "{requested}");
         assert!(suggestions.is_empty());
         assert!(suggestions_for_nothing_shared());
+    }
+
+    /// Review L2: escaping grows text, so the bound applies to the escaped
+    /// form, and no escape sequence is split.
+    #[test]
+    fn echoed_requests_are_bounded_after_escaping() {
+        for request in ["\u{1b}".repeat(100), "\u{1b}".repeat(64), "\n\u{0}".repeat(30), "é".repeat(200)] {
+            let error = resolve_release(Some(&request)).unwrap_err();
+            let FrontendError::UnknownRelease { requested, .. } = &error else {
+                panic!("{error}");
+            };
+            assert!(requested.len() <= MAX_RELEASE_ID_BYTES + 3, "{} bytes: {requested}", requested.len());
+            assert!(!requested.contains('\u{1b}') && !requested.contains('\n'), "{requested}");
+            // Every `\u{` that was started is closed: no half escapes.
+            assert_eq!(requested.matches("\\u{").count(), requested.matches('}').count(), "{requested}");
+            assert!(requested.ends_with("..."), "{requested}");
+        }
+        assert_eq!(echo("es201"), "es201");
     }
 
     fn suggestions_for_nothing_shared() -> bool {

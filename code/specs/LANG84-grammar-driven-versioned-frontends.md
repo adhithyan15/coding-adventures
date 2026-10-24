@@ -1430,9 +1430,37 @@ Divergences from this spec in 5b/7b slice 2:
    still lack the F10 table: Swift `grammar-tools` cannot express
    `start_mode`/`transitions`, and its embedded es3/es5 grammars are pinned
    by `regen-embedded-grammars.sh --check`, so that work needs F10 in Swift
-   first. Found in passing: es2021+ `FLOAT_NUMBER` requires a digit after
-   the `.`, so `5.` (a valid NumericLiteral) lexes as `5` then `.`; es2020
-   and earlier accept it. Not in the subset, recorded for a follow-up.
+   first.
+
+   **6d review fixes (2026-10-24).** Claiming es2021–es2025 put their number
+   patterns on the compile path for the first time, and the security review
+   found they were wrong in both directions:
+   - *Invalid separators were given values.* `[0-9]([0-9_]*[0-9])?` accepted
+     `1__0` (printed 10), `0_17` (15, as legacy octal) and `0_8` (8). The
+     es2021+ patterns now follow ECMA-262's NumericLiteralSeparator grammar:
+     one `_` between two digits; none after a lone leading `0`, none in a
+     legacy octal (`017`) or NonOctalDecimal (`08`); none beside `.`, the
+     exponent marker or a radix prefix. A legacy octal takes no fraction or
+     exponent (`017.5` and `017e1` are SyntaxErrors in node), while the
+     NonOctalDecimal forms `08.5` and `08e1` stay valid.
+   - *Valid literals were refused.* `FLOAT_NUMBER` required a digit after the
+     `.`, so `5.`, `5.e1` and `1.e3` were refused (the last as a member
+     access). The fraction digits are now optional, as in es2020.
+   - *Defence in depth.* The compiler reports any numeric spelling with a
+     misplaced `_`, or a legacy octal with a fraction or exponent, as
+     `SyntaxError: Invalid numeric literal` (category Parse), whatever the
+     edition. es2016–es2020's patterns still lex `017.5` as one NUMBER (other
+     consumers keep that leniency), and the compiler refuses it.
+   - *Error categories follow producer text only.* They were found by
+     substring, so `console.log(1 "spine limit")` came back as Budget. Each
+     test now anchors on a fixed message or prefix, and the depth phrase is
+     only honoured inside the parser's expected-list, before `, got`.
+   - *Release echoes are bounded after escaping*, so 100 ESC bytes no longer
+     echo as 416 bytes.
+
+   The corpus gains 2 positive cases (`trailing_dot_and_legacy`,
+   `numeric_separators_radix`) and 10 rejects, every one checked against
+   node v22.
 5. **6e.** Add `Language::JavaScript` to lang-aot, with matrix rows. JS numbers
    are `f64`, so B(S) for a printing subset depends on LANG83's `f64`
    formatting ops (`f64_to_str_js` / `write_f64_js`, LANG83 PR6). Until then,

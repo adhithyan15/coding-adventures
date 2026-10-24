@@ -448,7 +448,7 @@
       "version": "es2021",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2021.tokens",
-      "sha256": "5b7b23ccc7ca51b200313891d8b90d33770474f8179133b33bb580c4406b9273"
+      "sha256": "da9a9e9dc2da9b05e04b216579adea8ef34c4374e939dbc15f582adc0ac14f70"
     },
     {
       "family": "javascript",
@@ -462,7 +462,7 @@
       "version": "es2022",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2022.tokens",
-      "sha256": "5ed174b8b9d29e1264491c12173935a41dae983d62a53ab92d7ca052df514103"
+      "sha256": "75006fddb6fe3d84c9bae686ad8b4fe77c19391e90d77281a535f15ec1f3426c"
     },
     {
       "family": "javascript",
@@ -476,7 +476,7 @@
       "version": "es2023",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2023.tokens",
-      "sha256": "0583000acff3dafb4bfdbbcf087ab78aa02833334740d22070269d15a9e135ac"
+      "sha256": "d06c51727834885c231135e450e411f2989733607bab1afd52ec979bde4e94ad"
     },
     {
       "family": "javascript",
@@ -490,7 +490,7 @@
       "version": "es2024",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2024.tokens",
-      "sha256": "0609eda009ee9d020b21ee2d11e84d89d14d5054a8b950c167117f06ea1c2aea"
+      "sha256": "376a2097635c210a69ebf95fac324795094502bde8cab934e7411fdb9fae9a82"
     },
     {
       "family": "javascript",
@@ -504,7 +504,7 @@
       "version": "es2025",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2025.tokens",
-      "sha256": "b5d1ad8752c448c11e43bec36994e39c78ec1d1ec7f98e4f22ba58cc72452a6d"
+      "sha256": "9c07cbe6c6bdf9b8e8a3635bd3c6a1cc90c13a2b5dddaab30db0c5a9d6a7136c"
     },
     {
       "family": "javascript",

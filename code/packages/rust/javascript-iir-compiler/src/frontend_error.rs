@@ -72,32 +72,85 @@ pub enum FrontendError {
     },
 }
 
-/// Prefixes and phrases each producer writes, mapped to a C6 category.
+/// The fixed text each producer writes, mapped to a C6 category.
 ///
-/// | Producer                                   | Text it writes                                      | Category    |
-/// |--------------------------------------------|-----------------------------------------------------|-------------|
-/// | `javascript-lexer`                         | `JavaScript tokenization failed: …`                 | Lex         |
-/// | `parse_javascript_cst_bounded`             | `… exponentiation is unsupported …`                 | Unsupported |
-/// | `parse_javascript_cst_bounded`             | `… bounded CST spine limit`                         | Budget      |
-/// | `GrammarParser` depth guard                | `… nests deeper …` / `… supported nesting limit`    | Budget      |
-/// | `asi::parse_with_asi`                      | `JavaScript parse failed: …`                        | Parse       |
+/// Every test anchors on text the *producer* writes before any echo of the
+/// source: a whole fixed message, or a fixed prefix. A substring test would
+/// let source text pick the category: `console.log(1 "spine limit")` fails
+/// to parse with a message that quotes the string, and was reported as a
+/// Budget refusal (review L1).
+///
+/// | Producer                        | Text it writes (prefix or whole)                                      | Category    |
+/// |---------------------------------|-----------------------------------------------------------------------|-------------|
+/// | `javascript-lexer`              | `JavaScript tokenization failed: …`                                   | Lex         |
+/// | `parse_javascript_cst_bounded`  | `JavaScript exponentiation is unsupported in the bounded CST parser`  | Unsupported |
+/// | `parse_javascript_cst_bounded`  | `JavaScript expression chain …` (only the spine bound writes this)    | Budget      |
+/// | `GrammarParser` depth guard     | `JavaScript parse failed: Parse error at L:C: input nests deeper than the supported limit (N)`, or `… L:C: Expected input within the supported nesting limit or …, got "…"` (the phrase as a list item before `, got `) | Budget |
+/// | anything else from the parser   | `JavaScript parse failed: …`                                          | Parse       |
+const LEX_PREFIX: &str = "JavaScript tokenization failed";
+const EXPONENT_MESSAGE: &str = "JavaScript exponentiation is unsupported in the bounded CST parser";
+const SPINE_PREFIX: &str = "JavaScript expression chain ";
+const PARSE_PREFIX: &str = "JavaScript parse failed: ";
+const DEPTH_MESSAGE_PREFIX: &str = "input nests deeper than the supported limit (";
+const DEPTH_EXPECTATION: &str = "input within the supported nesting limit";
+const NODE_LIMIT_MESSAGE: &str = "JavaScript AST exceeds the native pilot node limit";
+const DEPTH_LIMIT_MESSAGE: &str = "JavaScript AST exceeds the native pilot depth limit";
+
+/// Whether `message` is the grammar parser's depth refusal: the
+/// `GrammarParseError` display is `Parse error at <line>:<col>: <message>`,
+/// and only the depth guard writes a message starting
+/// [`DEPTH_MESSAGE_PREFIX`]; ordinary failures start `Expected …`.
+fn is_depth_refusal(message: &str) -> bool {
+    let Some(rest) = message.strip_prefix(PARSE_PREFIX) else {
+        return false;
+    };
+    let rest = match rest.strip_prefix("Parse error at ") {
+        Some(located) => {
+            // Skip `<line>:<column>: `, both all digits.
+            let mut parts = located.splitn(3, ':');
+            let (Some(line), Some(column), Some(tail)) = (parts.next(), parts.next(), parts.next()) else {
+                return false;
+            };
+            if line.is_empty() || column.is_empty() || !line.bytes().chain(column.bytes()).all(|b| b.is_ascii_digit()) {
+                return false;
+            }
+            match tail.strip_prefix(' ') {
+                Some(tail) => tail,
+                None => return false,
+            }
+        }
+        None => rest,
+    };
+    if rest.starts_with(DEPTH_MESSAGE_PREFIX) {
+        return true;
+    }
+    // The furthest-failure form: `Expected A or B or …, got "<token>"`. The
+    // depth guard records the expectation `input within the supported
+    // nesting limit`. Only the list before `, got ` is producer text; what
+    // follows quotes the source, so the phrase is matched as a whole list
+    // item there and nowhere else.
+    let Some(expected) = rest.strip_prefix("Expected ") else {
+        return false;
+    };
+    let list = expected.split_once(", got ").map_or(expected, |(list, _)| list);
+    list.split(" or ").any(|item| item == DEPTH_EXPECTATION)
+}
+
 impl FrontendError {
     /// Categorize an error from `parse_javascript_cst_bounded`.
     pub(crate) fn from_parse(release: &str, message: String) -> Self {
         let release = release.to_string();
-        if message.starts_with("JavaScript tokenization failed") {
+        if message.starts_with(LEX_PREFIX) {
             Self::Lex { release, message }
-        } else if message.contains("exponentiation is unsupported") {
+        } else if message == EXPONENT_MESSAGE {
             Self::Unsupported { release, message }
-        } else if message.contains("spine limit") {
+        } else if message.starts_with(SPINE_PREFIX) {
             Self::Budget {
                 release,
                 which: "expression chain spine",
                 message,
             }
-        } else if message.contains("nests deeper than the supported limit")
-            || message.contains("input within the supported nesting limit")
-        {
+        } else if is_depth_refusal(&message) {
             Self::Budget {
                 release,
                 which: "parser rule depth",
@@ -110,20 +163,24 @@ impl FrontendError {
 
     /// Categorize an error from [`crate::compile_ast`].
     ///
-    /// | Text                                | Category |
-    /// |-------------------------------------|----------|
-    /// | `… node limit` / `… depth limit`    | Budget   |
-    /// | `SyntaxError: …` (an early error)   | Parse    |
-    /// | anything else                       | Unsupported |
+    /// | Text                                       | Category    |
+    /// |--------------------------------------------|-------------|
+    /// | exactly the node-limit message             | Budget      |
+    /// | exactly the depth-limit message            | Budget      |
+    /// | `SyntaxError: …` (an early error)          | Parse       |
+    /// | anything else                              | Unsupported |
+    ///
+    /// The budget messages are compared whole: other compile messages quote
+    /// source names, which must not choose the category.
     pub(crate) fn from_compile(release: &str, message: String) -> Self {
         let release = release.to_string();
-        if message.contains("node limit") {
+        if message == NODE_LIMIT_MESSAGE {
             Self::Budget {
                 release,
                 which: "CST nodes",
                 message,
             }
-        } else if message.contains("depth limit") {
+        } else if message == DEPTH_LIMIT_MESSAGE {
             Self::Budget {
                 release,
                 which: "expression depth",

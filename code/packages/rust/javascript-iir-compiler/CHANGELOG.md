@@ -2,6 +2,21 @@
 
 ## 0.5.0 - Unreleased - JavaScript edition selection is real (LANG84 6d)
 
+### Fixed (6d security review)
+
+- A numeric spelling no edition accepts is refused as
+  `SyntaxError: Invalid numeric literal '…'` (category Parse) instead of being
+  given a value: a misplaced `_` (`1__0`, `0_17`, `1_.5`) or a legacy octal
+  with a fraction or exponent (`017.5`, `017e1`). Before, es2021+ printed
+  `console.log(0_17)` as 15 and `1__0` as 10.
+- Error categories come only from producer text (a fixed message or prefix;
+  the parser's depth phrase only inside its expected-list). Source that quotes
+  `"spine limit"` is a Parse error, not a Budget refusal.
+- An unknown release request is escaped first and then bounded, whole escapes
+  only: at most 64 bytes plus `...`.
+- Corpus: `trailing_dot_and_legacy`, `numeric_separators_radix` and 10
+  separator / legacy-octal rejects, each checked against node v22.
+
 ### Added
 
 - `compile_source_at(source, release, module_name)`: lex, parse and compile
