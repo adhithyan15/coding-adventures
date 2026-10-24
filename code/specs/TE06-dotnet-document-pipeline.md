@@ -69,3 +69,69 @@ The first tranche is successful when:
 - both languages have pure parser entry points
 - GFM-only constructs live behind `gfm-parser`, not inside the AST consumer API
 - tests demonstrate the same baseline document behaviour in C# and F#
+
+## C# CommonMark And HTML Tranche
+
+The next C# tranche completes the base CommonMark pipeline without duplicating
+the already-substantive `commonmark-parser` package:
+
+1. qualify `commonmark-parser` through the repository's vendored CommonMark
+   0.31.2 corpus,
+2. add `document-ast-to-html` as a pure renderer over the public
+   `document-ast` types, and
+3. add `commonmark` as the thin public facade that exposes the parser and
+   renderer entry points.
+
+The facade corpus is the same 652-record `spec.json` used by the established
+TypeScript and Rust facades. The C# copy must record its upstream URL, version,
+SHA-256 digest, and exact case count. Tests load the records dynamically and
+assert that every record ran through `Commonmark.Parse` followed by
+`Commonmark.ToHtml`; a hand-selected subset does not qualify this tranche.
+
+Renderer tests are independently authored from the TE00 public contract. They
+exercise every C# `document-ast` node through `DocumentAstToHtml.ToHtml`,
+including tight and loose lists, ordered starts, escaping, raw-format routing,
+tables, task items, and dangerous URL schemes. These vectors are deliberately
+separate from GFM parser adoption: rendering extension node types already in
+the AST does not claim that C# consumes the GFM conformance corpus.
+
+### Public API
+
+```csharp
+using CodingAdventures.Commonmark;
+
+var document = Commonmark.Parse("# Hello\n");
+var html = Commonmark.ToHtml(document);
+```
+
+`CodingAdventures.DocumentAstToHtml.DocumentAstToHtml.ToHtml` accepts a
+`DocumentNode` plus immutable render options. Raw HTML passes through by
+default for CommonMark compatibility; callers rendering untrusted input must
+request raw-node suppression or sanitize the AST before rendering. Text,
+attribute values, code, and link/image destinations are escaped. The renderer
+removes browser-ignored control and zero-width characters before rejecting
+`javascript:`, `vbscript:`, `data:`, and `blob:` destinations.
+
+### Resource And Ownership Contract
+
+- parsing retains the existing bounded public C# parser entry point;
+- rendering is an in-memory tree walk with explicit node-depth, node-count,
+  and output-character ceilings;
+- input AST records and child collections are borrowed and never mutated;
+- rendering returns a newly owned string and performs no filesystem, network,
+  process, environment, clock, or random access; and
+- a limit failure throws `InvalidOperationException` before returning partial
+  output.
+
+### Package And Build Evidence
+
+Both new roots require normal NuGet metadata, `README.md`, `CHANGELOG.md`,
+`required_capabilities.json`, Unix `BUILD`, and Windows `BUILD_windows` fronts.
+The build fronts run native .NET tests with production line coverage above the
+repository's 80% floor. The facade declares both direct project references;
+the renderer declares only `document-ast`; and test-only dependencies remain
+in test projects rather than production package metadata.
+
+This tranche does not implement or qualify `gfm`, consume the GFM extension
+fixture, centralize the repository's duplicated CommonMark corpus, or claim
+sanitization policy beyond the renderer's documented raw-node and URL rules.

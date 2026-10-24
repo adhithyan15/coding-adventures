@@ -19805,18 +19805,21 @@
     {
       "id": "commonmark-html-csharp-lane-prerequisites",
       "title": "Port CommonMark parser and document AST HTML renderer to C#",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "gfm-fenced-block-ast-and-consumer-contract-repair"
       ],
-      "branch": null,
+      "branch": "codex/parity-csharp-commonmark-html-20261024",
       "pr_number": null,
       "notes": "Two missing portable C# roots in the 9/15 CommonMark and document-ast-to-html families; consume shared parser/renderer fixtures before GFM extensions.",
       "classification_refresh": "Current inventory commonmark and document-ast-to-html are actual missing nine-lane facade/renderer families; commonmark-parser is present12including this lane. Qualify existing parser where required, deliver actual owned CommonMark facade and HTML renderer with upstream fixtures; do not invent absent parser root or add duplicate facade/renderer owner. No native tests/merged receipt in this refresh.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/commonmark-html-csharp-lane-prerequisites"
       ],
-      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited.",
+      "started_at": "2026-10-24T18:13:58Z",
+      "base_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+      "selection_notes": "Selected as an independent dependency-ready lane prerequisite after PR #18105 merged. Preserve the existing substantive C# commonmark-parser root, add only the missing document-ast-to-html and commonmark roots, run all 652 official CommonMark 0.31.2 facade records, and keep GFM adoption separate."
     },
     {
       "id": "commonmark-html-fsharp-lane-prerequisites",
@@ -25764,6 +25767,23 @@
       "postmerge_preparation_evidence": [
         "code/specs/gfm-fenced-block-v1/VALIDATION.md"
       ]
+    },
+    {
+      "id": "commonmark-language-neutral-conformance-centralization",
+      "title": "Centralize CommonMark parser and renderer conformance fixtures",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-conformance-foundation",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T18:13:58Z",
+      "discovered_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+      "package_paths": [
+        "code/specs/fixtures",
+        "code/packages/typescript/commonmark/tests/fixtures/spec.json"
+      ],
+      "notes": "The official CommonMark 0.31.2 652-case corpus is duplicated under established language packages, while renderer vectors remain package-local. Specify one provenance-pinned, bounded language-neutral parser/facade corpus plus independently authored AST-to-HTML vectors and exact native-reader CI routing. This is not required for the C# lane tranche, does not replace its vendored fixture, and must not absorb the separate GFM extension corpus."
     }
   ]
 }

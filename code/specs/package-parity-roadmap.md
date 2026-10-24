@@ -17674,3 +17674,27 @@ SingleResponse root to the same pending OCSP owner, explicitly keeping larger
 response containers and authentication out of scope. The regenerated inventory
 now has 1,533 identities / 4,815 slots in the same 15 established lanes, with
 zero collisions or unknown buckets. No new implementation is selected.
+
+## C# CommonMark pipeline prerequisite selection (2026-10-24)
+
+PR #18105 merged the fenced-block contract prerequisite as
+`8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738`. The independent C# lane audit
+confirms that `commonmark-parser` is already a substantive package root, while
+`document-ast-to-html` and the thin `commonmark` facade are the two actual
+missing C# identities. Select only
+`commonmark-html-csharp-lane-prerequisites` on branch
+`codex/parity-csharp-commonmark-html-20261024` from `ce1fe9b5`.
+
+This tranche qualifies the existing parser through the same provenance-pinned
+652-case CommonMark 0.31.2 corpus used by established facades, adds a pure C#
+TE00 renderer with independent public-API vectors, and composes both through a
+real facade. It does not duplicate `commonmark-parser`, adopt the GFM fixture,
+or claim sanitizer/browser authority.
+
+The audit also discovered that CommonMark corpora and renderer vectors remain
+duplicated inside language packages rather than owned by a central neutral
+fixture. Register `commonmark-language-neutral-conformance-centralization` as
+a separate pending foundation. It should pin provenance, resource limits,
+native-reader routing, and independently authored renderer vectors without
+absorbing GFM. That centralization is not a prerequisite for this already
+established per-language corpus pattern and is not selected in this tranche.
