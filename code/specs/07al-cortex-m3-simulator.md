@@ -23,12 +23,11 @@ The package models one deterministic Cortex-M3 core with:
   FAULTMASK, CONTROL, and Thread/Handler mode;
 - 64 KiB of owned little-endian teaching memory, exact installed-image origin
   and length, and one local exclusive monitor;
-- the Cortex-M3 integer Thumb and Thumb-2 execution surface required by the
-  generic guide: shifts, arithmetic, logical and compare operations, bitfield
-  and saturation operations, multiply/divide, scalar and multiple memory,
-  dual-register memory, stack operations, conditional execution, branches,
-  table branches, BL/BX/BLX, exclusive accesses, hints, barriers, CPS,
-  MRS/MSR, SVC, and BKPT; and
+- the complete Cortex-M0-compatible integer Thumb surface plus a bounded,
+  explicit Cortex-M3 extension surface: IT blocks, CBZ/CBNZ, MOVW/MOVT,
+  SDIV/UDIV, wide byte/halfword/word scalar transfers, TBB/TBH, word
+  LDREX/STREX, CLREX, BASEPRI, FAULTMASK, barriers, and the corresponding
+  Armv7-M status views; and
 - exact raw bytes, width, conventional mnemonic, and complete before/after
   snapshots for every committed instruction.
 
@@ -37,6 +36,11 @@ and return, SysTick, MPU regions, debug/trace, WIC, AHB timing, bit-band bus
 translation, and vendor peripherals belong to later SoC/interconnect cells.
 SVC and non-sentinel BKPT therefore produce typed atomic boundary events.
 `BKPT #0` is the deterministic teaching halt sentinel.
+
+The remaining optional or larger Thumb-2 encodings (including coprocessor,
+long-multiply, dual-register, bitfield, and saturation families) are rejected
+atomically rather than approximated. They are tracked as a later instruction-
+surface expansion, independently of the core/SoC boundary completed here.
 
 ## 3. State and memory rules
 
@@ -80,8 +84,8 @@ before cloning, loading, or allocating, then atomically performs load and run.
 
 The cell is complete only when it has:
 
-1. decode classification across supported 16-bit and 32-bit families with
-   reserved-neighbor witnesses;
+1. decode classification across the bounded supported 16-bit and 32-bit
+   families with reserved-neighbor witnesses;
 2. behavior tests for flags, low/high registers, both stack pointers,
    PC-relative semantics, IT execution, scalar and multiple memory, exclusive
    accesses, control flow, special registers, and typed atomic faults;
