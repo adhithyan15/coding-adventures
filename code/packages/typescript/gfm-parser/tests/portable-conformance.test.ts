@@ -44,6 +44,10 @@ function assertPortableCase(testCase: PortableCase): void {
 }
 
 const corpus = loadCorpus();
+const corruptionCase = corpus.cases[0];
+if (corruptionCase === undefined) {
+  throw new Error("portable GFM corpus must contain a corruption witness case");
+}
 
 describe("TE04 portable GFM extension conformance", () => {
   it("loads the closed v1 corpus without a package-local case filter", () => {
@@ -57,31 +61,28 @@ describe("TE04 portable GFM extension conformance", () => {
   }
 
   it("detects independent source corruption", () => {
-    const testCase = corpus.cases[0]!;
     expect(() =>
       assertPortableCase({
-        ...testCase,
-        source: `${testCase.source}\nportable corruption witness\n`,
+        ...corruptionCase,
+        source: `${corruptionCase.source}\nportable corruption witness\n`,
       }),
     ).toThrow();
   });
 
   it("detects independent expected-AST corruption", () => {
-    const testCase = corpus.cases[0]!;
     expect(() =>
       assertPortableCase({
-        ...testCase,
+        ...corruptionCase,
         expected_ast: { type: "document", children: [] },
       }),
     ).toThrow();
   });
 
   it("detects independent expected-HTML corruption", () => {
-    const testCase = corpus.cases[0]!;
     expect(() =>
       assertPortableCase({
-        ...testCase,
-        expected_html: `${testCase.expected_html}<!-- corruption witness -->`,
+        ...corruptionCase,
+        expected_html: `${corruptionCase.expected_html}<!-- corruption witness -->`,
       }),
     ).toThrow();
   });
