@@ -35,6 +35,16 @@
   - `release_classes.csv` gains the `py2-int-print` rows: one class,
     {2.2, 2.7.18}, represented by 2.2.
 
+### Security
+
+- `compile_cst` refuses a tree whose `print` shape belongs to the other
+  profile's grammar. A `print_stmt` lowers only under `py2`, and a call-form
+  `print(…)` only under `py3`. Before this, a Python 3 tree compiled under a
+  Python 2 release lowered `print()` as a newline, but Python 2 prints `()`.
+  Source paths always parse with the release's own grammar, so only direct
+  `compile_cst` callers could reach this. The security review found it, and
+  the test is `a_tree_from_the_other_profiles_grammar_is_refused`.
+
 ### Changed
 - Error messages name the release's subset (`py-int-print` or
   `py2-int-print`) instead of always `py-int-print`. A release with no

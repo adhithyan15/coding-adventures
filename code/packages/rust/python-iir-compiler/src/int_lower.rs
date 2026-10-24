@@ -204,6 +204,15 @@ pub(crate) struct Lowering<'a> {
 }
 
 impl<'a> Lowering<'a> {
+    /// Whether this release's profile adds `rule` to its grammars
+    /// ([`crate::profiles::PROFILE_RULES`]). The lowering uses it to refuse a
+    /// tree shaped by another profile's grammar.
+    fn profile_owns_rule(&self, rule: &str) -> bool {
+        crate::profiles::PROFILE_RULES
+            .iter()
+            .any(|(profile, rules)| *profile == self.profile.name && rules.contains(&rule))
+    }
+
     pub(crate) fn new(release: &'a str, profile: &'a ReleaseProfile) -> Self {
         Self {
             release,
@@ -258,6 +267,16 @@ impl<'a> Lowering<'a> {
                 ASTNodeOrToken::Node(small) if small.rule_name == "small_stmt" => match small.children.as_slice() {
                     // Python 2: `small_stmt = print_stmt | expression`.
                     [ASTNodeOrToken::Node(print)] if print.rule_name == "print_stmt" => {
+                        // A caller-supplied tree (`compile_cst`) may come from
+                        // another release's grammar. Only a profile whose
+                        // grammars define `print_stmt` may lower one: under
+                        // `py3`, `print x` is a SyntaxError, not output.
+                        if !self.profile_owns_rule("print_stmt") {
+                            return Err(self.unsupported(
+                                print,
+                                format!("a `print` statement is not in {}; this tree is not from this release's grammar", self.profile.subset),
+                            ));
+                        }
                         self.lower_print_stmt(print)?;
                     }
                     _ => {
@@ -379,6 +398,20 @@ impl<'a> Lowering<'a> {
                 small,
                 callee,
                 format!("only `print` is in {}, not {}", self.profile.subset, shown(&callee.value)),
+            ));
+        }
+        // In a `py2` grammar `print` is a keyword, so a call-shaped `print(…)`
+        // can only reach here in a tree from a Python 3 grammar. Lowering it
+        // under `py2` would be wrong, not just lenient: Python 2 prints
+        // `print ()` as `()` and `print (1, 2)` as the tuple `(1, 2)`.
+        if self.profile_owns_rule("print_stmt") {
+            return Err(self.unsupported_token(
+                small,
+                callee,
+                format!(
+                    "`print` is a statement in {}; a call-form `print(…)` tree is not from this release's grammar",
+                    self.profile.subset
+                ),
             ));
         }
         match self.call_arguments(suffix)?.as_slice() {
