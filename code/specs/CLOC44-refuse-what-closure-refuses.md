@@ -76,6 +76,41 @@ one refusal per private name, plus the static-field extra. `run_compiler`
 returns `CompilerError::Refused` before reading inputs for compilation, so
 nothing is written.
 
+## Slice 2: `return` and `new.target` outside a function
+
+Both are `JSC_PARSE_ERROR`s, reported at the statement's or expression's
+first token, for every occurrence and at every level. Upstream's rule is
+Closure's, not quite ECMA-262's: an arrow counts as a function even for
+`new.target` at top level, and a class static block or field initialiser
+does not count:
+
+| input | upstream |
+|---|---|
+| `return;return;` | columns 0 and 7, "return must be inside function" |
+| `if(a){return}`, `l:{return}` | refused |
+| `x=()=>{return 1}`, `class A{m(){return new.target}}` | compiled |
+| `()=>new.target` (top level) | compiled |
+| `class A{static{return}}`, `class A{static{new.target}}` | refused |
+| `class A{x=new.target}` | refused, "new.target must be inside a function" |
+| `class A{#x}return;` | private element at 8, then `return` at 11 |
+
+These need structure that tokens can't give, so `refusals::scan` parses the
+file with `parse_javascript_typed` and walks the tree iteratively
+(`outside_function`). It parses only when a `return` or `new . target` token
+is present, so other files pay nothing. Function-like nodes (declarations,
+expressions, methods, accessors, generators, async forms and arrows) turn
+function context on, which covers their parameters as well as their
+bodies. `static_block` and `class_field_declaration` turn it off. A file
+that doesn't parse yields no slice-2 refusals. SIMPLE and ADVANCED then
+report their own parse failure; WHITESPACE_ONLY, which never parses,
+compiles the file as before. That is fail-open, but only for inputs the
+parser can't handle anyway, such as nesting past its rule-depth limit. All refusals are then sorted by position, so the kinds
+interleave the way upstream prints them.
+
+`simple-newtarget` and `simple-try-catch` now assert the identical refusal.
+No ladder rung changes, because the ladder's `new_target` and `try_catch`
+rungs use these constructs inside functions.
+
 ## The ladder's third verdict
 
 A rung upstream refuses records that refusal in its own fixture:
@@ -100,9 +135,7 @@ The refusals already captured in `tests/oracle/upstream-refusals-v20260915.json`
 |---|---|
 | `simple-import`, `simple-export`, `simple-importexpr` | `JSC_INVALID_MODULE_PATH` (module resolution) |
 | `simple-importmeta` | `JSC_CANNOT_CONVERT` (`import.meta`) |
-| `simple-newtarget` | `JSC_PARSE_ERROR` "new.target must be inside a function" |
 | `simple-super` | `JSC_INVALID_SUPER_ACCESS` |
-| `simple-try-catch` | `JSC_PARSE_ERROR` "return must be inside function" |
 | `simple-with` | `JSC_USE_OF_WITH` |
 
 Found since, and not yet captured as fixtures:
