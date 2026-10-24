@@ -52,6 +52,10 @@ impl X509OcspResponseDataVersion {
 }
 
 /// One structurally decoded RFC 6960 responder identifier.
+// Retaining the fully validated allocation-free Name makes this variant much
+// larger than the borrowed key-hash slice. Boxing would violate this crate's
+// no-allocation boundary, so the size difference is deliberate and bounded.
+#[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq)]
 pub enum X509OcspResponderId<'a> {
     /// An explicitly tagged RFC 5280 Name. No name semantics are implied.

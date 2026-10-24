@@ -172,7 +172,9 @@ fn required_fields_are_enforced_in_schema_order() {
         X509OcspResponseDataErrorKind::MissingResponderId
     );
     assert_eq!(
-        decode(&sequence(&[responder.clone()])).unwrap_err().kind(),
+        decode(&sequence(std::slice::from_ref(&responder)))
+            .unwrap_err()
+            .kind(),
         X509OcspResponseDataErrorKind::MissingProducedAt
     );
     assert_eq!(
