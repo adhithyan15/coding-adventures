@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.4.0 - Unreleased - the grammar tells a regex from a division (LANG84 6a)
+
+* **`compile_source` parses with `parse_javascript_cst_bounded`** (new in
+  `javascript-parser` 0.65.0) instead of the removed
+  `parse_javascript_cst_division_only`. The lexer no longer has `REGEX`
+  deleted from its grammar; es2020.tokens's F10 mode table reads a `/` after
+  a value as division, so the compiled subset means what it did.
+* **Gate.** Old and new `compile_source` were diffed (`Debug` of the
+  `IIRModule`, or the error text) over 18,775 inputs: the repository's 996
+  `.js` files under 64 KB, 11,651 string literals from the JavaScript,
+  closure and lang-aot Rust sources, and 6,128 generated `/`-heavy edge
+  cases. 18,039 matched exactly (2,673 compiled modules, 15,366 identical
+  errors). No module differed, nothing switched between compiling and
+  failing, and nothing panicked. The other 737 are programs both sides
+  reject with a different error text: 52 are the reworded spine and
+  exponent messages, and the rest hold a `/…/` that the old lexer split into
+  `/`, operand, `/` and failed to parse, while the new one lexes a `REGEX`
+  and fails later, usually at the subset check ("unsupported JavaScript
+  expression in native VM pilot").
+* `tests/cst_walk.rs`: the allowed parser import is
+  `parse_javascript_cst_bounded`, and `compile_ast` now agrees with
+  `compile_source` on the regex-aware `parse_javascript_typed` CST for *every*
+  case, slashes included. Before 6a only slash-free sources agreed.
+
 ## 0.3.0 - Unreleased - walk the parse tree, not the typed AST (LANG84)
 
 LANG84 decision 6: *the IIR compiler walks the parse tree*. No hand-written

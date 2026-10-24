@@ -205,6 +205,75 @@ group template:
   TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*`/
 
 # ============================================================================
+# Declarative lexer modes (F10): regex-vs-division disambiguation
+# ============================================================================
+#
+# A `/` starts a REGEX literal in expression position but is DIVISION in
+# operand position, so `a/b/c` must not lex as `a` + regex `/b/` + `c`.
+# This is the same table es2025.tokens carries (see its header comment
+# for the full explanation), restricted to the token names and keywords
+# this edition defines (LANG84 phase 6a). A program starts in `default`
+# (expression position); after a value-producing token the lexer switches
+# to `div`, whose two overrides make `/` and `/=` division.
+#
+# `template` / `template_div` keep `${...}` substitutions working: see
+# es2025.tokens for the first-slice limits (no nested braces).
+
+start_mode: default
+
+group div:
+  SLASH_EQUALS = "/="
+  SLASH        = "/"
+
+group template_div:
+  SLASH_EQUALS    = "/="
+  SLASH           = "/"
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*`/
+
+transitions:
+  # ── Template substitution entry/exit (gap-044, first slice) ──────────────
+  # After a template opener, enter flat `template` mode so TEMPLATE_TAIL/
+  # MIDDLE patterns are tried before the inherited RBRACE.
+  on TEMPLATE_HEAD   -> set-mode template
+  on TEMPLATE_MIDDLE -> set-mode template
+
+  # Inside `${...}`, after a value-producing NAME, switch to `template_div`
+  # (like `div` but still carries TEMPLATE_TAIL/MIDDLE as own patterns).
+  # The in_mode guard must come BEFORE the general NAME rule below, because
+  # first-match-wins would otherwise fire the general rule in template mode.
+  on NAME in template      -> set-mode template_div
+  on NAME in template_div  -> set-mode template_div
+
+  # Closing the substitution: TEMPLATE_TAIL is value-producing → div.
+  on TEMPLATE_TAIL -> set-mode div
+
+  # ── Regex-vs-division (gap-115, gap-119) ─────────────────────────────────
+  # Value-producing tokens -> the next `/` is DIVISION. (One rule per line:
+  # the transition parser reads each indented line as a complete rule.)
+  on (NAME | NUMBER | STRING | REGEX | TEMPLATE_NO_SUB | RPAREN | RBRACKET) -> set-mode div
+  on KEYWORD="this"  -> set-mode div
+  on KEYWORD="super" -> set-mode div
+  on KEYWORD="true"  -> set-mode div
+  on KEYWORD="false" -> set-mode div
+  on KEYWORD="null"  -> set-mode div
+
+  # Operators, openers, separators -> the next `/` is a REGEX.
+  on (LPAREN | LBRACKET | LBRACE | COMMA | SEMICOLON | COLON | DOT | EQUALS | ARROW | QUESTION | ELLIPSIS | PLUS | MINUS | STAR | SLASH | PERCENT | STAR_STAR | EQUALS_EQUALS | NOT_EQUALS | STRICT_EQUALS | STRICT_NOT_EQUALS | LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS | AND_AND | OR_OR | BANG | TILDE | AMPERSAND | PIPE | CARET | LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT | PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS | SLASH_EQUALS | PERCENT_EQUALS | STAR_STAR_EQUALS | AMPERSAND_EQUALS | PIPE_EQUALS | CARET_EQUALS | LEFT_SHIFT_EQUALS | RIGHT_SHIFT_EQUALS | UNSIGNED_RIGHT_SHIFT_EQUALS) -> set-mode default
+  on KEYWORD="return"     -> set-mode default
+  on KEYWORD="typeof"     -> set-mode default
+  on KEYWORD="delete"     -> set-mode default
+  on KEYWORD="void"       -> set-mode default
+  on KEYWORD="in"         -> set-mode default
+  on KEYWORD="instanceof" -> set-mode default
+  on KEYWORD="new"        -> set-mode default
+  on KEYWORD="do"         -> set-mode default
+  on KEYWORD="else"       -> set-mode default
+  on KEYWORD="case"       -> set-mode default
+  on KEYWORD="yield"      -> set-mode default
+  on KEYWORD="throw"      -> set-mode default
+
+# ============================================================================
 # Skip patterns
 # ============================================================================
 
