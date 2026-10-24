@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C197-dinchariya-review",
+    "language": "punjabi",
+    "chapter": 197,
+    "sequence": 10740,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:55793abbc3293497"
+  },
+  "findings": []
+}
