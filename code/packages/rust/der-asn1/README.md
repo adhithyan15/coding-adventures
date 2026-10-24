@@ -34,7 +34,10 @@ selecting the schema tag and interpreting the surrounding choice. SEQUENCE, SET,
 schema-selected context-specific IMPLICIT constructed values, and explicit
 context wrappers can be opened without recursion or allocation. Every
 constructed cursor shares the same depth and total-element budget. Errors
-contain only a category and local byte offset.
+contain only a category and local byte offset. A schema can frame an exact DER
+document embedded inside an existing element while deriving its root depth
+from that container and retaining the decoder's total-element count; the
+schema remains responsible for binding the embedded input to the container.
 
 This crate does not parse X.509 fields, time or string semantics, PEM, paths,
 signatures, trust roots, TLS, or network traffic. Successful decoding proves
