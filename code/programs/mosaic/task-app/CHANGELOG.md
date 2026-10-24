@@ -4,6 +4,11 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+Entries added after `task-app-v0.5.10` accumulate here until the next version is
+cut.
+
+## [0.5.10] - 2026-10-24
+
 ### Fixed
 
 - Preserve the 260-pixel board-column minimum in both themes and across Qt's
@@ -15,9 +20,6 @@ All notable changes to the `task-app` web program are documented here.
 - Record the completed immutable v0.5.9 publication and independent asset audit
   in the README, completion spec, and backlog (#17999); artifact coverage and
   unsigned-platform limitations remain unchanged.
-
-Entries added after `task-app-v0.5.9` accumulate here until the next version is
-cut.
 
 ## [0.5.9] - 2026-10-22
 
