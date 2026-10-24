@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R405-review-398-405
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 22400
+chapter: 405
+type: review
+headword: (dialogue)
+gloss: a review of the words from Passengers and Porters to Speed and Bumps
+concept_tag: REVIEW
+prerequisites: [HI-C398-musafir, HI-C398-kuli, HI-C398-dhhona, HI-C398-ladna, HI-C398-bithana, HI-C399-lain, HI-C399-injan, HI-C399-slipar, HI-C399-siti, HI-C399-sarakna, HI-C400-araksan, HI-C400-barth, HI-C400-pratiksa, HI-C400-jacna, HI-C400-ravana, HI-C401-phatak, HI-C401-signal, HI-C401-janksan, HI-C401-laghna, HI-C401-takna, HI-C402-gathri, HI-C402-ataici, HI-C402-sarkana, HI-C402-ughna, HI-C402-sustana, HI-C403-staind, HI-C403-rahgir, HI-C403-futpath, HI-C403-tahalna, HI-C403-haphna, HI-C404-traifik, HI-C404-jam, HI-C404-motarsaikil, HI-C404-rengna, HI-C404-hakna, HI-C405-gati, HI-C405-gaddha, HI-C405-kandaktar, HI-C405-uchalnaintr, HI-C405-kattna]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C398-MUSAFIR398-01, HI-LEX-C398-MUSAFIR398-02, HI-LEX-C398-MUSAFIR398-03, HI-LEX-C398-MUSAFIR398-04, HI-LEX-C398-MUSAFIR398-05, HI-LEX-C399-LAIN399-01, HI-LEX-C399-LAIN399-02, HI-LEX-C399-LAIN399-03, HI-LEX-C399-LAIN399-04, HI-LEX-C399-LAIN399-05, HI-LEX-C400-AARAKSHAN400-01, HI-LEX-C400-AARAKSHAN400-02, HI-LEX-C400-AARAKSHAN400-03, HI-LEX-C400-AARAKSHAN400-04, HI-LEX-C400-AARAKSHAN400-05, HI-LEX-C401-PHATAK401-01, HI-LEX-C401-PHATAK401-02, HI-LEX-C401-PHATAK401-03, HI-LEX-C401-PHATAK401-04, HI-LEX-C401-PHATAK401-05, HI-LEX-C402-GATHRI402-01, HI-LEX-C402-GATHRI402-02, HI-LEX-C402-GATHRI402-03, HI-LEX-C402-GATHRI402-04, HI-LEX-C402-GATHRI402-05, HI-LEX-C403-STAIND403-01, HI-LEX-C403-STAIND403-02, HI-LEX-C403-STAIND403-03, HI-LEX-C403-STAIND403-04, HI-LEX-C403-STAIND403-05, HI-LEX-C404-TRAIFIK404-01, HI-LEX-C404-TRAIFIK404-02, HI-LEX-C404-TRAIFIK404-03, HI-LEX-C404-TRAIFIK404-04, HI-LEX-C404-TRAIFIK404-05, HI-LEX-C405-GATI405-01, HI-LEX-C405-GATI405-02, HI-LEX-C405-GATI405-03, HI-LEX-C405-GATI405-04, HI-LEX-C405-GATI405-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C398-MUSAFIR398-01, HI-LEX-C398-MUSAFIR398-02, HI-LEX-C398-MUSAFIR398-03, HI-LEX-C398-MUSAFIR398-04, HI-LEX-C398-MUSAFIR398-05, HI-LEX-C399-LAIN399-01, HI-LEX-C399-LAIN399-02, HI-LEX-C399-LAIN399-03, HI-LEX-C399-LAIN399-04, HI-LEX-C399-LAIN399-05, HI-LEX-C400-AARAKSHAN400-01, HI-LEX-C400-AARAKSHAN400-02, HI-LEX-C400-AARAKSHAN400-03, HI-LEX-C400-AARAKSHAN400-04, HI-LEX-C400-AARAKSHAN400-05, HI-LEX-C401-PHATAK401-01, HI-LEX-C401-PHATAK401-02, HI-LEX-C401-PHATAK401-03, HI-LEX-C401-PHATAK401-04, HI-LEX-C401-PHATAK401-05, HI-LEX-C402-GATHRI402-01, HI-LEX-C402-GATHRI402-02, HI-LEX-C402-GATHRI402-03, HI-LEX-C402-GATHRI402-04, HI-LEX-C402-GATHRI402-05, HI-LEX-C403-STAIND403-01, HI-LEX-C403-STAIND403-02, HI-LEX-C403-STAIND403-03, HI-LEX-C403-STAIND403-04, HI-LEX-C403-STAIND403-05, HI-LEX-C404-TRAIFIK404-01, HI-LEX-C404-TRAIFIK404-02, HI-LEX-C404-TRAIFIK404-03, HI-LEX-C404-TRAIFIK404-04, HI-LEX-C404-TRAIFIK404-05, HI-LEX-C405-GATI405-01, HI-LEX-C405-GATI405-02, HI-LEX-C405-GATI405-03, HI-LEX-C405-GATI405-04, HI-LEX-C405-GATI405-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C398-musafir, HI-C398-kuli, HI-C398-dhhona, HI-C398-ladna, HI-C398-bithana, HI-C399-lain, HI-C399-injan, HI-C399-slipar, HI-C399-siti, HI-C399-sarakna, HI-C400-araksan, HI-C400-barth, HI-C400-pratiksa, HI-C400-jacna, HI-C400-ravana, HI-C401-phatak, HI-C401-signal, HI-C401-janksan, HI-C401-laghna, HI-C401-takna, HI-C402-gathri, HI-C402-ataici, HI-C402-sarkana, HI-C402-ughna, HI-C402-sustana, HI-C403-staind, HI-C403-rahgir, HI-C403-futpath, HI-C403-tahalna, HI-C403-haphna, HI-C404-traifik, HI-C404-jam, HI-C404-motarsaikil, HI-C404-rengna, HI-C404-hakna, HI-C405-gati, HI-C405-gaddha, HI-C405-kandaktar, HI-C405-uchalnaintr, HI-C405-kattna]
+---
+
+# Looking back: from Passengers and Porters to Speed and Bumps
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C398-MUSAFIR398-01, HI-LEX-C398-MUSAFIR398-02] -->
+
+[PAUSE 3s] Say the Hindi for a traveller and a porter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C398-MUSAFIR398-01, HI-LEX-C398-MUSAFIR398-02, HI-LEX-C398-MUSAFIR398-03, HI-LEX-C398-MUSAFIR398-04, HI-LEX-C398-MUSAFIR398-05, HI-LEX-C399-LAIN399-01, HI-LEX-C399-LAIN399-02, HI-LEX-C399-LAIN399-03, HI-LEX-C399-LAIN399-04, HI-LEX-C399-LAIN399-05, HI-LEX-C400-AARAKSHAN400-01, HI-LEX-C400-AARAKSHAN400-02, HI-LEX-C400-AARAKSHAN400-03, HI-LEX-C400-AARAKSHAN400-04, HI-LEX-C400-AARAKSHAN400-05, HI-LEX-C401-PHATAK401-01, HI-LEX-C401-PHATAK401-02, HI-LEX-C401-PHATAK401-03, HI-LEX-C401-PHATAK401-04, HI-LEX-C401-PHATAK401-05, HI-LEX-C402-GATHRI402-01, HI-LEX-C402-GATHRI402-02, HI-LEX-C402-GATHRI402-03, HI-LEX-C402-GATHRI402-04, HI-LEX-C402-GATHRI402-05, HI-LEX-C403-STAIND403-01, HI-LEX-C403-STAIND403-02, HI-LEX-C403-STAIND403-03, HI-LEX-C403-STAIND403-04, HI-LEX-C403-STAIND403-05, HI-LEX-C404-TRAIFIK404-01, HI-LEX-C404-TRAIFIK404-02, HI-LEX-C404-TRAIFIK404-03, HI-LEX-C404-TRAIFIK404-04, HI-LEX-C404-TRAIFIK404-05, HI-LEX-C405-GATI405-01, HI-LEX-C405-GATI405-02, HI-LEX-C405-GATI405-03, HI-LEX-C405-GATI405-04, HI-LEX-C405-GATI405-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a traveller, a porter, to haul, to load (onto), to seat (someone)]
+- [YOU SAY: a line, an engine, a sleeper carriage, a whistle, to slide]
+- [YOU SAY: a reservation (of a seat), a berth, waiting, to check, setting off]
+- [YOU SAY: a gate, a signal, a junction, to step over, to look out (at)]
+- [YOU SAY: a bundle, a suitcase, to slide (something), to doze, to rest a while]
+- [YOU SAY: a stand, a passer-by, a pavement, to take a stroll, to pant]
+- [YOU SAY: traffic, a traffic jam, a motorcycle, to crawl, to drive (animals)]
+- [YOU SAY: speed (formal), a pothole, a conductor, to bounce, to be cut]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C398-MUSAFIR398-01, HI-LEX-C398-MUSAFIR398-02, HI-LEX-C398-MUSAFIR398-03, HI-LEX-C398-MUSAFIR398-04, HI-LEX-C398-MUSAFIR398-05, HI-LEX-C399-LAIN399-01, HI-LEX-C399-LAIN399-02, HI-LEX-C399-LAIN399-03, HI-LEX-C399-LAIN399-04, HI-LEX-C399-LAIN399-05, HI-LEX-C400-AARAKSHAN400-01, HI-LEX-C400-AARAKSHAN400-02, HI-LEX-C400-AARAKSHAN400-03, HI-LEX-C400-AARAKSHAN400-04, HI-LEX-C400-AARAKSHAN400-05, HI-LEX-C401-PHATAK401-01, HI-LEX-C401-PHATAK401-02, HI-LEX-C401-PHATAK401-03, HI-LEX-C401-PHATAK401-04, HI-LEX-C401-PHATAK401-05, HI-LEX-C402-GATHRI402-01, HI-LEX-C402-GATHRI402-02, HI-LEX-C402-GATHRI402-03, HI-LEX-C402-GATHRI402-04, HI-LEX-C402-GATHRI402-05, HI-LEX-C403-STAIND403-01, HI-LEX-C403-STAIND403-02, HI-LEX-C403-STAIND403-03, HI-LEX-C403-STAIND403-04, HI-LEX-C403-STAIND403-05, HI-LEX-C404-TRAIFIK404-01, HI-LEX-C404-TRAIFIK404-02, HI-LEX-C404-TRAIFIK404-03, HI-LEX-C404-TRAIFIK404-04, HI-LEX-C404-TRAIFIK404-05, HI-LEX-C405-GATI405-01, HI-LEX-C405-GATI405-02, HI-LEX-C405-GATI405-03, HI-LEX-C405-GATI405-04, HI-LEX-C405-GATI405-05] -->
+
+[PAUSE 3s] A traveller? (**मुसाफ़िर**, *musāfir*.) A porter? (**कुली**, *kulī*.) To haul? (**ढोना**, *ḍhonā*.) To load (onto)? (**लादना**, *lādnā*.) To seat (someone)? (**बिठाना**, *biṭhānā*.) A line? (**लाइन**, *lāin*.) An engine? (**इंजन**, *injan*.) A sleeper carriage? (**स्लीपर**, *slīpar*.) A whistle? (**सीटी**, *sīṭī*.) To slide? (**सरकना**, *saraknā*.) A reservation (of a seat)? (**आरक्षण**, *ārakṣaṇ*.) A berth? (**बर्थ**, *barth*.) Waiting? (**प्रतीक्षा**, *pratīkṣā*.) To check? (**जाँचना**, *jā̃cnā*.) Setting off? (**रवाना**, *ravānā*.) A gate? (**फाटक**, *phāṭak*.) A signal? (**सिग्नल**, *signal*.) A junction? (**जंक्शन**, *jaṅkśan*.) To step over? (**लाँघना**, *lā̃ghnā*.) To look out (at)? (**ताकना**, *tāknā*.) A bundle? (**गठरी**, *gaṭhrī*.) A suitcase? (**अटैची**, *aṭaicī*.) To slide (something)? (**सरकाना**, *sarkānā*.) To doze? (**ऊँघना**, *ū̃ghnā*.) To rest a while? (**सुस्ताना**, *sustānā*.) A stand? (**स्टैंड**, *sṭaiṇḍ*.) A passer-by? (**राहगीर**, *rāhgīr*.) A pavement? (**फ़ुटपाथ**, *fuṭpāth*.) To take a stroll? (**टहलना**, *ṭahalnā*.) To pant? (**हाँफना**, *hā̃phnā*.) Traffic? (**ट्रैफ़िक**, *ṭraifik*.) A traffic jam? (**जाम**, *jām*.) A motorcycle? (**मोटरसाइकिल**, *moṭarsāikil*.) To crawl? (**रेंगना**, *reṅgnā*.) To drive (animals)? (**हाँकना**, *hā̃knā*.) Speed (formal)? (**गति**, *gati*.) A pothole? (**गड्ढा**, *gaḍḍhā*.) A conductor? (**कंडक्टर**, *kaṇḍakṭar*.) To bounce? (**उछलना**, *uchalnā*.) To be cut? (**कटना**, *kaṭnā*.)
+`;export{t};

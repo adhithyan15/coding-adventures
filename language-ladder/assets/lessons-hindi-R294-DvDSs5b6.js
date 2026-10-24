@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R295-review-288-295
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 16400
+chapter: 295
+type: review
+headword: (dialogue)
+gloss: a review of the words from A Theft in the Lane to The Case in Court
+concept_tag: REVIEW
+prerequisites: [HI-C288-cori, HI-C288-curana, HI-C288-caukidar, HI-C288-gavah, HI-C288-bahar, HI-C289-jebkatra, HI-C289-chinna, HI-C289-jhapatna, HI-C289-farar, HI-C289-picha, HI-C290-sikayat, HI-C290-riport, HI-C290-likhvana, HI-C290-daroga, HI-C290-havalat, HI-C291-casmdid, HI-C291-bayan, HI-C291-pahcanna, HI-C291-sak, HI-C291-ghurna, HI-C292-daku, HI-C292-lutna, HI-C292-dakaiti, HI-C292-banduq, HI-C292-badhna, HI-C293-thagna, HI-C293-dhokha, HI-C293-risvat, HI-C293-badmas, HI-C293-naqli, HI-C294-taftis, HI-C294-surag, HI-C294-jasus, HI-C294-sabut, HI-C294-khojna, HI-C295-giraftarkarna, HI-C295-muqadma, HI-C295-saza, HI-C295-jurmana, HI-C295-hathkari]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C288-CHORI288-01, HI-LEX-C288-CHORI288-02, HI-LEX-C288-CHORI288-03, HI-LEX-C288-CHORI288-04, HI-LEX-C288-CHORI288-05, HI-LEX-C289-BHAGA289-01, HI-LEX-C289-BHAGA289-02, HI-LEX-C289-BHAGA289-03, HI-LEX-C289-BHAGA289-04, HI-LEX-C289-BHAGA289-05, HI-LEX-C290-THANA290-01, HI-LEX-C290-THANA290-02, HI-LEX-C290-THANA290-03, HI-LEX-C290-THANA290-04, HI-LEX-C290-THANA290-05, HI-LEX-C291-GAVAHI291-01, HI-LEX-C291-GAVAHI291-02, HI-LEX-C291-GAVAHI291-03, HI-LEX-C291-GAVAHI291-04, HI-LEX-C291-GAVAHI291-05, HI-LEX-C292-DAKAITI292-01, HI-LEX-C292-DAKAITI292-02, HI-LEX-C292-DAKAITI292-03, HI-LEX-C292-DAKAITI292-04, HI-LEX-C292-DAKAITI292-05, HI-LEX-C293-THAGI293-01, HI-LEX-C293-THAGI293-02, HI-LEX-C293-THAGI293-03, HI-LEX-C293-THAGI293-04, HI-LEX-C293-THAGI293-05, HI-LEX-C294-TAFTISH294-01, HI-LEX-C294-TAFTISH294-02, HI-LEX-C294-TAFTISH294-03, HI-LEX-C294-TAFTISH294-04, HI-LEX-C294-TAFTISH294-05, HI-LEX-C295-ADALAT295-01, HI-LEX-C295-ADALAT295-02, HI-LEX-C295-ADALAT295-03, HI-LEX-C295-ADALAT295-04, HI-LEX-C295-ADALAT295-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C288-CHORI288-01, HI-LEX-C288-CHORI288-02, HI-LEX-C288-CHORI288-03, HI-LEX-C288-CHORI288-04, HI-LEX-C288-CHORI288-05, HI-LEX-C289-BHAGA289-01, HI-LEX-C289-BHAGA289-02, HI-LEX-C289-BHAGA289-03, HI-LEX-C289-BHAGA289-04, HI-LEX-C289-BHAGA289-05, HI-LEX-C290-THANA290-01, HI-LEX-C290-THANA290-02, HI-LEX-C290-THANA290-03, HI-LEX-C290-THANA290-04, HI-LEX-C290-THANA290-05, HI-LEX-C291-GAVAHI291-01, HI-LEX-C291-GAVAHI291-02, HI-LEX-C291-GAVAHI291-03, HI-LEX-C291-GAVAHI291-04, HI-LEX-C291-GAVAHI291-05, HI-LEX-C292-DAKAITI292-01, HI-LEX-C292-DAKAITI292-02, HI-LEX-C292-DAKAITI292-03, HI-LEX-C292-DAKAITI292-04, HI-LEX-C292-DAKAITI292-05, HI-LEX-C293-THAGI293-01, HI-LEX-C293-THAGI293-02, HI-LEX-C293-THAGI293-03, HI-LEX-C293-THAGI293-04, HI-LEX-C293-THAGI293-05, HI-LEX-C294-TAFTISH294-01, HI-LEX-C294-TAFTISH294-02, HI-LEX-C294-TAFTISH294-03, HI-LEX-C294-TAFTISH294-04, HI-LEX-C294-TAFTISH294-05, HI-LEX-C295-ADALAT295-01, HI-LEX-C295-ADALAT295-02, HI-LEX-C295-ADALAT295-03, HI-LEX-C295-ADALAT295-04, HI-LEX-C295-ADALAT295-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C288-cori, HI-C288-curana, HI-C288-caukidar, HI-C288-gavah, HI-C288-bahar, HI-C289-jebkatra, HI-C289-chinna, HI-C289-jhapatna, HI-C289-farar, HI-C289-picha, HI-C290-sikayat, HI-C290-riport, HI-C290-likhvana, HI-C290-daroga, HI-C290-havalat, HI-C291-casmdid, HI-C291-bayan, HI-C291-pahcanna, HI-C291-sak, HI-C291-ghurna, HI-C292-daku, HI-C292-lutna, HI-C292-dakaiti, HI-C292-banduq, HI-C292-badhna, HI-C293-thagna, HI-C293-dhokha, HI-C293-risvat, HI-C293-badmas, HI-C293-naqli, HI-C294-taftis, HI-C294-surag, HI-C294-jasus, HI-C294-sabut, HI-C294-khojna, HI-C295-giraftarkarna, HI-C295-muqadma, HI-C295-saza, HI-C295-jurmana, HI-C295-hathkari]
+---
+
+# Looking back: from A Theft in the Lane to The Case in Court
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C288-CHORI288-01, HI-LEX-C288-CHORI288-02] -->
+
+[PAUSE 3s] Say the Hindi for a theft and to steal.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C288-CHORI288-01, HI-LEX-C288-CHORI288-02, HI-LEX-C288-CHORI288-03, HI-LEX-C288-CHORI288-04, HI-LEX-C288-CHORI288-05, HI-LEX-C289-BHAGA289-01, HI-LEX-C289-BHAGA289-02, HI-LEX-C289-BHAGA289-03, HI-LEX-C289-BHAGA289-04, HI-LEX-C289-BHAGA289-05, HI-LEX-C290-THANA290-01, HI-LEX-C290-THANA290-02, HI-LEX-C290-THANA290-03, HI-LEX-C290-THANA290-04, HI-LEX-C290-THANA290-05, HI-LEX-C291-GAVAHI291-01, HI-LEX-C291-GAVAHI291-02, HI-LEX-C291-GAVAHI291-03, HI-LEX-C291-GAVAHI291-04, HI-LEX-C291-GAVAHI291-05, HI-LEX-C292-DAKAITI292-01, HI-LEX-C292-DAKAITI292-02, HI-LEX-C292-DAKAITI292-03, HI-LEX-C292-DAKAITI292-04, HI-LEX-C292-DAKAITI292-05, HI-LEX-C293-THAGI293-01, HI-LEX-C293-THAGI293-02, HI-LEX-C293-THAGI293-03, HI-LEX-C293-THAGI293-04, HI-LEX-C293-THAGI293-05, HI-LEX-C294-TAFTISH294-01, HI-LEX-C294-TAFTISH294-02, HI-LEX-C294-TAFTISH294-03, HI-LEX-C294-TAFTISH294-04, HI-LEX-C294-TAFTISH294-05, HI-LEX-C295-ADALAT295-01, HI-LEX-C295-ADALAT295-02, HI-LEX-C295-ADALAT295-03, HI-LEX-C295-ADALAT295-04, HI-LEX-C295-ADALAT295-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a theft, to steal, a watchman, a witness, outside]
+- [YOU SAY: a pickpocket, to snatch, to lunge, on the run, a chase]
+- [YOU SAY: a complaint, a report (to the police), to have written down, a police inspector, a lock-up]
+- [YOU SAY: an eyewitness, a statement, to recognize, suspicion, to stare]
+- [YOU SAY: a bandit, to rob, a robbery (by a gang), a gun, to tie up]
+- [YOU SAY: to cheat, a deception, a bribe, a crook, fake]
+- [YOU SAY: an investigation, a clue, a detective, evidence, to search for]
+- [YOU SAY: to arrest, a court case, a punishment, a fine, handcuffs]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C288-CHORI288-01, HI-LEX-C288-CHORI288-02, HI-LEX-C288-CHORI288-03, HI-LEX-C288-CHORI288-04, HI-LEX-C288-CHORI288-05, HI-LEX-C289-BHAGA289-01, HI-LEX-C289-BHAGA289-02, HI-LEX-C289-BHAGA289-03, HI-LEX-C289-BHAGA289-04, HI-LEX-C289-BHAGA289-05, HI-LEX-C290-THANA290-01, HI-LEX-C290-THANA290-02, HI-LEX-C290-THANA290-03, HI-LEX-C290-THANA290-04, HI-LEX-C290-THANA290-05, HI-LEX-C291-GAVAHI291-01, HI-LEX-C291-GAVAHI291-02, HI-LEX-C291-GAVAHI291-03, HI-LEX-C291-GAVAHI291-04, HI-LEX-C291-GAVAHI291-05, HI-LEX-C292-DAKAITI292-01, HI-LEX-C292-DAKAITI292-02, HI-LEX-C292-DAKAITI292-03, HI-LEX-C292-DAKAITI292-04, HI-LEX-C292-DAKAITI292-05, HI-LEX-C293-THAGI293-01, HI-LEX-C293-THAGI293-02, HI-LEX-C293-THAGI293-03, HI-LEX-C293-THAGI293-04, HI-LEX-C293-THAGI293-05, HI-LEX-C294-TAFTISH294-01, HI-LEX-C294-TAFTISH294-02, HI-LEX-C294-TAFTISH294-03, HI-LEX-C294-TAFTISH294-04, HI-LEX-C294-TAFTISH294-05, HI-LEX-C295-ADALAT295-01, HI-LEX-C295-ADALAT295-02, HI-LEX-C295-ADALAT295-03, HI-LEX-C295-ADALAT295-04, HI-LEX-C295-ADALAT295-05] -->
+
+[PAUSE 3s] A theft? (**चोरी**, *corī*.) To steal? (**चुराना**, *curānā*.) A watchman? (**चौकीदार**, *caukīdār*.) A witness? (**गवाह**, *gavāh*.) Outside? (**बाहर**, *bāhar*.) A pickpocket? (**जेबकतरा**, *jebkatrā*.) To snatch? (**छीनना**, *chīnnā*.) To lunge? (**झपटना**, *jhapaṭnā*.) On the run? (**फ़रार**, *farār*.) A chase? (**पीछा**, *pīchā*.) A complaint? (**शिकायत**, *śikāyat*.) A report (to the police)? (**रिपोर्ट**, *riporṭ*.) To have written down? (**लिखवाना**, *likhvānā*.) A police inspector? (**दरोगा**, *darogā*.) A lock-up? (**हवालात**, *havālāt*.) An eyewitness? (**चश्मदीद**, *caśmdīd*.) A statement? (**बयान**, *bayān*.) To recognize? (**पहचानना**, *pahcānnā*.) Suspicion? (**शक**, *śak*.) To stare? (**घूरना**, *ghūrnā*.) A bandit? (**डाकू**, *ḍākū*.) To rob? (**लूटना**, *lūṭnā*.) A robbery (by a gang)? (**डकैती**, *ḍakaitī*.) A gun? (**बंदूक़**, *bandūq*.) To tie up? (**बाँधना**, *bā̃dhnā*.) To cheat? (**ठगना**, *ṭhagnā*.) A deception? (**धोखा**, *dhokhā*.) A bribe? (**रिश्वत**, *riśvat*.) A crook? (**बदमाश**, *badmāś*.) Fake? (**नक़ली**, *naqlī*.) An investigation? (**तफ़्तीश**, *taftīś*.) A clue? (**सुराग़**, *surāġ*.) A detective? (**जासूस**, *jāsūs*.) Evidence? (**सबूत**, *sabūt*.) To search for? (**खोजना**, *khojnā*.) To arrest? (**गिरफ़्तार करना**, *giraftār karnā*.) A court case? (**मुक़दमा**, *muqadmā*.) A punishment? (**सज़ा**, *sazā*.) A fine? (**जुर्माना**, *jurmānā*.) Handcuffs? (**हथकड़ी**, *hathkaṛī*.)
+`;export{t};

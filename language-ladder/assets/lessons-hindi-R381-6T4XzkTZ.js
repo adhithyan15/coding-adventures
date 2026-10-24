@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R382-review-375-382
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 21040
+chapter: 382
+type: review
+headword: (dialogue)
+gloss: a review of the words from Hopes and Fears to Haste and Care
+concept_tag: REVIEW
+prerequisites: [HI-C375-asa, HI-C375-asanka, HI-C375-sanket, HI-C375-isara, HI-C375-rijhana, HI-C376-zahir, HI-C376-niscit, HI-C376-avasya, HI-C376-lazimi, HI-C376-ubharna, HI-C377-sthiti, HI-C377-halat, HI-C377-zarurat, HI-C377-musibat, HI-C377-phasana, HI-C378-avasyak, HI-C378-anivarya, HI-C378-keval, HI-C378-sivay, HI-C378-manakarna, HI-C379-yadi, HI-C379-anyatha, HI-C379-matra, HI-C379-khabardar, HI-C379-patakna, HI-C380-diqqat, HI-C380-badha, HI-C380-hal, HI-C380-atakna, HI-C380-ubarna, HI-C381-kas, HI-C381-afsos, HI-C381-satana, HI-C381-gavana, HI-C381-bhala, HI-C382-jaldbazi, HI-C382-laparvah, HI-C382-chalakna, HI-C382-masalna, HI-C382-nazuk]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C375-ASHA375-01, HI-LEX-C375-ASHA375-02, HI-LEX-C375-ASHA375-03, HI-LEX-C375-ASHA375-04, HI-LEX-C375-ASHA375-05, HI-LEX-C376-ZAHIR376-01, HI-LEX-C376-ZAHIR376-02, HI-LEX-C376-ZAHIR376-03, HI-LEX-C376-ZAHIR376-04, HI-LEX-C376-ZAHIR376-05, HI-LEX-C377-HALAT377-01, HI-LEX-C377-HALAT377-02, HI-LEX-C377-HALAT377-03, HI-LEX-C377-HALAT377-04, HI-LEX-C377-HALAT377-05, HI-LEX-C378-ZARURAT378-01, HI-LEX-C378-ZARURAT378-02, HI-LEX-C378-ZARURAT378-03, HI-LEX-C378-ZARURAT378-04, HI-LEX-C378-ZARURAT378-05, HI-LEX-C379-YADI379-01, HI-LEX-C379-YADI379-02, HI-LEX-C379-YADI379-03, HI-LEX-C379-YADI379-04, HI-LEX-C379-YADI379-05, HI-LEX-C380-HAL380-01, HI-LEX-C380-HAL380-02, HI-LEX-C380-HAL380-03, HI-LEX-C380-HAL380-04, HI-LEX-C380-HAL380-05, HI-LEX-C381-KASH381-01, HI-LEX-C381-KASH381-02, HI-LEX-C381-KASH381-03, HI-LEX-C381-KASH381-04, HI-LEX-C381-KASH381-05, HI-LEX-C382-JALDBAZI382-01, HI-LEX-C382-JALDBAZI382-02, HI-LEX-C382-JALDBAZI382-03, HI-LEX-C382-JALDBAZI382-04, HI-LEX-C382-JALDBAZI382-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C375-ASHA375-01, HI-LEX-C375-ASHA375-02, HI-LEX-C375-ASHA375-03, HI-LEX-C375-ASHA375-04, HI-LEX-C375-ASHA375-05, HI-LEX-C376-ZAHIR376-01, HI-LEX-C376-ZAHIR376-02, HI-LEX-C376-ZAHIR376-03, HI-LEX-C376-ZAHIR376-04, HI-LEX-C376-ZAHIR376-05, HI-LEX-C377-HALAT377-01, HI-LEX-C377-HALAT377-02, HI-LEX-C377-HALAT377-03, HI-LEX-C377-HALAT377-04, HI-LEX-C377-HALAT377-05, HI-LEX-C378-ZARURAT378-01, HI-LEX-C378-ZARURAT378-02, HI-LEX-C378-ZARURAT378-03, HI-LEX-C378-ZARURAT378-04, HI-LEX-C378-ZARURAT378-05, HI-LEX-C379-YADI379-01, HI-LEX-C379-YADI379-02, HI-LEX-C379-YADI379-03, HI-LEX-C379-YADI379-04, HI-LEX-C379-YADI379-05, HI-LEX-C380-HAL380-01, HI-LEX-C380-HAL380-02, HI-LEX-C380-HAL380-03, HI-LEX-C380-HAL380-04, HI-LEX-C380-HAL380-05, HI-LEX-C381-KASH381-01, HI-LEX-C381-KASH381-02, HI-LEX-C381-KASH381-03, HI-LEX-C381-KASH381-04, HI-LEX-C381-KASH381-05, HI-LEX-C382-JALDBAZI382-01, HI-LEX-C382-JALDBAZI382-02, HI-LEX-C382-JALDBAZI382-03, HI-LEX-C382-JALDBAZI382-04, HI-LEX-C382-JALDBAZI382-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C375-asa, HI-C375-asanka, HI-C375-sanket, HI-C375-isara, HI-C375-rijhana, HI-C376-zahir, HI-C376-niscit, HI-C376-avasya, HI-C376-lazimi, HI-C376-ubharna, HI-C377-sthiti, HI-C377-halat, HI-C377-zarurat, HI-C377-musibat, HI-C377-phasana, HI-C378-avasyak, HI-C378-anivarya, HI-C378-keval, HI-C378-sivay, HI-C378-manakarna, HI-C379-yadi, HI-C379-anyatha, HI-C379-matra, HI-C379-khabardar, HI-C379-patakna, HI-C380-diqqat, HI-C380-badha, HI-C380-hal, HI-C380-atakna, HI-C380-ubarna, HI-C381-kas, HI-C381-afsos, HI-C381-satana, HI-C381-gavana, HI-C381-bhala, HI-C382-jaldbazi, HI-C382-laparvah, HI-C382-chalakna, HI-C382-masalna, HI-C382-nazuk]
+---
+
+# Looking back: from Hopes and Fears to Haste and Care
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C375-ASHA375-01, HI-LEX-C375-ASHA375-02] -->
+
+[PAUSE 3s] Say the Hindi for an expectation and an apprehension.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C375-ASHA375-01, HI-LEX-C375-ASHA375-02, HI-LEX-C375-ASHA375-03, HI-LEX-C375-ASHA375-04, HI-LEX-C375-ASHA375-05, HI-LEX-C376-ZAHIR376-01, HI-LEX-C376-ZAHIR376-02, HI-LEX-C376-ZAHIR376-03, HI-LEX-C376-ZAHIR376-04, HI-LEX-C376-ZAHIR376-05, HI-LEX-C377-HALAT377-01, HI-LEX-C377-HALAT377-02, HI-LEX-C377-HALAT377-03, HI-LEX-C377-HALAT377-04, HI-LEX-C377-HALAT377-05, HI-LEX-C378-ZARURAT378-01, HI-LEX-C378-ZARURAT378-02, HI-LEX-C378-ZARURAT378-03, HI-LEX-C378-ZARURAT378-04, HI-LEX-C378-ZARURAT378-05, HI-LEX-C379-YADI379-01, HI-LEX-C379-YADI379-02, HI-LEX-C379-YADI379-03, HI-LEX-C379-YADI379-04, HI-LEX-C379-YADI379-05, HI-LEX-C380-HAL380-01, HI-LEX-C380-HAL380-02, HI-LEX-C380-HAL380-03, HI-LEX-C380-HAL380-04, HI-LEX-C380-HAL380-05, HI-LEX-C381-KASH381-01, HI-LEX-C381-KASH381-02, HI-LEX-C381-KASH381-03, HI-LEX-C381-KASH381-04, HI-LEX-C381-KASH381-05, HI-LEX-C382-JALDBAZI382-01, HI-LEX-C382-JALDBAZI382-02, HI-LEX-C382-JALDBAZI382-03, HI-LEX-C382-JALDBAZI382-04, HI-LEX-C382-JALDBAZI382-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an expectation, an apprehension, an indication, a hint, to charm]
+- [YOU SAY: evident, definite, without fail, bound to happen, to emerge]
+- [YOU SAY: a situation, a state (of health, repair), a need, a hardship, to trap]
+- [YOU SAY: essential, compulsory, solely, except, to forbid]
+- [YOU SAY: if (formal), otherwise (formal), mere, beware, to slam]
+- [YOU SAY: a hassle, an obstacle, a solution, to get stuck, to pull out of trouble]
+- [YOU SAY: if only, a pity, to torment, to waste, decent]
+- [YOU SAY: haste, careless, to spill over, to rub hard, fragile]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C375-ASHA375-01, HI-LEX-C375-ASHA375-02, HI-LEX-C375-ASHA375-03, HI-LEX-C375-ASHA375-04, HI-LEX-C375-ASHA375-05, HI-LEX-C376-ZAHIR376-01, HI-LEX-C376-ZAHIR376-02, HI-LEX-C376-ZAHIR376-03, HI-LEX-C376-ZAHIR376-04, HI-LEX-C376-ZAHIR376-05, HI-LEX-C377-HALAT377-01, HI-LEX-C377-HALAT377-02, HI-LEX-C377-HALAT377-03, HI-LEX-C377-HALAT377-04, HI-LEX-C377-HALAT377-05, HI-LEX-C378-ZARURAT378-01, HI-LEX-C378-ZARURAT378-02, HI-LEX-C378-ZARURAT378-03, HI-LEX-C378-ZARURAT378-04, HI-LEX-C378-ZARURAT378-05, HI-LEX-C379-YADI379-01, HI-LEX-C379-YADI379-02, HI-LEX-C379-YADI379-03, HI-LEX-C379-YADI379-04, HI-LEX-C379-YADI379-05, HI-LEX-C380-HAL380-01, HI-LEX-C380-HAL380-02, HI-LEX-C380-HAL380-03, HI-LEX-C380-HAL380-04, HI-LEX-C380-HAL380-05, HI-LEX-C381-KASH381-01, HI-LEX-C381-KASH381-02, HI-LEX-C381-KASH381-03, HI-LEX-C381-KASH381-04, HI-LEX-C381-KASH381-05, HI-LEX-C382-JALDBAZI382-01, HI-LEX-C382-JALDBAZI382-02, HI-LEX-C382-JALDBAZI382-03, HI-LEX-C382-JALDBAZI382-04, HI-LEX-C382-JALDBAZI382-05] -->
+
+[PAUSE 3s] An expectation? (**आशा**, *āśā*.) An apprehension? (**आशंका**, *āśaṅkā*.) An indication? (**संकेत**, *saṅket*.) A hint? (**इशारा**, *iśārā*.) To charm? (**रिझाना**, *rijhānā*.) Evident? (**ज़ाहिर**, *zāhir*.) Definite? (**निश्चित**, *niścit*.) Without fail? (**अवश्य**, *avaśya*.) Bound to happen? (**लाज़िमी**, *lāzimī*.) To emerge? (**उभरना**, *ubharnā*.) A situation? (**स्थिति**, *sthiti*.) A state (of health, repair)? (**हालत**, *hālat*.) A need? (**ज़रूरत**, *zarūrat*.) A hardship? (**मुसीबत**, *musībat*.) To trap? (**फँसाना**, *phãsānā*.) Essential? (**आवश्यक**, *āvaśyak*.) Compulsory? (**अनिवार्य**, *anivārya*.) Solely? (**केवल**, *keval*.) Except? (**सिवाय**, *sivāy*.) To forbid? (**मना करना**, *manā karnā*.) If (formal)? (**यदि**, *yadi*.) Otherwise (formal)? (**अन्यथा**, *anyathā*.) Mere? (**मात्र**, *mātra*.) Beware? (**ख़बरदार**, *khabardār*.) To slam? (**पटकना**, *paṭaknā*.) A hassle? (**दिक़्क़त**, *diqqat*.) An obstacle? (**बाधा**, *bādhā*.) A solution? (**हल**, *hal*.) To get stuck? (**अटकना**, *aṭaknā*.) To pull out of trouble? (**उबारना**, *ubārnā*.) If only? (**काश**, *kāś*.) A pity? (**अफ़सोस**, *afsos*.) To torment? (**सताना**, *satānā*.) To waste? (**गँवाना**, *gãvānā*.) Decent? (**भला**, *bhalā*.) Haste? (**जल्दबाज़ी**, *jaldbāzī*.) Careless? (**लापरवाह**, *lāparvāh*.) To spill over? (**छलकना**, *chalaknā*.) To rub hard? (**मसलना**, *masalnā*.) Fragile? (**नाज़ुक**, *nāzuk*.)
+`;export{t};

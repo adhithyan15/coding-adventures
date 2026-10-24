@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R483-review-476-483
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 26630
+chapter: 483
+type: review
+headword: (dialogue)
+gloss: a review of the words from The Face to Strength and Breath
+concept_tag: REVIEW
+prerequisites: [HI-C476-cehra, HI-C476-bhaumh, HI-C476-much, HI-C476-darhi, HI-C476-jabra, HI-C477-hatheli, HI-C477-mutthi, HI-C477-bah, HI-C477-tag, HI-C477-eri, HI-C478-phephra, HI-C478-dimag, HI-C478-nas, HI-C478-pasli, HI-C478-gurda, HI-C479-muh, HI-C479-masura, HI-C479-cusna, HI-C479-cabana, HI-C479-thukna, HI-C480-svad, HI-C480-spars, HI-C480-gandh, HI-C480-mahak, HI-C480-catna, HI-C481-letna, HI-C481-sikorna, HI-C481-lagrana, HI-C481-ucakna, HI-C481-kudna, HI-C482-qad, HI-C482-huliya, HI-C482-savla, HI-C482-gora, HI-C482-dubla, HI-C483-taqat, HI-C483-cust, HI-C483-dam, HI-C483-bal, HI-C483-thakana]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C476-CHEHRA476-01, HI-LEX-C476-CHEHRA476-02, HI-LEX-C476-CHEHRA476-03, HI-LEX-C476-CHEHRA476-04, HI-LEX-C476-CHEHRA476-05, HI-LEX-C477-HATHELI477-01, HI-LEX-C477-HATHELI477-02, HI-LEX-C477-HATHELI477-03, HI-LEX-C477-HATHELI477-04, HI-LEX-C477-HATHELI477-05, HI-LEX-C478-PHEPHDA478-01, HI-LEX-C478-PHEPHDA478-02, HI-LEX-C478-PHEPHDA478-03, HI-LEX-C478-PHEPHDA478-04, HI-LEX-C478-PHEPHDA478-05, HI-LEX-C479-MUNH479-01, HI-LEX-C479-MUNH479-02, HI-LEX-C479-MUNH479-03, HI-LEX-C479-MUNH479-04, HI-LEX-C479-MUNH479-05, HI-LEX-C480-SPARSH480-01, HI-LEX-C480-SPARSH480-02, HI-LEX-C480-SPARSH480-03, HI-LEX-C480-SPARSH480-04, HI-LEX-C480-SPARSH480-05, HI-LEX-C481-LETNA481-01, HI-LEX-C481-LETNA481-02, HI-LEX-C481-LETNA481-03, HI-LEX-C481-LETNA481-04, HI-LEX-C481-LETNA481-05, HI-LEX-C482-KAD482-01, HI-LEX-C482-KAD482-02, HI-LEX-C482-KAD482-03, HI-LEX-C482-KAD482-04, HI-LEX-C482-KAD482-05, HI-LEX-C483-TAQAT483-01, HI-LEX-C483-TAQAT483-02, HI-LEX-C483-TAQAT483-03, HI-LEX-C483-TAQAT483-04, HI-LEX-C483-TAQAT483-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C476-CHEHRA476-01, HI-LEX-C476-CHEHRA476-02, HI-LEX-C476-CHEHRA476-03, HI-LEX-C476-CHEHRA476-04, HI-LEX-C476-CHEHRA476-05, HI-LEX-C477-HATHELI477-01, HI-LEX-C477-HATHELI477-02, HI-LEX-C477-HATHELI477-03, HI-LEX-C477-HATHELI477-04, HI-LEX-C477-HATHELI477-05, HI-LEX-C478-PHEPHDA478-01, HI-LEX-C478-PHEPHDA478-02, HI-LEX-C478-PHEPHDA478-03, HI-LEX-C478-PHEPHDA478-04, HI-LEX-C478-PHEPHDA478-05, HI-LEX-C479-MUNH479-01, HI-LEX-C479-MUNH479-02, HI-LEX-C479-MUNH479-03, HI-LEX-C479-MUNH479-04, HI-LEX-C479-MUNH479-05, HI-LEX-C480-SPARSH480-01, HI-LEX-C480-SPARSH480-02, HI-LEX-C480-SPARSH480-03, HI-LEX-C480-SPARSH480-04, HI-LEX-C480-SPARSH480-05, HI-LEX-C481-LETNA481-01, HI-LEX-C481-LETNA481-02, HI-LEX-C481-LETNA481-03, HI-LEX-C481-LETNA481-04, HI-LEX-C481-LETNA481-05, HI-LEX-C482-KAD482-01, HI-LEX-C482-KAD482-02, HI-LEX-C482-KAD482-03, HI-LEX-C482-KAD482-04, HI-LEX-C482-KAD482-05, HI-LEX-C483-TAQAT483-01, HI-LEX-C483-TAQAT483-02, HI-LEX-C483-TAQAT483-03, HI-LEX-C483-TAQAT483-04, HI-LEX-C483-TAQAT483-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C476-cehra, HI-C476-bhaumh, HI-C476-much, HI-C476-darhi, HI-C476-jabra, HI-C477-hatheli, HI-C477-mutthi, HI-C477-bah, HI-C477-tag, HI-C477-eri, HI-C478-phephra, HI-C478-dimag, HI-C478-nas, HI-C478-pasli, HI-C478-gurda, HI-C479-muh, HI-C479-masura, HI-C479-cusna, HI-C479-cabana, HI-C479-thukna, HI-C480-svad, HI-C480-spars, HI-C480-gandh, HI-C480-mahak, HI-C480-catna, HI-C481-letna, HI-C481-sikorna, HI-C481-lagrana, HI-C481-ucakna, HI-C481-kudna, HI-C482-qad, HI-C482-huliya, HI-C482-savla, HI-C482-gora, HI-C482-dubla, HI-C483-taqat, HI-C483-cust, HI-C483-dam, HI-C483-bal, HI-C483-thakana]
+---
+
+# Looking back: from The Face to Strength and Breath
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C476-CHEHRA476-01, HI-LEX-C476-CHEHRA476-02] -->
+
+[PAUSE 3s] Say the Hindi for a face and an eyebrow.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C476-CHEHRA476-01, HI-LEX-C476-CHEHRA476-02, HI-LEX-C476-CHEHRA476-03, HI-LEX-C476-CHEHRA476-04, HI-LEX-C476-CHEHRA476-05, HI-LEX-C477-HATHELI477-01, HI-LEX-C477-HATHELI477-02, HI-LEX-C477-HATHELI477-03, HI-LEX-C477-HATHELI477-04, HI-LEX-C477-HATHELI477-05, HI-LEX-C478-PHEPHDA478-01, HI-LEX-C478-PHEPHDA478-02, HI-LEX-C478-PHEPHDA478-03, HI-LEX-C478-PHEPHDA478-04, HI-LEX-C478-PHEPHDA478-05, HI-LEX-C479-MUNH479-01, HI-LEX-C479-MUNH479-02, HI-LEX-C479-MUNH479-03, HI-LEX-C479-MUNH479-04, HI-LEX-C479-MUNH479-05, HI-LEX-C480-SPARSH480-01, HI-LEX-C480-SPARSH480-02, HI-LEX-C480-SPARSH480-03, HI-LEX-C480-SPARSH480-04, HI-LEX-C480-SPARSH480-05, HI-LEX-C481-LETNA481-01, HI-LEX-C481-LETNA481-02, HI-LEX-C481-LETNA481-03, HI-LEX-C481-LETNA481-04, HI-LEX-C481-LETNA481-05, HI-LEX-C482-KAD482-01, HI-LEX-C482-KAD482-02, HI-LEX-C482-KAD482-03, HI-LEX-C482-KAD482-04, HI-LEX-C482-KAD482-05, HI-LEX-C483-TAQAT483-01, HI-LEX-C483-TAQAT483-02, HI-LEX-C483-TAQAT483-03, HI-LEX-C483-TAQAT483-04, HI-LEX-C483-TAQAT483-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a face, an eyebrow, a moustache, a beard, a jaw]
+- [YOU SAY: the palm of the hand, a fist, an arm, a leg, a heel]
+- [YOU SAY: a lung, the brain, a vein, a rib, a kidney]
+- [YOU SAY: the mouth, a gum (of the teeth), to suck, to chew, to spit]
+- [YOU SAY: a taste, a touch, a smell, an aroma, to lick]
+- [YOU SAY: to lie down, to draw in, to limp, to stand on tiptoe, to jump]
+- [YOU SAY: height, appearance, dusky, fair-skinned, lean]
+- [YOU SAY: strength, spry, stamina, force, to tire someone out]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C476-CHEHRA476-01, HI-LEX-C476-CHEHRA476-02, HI-LEX-C476-CHEHRA476-03, HI-LEX-C476-CHEHRA476-04, HI-LEX-C476-CHEHRA476-05, HI-LEX-C477-HATHELI477-01, HI-LEX-C477-HATHELI477-02, HI-LEX-C477-HATHELI477-03, HI-LEX-C477-HATHELI477-04, HI-LEX-C477-HATHELI477-05, HI-LEX-C478-PHEPHDA478-01, HI-LEX-C478-PHEPHDA478-02, HI-LEX-C478-PHEPHDA478-03, HI-LEX-C478-PHEPHDA478-04, HI-LEX-C478-PHEPHDA478-05, HI-LEX-C479-MUNH479-01, HI-LEX-C479-MUNH479-02, HI-LEX-C479-MUNH479-03, HI-LEX-C479-MUNH479-04, HI-LEX-C479-MUNH479-05, HI-LEX-C480-SPARSH480-01, HI-LEX-C480-SPARSH480-02, HI-LEX-C480-SPARSH480-03, HI-LEX-C480-SPARSH480-04, HI-LEX-C480-SPARSH480-05, HI-LEX-C481-LETNA481-01, HI-LEX-C481-LETNA481-02, HI-LEX-C481-LETNA481-03, HI-LEX-C481-LETNA481-04, HI-LEX-C481-LETNA481-05, HI-LEX-C482-KAD482-01, HI-LEX-C482-KAD482-02, HI-LEX-C482-KAD482-03, HI-LEX-C482-KAD482-04, HI-LEX-C482-KAD482-05, HI-LEX-C483-TAQAT483-01, HI-LEX-C483-TAQAT483-02, HI-LEX-C483-TAQAT483-03, HI-LEX-C483-TAQAT483-04, HI-LEX-C483-TAQAT483-05] -->
+
+[PAUSE 3s] A face? (**चेहरा**, *cehrā*.) An eyebrow? (**भौंह**, *bhauṁh*.) A moustache? (**मूँछ**, *mū̃ch*.) A beard? (**दाढ़ी**, *dāṛhī*.) A jaw? (**जबड़ा**, *jabṛā*.) The palm of the hand? (**हथेली**, *hathelī*.) A fist? (**मुट्ठी**, *muṭṭhī*.) An arm? (**बाँह**, *bā̃h*.) A leg? (**टाँग**, *ṭā̃g*.) A heel? (**एड़ी**, *eṛī*.) A lung? (**फेफड़ा**, *phephṛā*.) The brain? (**दिमाग़**, *dimāġ*.) A vein? (**नस**, *nas*.) A rib? (**पसली**, *paslī*.) A kidney? (**गुर्दा**, *gurdā*.) The mouth? (**मुँह**, *mũh*.) A gum (of the teeth)? (**मसूड़ा**, *masūṛā*.) To suck? (**चूसना**, *cūsnā*.) To chew? (**चबाना**, *cabānā*.) To spit? (**थूकना**, *thūknā*.) A taste? (**स्वाद**, *svād*.) A touch? (**स्पर्श**, *sparś*.) A smell? (**गंध**, *gandh*.) An aroma? (**महक**, *mahak*.) To lick? (**चाटना**, *cāṭnā*.) To lie down? (**लेटना**, *leṭnā*.) To draw in? (**सिकोड़ना**, *sikoṛnā*.) To limp? (**लँगड़ाना**, *lãgṛānā*.) To stand on tiptoe? (**उचकना**, *ucaknā*.) To jump? (**कूदना**, *kūdnā*.) Height? (**क़द**, *qad*.) Appearance? (**हुलिया**, *huliyā*.) Dusky? (**साँवला**, *sā̃vlā*.) Fair-skinned? (**गोरा**, *gorā*.) Lean? (**दुबला**, *dublā*.) Strength? (**ताक़त**, *tāqat*.) Spry? (**चुस्त**, *cust*.) Stamina? (**दम**, *dam*.) Force? (**बल**, *bal*.) To tire someone out? (**थकाना**, *thakānā*.)
+`;export{t};

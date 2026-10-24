@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R451-review-445-451
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24760
+chapter: 451
+type: review
+headword: (dialogue)
+gloss: a review of the words from Boats, Nets and Shells to Outings and Views
+concept_tag: REVIEW
+prerequisites: [HI-C445-kisti, HI-C445-mallah, HI-C445-jal, HI-C445-jvar, HI-C445-sip, HI-C446-prakrti, HI-C446-paryavaran, HI-C446-paudha, HI-C446-khilna, HI-C446-kumhlana, HI-C447-kunj, HI-C447-bel, HI-C447-kai, HI-C447-kira, HI-C447-lipatna, HI-C448-conc, HI-C448-pankh, HI-C448-sikar, HI-C448-cugna, HI-C448-cubhna, HI-C449-siyar, HI-C449-jugnu, HI-C449-jhigur, HI-C449-carna, HI-C449-carana, HI-C450-jharnaa, HI-C450-ukharna, HI-C450-jotna, HI-C450-upajna, HI-C450-duhna, HI-C451-sair, HI-C451-paryatak, HI-C451-nazara, HI-C451-smarak, HI-C451-niharna]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C445-KISHTI445-01, HI-LEX-C445-KISHTI445-02, HI-LEX-C445-KISHTI445-03, HI-LEX-C445-KISHTI445-04, HI-LEX-C445-KISHTI445-05, HI-LEX-C446-PRAKRITI446-01, HI-LEX-C446-PRAKRITI446-02, HI-LEX-C446-PRAKRITI446-03, HI-LEX-C446-PRAKRITI446-04, HI-LEX-C446-PRAKRITI446-05, HI-LEX-C447-JHADI447-01, HI-LEX-C447-JHADI447-02, HI-LEX-C447-JHADI447-03, HI-LEX-C447-JHADI447-04, HI-LEX-C447-JHADI447-05, HI-LEX-C448-CHONCH448-01, HI-LEX-C448-CHONCH448-02, HI-LEX-C448-CHONCH448-03, HI-LEX-C448-CHONCH448-04, HI-LEX-C448-CHONCH448-05, HI-LEX-C449-SIYAR449-01, HI-LEX-C449-SIYAR449-02, HI-LEX-C449-SIYAR449-03, HI-LEX-C449-SIYAR449-04, HI-LEX-C449-SIYAR449-05, HI-LEX-C450-JHADNA450-01, HI-LEX-C450-JHADNA450-02, HI-LEX-C450-JHADNA450-03, HI-LEX-C450-JHADNA450-04, HI-LEX-C450-JHADNA450-05, HI-LEX-C451-SAIR451-01, HI-LEX-C451-SAIR451-02, HI-LEX-C451-SAIR451-03, HI-LEX-C451-SAIR451-04, HI-LEX-C451-SAIR451-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C445-KISHTI445-01, HI-LEX-C445-KISHTI445-02, HI-LEX-C445-KISHTI445-03, HI-LEX-C445-KISHTI445-04, HI-LEX-C445-KISHTI445-05, HI-LEX-C446-PRAKRITI446-01, HI-LEX-C446-PRAKRITI446-02, HI-LEX-C446-PRAKRITI446-03, HI-LEX-C446-PRAKRITI446-04, HI-LEX-C446-PRAKRITI446-05, HI-LEX-C447-JHADI447-01, HI-LEX-C447-JHADI447-02, HI-LEX-C447-JHADI447-03, HI-LEX-C447-JHADI447-04, HI-LEX-C447-JHADI447-05, HI-LEX-C448-CHONCH448-01, HI-LEX-C448-CHONCH448-02, HI-LEX-C448-CHONCH448-03, HI-LEX-C448-CHONCH448-04, HI-LEX-C448-CHONCH448-05, HI-LEX-C449-SIYAR449-01, HI-LEX-C449-SIYAR449-02, HI-LEX-C449-SIYAR449-03, HI-LEX-C449-SIYAR449-04, HI-LEX-C449-SIYAR449-05, HI-LEX-C450-JHADNA450-01, HI-LEX-C450-JHADNA450-02, HI-LEX-C450-JHADNA450-03, HI-LEX-C450-JHADNA450-04, HI-LEX-C450-JHADNA450-05, HI-LEX-C451-SAIR451-01, HI-LEX-C451-SAIR451-02, HI-LEX-C451-SAIR451-03, HI-LEX-C451-SAIR451-04, HI-LEX-C451-SAIR451-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C445-kisti, HI-C445-mallah, HI-C445-jal, HI-C445-jvar, HI-C445-sip, HI-C446-prakrti, HI-C446-paryavaran, HI-C446-paudha, HI-C446-khilna, HI-C446-kumhlana, HI-C447-kunj, HI-C447-bel, HI-C447-kai, HI-C447-kira, HI-C447-lipatna, HI-C448-conc, HI-C448-pankh, HI-C448-sikar, HI-C448-cugna, HI-C448-cubhna, HI-C449-siyar, HI-C449-jugnu, HI-C449-jhigur, HI-C449-carna, HI-C449-carana, HI-C450-jharnaa, HI-C450-ukharna, HI-C450-jotna, HI-C450-upajna, HI-C450-duhna, HI-C451-sair, HI-C451-paryatak, HI-C451-nazara, HI-C451-smarak, HI-C451-niharna]
+---
+
+# Looking back: from Boats, Nets and Shells to Outings and Views
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C445-KISHTI445-01, HI-LEX-C445-KISHTI445-02] -->
+
+[PAUSE 3s] Say the Hindi for a small boat and a boatman.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C445-KISHTI445-01, HI-LEX-C445-KISHTI445-02, HI-LEX-C445-KISHTI445-03, HI-LEX-C445-KISHTI445-04, HI-LEX-C445-KISHTI445-05, HI-LEX-C446-PRAKRITI446-01, HI-LEX-C446-PRAKRITI446-02, HI-LEX-C446-PRAKRITI446-03, HI-LEX-C446-PRAKRITI446-04, HI-LEX-C446-PRAKRITI446-05, HI-LEX-C447-JHADI447-01, HI-LEX-C447-JHADI447-02, HI-LEX-C447-JHADI447-03, HI-LEX-C447-JHADI447-04, HI-LEX-C447-JHADI447-05, HI-LEX-C448-CHONCH448-01, HI-LEX-C448-CHONCH448-02, HI-LEX-C448-CHONCH448-03, HI-LEX-C448-CHONCH448-04, HI-LEX-C448-CHONCH448-05, HI-LEX-C449-SIYAR449-01, HI-LEX-C449-SIYAR449-02, HI-LEX-C449-SIYAR449-03, HI-LEX-C449-SIYAR449-04, HI-LEX-C449-SIYAR449-05, HI-LEX-C450-JHADNA450-01, HI-LEX-C450-JHADNA450-02, HI-LEX-C450-JHADNA450-03, HI-LEX-C450-JHADNA450-04, HI-LEX-C450-JHADNA450-05, HI-LEX-C451-SAIR451-01, HI-LEX-C451-SAIR451-02, HI-LEX-C451-SAIR451-03, HI-LEX-C451-SAIR451-04, HI-LEX-C451-SAIR451-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a small boat, a boatman, a net, the high tide, a shell]
+- [YOU SAY: nature, the environment, a plant, to bloom, to wilt]
+- [YOU SAY: a bower, a creeper, moss, an insect, to wind round]
+- [YOU SAY: a beak, a wing, hunting, to peck, to prick]
+- [YOU SAY: a jackal, a firefly, a cricket, to graze, to take to graze]
+- [YOU SAY: to be shed, to be uprooted, to plough, to grow (of crops), to milk]
+- [YOU SAY: an outing, a tourist, a view, a monument, to gaze at]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C445-KISHTI445-01, HI-LEX-C445-KISHTI445-02, HI-LEX-C445-KISHTI445-03, HI-LEX-C445-KISHTI445-04, HI-LEX-C445-KISHTI445-05, HI-LEX-C446-PRAKRITI446-01, HI-LEX-C446-PRAKRITI446-02, HI-LEX-C446-PRAKRITI446-03, HI-LEX-C446-PRAKRITI446-04, HI-LEX-C446-PRAKRITI446-05, HI-LEX-C447-JHADI447-01, HI-LEX-C447-JHADI447-02, HI-LEX-C447-JHADI447-03, HI-LEX-C447-JHADI447-04, HI-LEX-C447-JHADI447-05, HI-LEX-C448-CHONCH448-01, HI-LEX-C448-CHONCH448-02, HI-LEX-C448-CHONCH448-03, HI-LEX-C448-CHONCH448-04, HI-LEX-C448-CHONCH448-05, HI-LEX-C449-SIYAR449-01, HI-LEX-C449-SIYAR449-02, HI-LEX-C449-SIYAR449-03, HI-LEX-C449-SIYAR449-04, HI-LEX-C449-SIYAR449-05, HI-LEX-C450-JHADNA450-01, HI-LEX-C450-JHADNA450-02, HI-LEX-C450-JHADNA450-03, HI-LEX-C450-JHADNA450-04, HI-LEX-C450-JHADNA450-05, HI-LEX-C451-SAIR451-01, HI-LEX-C451-SAIR451-02, HI-LEX-C451-SAIR451-03, HI-LEX-C451-SAIR451-04, HI-LEX-C451-SAIR451-05] -->
+
+[PAUSE 3s] A small boat? (**किश्ती**, *kiśtī*.) A boatman? (**मल्लाह**, *mallāh*.) A net? (**जाल**, *jāl*.) The high tide? (**ज्वार**, *jvār*.) A shell? (**सीप**, *sīp*.) Nature? (**प्रकृति**, *prakṛti*.) The environment? (**पर्यावरण**, *paryāvaraṇ*.) A plant? (**पौधा**, *paudhā*.) To bloom? (**खिलना**, *khilnā*.) To wilt? (**कुम्हलाना**, *kumhlānā*.) A bower? (**कुंज**, *kuñj*.) A creeper? (**बेल**, *bel*.) Moss? (**काई**, *kāī*.) An insect? (**कीड़ा**, *kīṛā*.) To wind round? (**लिपटना**, *lipaṭnā*.) A beak? (**चोंच**, *coñc*.) A wing? (**पंख**, *paṅkh*.) Hunting? (**शिकार**, *śikār*.) To peck? (**चुगना**, *cugnā*.) To prick? (**चुभना**, *cubhnā*.) A jackal? (**सियार**, *siyār*.) A firefly? (**जुगनू**, *jugnū*.) A cricket? (**झींगुर**, *jhī̃gur*.) To graze? (**चरना**, *carnā*.) To take to graze? (**चराना**, *carānā*.) To be shed? (**झड़ना**, *jhaṛnā*.) To be uprooted? (**उखड़ना**, *ukhaṛnā*.) To plough? (**जोतना**, *jotnā*.) To grow (of crops)? (**उपजना**, *upajnā*.) To milk? (**दुहना**, *duhnā*.) An outing? (**सैर**, *sair*.) A tourist? (**पर्यटक**, *paryaṭak*.) A view? (**नज़ारा**, *nazārā*.) A monument? (**स्मारक**, *smārak*.) To gaze at? (**निहारना**, *nihārnā*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R451-review-final-451
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24770
+chapter: 451
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [HI-C451-sair, HI-C451-paryatak, HI-C451-nazara, HI-C451-smarak, HI-C451-niharna]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C451-SAIR451-01, HI-LEX-C451-SAIR451-02, HI-LEX-C451-SAIR451-03, HI-LEX-C451-SAIR451-04, HI-LEX-C451-SAIR451-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C451-SAIR451-01, HI-LEX-C451-SAIR451-02, HI-LEX-C451-SAIR451-03, HI-LEX-C451-SAIR451-04, HI-LEX-C451-SAIR451-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C451-sair, HI-C451-paryatak, HI-C451-nazara, HI-C451-smarak, HI-C451-niharna]
+---
+
+# Outings and Views — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C451-SAIR451-01, HI-LEX-C451-SAIR451-02] -->
+
+[PAUSE 3s] Say the Hindi for an outing and a tourist.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C451-SAIR451-01, HI-LEX-C451-SAIR451-02, HI-LEX-C451-SAIR451-03, HI-LEX-C451-SAIR451-04, HI-LEX-C451-SAIR451-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an outing, a tourist, a view, a monument, to gaze at]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C451-SAIR451-01, HI-LEX-C451-SAIR451-02, HI-LEX-C451-SAIR451-03, HI-LEX-C451-SAIR451-04, HI-LEX-C451-SAIR451-05] -->
+
+[PAUSE 3s] An outing? (**सैर**, *sair*.) A tourist? (**पर्यटक**, *paryaṭak*.) A view? (**नज़ारा**, *nazārā*.) A monument? (**स्मारक**, *smārak*.) To gaze at? (**निहारना**, *nihārnā*.)
+`;export{t as n,r as t};

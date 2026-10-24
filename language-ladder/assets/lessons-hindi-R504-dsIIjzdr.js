@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R505-review-499-505
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27760
+chapter: 505
+type: review
+headword: (dialogue)
+gloss: a review of the words from Growing Up to Mourning
+concept_tag: REVIEW
+prerequisites: [HI-C499-kisor, HI-C499-balig, HI-C499-sararat, HI-C499-yauvan, HI-C499-bisurna, HI-C500-dulha, HI-C500-mehndi, HI-C500-sagai, HI-C500-barat, HI-C500-vidai, HI-C501-nata, HI-C501-byahna, HI-C501-talaq, HI-C501-nibhana, HI-C501-sulah, HI-C502-pota, HI-C502-nati, HI-C502-bhanja, HI-C502-jhulana, HI-C502-iklauta, HI-C503-grhasthi, HI-C503-mukhiya, HI-C503-buzurg, HI-C503-pirhi, HI-C503-posna, HI-C504-yaddast, HI-C504-chari, HI-C504-pemsan, HI-C504-bisarna, HI-C504-virasat, HI-C505-sok, HI-C505-smasan, HI-C505-cita, HI-C505-vidhva, HI-C505-dafnana]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C499-KISHOR499-01, HI-LEX-C499-KISHOR499-02, HI-LEX-C499-KISHOR499-03, HI-LEX-C499-KISHOR499-04, HI-LEX-C499-KISHOR499-05, HI-LEX-C500-BARAT500-01, HI-LEX-C500-BARAT500-02, HI-LEX-C500-BARAT500-03, HI-LEX-C500-BARAT500-04, HI-LEX-C500-BARAT500-05, HI-LEX-C501-NATA501-01, HI-LEX-C501-NATA501-02, HI-LEX-C501-NATA501-03, HI-LEX-C501-NATA501-04, HI-LEX-C501-NATA501-05, HI-LEX-C502-POTA502-01, HI-LEX-C502-POTA502-02, HI-LEX-C502-POTA502-03, HI-LEX-C502-POTA502-04, HI-LEX-C502-POTA502-05, HI-LEX-C503-PIDHI503-01, HI-LEX-C503-PIDHI503-02, HI-LEX-C503-PIDHI503-03, HI-LEX-C503-PIDHI503-04, HI-LEX-C503-PIDHI503-05, HI-LEX-C504-BUDHAPA504-01, HI-LEX-C504-BUDHAPA504-02, HI-LEX-C504-BUDHAPA504-03, HI-LEX-C504-BUDHAPA504-04, HI-LEX-C504-BUDHAPA504-05, HI-LEX-C505-SHOK505-01, HI-LEX-C505-SHOK505-02, HI-LEX-C505-SHOK505-03, HI-LEX-C505-SHOK505-04, HI-LEX-C505-SHOK505-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C499-KISHOR499-01, HI-LEX-C499-KISHOR499-02, HI-LEX-C499-KISHOR499-03, HI-LEX-C499-KISHOR499-04, HI-LEX-C499-KISHOR499-05, HI-LEX-C500-BARAT500-01, HI-LEX-C500-BARAT500-02, HI-LEX-C500-BARAT500-03, HI-LEX-C500-BARAT500-04, HI-LEX-C500-BARAT500-05, HI-LEX-C501-NATA501-01, HI-LEX-C501-NATA501-02, HI-LEX-C501-NATA501-03, HI-LEX-C501-NATA501-04, HI-LEX-C501-NATA501-05, HI-LEX-C502-POTA502-01, HI-LEX-C502-POTA502-02, HI-LEX-C502-POTA502-03, HI-LEX-C502-POTA502-04, HI-LEX-C502-POTA502-05, HI-LEX-C503-PIDHI503-01, HI-LEX-C503-PIDHI503-02, HI-LEX-C503-PIDHI503-03, HI-LEX-C503-PIDHI503-04, HI-LEX-C503-PIDHI503-05, HI-LEX-C504-BUDHAPA504-01, HI-LEX-C504-BUDHAPA504-02, HI-LEX-C504-BUDHAPA504-03, HI-LEX-C504-BUDHAPA504-04, HI-LEX-C504-BUDHAPA504-05, HI-LEX-C505-SHOK505-01, HI-LEX-C505-SHOK505-02, HI-LEX-C505-SHOK505-03, HI-LEX-C505-SHOK505-04, HI-LEX-C505-SHOK505-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C499-kisor, HI-C499-balig, HI-C499-sararat, HI-C499-yauvan, HI-C499-bisurna, HI-C500-dulha, HI-C500-mehndi, HI-C500-sagai, HI-C500-barat, HI-C500-vidai, HI-C501-nata, HI-C501-byahna, HI-C501-talaq, HI-C501-nibhana, HI-C501-sulah, HI-C502-pota, HI-C502-nati, HI-C502-bhanja, HI-C502-jhulana, HI-C502-iklauta, HI-C503-grhasthi, HI-C503-mukhiya, HI-C503-buzurg, HI-C503-pirhi, HI-C503-posna, HI-C504-yaddast, HI-C504-chari, HI-C504-pemsan, HI-C504-bisarna, HI-C504-virasat, HI-C505-sok, HI-C505-smasan, HI-C505-cita, HI-C505-vidhva, HI-C505-dafnana]
+---
+
+# Looking back: from Growing Up to Mourning
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C499-KISHOR499-01, HI-LEX-C499-KISHOR499-02] -->
+
+[PAUSE 3s] Say the Hindi for an adolescent and of age.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C499-KISHOR499-01, HI-LEX-C499-KISHOR499-02, HI-LEX-C499-KISHOR499-03, HI-LEX-C499-KISHOR499-04, HI-LEX-C499-KISHOR499-05, HI-LEX-C500-BARAT500-01, HI-LEX-C500-BARAT500-02, HI-LEX-C500-BARAT500-03, HI-LEX-C500-BARAT500-04, HI-LEX-C500-BARAT500-05, HI-LEX-C501-NATA501-01, HI-LEX-C501-NATA501-02, HI-LEX-C501-NATA501-03, HI-LEX-C501-NATA501-04, HI-LEX-C501-NATA501-05, HI-LEX-C502-POTA502-01, HI-LEX-C502-POTA502-02, HI-LEX-C502-POTA502-03, HI-LEX-C502-POTA502-04, HI-LEX-C502-POTA502-05, HI-LEX-C503-PIDHI503-01, HI-LEX-C503-PIDHI503-02, HI-LEX-C503-PIDHI503-03, HI-LEX-C503-PIDHI503-04, HI-LEX-C503-PIDHI503-05, HI-LEX-C504-BUDHAPA504-01, HI-LEX-C504-BUDHAPA504-02, HI-LEX-C504-BUDHAPA504-03, HI-LEX-C504-BUDHAPA504-04, HI-LEX-C504-BUDHAPA504-05, HI-LEX-C505-SHOK505-01, HI-LEX-C505-SHOK505-02, HI-LEX-C505-SHOK505-03, HI-LEX-C505-SHOK505-04, HI-LEX-C505-SHOK505-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an adolescent, of age, mischief, the prime of youth, to whimper]
+- [YOU SAY: a bridegroom, henna, an engagement (to marry), the groom's wedding procession, a farewell]
+- [YOU SAY: a bond, to marry, a divorce, to keep up, a reconciliation]
+- [YOU SAY: a grandson (a son's son), a grandson (a daughter's son), a nephew (a sister's son), to rock, only (child)]
+- [YOU SAY: a household, the head (of a family or village), an elder, a generation, to nurture]
+- [YOU SAY: memory (the power to remember), a walking stick, a pension, to slip from memory, an inheritance]
+- [YOU SAY: mourning, a cremation ground, a funeral pyre, a widow, to bury (the dead)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C499-KISHOR499-01, HI-LEX-C499-KISHOR499-02, HI-LEX-C499-KISHOR499-03, HI-LEX-C499-KISHOR499-04, HI-LEX-C499-KISHOR499-05, HI-LEX-C500-BARAT500-01, HI-LEX-C500-BARAT500-02, HI-LEX-C500-BARAT500-03, HI-LEX-C500-BARAT500-04, HI-LEX-C500-BARAT500-05, HI-LEX-C501-NATA501-01, HI-LEX-C501-NATA501-02, HI-LEX-C501-NATA501-03, HI-LEX-C501-NATA501-04, HI-LEX-C501-NATA501-05, HI-LEX-C502-POTA502-01, HI-LEX-C502-POTA502-02, HI-LEX-C502-POTA502-03, HI-LEX-C502-POTA502-04, HI-LEX-C502-POTA502-05, HI-LEX-C503-PIDHI503-01, HI-LEX-C503-PIDHI503-02, HI-LEX-C503-PIDHI503-03, HI-LEX-C503-PIDHI503-04, HI-LEX-C503-PIDHI503-05, HI-LEX-C504-BUDHAPA504-01, HI-LEX-C504-BUDHAPA504-02, HI-LEX-C504-BUDHAPA504-03, HI-LEX-C504-BUDHAPA504-04, HI-LEX-C504-BUDHAPA504-05, HI-LEX-C505-SHOK505-01, HI-LEX-C505-SHOK505-02, HI-LEX-C505-SHOK505-03, HI-LEX-C505-SHOK505-04, HI-LEX-C505-SHOK505-05] -->
+
+[PAUSE 3s] An adolescent? (**किशोर**, *kiśor*.) Of age? (**बालिग़**, *bāliġ*.) Mischief? (**शरारत**, *śarārat*.) The prime of youth? (**यौवन**, *yauvan*.) To whimper? (**बिसूरना**, *bisūrnā*.) A bridegroom? (**दूल्हा**, *dūlhā*.) Henna? (**मेहंदी**, *mehndī*.) An engagement (to marry)? (**सगाई**, *sagāī*.) The groom's wedding procession? (**बारात**, *bārāt*.) A farewell? (**विदाई**, *vidāī*.) A bond? (**नाता**, *nātā*.) To marry? (**ब्याहना**, *byāhnā*.) A divorce? (**तलाक़**, *talāq*.) To keep up? (**निभाना**, *nibhānā*.) A reconciliation? (**सुलह**, *sulah*.) A grandson (a son's son)? (**पोता**, *potā*.) A grandson (a daughter's son)? (**नाती**, *nātī*.) A nephew (a sister's son)? (**भांजा**, *bhāñjā*.) To rock? (**झुलाना**, *jhulānā*.) Only (child)? (**इकलौता**, *iklautā*.) A household? (**गृहस्थी**, *gṛhasthī*.) The head (of a family or village)? (**मुखिया**, *mukhiyā*.) An elder? (**बुज़ुर्ग**, *buzurg*.) A generation? (**पीढ़ी**, *pīṛhī*.) To nurture? (**पोसना**, *posnā*.) Memory (the power to remember)? (**याददाश्त**, *yāddāśt*.) A walking stick? (**छड़ी**, *chaṛī*.) A pension? (**पेंशन**, *peṁśan*.) To slip from memory? (**बिसरना**, *bisarnā*.) An inheritance? (**विरासत**, *virāsat*.) Mourning? (**शोक**, *śok*.) A cremation ground? (**श्मशान**, *śmaśān*.) A funeral pyre? (**चिता**, *citā*.) A widow? (**विधवा**, *vidhvā*.) To bury (the dead)? (**दफ़नाना**, *dafnānā*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R505-review-final-505
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27770
+chapter: 505
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [HI-C505-sok, HI-C505-smasan, HI-C505-cita, HI-C505-vidhva, HI-C505-dafnana]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C505-SHOK505-01, HI-LEX-C505-SHOK505-02, HI-LEX-C505-SHOK505-03, HI-LEX-C505-SHOK505-04, HI-LEX-C505-SHOK505-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C505-SHOK505-01, HI-LEX-C505-SHOK505-02, HI-LEX-C505-SHOK505-03, HI-LEX-C505-SHOK505-04, HI-LEX-C505-SHOK505-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C505-sok, HI-C505-smasan, HI-C505-cita, HI-C505-vidhva, HI-C505-dafnana]
+---
+
+# Mourning — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C505-SHOK505-01, HI-LEX-C505-SHOK505-02] -->
+
+[PAUSE 3s] Say the Hindi for mourning and a cremation ground.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C505-SHOK505-01, HI-LEX-C505-SHOK505-02, HI-LEX-C505-SHOK505-03, HI-LEX-C505-SHOK505-04, HI-LEX-C505-SHOK505-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: mourning, a cremation ground, a funeral pyre, a widow, to bury (the dead)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C505-SHOK505-01, HI-LEX-C505-SHOK505-02, HI-LEX-C505-SHOK505-03, HI-LEX-C505-SHOK505-04, HI-LEX-C505-SHOK505-05] -->
+
+[PAUSE 3s] Mourning? (**शोक**, *śok*.) A cremation ground? (**श्मशान**, *śmaśān*.) A funeral pyre? (**चिता**, *citā*.) A widow? (**विधवा**, *vidhvā*.) To bury (the dead)? (**दफ़नाना**, *dafnānā*.)
+`;export{t as n,r as t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R475-review-468-475
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 26220
+chapter: 475
+type: review
+headword: (dialogue)
+gloss: a review of the words from Patience and Temper to Character and Conduct
+concept_tag: REVIEW
+prerequisites: [HI-C468-dhairya, HI-C468-adhir, HI-C468-jhakki, HI-C468-jhirakna, HI-C468-jhallana, HI-C469-krpan, HI-C469-mitvyayi, HI-C469-dan, HI-C469-lobhi, HI-C469-bhikhari, HI-C470-sahas, HI-C470-vir, HI-C470-diler, HI-C470-nirbhik, HI-C470-jokhim, HI-C471-vinamra, HI-C471-badtamiz, HI-C471-lihaz, HI-C471-sistacar, HI-C471-cirhana, HI-C472-phurtila, HI-C472-sust, HI-C472-nikamma, HI-C472-karmath, HI-C472-mustaid, HI-C473-batuni, HI-C473-cup, HI-C473-gap, HI-C473-barbarana, HI-C473-maun, HI-C474-aql, HI-C474-bevkuf, HI-C474-nadan, HI-C474-pagal, HI-C474-bahakna, HI-C475-caritra, HI-C475-acran, HI-C475-mizaj, HI-C475-gun, HI-C475-pravrtti]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C468-DHAIRYA468-01, HI-LEX-C468-DHAIRYA468-02, HI-LEX-C468-DHAIRYA468-03, HI-LEX-C468-DHAIRYA468-04, HI-LEX-C468-DHAIRYA468-05, HI-LEX-C469-UDAR469-01, HI-LEX-C469-UDAR469-02, HI-LEX-C469-UDAR469-03, HI-LEX-C469-UDAR469-04, HI-LEX-C469-UDAR469-05, HI-LEX-C470-SAHAS470-01, HI-LEX-C470-SAHAS470-02, HI-LEX-C470-SAHAS470-03, HI-LEX-C470-SAHAS470-04, HI-LEX-C470-SAHAS470-05, HI-LEX-C471-VINAMRA471-01, HI-LEX-C471-VINAMRA471-02, HI-LEX-C471-VINAMRA471-03, HI-LEX-C471-VINAMRA471-04, HI-LEX-C471-VINAMRA471-05, HI-LEX-C472-PHURTI472-01, HI-LEX-C472-PHURTI472-02, HI-LEX-C472-PHURTI472-03, HI-LEX-C472-PHURTI472-04, HI-LEX-C472-PHURTI472-05, HI-LEX-C473-BATUNI473-01, HI-LEX-C473-BATUNI473-02, HI-LEX-C473-BATUNI473-03, HI-LEX-C473-BATUNI473-04, HI-LEX-C473-BATUNI473-05, HI-LEX-C474-AQL474-01, HI-LEX-C474-AQL474-02, HI-LEX-C474-AQL474-03, HI-LEX-C474-AQL474-04, HI-LEX-C474-AQL474-05, HI-LEX-C475-CHARITRA475-01, HI-LEX-C475-CHARITRA475-02, HI-LEX-C475-CHARITRA475-03, HI-LEX-C475-CHARITRA475-04, HI-LEX-C475-CHARITRA475-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C468-DHAIRYA468-01, HI-LEX-C468-DHAIRYA468-02, HI-LEX-C468-DHAIRYA468-03, HI-LEX-C468-DHAIRYA468-04, HI-LEX-C468-DHAIRYA468-05, HI-LEX-C469-UDAR469-01, HI-LEX-C469-UDAR469-02, HI-LEX-C469-UDAR469-03, HI-LEX-C469-UDAR469-04, HI-LEX-C469-UDAR469-05, HI-LEX-C470-SAHAS470-01, HI-LEX-C470-SAHAS470-02, HI-LEX-C470-SAHAS470-03, HI-LEX-C470-SAHAS470-04, HI-LEX-C470-SAHAS470-05, HI-LEX-C471-VINAMRA471-01, HI-LEX-C471-VINAMRA471-02, HI-LEX-C471-VINAMRA471-03, HI-LEX-C471-VINAMRA471-04, HI-LEX-C471-VINAMRA471-05, HI-LEX-C472-PHURTI472-01, HI-LEX-C472-PHURTI472-02, HI-LEX-C472-PHURTI472-03, HI-LEX-C472-PHURTI472-04, HI-LEX-C472-PHURTI472-05, HI-LEX-C473-BATUNI473-01, HI-LEX-C473-BATUNI473-02, HI-LEX-C473-BATUNI473-03, HI-LEX-C473-BATUNI473-04, HI-LEX-C473-BATUNI473-05, HI-LEX-C474-AQL474-01, HI-LEX-C474-AQL474-02, HI-LEX-C474-AQL474-03, HI-LEX-C474-AQL474-04, HI-LEX-C474-AQL474-05, HI-LEX-C475-CHARITRA475-01, HI-LEX-C475-CHARITRA475-02, HI-LEX-C475-CHARITRA475-03, HI-LEX-C475-CHARITRA475-04, HI-LEX-C475-CHARITRA475-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C468-dhairya, HI-C468-adhir, HI-C468-jhakki, HI-C468-jhirakna, HI-C468-jhallana, HI-C469-krpan, HI-C469-mitvyayi, HI-C469-dan, HI-C469-lobhi, HI-C469-bhikhari, HI-C470-sahas, HI-C470-vir, HI-C470-diler, HI-C470-nirbhik, HI-C470-jokhim, HI-C471-vinamra, HI-C471-badtamiz, HI-C471-lihaz, HI-C471-sistacar, HI-C471-cirhana, HI-C472-phurtila, HI-C472-sust, HI-C472-nikamma, HI-C472-karmath, HI-C472-mustaid, HI-C473-batuni, HI-C473-cup, HI-C473-gap, HI-C473-barbarana, HI-C473-maun, HI-C474-aql, HI-C474-bevkuf, HI-C474-nadan, HI-C474-pagal, HI-C474-bahakna, HI-C475-caritra, HI-C475-acran, HI-C475-mizaj, HI-C475-gun, HI-C475-pravrtti]
+---
+
+# Looking back: from Patience and Temper to Character and Conduct
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C468-DHAIRYA468-01, HI-LEX-C468-DHAIRYA468-02] -->
+
+[PAUSE 3s] Say the Hindi for forbearance and impatient.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C468-DHAIRYA468-01, HI-LEX-C468-DHAIRYA468-02, HI-LEX-C468-DHAIRYA468-03, HI-LEX-C468-DHAIRYA468-04, HI-LEX-C468-DHAIRYA468-05, HI-LEX-C469-UDAR469-01, HI-LEX-C469-UDAR469-02, HI-LEX-C469-UDAR469-03, HI-LEX-C469-UDAR469-04, HI-LEX-C469-UDAR469-05, HI-LEX-C470-SAHAS470-01, HI-LEX-C470-SAHAS470-02, HI-LEX-C470-SAHAS470-03, HI-LEX-C470-SAHAS470-04, HI-LEX-C470-SAHAS470-05, HI-LEX-C471-VINAMRA471-01, HI-LEX-C471-VINAMRA471-02, HI-LEX-C471-VINAMRA471-03, HI-LEX-C471-VINAMRA471-04, HI-LEX-C471-VINAMRA471-05, HI-LEX-C472-PHURTI472-01, HI-LEX-C472-PHURTI472-02, HI-LEX-C472-PHURTI472-03, HI-LEX-C472-PHURTI472-04, HI-LEX-C472-PHURTI472-05, HI-LEX-C473-BATUNI473-01, HI-LEX-C473-BATUNI473-02, HI-LEX-C473-BATUNI473-03, HI-LEX-C473-BATUNI473-04, HI-LEX-C473-BATUNI473-05, HI-LEX-C474-AQL474-01, HI-LEX-C474-AQL474-02, HI-LEX-C474-AQL474-03, HI-LEX-C474-AQL474-04, HI-LEX-C474-AQL474-05, HI-LEX-C475-CHARITRA475-01, HI-LEX-C475-CHARITRA475-02, HI-LEX-C475-CHARITRA475-03, HI-LEX-C475-CHARITRA475-04, HI-LEX-C475-CHARITRA475-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: forbearance, impatient, cranky, to snap at, to snap irritably]
+- [YOU SAY: miserly, thrifty, a donation, greedy, a beggar]
+- [YOU SAY: daring, valiant, bold, fearless, a risk]
+- [YOU SAY: polite, rude, consideration, etiquette, to tease]
+- [YOU SAY: nimble, sluggish, good-for-nothing, dedicated, alert]
+- [YOU SAY: talkative, silent, idle chat, to grumble, silence]
+- [YOU SAY: sense, a fool, naive, mad, to go astray]
+- [YOU SAY: character, moral conduct, mood, a virtue, a tendency]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C468-DHAIRYA468-01, HI-LEX-C468-DHAIRYA468-02, HI-LEX-C468-DHAIRYA468-03, HI-LEX-C468-DHAIRYA468-04, HI-LEX-C468-DHAIRYA468-05, HI-LEX-C469-UDAR469-01, HI-LEX-C469-UDAR469-02, HI-LEX-C469-UDAR469-03, HI-LEX-C469-UDAR469-04, HI-LEX-C469-UDAR469-05, HI-LEX-C470-SAHAS470-01, HI-LEX-C470-SAHAS470-02, HI-LEX-C470-SAHAS470-03, HI-LEX-C470-SAHAS470-04, HI-LEX-C470-SAHAS470-05, HI-LEX-C471-VINAMRA471-01, HI-LEX-C471-VINAMRA471-02, HI-LEX-C471-VINAMRA471-03, HI-LEX-C471-VINAMRA471-04, HI-LEX-C471-VINAMRA471-05, HI-LEX-C472-PHURTI472-01, HI-LEX-C472-PHURTI472-02, HI-LEX-C472-PHURTI472-03, HI-LEX-C472-PHURTI472-04, HI-LEX-C472-PHURTI472-05, HI-LEX-C473-BATUNI473-01, HI-LEX-C473-BATUNI473-02, HI-LEX-C473-BATUNI473-03, HI-LEX-C473-BATUNI473-04, HI-LEX-C473-BATUNI473-05, HI-LEX-C474-AQL474-01, HI-LEX-C474-AQL474-02, HI-LEX-C474-AQL474-03, HI-LEX-C474-AQL474-04, HI-LEX-C474-AQL474-05, HI-LEX-C475-CHARITRA475-01, HI-LEX-C475-CHARITRA475-02, HI-LEX-C475-CHARITRA475-03, HI-LEX-C475-CHARITRA475-04, HI-LEX-C475-CHARITRA475-05] -->
+
+[PAUSE 3s] Forbearance? (**धैर्य**, *dhairya*.) Impatient? (**अधीर**, *adhīr*.) Cranky? (**झक्की**, *jhakkī*.) To snap at? (**झिड़कना**, *jhiṛaknā*.) To snap irritably? (**झल्लाना**, *jhallānā*.) Miserly? (**कृपण**, *kṛpaṇ*.) Thrifty? (**मितव्ययी**, *mitvyayī*.) A donation? (**दान**, *dān*.) Greedy? (**लोभी**, *lobhī*.) A beggar? (**भिखारी**, *bhikhārī*.) Daring? (**साहस**, *sāhas*.) Valiant? (**वीर**, *vīr*.) Bold? (**दिलेर**, *diler*.) Fearless? (**निर्भीक**, *nirbhīk*.) A risk? (**जोखिम**, *jokhim*.) Polite? (**विनम्र**, *vinamra*.) Rude? (**बदतमीज़**, *badtamīz*.) Consideration? (**लिहाज़**, *lihāz*.) Etiquette? (**शिष्टाचार**, *śiṣṭācār*.) To tease? (**चिढ़ाना**, *ciṛhānā*.) Nimble? (**फुर्तीला**, *phurtīlā*.) Sluggish? (**सुस्त**, *sust*.) Good-for-nothing? (**निकम्मा**, *nikammā*.) Dedicated? (**कर्मठ**, *karmaṭh*.) Alert? (**मुस्तैद**, *mustaid*.) Talkative? (**बातूनी**, *bātūnī*.) Silent? (**चुप**, *cup*.) Idle chat? (**गप**, *gap*.) To grumble? (**बड़बड़ाना**, *baṛbaṛānā*.) Silence? (**मौन**, *maun*.) Sense? (**अक़्ल**, *aql*.) A fool? (**बेवकूफ़**, *bevkūf*.) Naive? (**नादान**, *nādān*.) Mad? (**पागल**, *pāgal*.) To go astray? (**बहकना**, *bahaknā*.) Character? (**चरित्र**, *caritra*.) Moral conduct? (**आचरण**, *ācraṇ*.) Mood? (**मिज़ाज**, *mizāj*.) A virtue? (**गुण**, *guṇ*.) A tendency? (**प्रवृत्ति**, *pravṛtti*.)
+`;export{t};

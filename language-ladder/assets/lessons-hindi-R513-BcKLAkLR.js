@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R513-review-506-513
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 28400
+chapter: 513
+type: review
+headword: (dialogue)
+gloss: a review of the words from The Craftsman's Bench to At the Tailor's
+concept_tag: REVIEW
+prerequisites: [HI-C506-karigar, HI-C506-auzar, HI-C506-hunar, HI-C506-garhna, HI-C506-mistri, HI-C507-sahkarmi, HI-C507-afsar, HI-C507-ustad, HI-C507-kausal, HI-C507-pratibha, HI-C508-intarvyu, HI-C508-niyukti, HI-C508-avedan, HI-C508-dakhila, HI-C508-vetan, HI-C509-hartal, HI-C509-istifa, HI-C509-canda, HI-C509-manmani, HI-C509-nara, HI-C510-randa, HI-C510-cheni, HI-C510-ghisna, HI-C510-thokna, HI-C510-chedna, HI-C511-cak, HI-C511-sanna, HI-C511-ava, HI-C511-saca, HI-C511-dhaalna, HI-C512-kapas, HI-C512-carkha, HI-C512-kaatna, HI-C512-kargha, HI-C512-gath, HI-C513-silna, HI-C513-silvana, HI-C513-katarna, HI-C513-pirona, HI-C513-udharna]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C506-KARIGAR506-01, HI-LEX-C506-KARIGAR506-02, HI-LEX-C506-KARIGAR506-03, HI-LEX-C506-KARIGAR506-04, HI-LEX-C506-KARIGAR506-05, HI-LEX-C507-DAFTAR507-01, HI-LEX-C507-DAFTAR507-02, HI-LEX-C507-DAFTAR507-03, HI-LEX-C507-DAFTAR507-04, HI-LEX-C507-DAFTAR507-05, HI-LEX-C508-NAUKRI508-01, HI-LEX-C508-NAUKRI508-02, HI-LEX-C508-NAUKRI508-03, HI-LEX-C508-NAUKRI508-04, HI-LEX-C508-NAUKRI508-05, HI-LEX-C509-HADTAL509-01, HI-LEX-C509-HADTAL509-02, HI-LEX-C509-HADTAL509-03, HI-LEX-C509-HADTAL509-04, HI-LEX-C509-HADTAL509-05, HI-LEX-C510-BADHAI510-01, HI-LEX-C510-BADHAI510-02, HI-LEX-C510-BADHAI510-03, HI-LEX-C510-BADHAI510-04, HI-LEX-C510-BADHAI510-05, HI-LEX-C511-KUMHAR511-01, HI-LEX-C511-KUMHAR511-02, HI-LEX-C511-KUMHAR511-03, HI-LEX-C511-KUMHAR511-04, HI-LEX-C511-KUMHAR511-05, HI-LEX-C512-KARGHA512-01, HI-LEX-C512-KARGHA512-02, HI-LEX-C512-KARGHA512-03, HI-LEX-C512-KARGHA512-04, HI-LEX-C512-KARGHA512-05, HI-LEX-C513-DARZI513-01, HI-LEX-C513-DARZI513-02, HI-LEX-C513-DARZI513-03, HI-LEX-C513-DARZI513-04, HI-LEX-C513-DARZI513-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C506-KARIGAR506-01, HI-LEX-C506-KARIGAR506-02, HI-LEX-C506-KARIGAR506-03, HI-LEX-C506-KARIGAR506-04, HI-LEX-C506-KARIGAR506-05, HI-LEX-C507-DAFTAR507-01, HI-LEX-C507-DAFTAR507-02, HI-LEX-C507-DAFTAR507-03, HI-LEX-C507-DAFTAR507-04, HI-LEX-C507-DAFTAR507-05, HI-LEX-C508-NAUKRI508-01, HI-LEX-C508-NAUKRI508-02, HI-LEX-C508-NAUKRI508-03, HI-LEX-C508-NAUKRI508-04, HI-LEX-C508-NAUKRI508-05, HI-LEX-C509-HADTAL509-01, HI-LEX-C509-HADTAL509-02, HI-LEX-C509-HADTAL509-03, HI-LEX-C509-HADTAL509-04, HI-LEX-C509-HADTAL509-05, HI-LEX-C510-BADHAI510-01, HI-LEX-C510-BADHAI510-02, HI-LEX-C510-BADHAI510-03, HI-LEX-C510-BADHAI510-04, HI-LEX-C510-BADHAI510-05, HI-LEX-C511-KUMHAR511-01, HI-LEX-C511-KUMHAR511-02, HI-LEX-C511-KUMHAR511-03, HI-LEX-C511-KUMHAR511-04, HI-LEX-C511-KUMHAR511-05, HI-LEX-C512-KARGHA512-01, HI-LEX-C512-KARGHA512-02, HI-LEX-C512-KARGHA512-03, HI-LEX-C512-KARGHA512-04, HI-LEX-C512-KARGHA512-05, HI-LEX-C513-DARZI513-01, HI-LEX-C513-DARZI513-02, HI-LEX-C513-DARZI513-03, HI-LEX-C513-DARZI513-04, HI-LEX-C513-DARZI513-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C506-karigar, HI-C506-auzar, HI-C506-hunar, HI-C506-garhna, HI-C506-mistri, HI-C507-sahkarmi, HI-C507-afsar, HI-C507-ustad, HI-C507-kausal, HI-C507-pratibha, HI-C508-intarvyu, HI-C508-niyukti, HI-C508-avedan, HI-C508-dakhila, HI-C508-vetan, HI-C509-hartal, HI-C509-istifa, HI-C509-canda, HI-C509-manmani, HI-C509-nara, HI-C510-randa, HI-C510-cheni, HI-C510-ghisna, HI-C510-thokna, HI-C510-chedna, HI-C511-cak, HI-C511-sanna, HI-C511-ava, HI-C511-saca, HI-C511-dhaalna, HI-C512-kapas, HI-C512-carkha, HI-C512-kaatna, HI-C512-kargha, HI-C512-gath, HI-C513-silna, HI-C513-silvana, HI-C513-katarna, HI-C513-pirona, HI-C513-udharna]
+---
+
+# Looking back: from The Craftsman's Bench to At the Tailor's
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C506-KARIGAR506-01, HI-LEX-C506-KARIGAR506-02] -->
+
+[PAUSE 3s] Say the Hindi for a craftsman and a tool.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C506-KARIGAR506-01, HI-LEX-C506-KARIGAR506-02, HI-LEX-C506-KARIGAR506-03, HI-LEX-C506-KARIGAR506-04, HI-LEX-C506-KARIGAR506-05, HI-LEX-C507-DAFTAR507-01, HI-LEX-C507-DAFTAR507-02, HI-LEX-C507-DAFTAR507-03, HI-LEX-C507-DAFTAR507-04, HI-LEX-C507-DAFTAR507-05, HI-LEX-C508-NAUKRI508-01, HI-LEX-C508-NAUKRI508-02, HI-LEX-C508-NAUKRI508-03, HI-LEX-C508-NAUKRI508-04, HI-LEX-C508-NAUKRI508-05, HI-LEX-C509-HADTAL509-01, HI-LEX-C509-HADTAL509-02, HI-LEX-C509-HADTAL509-03, HI-LEX-C509-HADTAL509-04, HI-LEX-C509-HADTAL509-05, HI-LEX-C510-BADHAI510-01, HI-LEX-C510-BADHAI510-02, HI-LEX-C510-BADHAI510-03, HI-LEX-C510-BADHAI510-04, HI-LEX-C510-BADHAI510-05, HI-LEX-C511-KUMHAR511-01, HI-LEX-C511-KUMHAR511-02, HI-LEX-C511-KUMHAR511-03, HI-LEX-C511-KUMHAR511-04, HI-LEX-C511-KUMHAR511-05, HI-LEX-C512-KARGHA512-01, HI-LEX-C512-KARGHA512-02, HI-LEX-C512-KARGHA512-03, HI-LEX-C512-KARGHA512-04, HI-LEX-C512-KARGHA512-05, HI-LEX-C513-DARZI513-01, HI-LEX-C513-DARZI513-02, HI-LEX-C513-DARZI513-03, HI-LEX-C513-DARZI513-04, HI-LEX-C513-DARZI513-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a craftsman, a tool, a skill, to shape, a mechanic]
+- [YOU SAY: a colleague, an officer, a master (of a craft or an art), skill, talent]
+- [YOU SAY: an interview (for a job or a place), an appointment (to a post), an application (formal), admission (to a school or course), a salary, pay (formal)]
+- [YOU SAY: a strike (stopping work), a resignation, a contribution, high-handedness, a slogan]
+- [YOU SAY: a carpenter's plane, a chisel, to rub, to wear down, to knock in, to bore]
+- [YOU SAY: a potter's wheel, to mix (with water), a potter's kiln, a mould, to pour into a mould]
+- [YOU SAY: cotton (the plant, the raw fibre), a spinning wheel, to spin (thread), a loom, a knot]
+- [YOU SAY: to be stitched, to have (clothes) stitched, to snip, to thread (a needle), to come unstitched]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C506-KARIGAR506-01, HI-LEX-C506-KARIGAR506-02, HI-LEX-C506-KARIGAR506-03, HI-LEX-C506-KARIGAR506-04, HI-LEX-C506-KARIGAR506-05, HI-LEX-C507-DAFTAR507-01, HI-LEX-C507-DAFTAR507-02, HI-LEX-C507-DAFTAR507-03, HI-LEX-C507-DAFTAR507-04, HI-LEX-C507-DAFTAR507-05, HI-LEX-C508-NAUKRI508-01, HI-LEX-C508-NAUKRI508-02, HI-LEX-C508-NAUKRI508-03, HI-LEX-C508-NAUKRI508-04, HI-LEX-C508-NAUKRI508-05, HI-LEX-C509-HADTAL509-01, HI-LEX-C509-HADTAL509-02, HI-LEX-C509-HADTAL509-03, HI-LEX-C509-HADTAL509-04, HI-LEX-C509-HADTAL509-05, HI-LEX-C510-BADHAI510-01, HI-LEX-C510-BADHAI510-02, HI-LEX-C510-BADHAI510-03, HI-LEX-C510-BADHAI510-04, HI-LEX-C510-BADHAI510-05, HI-LEX-C511-KUMHAR511-01, HI-LEX-C511-KUMHAR511-02, HI-LEX-C511-KUMHAR511-03, HI-LEX-C511-KUMHAR511-04, HI-LEX-C511-KUMHAR511-05, HI-LEX-C512-KARGHA512-01, HI-LEX-C512-KARGHA512-02, HI-LEX-C512-KARGHA512-03, HI-LEX-C512-KARGHA512-04, HI-LEX-C512-KARGHA512-05, HI-LEX-C513-DARZI513-01, HI-LEX-C513-DARZI513-02, HI-LEX-C513-DARZI513-03, HI-LEX-C513-DARZI513-04, HI-LEX-C513-DARZI513-05] -->
+
+[PAUSE 3s] A craftsman? (**कारीगर**, *kārīgar*.) A tool? (**औज़ार**, *auzār*.) A skill? (**हुनर**, *hunar*.) To shape? (**गढ़ना**, *gaṛhnā*.) A mechanic? (**मिस्त्री**, *mistrī*.) A colleague? (**सहकर्मी**, *sahkarmī*.) An officer? (**अफ़सर**, *afsar*.) A master (of a craft or an art)? (**उस्ताद**, *ustād*.) Skill? (**कौशल**, *kauśal*.) Talent? (**प्रतिभा**, *pratibhā*.) An interview (for a job or a place)? (**इंटरव्यू**, *iṇṭarvyū*.) An appointment (to a post)? (**नियुक्ति**, *niyukti*.) An application (formal)? (**आवेदन**, *āvedan*.) Admission (to a school or course)? (**दाख़िला**, *dākhilā*.) A salary, pay (formal)? (**वेतन**, *vetan*.) A strike (stopping work)? (**हड़ताल**, *haṛtāl*.) A resignation? (**इस्तीफ़ा**, *istīfā*.) A contribution? (**चंदा**, *candā*.) High-handedness? (**मनमानी**, *manmānī*.) A slogan? (**नारा**, *nārā*.) A carpenter's plane? (**रंदा**, *randā*.) A chisel? (**छेनी**, *chenī*.) To rub, to wear down? (**घिसना**, *ghisnā*.) To knock in? (**ठोकना**, *ṭhoknā*.) To bore? (**छेदना**, *chednā*.) A potter's wheel? (**चाक**, *cāk*.) To mix (with water)? (**सानना**, *sānnā*.) A potter's kiln? (**आँवा**, *ā̃vā*.) A mould? (**साँचा**, *sā̃cā*.) To pour into a mould? (**ढालना**, *ḍhālnā*.) Cotton (the plant, the raw fibre)? (**कपास**, *kapās*.) A spinning wheel? (**चरखा**, *carkhā*.) To spin (thread)? (**कातना**, *kātnā*.) A loom? (**करघा**, *karghā*.) A knot? (**गाँठ**, *gā̃ṭh*.) To be stitched? (**सिलना**, *silnā*.) To have (clothes) stitched? (**सिलवाना**, *silvānā*.) To snip? (**कतरना**, *katarnā*.) To thread (a needle)? (**पिरोना**, *pironā*.) To come unstitched? (**उधड़ना**, *udhaṛnā*.)
+`;export{t};

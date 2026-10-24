@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R421-review-414-421
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23220
+chapter: 421
+type: review
+headword: (dialogue)
+gloss: a review of the words from Bathrooms and Comfort to Settlements and Towns
+concept_tag: REVIEW
+prerequisites: [HI-C414-gusalkhana, HI-C414-saucalay, HI-C414-gizar, HI-C414-aramdeh, HI-C414-jagana, HI-C415-mainejar, HI-C415-rajistar, HI-C415-buking, HI-C415-thikana, HI-C415-magana, HI-C416-khema, HI-C416-sulana, HI-C416-basera, HI-C416-guzaarna, HI-C416-bitana, HI-C417-disa, HI-C417-taraf, HI-C417-or, HI-C417-marg, HI-C417-rukh, HI-C418-nazdik, HI-C418-nikat, HI-C418-par, HI-C418-bagal, HI-C418-pahucana, HI-C419-tiraha, HI-C419-cakkar, HI-C419-nisan, HI-C419-imarat, HI-C419-bord, HI-C420-dhalan, HI-C420-galiyara, HI-C420-ghusna, HI-C420-lurhakna, HI-C420-garnaintr, HI-C421-basti, HI-C421-qasba, HI-C421-basinda, HI-C421-paros, HI-C421-dehat]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C414-GUSALKHANA414-01, HI-LEX-C414-GUSALKHANA414-02, HI-LEX-C414-GUSALKHANA414-03, HI-LEX-C414-GUSALKHANA414-04, HI-LEX-C414-GUSALKHANA414-05, HI-LEX-C415-RAJISTAR415-01, HI-LEX-C415-RAJISTAR415-02, HI-LEX-C415-RAJISTAR415-03, HI-LEX-C415-RAJISTAR415-04, HI-LEX-C415-RAJISTAR415-05, HI-LEX-C416-KHEMA416-01, HI-LEX-C416-KHEMA416-02, HI-LEX-C416-KHEMA416-03, HI-LEX-C416-KHEMA416-04, HI-LEX-C416-KHEMA416-05, HI-LEX-C417-DISHA417-01, HI-LEX-C417-DISHA417-02, HI-LEX-C417-DISHA417-03, HI-LEX-C417-DISHA417-04, HI-LEX-C417-DISHA417-05, HI-LEX-C418-NAZDIK418-01, HI-LEX-C418-NAZDIK418-02, HI-LEX-C418-NAZDIK418-03, HI-LEX-C418-NAZDIK418-04, HI-LEX-C418-NAZDIK418-05, HI-LEX-C419-TIRAHA419-01, HI-LEX-C419-TIRAHA419-02, HI-LEX-C419-TIRAHA419-03, HI-LEX-C419-TIRAHA419-04, HI-LEX-C419-TIRAHA419-05, HI-LEX-C420-DHALAN420-01, HI-LEX-C420-DHALAN420-02, HI-LEX-C420-DHALAN420-03, HI-LEX-C420-DHALAN420-04, HI-LEX-C420-DHALAN420-05, HI-LEX-C421-BASTI421-01, HI-LEX-C421-BASTI421-02, HI-LEX-C421-BASTI421-03, HI-LEX-C421-BASTI421-04, HI-LEX-C421-BASTI421-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C414-GUSALKHANA414-01, HI-LEX-C414-GUSALKHANA414-02, HI-LEX-C414-GUSALKHANA414-03, HI-LEX-C414-GUSALKHANA414-04, HI-LEX-C414-GUSALKHANA414-05, HI-LEX-C415-RAJISTAR415-01, HI-LEX-C415-RAJISTAR415-02, HI-LEX-C415-RAJISTAR415-03, HI-LEX-C415-RAJISTAR415-04, HI-LEX-C415-RAJISTAR415-05, HI-LEX-C416-KHEMA416-01, HI-LEX-C416-KHEMA416-02, HI-LEX-C416-KHEMA416-03, HI-LEX-C416-KHEMA416-04, HI-LEX-C416-KHEMA416-05, HI-LEX-C417-DISHA417-01, HI-LEX-C417-DISHA417-02, HI-LEX-C417-DISHA417-03, HI-LEX-C417-DISHA417-04, HI-LEX-C417-DISHA417-05, HI-LEX-C418-NAZDIK418-01, HI-LEX-C418-NAZDIK418-02, HI-LEX-C418-NAZDIK418-03, HI-LEX-C418-NAZDIK418-04, HI-LEX-C418-NAZDIK418-05, HI-LEX-C419-TIRAHA419-01, HI-LEX-C419-TIRAHA419-02, HI-LEX-C419-TIRAHA419-03, HI-LEX-C419-TIRAHA419-04, HI-LEX-C419-TIRAHA419-05, HI-LEX-C420-DHALAN420-01, HI-LEX-C420-DHALAN420-02, HI-LEX-C420-DHALAN420-03, HI-LEX-C420-DHALAN420-04, HI-LEX-C420-DHALAN420-05, HI-LEX-C421-BASTI421-01, HI-LEX-C421-BASTI421-02, HI-LEX-C421-BASTI421-03, HI-LEX-C421-BASTI421-04, HI-LEX-C421-BASTI421-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C414-gusalkhana, HI-C414-saucalay, HI-C414-gizar, HI-C414-aramdeh, HI-C414-jagana, HI-C415-mainejar, HI-C415-rajistar, HI-C415-buking, HI-C415-thikana, HI-C415-magana, HI-C416-khema, HI-C416-sulana, HI-C416-basera, HI-C416-guzaarna, HI-C416-bitana, HI-C417-disa, HI-C417-taraf, HI-C417-or, HI-C417-marg, HI-C417-rukh, HI-C418-nazdik, HI-C418-nikat, HI-C418-par, HI-C418-bagal, HI-C418-pahucana, HI-C419-tiraha, HI-C419-cakkar, HI-C419-nisan, HI-C419-imarat, HI-C419-bord, HI-C420-dhalan, HI-C420-galiyara, HI-C420-ghusna, HI-C420-lurhakna, HI-C420-garnaintr, HI-C421-basti, HI-C421-qasba, HI-C421-basinda, HI-C421-paros, HI-C421-dehat]
+---
+
+# Looking back: from Bathrooms and Comfort to Settlements and Towns
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C414-GUSALKHANA414-01, HI-LEX-C414-GUSALKHANA414-02] -->
+
+[PAUSE 3s] Say the Hindi for a bathroom and a toilet.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C414-GUSALKHANA414-01, HI-LEX-C414-GUSALKHANA414-02, HI-LEX-C414-GUSALKHANA414-03, HI-LEX-C414-GUSALKHANA414-04, HI-LEX-C414-GUSALKHANA414-05, HI-LEX-C415-RAJISTAR415-01, HI-LEX-C415-RAJISTAR415-02, HI-LEX-C415-RAJISTAR415-03, HI-LEX-C415-RAJISTAR415-04, HI-LEX-C415-RAJISTAR415-05, HI-LEX-C416-KHEMA416-01, HI-LEX-C416-KHEMA416-02, HI-LEX-C416-KHEMA416-03, HI-LEX-C416-KHEMA416-04, HI-LEX-C416-KHEMA416-05, HI-LEX-C417-DISHA417-01, HI-LEX-C417-DISHA417-02, HI-LEX-C417-DISHA417-03, HI-LEX-C417-DISHA417-04, HI-LEX-C417-DISHA417-05, HI-LEX-C418-NAZDIK418-01, HI-LEX-C418-NAZDIK418-02, HI-LEX-C418-NAZDIK418-03, HI-LEX-C418-NAZDIK418-04, HI-LEX-C418-NAZDIK418-05, HI-LEX-C419-TIRAHA419-01, HI-LEX-C419-TIRAHA419-02, HI-LEX-C419-TIRAHA419-03, HI-LEX-C419-TIRAHA419-04, HI-LEX-C419-TIRAHA419-05, HI-LEX-C420-DHALAN420-01, HI-LEX-C420-DHALAN420-02, HI-LEX-C420-DHALAN420-03, HI-LEX-C420-DHALAN420-04, HI-LEX-C420-DHALAN420-05, HI-LEX-C421-BASTI421-01, HI-LEX-C421-BASTI421-02, HI-LEX-C421-BASTI421-03, HI-LEX-C421-BASTI421-04, HI-LEX-C421-BASTI421-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a bathroom, a toilet, a water heater, comfortable, to wake (someone)]
+- [YOU SAY: a manager, a register, a booking, a place to stay, to send for]
+- [YOU SAY: a tent (for camping), to put to sleep, a roost, to spend (time), to pass (time)]
+- [YOU SAY: a direction, a side (of a place), towards, a route, the way something faces]
+- [YOU SAY: close by, near (formal), across, beside, to deliver]
+- [YOU SAY: a T-junction, a round, a mark left behind, a building, a signboard]
+- [YOU SAY: a slope, a corridor, to push in, to roll, to dig into]
+- [YOU SAY: a settlement, a small town, a resident, next door, the countryside]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C414-GUSALKHANA414-01, HI-LEX-C414-GUSALKHANA414-02, HI-LEX-C414-GUSALKHANA414-03, HI-LEX-C414-GUSALKHANA414-04, HI-LEX-C414-GUSALKHANA414-05, HI-LEX-C415-RAJISTAR415-01, HI-LEX-C415-RAJISTAR415-02, HI-LEX-C415-RAJISTAR415-03, HI-LEX-C415-RAJISTAR415-04, HI-LEX-C415-RAJISTAR415-05, HI-LEX-C416-KHEMA416-01, HI-LEX-C416-KHEMA416-02, HI-LEX-C416-KHEMA416-03, HI-LEX-C416-KHEMA416-04, HI-LEX-C416-KHEMA416-05, HI-LEX-C417-DISHA417-01, HI-LEX-C417-DISHA417-02, HI-LEX-C417-DISHA417-03, HI-LEX-C417-DISHA417-04, HI-LEX-C417-DISHA417-05, HI-LEX-C418-NAZDIK418-01, HI-LEX-C418-NAZDIK418-02, HI-LEX-C418-NAZDIK418-03, HI-LEX-C418-NAZDIK418-04, HI-LEX-C418-NAZDIK418-05, HI-LEX-C419-TIRAHA419-01, HI-LEX-C419-TIRAHA419-02, HI-LEX-C419-TIRAHA419-03, HI-LEX-C419-TIRAHA419-04, HI-LEX-C419-TIRAHA419-05, HI-LEX-C420-DHALAN420-01, HI-LEX-C420-DHALAN420-02, HI-LEX-C420-DHALAN420-03, HI-LEX-C420-DHALAN420-04, HI-LEX-C420-DHALAN420-05, HI-LEX-C421-BASTI421-01, HI-LEX-C421-BASTI421-02, HI-LEX-C421-BASTI421-03, HI-LEX-C421-BASTI421-04, HI-LEX-C421-BASTI421-05] -->
+
+[PAUSE 3s] A bathroom? (**गुसलख़ाना**, *gusalkhānā*.) A toilet? (**शौचालय**, *śaucālay*.) A water heater? (**गीज़र**, *gīzar*.) Comfortable? (**आरामदेह**, *ārāmdeh*.) To wake (someone)? (**जगाना**, *jagānā*.) A manager? (**मैनेजर**, *mainejar*.) A register? (**रजिस्टर**, *rajisṭar*.) A booking? (**बुकिंग**, *buking*.) A place to stay? (**ठिकाना**, *ṭhikānā*.) To send for? (**मँगाना**, *mãgānā*.) A tent (for camping)? (**ख़ेमा**, *khemā*.) To put to sleep? (**सुलाना**, *sulānā*.) A roost? (**बसेरा**, *baserā*.) To spend (time)? (**गुज़ारना**, *guzārnā*.) To pass (time)? (**बिताना**, *bitānā*.) A direction? (**दिशा**, *diśā*.) A side (of a place)? (**तरफ़**, *taraf*.) Towards? (**ओर**, *or*.) A route? (**मार्ग**, *mārg*.) The way something faces? (**रुख़**, *rukh*.) Close by? (**नज़दीक**, *nazdīk*.) Near (formal)? (**निकट**, *nikaṭ*.) Across? (**पार**, *pār*.) Beside? (**बग़ल**, *baġal*.) To deliver? (**पहुँचाना**, *pahũcānā*.) A T-junction? (**तिराहा**, *tirāhā*.) A round? (**चक्कर**, *cakkar*.) A mark left behind? (**निशान**, *niśān*.) A building? (**इमारत**, *imārat*.) A signboard? (**बोर्ड**, *borḍ*.) A slope? (**ढलान**, *ḍhalān*.) A corridor? (**गलियारा**, *galiyārā*.) To push in? (**घुसना**, *ghusnā*.) To roll? (**लुढ़कना**, *luṛhaknā*.) To dig into? (**गड़ना**, *gaṛnā*.) A settlement? (**बस्ती**, *bastī*.) A small town? (**क़स्बा**, *qasbā*.) A resident? (**बाशिंदा**, *bāśindā*.) Next door? (**पड़ोस**, *paṛos*.) The countryside? (**देहात**, *dehāt*.)
+`;export{t};

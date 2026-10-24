@@ -1,0 +1,1 @@
+var e=new URL(`HI-W280-letter-ai-filmstrip-BGYvt8lj.svg`,import.meta.url).href;export{e as default};

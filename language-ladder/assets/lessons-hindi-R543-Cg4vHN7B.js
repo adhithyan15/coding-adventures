@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R545-review-538-545
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 30040
+chapter: 545
+type: review
+headword: (dialogue)
+gloss: a review of the words from Getting Things Ready to A Game of Chance
+concept_tag: REVIEW
+prerequisites: [HI-C538-sajona, HI-C538-taiyar, HI-C538-prabandh, HI-C538-sajna, HI-C538-binna, HI-C539-tirth, HI-C539-dua, HI-C539-prarthna, HI-C539-kamna, HI-C539-thanna, HI-C540-tajurba, HI-C540-yukti, HI-C540-zariya, HI-C540-tarkib, HI-C540-prayatn, HI-C541-rukavat, HI-C541-jhamela, HI-C541-atkana, HI-C541-phanda, HI-C541-uljhana, HI-C542-varta, HI-C542-riyayat, HI-C542-sahmati, HI-C542-peskas, HI-C542-madhyasth, HI-C543-vacan, HI-C543-qasam, HI-C543-razi, HI-C543-sapath, HI-C543-paband, HI-C544-qismat, HI-C544-samyog, HI-C544-mauqa, HI-C544-avsar, HI-C544-dav, HI-C545-jua, HI-C545-pasa, HI-C545-bazi, HI-C545-mohra, HI-C545-mat]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C538-PRABANDH538-01, HI-LEX-C538-PRABANDH538-02, HI-LEX-C538-PRABANDH538-03, HI-LEX-C538-PRABANDH538-04, HI-LEX-C538-PRABANDH538-05, HI-LEX-C539-DUA539-01, HI-LEX-C539-DUA539-02, HI-LEX-C539-DUA539-03, HI-LEX-C539-DUA539-04, HI-LEX-C539-DUA539-05, HI-LEX-C540-KOSHISH540-01, HI-LEX-C540-KOSHISH540-02, HI-LEX-C540-KOSHISH540-03, HI-LEX-C540-KOSHISH540-04, HI-LEX-C540-KOSHISH540-05, HI-LEX-C541-RUKAVAT541-01, HI-LEX-C541-RUKAVAT541-02, HI-LEX-C541-RUKAVAT541-03, HI-LEX-C541-RUKAVAT541-04, HI-LEX-C541-RUKAVAT541-05, HI-LEX-C542-SAMJHAUTA542-01, HI-LEX-C542-SAMJHAUTA542-02, HI-LEX-C542-SAMJHAUTA542-03, HI-LEX-C542-SAMJHAUTA542-04, HI-LEX-C542-SAMJHAUTA542-05, HI-LEX-C543-VACHAN543-01, HI-LEX-C543-VACHAN543-02, HI-LEX-C543-VACHAN543-03, HI-LEX-C543-VACHAN543-04, HI-LEX-C543-VACHAN543-05, HI-LEX-C544-KISMAT544-01, HI-LEX-C544-KISMAT544-02, HI-LEX-C544-KISMAT544-03, HI-LEX-C544-KISMAT544-04, HI-LEX-C544-KISMAT544-05, HI-LEX-C545-JUA545-01, HI-LEX-C545-JUA545-02, HI-LEX-C545-JUA545-03, HI-LEX-C545-JUA545-04, HI-LEX-C545-JUA545-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C538-PRABANDH538-01, HI-LEX-C538-PRABANDH538-02, HI-LEX-C538-PRABANDH538-03, HI-LEX-C538-PRABANDH538-04, HI-LEX-C538-PRABANDH538-05, HI-LEX-C539-DUA539-01, HI-LEX-C539-DUA539-02, HI-LEX-C539-DUA539-03, HI-LEX-C539-DUA539-04, HI-LEX-C539-DUA539-05, HI-LEX-C540-KOSHISH540-01, HI-LEX-C540-KOSHISH540-02, HI-LEX-C540-KOSHISH540-03, HI-LEX-C540-KOSHISH540-04, HI-LEX-C540-KOSHISH540-05, HI-LEX-C541-RUKAVAT541-01, HI-LEX-C541-RUKAVAT541-02, HI-LEX-C541-RUKAVAT541-03, HI-LEX-C541-RUKAVAT541-04, HI-LEX-C541-RUKAVAT541-05, HI-LEX-C542-SAMJHAUTA542-01, HI-LEX-C542-SAMJHAUTA542-02, HI-LEX-C542-SAMJHAUTA542-03, HI-LEX-C542-SAMJHAUTA542-04, HI-LEX-C542-SAMJHAUTA542-05, HI-LEX-C543-VACHAN543-01, HI-LEX-C543-VACHAN543-02, HI-LEX-C543-VACHAN543-03, HI-LEX-C543-VACHAN543-04, HI-LEX-C543-VACHAN543-05, HI-LEX-C544-KISMAT544-01, HI-LEX-C544-KISMAT544-02, HI-LEX-C544-KISMAT544-03, HI-LEX-C544-KISMAT544-04, HI-LEX-C544-KISMAT544-05, HI-LEX-C545-JUA545-01, HI-LEX-C545-JUA545-02, HI-LEX-C545-JUA545-03, HI-LEX-C545-JUA545-04, HI-LEX-C545-JUA545-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C538-sajona, HI-C538-taiyar, HI-C538-prabandh, HI-C538-sajna, HI-C538-binna, HI-C539-tirth, HI-C539-dua, HI-C539-prarthna, HI-C539-kamna, HI-C539-thanna, HI-C540-tajurba, HI-C540-yukti, HI-C540-zariya, HI-C540-tarkib, HI-C540-prayatn, HI-C541-rukavat, HI-C541-jhamela, HI-C541-atkana, HI-C541-phanda, HI-C541-uljhana, HI-C542-varta, HI-C542-riyayat, HI-C542-sahmati, HI-C542-peskas, HI-C542-madhyasth, HI-C543-vacan, HI-C543-qasam, HI-C543-razi, HI-C543-sapath, HI-C543-paband, HI-C544-qismat, HI-C544-samyog, HI-C544-mauqa, HI-C544-avsar, HI-C544-dav, HI-C545-jua, HI-C545-pasa, HI-C545-bazi, HI-C545-mohra, HI-C545-mat]
+---
+
+# Looking back: from Getting Things Ready to A Game of Chance
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C538-PRABANDH538-01, HI-LEX-C538-PRABANDH538-02] -->
+
+[PAUSE 3s] Say the Hindi for to treasure and ready.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C538-PRABANDH538-01, HI-LEX-C538-PRABANDH538-02, HI-LEX-C538-PRABANDH538-03, HI-LEX-C538-PRABANDH538-04, HI-LEX-C538-PRABANDH538-05, HI-LEX-C539-DUA539-01, HI-LEX-C539-DUA539-02, HI-LEX-C539-DUA539-03, HI-LEX-C539-DUA539-04, HI-LEX-C539-DUA539-05, HI-LEX-C540-KOSHISH540-01, HI-LEX-C540-KOSHISH540-02, HI-LEX-C540-KOSHISH540-03, HI-LEX-C540-KOSHISH540-04, HI-LEX-C540-KOSHISH540-05, HI-LEX-C541-RUKAVAT541-01, HI-LEX-C541-RUKAVAT541-02, HI-LEX-C541-RUKAVAT541-03, HI-LEX-C541-RUKAVAT541-04, HI-LEX-C541-RUKAVAT541-05, HI-LEX-C542-SAMJHAUTA542-01, HI-LEX-C542-SAMJHAUTA542-02, HI-LEX-C542-SAMJHAUTA542-03, HI-LEX-C542-SAMJHAUTA542-04, HI-LEX-C542-SAMJHAUTA542-05, HI-LEX-C543-VACHAN543-01, HI-LEX-C543-VACHAN543-02, HI-LEX-C543-VACHAN543-03, HI-LEX-C543-VACHAN543-04, HI-LEX-C543-VACHAN543-05, HI-LEX-C544-KISMAT544-01, HI-LEX-C544-KISMAT544-02, HI-LEX-C544-KISMAT544-03, HI-LEX-C544-KISMAT544-04, HI-LEX-C544-KISMAT544-05, HI-LEX-C545-JUA545-01, HI-LEX-C545-JUA545-02, HI-LEX-C545-JUA545-03, HI-LEX-C545-JUA545-04, HI-LEX-C545-JUA545-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to treasure, ready, management, to be decorated, to pick out, to pick over (grain)]
+- [YOU SAY: a place of pilgrimage, a prayer, a blessing (for someone), a prayer, a wish (for someone's good), to resolve]
+- [YOU SAY: experience (gained over time), a clever way, a means, a way (of doing something), a trick, an effort, an endeavour (formal)]
+- [YOU SAY: an obstacle, a hold-up, a hassle, a tiresome business, to get (something) stuck, a noose, to tangle]
+- [YOU SAY: talks, a concession, agreement, an offer, a mediator]
+- [YOU SAY: a word given, an oath, willing, an oath (formal), bound (by a rule or a time)]
+- [YOU SAY: luck, a coincidence, a chance, an opportunity (formal), a turn (in a game)]
+- [YOU SAY: gambling, a die, a round (of a game), a piece (in chess or a board game), defeat]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C538-PRABANDH538-01, HI-LEX-C538-PRABANDH538-02, HI-LEX-C538-PRABANDH538-03, HI-LEX-C538-PRABANDH538-04, HI-LEX-C538-PRABANDH538-05, HI-LEX-C539-DUA539-01, HI-LEX-C539-DUA539-02, HI-LEX-C539-DUA539-03, HI-LEX-C539-DUA539-04, HI-LEX-C539-DUA539-05, HI-LEX-C540-KOSHISH540-01, HI-LEX-C540-KOSHISH540-02, HI-LEX-C540-KOSHISH540-03, HI-LEX-C540-KOSHISH540-04, HI-LEX-C540-KOSHISH540-05, HI-LEX-C541-RUKAVAT541-01, HI-LEX-C541-RUKAVAT541-02, HI-LEX-C541-RUKAVAT541-03, HI-LEX-C541-RUKAVAT541-04, HI-LEX-C541-RUKAVAT541-05, HI-LEX-C542-SAMJHAUTA542-01, HI-LEX-C542-SAMJHAUTA542-02, HI-LEX-C542-SAMJHAUTA542-03, HI-LEX-C542-SAMJHAUTA542-04, HI-LEX-C542-SAMJHAUTA542-05, HI-LEX-C543-VACHAN543-01, HI-LEX-C543-VACHAN543-02, HI-LEX-C543-VACHAN543-03, HI-LEX-C543-VACHAN543-04, HI-LEX-C543-VACHAN543-05, HI-LEX-C544-KISMAT544-01, HI-LEX-C544-KISMAT544-02, HI-LEX-C544-KISMAT544-03, HI-LEX-C544-KISMAT544-04, HI-LEX-C544-KISMAT544-05, HI-LEX-C545-JUA545-01, HI-LEX-C545-JUA545-02, HI-LEX-C545-JUA545-03, HI-LEX-C545-JUA545-04, HI-LEX-C545-JUA545-05] -->
+
+[PAUSE 3s] To treasure? (**सँजोना**, *sãjonā*.) Ready? (**तैयार**, *taiyār*.) Management? (**प्रबंध**, *prabandh*.) To be decorated? (**सजना**, *sajnā*.) To pick out, to pick over (grain)? (**बीनना**, *bīnnā*.) A place of pilgrimage? (**तीर्थ**, *tīrth*.) A prayer, a blessing (for someone)? (**दुआ**, *duā*.) A prayer? (**प्रार्थना**, *prārthnā*.) A wish (for someone's good)? (**कामना**, *kāmnā*.) To resolve? (**ठानना**, *ṭhānnā*.) Experience (gained over time)? (**तजुर्बा**, *tajurbā*.) A clever way? (**युक्ति**, *yukti*.) A means, a way (of doing something)? (**ज़रिया**, *zariyā*.) A trick? (**तरकीब**, *tarkīb*.) An effort, an endeavour (formal)? (**प्रयत्न**, *prayatn*.) An obstacle, a hold-up? (**रुकावट**, *rukāvaṭ*.) A hassle, a tiresome business? (**झमेला**, *jhamelā*.) To get (something) stuck? (**अटकाना**, *aṭkānā*.) A noose? (**फंदा**, *phandā*.) To tangle? (**उलझाना**, *uljhānā*.) Talks? (**वार्ता**, *vārtā*.) A concession? (**रियायत**, *riyāyat*.) Agreement? (**सहमति**, *sahmati*.) An offer? (**पेशकश**, *peśkaś*.) A mediator? (**मध्यस्थ**, *madhyasth*.) A word given? (**वचन**, *vacan*.) An oath? (**क़सम**, *qasam*.) Willing? (**राज़ी**, *rāzī*.) An oath (formal)? (**शपथ**, *śapath*.) Bound (by a rule or a time)? (**पाबंद**, *pāband*.) Luck? (**क़िस्मत**, *qismat*.) A coincidence? (**संयोग**, *saṁyog*.) A chance? (**मौक़ा**, *mauqā*.) An opportunity (formal)? (**अवसर**, *avsar*.) A turn (in a game)? (**दाँव**, *dā̃v*.) Gambling? (**जुआ**, *juā*.) A die? (**पासा**, *pāsā*.) A round (of a game)? (**बाज़ी**, *bāzī*.) A piece (in chess or a board game)? (**मोहरा**, *mohrā*.) Defeat? (**मात**, *māt*.)
+`;export{t};

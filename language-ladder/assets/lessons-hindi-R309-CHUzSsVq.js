@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R311-review-304-311
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 17220
+chapter: 311
+type: review
+headword: (dialogue)
+gloss: a review of the words from The Storm to Lending a Hand
+concept_tag: REVIEW
+prerequisites: [HI-C304-adhera, HI-C304-garajna, HI-C304-camakna, HI-C304-musladhar, HI-C304-tabahi, HI-C305-uphanna, HI-C305-badh, HI-C305-kramsah, HI-C305-sailab, HI-C305-bhavar, HI-C306-akal, HI-C306-bhukhmari, HI-C306-sarna, HI-C306-mahamari, HI-C306-haiza, HI-C307-phasna, HI-C307-pukarna, HI-C307-sannata, HI-C307-nikalna, HI-C307-behal, HI-C308-bera, HI-C308-gotakhor, HI-C308-zinda, HI-C308-churana, HI-C308-lapakna, HI-C309-rahat, HI-C309-sivir, HI-C309-dera, HI-C309-pirit, HI-C309-saran, HI-C310-bichurna, HI-C310-bhatakna, HI-C310-talas, HI-C310-salamat, HI-C310-dilasa, HI-C311-sahayta, HI-C311-svayamsevak, HI-C311-jutna, HI-C311-jutana, HI-C311-hausla]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C304-TOOFAN304-01, HI-LEX-C304-TOOFAN304-02, HI-LEX-C304-TOOFAN304-03, HI-LEX-C304-TOOFAN304-04, HI-LEX-C304-TOOFAN304-05, HI-LEX-C305-BAADH305-01, HI-LEX-C305-BAADH305-02, HI-LEX-C305-BAADH305-03, HI-LEX-C305-BAADH305-04, HI-LEX-C305-BAADH305-05, HI-LEX-C306-AKAL306-01, HI-LEX-C306-AKAL306-02, HI-LEX-C306-AKAL306-03, HI-LEX-C306-AKAL306-04, HI-LEX-C306-AKAL306-05, HI-LEX-C307-PHANSA307-01, HI-LEX-C307-PHANSA307-02, HI-LEX-C307-PHANSA307-03, HI-LEX-C307-PHANSA307-04, HI-LEX-C307-PHANSA307-05, HI-LEX-C308-BACHAV308-01, HI-LEX-C308-BACHAV308-02, HI-LEX-C308-BACHAV308-03, HI-LEX-C308-BACHAV308-04, HI-LEX-C308-BACHAV308-05, HI-LEX-C309-RAHAT309-01, HI-LEX-C309-RAHAT309-02, HI-LEX-C309-RAHAT309-03, HI-LEX-C309-RAHAT309-04, HI-LEX-C309-RAHAT309-05, HI-LEX-C310-BICHHUD310-01, HI-LEX-C310-BICHHUD310-02, HI-LEX-C310-BICHHUD310-03, HI-LEX-C310-BICHHUD310-04, HI-LEX-C310-BICHHUD310-05, HI-LEX-C311-MADAD311-01, HI-LEX-C311-MADAD311-02, HI-LEX-C311-MADAD311-03, HI-LEX-C311-MADAD311-04, HI-LEX-C311-MADAD311-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C304-TOOFAN304-01, HI-LEX-C304-TOOFAN304-02, HI-LEX-C304-TOOFAN304-03, HI-LEX-C304-TOOFAN304-04, HI-LEX-C304-TOOFAN304-05, HI-LEX-C305-BAADH305-01, HI-LEX-C305-BAADH305-02, HI-LEX-C305-BAADH305-03, HI-LEX-C305-BAADH305-04, HI-LEX-C305-BAADH305-05, HI-LEX-C306-AKAL306-01, HI-LEX-C306-AKAL306-02, HI-LEX-C306-AKAL306-03, HI-LEX-C306-AKAL306-04, HI-LEX-C306-AKAL306-05, HI-LEX-C307-PHANSA307-01, HI-LEX-C307-PHANSA307-02, HI-LEX-C307-PHANSA307-03, HI-LEX-C307-PHANSA307-04, HI-LEX-C307-PHANSA307-05, HI-LEX-C308-BACHAV308-01, HI-LEX-C308-BACHAV308-02, HI-LEX-C308-BACHAV308-03, HI-LEX-C308-BACHAV308-04, HI-LEX-C308-BACHAV308-05, HI-LEX-C309-RAHAT309-01, HI-LEX-C309-RAHAT309-02, HI-LEX-C309-RAHAT309-03, HI-LEX-C309-RAHAT309-04, HI-LEX-C309-RAHAT309-05, HI-LEX-C310-BICHHUD310-01, HI-LEX-C310-BICHHUD310-02, HI-LEX-C310-BICHHUD310-03, HI-LEX-C310-BICHHUD310-04, HI-LEX-C310-BICHHUD310-05, HI-LEX-C311-MADAD311-01, HI-LEX-C311-MADAD311-02, HI-LEX-C311-MADAD311-03, HI-LEX-C311-MADAD311-04, HI-LEX-C311-MADAD311-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C304-adhera, HI-C304-garajna, HI-C304-camakna, HI-C304-musladhar, HI-C304-tabahi, HI-C305-uphanna, HI-C305-badh, HI-C305-kramsah, HI-C305-sailab, HI-C305-bhavar, HI-C306-akal, HI-C306-bhukhmari, HI-C306-sarna, HI-C306-mahamari, HI-C306-haiza, HI-C307-phasna, HI-C307-pukarna, HI-C307-sannata, HI-C307-nikalna, HI-C307-behal, HI-C308-bera, HI-C308-gotakhor, HI-C308-zinda, HI-C308-churana, HI-C308-lapakna, HI-C309-rahat, HI-C309-sivir, HI-C309-dera, HI-C309-pirit, HI-C309-saran, HI-C310-bichurna, HI-C310-bhatakna, HI-C310-talas, HI-C310-salamat, HI-C310-dilasa, HI-C311-sahayta, HI-C311-svayamsevak, HI-C311-jutna, HI-C311-jutana, HI-C311-hausla]
+---
+
+# Looking back: from The Storm to Lending a Hand
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C304-TOOFAN304-01, HI-LEX-C304-TOOFAN304-02] -->
+
+[PAUSE 3s] Say the Hindi for darkness and to thunder.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C304-TOOFAN304-01, HI-LEX-C304-TOOFAN304-02, HI-LEX-C304-TOOFAN304-03, HI-LEX-C304-TOOFAN304-04, HI-LEX-C304-TOOFAN304-05, HI-LEX-C305-BAADH305-01, HI-LEX-C305-BAADH305-02, HI-LEX-C305-BAADH305-03, HI-LEX-C305-BAADH305-04, HI-LEX-C305-BAADH305-05, HI-LEX-C306-AKAL306-01, HI-LEX-C306-AKAL306-02, HI-LEX-C306-AKAL306-03, HI-LEX-C306-AKAL306-04, HI-LEX-C306-AKAL306-05, HI-LEX-C307-PHANSA307-01, HI-LEX-C307-PHANSA307-02, HI-LEX-C307-PHANSA307-03, HI-LEX-C307-PHANSA307-04, HI-LEX-C307-PHANSA307-05, HI-LEX-C308-BACHAV308-01, HI-LEX-C308-BACHAV308-02, HI-LEX-C308-BACHAV308-03, HI-LEX-C308-BACHAV308-04, HI-LEX-C308-BACHAV308-05, HI-LEX-C309-RAHAT309-01, HI-LEX-C309-RAHAT309-02, HI-LEX-C309-RAHAT309-03, HI-LEX-C309-RAHAT309-04, HI-LEX-C309-RAHAT309-05, HI-LEX-C310-BICHHUD310-01, HI-LEX-C310-BICHHUD310-02, HI-LEX-C310-BICHHUD310-03, HI-LEX-C310-BICHHUD310-04, HI-LEX-C310-BICHHUD310-05, HI-LEX-C311-MADAD311-01, HI-LEX-C311-MADAD311-02, HI-LEX-C311-MADAD311-03, HI-LEX-C311-MADAD311-04, HI-LEX-C311-MADAD311-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: darkness, to thunder, to flash, torrential (of rain), destruction]
+- [YOU SAY: to swell up, a dam, little by little, a deluge, a whirlpool]
+- [YOU SAY: a famine, starvation, to rot, an epidemic, cholera]
+- [YOU SAY: to be trapped, to call out (to), a dead silence, to take out, in a sorry state]
+- [YOU SAY: a raft, a diver, alive, to set free, to dart]
+- [YOU SAY: relief, a camp, an encampment, a victim, refuge]
+- [YOU SAY: to be separated, to wander, a search, safe and sound, comfort]
+- [YOU SAY: aid, a volunteer, to gather, to collect, spirit]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C304-TOOFAN304-01, HI-LEX-C304-TOOFAN304-02, HI-LEX-C304-TOOFAN304-03, HI-LEX-C304-TOOFAN304-04, HI-LEX-C304-TOOFAN304-05, HI-LEX-C305-BAADH305-01, HI-LEX-C305-BAADH305-02, HI-LEX-C305-BAADH305-03, HI-LEX-C305-BAADH305-04, HI-LEX-C305-BAADH305-05, HI-LEX-C306-AKAL306-01, HI-LEX-C306-AKAL306-02, HI-LEX-C306-AKAL306-03, HI-LEX-C306-AKAL306-04, HI-LEX-C306-AKAL306-05, HI-LEX-C307-PHANSA307-01, HI-LEX-C307-PHANSA307-02, HI-LEX-C307-PHANSA307-03, HI-LEX-C307-PHANSA307-04, HI-LEX-C307-PHANSA307-05, HI-LEX-C308-BACHAV308-01, HI-LEX-C308-BACHAV308-02, HI-LEX-C308-BACHAV308-03, HI-LEX-C308-BACHAV308-04, HI-LEX-C308-BACHAV308-05, HI-LEX-C309-RAHAT309-01, HI-LEX-C309-RAHAT309-02, HI-LEX-C309-RAHAT309-03, HI-LEX-C309-RAHAT309-04, HI-LEX-C309-RAHAT309-05, HI-LEX-C310-BICHHUD310-01, HI-LEX-C310-BICHHUD310-02, HI-LEX-C310-BICHHUD310-03, HI-LEX-C310-BICHHUD310-04, HI-LEX-C310-BICHHUD310-05, HI-LEX-C311-MADAD311-01, HI-LEX-C311-MADAD311-02, HI-LEX-C311-MADAD311-03, HI-LEX-C311-MADAD311-04, HI-LEX-C311-MADAD311-05] -->
+
+[PAUSE 3s] Darkness? (**अँधेरा**, *ãdherā*.) To thunder? (**गरजना**, *garajnā*.) To flash? (**चमकना**, *camaknā*.) Torrential (of rain)? (**मूसलाधार**, *mūslādhār*.) Destruction? (**तबाही**, *tabāhī*.) To swell up? (**उफनना**, *uphannā*.) A dam? (**बाँध**, *bā̃dh*.) Little by little? (**क्रमशः**, *kramśaḥ*.) A deluge? (**सैलाब**, *sailāb*.) A whirlpool? (**भँवर**, *bhãvar*.) A famine? (**अकाल**, *akāl*.) Starvation? (**भुखमरी**, *bhukhmarī*.) To rot? (**सड़ना**, *saṛnā*.) An epidemic? (**महामारी**, *mahāmārī*.) Cholera? (**हैज़ा**, *haizā*.) To be trapped? (**फँसना**, *phãsnā*.) To call out (to)? (**पुकारना**, *pukārnā*.) A dead silence? (**सन्नाटा**, *sannāṭā*.) To take out? (**निकालना**, *nikālnā*.) In a sorry state? (**बेहाल**, *behāl*.) A raft? (**बेड़ा**, *beṛā*.) A diver? (**गोताख़ोर**, *gotākhor*.) Alive? (**ज़िंदा**, *zindā*.) To set free? (**छुड़ाना**, *chuṛānā*.) To dart? (**लपकना**, *lapaknā*.) Relief? (**राहत**, *rāhat*.) A camp? (**शिविर**, *śivir*.) An encampment? (**डेरा**, *ḍerā*.) A victim? (**पीड़ित**, *pīṛit*.) Refuge? (**शरण**, *śaraṇ*.) To be separated? (**बिछुड़ना**, *bichuṛnā*.) To wander? (**भटकना**, *bhaṭaknā*.) A search? (**तलाश**, *talāś*.) Safe and sound? (**सलामत**, *salāmat*.) Comfort? (**दिलासा**, *dilāsā*.) Aid? (**सहायता**, *sahāytā*.) A volunteer? (**स्वयंसेवक**, *svayaṁsevak*.) To gather? (**जुटना**, *juṭnā*.) To collect? (**जुटाना**, *juṭānā*.) Spirit? (**हौसला**, *hauslā*.)
+`;export{t};
