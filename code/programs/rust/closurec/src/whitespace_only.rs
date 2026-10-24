@@ -445,7 +445,15 @@ pub fn whitespace_only_minify(
                     || is_structural_punct(kept[i - 1], "{")
                     || is_structural_punct(kept[i - 1], ";");
                 let in_for_header = matches!(stack.last(), Some(true));
-                if droppable_pos && !in_for_header {
+                // #17907: an empty statement ends a directive prologue. In
+                // `;"use strict";` the string is NOT a directive; drop the
+                // `;` and it becomes one, making sloppy code strict. Keep a
+                // `;` that stands in front of a `use strict` string (at most
+                // one survives: in `;;"use strict"` the first still goes).
+                let shields_use_strict = kept
+                    .get(i + 1)
+                    .is_some_and(|n| is_string_literal(n) && decode_js_string(&n.value) == "use strict");
+                if droppable_pos && !in_for_header && !shields_use_strict {
                     drops.push(i);
                 }
             } else if is_structural_punct(t, "(") {
@@ -9121,6 +9129,22 @@ mod tests {
     /// keeps it. A genuine `for` loop is distinguished from a `.for(`
     /// property call (`a.for(b)` is untouched and never mistaken for a
     /// for-header).
+    /// #17907: gap-088 keeps the one `;` in front of a `use strict`
+    /// string. That empty statement is what makes the string a plain
+    /// expression rather than a directive.
+    #[test]
+    fn gap088_keeps_the_semi_before_use_strict() {
+        assert_eq!(minify(";\"use strict\";f();"), ";\"use strict\";f();");
+        assert_eq!(minify(";;\"use strict\";f();"), ";\"use strict\";f();");
+        assert_eq!(minify("\"a\";;\"use strict\";f();"), "\"a\";;\"use strict\";f();");
+        assert_eq!(
+            minify("function g(){;'use strict';f()}"),
+            "function g(){;\"use strict\";f()};"
+        );
+        // Any other string still loses the empty statement.
+        assert_eq!(minify(";\"a\";f();"), "\"a\";f();");
+    }
+
     #[test]
     fn gap088_for_header_separators_kept() {
         assert_eq!(minify("for(;;)x();"), "for(;;)x();");

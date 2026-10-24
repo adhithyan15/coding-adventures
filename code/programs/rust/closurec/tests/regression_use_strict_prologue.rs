@@ -57,6 +57,24 @@ const CASES: &[(&str, &str, &str)] = &[
         r#"("use strict");function t(){return this===undefined}console.log(t());"#,
         "function t(){return this===void 0}console.log(t());",
     ),
+    // An empty statement ends the prologue, so the string after it is
+    // not a directive. WHITESPACE_ONLY's empty-statement drop (gap-088)
+    // keeps the one `;` in front of it.
+    (
+        r#";"use strict";"#,
+        r#";"use strict";function t(){return this===undefined}console.log(t());"#,
+        "function t(){return this===void 0}console.log(t());",
+    ),
+    (
+        r#";;"use strict";"#,
+        r#";"use strict";function t(){return this===undefined}console.log(t());"#,
+        "function t(){return this===void 0}console.log(t());",
+    ),
+    (
+        r#""a";;"use strict";"#,
+        r#""a";;"use strict";function t(){return this===undefined}console.log(t());"#,
+        r#""a";function t(){return this===void 0}console.log(t());"#,
+    ),
     // Upstream SIMPLE prints `"use strict";1;…`, which is strict.
     (
         r#""use strict",1;"#,

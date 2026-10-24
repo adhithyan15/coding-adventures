@@ -19,11 +19,13 @@ bodies. WHITESPACE_ONLY turned `"use\x20strict"` into `"use strict"` too.
   keeps a `"use strict"`, and SIMPLE's flattening can then make one out of
   `"a";{"use strict"}`. closurec drops it there too.
 - WHITESPACE_ONLY prints an escaped spelling as `"use\x20strict"`, which
-  stays inert. It still keeps real directives, which CCR-085 (#15920) will
+  stays inert. It also keeps the `;` in `;"use strict";…`: that empty
+  statement ends the prologue, and dropping it (gap-088) made the string a
+  live directive. It still keeps real directives, which CCR-085 (#15920) will
   strip.
 
 `tests/regression_use_strict_prologue.rs` pins WHITESPACE_ONLY and SIMPLE
-bytes for four shapes and SIMPLE bytes for seven more. It asserts that no
+bytes for seven shapes and SIMPLE bytes for seven more. It asserts that no
 level opens its output with `"use strict"` and, with `node`, that every
 output prints what its source prints.
 

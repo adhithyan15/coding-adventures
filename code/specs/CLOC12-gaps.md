@@ -302,13 +302,16 @@ historical context with status `RESOLVED` and a link to the fix PR.
     That is consistent with stripping the genuine leading ones.
 - **WHITESPACE_ONLY token path: the escape case is resolved.**
   `emit_quoted_string` prints a `use strict` string whose source spelling had
-  an escape as `"use\x20strict"`, so it stays inert. The template,
+  an escape as `"use\x20strict"`, so it stays inert. gap-088 (empty
+  statement removal) keeps the one `;` in front of a `use strict` string:
+  in `;"use strict";…` that empty statement is what ends the prologue, and
+  dropping it made the string a live directive. The template,
   parenthesised and sequence forms already printed as written. Stripping the
   leading run in WHITESPACE_ONLY, which needs function-body boundaries in the
   token stream, is left to CCR-085 (#15920).
 - **Tests.** Eleven emitter unit tests, and
   `closurec/tests/regression_use_strict_prologue.rs`. The closurec test pins
-  WHITESPACE_ONLY and SIMPLE bytes for four shapes, SIMPLE bytes for seven
+  WHITESPACE_ONLY and SIMPLE bytes for seven shapes, SIMPLE bytes for seven
   more (in function bodies, and after `"a";`), asserts that no level opens
   its output with `"use strict"`, and, when `node` is on `PATH`, checks
   that every output prints what its source prints.
