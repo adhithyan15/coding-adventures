@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-FORM-PAHILE-ORDINAL-193, PA-FORM-DUJE-ORDINAL-193, PA-LEX-PAHILA-01, PA-LEX-DUJA-01, PA-LEX-C71-HOME71-01, PA-PLACE-KAMRE-ROOM-01, PA-POSTPOSITION-VICH-01]
+  knowledge: [PA-FORM-PAHILE-ORDINAL-193, PA-FORM-DUJE-ORDINAL-193, PA-LEX-C71-HOME71-01, PA-PLACE-KAMRE-ROOM-01, PA-POSTPOSITION-VICH-01]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]

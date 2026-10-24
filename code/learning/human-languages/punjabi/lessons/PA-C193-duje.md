@@ -36,7 +36,7 @@ reviews_of: [PA-C193-pahile-review, PA-C44-duja, PA-C71-kamra, PA-C180-kamre, PA
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-DUJA-01, PA-FORM-PAHILE-ORDINAL-193] -->
 
-[PAUSE 2s] Retrieve **ਦੂਜਾ**, then the room-frame change you just practised.
+[PAUSE 2s] Retrieve **ਦੂਜਾ**, then the room-frame change practised one lesson ago.
 
 ## Grammar Lens: direct owner
 <!-- hl-knowledge: introduces=[PA-FORM-DUJE-ORDINAL-193]; assesses=[PA-LEX-DUJA-01, PA-LEX-C71-HOME71-01, PA-PLACE-KAMRE-ROOM-01, PA-POSTPOSITION-VICH-01] -->

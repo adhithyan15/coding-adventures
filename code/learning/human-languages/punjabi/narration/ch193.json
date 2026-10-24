@@ -4,7 +4,7 @@
   "chapter": 193,
   "title": "First and Second in a Room",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8559b56e7d9cde6b",
+  "sourceHash": "fnv1a64:2bec10751d28c205",
   "lessons": [
     {
       "id": "PA-C193-ordinal-return",
@@ -337,7 +337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb5634fc73907502",
+      "sourceHash": "fnv1a64:8c32415a86baf74a",
       "notice": null,
       "blocks": [
         {
@@ -353,7 +353,7 @@
             },
             {
               "kind": "speech",
-              "text": "Retrieve ਦੂਜਾ, then the room-frame change you just practised."
+              "text": "Retrieve ਦੂਜਾ, then the room-frame change practised one lesson ago."
             }
           ]
         },
@@ -670,7 +670,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:519e45a2251fa638",
+      "sourceHash": "fnv1a64:f3df1988b02b6651",
       "notice": null,
       "blocks": [
         {
