@@ -296,6 +296,25 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_class` flipped IGNORED → PASS. **The byte-identity harness now reports 25/25 PASS across the expanded seed set.**
 - **Resolution:** Added `BlockKind::Class` variant. `class` keyword at statement boundary arms `saw_class_kw_at_boundary`; next `{` consumes it. On matching `}`, emit synthetic `;`. **Critical bug caught by pre-push security review**: the initial cut armed the flag whenever `class` appeared at a statement boundary, contaminating the next unrelated `{` when `class` was used as an object-literal property name (`var o={class:1};do{y}while(x);` would emit `do{y};while(x);` — a SyntaxError). Same defect family as gap-033's `try`-as-property bug. Fix: also require the next non-trivia token to look like a class-decl continuation (`{`, `extends`, or an identifier — NOT `:`/`,`/`;`/`}`/`)`/`]`/`.`/`=`/`(`).
 
+### #18124 — body flattens keep a lone lexical declaration braced
+
+- **The bug.** gap-032, gap-074/076/079, gap-080 and the `do`-body flatten
+  checked only for `function`/`class`/control-flow keywords, so
+  `if(a){let x=1;}` printed as `if(a)let x=1;`, which does not parse. A body
+  slot takes a Statement, and a lexical declaration is not one.
+- **Upstream (v20260915).** Keeps the block (`isBlockDeclOrDo` is true for
+  `LET`/`CONST`): `if(a){let x=1};`, `while(o){const x=1};`.
+- **Resolution.** `starts_lexical_declaration` checks the body's first
+  token: `const`, `let` + identifier/`[`/`{`, `using` + identifier, or
+  `await using`. Each pass refuses to flatten such a body.
+  `if(a){using(b);}` still flattens, because there `using` is a call.
+- **Not matched.** Upstream rejects `let` used as an identifier
+  (`if(a){let=1;}` is a parse error there); closurec's token path keeps
+  compiling it. That belongs to the refusal work (CCR-075).
+- **Tests.** Two unit tests, and
+  `closurec/tests/regression_ws_lexical_body.rs` (15 shapes pinned to the
+  jar, node parse check).
+
 ### gap-035 — `var{...}` / `let{...}` / `const{...}` destructuring requires space before `{`
 
 - **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_destructuring` flipped IGNORED → PASS.
