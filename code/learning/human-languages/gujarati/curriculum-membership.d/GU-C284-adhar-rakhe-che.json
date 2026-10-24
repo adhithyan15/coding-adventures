@@ -1,0 +1,11 @@
+{
+  "id": "GU-C284-adhar-rakhe-che",
+  "pathSegment": "GU-PATH-284-CONDITION-WOULD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-284-CONDITION-WOULD",
+      "order": 1
+    }
+  ]
+}

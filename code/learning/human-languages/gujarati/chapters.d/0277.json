@@ -1,0 +1,22 @@
+{
+  "chapter": 277,
+  "title": "Opinions and reasons",
+  "label": "ch:gu-opinions-and-reasons",
+  "canDo": "I can say what I think (mane lāge che ke …, mārā mate), ask someone's view, and give a reason with kāraṇ ke or -ne līdhe.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-R277-opinion-and-reason",
+    "kind": "production",
+    "summary": "Complete GU-R277-opinion-and-reason: give an opinion and the reason for it.",
+    "assesses": [
+      "GU-LEX-C277-MAT-01",
+      "GU-GRAMMAR-C277-LAGE-CHE-KE-01",
+      "GU-GRAMMAR-C277-OPINION-ASK-01",
+      "GU-LEX-C277-KARAN-01",
+      "GU-GRAMMAR-C277-KARAN-KE-01",
+      "GU-GRAMMAR-C277-NE-LIDHE-01"
+    ]
+  }
+}

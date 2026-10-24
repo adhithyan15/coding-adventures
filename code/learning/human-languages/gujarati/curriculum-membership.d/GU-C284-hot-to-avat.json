@@ -1,0 +1,11 @@
+{
+  "id": "GU-C284-hot-to-avat",
+  "pathSegment": "GU-PATH-284-CONDITION-WOULD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-284-CONDITION-WOULD",
+      "order": 2
+    }
+  ]
+}

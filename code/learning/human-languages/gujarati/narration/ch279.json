@@ -1,0 +1,385 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 279,
+  "title": "Asking the way",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:eecca8a1a0007862",
+  "lessons": [
+    {
+      "id": "GU-C279-rit",
+      "sequence": 15030,
+      "title": "રીત (rīt) — a way; a manner",
+      "headword": "રીત",
+      "romanization": "rīt",
+      "gloss": "a way; a manner",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f039a8347c78e08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"it was raining, so we stayed at home\". (varsād paḍto hato, eṭle ame ghare rahyā.) Then \"by bus\". (બસમાં.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: રીત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રીત — rīt — \"a way; a manner\": the way a thing is done. It is feminine: તેની રીત, \"his way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તેની રીત સારી છે. tenī rīt sārī che. — \"His way of doing it is good.\""
+            },
+            {
+              "kind": "speech",
+              "text": "કેવી રીતે (kevī rīte), \"in what way\", is how Gujarati says \"how\": કેવી asks \"what kind of\", agreeing with રીત (rīt), and રીતે takes the -ે of સવારે."
+            },
+            {
+              "kind": "speech",
+              "text": "તે કેવી રીતે આવી? te kevī rīte āvī? — \"How did she come?\""
+            },
+            {
+              "kind": "speech",
+              "text": "The answer can be બસમાં: by bus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રીત (rīt) goes back to Sanskrit rīti, \"going, a course\", and later \"a way of doing things\" (Monier-Williams). CDIAL's entry for rīti (CDIAL 10751) lists an older Gujarati rī, \"method, manner\"; રીત keeps the Sanskrit -t, so it is probably the learned form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rīt, then kevī rīte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rīt*, then *kevī rīte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How did she come?\" — te kevī rīte āvī?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How did she come?\" — *te kevī rīte āvī?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How did you come?\", with respect — tame kevī rīte āvyā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How did you come?\", with respect — *tame kevī rīte āvyā?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does રીત (rīt) mean? (\"A way; a manner\".) \"How?\" (કેવી રીતે?) Why કેવી, not કેવો? (રીત (rīt) is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C279-kevi-rite-javu",
+      "sequence": 15040,
+      "title": "સ્ટેશન કેવી રીતે જવું? (sṭeśan kevī rīte javũ?) — asking the way",
+      "headword": "સ્ટેશન કેવી રીતે જવું?",
+      "romanization": "sṭeśan kevī rīte javũ?",
+      "gloss": "how do I get to the station? — asking where, how far and how, and following directions",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d6ff005af213c78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"how?\" (kevī rīte?) Then \"where\" and \"far\". (ક્યાં, દૂર.) And \"excuse me\". (માફ કરો.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: three questions",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "માફ કરો, સ્ટેશન કેવી રીતે જવું? māph karo, sṭeśan kevī rīte javũ? — \"Excuse me, how do I get to the station?\""
+            },
+            {
+              "kind": "speech",
+              "text": "The verb stays in its -વું form: \"how to go to the station?\" Three questions do most of the work: where it is, સ્ટેશન ક્યાં છે?; how far, કેટલું દૂર છે?; and how, સ્ટેશન કેવી રીતે જવું? (sṭeśan kevī rīte javũ?) One more asks to be shown: મને રસ્તો બતાવશો? It is a polite future, \"will you show me the way?\": a request, not an order."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the answer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સીધા જાઓ, પછી પુલ પાસે ડાબી બાજુ વળો. sīdhā jāo, pachī pul pāse ḍābī bāju vaḷo. — \"Go straight, then turn left at the bridge.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Directions are said with -ઓ, the form of માફ કરો: જાઓ, વળો. ડાબી and જમણી follow બાજુ, which is feminine. Other pieces: બેંકની સામે (beṅknī sāme), \"opposite the bank\"; સિગ્નલ પછી (signal pachī), \"after the signal\"; દૂર નથી, દસ મિનિટ છે (dūr nathī, das miniṭ che), \"it's not far, ten minutes\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Will you show me the way?\" — mane rasto batāvśo?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Will you show me the way?\" — *mane rasto batāvśo?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It's opposite the bank\" — beṅknī sāme che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It's opposite the bank\" — *beṅknī sāme che*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C279-kevi-rite-javu-r1",
+              "prompt": "Ask how to get to the station, then give the answer: go straight, then turn right after the signal.",
+              "assesses": [
+                "GU-GRAMMAR-C279-WAY-ASK-01",
+                "GU-GRAMMAR-C279-WAY-GIVE-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "sṭeśan kevī rīte javũ? sīdhā jāo, pachī signal pachī jamṇī bāju vaḷo",
+                "સ્ટેશન કેવી રીતે જવું? સીધા જાઓ, પછી સિગ્નલ પછી જમણી બાજુ વળો.",
+                "sṭeśan kevī rīte javũ? sīdhā jāo, signal pachī jamṇī bāju vaḷo."
+              ],
+              "feedback": {
+                "correct": "kevī rīte javũ for the question; jāo and vaḷo for the answer.",
+                "incorrect": "Ask with kevī rīte javũ? Answer with sīdhā jāo, then jamṇī bāju vaḷo."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How far is it?\" (કેટલું દૂર છે?) \"How do I get to the station?\" (સ્ટેશન કેવી રીતે જવું? (sṭeśan kevī rīte javũ?)) \"Turn left\"? (ડાબી બાજુ વળો.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R279-asking-the-way",
+      "sequence": 15050,
+      "title": "Review — asking the way",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "asking the way, and giving it",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21c04a16ee3e89d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"you should go to the doctor\". (tamāre dāktar pāse javũ joīe.) Then \"so\", the everyday way. (eṭle.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Excuse me, where is the station? How far is it?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Excuse me, where is the station? How far is it?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "How do I get to the station? Will you show me the way?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: How do I get to the station? Will you show me the way?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Go straight, then turn left at the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Go straight, then turn left at the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It's not far, ten minutes. It's opposite the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It's not far, ten minutes. It's opposite the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "How did you come? By bus, because the train was late. Now turn it round, with eṭle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: How did you come? By bus, because the train was late. Now turn it round, with eṭle.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How?\" (કેવી રીતે?) Which form gives a direction? (-ઓ: જાઓ, વળો.) Why ડાબી બાજુ? (બાજુ is feminine.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:59a0f38c8f095c92",
+  "lessonIds": [
+    "GU-C284-adhar",
+    "GU-C284-adhar-rakhe-che",
+    "GU-C284-hot-to-avat",
+    "GU-W54-six-lines",
+    "GU-R284-depends-and-would"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "gujarati/narration/ch284.txt",
+  "json": "gujarati/narration/ch284.json",
+  "textHash": "fnv1a64:cfae09c72bdc2d8d",
+  "jsonHash": "fnv1a64:4bb513e9d2e0366f",
+  "findings": []
+}

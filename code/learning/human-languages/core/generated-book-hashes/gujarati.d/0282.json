@@ -1,0 +1,16 @@
+{
+  "language": "gujarati",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:ffa73453acdb12d1",
+  "lessonIds": [
+    "GU-C282-sauthi",
+    "GU-W52-au-sign",
+    "GU-C282-kartan",
+    "GU-C282-sudhi",
+    "GU-C282-be-varasthi",
+    "GU-C282-rtu",
+    "GU-W53-vocalic-r-letter",
+    "GU-R282-comparing-and-time"
+  ],
+  "tex": "gujarati/book/chapters/ch282-comparing-and-how-long.tex"
+}

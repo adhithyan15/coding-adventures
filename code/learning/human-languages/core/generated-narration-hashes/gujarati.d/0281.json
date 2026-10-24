@@ -1,0 +1,22 @@
+{
+  "language": "gujarati",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:8f4faf221e5c1894",
+  "lessonIds": [
+    "GU-C281-dukh",
+    "GU-W50-visarga",
+    "GU-C281-mane-bik",
+    "GU-C281-iccha",
+    "GU-W51-short-i",
+    "GU-C281-sapnu",
+    "GU-C281-banvu-che",
+    "GU-R281-feelings-and-hopes"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "gujarati/narration/ch281.txt",
+  "json": "gujarati/narration/ch281.json",
+  "textHash": "fnv1a64:f15b505c4adec4d0",
+  "jsonHash": "fnv1a64:ead931289c996405",
+  "findings": []
+}
