@@ -6,4 +6,3 @@ description = "Checked Armv7-M Cortex-M3 functional simulator"
 license = "MIT"
 
 [dependencies]
-
