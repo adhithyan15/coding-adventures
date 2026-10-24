@@ -675,7 +675,7 @@ fn special_register_fixed_and_mapped_surfaces_are_visible() {
 }
 
 #[test]
-fn special_register_instructions_require_supervisor_mode() {
+fn supervisor_special_registers_reject_user_mode_atomically() {
     for word in [imm(0x2d, 2, 1, 17), mtspr(1, 2, 17)] {
         let mut simulator = loaded(&[word, HALT]);
         let mut state = simulator.get_state();
@@ -689,6 +689,20 @@ fn special_register_instructions_require_supervisor_mode() {
         );
         assert_eq!(simulator.get_state(), before);
     }
+}
+
+#[test]
+fn mac_special_registers_remain_available_in_user_mode() {
+    let mut simulator = loaded(&[imm(0x2d, 3, 0, 0x2801), mtspr(0, 2, 0x2802), HALT]);
+    let mut state = simulator.get_state();
+    state.sr &= !SR_SM;
+    state.maclo = 0x1122_3344;
+    state.gpr[2] = 0xaabb_ccdd;
+    simulator.restore(state).unwrap();
+    assert_eq!(simulator.step().unwrap().mnemonic, "l.mfspr");
+    assert_eq!(simulator.read_register(3).unwrap(), 0x1122_3344);
+    assert_eq!(simulator.step().unwrap().mnemonic, "l.mtspr");
+    assert_eq!(simulator.get_state().machi, 0xaabb_ccdd);
 }
 
 #[test]

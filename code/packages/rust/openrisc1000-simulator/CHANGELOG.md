@@ -10,5 +10,5 @@
   exception entry/return, and the supported SPR surface.
 - Add exact full-state traces, transactional step/run/execute operations, typed
   faults, retention limits, and deterministic `l.nop 1` semihosting halt.
-- Add 33 completion tests with full primary-opcode and implemented-subfamily
-  classification, strict tooling gates, and 93.95% line coverage (746/794).
+- Add 34 completion tests with full primary-opcode and implemented-subfamily
+  classification, strict tooling gates, and 94.10% line coverage (749/796).

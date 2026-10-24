@@ -428,12 +428,14 @@ fn invalidate_overlapping_reservation(state: &mut OpenRisc1000State, address: u3
     }
 }
 
-fn require_supervisor(
+fn require_spr_privilege(
     state: &OpenRisc1000State,
+    address: u32,
     word: u32,
     pc: u32,
 ) -> Result<(), OpenRisc1000Error> {
-    if state.sr & SR_SM == 0 {
+    let user_accessible = matches!(address, SPR_MACLO | SPR_MACHI);
+    if state.sr & SR_SM == 0 && !user_accessible {
         return Err(OpenRisc1000Error::PrivilegedInstruction { word, pc });
     }
     Ok(())
@@ -625,17 +627,17 @@ fn execute_word(
             Ok("l.muli")
         }
         0x2d => {
-            require_supervisor(state, word, pc)?;
             let address = state.gpr[ra] | u32::from(immediate);
+            require_spr_privilege(state, address, word, pc)?;
             state.gpr[rd] = read_spr(state, address)?;
             Ok("l.mfspr")
         }
         0x2e => execute_shift_immediate(state, word, rd, ra, pc),
         0x2f => execute_compare_immediate(state, word, ra, immediate, pc),
         0x30 => {
-            require_supervisor(state, word, pc)?;
             let spr = (((word >> 21) & 0x1f) << 11) | (word & 0x7ff);
             let address = state.gpr[ra] | spr;
+            require_spr_privilege(state, address, word, pc)?;
             write_spr(state, address, state.gpr[rb])?;
             Ok("l.mtspr")
         }

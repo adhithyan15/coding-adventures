@@ -50,7 +50,8 @@ Unsupported 16-bit SPRs read as zero and ignore writes, while documented
 configuration SPRs expose their fixed values. Writable CPU SPRs, mapped GPRs,
 and MAC registers round-trip through `l.mfspr` and `l.mtspr`; implemented
 read-only writes and out-of-range addresses fail atomically. Both instructions
-require supervisor mode.
+require supervisor mode for CPU-group registers; MACLO and MACHI retain their
+architectural user-mode read/write permission.
 
 ## Transport and lifecycle
 
@@ -117,6 +118,6 @@ Completion requires:
 2. behavioral witnesses for both branch outcomes, signed/unsigned data,
    carry/overflow, jumps/links, exceptions, atomics, and memory widths;
 3. lifecycle, restore, rollback, malformed-word, and bounded-execution tests;
-4. line coverage above 80% (completion baseline: 93.95%, 746/794); and
+4. line coverage above 80% (completion baseline: 94.10%, 749/796); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and security review before publication.
