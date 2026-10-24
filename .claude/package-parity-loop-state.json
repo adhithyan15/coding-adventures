@@ -16,11 +16,11 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
+  "active_pr": 18105,
   "last_ci_action": {
-    "observed_at": "2026-10-24T15:10:18.352788+00:00",
-    "pr_number": null,
-    "action": "No active PR. C: recovered above5GB; clean rebase onto currentmain; native closure resumed serial implementation. Nine new Rust roots queued for collision-checked classification before next selection. Native closure completed105PASS13FAIL;15changedBUILDfrontsPASS;baseline failures assigned existing owners plus one pending transitive Node declaration follow-up. No second implementation selected."
+    "observed_at": "2026-10-24T15:28:47.815420+00:00",
+    "pr_number": 18105,
+    "action": "Opened ready-for-review PR18105 at534aa354945bd47f83595dbde743e896c7fe47ef after final-main classification and validation review. GitHub reports MERGEABLE; initial CI jobs in progress. No auto-merge enrollment while checks are pending. Exactly one active parity PR."
   },
   "last_inventory": {
     "revision": "2a0365e356839e22652717fb213499c4454cb972",
@@ -17183,10 +17183,10 @@
     {
       "id": "gfm-fenced-block-ast-and-consumer-contract-repair",
       "title": "Repair the TE04 fenced-block AST and consumer contract",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-gfm-fenced-ast-20261022",
-      "pr_number": null,
+      "pr_number": 18105,
       "notes": "TE04 requires source-preserving fenced_block nodes, but inspected ASTs do not define FencedBlockNode and the TypeScript reference lowers fences to code_block. Reconcile the AST, parser, and downstream rendering contract before using it as a four-lane GFM oracle.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/gfm-fenced-block-ast-and-consumer-contract-repair"
@@ -17232,7 +17232,8 @@
         "actual_BUILD_fronts": "15of15PASS; independent cmd shells/package cwd",
         "coverage_target_review": "Fullsource globs retained;14runtimepackages83.17%-100% statements,95%library target not universally reached;ASTtypeonly no executable credit",
         "validation_completed_at": "2026-10-24T15:21:55.943416+00:00"
-      }
+      },
+      "pr_opened_at": "2026-10-24T15:28:47.815420+00:00"
     },
     {
       "id": "gfm-language-neutral-conformance-fixture",
