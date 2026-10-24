@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C364-lekh",
+    "language": "hindi",
+    "chapter": 364,
+    "sequence": 20090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b29e97036cc8f85"
+  },
+  "findings": []
+}

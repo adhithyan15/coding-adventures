@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:499965df611cf628",
+  "lessonIds": [
+    "HI-C443-nahar",
+    "HI-C443-jalasay",
+    "HI-C443-dhara",
+    "HI-C443-sicna",
+    "HI-C443-nirana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch443.txt",
+  "json": "hindi/narration/ch443.json",
+  "textHash": "fnv1a64:d113e0b419f84120",
+  "jsonHash": "fnv1a64:5bb29c58673a81c7",
+  "findings": []
+}

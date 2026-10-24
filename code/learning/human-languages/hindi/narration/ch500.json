@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 500,
+  "title": "A Wedding",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4522f0f194688f9c",
+  "lessons": [
+    {
+      "id": "HI-C500-dulha",
+      "sequence": 27460,
+      "title": "दूल्हा (dūlhā) — a bridegroom",
+      "headword": "दूल्हा",
+      "romanization": "dūlhā",
+      "gloss": "a bridegroom",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73431c1d15833271",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for the prime of youth, then the Hindi for to whimper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दूल्हा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूल्हा — dūlhā — \"a bridegroom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दूल्हा घोड़े पर बैठकर आया। dūlhā ghoṛe par baiṭhkar āyā. The bridegroom arrived on horseback."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूल्हा (dūlhā) is a tadbhava: CDIAL lists Hindi dūlhā, \"bridegroom\", under Sanskrit durlabha, \"hard to get, precious\" (CDIAL 6446): the dear one. The bride is dulhan, the feminine of the same word, listed in the same entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūlhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūlhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūlhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūlhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūlhā ghoṛe par baiṭhkar āyā. — The bridegroom arrived on horseback.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūlhā ghoṛe par baiṭhkar āyā.* — The bridegroom arrived on horseback.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for the prime of youth, then the Hindi for to whimper, then say dūlhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for the prime of youth, then the Hindi for to whimper, then say *dūlhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दूल्हा (dūlhā) mean? (\"A bridegroom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C500-mehndi",
+      "sequence": 27470,
+      "title": "मेहंदी (mehndī) — henna",
+      "headword": "मेहंदी",
+      "romanization": "mehndī",
+      "gloss": "henna",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a93930213208e4f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to whimper, then the Hindi for a bridegroom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मेहंदी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेहंदी — mehndī — \"henna\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शादी के दिन मीरा के हाथों में मेहंदी लगी थी। śādī ke din Mīrā ke hāthoṁ meṁ mehndī lagī thī. On her wedding day Mira's hands were patterned with henna."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेहंदी (mehndī) is a tadbhava: CDIAL lists Hindi mẽhdī, the henna plant, under Sanskrit mēndhī (CDIAL 10328). Its leaves are ground to a paste that leaves red-brown patterns on the hands, above all before a wedding."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mehndī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mehndī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mehndī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mehndī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śādī ke din Mīrā ke hāthoṁ meṁ mehndī lagī thī. — On her wedding day Mira's hands were patterned with henna.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śādī ke din Mīrā ke hāthoṁ meṁ mehndī lagī thī.* — On her wedding day Mira's hands were patterned with henna.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to whimper, then the Hindi for a bridegroom, then say mehndī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to whimper, then the Hindi for a bridegroom, then say *mehndī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मेहंदी (mehndī) mean? (\"Henna\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C500-sagai",
+      "sequence": 27480,
+      "title": "सगाई (sagāī) — an engagement (to marry)",
+      "headword": "सगाई",
+      "romanization": "sagāī",
+      "gloss": "an engagement (to marry)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32bbb7f182b309dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a bridegroom, then the Hindi for henna."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सगाई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सगाई — sagāī — \"an engagement (to marry)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पिछले साल मीरा की सगाई हुई। pichle sāl Mīrā kī sagāī huī. Mira got engaged last year."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सगाई (sagāī) is probably the noun of sagā, \"of full blood relationship\", which CDIAL lists under svagya-, a form it reconstructs (CDIAL 13896b): the promise that makes two families kin. CDIAL does not give the \"engagement\" sense itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pichle sāl Mīrā kī sagāī huī. — Mira got engaged last year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pichle sāl Mīrā kī sagāī huī.* — Mira got engaged last year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a bridegroom, then the Hindi for henna, then say sagāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a bridegroom, then the Hindi for henna, then say *sagāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सगाई (sagāī) mean? (\"An engagement (to marry)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C500-barat",
+      "sequence": 27490,
+      "title": "बारात (bārāt) — the groom's wedding procession",
+      "headword": "बारात",
+      "romanization": "bārāt",
+      "gloss": "the groom's wedding procession",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:386661b6239f58fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for henna, then the Hindi for an engagement (to marry)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बारात",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बारात — bārāt — \"the groom's wedding procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बारात में सब लोग नाच रहे थे। bārāt meṁ sab log nāc rahe the. Everyone in the wedding procession was dancing."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बारात (bārāt) is a tadbhava: CDIAL lists Hindi barāt, \"marriage procession\", under Sanskrit varayātrā, built on vara, \"bridegroom\", and yātrā, \"journey\" (CDIAL 11322)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārāt meṁ sab log nāc rahe the. — Everyone in the wedding procession was dancing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārāt meṁ sab log nāc rahe the.* — Everyone in the wedding procession was dancing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for henna, then the Hindi for an engagement (to marry), then say bārāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for henna, then the Hindi for an engagement (to marry), then say *bārāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बारात (bārāt) mean? (\"The groom's wedding procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C500-vidai",
+      "sequence": 27500,
+      "title": "विदाई (vidāī) — a farewell; the bride's leave-taking",
+      "headword": "विदाई",
+      "romanization": "vidāī",
+      "gloss": "a farewell; the bride's leave-taking",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d760a8c7fbb9e871",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an engagement (to marry), then the Hindi for the groom's wedding procession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विदाई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विदाई — vidāī — \"a farewell; the bride's leave-taking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "विदाई के समय मीरा और उसकी माँ दोनों रोईं। vidāī ke samay Mīrā aur uskī māṁ donõ roīṃ. At the bride's farewell, Mira and her mother both wept."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विदाई (vidāī) is vidā, \"farewell\", with the ending -ī; vidā is usually traced to Arabic vidāʿ, \"farewell\", which reached Hindi through Persian. At a wedding it is the moment the bride leaves her parents' home."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidāī ke samay Mīrā aur uskī māṁ donõ roīṃ. — At the bride's farewell, Mira and her mother both wept.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidāī ke samay Mīrā aur uskī māṁ donõ roīṃ.* — At the bride's farewell, Mira and her mother both wept.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an engagement (to marry), then the Hindi for the groom's wedding procession, then say vidāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an engagement (to marry), then the Hindi for the groom's wedding procession, then say *vidāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विदाई (vidāī) mean? (\"A farewell; the bride's leave-taking\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

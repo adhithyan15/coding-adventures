@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C332-rivaj",
+    "language": "hindi",
+    "chapter": 332,
+    "sequence": 18260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68382907bc4d6fc1"
+  },
+  "findings": []
+}

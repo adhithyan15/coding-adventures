@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:11a158bd4626f048",
+  "lessonIds": [
+    "HI-C476-cehra",
+    "HI-C476-bhaumh",
+    "HI-C476-much",
+    "HI-C476-darhi",
+    "HI-C476-jabra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch476.txt",
+  "json": "hindi/narration/ch476.json",
+  "textHash": "fnv1a64:56ff2387509ceb63",
+  "jsonHash": "fnv1a64:1045587659f97a11",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 335,
+  "title": "Gods and Demons",
+  "label": "ch:hi-gods-and-demons",
+  "canDo": "I can tell a story of gods and demons.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-R335-review-328-335",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can tell a story of gods and demons.",
+    "assesses": [
+      "HI-LEX-C335-DEVTA335-01",
+      "HI-LEX-C335-DEVTA335-02",
+      "HI-LEX-C335-DEVTA335-03",
+      "HI-LEX-C335-DEVTA335-04",
+      "HI-LEX-C335-DEVTA335-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C481-sikorna",
+    "language": "hindi",
+    "chapter": 481,
+    "sequence": 26490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46272a52bdc1803f"
+  },
+  "findings": []
+}

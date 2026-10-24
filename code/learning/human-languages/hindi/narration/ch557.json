@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 557,
+  "title": "Fears and Reassurance",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c9f9f98e61170891",
+  "lessons": [
+    {
+      "id": "HI-C557-andesa",
+      "sequence": 30610,
+      "title": "अंदेशा (andeśā) — a worry; a misgiving",
+      "headword": "अंदेशा",
+      "romanization": "andeśā",
+      "gloss": "a worry; a misgiving",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55b7d8836e80e146",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a groundless fear, then the Hindi for a firm decision."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अंदेशा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंदेशा — andeśā — \"a worry; a misgiving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे अंदेशा था कि ट्रेन देर से आएगी। Mujhe andeśā thā ki ṭren der se āegī. I had a feeling that the train would be late."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंदेशा (andeśā) is usually traced to Persian andēsha, \"thought, anxiety\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andeśā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andeśā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andeśā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andeśā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mujhe andeśā thā ki ṭren der se āegī. — I had a feeling that the train would be late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mujhe andeśā thā ki ṭren der se āegī.* — I had a feeling that the train would be late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a groundless fear, then the Hindi for a firm decision, then say andeśā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a groundless fear, then the Hindi for a firm decision, then say *andeśā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अंदेशा (andeśā) mean? (\"A worry; a misgiving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C557-itminan",
+      "sequence": 30620,
+      "title": "इत्मीनान (itmīnān) — peace of mind, ease",
+      "headword": "इत्मीनान",
+      "romanization": "itmīnān",
+      "gloss": "peace of mind, ease",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44c403e0eba42ac5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a firm decision, then the Hindi for a worry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इत्मीनान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इत्मीनान — itmīnān — \"peace of mind, ease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सब काम पूरा करके मैं इत्मीनान से सोया। Sab kām pūrā karke maiṁ itmīnān se soyā. With all the work finished I slept with my mind at rest."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इत्मीनान (itmīnān) is usually traced to Arabic iṭmiʾnān, \"tranquillity\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itmīnān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itmīnān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itmīnān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itmīnān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sab kām pūrā karke maiṁ itmīnān se soyā. — With all the work finished I slept with my mind at rest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sab kām pūrā karke maiṁ itmīnān se soyā.* — With all the work finished I slept with my mind at rest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a firm decision, then the Hindi for a worry, then say itmīnān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a firm decision, then the Hindi for a worry, then say *itmīnān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इत्मीनान (itmīnān) mean? (\"Peace of mind, ease\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C557-garanti",
+      "sequence": 30630,
+      "title": "गारंटी (gāraṇṭī) — a guarantee",
+      "headword": "गारंटी",
+      "romanization": "gāraṇṭī",
+      "gloss": "a guarantee",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d11b83507116b7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a worry, then the Hindi for peace of mind, ease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गारंटी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गारंटी — gāraṇṭī — \"a guarantee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दुकानदार ने घड़ी पर एक साल की गारंटी दी। Dukāndār ne ghaṛī par ek sāl kī gāraṇṭī dī. The shopkeeper gave a one-year guarantee on the watch."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गारंटी (gāraṇṭī) is a loan from English guarantee."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāraṇṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāraṇṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāraṇṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāraṇṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dukāndār ne ghaṛī par ek sāl kī gāraṇṭī dī. — The shopkeeper gave a one-year guarantee on the watch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dukāndār ne ghaṛī par ek sāl kī gāraṇṭī dī.* — The shopkeeper gave a one-year guarantee on the watch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a worry, then the Hindi for peace of mind, ease, then say gāraṇṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a worry, then the Hindi for peace of mind, ease, then say *gāraṇṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गारंटी (gāraṇṭī) mean? (\"A guarantee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C557-durbhagya",
+      "sequence": 30640,
+      "title": "दुर्भाग्य (durbhāgya) — misfortune; bad luck",
+      "headword": "दुर्भाग्य",
+      "romanization": "durbhāgya",
+      "gloss": "misfortune; bad luck",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c31dae41b8f8ecdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for peace of mind, ease, then the Hindi for a guarantee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुर्भाग्य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुर्भाग्य — durbhāgya — \"misfortune; bad luck\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दुर्भाग्य (durbhāgya) से हमारी ट्रेन छूट गई। Durbhāgya se hamārī ṭren chūṭ gaī. Unfortunately we missed our train."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुर्भाग्य (durbhāgya) is a tatsama, taken whole from Sanskrit durbhāgya, \"ill luck\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durbhāgya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durbhāgya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durbhāgya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durbhāgya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Durbhāgya se hamārī ṭren chūṭ gaī. — Unfortunately we missed our train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Durbhāgya se hamārī ṭren chūṭ gaī.* — Unfortunately we missed our train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for peace of mind, ease, then the Hindi for a guarantee, then say durbhāgya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for peace of mind, ease, then the Hindi for a guarantee, then say *durbhāgya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुर्भाग्य (durbhāgya) mean? (\"Misfortune; bad luck\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C557-khauf",
+      "sequence": 30650,
+      "title": "ख़ौफ़ (khauf) — fear, dread",
+      "headword": "ख़ौफ़",
+      "romanization": "khauf",
+      "gloss": "fear, dread",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be334aaebf47df8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a guarantee, then the Hindi for misfortune."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ख़ौफ़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ख़ौफ़ — khauf — \"fear, dread\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात को जंगल में हमें ख़ौफ़ लगा। Rāt ko jaṅgal meṁ hamẽ khauf lagā. We felt afraid in the forest at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ख़ौफ़ (khauf) is usually traced to Arabic khawf, \"fear\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khauf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khauf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khauf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khauf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Rāt ko jaṅgal meṁ hamẽ khauf lagā. — We felt afraid in the forest at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Rāt ko jaṅgal meṁ hamẽ khauf lagā.* — We felt afraid in the forest at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a guarantee, then the Hindi for misfortune, then say khauf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a guarantee, then the Hindi for misfortune, then say *khauf* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ख़ौफ़ (khauf) mean? (\"Fear, dread\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

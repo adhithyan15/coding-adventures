@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C436-megh",
+    "language": "hindi",
+    "chapter": 436,
+    "sequence": 23950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83b5bbc4d3479fc4"
+  },
+  "findings": []
+}

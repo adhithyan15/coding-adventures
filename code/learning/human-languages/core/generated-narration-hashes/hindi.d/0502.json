@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:642520b6cad503d5",
+  "lessonIds": [
+    "HI-C502-pota",
+    "HI-C502-nati",
+    "HI-C502-bhanja",
+    "HI-C502-jhulana",
+    "HI-C502-iklauta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch502.txt",
+  "json": "hindi/narration/ch502.json",
+  "textHash": "fnv1a64:08bb62cf5a032f39",
+  "jsonHash": "fnv1a64:bbb5bf85a78b7b51",
+  "findings": []
+}

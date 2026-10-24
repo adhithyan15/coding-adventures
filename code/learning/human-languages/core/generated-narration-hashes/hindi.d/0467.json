@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:5a5094aaf25b57b4",
+  "lessonIds": [
+    "HI-C467-kapti",
+    "HI-C467-dhurt",
+    "HI-C467-bhola",
+    "HI-C467-visvasghat",
+    "HI-C467-makkar",
+    "HI-R467-review-460-467"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch467.txt",
+  "json": "hindi/narration/ch467.json",
+  "textHash": "fnv1a64:ff38cad8b5f5ab76",
+  "jsonHash": "fnv1a64:196350d43465a9b7",
+  "findings": []
+}

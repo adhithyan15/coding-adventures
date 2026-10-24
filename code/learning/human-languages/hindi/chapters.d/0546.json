@@ -1,0 +1,19 @@
+{
+  "chapter": 546,
+  "title": "Fate and Chance",
+  "label": "ch:hi-fate-and-chance",
+  "canDo": "I can talk about omens, bad luck and lucky chances.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C546-ittafaq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 546: I can talk about omens, bad luck and lucky chances.",
+    "assesses": [
+      "HI-LEX-C546-TAQDIR546-03",
+      "HI-LEX-C546-TAQDIR546-04",
+      "HI-LEX-C546-TAQDIR546-05"
+    ]
+  }
+}

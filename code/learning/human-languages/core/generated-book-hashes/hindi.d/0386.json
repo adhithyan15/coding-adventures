@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:5c1061833b21ca1b",
+  "lessonIds": [
+    "HI-C386-khisakna",
+    "HI-C386-khalna",
+    "HI-C386-sahara",
+    "HI-C386-zid",
+    "HI-C386-yogya"
+  ],
+  "tex": "hindi/book/chapters/ch386-leaning-on-others.tex"
+}

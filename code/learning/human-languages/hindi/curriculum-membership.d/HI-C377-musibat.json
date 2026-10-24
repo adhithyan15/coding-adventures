@@ -1,0 +1,11 @@
+{
+  "id": "HI-C377-musibat",
+  "pathSegment": "HI-PATH-377-HALAT377",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-377-HALAT377",
+      "order": 3
+    }
+  ]
+}

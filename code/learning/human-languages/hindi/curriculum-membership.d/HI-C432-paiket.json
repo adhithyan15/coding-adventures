@@ -1,0 +1,11 @@
+{
+  "id": "HI-C432-paiket",
+  "pathSegment": "HI-PATH-432-MAAL432",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-432-MAAL432",
+      "order": 2
+    }
+  ]
+}

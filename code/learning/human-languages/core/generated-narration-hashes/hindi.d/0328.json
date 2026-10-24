@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:23d3fa1321c4ae6f",
+  "lessonIds": [
+    "HI-C328-rangoli",
+    "HI-C328-jagmagana",
+    "HI-C328-jhilmilana",
+    "HI-C328-patakha",
+    "HI-C328-atisbazi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch328.txt",
+  "json": "hindi/narration/ch328.json",
+  "textHash": "fnv1a64:3537a7373254a014",
+  "jsonHash": "fnv1a64:8be5940fcec74a7b",
+  "findings": []
+}

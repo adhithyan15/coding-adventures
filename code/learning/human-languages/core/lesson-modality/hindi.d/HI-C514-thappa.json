@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C514-thappa",
+    "language": "hindi",
+    "chapter": 514,
+    "sequence": 28410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25cc919c1cf8100e"
+  },
+  "findings": []
+}

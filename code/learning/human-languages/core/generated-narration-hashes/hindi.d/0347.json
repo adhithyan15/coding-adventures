@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:2e8c98a4436a6cc8",
+  "lessonIds": [
+    "HI-C347-paks",
+    "HI-C347-khilaf",
+    "HI-C347-virodhkarna",
+    "HI-C347-samarthankarna",
+    "HI-C347-sahmathona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch347.txt",
+  "json": "hindi/narration/ch347.json",
+  "textHash": "fnv1a64:8fb8680061641f99",
+  "jsonHash": "fnv1a64:4e7b6bf83d5b1e37",
+  "findings": []
+}

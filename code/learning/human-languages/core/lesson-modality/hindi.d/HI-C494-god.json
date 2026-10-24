@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C494-god",
+    "language": "hindi",
+    "chapter": 494,
+    "sequence": 27160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:beb6b17f31fac3de"
+  },
+  "findings": []
+}

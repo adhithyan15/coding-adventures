@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:98879efc27e218ca",
+  "lessonIds": [
+    "HI-C377-sthiti",
+    "HI-C377-halat",
+    "HI-C377-zarurat",
+    "HI-C377-musibat",
+    "HI-C377-phasana"
+  ],
+  "tex": "hindi/book/chapters/ch377-as-things-stand.tex"
+}

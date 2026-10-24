@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:f256d50b73aa8e6d",
+  "lessonIds": [
+    "HI-C419-tiraha",
+    "HI-C419-cakkar",
+    "HI-C419-nisan",
+    "HI-C419-imarat",
+    "HI-C419-bord"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch419.txt",
+  "json": "hindi/narration/ch419.json",
+  "textHash": "fnv1a64:663eb524ac74afaa",
+  "jsonHash": "fnv1a64:2ff2bda703615b53",
+  "findings": []
+}

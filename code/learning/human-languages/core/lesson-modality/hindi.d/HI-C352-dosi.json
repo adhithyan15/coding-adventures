@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C352-dosi",
+    "language": "hindi",
+    "chapter": 352,
+    "sequence": 19490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b232847d52c3991c"
+  },
+  "findings": []
+}

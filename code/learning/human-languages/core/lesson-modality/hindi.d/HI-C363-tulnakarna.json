@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C363-tulnakarna",
+    "language": "hindi",
+    "chapter": 363,
+    "sequence": 20050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41318238fdac847a"
+  },
+  "findings": []
+}

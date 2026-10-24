@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:84d0122f1b84fe57",
+  "lessonIds": [
+    "HI-C359-mudda",
+    "HI-C359-samjhauta",
+    "HI-C359-vivad",
+    "HI-C359-ulajhna",
+    "HI-C359-cherna"
+  ],
+  "tex": "hindi/book/chapters/ch359-the-issue-at-hand.tex"
+}

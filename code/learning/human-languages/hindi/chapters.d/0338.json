@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Fairies and Ghosts",
+  "label": "ch:hi-fairies-and-ghosts",
+  "canDo": "I can tell a story with magic in it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C338-camatkar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can tell a story with magic in it.",
+    "assesses": [
+      "HI-LEX-C338-PARI338-03",
+      "HI-LEX-C338-PARI338-04",
+      "HI-LEX-C338-PARI338-05"
+    ]
+  }
+}

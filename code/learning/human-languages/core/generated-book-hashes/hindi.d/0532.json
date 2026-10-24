@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:290e554fc93249ac",
+  "lessonIds": [
+    "HI-C532-git",
+    "HI-C532-lay",
+    "HI-C532-riyaz",
+    "HI-C532-mahfil",
+    "HI-C532-nacana"
+  ],
+  "tex": "hindi/book/chapters/ch532-a-song-to-dance-to.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C340-adhyay",
+    "language": "hindi",
+    "chapter": 340,
+    "sequence": 18690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e19cc782a0875283"
+  },
+  "findings": []
+}

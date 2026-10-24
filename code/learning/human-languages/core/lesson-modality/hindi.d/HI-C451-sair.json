@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C451-sair",
+    "language": "hindi",
+    "chapter": 451,
+    "sequence": 24710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a415cf13d88fc45b"
+  },
+  "findings": []
+}

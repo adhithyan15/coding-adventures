@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C347-samarthankarna",
+    "language": "hindi",
+    "chapter": 347,
+    "sequence": 19230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8070d91c6425ddf8"
+  },
+  "findings": []
+}

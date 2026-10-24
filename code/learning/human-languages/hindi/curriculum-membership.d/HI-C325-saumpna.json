@@ -1,0 +1,11 @@
+{
+  "id": "HI-C325-saumpna",
+  "pathSegment": "HI-PATH-325-ANDOLAN325",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-325-ANDOLAN325",
+      "order": 4
+    }
+  ]
+}

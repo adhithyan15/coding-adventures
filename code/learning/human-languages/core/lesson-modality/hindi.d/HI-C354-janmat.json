@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C354-janmat",
+    "language": "hindi",
+    "chapter": 354,
+    "sequence": 19580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cbae9a5e0a912c3"
+  },
+  "findings": []
+}

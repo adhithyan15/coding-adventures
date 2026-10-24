@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:5abe6111d2dab278",
+  "lessonIds": [
+    "HI-C399-lain",
+    "HI-C399-injan",
+    "HI-C399-slipar",
+    "HI-C399-siti",
+    "HI-C399-sarakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch399.txt",
+  "json": "hindi/narration/ch399.json",
+  "textHash": "fnv1a64:260eb8dd900d9dc5",
+  "jsonHash": "fnv1a64:c9338cdb5dd01401",
+  "findings": []
+}

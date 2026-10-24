@@ -1,0 +1,11 @@
+{
+  "id": "HI-C526-satranj",
+  "pathSegment": "HI-PATH-526-FURSAT526",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-526-FURSAT526",
+      "order": 4
+    }
+  ]
+}

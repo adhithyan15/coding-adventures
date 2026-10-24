@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-455-GAM455",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-455-GAM455"
+  ],
+  "after": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:51f0553289fc24ff",
+  "lessonIds": [
+    "HI-C327-purvaj",
+    "HI-C327-basna",
+    "HI-C327-vams",
+    "HI-C327-yug",
+    "HI-C327-ujarna",
+    "HI-R327-review-320-327"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch327.txt",
+  "json": "hindi/narration/ch327.json",
+  "textHash": "fnv1a64:cd045325887f4de5",
+  "jsonHash": "fnv1a64:678d821875810d60",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C525-khad",
+  "pathSegment": "HI-PATH-525-PAUDHA525",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-525-PAUDHA525",
+      "order": 2
+    }
+  ]
+}

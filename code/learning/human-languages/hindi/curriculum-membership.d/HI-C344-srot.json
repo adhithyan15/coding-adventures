@@ -1,0 +1,11 @@
+{
+  "id": "HI-C344-srot",
+  "pathSegment": "HI-PATH-344-PARINAM344",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-344-PARINAM344",
+      "order": 4
+    }
+  ]
+}

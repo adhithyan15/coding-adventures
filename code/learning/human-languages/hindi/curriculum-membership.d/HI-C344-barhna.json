@@ -1,0 +1,11 @@
+{
+  "id": "HI-C344-barhna",
+  "pathSegment": "HI-PATH-344-PARINAM344",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-344-PARINAM344",
+      "order": 2
+    }
+  ]
+}

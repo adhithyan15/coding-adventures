@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:815b53cc1fdd12e0",
+  "lessonIds": [
+    "HI-C376-zahir",
+    "HI-C376-niscit",
+    "HI-C376-avasya",
+    "HI-C376-lazimi",
+    "HI-C376-ubharna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch376.txt",
+  "json": "hindi/narration/ch376.json",
+  "textHash": "fnv1a64:9746ec5e6a0186d4",
+  "jsonHash": "fnv1a64:9440615659ad806f",
+  "findings": []
+}

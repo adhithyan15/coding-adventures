@@ -1,0 +1,11 @@
+{
+  "id": "HI-C336-kosna",
+  "pathSegment": "HI-PATH-336-SHAAP336",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-336-SHAAP336",
+      "order": 2
+    }
+  ]
+}

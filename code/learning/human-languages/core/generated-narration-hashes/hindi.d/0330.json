@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:d7ad65e38c6a45ba",
+  "lessonIds": [
+    "HI-C330-ikattha",
+    "HI-C330-jhaki",
+    "HI-C330-jhulna",
+    "HI-C330-sobhayatra",
+    "HI-C330-bhakt"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "hindi/narration/ch330.txt",
+  "json": "hindi/narration/ch330.json",
+  "textHash": "fnv1a64:cd114727c8109956",
+  "jsonHash": "fnv1a64:5bee46096923fcf4",
+  "findings": []
+}

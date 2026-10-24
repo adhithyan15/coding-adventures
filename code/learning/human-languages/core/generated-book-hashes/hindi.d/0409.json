@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:7220598c0456d683",
+  "lessonIds": [
+    "HI-C409-eyarport",
+    "HI-C409-viman",
+    "HI-C409-payalat",
+    "HI-C409-uran",
+    "HI-C409-agaman"
+  ],
+  "tex": "hindi/book/chapters/ch409-airports-and-flights.tex"
+}

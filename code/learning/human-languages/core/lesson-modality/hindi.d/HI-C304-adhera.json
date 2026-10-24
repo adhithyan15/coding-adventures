@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C304-adhera",
+    "language": "hindi",
+    "chapter": 304,
+    "sequence": 16820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4baa88f447f35335"
+  },
+  "findings": []
+}

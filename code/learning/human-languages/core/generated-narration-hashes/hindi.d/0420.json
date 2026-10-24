@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:9cb17955c1191d78",
+  "lessonIds": [
+    "HI-C420-dhalan",
+    "HI-C420-galiyara",
+    "HI-C420-ghusna",
+    "HI-C420-lurhakna",
+    "HI-C420-garnaintr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch420.txt",
+  "json": "hindi/narration/ch420.json",
+  "textHash": "fnv1a64:1ccc1583fbca5251",
+  "jsonHash": "fnv1a64:664541a7f3024a0d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C392-sujhna",
+    "language": "hindi",
+    "chapter": 392,
+    "sequence": 21550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2f690fd7a3f0845"
+  },
+  "findings": []
+}

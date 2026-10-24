@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C317-hairan",
+    "language": "hindi",
+    "chapter": 317,
+    "sequence": 17520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ad124006c8d32bf"
+  },
+  "findings": []
+}

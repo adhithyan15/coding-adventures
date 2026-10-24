@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 391,
+  "title": "Effort",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3403dad6d2b67a08",
+  "lessons": [
+    {
+      "id": "HI-C391-prayas",
+      "sequence": 21460,
+      "title": "प्रयास (prayās) — an effort (formal)",
+      "headword": "प्रयास",
+      "romanization": "prayās",
+      "gloss": "an effort (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50a4033185909f9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a step, then the Hindi for to try."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रयास",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रयास — prayās — \"an effort (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर सब मिलकर प्रयास करेंगे तो गाँव बदलेगा। agar sab milkar prayās kareṅge to gā̃v badlegā. If everyone makes an effort together, the village will change."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रयास (prayās) is a tatsama, borrowed from Sanskrit prayāsa, \"exertion, effort\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar sab milkar prayās kareṅge to gā̃v badlegā. — If everyone makes an effort together, the village will change.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar sab milkar prayās kareṅge to gā̃v badlegā.* — If everyone makes an effort together, the village will change.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a step, then the Hindi for to try, then say prayās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a step, then the Hindi for to try, then say *prayās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रयास (prayās) mean? (\"An effort (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C391-parisram",
+      "sequence": 21470,
+      "title": "परिश्रम (pariśram) — hard work, toil (formal)",
+      "headword": "परिश्रम",
+      "romanization": "pariśram",
+      "gloss": "hard work, toil (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:511cf852ffa83a1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to try, then the Hindi for an effort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परिश्रम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिश्रम — pariśram — \"hard work, toil (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम परिश्रम करोगे तो उसका फल ज़रूर मिलेगा। agar tum pariśram karoge to uskā phal zarūr milegā. If you work hard, you'll certainly reap the reward."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिश्रम (pariśram) is a tatsama, borrowed from Sanskrit pariśrama, \"fatigue, exertion, labour\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariśram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariśram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariśram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariśram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum pariśram karoge to uskā phal zarūr milegā. — If you work hard, you'll certainly reap the reward.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum pariśram karoge to uskā phal zarūr milegā.* — If you work hard, you'll certainly reap the reward.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to try, then the Hindi for an effort, then say pariśram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to try, then the Hindi for an effort, then say *pariśram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परिश्रम (pariśram) mean? (\"Hard work, toil (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C391-jos",
+      "sequence": 21480,
+      "title": "जोश (joś) — enthusiasm, fervour",
+      "headword": "जोश",
+      "romanization": "joś",
+      "gloss": "enthusiasm, fervour",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51d930c609524fca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an effort, then the Hindi for toil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जोश",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जोश — joś — \"enthusiasm, fervour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर टीम में जोश होगा तो जीत पक्की है। agar ṭīm meṁ joś hogā to jīt pakkī hai. If the team is fired up, victory is certain."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जोश (joś) is usually traced to Persian jōsh, \"boiling, ardour\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *joś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joś, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *joś*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar ṭīm meṁ joś hogā to jīt pakkī hai. — If the team is fired up, victory is certain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar ṭīm meṁ joś hogā to jīt pakkī hai.* — If the team is fired up, victory is certain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an effort, then the Hindi for toil, then say joś again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an effort, then the Hindi for toil, then say *joś* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जोश (joś) mean? (\"Enthusiasm, fervour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C391-nirantar",
+      "sequence": 21490,
+      "title": "निरंतर (nirantar) — continuous, without a break",
+      "headword": "निरंतर",
+      "romanization": "nirantar",
+      "gloss": "continuous, without a break",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef6e1d6333f75eeb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for toil, then the Hindi for enthusiasm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निरंतर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निरंतर — nirantar — \"continuous, without a break\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम निरंतर अभ्यास करोगे तो तुम्हारी हिंदी अच्छी हो जाएगी। agar tum nirantar abhyās karoge to tumhārī hindī acchī ho jāegī. If you practise without a break, your Hindi will become good."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निरंतर (nirantar) is a tatsama, borrowed from Sanskrit nirantara, \"without an interval, constant\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirantar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirantar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirantar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirantar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum nirantar abhyās karoge to tumhārī hindī acchī ho jāegī. — If you practise without a break, your Hindi will become good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum nirantar abhyās karoge to tumhārī hindī acchī ho jāegī.* — If you practise without a break, your Hindi will become good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for toil, then the Hindi for enthusiasm, then say nirantar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for toil, then the Hindi for enthusiasm, then say *nirantar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निरंतर (nirantar) mean? (\"Continuous, without a break\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C391-dohrana",
+      "sequence": 21500,
+      "title": "दोहराना (dohrānā) — to repeat, to go over again",
+      "headword": "दोहराना",
+      "romanization": "dohrānā",
+      "gloss": "to repeat, to go over again",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbc0e8bc6e436ada",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for enthusiasm, then the Hindi for without a break."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दोहराना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दोहराना — dohrānā — \"to repeat, to go over again\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम यह पाठ दो बार दोहराओगे तो याद हो जाएगा। agar tum yah pāṭh do bār dohrāoge to yād ho jāegā. If you go over this lesson twice, you'll remember it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने सवाल दोहराया, usne savāl dohrāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दोहराना (dohrānā) is a verb made on दोहरा, \"double\", which CDIAL traces to a reconstructed dudhāra (CDIAL 6407): to do a thing twice over."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dohrānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dohrānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dohrānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dohrānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum yah pāṭh do bār dohrāoge to yād ho jāegā. — If you go over this lesson twice, you'll remember it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum yah pāṭh do bār dohrāoge to yād ho jāegā.* — If you go over this lesson twice, you'll remember it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for enthusiasm, then the Hindi for without a break, then say dohrānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for enthusiasm, then the Hindi for without a break, then say *dohrānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दोहराना (dohrānā) mean? (\"To repeat, to go over again\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R498-review-492-498",
+    "language": "hindi",
+    "chapter": 498,
+    "sequence": 27400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fef945894b6acdf8"
+  },
+  "findings": []
+}

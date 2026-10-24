@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:bf64b7022fd3285b",
+  "lessonIds": [
+    "HI-C364-visesajna",
+    "HI-C364-vidvan",
+    "HI-C364-lekh",
+    "HI-C364-nibandh",
+    "HI-C364-chatna"
+  ],
+  "tex": "hindi/book/chapters/ch364-ask-an-expert.tex"
+}

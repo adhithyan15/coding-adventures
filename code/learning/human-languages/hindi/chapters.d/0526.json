@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Free Time",
+  "label": "ch:hi-free-time",
+  "canDo": "I can talk about what I do in my free time.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C526-satranj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about what I do in my free time.",
+    "assesses": [
+      "HI-LEX-C526-FURSAT526-03",
+      "HI-LEX-C526-FURSAT526-04",
+      "HI-LEX-C526-FURSAT526-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C473-barbarana",
+  "pathSegment": "HI-PATH-473-BATUNI473",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-473-BATUNI473",
+      "order": 3
+    }
+  ]
+}

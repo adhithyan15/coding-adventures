@@ -1,0 +1,11 @@
+{
+  "id": "HI-C430-ugahna",
+  "pathSegment": "HI-PATH-430-DIVALA430",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-430-DIVALA430",
+      "order": 4
+    }
+  ]
+}

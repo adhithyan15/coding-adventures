@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:87e46169df98bc18",
+  "lessonIds": [
+    "HI-C455-gam",
+    "HI-C455-niras",
+    "HI-C455-mayus",
+    "HI-C455-kurhna",
+    "HI-C455-dukhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch455.txt",
+  "json": "hindi/narration/ch455.json",
+  "textHash": "fnv1a64:567d37ba711a5007",
+  "jsonHash": "fnv1a64:c3ddb338e24c3226",
+  "findings": []
+}

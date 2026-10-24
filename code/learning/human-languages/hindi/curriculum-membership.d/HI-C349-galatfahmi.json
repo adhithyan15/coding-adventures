@@ -1,0 +1,11 @@
+{
+  "id": "HI-C349-galatfahmi",
+  "pathSegment": "HI-PATH-349-INKAR349",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-349-INKAR349",
+      "order": 4
+    }
+  ]
+}

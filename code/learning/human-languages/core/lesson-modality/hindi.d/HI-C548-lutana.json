@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C548-lutana",
+    "language": "hindi",
+    "chapter": 548,
+    "sequence": 30190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55143a155d7df966"
+  },
+  "findings": []
+}

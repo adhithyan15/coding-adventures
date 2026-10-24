@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:c40fed9d885e7052",
+  "lessonIds": [
+    "HI-C386-khisakna",
+    "HI-C386-khalna",
+    "HI-C386-sahara",
+    "HI-C386-zid",
+    "HI-C386-yogya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch386.txt",
+  "json": "hindi/narration/ch386.json",
+  "textHash": "fnv1a64:0b92f04cddb7a11b",
+  "jsonHash": "fnv1a64:26812900630febbf",
+  "findings": []
+}

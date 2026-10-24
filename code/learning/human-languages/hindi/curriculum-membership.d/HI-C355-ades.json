@@ -1,0 +1,11 @@
+{
+  "id": "HI-C355-ades",
+  "pathSegment": "HI-PATH-355-VIBHAG355",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-355-VIBHAG355",
+      "order": 3
+    }
+  ]
+}

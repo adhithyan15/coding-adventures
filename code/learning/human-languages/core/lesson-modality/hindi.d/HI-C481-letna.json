@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C481-letna",
+    "language": "hindi",
+    "chapter": 481,
+    "sequence": 26480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fccc084d8b1d30f3"
+  },
+  "findings": []
+}

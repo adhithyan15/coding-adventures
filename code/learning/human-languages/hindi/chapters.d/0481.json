@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Lying Down and Getting About",
+  "label": "ch:hi-lying-down-and-getting-about",
+  "canDo": "I can say how someone moved, slipped or fell.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C481-kudna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can say how someone moved, slipped or fell.",
+    "assesses": [
+      "HI-LEX-C481-LETNA481-03",
+      "HI-LEX-C481-LETNA481-04",
+      "HI-LEX-C481-LETNA481-05"
+    ]
+  }
+}

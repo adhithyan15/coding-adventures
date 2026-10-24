@@ -1,0 +1,11 @@
+{
+  "id": "HI-C545-mat",
+  "pathSegment": "HI-PATH-545-JUA545",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-545-JUA545",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C459-puckarna",
+  "pathSegment": "HI-PATH-459-SNEH459",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-459-SNEH459",
+      "order": 4
+    }
+  ]
+}

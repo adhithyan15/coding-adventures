@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:a6f8837e6a2c1e9a",
+  "lessonIds": [
+    "HI-C388-adhik",
+    "HI-C388-tadad",
+    "HI-C388-paryapt",
+    "HI-C388-mamuli",
+    "HI-C388-qarib"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch388.txt",
+  "json": "hindi/narration/ch388.json",
+  "textHash": "fnv1a64:95f241dbde46ae41",
+  "jsonHash": "fnv1a64:f641de8da9534d4a",
+  "findings": []
+}

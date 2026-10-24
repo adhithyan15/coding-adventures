@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:d276b5d7e1eb2269",
+  "lessonIds": [
+    "HI-C490-chala",
+    "HI-C490-taka",
+    "HI-C490-papri",
+    "HI-C490-kuredna",
+    "HI-C490-dag"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch490.txt",
+  "json": "hindi/narration/ch490.json",
+  "textHash": "fnv1a64:198de6b7d160c670",
+  "jsonHash": "fnv1a64:2b60a3a51101e2ff",
+  "findings": []
+}

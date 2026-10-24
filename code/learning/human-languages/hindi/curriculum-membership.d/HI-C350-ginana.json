@@ -1,0 +1,11 @@
+{
+  "id": "HI-C350-ginana",
+  "pathSegment": "HI-PATH-350-MISAAL350",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-350-MISAAL350",
+      "order": 4
+    }
+  ]
+}

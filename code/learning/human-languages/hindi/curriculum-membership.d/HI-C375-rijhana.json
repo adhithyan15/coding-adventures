@@ -1,0 +1,11 @@
+{
+  "id": "HI-C375-rijhana",
+  "pathSegment": "HI-PATH-375-ASHA375",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-375-ASHA375",
+      "order": 4
+    }
+  ]
+}

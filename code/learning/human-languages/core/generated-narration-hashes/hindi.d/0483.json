@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:6aa2fedda59563c0",
+  "lessonIds": [
+    "HI-C483-taqat",
+    "HI-C483-cust",
+    "HI-C483-dam",
+    "HI-C483-bal",
+    "HI-C483-thakana",
+    "HI-R483-review-476-483"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch483.txt",
+  "json": "hindi/narration/ch483.json",
+  "textHash": "fnv1a64:1fbca9ede9767026",
+  "jsonHash": "fnv1a64:db31111b2d255b7b",
+  "findings": []
+}

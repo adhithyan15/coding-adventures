@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Bored or Curious",
+  "label": "ch:hi-bored-or-curious",
+  "canDo": "I can say what bores me and what interests me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C464-rocak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can say what bores me and what interests me.",
+    "assesses": [
+      "HI-LEX-C464-UBNA464-03",
+      "HI-LEX-C464-UBNA464-04",
+      "HI-LEX-C464-UBNA464-05"
+    ]
+  }
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 540,
+  "title": "Ways and Means",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7b0a5969bd5535cd",
+  "lessons": [
+    {
+      "id": "HI-C540-tajurba",
+      "sequence": 29740,
+      "title": "तजुर्बा (tajurbā) — experience (gained over time)",
+      "headword": "तजुर्बा",
+      "romanization": "tajurbā",
+      "gloss": "experience (gained over time)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1bc13f52969eb53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a wish (for someone's good), then the Hindi for to resolve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तजुर्बा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तजुर्बा — tajurbā — \"experience (gained over time)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुण को इस काम का दस साल का तजुर्बा है। Aruṇ ko is kām kā das sāl kā tajurbā hai. Arun has ten years' experience of this work."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तजुर्बा (tajurbā) is usually traced to Arabic tajriba, \"a trial, a test\", through Persian; Hindi uses it for what years of doing something teach you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajurbā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajurbā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajurbā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajurbā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ ko is kām kā das sāl kā tajurbā hai. — Arun has ten years' experience of this work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ ko is kām kā das sāl kā tajurbā hai.* — Arun has ten years' experience of this work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a wish (for someone's good), then the Hindi for to resolve, then say tajurbā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a wish (for someone's good), then the Hindi for to resolve, then say *tajurbā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तजुर्बा (tajurbā) mean? (\"Experience (gained over time)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C540-yukti",
+      "sequence": 29750,
+      "title": "युक्ति (yukti) — a clever way; a device",
+      "headword": "युक्ति",
+      "romanization": "yukti",
+      "gloss": "a clever way; a device",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b79b66314bd413b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to resolve, then the Hindi for experience (gained over time)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: युक्ति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "युक्ति — yukti — \"a clever way; a device\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुण ने एक युक्ति से भारी मेज़ अकेले उठाई। Aruṇ ne ek yukti se bhārī mez akele uṭhāī. Arun found a clever way to lift the heavy table on his own."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "युक्ति (yukti) is a tatsama, taken whole from Sanskrit yukti, \"union; a contrivance, a means\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ ne ek yukti se bhārī mez akele uṭhāī. — Arun found a clever way to lift the heavy table on his own.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ ne ek yukti se bhārī mez akele uṭhāī.* — Arun found a clever way to lift the heavy table on his own.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to resolve, then the Hindi for experience (gained over time), then say yukti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to resolve, then the Hindi for experience (gained over time), then say *yukti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does युक्ति (yukti) mean? (\"A clever way; a device\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C540-zariya",
+      "sequence": 29760,
+      "title": "ज़रिया (zariyā) — a means, a way (of doing something)",
+      "headword": "ज़रिया",
+      "romanization": "zariyā",
+      "gloss": "a means, a way (of doing something)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25439e88d49aa79c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for experience (gained over time), then the Hindi for a clever way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ज़रिया",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़रिया — zariyā — \"a means, a way (of doing something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मोबाइल बात करने का सबसे आसान ज़रिया है। Mobāil bāt karne kā sabse āsān zariyā hai. A mobile is the easiest way to talk."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़रिया (zariyā) is usually traced to Arabic ḏarīʿa, \"a means\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zariyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zariyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zariyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zariyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mobāil bāt karne kā sabse āsān zariyā hai. — A mobile is the easiest way to talk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mobāil bāt karne kā sabse āsān zariyā hai.* — A mobile is the easiest way to talk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for experience (gained over time), then the Hindi for a clever way, then say zariyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for experience (gained over time), then the Hindi for a clever way, then say *zariyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ज़रिया (zariyā) mean? (\"A means, a way (of doing something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C540-tarkib",
+      "sequence": 29770,
+      "title": "तरकीब (tarkīb) — a trick; a method (for doing something)",
+      "headword": "तरकीब",
+      "romanization": "tarkīb",
+      "gloss": "a trick; a method (for doing something)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f3ec21207b2fca3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a clever way, then the Hindi for a means, a way (of doing something)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तरकीब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तरकीब — tarkīb — \"a trick; a method (for doing something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा के पास हर समस्या की कोई तरकीब होती है। Mīrā ke pās har samasyā kī koī tarkīb hotī hai. Mira always has some trick for every problem."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तरकीब (tarkīb) is usually traced to Arabic tarkīb, \"putting together\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkīb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkīb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkīb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkīb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā ke pās har samasyā kī koī tarkīb hotī hai. — Mira always has some trick for every problem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā ke pās har samasyā kī koī tarkīb hotī hai.* — Mira always has some trick for every problem.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a clever way, then the Hindi for a means, a way (of doing something), then say tarkīb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a clever way, then the Hindi for a means, a way (of doing something), then say *tarkīb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तरकीब (tarkīb) mean? (\"A trick; a method (for doing something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C540-prayatn",
+      "sequence": 29780,
+      "title": "प्रयत्न (prayatn) — an effort, an endeavour (formal)",
+      "headword": "प्रयत्न",
+      "romanization": "prayatn",
+      "gloss": "an effort, an endeavour (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ea26afef7a352a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a means, a way (of doing something), then the Hindi for a trick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रयत्न",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रयत्न — prayatn — \"an effort, an endeavour (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बहुत प्रयत्न के बाद वह पहाड़ पर पहुँचा। Bahut prayatn ke bād vah pahāṛ par pahũcā. After a great effort he reached the top of the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रयत्न (prayatn) is a tatsama, taken whole from Sanskrit prayatna, \"persevering effort\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayatn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayatn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayatn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayatn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bahut prayatn ke bād vah pahāṛ par pahũcā. — After a great effort he reached the top of the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Bahut prayatn ke bād vah pahāṛ par pahũcā.* — After a great effort he reached the top of the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a means, a way (of doing something), then the Hindi for a trick, then say prayatn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a means, a way (of doing something), then the Hindi for a trick, then say *prayatn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रयत्न (prayatn) mean? (\"An effort, an endeavour (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

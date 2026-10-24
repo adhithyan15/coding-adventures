@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-463-SUKUN463",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-463-SUKUN463"
+  ],
+  "after": []
+}

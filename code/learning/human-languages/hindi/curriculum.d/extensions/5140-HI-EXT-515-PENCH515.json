@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-515-PENCH515",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is loose and fix it.",
+  "prerequisites": []
+}

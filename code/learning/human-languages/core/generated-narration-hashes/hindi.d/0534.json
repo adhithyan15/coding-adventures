@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:98919791b9486b20",
+  "lessonIds": [
+    "HI-C534-maic",
+    "HI-C534-muqabla",
+    "HI-C534-jitana",
+    "HI-C534-vijeta",
+    "HI-C534-puraskar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch534.txt",
+  "json": "hindi/narration/ch534.json",
+  "textHash": "fnv1a64:96039ca5dd77e73c",
+  "jsonHash": "fnv1a64:016e7465309c6a50",
+  "findings": []
+}

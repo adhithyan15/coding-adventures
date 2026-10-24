@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C551-azad",
+    "language": "hindi",
+    "chapter": 551,
+    "sequence": 30310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ee10aa35150d092"
+  },
+  "findings": []
+}

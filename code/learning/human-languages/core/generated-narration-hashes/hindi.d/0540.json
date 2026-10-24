@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:7b0a5969bd5535cd",
+  "lessonIds": [
+    "HI-C540-tajurba",
+    "HI-C540-yukti",
+    "HI-C540-zariya",
+    "HI-C540-tarkib",
+    "HI-C540-prayatn"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch540.txt",
+  "json": "hindi/narration/ch540.json",
+  "textHash": "fnv1a64:2768f409f051045d",
+  "jsonHash": "fnv1a64:4df84ce2061ae12e",
+  "findings": []
+}

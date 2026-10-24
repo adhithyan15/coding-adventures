@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:ad3694114b0ee089",
+  "lessonIds": [
+    "HI-C545-jua",
+    "HI-C545-pasa",
+    "HI-C545-bazi",
+    "HI-C545-mohra",
+    "HI-C545-mat",
+    "HI-R545-review-538-545"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch545.txt",
+  "json": "hindi/narration/ch545.json",
+  "textHash": "fnv1a64:b6600d13fa597a42",
+  "jsonHash": "fnv1a64:51b13c97b0def501",
+  "findings": []
+}

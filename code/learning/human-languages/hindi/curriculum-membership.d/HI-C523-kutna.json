@@ -1,0 +1,11 @@
+{
+  "id": "HI-C523-kutna",
+  "pathSegment": "HI-PATH-523-CHAKU523",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-523-CHAKU523",
+      "order": 2
+    }
+  ]
+}

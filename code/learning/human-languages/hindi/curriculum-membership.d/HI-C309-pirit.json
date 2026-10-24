@@ -1,0 +1,11 @@
+{
+  "id": "HI-C309-pirit",
+  "pathSegment": "HI-PATH-309-RAHAT309",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-309-RAHAT309",
+      "order": 3
+    }
+  ]
+}

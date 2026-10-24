@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C544-samyog",
+    "language": "hindi",
+    "chapter": 544,
+    "sequence": 29950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e7faff17f85dd40"
+  },
+  "findings": []
+}

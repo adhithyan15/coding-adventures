@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:a73a2291cce0a5d3",
+  "lessonIds": [
+    "HI-C304-adhera",
+    "HI-C304-garajna",
+    "HI-C304-camakna",
+    "HI-C304-musladhar",
+    "HI-C304-tabahi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch304.txt",
+  "json": "hindi/narration/ch304.json",
+  "textHash": "fnv1a64:10de65c939a3a881",
+  "jsonHash": "fnv1a64:06ca7aff6eedb1d1",
+  "findings": []
+}

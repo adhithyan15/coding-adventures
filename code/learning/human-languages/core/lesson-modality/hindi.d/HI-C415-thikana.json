@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C415-thikana",
+    "language": "hindi",
+    "chapter": 415,
+    "sequence": 22900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b56fcf14250e7c31"
+  },
+  "findings": []
+}

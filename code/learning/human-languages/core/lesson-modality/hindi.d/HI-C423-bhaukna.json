@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C423-bhaukna",
+    "language": "hindi",
+    "chapter": 423,
+    "sequence": 23320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c588ee1a5f3d4c8"
+  },
+  "findings": []
+}

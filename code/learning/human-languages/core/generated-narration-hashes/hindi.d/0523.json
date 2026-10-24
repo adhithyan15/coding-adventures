@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:c4541ffb8591be48",
+  "lessonIds": [
+    "HI-C523-caku",
+    "HI-C523-chiilna",
+    "HI-C523-kutna",
+    "HI-C523-burakna",
+    "HI-C523-dalnagrind"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch523.txt",
+  "json": "hindi/narration/ch523.json",
+  "textHash": "fnv1a64:8b8837c812d2b992",
+  "jsonHash": "fnv1a64:2c4e0e3b5796a3a8",
+  "findings": []
+}

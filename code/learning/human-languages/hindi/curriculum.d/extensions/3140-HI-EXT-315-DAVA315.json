@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-315-DAVA315",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report what someone claimed and how it was answered.",
+  "prerequisites": []
+}

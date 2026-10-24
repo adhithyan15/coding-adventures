@@ -1,0 +1,11 @@
+{
+  "id": "HI-C529-kirdar",
+  "pathSegment": "HI-PATH-529-NATAK529",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-529-NATAK529",
+      "order": 3
+    }
+  ]
+}

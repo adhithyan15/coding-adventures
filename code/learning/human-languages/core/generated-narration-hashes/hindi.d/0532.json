@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:a93ddb79b2b357c2",
+  "lessonIds": [
+    "HI-C532-git",
+    "HI-C532-lay",
+    "HI-C532-riyaz",
+    "HI-C532-mahfil",
+    "HI-C532-nacana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch532.txt",
+  "json": "hindi/narration/ch532.json",
+  "textHash": "fnv1a64:aa147057f2512f45",
+  "jsonHash": "fnv1a64:bd3a6c5a9d30c978",
+  "findings": []
+}

@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 456,
+  "title": "Losing One's Temper",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:96eb850b4af5647c",
+  "lessons": [
+    {
+      "id": "HI-C456-naraz",
+      "sequence": 25200,
+      "title": "नाराज़ (nārāz) — cross; displeased",
+      "headword": "नाराज़",
+      "romanization": "nārāz",
+      "gloss": "cross; displeased",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8bf751a804cc491",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to fret, then the Hindi for to hurt someone's feelings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाराज़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाराज़ — nārāz — \"cross; displeased\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पिता अरुण से नाराज़ थे क्योंकि वह देर से आया। pitā Aruṇ se nārāz the kyoṁki vah der se āyā. Arun's father was cross with him because he came late."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाराज़ (nārāz) is usually traced to Persian nārāz, \"displeased\", built on nā-, \"not\", and a word for \"content\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nārāz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nārāz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nārāz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nārāz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitā Aruṇ se nārāz the kyoṁki vah der se āyā. — Arun's father was cross with him because he came late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitā Aruṇ se nārāz the kyoṁki vah der se āyā.* — Arun's father was cross with him because he came late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to fret, then the Hindi for to hurt someone's feelings, then say nārāz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to fret, then the Hindi for to hurt someone's feelings, then say *nārāz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नाराज़ (nārāz) mean? (\"Cross; displeased\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C456-krodh",
+      "sequence": 25210,
+      "title": "क्रोध (krodh) — wrath; rage",
+      "headword": "क्रोध",
+      "romanization": "krodh",
+      "gloss": "wrath; rage",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6e57adf64b94d9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to hurt someone's feelings, then the Hindi for cross."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्रोध",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रोध — krodh — \"wrath; rage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "क्रोध में आदमी सही और ग़लत भूल जाता है। krodh meṁ ādmī sahī aur ġalat bhūl jātā hai. In a rage a person forgets right from wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रोध (krodh) is a tatsama, borrowed from Sanskrit krodha, \"anger, wrath, passion\" (Monier-Williams). Everyday speech says ġussā; krodh is the word of books and sermons."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krodh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krodh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krodh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krodh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krodh meṁ ādmī sahī aur ġalat bhūl jātā hai. — In a rage a person forgets right from wrong.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krodh meṁ ādmī sahī aur ġalat bhūl jātā hai.* — In a rage a person forgets right from wrong.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to hurt someone's feelings, then the Hindi for cross, then say krodh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to hurt someone's feelings, then the Hindi for cross, then say *krodh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क्रोध (krodh) mean? (\"Wrath; rage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C456-cirhna",
+      "sequence": 25220,
+      "title": "चिढ़ना (ciṛhnā) — to get irritated",
+      "headword": "चिढ़ना",
+      "romanization": "ciṛhnā",
+      "gloss": "to get irritated",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:023dc7b22a72dea9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for cross, then the Hindi for wrath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चिढ़ना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिढ़ना — ciṛhnā — \"to get irritated\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा का भाई छोटी बात पर चिढ़ जाता है। Mīrā kā bhāī choṭī bāt par ciṛh jātā hai. Mira's brother gets irritated over little things."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह चिढ़ गया, vah ciṛh gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिढ़ना (ciṛhnā) is a tadbhava: CDIAL lists Hindi ciṛhnā, \"to be provoked\", under ciḍ, a form it reconstructs (CDIAL 4794)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṛhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṛhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṛhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṛhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā kā bhāī choṭī bāt par ciṛh jātā hai. — Mira's brother gets irritated over little things.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā kā bhāī choṭī bāt par ciṛh jātā hai.* — Mira's brother gets irritated over little things.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for cross, then the Hindi for wrath, then say ciṛhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for cross, then the Hindi for wrath, then say *ciṛhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चिढ़ना (ciṛhnā) mean? (\"To get irritated\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C456-bipharna",
+      "sequence": 25230,
+      "title": "बिफरना (bipharnā) — to fly into a rage",
+      "headword": "बिफरना",
+      "romanization": "bipharnā",
+      "gloss": "to fly into a rage",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a610757253002f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for wrath, then the Hindi for to get irritated."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बिफरना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिफरना — bipharnā — \"to fly into a rage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कम पैसे देखकर दुकानदार बिफर गया। kam paise dekhkar dukāndār biphar gayā. Seeing how little money he had been given, the shopkeeper flew into a rage."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह बिफर गया, vah biphar gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिफरना (bipharnā) is a tadbhava: CDIAL lists Hindi bipharnā, \"to become enraged\", under vispharati, \"quivers, trembles\", a form it reconstructs (CDIAL 12014): someone shaking with anger. It is an outburst, much stronger than ciṛhnā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bipharnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bipharnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bipharnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bipharnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kam paise dekhkar dukāndār biphar gayā. — Seeing how little money he had been given, the shopkeeper flew into a rage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kam paise dekhkar dukāndār biphar gayā.* — Seeing how little money he had been given, the shopkeeper flew into a rage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for wrath, then the Hindi for to get irritated, then say bipharnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for wrath, then the Hindi for to get irritated, then say *bipharnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बिफरना (bipharnā) mean? (\"To fly into a rage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C456-khijhna",
+      "sequence": 25240,
+      "title": "खीझना (khījhnā) — to get fed up; to be vexed",
+      "headword": "खीझना",
+      "romanization": "khījhnā",
+      "gloss": "to get fed up; to be vexed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45f6e7252c4fc2ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to get irritated, then the Hindi for to fly into a rage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खीझना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खीझना — khījhnā — \"to get fed up; to be vexed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात को फ़ोन तीन बार बजा और मीरा खीझ गई। rāt ko fon tīn bār bajā aur Mīrā khījh gaī. The phone rang three times in the night and Mira got fed up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): वह खीझ गई, vah khījh gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खीझना (khījhnā) is inherited: CDIAL lists Hindi khījnā, \"to be irritated\", and the causative khijhānā, \"to vex\", under Sanskrit kṣīyátē, \"is destroyed, wanes\" (CDIAL 3695); khījhnā is the usual spelling of that plain verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khījhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khījhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khījhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khījhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt ko fon tīn bār bajā aur Mīrā khījh gaī. — The phone rang three times in the night and Mira got fed up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt ko fon tīn bār bajā aur Mīrā khījh gaī.* — The phone rang three times in the night and Mira got fed up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to get irritated, then the Hindi for to fly into a rage, then say khījhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to get irritated, then the Hindi for to fly into a rage, then say *khījhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खीझना (khījhnā) mean? (\"To get fed up; to be vexed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

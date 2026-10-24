@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:18343688c6396017",
+  "lessonIds": [
+    "HI-C447-kunj",
+    "HI-C447-bel",
+    "HI-C447-kai",
+    "HI-C447-kira",
+    "HI-C447-lipatna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch447.txt",
+  "json": "hindi/narration/ch447.json",
+  "textHash": "fnv1a64:c5d5988766745104",
+  "jsonHash": "fnv1a64:21abdc67361f903d",
+  "findings": []
+}

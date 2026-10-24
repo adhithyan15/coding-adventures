@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:a1e21af784fd01fe",
+  "lessonIds": [
+    "HI-C353-samsad",
+    "HI-C353-sasan",
+    "HI-C353-niti",
+    "HI-C353-prastav",
+    "HI-C353-thahrana"
+  ],
+  "tex": "hindi/book/chapters/ch353-who-governs.tex"
+}

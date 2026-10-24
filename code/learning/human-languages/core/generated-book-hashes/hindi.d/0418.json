@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:fea3a0d732fcaaa9",
+  "lessonIds": [
+    "HI-C418-nazdik",
+    "HI-C418-nikat",
+    "HI-C418-par",
+    "HI-C418-bagal",
+    "HI-C418-pahucana"
+  ],
+  "tex": "hindi/book/chapters/ch418-near-and-across.tex"
+}

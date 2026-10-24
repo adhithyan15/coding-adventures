@@ -1,0 +1,11 @@
+{
+  "id": "HI-C554-taqriban",
+  "pathSegment": "HI-PATH-554-NATIJATAN554",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-554-NATIJATAN554",
+      "order": 3
+    }
+  ]
+}

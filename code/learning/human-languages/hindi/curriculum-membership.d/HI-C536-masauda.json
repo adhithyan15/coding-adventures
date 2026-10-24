@@ -1,0 +1,11 @@
+{
+  "id": "HI-C536-masauda",
+  "pathSegment": "HI-PATH-536-YOJNA536",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-536-YOJNA536",
+      "order": 4
+    }
+  ]
+}

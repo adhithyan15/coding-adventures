@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 373,
+  "title": "Is It Possible?",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:caf664e61a5139e0",
+  "lessons": [
+    {
+      "id": "HI-C373-mumkin",
+      "sequence": 20530,
+      "title": "मुमकिन (mumkin) — possible",
+      "headword": "मुमकिन",
+      "romanization": "mumkin",
+      "gloss": "possible",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a75433b278a557b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a sin, then the Hindi for to hold on to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मुमकिन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुमकिन — mumkin — \"possible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर हम जल्दी निकलेंगे तो दोपहर तक पहुँचना मुमकिन है। agar ham jaldī nikleṅge to dopahar tak pahũcnā mumkin hai. If we leave early, we can get there by noon."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुमकिन (mumkin) is usually traced to Arabic mumkin, \"possible\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mumkin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mumkin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mumkin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mumkin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar ham jaldī nikleṅge to dopahar tak pahũcnā mumkin hai. — If we leave early, we can get there by noon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar ham jaldī nikleṅge to dopahar tak pahũcnā mumkin hai.* — If we leave early, we can get there by noon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a sin, then the Hindi for to hold on to, then say mumkin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a sin, then the Hindi for to hold on to, then say *mumkin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मुमकिन (mumkin) mean? (\"Possible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C373-sambhav",
+      "sequence": 20540,
+      "title": "संभव (sambhav) — possible (formal)",
+      "headword": "संभव",
+      "romanization": "sambhav",
+      "gloss": "possible (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e6ab6aad5e60ad9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to hold on to, then the Hindi for possible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संभव",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संभव — sambhav — \"possible (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर सब मदद करेंगे तो यह काम संभव है। agar sab madad kareṅge to yah kām sambhav hai. If everyone helps, this job can be done."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संभव (sambhav) is a tatsama, borrowed from Sanskrit sambhava, \"coming into being\" (Monier-Williams). Hindi uses it as an adjective: what can come about."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhav",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhav*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhav, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhav*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar sab madad kareṅge to yah kām sambhav hai. — If everyone helps, this job can be done.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar sab madad kareṅge to yah kām sambhav hai.* — If everyone helps, this job can be done.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to hold on to, then the Hindi for possible, then say sambhav again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to hold on to, then the Hindi for possible, then say *sambhav* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संभव (sambhav) mean? (\"Possible (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C373-sambhavna",
+      "sequence": 20550,
+      "title": "संभावना (sambhāvnā) — a likelihood, a possibility",
+      "headword": "संभावना",
+      "romanization": "sambhāvnā",
+      "gloss": "a likelihood, a possibility",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf01eec592720dd5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for possible, then the Hindi for possible (formal)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संभावना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संभावना — sambhāvnā — \"a likelihood, a possibility\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर बादल रहेंगे तो बारिश की संभावना है। agar bādal raheṅge to bāriś kī sambhāvnā hai. If the clouds stay, there is a chance of rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संभावना (sambhāvnā) is a tatsama, borrowed from Sanskrit sambhāvanā, \"bringing about; supposing\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāvnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāvnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāvnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāvnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar bādal raheṅge to bāriś kī sambhāvnā hai. — If the clouds stay, there is a chance of rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar bādal raheṅge to bāriś kī sambhāvnā hai.* — If the clouds stay, there is a chance of rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for possible, then the Hindi for possible (formal), then say sambhāvnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for possible, then the Hindi for possible (formal), then say *sambhāvnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संभावना (sambhāvnā) mean? (\"A likelihood, a possibility\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C373-cukna",
+      "sequence": 20560,
+      "title": "चूकना (cūknā) — to miss (a chance, a mark)",
+      "headword": "चूकना",
+      "romanization": "cūknā",
+      "gloss": "to miss (a chance, a mark)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff676a16f29fdd01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for possible (formal), then the Hindi for a likelihood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चूकना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चूकना — cūknā — \"to miss (a chance, a mark)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम तेज़ नहीं दौड़ोगे तो गेंद पकड़ने से चूक जाओगे। agar tum tez nahīṃ dauṛoge to gẽd pakaṛne se cūk jāoge. If you don't run fast, you'll fail to catch the ball."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह चूक गया, vah cūk gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चूकना (cūknā) is inherited from cukk, \"fall short\", a form CDIAL reconstructs from its descendants (CDIAL 4848)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum tez nahīṃ dauṛoge to gẽd pakaṛne se cūk jāoge. — If you don't run fast, you'll fail to catch the ball.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum tez nahīṃ dauṛoge to gẽd pakaṛne se cūk jāoge.* — If you don't run fast, you'll fail to catch the ball.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for possible (formal), then the Hindi for a likelihood, then say cūknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for possible (formal), then the Hindi for a likelihood, then say *cūknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चूकना (cūknā) mean? (\"To miss (a chance, a mark)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C373-upayogi",
+      "sequence": 20570,
+      "title": "उपयोगी (upayogī) — useful",
+      "headword": "उपयोगी",
+      "romanization": "upayogī",
+      "gloss": "useful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f27a4a58d822553",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a likelihood, then the Hindi for to miss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपयोगी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपयोगी — upayogī — \"useful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम यह किताब पढ़ोगे तो यह बहुत उपयोगी होगी। agar tum yah kitāb paṛhoge to yah bahut upayogī hogī. If you read this book, you will find it very useful."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपयोगी (upayogī) is a tatsama, borrowed from Sanskrit upayogin, \"serviceable, useful\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upayogī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upayogī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upayogī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upayogī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum yah kitāb paṛhoge to yah bahut upayogī hogī. — If you read this book, you will find it very useful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum yah kitāb paṛhoge to yah bahut upayogī hogī.* — If you read this book, you will find it very useful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a likelihood, then the Hindi for to miss, then say upayogī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a likelihood, then the Hindi for to miss, then say *upayogī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपयोगी (upayogī) mean? (\"Useful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

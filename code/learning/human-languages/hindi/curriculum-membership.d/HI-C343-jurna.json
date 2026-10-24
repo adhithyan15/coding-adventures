@@ -1,0 +1,11 @@
+{
+  "id": "HI-C343-jurna",
+  "pathSegment": "HI-PATH-343-KARAN343",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-343-KARAN343",
+      "order": 2
+    }
+  ]
+}

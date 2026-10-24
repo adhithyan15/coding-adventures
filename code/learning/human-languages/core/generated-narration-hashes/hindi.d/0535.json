@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:4f1638ac24d0a1b4",
+  "lessonIds": [
+    "HI-C535-daur",
+    "HI-C535-phurti",
+    "HI-C535-phadna",
+    "HI-C535-medal",
+    "HI-C535-daurana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch535.txt",
+  "json": "hindi/narration/ch535.json",
+  "textHash": "fnv1a64:7efc198ecde5f37f",
+  "jsonHash": "fnv1a64:027c1c4e6d2618a8",
+  "findings": []
+}

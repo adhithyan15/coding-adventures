@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:c2f15b8f5e84df4c",
+  "lessonIds": [
+    "HI-C310-bichurna",
+    "HI-C310-bhatakna",
+    "HI-C310-talas",
+    "HI-C310-salamat",
+    "HI-C310-dilasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch310.txt",
+  "json": "hindi/narration/ch310.json",
+  "textHash": "fnv1a64:09a694291f567017",
+  "jsonHash": "fnv1a64:46cb69224b56a0f4",
+  "findings": []
+}

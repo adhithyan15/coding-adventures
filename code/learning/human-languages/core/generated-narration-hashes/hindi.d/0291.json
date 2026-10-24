@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:01e80b391cc729fd",
+  "lessonIds": [
+    "HI-C291-casmdid",
+    "HI-C291-bayan",
+    "HI-C291-pahcanna",
+    "HI-C291-sak",
+    "HI-C291-ghurna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch291.txt",
+  "json": "hindi/narration/ch291.json",
+  "textHash": "fnv1a64:90ffe45713322fc4",
+  "jsonHash": "fnv1a64:0ef7154f9eac72cd",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C509-hartal",
+    "language": "hindi",
+    "chapter": 509,
+    "sequence": 28150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e9044b3b71f7e2d"
+  },
+  "findings": []
+}

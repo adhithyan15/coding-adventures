@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C467-bhola",
+    "language": "hindi",
+    "chapter": 467,
+    "sequence": 25780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21706ab88ef3277d"
+  },
+  "findings": []
+}

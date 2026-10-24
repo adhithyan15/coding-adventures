@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 310,
+  "title": "Lost and Found",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c2f15b8f5e84df4c",
+  "lessons": [
+    {
+      "id": "HI-C310-bichurna",
+      "sequence": 17120,
+      "title": "बिछुड़ना (bichuṛnā) — to be separated",
+      "headword": "बिछुड़ना",
+      "romanization": "bichuṛnā",
+      "gloss": "to be separated",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c6e041e5b6d4147",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a victim, then the Hindi for refuge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बिछुड़ना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिछुड़ना — bichuṛnā — \"to be separated\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेले में एक बच्चा अपनी माँ से बिछुड़ गया। mele meṁ ek baccā apnī māṁ se bichuṛ gayā. At the fair a child got separated from his mother."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह बच्चा बिछुड़ गया, vah baccā bichuṛ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिछुड़ना (bichuṛnā) is inherited from vikṣuṭati, a form CDIAL reconstructs (CDIAL 11651). The one you are parted from takes से: माँ से बिछुड़ गया."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bichuṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bichuṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bichuṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bichuṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mele meṁ ek baccā apnī māṁ se bichuṛ gayā. — At the fair a child got separated from his mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mele meṁ ek baccā apnī māṁ se bichuṛ gayā.* — At the fair a child got separated from his mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a victim, then the Hindi for refuge, then say bichuṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a victim, then the Hindi for refuge, then say *bichuṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बिछुड़ना (bichuṛnā) mean? (\"To be separated\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C310-bhatakna",
+      "sequence": 17130,
+      "title": "भटकना (bhaṭaknā) — to wander; to lose one's way",
+      "headword": "भटकना",
+      "romanization": "bhaṭaknā",
+      "gloss": "to wander; to lose one's way",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7b1521baa25f89a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for refuge, then the Hindi for to be separated."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भटकना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भटकना — bhaṭaknā — \"to wander; to lose one's way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चा भटककर नदी के किनारे पहुँचा। baccā bhaṭakkar nadī ke kināre pahũcā. The child wandered off and ended up on the riverbank."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह रास्ता भटक गया, vah rāstā bhaṭak gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भटकना (bhaṭaknā) is set by CDIAL under Sanskrit bhraṣṭa, \"fallen, ruined\" (CDIAL 9655). It is wandering without knowing the way: रास्ता भटकना, to lose one's way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaṭaknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaṭaknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaṭaknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaṭaknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baccā bhaṭakkar nadī ke kināre pahũcā. — The child wandered off and ended up on the riverbank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baccā bhaṭakkar nadī ke kināre pahũcā.* — The child wandered off and ended up on the riverbank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for refuge, then the Hindi for to be separated, then say bhaṭaknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for refuge, then the Hindi for to be separated, then say *bhaṭaknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भटकना (bhaṭaknā) mean? (\"To wander; to lose one's way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C310-talas",
+      "sequence": 17140,
+      "title": "तलाश (talāś) — a search",
+      "headword": "तलाश",
+      "romanization": "talāś",
+      "gloss": "a search",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bb1d212551cee74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to be separated, then the Hindi for to wander."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तलाश",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तलाश — talāś — \"a search\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दो दिन तक बच्चे की तलाश चली। do din tak bacce kī talāś calī. The search for the child went on for two days."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तलाश (talāś) is usually traced to Persian talāš, \"a search, an effort\", which may itself come from Turkic. की तलाश में is in search of."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talāś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talāś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talāś, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talāś*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "do din tak bacce kī talāś calī. — The search for the child went on for two days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *do din tak bacce kī talāś calī.* — The search for the child went on for two days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to be separated, then the Hindi for to wander, then say talāś again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to be separated, then the Hindi for to wander, then say *talāś* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तलाश (talāś) mean? (\"A search\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C310-salamat",
+      "sequence": 17150,
+      "title": "सलामत (salāmat) — safe and sound",
+      "headword": "सलामत",
+      "romanization": "salāmat",
+      "gloss": "safe and sound",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:253e452f63a801e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to wander, then the Hindi for a search."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सलामत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सलामत — salāmat — \"safe and sound\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आख़िर में बच्चा सलामत मिला। ākhir meṁ baccā salāmat milā. In the end the child was found safe and sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सलामत (salāmat) is usually traced, through Persian, to Arabic salāma, \"safety\". It describes a person who has come through unhurt."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "salāmat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *salāmat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "salāmat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *salāmat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākhir meṁ baccā salāmat milā. — In the end the child was found safe and sound.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākhir meṁ baccā salāmat milā.* — In the end the child was found safe and sound.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to wander, then the Hindi for a search, then say salāmat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to wander, then the Hindi for a search, then say *salāmat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सलामत (salāmat) mean? (\"Safe and sound\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C310-dilasa",
+      "sequence": 17160,
+      "title": "दिलासा (dilāsā) — comfort; consolation",
+      "headword": "दिलासा",
+      "romanization": "dilāsā",
+      "gloss": "comfort; consolation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a0545a64cb1a1c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a search, then the Hindi for safe and sound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दिलासा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिलासा — dilāsā — \"comfort; consolation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पड़ोसियों ने माँ को दिलासा दिया। paṛosiyoṁ ne māṁ ko dilāsā diyā. The neighbours comforted the mother."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिलासा (dilāsā) is usually traced to Persian dilāsā, \"a consoling\", whose first part is dil, the heart, as in दिल. दिलासा देना is to comfort someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dilāsā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dilāsā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dilāsā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dilāsā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṛosiyoṁ ne māṁ ko dilāsā diyā. — The neighbours comforted the mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṛosiyoṁ ne māṁ ko dilāsā diyā.* — The neighbours comforted the mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a search, then the Hindi for safe and sound, then say dilāsā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a search, then the Hindi for safe and sound, then say *dilāsā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दिलासा (dilāsā) mean? (\"Comfort; consolation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C356-uksana",
+  "pathSegment": "HI-PATH-356-BARABAR356",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-356-BARABAR356",
+      "order": 4
+    }
+  ]
+}

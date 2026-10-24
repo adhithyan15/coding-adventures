@@ -1,0 +1,11 @@
+{
+  "id": "HI-C347-khilaf",
+  "pathSegment": "HI-PATH-347-PAKSH347",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-347-PAKSH347",
+      "order": 1
+    }
+  ]
+}

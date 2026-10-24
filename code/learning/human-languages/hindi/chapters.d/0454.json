@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "A Surprise",
+  "label": "ch:hi-a-surprise",
+  "canDo": "I can say that something surprised me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C454-kamal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can say that something surprised me.",
+    "assesses": [
+      "HI-LEX-C454-ACHAMBHA454-03",
+      "HI-LEX-C454-ACHAMBHA454-04",
+      "HI-LEX-C454-ACHAMBHA454-05"
+    ]
+  }
+}

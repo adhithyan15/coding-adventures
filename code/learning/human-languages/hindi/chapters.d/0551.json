@@ -1,0 +1,19 @@
+{
+  "chapter": 551,
+  "title": "Free to Choose",
+  "label": "ch:hi-free-to-choose",
+  "canDo": "I can say whether someone is free, stubborn or shy.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C551-zabardasti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 551: I can say whether someone is free, stubborn or shy.",
+    "assesses": [
+      "HI-LEX-C551-MAJBUR551-03",
+      "HI-LEX-C551-MAJBUR551-04",
+      "HI-LEX-C551-MAJBUR551-05"
+    ]
+  }
+}

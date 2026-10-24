@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Sums and Cash",
+  "label": "ch:hi-sums-and-cash",
+  "canDo": "I can pay in cash or by cheque, deposit a sum and find a cash machine.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C426-etiem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can pay in cash or by cheque, deposit a sum and find a cash machine.",
+    "assesses": [
+      "HI-LEX-C426-RAQAM426-03",
+      "HI-LEX-C426-RAQAM426-04",
+      "HI-LEX-C426-RAQAM426-05"
+    ]
+  }
+}

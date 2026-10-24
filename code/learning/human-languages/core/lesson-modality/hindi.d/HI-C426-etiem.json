@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C426-etiem",
+    "language": "hindi",
+    "chapter": 426,
+    "sequence": 23470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:842fc3d4f5b5655e"
+  },
+  "findings": []
+}

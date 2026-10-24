@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-371-HALANKI371",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "HI-EXT-371-HALANKI371"
+  ],
+  "after": []
+}

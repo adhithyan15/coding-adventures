@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C548-avadhi",
+    "language": "hindi",
+    "chapter": 548,
+    "sequence": 30150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4dd16975c79c2f9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 459,
+  "title": "Affection",
+  "label": "ch:hi-affection",
+  "canDo": "I can say how someone shows their love.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-R459-review-452-459",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can say how someone shows their love.",
+    "assesses": [
+      "HI-LEX-C459-SNEH459-01",
+      "HI-LEX-C459-SNEH459-02",
+      "HI-LEX-C459-SNEH459-03",
+      "HI-LEX-C459-SNEH459-04",
+      "HI-LEX-C459-SNEH459-05"
+    ]
+  }
+}

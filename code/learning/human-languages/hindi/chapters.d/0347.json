@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "Taking Sides",
+  "label": "ch:hi-taking-sides",
+  "canDo": "I can say who is for an idea and who is against it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C347-sahmathona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can say who is for an idea and who is against it.",
+    "assesses": [
+      "HI-LEX-C347-PAKSH347-03",
+      "HI-LEX-C347-PAKSH347-04",
+      "HI-LEX-C347-PAKSH347-05"
+    ]
+  }
+}

@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 554,
+  "title": "How It Turned Out",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bfc97caca6b3fec0",
+  "lessons": [
+    {
+      "id": "HI-C554-sabaq",
+      "sequence": 30460,
+      "title": "सबक़ (sabaq) — a lesson (learned)",
+      "headword": "सबक़",
+      "romanization": "sabaq",
+      "gloss": "a lesson (learned)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:964d3912cc531842",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a stage, a phase, then the Hindi for a date (formal)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सबक़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सबक़ — sabaq — \"a lesson (learned)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अपनी ग़लती से मैंने एक बड़ा सबक़ सीखा। Apnī ġaltī se maiṁne ek baṛā sabaq sīkhā. I learned a big lesson from my mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सबक़ (sabaq) is usually traced to Arabic sabaq, \"a lesson\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabaq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabaq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabaq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabaq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Apnī ġaltī se maiṁne ek baṛā sabaq sīkhā. — I learned a big lesson from my mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Apnī ġaltī se maiṁne ek baṛā sabaq sīkhā.* — I learned a big lesson from my mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a stage, a phase, then the Hindi for a date (formal), then say sabaq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a stage, a phase, then the Hindi for a date (formal), then say *sabaq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सबक़ (sabaq) mean? (\"A lesson (learned)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C554-antatah",
+      "sequence": 30470,
+      "title": "अंततः (antataḥ) — in the end, ultimately (formal)",
+      "headword": "अंततः",
+      "romanization": "antataḥ",
+      "gloss": "in the end, ultimately (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0992a731bd6bddaa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a date (formal), then the Hindi for a lesson (learned)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अंततः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंततः — antataḥ — \"in the end, ultimately (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लंबी बहस के बाद अंततः सब लोग सहमत हो गए। Lambī bahas ke bād antataḥ sab log sahmat ho gae. After a long debate everyone finally agreed."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word; speech says आख़िर में."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंततः (antataḥ) is a tatsama, taken whole from Sanskrit antatas, \"from the end; lastly, finally\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antataḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antataḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antataḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antataḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Lambī bahas ke bād antataḥ sab log sahmat ho gae. — After a long debate everyone finally agreed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Lambī bahas ke bād antataḥ sab log sahmat ho gae.* — After a long debate everyone finally agreed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a date (formal), then the Hindi for a lesson (learned), then say antataḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a date (formal), then the Hindi for a lesson (learned), then say *antataḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अंततः (antataḥ) mean? (\"In the end, ultimately (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C554-natijatan",
+      "sequence": 30480,
+      "title": "नतीजतन (natījatan) — as a result",
+      "headword": "नतीजतन",
+      "romanization": "natījatan",
+      "gloss": "as a result",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7cf182279e24da9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a lesson (learned), then the Hindi for ultimately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नतीजतन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नतीजतन — natījatan — \"as a result\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वह देर से उठा, नतीजतन उसकी ट्रेन छूट गई। Vah der se uṭhā, natījatan uskī ṭren chūṭ gaī. He got up late; as a result he missed his train."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नतीजतन (natījatan) is usually traced to Arabic natījatan, \"as a result\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natījatan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natījatan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natījatan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natījatan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Vah der se uṭhā, natījatan uskī ṭren chūṭ gaī. — He got up late; as a result he missed his train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Vah der se uṭhā, natījatan uskī ṭren chūṭ gaī.* — He got up late; as a result he missed his train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a lesson (learned), then the Hindi for ultimately, then say natījatan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a lesson (learned), then the Hindi for ultimately, then say *natījatan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नतीजतन (natījatan) mean? (\"As a result\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C554-taqriban",
+      "sequence": 30490,
+      "title": "तक़रीबन (taqrīban) — approximately, roughly",
+      "headword": "तक़रीबन",
+      "romanization": "taqrīban",
+      "gloss": "approximately, roughly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f63d5f468d2667f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for ultimately, then the Hindi for as a result."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तक़रीबन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तक़रीबन — taqrīban — \"approximately, roughly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तक़रीबन (taqrīban) सौ लोग मेले में आए। Taqrīban sau log mele meṁ āe. Roughly a hundred people came to the fair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तक़रीबन (taqrīban) is usually traced to Arabic taqrīban, \"approximately\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taqrīban",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taqrīban*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taqrīban, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taqrīban*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Taqrīban sau log mele meṁ āe. — Roughly a hundred people came to the fair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Taqrīban sau log mele meṁ āe.* — Roughly a hundred people came to the fair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for ultimately, then the Hindi for as a result, then say taqrīban again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for ultimately, then the Hindi for as a result, then say *taqrīban* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तक़रीबन (taqrīban) mean? (\"Approximately, roughly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C554-darasal",
+      "sequence": 30500,
+      "title": "दरअसल (darasal) — actually; in fact",
+      "headword": "दरअसल",
+      "romanization": "darasal",
+      "gloss": "actually; in fact",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87463ea625863048",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for as a result, then the Hindi for approximately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दरअसल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरअसल — darasal — \"actually; in fact\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दरअसल (darasal) मैं कल बीमार था। Darasal maiṁ kal bīmār thā. Actually, I was ill yesterday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरअसल (darasal) is usually traced to Persian dar-aṣl, \"in origin, in fact\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darasal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darasal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darasal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darasal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Darasal maiṁ kal bīmār thā. — Actually, I was ill yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Darasal maiṁ kal bīmār thā.* — Actually, I was ill yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for as a result, then the Hindi for approximately, then say darasal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for as a result, then the Hindi for approximately, then say *darasal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दरअसल (darasal) mean? (\"Actually; in fact\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

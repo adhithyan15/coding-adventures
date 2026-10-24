@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C335-amar",
+    "language": "hindi",
+    "chapter": 335,
+    "sequence": 18430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c43482ee6292b779"
+  },
+  "findings": []
+}

@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 386,
+  "title": "Leaning on Others",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c40fed9d885e7052",
+  "lessons": [
+    {
+      "id": "HI-C386-khisakna",
+      "sequence": 21200,
+      "title": "खिसकना (khisaknā) — to slip away, to shift",
+      "headword": "खिसकना",
+      "romanization": "khisaknā",
+      "gloss": "to slip away, to shift",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c63c0e04d92e7a35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to set, then the Hindi for unfinished."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खिसकना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिसकना — khisaknā — \"to slip away, to shift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम दोनों थोड़ा खिसकोगे तो मैं भी बैठ सकूँगा। agar tum donõ thoṛā khiskoge to maiṁ bhī baiṭh sakūṅgā. If you two shift up a little, I'll be able to sit too."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह पीछे खिसक गया, vah pīche khisak gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिसकना (khisaknā) is inherited from khis, \"slip\", a form CDIAL reconstructs from its descendants (CDIAL 3888)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khisaknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khisaknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khisaknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khisaknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum donõ thoṛā khiskoge to maiṁ bhī baiṭh sakūṅgā. — If you two shift up a little, I'll be able to sit too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum donõ thoṛā khiskoge to maiṁ bhī baiṭh sakūṅgā.* — If you two shift up a little, I'll be able to sit too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to set, then the Hindi for unfinished, then say khisaknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to set, then the Hindi for unfinished, then say *khisaknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खिसकना (khisaknā) mean? (\"To slip away, to shift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C386-khalna",
+      "sequence": 21210,
+      "title": "खलना (khalnā) — to be missed, to bother (someone)",
+      "headword": "खलना",
+      "romanization": "khalnā",
+      "gloss": "to be missed, to bother (someone)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd65c41a50fdc9dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for unfinished, then the Hindi for to slip away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खलना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खलना — khalnā — \"to be missed, to bother (someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम चले जाओगे तो मुझे बहुत खलेगा। agar tum cale jāoge to mujhe bahut khalegā. If you go away, I'll really miss you."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह बात उसे बहुत खली, vah bāt use bahut khalī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खलना (khalnā) is a tadbhava, inherited from Sanskrit skhalati, \"stumbles\" (CDIAL 13663). CDIAL glosses the Hindi verb \"to be bad, to be inimical\"; the sense of being missed is not among its glosses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khalnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khalnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khalnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khalnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum cale jāoge to mujhe bahut khalegā. — If you go away, I'll really miss you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum cale jāoge to mujhe bahut khalegā.* — If you go away, I'll really miss you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for unfinished, then the Hindi for to slip away, then say khalnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for unfinished, then the Hindi for to slip away, then say *khalnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खलना (khalnā) mean? (\"To be missed, to bother (someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C386-sahara",
+      "sequence": 21220,
+      "title": "सहारा (sahārā) — a support, someone to lean on",
+      "headword": "सहारा",
+      "romanization": "sahārā",
+      "gloss": "a support, someone to lean on",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3df8348e6cdb0a5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to slip away, then the Hindi for to be missed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सहारा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहारा — sahārā — \"a support, someone to lean on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर बूढ़ी माँ को सहारा नहीं मिलेगा तो वह गिर जाएगी। agar būṛhī māṁ ko sahārā nahīṃ milegā to vah gir jāegī. If the old mother has nobody to lean on, she will fall."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहारा (sahārā) is a tadbhava, inherited from Sanskrit sahakāra, \"assistance\" (CDIAL 13299)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahārā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahārā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar būṛhī māṁ ko sahārā nahīṃ milegā to vah gir jāegī. — If the old mother has nobody to lean on, she will fall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar būṛhī māṁ ko sahārā nahīṃ milegā to vah gir jāegī.* — If the old mother has nobody to lean on, she will fall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to slip away, then the Hindi for to be missed, then say sahārā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to slip away, then the Hindi for to be missed, then say *sahārā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सहारा (sahārā) mean? (\"A support, someone to lean on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C386-zid",
+      "sequence": 21230,
+      "title": "ज़िद (zid) — stubbornness, insistence",
+      "headword": "ज़िद",
+      "romanization": "zid",
+      "gloss": "stubbornness, insistence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b47a7d1580a5c19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to be missed, then the Hindi for someone to lean on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ज़िद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़िद — zid — \"stubbornness, insistence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ज़िद मत करो, वरना माँ को ग़ुस्सा आएगा। zid mat karo, varnā māṁ ko ġussā āegā. Don't be stubborn, or your mother will get angry."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़िद (zid) is usually traced to Arabic ḍidd, \"the opposite\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zid, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zid*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zid mat karo, varnā māṁ ko ġussā āegā. — Don't be stubborn, or your mother will get angry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zid mat karo, varnā māṁ ko ġussā āegā.* — Don't be stubborn, or your mother will get angry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to be missed, then the Hindi for someone to lean on, then say zid again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to be missed, then the Hindi for someone to lean on, then say *zid* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ज़िद (zid) mean? (\"Stubbornness, insistence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C386-yogya",
+      "sequence": 21240,
+      "title": "योग्य (yogya) — eligible, qualified",
+      "headword": "योग्य",
+      "romanization": "yogya",
+      "gloss": "eligible, qualified",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:504a2d2a94a557ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for someone to lean on, then the Hindi for stubbornness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: योग्य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "योग्य — yogya — \"eligible, qualified\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम्हारे अच्छे अंक आएँगे तो तुम नौकरी के योग्य होगे। agar tumhāre acche aṅk āeṅge to tum naukrī ke yogya hoge. If you get good marks, you'll be eligible for the job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "योग्य (yogya) is a tatsama, borrowed from Sanskrit yogya, \"fit, suitable\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yogya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yogya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yogya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yogya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tumhāre acche aṅk āeṅge to tum naukrī ke yogya hoge. — If you get good marks, you'll be eligible for the job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tumhāre acche aṅk āeṅge to tum naukrī ke yogya hoge.* — If you get good marks, you'll be eligible for the job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for someone to lean on, then the Hindi for stubbornness, then say yogya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for someone to lean on, then the Hindi for stubbornness, then say *yogya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does योग्य (yogya) mean? (\"Eligible, qualified\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C437-barsat",
+  "pathSegment": "HI-PATH-437-MANSUN437",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-437-MANSUN437",
+      "order": 1
+    }
+  ]
+}

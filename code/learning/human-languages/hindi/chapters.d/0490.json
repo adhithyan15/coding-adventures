@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Cuts and Scrapes",
+  "label": "ch:hi-cuts-and-scrapes",
+  "canDo": "I can say how someone got a small injury.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C490-dag",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can say how someone got a small injury.",
+    "assesses": [
+      "HI-LEX-C490-CHHALA490-03",
+      "HI-LEX-C490-CHHALA490-04",
+      "HI-LEX-C490-CHHALA490-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C428-vasulna",
+    "language": "hindi",
+    "chapter": 428,
+    "sequence": 23570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4a0f7657aa9f59c"
+  },
+  "findings": []
+}

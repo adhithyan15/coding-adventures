@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:316fba419480f840",
+  "lessonIds": [
+    "HI-C330-ikattha",
+    "HI-C330-jhaki",
+    "HI-C330-jhulna",
+    "HI-C330-sobhayatra",
+    "HI-C330-bhakt"
+  ],
+  "tex": "hindi/book/chapters/ch330-at-the-fair.tex"
+}

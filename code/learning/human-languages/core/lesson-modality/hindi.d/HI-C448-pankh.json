@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C448-pankh",
+    "language": "hindi",
+    "chapter": 448,
+    "sequence": 24570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad7c670418c319f9"
+  },
+  "findings": []
+}

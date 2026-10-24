@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Losing One's Temper",
+  "label": "ch:hi-losing-one-s-temper",
+  "canDo": "I can say that someone got cross and why.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C456-khijhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can say that someone got cross and why.",
+    "assesses": [
+      "HI-LEX-C456-KRODH456-03",
+      "HI-LEX-C456-KRODH456-04",
+      "HI-LEX-C456-KRODH456-05"
+    ]
+  }
+}

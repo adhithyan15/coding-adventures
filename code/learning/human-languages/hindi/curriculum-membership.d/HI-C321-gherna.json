@@ -1,0 +1,11 @@
+{
+  "id": "HI-C321-gherna",
+  "pathSegment": "HI-PATH-321-HAMLA321",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-321-HAMLA321",
+      "order": 1
+    }
+  ]
+}

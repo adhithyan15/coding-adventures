@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:2263059e9f1e08a8",
+  "lessonIds": [
+    "HI-C516-tapkana",
+    "HI-C516-darakna",
+    "HI-C516-paip",
+    "HI-C516-ched",
+    "HI-C516-dhalakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch516.txt",
+  "json": "hindi/narration/ch516.json",
+  "textHash": "fnv1a64:ef6c03321f98b15d",
+  "jsonHash": "fnv1a64:c75ed841d8648faf",
+  "findings": []
+}

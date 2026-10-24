@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-297-PHISAL297",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "HI-EXT-297-PHISAL297"
+  ],
+  "after": []
+}

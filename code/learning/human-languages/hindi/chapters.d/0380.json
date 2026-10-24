@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Getting Out of Trouble",
+  "label": "ch:hi-getting-out-of-trouble",
+  "canDo": "I can say what to do if something gets in the way.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C380-ubarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can say what to do if something gets in the way.",
+    "assesses": [
+      "HI-LEX-C380-HAL380-03",
+      "HI-LEX-C380-HAL380-04",
+      "HI-LEX-C380-HAL380-05"
+    ]
+  }
+}

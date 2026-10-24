@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 468,
+  "title": "Patience and Temper",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b194bbd83fcc6050",
+  "lessons": [
+    {
+      "id": "HI-C468-dhairya",
+      "sequence": 25820,
+      "title": "धैर्य (dhairya) — forbearance; patience",
+      "headword": "धैर्य",
+      "romanization": "dhairya",
+      "gloss": "forbearance; patience",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d76f01637490b93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a betrayal of trust, then the Hindi for crooked."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धैर्य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धैर्य — dhairya — \"forbearance; patience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चों को पढ़ाने के लिए बहुत धैर्य चाहिए। baccoṁ ko paṛhāne ke liye bahut dhairya cāhiye. Teaching children takes a great deal of patience."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धैर्य (dhairya) is a tatsama, borrowed from Sanskrit dhairya, \"firmness, constancy, calmness, patience\" (Monier-Williams). It is the formal sister of dhīraj."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhairya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhairya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhairya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhairya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baccoṁ ko paṛhāne ke liye bahut dhairya cāhiye. — Teaching children takes a great deal of patience.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baccoṁ ko paṛhāne ke liye bahut dhairya cāhiye.* — Teaching children takes a great deal of patience.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a betrayal of trust, then the Hindi for crooked, then say dhairya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a betrayal of trust, then the Hindi for crooked, then say *dhairya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धैर्य (dhairya) mean? (\"Forbearance; patience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C468-adhir",
+      "sequence": 25830,
+      "title": "अधीर (adhīr) — impatient",
+      "headword": "अधीर",
+      "romanization": "adhīr",
+      "gloss": "impatient",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd83c70f20b67ef6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for crooked, then the Hindi for forbearance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अधीर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अधीर — adhīr — \"impatient\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ट्रेन देर से आई, इसलिए सब यात्री अधीर थे। ṭren der se āī, isliye sab yātrī adhīr the. The train came late, so all the passengers were impatient."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अधीर (adhīr) is a tatsama, borrowed from Sanskrit adhīra, \"not steady, excitable\", built on a-, \"not\", and dhīra, \"steady\" (Monier-Williams). Hindi uses it for someone who cannot wait."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭren der se āī, isliye sab yātrī adhīr the. — The train came late, so all the passengers were impatient.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭren der se āī, isliye sab yātrī adhīr the.* — The train came late, so all the passengers were impatient.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for crooked, then the Hindi for forbearance, then say adhīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for crooked, then the Hindi for forbearance, then say *adhīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अधीर (adhīr) mean? (\"Impatient\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C468-jhakki",
+      "sequence": 25840,
+      "title": "झक्की (jhakkī) — cranky; set in odd ways",
+      "headword": "झक्की",
+      "romanization": "jhakkī",
+      "gloss": "cranky; set in odd ways",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb7459301b8a2a04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for forbearance, then the Hindi for impatient."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झक्की",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झक्की — jhakkī — \"cranky; set in odd ways\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरे नाना थोड़े झक्की हैं, हर काम अपने तरीक़े से करते हैं। mere nānā thoṛe jhakkī haiṁ, har kām apne tarīqe se karte haiṁ. My grandfather is a bit cranky; he does everything his own way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झक्की (jhakkī) is a tadbhava: CDIAL lists Hindi jhakkī, \"stubborn\", under jhakk, a form it reconstructs (CDIAL 5319). It is the stubbornness of odd, fixed habits."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhakkī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhakkī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhakkī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhakkī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mere nānā thoṛe jhakkī haiṁ, har kām apne tarīqe se karte haiṁ. — My grandfather is a bit cranky; he does everything his own way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mere nānā thoṛe jhakkī haiṁ, har kām apne tarīqe se karte haiṁ.* — My grandfather is a bit cranky; he does everything his own way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for forbearance, then the Hindi for impatient, then say jhakkī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for forbearance, then the Hindi for impatient, then say *jhakkī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झक्की (jhakkī) mean? (\"Cranky; set in odd ways\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C468-jhirakna",
+      "sequence": 25850,
+      "title": "झिड़कना (jhiṛaknā) — to snap at; to rebuke",
+      "headword": "झिड़कना",
+      "romanization": "jhiṛaknā",
+      "gloss": "to snap at; to rebuke",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81eb23dc4104b431",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for impatient, then the Hindi for cranky."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झिड़कना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झिड़कना — jhiṛaknā — \"to snap at; to rebuke\"."
+            },
+            {
+              "kind": "speech",
+              "text": "देर से आने पर मालिक ने नौकर को झिड़का। der se āne par mālik ne naukar ko jhiṛkā. The master snapped at the servant for coming late."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने नौकर को झिड़का, usne naukar ko jhiṛkā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झिड़कना (jhiṛaknā) is a tadbhava: CDIAL lists Hindi jhiṛaknā, \"to shake, scold\", under jhaṭ, a form it reconstructs (CDIAL 5327). It is a short, sharp telling-off, sharper than ḍā̃ṭnā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhiṛaknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhiṛaknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhiṛaknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhiṛaknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der se āne par mālik ne naukar ko jhiṛkā. — The master snapped at the servant for coming late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der se āne par mālik ne naukar ko jhiṛkā.* — The master snapped at the servant for coming late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for impatient, then the Hindi for cranky, then say jhiṛaknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for impatient, then the Hindi for cranky, then say *jhiṛaknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झिड़कना (jhiṛaknā) mean? (\"To snap at; to rebuke\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C468-jhallana",
+      "sequence": 25860,
+      "title": "झल्लाना (jhallānā) — to snap irritably",
+      "headword": "झल्लाना",
+      "romanization": "jhallānā",
+      "gloss": "to snap irritably",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7fb6d1351a3b5d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for cranky, then the Hindi for to snap at."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झल्लाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झल्लाना — jhallānā — \"to snap irritably\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बार बार वही सवाल सुनकर पिता झल्ला गए। bār bār vahī savāl sunkar pitā jhallā gae. Hearing the same question again and again, my father snapped."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह झल्ला गया, vah jhallā gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झल्लाना (jhallānā) is inherited: CDIAL lists Hindi jhallānā, \"to burn\", beside jhallā, \"hot\", under jhal, \"flash\", a form it reconstructs (CDIAL 5352). The sense \"to flare up in irritation\" is a turn CDIAL does not give, though the heat behind it is plain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhallānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhallānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhallānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhallānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bār bār vahī savāl sunkar pitā jhallā gae. — Hearing the same question again and again, my father snapped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bār bār vahī savāl sunkar pitā jhallā gae.* — Hearing the same question again and again, my father snapped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for cranky, then the Hindi for to snap at, then say jhallānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for cranky, then the Hindi for to snap at, then say *jhallānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झल्लाना (jhallānā) mean? (\"To snap irritably\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

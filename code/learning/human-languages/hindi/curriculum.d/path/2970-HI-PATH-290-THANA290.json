@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-290-THANA290",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "HI-EXT-290-THANA290"
+  ],
+  "after": []
+}

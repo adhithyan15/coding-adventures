@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:38358b35ccc59508",
+  "lessonIds": [
+    "HI-C544-qismat",
+    "HI-C544-samyog",
+    "HI-C544-mauqa",
+    "HI-C544-avsar",
+    "HI-C544-dav"
+  ],
+  "tex": "hindi/book/chapters/ch544-a-stroke-of-luck.tex"
+}

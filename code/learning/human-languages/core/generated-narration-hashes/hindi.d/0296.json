@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:10d7ff629bf3a188",
+  "lessonIds": [
+    "HI-C296-raftar",
+    "HI-C296-takrana",
+    "HI-C296-savari",
+    "HI-C296-pahiya",
+    "HI-C296-palatna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch296.txt",
+  "json": "hindi/narration/ch296.json",
+  "textHash": "fnv1a64:da6535870ddbc517",
+  "jsonHash": "fnv1a64:d8170876ca0ce65d",
+  "findings": []
+}

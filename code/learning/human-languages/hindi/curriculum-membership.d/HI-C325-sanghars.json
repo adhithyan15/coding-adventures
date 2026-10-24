@@ -1,0 +1,11 @@
+{
+  "id": "HI-C325-sanghars",
+  "pathSegment": "HI-PATH-325-ANDOLAN325",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-325-ANDOLAN325",
+      "order": 2
+    }
+  ]
+}

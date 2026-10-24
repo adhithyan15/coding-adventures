@@ -1,0 +1,11 @@
+{
+  "id": "HI-C540-tarkib",
+  "pathSegment": "HI-PATH-540-KOSHISH540",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-540-KOSHISH540",
+      "order": 3
+    }
+  ]
+}

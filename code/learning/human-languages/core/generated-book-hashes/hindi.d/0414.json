@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:09ed8f25c1cac8c4",
+  "lessonIds": [
+    "HI-C414-gusalkhana",
+    "HI-C414-saucalay",
+    "HI-C414-gizar",
+    "HI-C414-aramdeh",
+    "HI-C414-jagana"
+  ],
+  "tex": "hindi/book/chapters/ch414-bathrooms-and-comfort.tex"
+}

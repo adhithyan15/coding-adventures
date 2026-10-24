@@ -1,0 +1,11 @@
+{
+  "id": "HI-C379-patakna",
+  "pathSegment": "HI-PATH-379-YADI379",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-379-YADI379",
+      "order": 4
+    }
+  ]
+}

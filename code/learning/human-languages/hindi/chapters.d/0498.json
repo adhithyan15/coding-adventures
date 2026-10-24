@@ -1,0 +1,21 @@
+{
+  "chapter": 498,
+  "title": "Bringing Up a Child",
+  "label": "ch:hi-bringing-up-a-child",
+  "canDo": "I can say how a child was brought up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-R498-review-492-498",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can say how a child was brought up.",
+    "assesses": [
+      "HI-LEX-C498-PARVARISH498-01",
+      "HI-LEX-C498-PARVARISH498-02",
+      "HI-LEX-C498-PARVARISH498-03",
+      "HI-LEX-C498-PARVARISH498-04",
+      "HI-LEX-C498-PARVARISH498-05"
+    ]
+  }
+}

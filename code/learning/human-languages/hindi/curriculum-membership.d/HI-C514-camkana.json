@@ -1,0 +1,11 @@
+{
+  "id": "HI-C514-camkana",
+  "pathSegment": "HI-PATH-514-SUNAR514",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-514-SUNAR514",
+      "order": 3
+    }
+  ]
+}

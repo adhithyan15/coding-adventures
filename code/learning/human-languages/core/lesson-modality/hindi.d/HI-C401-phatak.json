@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C401-phatak",
+    "language": "hindi",
+    "chapter": 401,
+    "sequence": 22150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a33b45c798edf51"
+  },
+  "findings": []
+}

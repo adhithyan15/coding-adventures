@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:ab60f0a71ebc4b62",
+  "lessonIds": [
+    "HI-C311-sahayta",
+    "HI-C311-svayamsevak",
+    "HI-C311-jutna",
+    "HI-C311-jutana",
+    "HI-C311-hausla",
+    "HI-R311-review-304-311"
+  ],
+  "tex": "hindi/book/chapters/ch311-lending-a-hand.tex"
+}

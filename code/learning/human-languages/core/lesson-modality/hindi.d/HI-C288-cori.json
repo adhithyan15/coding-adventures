@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C288-cori",
+    "language": "hindi",
+    "chapter": 288,
+    "sequence": 16000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bca5abe159f5f970"
+  },
+  "findings": []
+}

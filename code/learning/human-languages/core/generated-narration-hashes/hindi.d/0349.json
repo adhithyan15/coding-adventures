@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:cb8660a5c6d7b61b",
+  "lessonIds": [
+    "HI-C349-ugalna",
+    "HI-C349-inkarkarna",
+    "HI-C349-pustikarna",
+    "HI-C349-svikarkarna",
+    "HI-C349-galatfahmi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch349.txt",
+  "json": "hindi/narration/ch349.json",
+  "textHash": "fnv1a64:6d70d8ab0c1eedc4",
+  "jsonHash": "fnv1a64:9f35cb4af904c0b9",
+  "findings": []
+}

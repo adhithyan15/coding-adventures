@@ -1,0 +1,11 @@
+{
+  "id": "HI-C308-lapakna",
+  "pathSegment": "HI-PATH-308-BACHAV308",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-308-BACHAV308",
+      "order": 4
+    }
+  ]
+}

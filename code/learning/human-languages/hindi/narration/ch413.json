@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 413,
+  "title": "Inns and Rest Houses",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:bfc453936dfad05f",
+  "lessons": [
+    {
+      "id": "HI-C413-saray",
+      "sequence": 22760,
+      "title": "सराय (sarāy) — an inn",
+      "headword": "सराय",
+      "romanization": "sarāy",
+      "gloss": "an inn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c156cb5dee385dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to unload, then the Hindi for to put on board."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सराय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सराय — sarāy — \"an inn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पहले मुसाफ़िर सराय में रुकते थे। pahle musāfir sarāy meṁ rukte the. In the old days, travellers used to stop at an inn."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सराय (sarāy) is usually traced to Persian sarāy, \"a large house, a palace\", which also named the walled inns built along the old trade roads; many towns still have a lane or a quarter called सराय."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahle musāfir sarāy meṁ rukte the. — In the old days, travellers used to stop at an inn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahle musāfir sarāy meṁ rukte the.* — In the old days, travellers used to stop at an inn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to unload, then the Hindi for to put on board, then say sarāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to unload, then the Hindi for to put on board, then say *sarāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सराय (sarāy) mean? (\"An inn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C413-dharmsala",
+      "sequence": 22770,
+      "title": "धर्मशाला (dharmśālā) — a rest house (for pilgrims)",
+      "headword": "धर्मशाला",
+      "romanization": "dharmśālā",
+      "gloss": "a rest house (for pilgrims)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebbdfe318c0778b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to put on board, then the Hindi for an inn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धर्मशाला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धर्मशाला — dharmśālā — \"a rest house (for pilgrims)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मंदिर के पास एक सस्ती धर्मशाला है। mandir ke pās ek sastī dharmśālā hai. There is a cheap rest house near the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धर्मशाला (dharmśālā) is a tatsama, Sanskrit dharmaśālā (Monier-Williams), from dharma, \"duty, charity\", and śālā, \"a hall\": a house kept for pilgrims and travellers at little or no cost."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dharmśālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dharmśālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dharmśālā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dharmśālā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mandir ke pās ek sastī dharmśālā hai. — There is a cheap rest house near the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mandir ke pās ek sastī dharmśālā hai.* — There is a cheap rest house near the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to put on board, then the Hindi for an inn, then say dharmśālā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to put on board, then the Hindi for an inn, then say *dharmśālā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धर्मशाला (dharmśālā) mean? (\"A rest house (for pilgrims)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C413-lift",
+      "sequence": 22780,
+      "title": "लिफ़्ट (lifṭ) — a lift",
+      "headword": "लिफ़्ट",
+      "romanization": "lifṭ",
+      "gloss": "a lift",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1c8e3fe708f920b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an inn, then the Hindi for a rest house."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लिफ़्ट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिफ़्ट — lifṭ — \"a lift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लिफ़्ट बंद है, सीढ़ी से जाइए। lifṭ band hai, sīṛhī se jāiye. The lift is out of order; please take the stairs."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिफ़्ट (lifṭ) is borrowed from English lift; it is feminine in Hindi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lifṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lifṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lifṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lifṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lifṭ band hai, sīṛhī se jāiye. — The lift is out of order; please take the stairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lifṭ band hai, sīṛhī se jāiye.* — The lift is out of order; please take the stairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an inn, then the Hindi for a rest house, then say lifṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an inn, then the Hindi for a rest house, then say *lifṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लिफ़्ट (lifṭ) mean? (\"A lift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C413-thaharna",
+      "sequence": 22790,
+      "title": "ठहरना (ṭhaharnā) — to stop over; to stay (somewhere)",
+      "headword": "ठहरना",
+      "romanization": "ṭhaharnā",
+      "gloss": "to stop over; to stay (somewhere)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9047ecd0fdce63a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a rest house, then the Hindi for a lift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ठहरना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठहरना — ṭhaharnā — \"to stop over; to stay (somewhere)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हम दो रात एक होटल में ठहरे। ham do rāt ek hoṭal meṁ ṭhahre. We stayed two nights at a hotel."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह धर्मशाला में ठहरा, vah dharmśālā meṁ ṭhahrā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठहरना (ṭhaharnā) goes back to stabhira, \"fixed, firm\", a form CDIAL reconstructs (CDIAL 13680), which lists Hindi ṭhaharnā, \"to stop\". To ṭhaharnā is to stand still in one place for a while."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhaharnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhaharnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhaharnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhaharnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ham do rāt ek hoṭal meṁ ṭhahre. — We stayed two nights at a hotel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ham do rāt ek hoṭal meṁ ṭhahre.* — We stayed two nights at a hotel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a rest house, then the Hindi for a lift, then say ṭhaharnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a rest house, then the Hindi for a lift, then say *ṭhaharnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ठहरना (ṭhaharnā) mean? (\"To stop over; to stay (somewhere)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C413-bichana",
+      "sequence": 22800,
+      "title": "बिछाना (bichānā) — to spread out (a sheet or a mat); to make up (a bed)",
+      "headword": "बिछाना",
+      "romanization": "bichānā",
+      "gloss": "to spread out (a sheet or a mat); to make up (a bed)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f44bd0bc03dd885a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a lift, then the Hindi for to stop over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बिछाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिछाना — bichānā — \"to spread out (a sheet or a mat); to make up (a bed)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नौकर ने बिस्तर पर नई चादर बिछाई। naukar ne bistar par naī cādar bichāī. The servant spread a fresh sheet on the bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने फ़र्श पर दरी बिछाई, usne farś par darī bichāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिछाना (bichānā) goes back to vicchādayati, \"spreads out\", a form CDIAL reconstructs (CDIAL 11692), which lists Hindi bichānā, \"to spread\"; बिस्तर बिछाना is to make up a bed on the floor or a cot."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bichānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bichānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bichānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bichānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naukar ne bistar par naī cādar bichāī. — The servant spread a fresh sheet on the bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naukar ne bistar par naī cādar bichāī.* — The servant spread a fresh sheet on the bed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a lift, then the Hindi for to stop over, then say bichānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a lift, then the Hindi for to stop over, then say *bichānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बिछाना (bichānā) mean? (\"To spread out (a sheet or a mat); to make up (a bed)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R413-review-406-413",
+      "sequence": 22810,
+      "title": "Looking back: from Taxis and Tyres to Inns and Rest Houses",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Taxis and Tyres to Inns and Rest Houses",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2809baf0a11fedbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for a taxi and a tyre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a taxi, a tyre, a puncture, a helmet, a licence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a taxi, a tyre, a puncture, a helmet, a licence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a highway, a toll, a checkpoint, a convoy, to wash away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a highway, a toll, a checkpoint, a convoy, to wash away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mile, a kos, a distance, a path, to chase off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mile, a kos, a distance, a path, to chase off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an airport, an aircraft, a pilot, a flight, arrival",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an airport, an aircraft, a pilot, a flight, arrival]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a passport, a visa, security, customs, a fee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a passport, a visa, security, customs, a fee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "weight, a delay (formal), a belt, cancelled, departure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: weight, a delay (formal), a belt, cancelled, departure]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abroad, a land far from home, a frontier, to unload, to put on board",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: abroad, a land far from home, a frontier, to unload, to put on board]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an inn, a rest house, a lift, to stop over, to spread out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an inn, a rest house, a lift, to stop over, to spread out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A taxi? (टैक्सी, ṭaiksī.) A tyre? (टायर, ṭāyar.) A puncture? (पंचर, pañcar.) A helmet? (हेलमेट, helmeṭ.) A licence? (लाइसेंस, lāisens.) A highway? (राजमार्ग, rājmārg.) A toll? (टोल, ṭol.) A checkpoint? (नाका, nākā.) A convoy? (क़ाफ़िला, qāfilā.) To wash away? (बहाना, bahānā.) A mile? (मील, mīl.) A kos? (कोस, kos.) A distance? (फ़ासला, fāslā.) A path? (राह, rāh.) To chase off? (भगाना, bhagānā.) An airport? (एयरपोर्ट, eyarporṭ.) An aircraft? (विमान, vimān.) A pilot? (पायलट, pāyalaṭ.) A flight? (उड़ान, uṛān.) Arrival? (आगमन, āgaman.) A passport? (पासपोर्ट, pāsporṭ.) A visa? (वीज़ा, vīzā.) Security? (सुरक्षा, surakṣā.) Customs? (कस्टम, kasṭam.) A fee? (शुल्क, śulk.) Weight? (वज़न, vazan.) A delay (formal)? (विलंब, vilamb.) A belt? (पेटी, peṭī.) Cancelled? (रद्द, radd.) Departure? (प्रस्थान, prasthān.) Abroad? (विदेश, videś.) A land far from home? (परदेस, pardes.) A frontier? (सरहद, sarhad.) To unload? (उतारना, utārnā.) To put on board? (चढ़ाना, caṛhānā.) An inn? (सराय, sarāy.) A rest house? (धर्मशाला, dharmśālā.) A lift? (लिफ़्ट, lifṭ.) To stop over? (ठहरना, ṭhaharnā.) To spread out? (बिछाना, bichānā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

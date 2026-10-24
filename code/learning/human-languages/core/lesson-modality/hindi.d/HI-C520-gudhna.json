@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C520-gudhna",
+    "language": "hindi",
+    "chapter": 520,
+    "sequence": 28720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27a41d549e68fb75"
+  },
+  "findings": []
+}

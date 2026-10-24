@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Calm Again",
+  "label": "ch:hi-calm-again",
+  "canDo": "I can say that someone felt calm and content.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C463-santvana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can say that someone felt calm and content.",
+    "assesses": [
+      "HI-LEX-C463-SUKUN463-03",
+      "HI-LEX-C463-SUKUN463-04",
+      "HI-LEX-C463-SUKUN463-05"
+    ]
+  }
+}

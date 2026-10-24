@@ -1,0 +1,11 @@
+{
+  "id": "HI-C337-dasna",
+  "pathSegment": "HI-PATH-337-KHAZANA337",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-337-KHAZANA337",
+      "order": 4
+    }
+  ]
+}

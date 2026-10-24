@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 501,
+  "title": "Getting Along",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c1d55391019b9dcb",
+  "lessons": [
+    {
+      "id": "HI-C501-nata",
+      "sequence": 27510,
+      "title": "नाता (nātā) — a bond; a tie of kinship",
+      "headword": "नाता",
+      "romanization": "nātā",
+      "gloss": "a bond; a tie of kinship",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc1df66445c0c3c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for the groom's wedding procession, then the Hindi for a farewell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाता — nātā — \"a bond; a tie of kinship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा का अपने गाँव से गहरा नाता है। Mīrā kā apne gā̃v se gahrā nātā hai. Mira has a deep bond with her village."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाता (nātā) is a tadbhava: CDIAL lists Hindi nātā, \"kinship, alliance\", under jñātra, a form it reconstructs, close to Sanskrit jñāti, \"a kinsman\" (CDIAL 5279)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nātā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nātā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nātā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nātā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā kā apne gā̃v se gahrā nātā hai. — Mira has a deep bond with her village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā kā apne gā̃v se gahrā nātā hai.* — Mira has a deep bond with her village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for the groom's wedding procession, then the Hindi for a farewell, then say nātā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for the groom's wedding procession, then the Hindi for a farewell, then say *nātā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नाता (nātā) mean? (\"A bond; a tie of kinship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C501-byahna",
+      "sequence": 27520,
+      "title": "ब्याहना (byāhnā) — to marry; to marry off",
+      "headword": "ब्याहना",
+      "romanization": "byāhnā",
+      "gloss": "to marry; to marry off",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca2e739d5208d79d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a farewell, then the Hindi for a bond."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ब्याहना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ब्याहना — byāhnā — \"to marry; to marry off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पिता ने बेटी को अच्छे परिवार में ब्याहा। pitā ne beṭī ko acche parivār meṁ byāhā. The father married his daughter into a good family."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बेटी को ब्याहा, usne beṭī ko byāhā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ब्याहना (byāhnā) is a tadbhava: CDIAL lists Hindi byāhnā, \"to marry\", under Sanskrit vivāhayati (CDIAL 11923), the verb beside vivāha, \"marriage\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byāhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byāhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byāhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byāhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitā ne beṭī ko acche parivār meṁ byāhā. — The father married his daughter into a good family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitā ne beṭī ko acche parivār meṁ byāhā.* — The father married his daughter into a good family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a farewell, then the Hindi for a bond, then say byāhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a farewell, then the Hindi for a bond, then say *byāhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ब्याहना (byāhnā) mean? (\"To marry; to marry off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C501-talaq",
+      "sequence": 27530,
+      "title": "तलाक़ (talāq) — a divorce",
+      "headword": "तलाक़",
+      "romanization": "talāq",
+      "gloss": "a divorce",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f43a1c94a47ca420",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a bond, then the Hindi for to marry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तलाक़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तलाक़ — talāq — \"a divorce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दो साल बाद पति और पत्नी का तलाक़ हो गया। do sāl bād pati aur patnī kā talāq ho gayā. Two years later the husband and wife got divorced."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तलाक़ (talāq) is usually traced to Arabic ṭalāq, \"release, divorce\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talāq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talāq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talāq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talāq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "do sāl bād pati aur patnī kā talāq ho gayā. — Two years later the husband and wife got divorced.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *do sāl bād pati aur patnī kā talāq ho gayā.* — Two years later the husband and wife got divorced.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a bond, then the Hindi for to marry, then say talāq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a bond, then the Hindi for to marry, then say *talāq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तलाक़ (talāq) mean? (\"A divorce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C501-nibhana",
+      "sequence": 27540,
+      "title": "निभाना (nibhānā) — to keep up; to stand by",
+      "headword": "निभाना",
+      "romanization": "nibhānā",
+      "gloss": "to keep up; to stand by",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:891148d57eb593cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to marry, then the Hindi for a divorce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निभाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निभाना — nibhānā — \"to keep up; to stand by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुण ने अपना वादा निभाया। Aruṇ ne apnā vādā nibhāyā. Arun kept his promise."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने वादा निभाया, usne vādā nibhāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निभाना (nibhānā) is the transitive beside nibhnā, \"to last, succeed\": CDIAL lists nibhnā and nibāhnā, \"to carry on\", under Sanskrit nírvahati, \"carries through\" (CDIAL 7397). One keeps up a promise, a friendship or a duty."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nibhānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nibhānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nibhānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nibhānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ ne apnā vādā nibhāyā. — Arun kept his promise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ ne apnā vādā nibhāyā.* — Arun kept his promise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to marry, then the Hindi for a divorce, then say nibhānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to marry, then the Hindi for a divorce, then say *nibhānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निभाना (nibhānā) mean? (\"To keep up; to stand by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C501-sulah",
+      "sequence": 27550,
+      "title": "सुलह (sulah) — a reconciliation; making peace",
+      "headword": "सुलह",
+      "romanization": "sulah",
+      "gloss": "a reconciliation; making peace",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70fff5e4d62f7544",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a divorce, then the Hindi for to keep up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुलह",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुलह — sulah — \"a reconciliation; making peace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बड़ों ने दोनों परिवारों में सुलह कराई। baṛoṁ ne donõ parivāroṁ meṁ sulah karāī. The elders brought the two families back together."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुलह (sulah) is usually traced to Arabic ṣulḥ, \"peace, reconciliation\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sulah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sulah*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sulah, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sulah*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṛoṁ ne donõ parivāroṁ meṁ sulah karāī. — The elders brought the two families back together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṛoṁ ne donõ parivāroṁ meṁ sulah karāī.* — The elders brought the two families back together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a divorce, then the Hindi for to keep up, then say sulah again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a divorce, then the Hindi for to keep up, then say *sulah* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुलह (sulah) mean? (\"A reconciliation; making peace\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:dcb540ac55da23f0",
+  "lessonIds": [
+    "HI-C553-siva",
+    "HI-C553-silsila",
+    "HI-C553-kram",
+    "HI-C553-caran",
+    "HI-C553-tithi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch553.txt",
+  "json": "hindi/narration/ch553.json",
+  "textHash": "fnv1a64:2ef4f141378528d6",
+  "jsonHash": "fnv1a64:25b4057215c05f25",
+  "findings": []
+}

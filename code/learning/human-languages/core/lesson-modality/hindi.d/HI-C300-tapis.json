@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C300-tapis",
+    "language": "hindi",
+    "chapter": 300,
+    "sequence": 16650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bccdec22b90933df"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Shyness and Shame",
+  "label": "ch:hi-shyness-and-shame",
+  "canDo": "I can say that someone felt shy or ashamed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C461-dhith",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can say that someone felt shy or ashamed.",
+    "assesses": [
+      "HI-LEX-C461-SANKOCH461-03",
+      "HI-LEX-C461-SANKOCH461-04",
+      "HI-LEX-C461-SANKOCH461-05"
+    ]
+  }
+}

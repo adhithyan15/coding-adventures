@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Feeling Unwell",
+  "label": "ch:hi-feeling-unwell",
+  "canDo": "I can say that someone felt dizzy or sick.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C485-dakar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can say that someone felt dizzy or sick.",
+    "assesses": [
+      "HI-LEX-C485-CHAKKAR485-03",
+      "HI-LEX-C485-CHAKKAR485-04",
+      "HI-LEX-C485-CHAKKAR485-05"
+    ]
+  }
+}

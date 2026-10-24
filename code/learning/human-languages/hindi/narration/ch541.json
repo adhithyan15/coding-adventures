@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 541,
+  "title": "Something in the Way",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c243d9e3896781b0",
+  "lessons": [
+    {
+      "id": "HI-C541-rukavat",
+      "sequence": 29790,
+      "title": "रुकावट (rukāvaṭ) — an obstacle, a hold-up",
+      "headword": "रुकावट",
+      "romanization": "rukāvaṭ",
+      "gloss": "an obstacle, a hold-up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68eaccc234fcee11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a trick, then the Hindi for an effort, an endeavour (formal)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रुकावट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रुकावट — rukāvaṭ — \"an obstacle, a hold-up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सड़क पर एक पेड़ गिरा था, इसलिए रास्ते में रुकावट थी। Saṛak par ek peṛ girā thā, isliye rāste meṁ rukāvaṭ thī. A tree had fallen on the road, so the way was blocked."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रुकावट (rukāvaṭ) is the noun of ruknā, \"to stop\", which CDIAL lists beside roknā under a reconstructed rokk (CDIAL 10827), with the ending -āvaṭ that makes nouns of verbs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rukāvaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rukāvaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rukāvaṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rukāvaṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Saṛak par ek peṛ girā thā, isliye rāste meṁ rukāvaṭ thī. — A tree had fallen on the road, so the way was blocked.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Saṛak par ek peṛ girā thā, isliye rāste meṁ rukāvaṭ thī.* — A tree had fallen on the road, so the way was blocked.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a trick, then the Hindi for an effort, an endeavour (formal), then say rukāvaṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a trick, then the Hindi for an effort, an endeavour (formal), then say *rukāvaṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रुकावट (rukāvaṭ) mean? (\"An obstacle, a hold-up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C541-jhamela",
+      "sequence": 29800,
+      "title": "झमेला (jhamelā) — a hassle, a tiresome business",
+      "headword": "झमेला",
+      "romanization": "jhamelā",
+      "gloss": "a hassle, a tiresome business",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43b2afc4bb15f258",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an effort, an endeavour (formal), then the Hindi for an obstacle, a hold-up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झमेला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झमेला — jhamelā — \"a hassle, a tiresome business\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दफ़्तर में काग़ज़ों का बड़ा झमेला है। Daftar meṁ kāġzoṁ kā baṛā jhamelā hai. There is a big hassle with papers at the office."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झमेला (jhamelā) is a tadbhava, inherited from jhamm, \"entanglement\", a form CDIAL reconstructs from its descendants (CDIAL 5340). CDIAL gives the Hindi word as \"wrangling\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhamelā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhamelā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhamelā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhamelā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Daftar meṁ kāġzoṁ kā baṛā jhamelā hai. — There is a big hassle with papers at the office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Daftar meṁ kāġzoṁ kā baṛā jhamelā hai.* — There is a big hassle with papers at the office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an effort, an endeavour (formal), then the Hindi for an obstacle, a hold-up, then say jhamelā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an effort, an endeavour (formal), then the Hindi for an obstacle, a hold-up, then say *jhamelā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झमेला (jhamelā) mean? (\"A hassle, a tiresome business\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C541-atkana",
+      "sequence": 29810,
+      "title": "अटकाना (aṭkānā) — to get (something) stuck; to hold up",
+      "headword": "अटकाना",
+      "romanization": "aṭkānā",
+      "gloss": "to get (something) stuck; to hold up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9571386b9ed477c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an obstacle, a hold-up, then the Hindi for a hassle, a tiresome business."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अटकाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अटकाना — aṭkānā — \"to get (something) stuck; to hold up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उसने पतंग पेड़ पर अटका दी। Usne patang peṛ par aṭkā dī. He got the kite stuck in the tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने काम अटकाया, usne kām aṭkāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अटकाना (aṭkānā) is the causative of aṭaknā, \"to stick, to stop\", which CDIAL files under aṭṭakk, a reconstructed form (CDIAL 182)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭkānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭkānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭkānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭkānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Usne patang peṛ par aṭkā dī. — He got the kite stuck in the tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Usne patang peṛ par aṭkā dī.* — He got the kite stuck in the tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an obstacle, a hold-up, then the Hindi for a hassle, a tiresome business, then say aṭkānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an obstacle, a hold-up, then the Hindi for a hassle, a tiresome business, then say *aṭkānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अटकाना (aṭkānā) mean? (\"To get (something) stuck; to hold up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C541-phanda",
+      "sequence": 29820,
+      "title": "फंदा (phandā) — a noose; a snare",
+      "headword": "फंदा",
+      "romanization": "phandā",
+      "gloss": "a noose; a snare",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:291c8579131c2717",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a hassle, a tiresome business, then the Hindi for to get (something) stuck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फंदा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फंदा — phandā — \"a noose; a snare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "किसान ने चूहों के लिए एक फंदा रखा। Kisān ne cūhoṁ ke liye ek phandā rakhā. The farmer set a snare for the rats."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फंदा (phandā) is probably related to Hindi phā̃d and phā̃s, \"a noose, a net\", which CDIAL files under Sanskrit spāśa, \"a fetter, a noose\" (CDIAL 13813); CDIAL does not list phandā itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phandā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phandā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phandā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phandā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kisān ne cūhoṁ ke liye ek phandā rakhā. — The farmer set a snare for the rats.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Kisān ne cūhoṁ ke liye ek phandā rakhā.* — The farmer set a snare for the rats.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a hassle, a tiresome business, then the Hindi for to get (something) stuck, then say phandā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a hassle, a tiresome business, then the Hindi for to get (something) stuck, then say *phandā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फंदा (phandā) mean? (\"A noose; a snare\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C541-uljhana",
+      "sequence": 29830,
+      "title": "उलझाना (uljhānā) — to tangle; to confuse",
+      "headword": "उलझाना",
+      "romanization": "uljhānā",
+      "gloss": "to tangle; to confuse",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a48d1aedd5fe84c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to get (something) stuck, then the Hindi for a noose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उलझाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उलझाना — uljhānā — \"to tangle; to confuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चे ने धागा उलझा दिया। Bacce ne dhāgā uljhā diyā. The child tangled up the thread."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बात उलझाई, usne bāt uljhāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उलझाना (uljhānā) is the causative of ulajhnā, \"to get tangled\", which CDIAL files under Sanskrit uparundhati, \"obstructs\" (CDIAL 2221)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uljhānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uljhānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uljhānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uljhānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bacce ne dhāgā uljhā diyā. — The child tangled up the thread.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Bacce ne dhāgā uljhā diyā.* — The child tangled up the thread.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to get (something) stuck, then the Hindi for a noose, then say uljhānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to get (something) stuck, then the Hindi for a noose, then say *uljhānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उलझाना (uljhānā) mean? (\"To tangle; to confuse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

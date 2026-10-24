@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:b3ffaecafd3332b8",
+  "lessonIds": [
+    "HI-C531-dholak",
+    "HI-C531-sahnai",
+    "HI-C531-ghughru",
+    "HI-C531-baja",
+    "HI-C531-mrdang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch531.txt",
+  "json": "hindi/narration/ch531.json",
+  "textHash": "fnv1a64:a1c52f584bf09101",
+  "jsonHash": "fnv1a64:1528cce84995df54",
+  "findings": []
+}

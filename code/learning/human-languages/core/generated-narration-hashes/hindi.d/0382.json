@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:6d1b4423f102f57e",
+  "lessonIds": [
+    "HI-C382-jaldbazi",
+    "HI-C382-laparvah",
+    "HI-C382-chalakna",
+    "HI-C382-masalna",
+    "HI-C382-nazuk",
+    "HI-R382-review-375-382"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch382.txt",
+  "json": "hindi/narration/ch382.json",
+  "textHash": "fnv1a64:10c54f2e95e7bd81",
+  "jsonHash": "fnv1a64:9ba0fc59859f32f6",
+  "findings": []
+}

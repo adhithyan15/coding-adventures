@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Making a Plan",
+  "label": "ch:hi-making-a-plan",
+  "canDo": "I can make a plan, sketch it out and say what is settled.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C536-masauda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can make a plan, sketch it out and say what is settled.",
+    "assesses": [
+      "HI-LEX-C536-YOJNA536-03",
+      "HI-LEX-C536-YOJNA536-04",
+      "HI-LEX-C536-YOJNA536-05"
+    ]
+  }
+}

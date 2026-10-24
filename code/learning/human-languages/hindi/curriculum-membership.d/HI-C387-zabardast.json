@@ -1,0 +1,11 @@
+{
+  "id": "HI-C387-zabardast",
+  "pathSegment": "HI-PATH-387-BEHAD387",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-387-BEHAD387",
+      "order": 4
+    }
+  ]
+}

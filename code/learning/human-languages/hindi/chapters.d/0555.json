@@ -1,0 +1,19 @@
+{
+  "chapter": 555,
+  "title": "Ups and Downs",
+  "label": "ch:hi-ups-and-downs",
+  "canDo": "I can talk about things rising, falling and holding steady.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C555-patan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 555: I can talk about things rising, falling and holding steady.",
+    "assesses": [
+      "HI-LEX-C555-GIRAVAT555-03",
+      "HI-LEX-C555-GIRAVAT555-04",
+      "HI-LEX-C555-GIRAVAT555-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C557-andesa",
+    "language": "hindi",
+    "chapter": 557,
+    "sequence": 30610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55b7d8836e80e146"
+  },
+  "findings": []
+}

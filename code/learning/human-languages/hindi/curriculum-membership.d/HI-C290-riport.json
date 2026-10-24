@@ -1,0 +1,11 @@
+{
+  "id": "HI-C290-riport",
+  "pathSegment": "HI-PATH-290-THANA290",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-290-THANA290",
+      "order": 1
+    }
+  ]
+}

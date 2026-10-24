@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "Rights and Duties",
+  "label": "ch:hi-rights-and-duties",
+  "canDo": "I can talk about rights and duties.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C351-nyay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can talk about rights and duties.",
+    "assesses": [
+      "HI-LEX-C351-ADHIKAR351-03",
+      "HI-LEX-C351-ADHIKAR351-04",
+      "HI-LEX-C351-ADHIKAR351-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Craft and Carving",
+  "label": "ch:hi-craft-and-carving",
+  "canDo": "I can talk about carving, crafts and exhibitions.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C528-pradarsani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about carving, crafts and exhibitions.",
+    "assesses": [
+      "HI-LEX-C528-SHILP528-03",
+      "HI-LEX-C528-SHILP528-04",
+      "HI-LEX-C528-SHILP528-05"
+    ]
+  }
+}

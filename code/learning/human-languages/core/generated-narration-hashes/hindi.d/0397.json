@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:6d77b17c9a2ca96d",
+  "lessonIds": [
+    "HI-C397-visay",
+    "HI-C397-patrika",
+    "HI-C397-chatravrtti",
+    "HI-C397-farq",
+    "HI-C397-praptkarna",
+    "HI-R397-review-391-397",
+    "HI-R397-review-final-397"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch397.txt",
+  "json": "hindi/narration/ch397.json",
+  "textHash": "fnv1a64:6c337a057dc08b6d",
+  "jsonHash": "fnv1a64:cc3554f668124351",
+  "findings": []
+}

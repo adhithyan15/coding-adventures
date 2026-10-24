@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "The Relief Camp",
+  "label": "ch:hi-the-relief-camp",
+  "canDo": "I can describe life in a relief camp.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C309-saran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can describe life in a relief camp.",
+    "assesses": [
+      "HI-LEX-C309-RAHAT309-03",
+      "HI-LEX-C309-RAHAT309-04",
+      "HI-LEX-C309-RAHAT309-05"
+    ]
+  }
+}

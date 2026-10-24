@@ -1,0 +1,11 @@
+{
+  "id": "HI-C508-vetan",
+  "pathSegment": "HI-PATH-508-NAUKRI508",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-508-NAUKRI508",
+      "order": 4
+    }
+  ]
+}

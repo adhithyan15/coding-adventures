@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:8cb02b0aa14954bf",
+  "lessonIds": [
+    "HI-C362-niskars",
+    "HI-C362-ausat",
+    "HI-C362-ubhaarna",
+    "HI-C362-vislesan",
+    "HI-C362-pariksan"
+  ],
+  "tex": "hindi/book/chapters/ch362-what-the-figures-say.tex"
+}

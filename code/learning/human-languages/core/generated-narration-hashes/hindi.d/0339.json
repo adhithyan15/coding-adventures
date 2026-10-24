@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:fdc6bc6aa04f3053",
+  "lessonIds": [
+    "HI-C339-rajkumar",
+    "HI-C339-bhes",
+    "HI-C339-parakhna",
+    "HI-C339-chal",
+    "HI-C339-lubhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch339.txt",
+  "json": "hindi/narration/ch339.json",
+  "textHash": "fnv1a64:44070a3eaf32f3e8",
+  "jsonHash": "fnv1a64:101a6636bc8c99f1",
+  "findings": []
+}

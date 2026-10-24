@@ -1,0 +1,21 @@
+{
+  "chapter": 311,
+  "title": "Lending a Hand",
+  "label": "ch:hi-lending-a-hand",
+  "canDo": "I can say who helped and what they collected.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-R311-review-304-311",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can say who helped and what they collected.",
+    "assesses": [
+      "HI-LEX-C311-MADAD311-01",
+      "HI-LEX-C311-MADAD311-02",
+      "HI-LEX-C311-MADAD311-03",
+      "HI-LEX-C311-MADAD311-04",
+      "HI-LEX-C311-MADAD311-05"
+    ]
+  }
+}

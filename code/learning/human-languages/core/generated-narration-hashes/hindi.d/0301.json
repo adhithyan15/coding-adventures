@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:334f18cfbb61c510",
+  "lessonIds": [
+    "HI-C301-sayran",
+    "HI-C301-harbarana",
+    "HI-C301-bujhna",
+    "HI-C301-pighalna",
+    "HI-C301-phaphola"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch301.txt",
+  "json": "hindi/narration/ch301.json",
+  "textHash": "fnv1a64:71b2a40f2e741ba9",
+  "jsonHash": "fnv1a64:3e38827303470732",
+  "findings": []
+}

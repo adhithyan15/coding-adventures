@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:f778915c2c77dd91",
+  "lessonIds": [
+    "HI-C460-virah",
+    "HI-C460-cimatna",
+    "HI-C460-akulana",
+    "HI-C460-suna",
+    "HI-C460-lalsa"
+  ],
+  "tex": "hindi/book/chapters/ch460-missing-someone.tex"
+}

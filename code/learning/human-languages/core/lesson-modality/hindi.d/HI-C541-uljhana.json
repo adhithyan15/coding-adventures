@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C541-uljhana",
+    "language": "hindi",
+    "chapter": 541,
+    "sequence": 29830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a48d1aedd5fe84c"
+  },
+  "findings": []
+}

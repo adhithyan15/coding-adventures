@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C310-bichurna",
+    "language": "hindi",
+    "chapter": 310,
+    "sequence": 17120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c6e041e5b6d4147"
+  },
+  "findings": []
+}

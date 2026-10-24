@@ -1,0 +1,11 @@
+{
+  "id": "HI-C433-thamana",
+  "pathSegment": "HI-PATH-433-QATAR433",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-433-QATAR433",
+      "order": 4
+    }
+  ]
+}

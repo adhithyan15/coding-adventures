@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Bushes and Creepers",
+  "label": "ch:hi-bushes-and-creepers",
+  "canDo": "I can talk about bushes, creepers, moss and insects, and a vine winding round a tree.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C447-lipatna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can talk about bushes, creepers, moss and insects, and a vine winding round a tree.",
+    "assesses": [
+      "HI-LEX-C447-JHADI447-03",
+      "HI-LEX-C447-JHADI447-04",
+      "HI-LEX-C447-JHADI447-05"
+    ]
+  }
+}

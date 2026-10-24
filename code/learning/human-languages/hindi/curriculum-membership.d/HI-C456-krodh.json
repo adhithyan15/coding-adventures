@@ -1,0 +1,11 @@
+{
+  "id": "HI-C456-krodh",
+  "pathSegment": "HI-PATH-456-KRODH456",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-456-KRODH456",
+      "order": 1
+    }
+  ]
+}

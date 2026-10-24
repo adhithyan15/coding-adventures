@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C395-felhona",
+    "language": "hindi",
+    "chapter": 395,
+    "sequence": 21690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff27d2cc9e6504ca"
+  },
+  "findings": []
+}

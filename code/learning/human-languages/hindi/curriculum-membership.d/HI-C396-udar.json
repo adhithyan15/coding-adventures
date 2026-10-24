@@ -1,0 +1,11 @@
+{
+  "id": "HI-C396-udar",
+  "pathSegment": "HI-PATH-396-SANSKAR396",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-396-SANSKAR396",
+      "order": 2
+    }
+  ]
+}

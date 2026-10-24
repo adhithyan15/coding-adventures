@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C356-paksapat",
+    "language": "hindi",
+    "chapter": 356,
+    "sequence": 19680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f00111a81004d558"
+  },
+  "findings": []
+}

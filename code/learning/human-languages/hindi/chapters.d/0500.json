@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "A Wedding",
+  "label": "ch:hi-a-wedding",
+  "canDo": "I can describe a wedding.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C500-vidai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can describe a wedding.",
+    "assesses": [
+      "HI-LEX-C500-BARAT500-03",
+      "HI-LEX-C500-BARAT500-04",
+      "HI-LEX-C500-BARAT500-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C302-ailan",
+    "language": "hindi",
+    "chapter": 302,
+    "sequence": 16730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:569ffd44db56e9ba"
+  },
+  "findings": []
+}

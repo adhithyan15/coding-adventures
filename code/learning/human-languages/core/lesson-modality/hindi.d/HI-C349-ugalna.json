@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C349-ugalna",
+    "language": "hindi",
+    "chapter": 349,
+    "sequence": 19300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a62c24341d841f8"
+  },
+  "findings": []
+}

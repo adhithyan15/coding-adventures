@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:5bbe97192e85018b",
+  "lessonIds": [
+    "HI-C441-savera",
+    "HI-C441-suryoday",
+    "HI-C441-suryast",
+    "HI-C441-ksitij",
+    "HI-C441-godhuli"
+  ],
+  "tex": "hindi/book/chapters/ch441-dawn-and-dusk.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C537-mohlat",
+    "language": "hindi",
+    "chapter": 537,
+    "sequence": 29590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94f6de041baa9f0c"
+  },
+  "findings": []
+}

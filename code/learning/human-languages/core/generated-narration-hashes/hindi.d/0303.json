@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:3dda665d81970c4c",
+  "lessonIds": [
+    "HI-C303-hilna",
+    "HI-C303-jhatka",
+    "HI-C303-darar",
+    "HI-C303-dhasna",
+    "HI-C303-dabna",
+    "HI-R303-review-296-303"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch303.txt",
+  "json": "hindi/narration/ch303.json",
+  "textHash": "fnv1a64:91de00109f7c69fe",
+  "jsonHash": "fnv1a64:ff343030dd598522",
+  "findings": []
+}

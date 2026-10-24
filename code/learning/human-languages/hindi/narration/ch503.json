@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 503,
+  "title": "The Generations",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8a7c116aea3f1c45",
+  "lessons": [
+    {
+      "id": "HI-C503-grhasthi",
+      "sequence": 27610,
+      "title": "गृहस्थी (gṛhasthī) — a household; family life",
+      "headword": "गृहस्थी",
+      "romanization": "gṛhasthī",
+      "gloss": "a household; family life",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eadb0a3902b56b6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to rock, then the Hindi for only (child)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गृहस्थी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गृहस्थी — gṛhasthī — \"a household; family life\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शादी के बाद मीरा ने अपनी गृहस्थी सँभाली। śādī ke bād Mīrā ne apnī gṛhasthī sãbhālī. After her marriage Mira took charge of her household."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गृहस्थी (gṛhasthī) is Sanskrit gṛhastha, \"a householder\", built on gṛha, \"house\", and stha, \"standing in\" (Monier-Williams), with the ending -ī: the life and business of a household."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gṛhasthī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gṛhasthī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gṛhasthī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gṛhasthī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śādī ke bād Mīrā ne apnī gṛhasthī sãbhālī. — After her marriage Mira took charge of her household.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śādī ke bād Mīrā ne apnī gṛhasthī sãbhālī.* — After her marriage Mira took charge of her household.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to rock, then the Hindi for only (child), then say gṛhasthī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to rock, then the Hindi for only (child), then say *gṛhasthī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गृहस्थी (gṛhasthī) mean? (\"A household; family life\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C503-mukhiya",
+      "sequence": 27620,
+      "title": "मुखिया (mukhiyā) — the head (of a family or village)",
+      "headword": "मुखिया",
+      "romanization": "mukhiyā",
+      "gloss": "the head (of a family or village)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2214a0f122847f30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for only (child), then the Hindi for a household."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मुखिया",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुखिया — mukhiyā — \"the head (of a family or village)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादा हमारे परिवार के मुखिया हैं। dādā hamāre parivār ke mukhiyā haiṁ. Grandfather is the head of our family."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुखिया (mukhiyā) is a tadbhava: CDIAL lists Hindi mukhyā, \"chief\", under Sanskrit múkhya, \"pertaining to the face\" and \"chief\" (CDIAL 10174); mukhiyā is the usual spelling. múkhya is built on múkha, \"face, front\", the word behind mũh."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhiyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhiyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhiyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhiyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādā hamāre parivār ke mukhiyā haiṁ. — Grandfather is the head of our family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādā hamāre parivār ke mukhiyā haiṁ.* — Grandfather is the head of our family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for only (child), then the Hindi for a household, then say mukhiyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for only (child), then the Hindi for a household, then say *mukhiyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मुखिया (mukhiyā) mean? (\"The head (of a family or village)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C503-buzurg",
+      "sequence": 27630,
+      "title": "बुज़ुर्ग (buzurg) — an elder; elderly",
+      "headword": "बुज़ुर्ग",
+      "romanization": "buzurg",
+      "gloss": "an elder; elderly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3097030c1acd76f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a household, then the Hindi for the head (of a family or village)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बुज़ुर्ग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुज़ुर्ग — buzurg — \"an elder; elderly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गाँव के बुज़ुर्ग पेड़ के नीचे बैठकर बात करते हैं। gā̃v ke buzurg peṛ ke nīce baiṭhkar bāt karte haiṁ. The village elders sit under the tree and talk."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुज़ुर्ग (buzurg) is usually traced to Persian buzurg, \"great\", and so \"an elder\". It is a respectful word for anyone old."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buzurg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buzurg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buzurg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buzurg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gā̃v ke buzurg peṛ ke nīce baiṭhkar bāt karte haiṁ. — The village elders sit under the tree and talk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gā̃v ke buzurg peṛ ke nīce baiṭhkar bāt karte haiṁ.* — The village elders sit under the tree and talk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a household, then the Hindi for the head (of a family or village), then say buzurg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a household, then the Hindi for the head (of a family or village), then say *buzurg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बुज़ुर्ग (buzurg) mean? (\"An elder; elderly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C503-pirhi",
+      "sequence": 27640,
+      "title": "पीढ़ी (pīṛhī) — a generation",
+      "headword": "पीढ़ी",
+      "romanization": "pīṛhī",
+      "gloss": "a generation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb2e97464f86cff1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for the head (of a family or village), then the Hindi for an elder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पीढ़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पीढ़ी — pīṛhī — \"a generation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हमारे घर में तीन पीढ़ियाँ एक साथ रहती हैं। hamāre ghar meṁ tīn pīṛhiyā̃ ek sāth rahtī haiṁ. Three generations live together in our house."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पीढ़ी (pīṛhī) is a tadbhava: CDIAL lists Hindi pīṛhī both as \"small square stool\" and as \"generation\" under Sanskrit pīṭha, \"seat\" (CDIAL 8222)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṛhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṛhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṛhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṛhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamāre ghar meṁ tīn pīṛhiyā̃ ek sāth rahtī haiṁ. — Three generations live together in our house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamāre ghar meṁ tīn pīṛhiyā̃ ek sāth rahtī haiṁ.* — Three generations live together in our house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for the head (of a family or village), then the Hindi for an elder, then say pīṛhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for the head (of a family or village), then the Hindi for an elder, then say *pīṛhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पीढ़ी (pīṛhī) mean? (\"A generation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C503-posna",
+      "sequence": 27650,
+      "title": "पोसना (posnā) — to nurture; to rear",
+      "headword": "पोसना",
+      "romanization": "posnā",
+      "gloss": "to nurture; to rear",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9f4fd0f21ddfb45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an elder, then the Hindi for a generation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पोसना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पोसना — posnā — \"to nurture; to rear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी ने हमारे परिवार की तीन पीढ़ियों को पोसा। dādī ne hamāre parivār kī tīn pīṛhiyoṁ ko posā. Grandmother has nurtured three generations of our family."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बच्चों को पोसा, usne baccoṁ ko posā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पोसना (posnā) is a tadbhava: CDIAL lists Hindi posnā, \"to nourish, rear\", under Sanskrit pōṣáyati, \"nourishes\" (CDIAL 8410)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "posnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *posnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "posnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *posnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī ne hamāre parivār kī tīn pīṛhiyoṁ ko posā. — Grandmother has nurtured three generations of our family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī ne hamāre parivār kī tīn pīṛhiyoṁ ko posā.* — Grandmother has nurtured three generations of our family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an elder, then the Hindi for a generation, then say posnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an elder, then the Hindi for a generation, then say *posnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पोसना (posnā) mean? (\"To nurture; to rear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

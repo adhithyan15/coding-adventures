@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C552-jabki",
+    "language": "hindi",
+    "chapter": 552,
+    "sequence": 30350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4904dc1ff1c0eed"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C544-samyog",
+  "pathSegment": "HI-PATH-544-KISMAT544",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-544-KISMAT544",
+      "order": 1
+    }
+  ]
+}

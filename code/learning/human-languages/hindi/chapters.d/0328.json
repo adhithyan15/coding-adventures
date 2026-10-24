@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "A Night of Lights",
+  "label": "ch:hi-a-night-of-lights",
+  "canDo": "I can describe a festival night of lights.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C328-atisbazi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can describe a festival night of lights.",
+    "assesses": [
+      "HI-LEX-C328-ROSHNI328-03",
+      "HI-LEX-C328-ROSHNI328-04",
+      "HI-LEX-C328-ROSHNI328-05"
+    ]
+  }
+}

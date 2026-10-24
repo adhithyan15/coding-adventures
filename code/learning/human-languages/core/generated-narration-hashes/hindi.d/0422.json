@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:7a00cc57f40c228f",
+  "lessonIds": [
+    "HI-C422-jhopri",
+    "HI-C422-kothi",
+    "HI-C422-makan",
+    "HI-C422-ahata",
+    "HI-C422-chappar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch422.txt",
+  "json": "hindi/narration/ch422.json",
+  "textHash": "fnv1a64:eb56bfae3c25fa1f",
+  "jsonHash": "fnv1a64:a59cc7853707e8e1",
+  "findings": []
+}

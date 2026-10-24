@@ -1,0 +1,11 @@
+{
+  "id": "HI-C473-maun",
+  "pathSegment": "HI-PATH-473-BATUNI473",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-473-BATUNI473",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "People at Work",
+  "label": "ch:hi-people-at-work",
+  "canDo": "I can talk about the people I work with and what they are good at.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C507-pratibha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can talk about the people I work with and what they are good at.",
+    "assesses": [
+      "HI-LEX-C507-DAFTAR507-03",
+      "HI-LEX-C507-DAFTAR507-04",
+      "HI-LEX-C507-DAFTAR507-05"
+    ]
+  }
+}

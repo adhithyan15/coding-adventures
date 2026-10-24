@@ -1,0 +1,11 @@
+{
+  "id": "HI-C445-jvar",
+  "pathSegment": "HI-PATH-445-KISHTI445",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-445-KISHTI445",
+      "order": 3
+    }
+  ]
+}

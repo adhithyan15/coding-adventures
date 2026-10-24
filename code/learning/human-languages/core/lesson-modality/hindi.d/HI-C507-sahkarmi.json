@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C507-sahkarmi",
+    "language": "hindi",
+    "chapter": 507,
+    "sequence": 28050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dead4f410bc679c1"
+  },
+  "findings": []
+}

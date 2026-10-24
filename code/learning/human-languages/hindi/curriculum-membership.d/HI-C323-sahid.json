@@ -1,0 +1,11 @@
+{
+  "id": "HI-C323-sahid",
+  "pathSegment": "HI-PATH-323-VIJAY323",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-323-VIJAY323",
+      "order": 3
+    }
+  ]
+}

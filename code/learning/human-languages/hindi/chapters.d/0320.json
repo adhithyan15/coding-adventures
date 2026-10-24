@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Kings and Emperors",
+  "label": "ch:hi-kings-and-emperors",
+  "canDo": "I can tell who ruled long ago and how they lived.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C320-darbar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can tell who ruled long ago and how they lived.",
+    "assesses": [
+      "HI-LEX-C320-SAMRAT320-03",
+      "HI-LEX-C320-SAMRAT320-04",
+      "HI-LEX-C320-SAMRAT320-05"
+    ]
+  }
+}

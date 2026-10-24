@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Manners",
+  "label": "ch:hi-manners",
+  "canDo": "I can say whether someone is polite or rude.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C471-cirhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can say whether someone is polite or rude.",
+    "assesses": [
+      "HI-LEX-C471-VINAMRA471-03",
+      "HI-LEX-C471-VINAMRA471-04",
+      "HI-LEX-C471-VINAMRA471-05"
+    ]
+  }
+}

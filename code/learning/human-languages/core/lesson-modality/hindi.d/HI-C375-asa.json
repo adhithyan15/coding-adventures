@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C375-asa",
+    "language": "hindi",
+    "chapter": 375,
+    "sequence": 20640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d207a05fba1ab1ed"
+  },
+  "findings": []
+}

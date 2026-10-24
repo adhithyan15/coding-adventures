@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Down to the River",
+  "label": "ch:hi-down-to-the-river",
+  "canDo": "I can say what people did at the river on a festival.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C333-dipdan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can say what people did at the river on a festival.",
+    "assesses": [
+      "HI-LEX-C333-GHAT333-03",
+      "HI-LEX-C333-GHAT333-04",
+      "HI-LEX-C333-GHAT333-05"
+    ]
+  }
+}

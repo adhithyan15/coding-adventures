@@ -1,0 +1,11 @@
+{
+  "id": "HI-C532-nacana",
+  "pathSegment": "HI-PATH-532-GEET532",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-532-GEET532",
+      "order": 4
+    }
+  ]
+}

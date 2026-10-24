@@ -1,0 +1,11 @@
+{
+  "id": "HI-C395-felhona",
+  "pathSegment": "HI-PATH-395-MANZURI395",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-395-MANZURI395",
+      "order": 3
+    }
+  ]
+}

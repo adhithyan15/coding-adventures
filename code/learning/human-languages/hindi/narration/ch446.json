@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 446,
+  "title": "Nature",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:45c19e4df456a749",
+  "lessons": [
+    {
+      "id": "HI-C446-prakrti",
+      "sequence": 24460,
+      "title": "प्रकृति (prakṛti) — nature",
+      "headword": "प्रकृति",
+      "romanization": "prakṛti",
+      "gloss": "nature",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f16ea55866a7135",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for the high tide, then the Hindi for a shell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रकृति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रकृति — prakṛti — \"nature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पहाड़ों में प्रकृति बहुत सुंदर है। pahāṛoṁ meṁ prakṛti bahut sundar hai. Nature is very beautiful in the mountains."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रकृति (prakṛti) is a tatsama, Sanskrit prakṛti, \"the original or natural form of a thing\" (Monier-Williams); it also means a person's nature, their temperament."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakṛti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakṛti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakṛti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakṛti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahāṛoṁ meṁ prakṛti bahut sundar hai. — Nature is very beautiful in the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahāṛoṁ meṁ prakṛti bahut sundar hai.* — Nature is very beautiful in the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for the high tide, then the Hindi for a shell, then say prakṛti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for the high tide, then the Hindi for a shell, then say *prakṛti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रकृति (prakṛti) mean? (\"Nature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C446-paryavaran",
+      "sequence": 24470,
+      "title": "पर्यावरण (paryāvaraṇ) — the environment",
+      "headword": "पर्यावरण",
+      "romanization": "paryāvaraṇ",
+      "gloss": "the environment",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90ad34a15d3c273b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a shell, then the Hindi for nature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पर्यावरण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पर्यावरण — paryāvaraṇ — \"the environment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पेड़ काटना पर्यावरण के लिए बुरा है। peṛ kāṭnā paryāvaraṇ ke liye burā hai. Cutting down trees is bad for the environment."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पर्यावरण (paryāvaraṇ) is a modern coinage from Sanskrit pari, \"around\", and āvaraṇa, \"covering\" (Monier-Williams): what covers us all round."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryāvaraṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryāvaraṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryāvaraṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryāvaraṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṛ kāṭnā paryāvaraṇ ke liye burā hai. — Cutting down trees is bad for the environment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṛ kāṭnā paryāvaraṇ ke liye burā hai.* — Cutting down trees is bad for the environment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a shell, then the Hindi for nature, then say paryāvaraṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a shell, then the Hindi for nature, then say *paryāvaraṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पर्यावरण (paryāvaraṇ) mean? (\"The environment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C446-paudha",
+      "sequence": 24480,
+      "title": "पौधा (paudhā) — a plant; a sapling",
+      "headword": "पौधा",
+      "romanization": "paudhā",
+      "gloss": "a plant; a sapling",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58baddc68072cfb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for nature, then the Hindi for the environment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पौधा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पौधा — paudhā — \"a plant; a sapling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरे कमरे में एक छोटा पौधा है। mere kamre meṁ ek choṭā paudhā hai. There is a small plant in my room."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पौधा (paudhā) is a tadbhava of Sanskrit pravṛddha, \"grown up, great\" (CDIAL 8807), which lists Hindi paudhā, \"young plants for transplanting\"; Hindi widened it to any plant."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paudhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paudhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paudhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paudhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mere kamre meṁ ek choṭā paudhā hai. — There is a small plant in my room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mere kamre meṁ ek choṭā paudhā hai.* — There is a small plant in my room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for nature, then the Hindi for the environment, then say paudhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for nature, then the Hindi for the environment, then say *paudhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पौधा (paudhā) mean? (\"A plant; a sapling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C446-khilna",
+      "sequence": 24490,
+      "title": "खिलना (khilnā) — to bloom; to open (of a flower)",
+      "headword": "खिलना",
+      "romanization": "khilnā",
+      "gloss": "to bloom; to open (of a flower)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7eb1b4f74796f9c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for the environment, then the Hindi for a plant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खिलना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिलना — khilnā — \"to bloom; to open (of a flower)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वसंत में बगीचे में फूल खिलते हैं। vasant meṁ bagīce meṁ phūl khilte haiṁ. In spring the flowers bloom in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह फूल सुबह खिला, vah phūl subah khilā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिलना (khilnā) goes back to khiḍ, khil, \"be open, expand\", forms CDIAL reconstructs (CDIAL 3882), which lists Hindi khilnā, \"to open, bloom\". A face खिलता too, when it lights up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khilnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khilnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khilnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khilnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vasant meṁ bagīce meṁ phūl khilte haiṁ. — In spring the flowers bloom in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vasant meṁ bagīce meṁ phūl khilte haiṁ.* — In spring the flowers bloom in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for the environment, then the Hindi for a plant, then say khilnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for the environment, then the Hindi for a plant, then say *khilnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खिलना (khilnā) mean? (\"To bloom; to open (of a flower)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C446-kumhlana",
+      "sequence": 24500,
+      "title": "कुम्हलाना (kumhlānā) — to wilt; to fade",
+      "headword": "कुम्हलाना",
+      "romanization": "kumhlānā",
+      "gloss": "to wilt; to fade",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:243df9ce9d215e2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a plant, then the Hindi for to bloom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कुम्हलाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुम्हलाना — kumhlānā — \"to wilt; to fade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पानी के बिना पौधे कुम्हला गए। pānī ke binā paudhe kumhlā gae. Without water the plants wilted."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह फूल धूप में कुम्हलाया, vah phūl dhūp meṁ kumhlāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुम्हलाना (kumhlānā) goes back to kōmh, \"wither\", a form CDIAL reconstructs (CDIAL 3524), which lists Hindi kumhlānā, \"to fade, wither\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumhlānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumhlānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumhlānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumhlānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānī ke binā paudhe kumhlā gae. — Without water the plants wilted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānī ke binā paudhe kumhlā gae.* — Without water the plants wilted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a plant, then the Hindi for to bloom, then say kumhlānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a plant, then the Hindi for to bloom, then say *kumhlānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कुम्हलाना (kumhlānā) mean? (\"To wilt; to fade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

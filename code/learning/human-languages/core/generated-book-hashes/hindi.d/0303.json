@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:b8fd6e12f0bf7e7a",
+  "lessonIds": [
+    "HI-C303-hilna",
+    "HI-C303-jhatka",
+    "HI-C303-darar",
+    "HI-C303-dhasna",
+    "HI-C303-dabna",
+    "HI-R303-review-296-303"
+  ],
+  "tex": "hindi/book/chapters/ch303-when-the-ground-shook.tex"
+}

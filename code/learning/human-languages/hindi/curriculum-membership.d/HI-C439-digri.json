@@ -1,0 +1,11 @@
+{
+  "id": "HI-C439-digri",
+  "pathSegment": "HI-PATH-439-TAP439",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-439-TAP439",
+      "order": 3
+    }
+  ]
+}

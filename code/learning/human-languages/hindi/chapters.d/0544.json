@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "A Stroke of Luck",
+  "label": "ch:hi-a-stroke-of-luck",
+  "canDo": "I can talk about luck and chances.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C544-dav",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can talk about luck and chances.",
+    "assesses": [
+      "HI-LEX-C544-KISMAT544-03",
+      "HI-LEX-C544-KISMAT544-04",
+      "HI-LEX-C544-KISMAT544-05"
+    ]
+  }
+}

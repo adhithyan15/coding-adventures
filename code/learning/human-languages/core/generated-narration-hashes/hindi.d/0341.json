@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:1591184f5e4db634",
+  "lessonIds": [
+    "HI-C341-panna",
+    "HI-C341-jild",
+    "HI-C341-sirsak",
+    "HI-C341-pathak",
+    "HI-C341-bikna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch341.txt",
+  "json": "hindi/narration/ch341.json",
+  "textHash": "fnv1a64:66e05940b4f87a5c",
+  "jsonHash": "fnv1a64:de00f892f0d0b4ee",
+  "findings": []
+}

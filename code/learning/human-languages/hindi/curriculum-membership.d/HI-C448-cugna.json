@@ -1,0 +1,11 @@
+{
+  "id": "HI-C448-cugna",
+  "pathSegment": "HI-PATH-448-CHONCH448",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-448-CHONCH448",
+      "order": 3
+    }
+  ]
+}

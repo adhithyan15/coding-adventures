@@ -1,0 +1,11 @@
+{
+  "id": "HI-C325-balidan",
+  "pathSegment": "HI-PATH-325-ANDOLAN325",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-325-ANDOLAN325",
+      "order": 3
+    }
+  ]
+}

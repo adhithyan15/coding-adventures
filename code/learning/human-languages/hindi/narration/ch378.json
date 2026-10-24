@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 378,
+  "title": "What Must Happen First",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:766fe3320ae9ad13",
+  "lessons": [
+    {
+      "id": "HI-C378-avasyak",
+      "sequence": 20790,
+      "title": "आवश्यक (āvaśyak) — essential, required (formal)",
+      "headword": "आवश्यक",
+      "romanization": "āvaśyak",
+      "gloss": "essential, required (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f5067c8a364c53a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a hardship, then the Hindi for to trap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आवश्यक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवश्यक — āvaśyak — \"essential, required (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर बीमारी गंभीर है तो आराम आवश्यक है। agar bīmārī gambhīr hai to ārām āvaśyak hai. If the illness is serious, rest is essential."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवश्यक (āvaśyak) is a tatsama, borrowed from Sanskrit āvaśyaka, \"necessary, inevitable\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvaśyak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvaśyak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvaśyak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvaśyak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar bīmārī gambhīr hai to ārām āvaśyak hai. — If the illness is serious, rest is essential.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar bīmārī gambhīr hai to ārām āvaśyak hai.* — If the illness is serious, rest is essential.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a hardship, then the Hindi for to trap, then say āvaśyak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a hardship, then the Hindi for to trap, then say *āvaśyak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आवश्यक (āvaśyak) mean? (\"Essential, required (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C378-anivarya",
+      "sequence": 20800,
+      "title": "अनिवार्य (anivārya) — compulsory",
+      "headword": "अनिवार्य",
+      "romanization": "anivārya",
+      "gloss": "compulsory",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a05bc087180cba94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to trap, then the Hindi for essential."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनिवार्य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनिवार्य — anivārya — \"compulsory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम पहाड़ पर चढ़ोगे तो रस्सी अनिवार्य है। agar tum pahāṛ par caṛhoge to rassī anivārya hai. If you climb the mountain, a rope is compulsory."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनिवार्य (anivārya) is a tatsama, borrowed from Sanskrit anivārya, \"not to be warded off, unavoidable\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anivārya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anivārya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anivārya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anivārya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum pahāṛ par caṛhoge to rassī anivārya hai. — If you climb the mountain, a rope is compulsory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum pahāṛ par caṛhoge to rassī anivārya hai.* — If you climb the mountain, a rope is compulsory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to trap, then the Hindi for essential, then say anivārya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to trap, then the Hindi for essential, then say *anivārya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनिवार्य (anivārya) mean? (\"Compulsory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C378-keval",
+      "sequence": 20810,
+      "title": "केवल (keval) — only, solely",
+      "headword": "केवल",
+      "romanization": "keval",
+      "gloss": "only, solely",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3a6cfa2fb5909e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for essential, then the Hindi for compulsory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: केवल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "केवल — keval — \"only, solely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम केवल सच बोलोगे तो डरने की कोई बात नहीं होगी। agar tum keval sac bologe to ḍarne kī koī bāt nahīṃ hogī. If you tell nothing but the truth, there will be nothing to fear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "केवल (keval) is a tatsama, borrowed from Sanskrit kevala, \"alone, only, mere\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keval",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keval*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keval, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keval*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum keval sac bologe to ḍarne kī koī bāt nahīṃ hogī. — If you tell nothing but the truth, there will be nothing to fear.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum keval sac bologe to ḍarne kī koī bāt nahīṃ hogī.* — If you tell nothing but the truth, there will be nothing to fear.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for essential, then the Hindi for compulsory, then say keval again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for essential, then the Hindi for compulsory, then say *keval* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does केवल (keval) mean? (\"Only, solely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C378-sivay",
+      "sequence": 20820,
+      "title": "सिवाय (sivāy) — except (के सिवाय)",
+      "headword": "सिवाय",
+      "romanization": "sivāy",
+      "gloss": "except (के सिवाय)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6091f545ee981f40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for compulsory, then the Hindi for solely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सिवाय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिवाय — sivāy — \"except (के सिवाय)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम्हारे सिवाय कोई नहीं आएगा तो हम क्या करेंगे? agar tumhāre sivāy koī nahīṃ āegā to ham kyā kareṅge? If nobody but you comes, what will we do?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिवाय (sivāy) is usually traced to Arabic siwā, \"other than\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sivāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sivāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sivāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sivāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tumhāre sivāy koī nahīṃ āegā to ham kyā kareṅge? — If nobody but you comes, what will we do?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tumhāre sivāy koī nahīṃ āegā to ham kyā kareṅge?* — If nobody but you comes, what will we do?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for compulsory, then the Hindi for solely, then say sivāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for compulsory, then the Hindi for solely, then say *sivāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सिवाय (sivāy) mean? (\"Except (के सिवाय (sivāy))\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C378-manakarna",
+      "sequence": 20830,
+      "title": "मना करना (manā karnā) — to forbid; to say no",
+      "headword": "मना करना",
+      "romanization": "manā karnā",
+      "gloss": "to forbid; to say no",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8626340b7d70618d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for solely, then the Hindi for except."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मना करना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मना करना — manā karnā — \"to forbid; to say no\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर डाक्टर मना करेगा तो मैं मिठाई नहीं खाऊँगा। agar ḍākṭar manā karegā to maiṁ miṭhāī nahīṃ khāūṅgā. If the doctor forbids it, I won't eat sweets."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने मना किया, usne manā kiyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मना करना (manā karnā) joins मना to करना, \"to do\". मना is usually traced to Arabic manʿ, \"prevention, holding back\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manā karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manā karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manā karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manā karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar ḍākṭar manā karegā to maiṁ miṭhāī nahīṃ khāūṅgā. — If the doctor forbids it, I won't eat sweets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar ḍākṭar manā karegā to maiṁ miṭhāī nahīṃ khāūṅgā.* — If the doctor forbids it, I won't eat sweets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for solely, then the Hindi for except, then say manā karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for solely, then the Hindi for except, then say *manā karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मना करना (manā karnā) mean? (\"To forbid; to say no\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

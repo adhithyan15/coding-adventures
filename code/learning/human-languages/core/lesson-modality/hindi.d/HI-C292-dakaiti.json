@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C292-dakaiti",
+    "language": "hindi",
+    "chapter": 292,
+    "sequence": 16220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e8a95cfccb3f3a3"
+  },
+  "findings": []
+}

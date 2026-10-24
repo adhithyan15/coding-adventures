@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C503-grhasthi",
+    "language": "hindi",
+    "chapter": 503,
+    "sequence": 27610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eadb0a3902b56b6f"
+  },
+  "findings": []
+}

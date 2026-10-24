@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Looking for a Job",
+  "label": "ch:hi-looking-for-a-job",
+  "canDo": "I can apply for a job or a place and say what I can do.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C508-vetan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can apply for a job or a place and say what I can do.",
+    "assesses": [
+      "HI-LEX-C508-NAUKRI508-03",
+      "HI-LEX-C508-NAUKRI508-04",
+      "HI-LEX-C508-NAUKRI508-05"
+    ]
+  }
+}

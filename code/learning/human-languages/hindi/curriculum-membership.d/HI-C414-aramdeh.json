@@ -1,0 +1,11 @@
+{
+  "id": "HI-C414-aramdeh",
+  "pathSegment": "HI-PATH-414-GUSALKHANA414",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-414-GUSALKHANA414",
+      "order": 3
+    }
+  ]
+}

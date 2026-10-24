@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R374-review-367-374",
+    "language": "hindi",
+    "chapter": 374,
+    "sequence": 20630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d5fcce97b326cd2"
+  },
+  "findings": []
+}

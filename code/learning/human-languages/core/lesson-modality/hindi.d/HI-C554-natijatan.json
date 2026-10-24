@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C554-natijatan",
+    "language": "hindi",
+    "chapter": 554,
+    "sequence": 30480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7cf182279e24da9"
+  },
+  "findings": []
+}

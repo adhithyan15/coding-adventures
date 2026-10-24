@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:65a8fe1f8045523f",
+  "lessonIds": [
+    "HI-C333-ghat",
+    "HI-C333-visarjan",
+    "HI-C333-dubona",
+    "HI-C333-bikharna",
+    "HI-C333-dipdan"
+  ],
+  "tex": "hindi/book/chapters/ch333-down-to-the-river.tex"
+}

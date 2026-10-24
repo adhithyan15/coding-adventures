@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C401-laghna",
+    "language": "hindi",
+    "chapter": 401,
+    "sequence": 22180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06bdb562cd536c14"
+  },
+  "findings": []
+}

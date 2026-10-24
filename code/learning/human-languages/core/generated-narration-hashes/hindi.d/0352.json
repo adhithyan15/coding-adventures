@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:6371fbfa35e569c2",
+  "lessonIds": [
+    "HI-C352-qaid",
+    "HI-C352-jaj",
+    "HI-C352-faisla",
+    "HI-C352-dosi",
+    "HI-C352-zamanat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch352.txt",
+  "json": "hindi/narration/ch352.json",
+  "textHash": "fnv1a64:12bed1177e78df14",
+  "jsonHash": "fnv1a64:c7c576209c07be96",
+  "findings": []
+}

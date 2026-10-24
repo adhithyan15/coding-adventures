@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Getting Better",
+  "label": "ch:hi-getting-better",
+  "canDo": "I can say that someone is getting better.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C492-sphurti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can say that someone is getting better.",
+    "assesses": [
+      "HI-LEX-C492-SUDHAR492-03",
+      "HI-LEX-C492-SUDHAR492-04",
+      "HI-LEX-C492-SUDHAR492-05"
+    ]
+  }
+}

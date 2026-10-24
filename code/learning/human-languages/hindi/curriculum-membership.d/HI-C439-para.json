@@ -1,0 +1,11 @@
+{
+  "id": "HI-C439-para",
+  "pathSegment": "HI-PATH-439-TAP439",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-439-TAP439",
+      "order": 1
+    }
+  ]
+}

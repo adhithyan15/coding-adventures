@@ -1,0 +1,11 @@
+{
+  "id": "HI-C441-ksitij",
+  "pathSegment": "HI-PATH-441-SAVERA441",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-441-SAVERA441",
+      "order": 3
+    }
+  ]
+}

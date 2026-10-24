@@ -1,0 +1,11 @@
+{
+  "id": "HI-C485-murcha",
+  "pathSegment": "HI-PATH-485-CHAKKAR485",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-485-CHAKKAR485",
+      "order": 1
+    }
+  ]
+}

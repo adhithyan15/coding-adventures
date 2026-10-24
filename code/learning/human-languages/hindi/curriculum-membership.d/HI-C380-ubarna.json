@@ -1,0 +1,11 @@
+{
+  "id": "HI-C380-ubarna",
+  "pathSegment": "HI-PATH-380-HAL380",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-380-HAL380",
+      "order": 4
+    }
+  ]
+}

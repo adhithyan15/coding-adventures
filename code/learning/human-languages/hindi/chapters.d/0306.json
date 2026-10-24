@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Famine and Sickness",
+  "label": "ch:hi-famine-and-sickness",
+  "canDo": "I can tell how hunger and disease spread.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C306-haiza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can tell how hunger and disease spread.",
+    "assesses": [
+      "HI-LEX-C306-AKAL306-03",
+      "HI-LEX-C306-AKAL306-04",
+      "HI-LEX-C306-AKAL306-05"
+    ]
+  }
+}

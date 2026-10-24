@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C318-tharrana",
+    "language": "hindi",
+    "chapter": 318,
+    "sequence": 17560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a055aa24125e4000"
+  },
+  "findings": []
+}

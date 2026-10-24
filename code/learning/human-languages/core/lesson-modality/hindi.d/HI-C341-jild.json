@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C341-jild",
+    "language": "hindi",
+    "chapter": 341,
+    "sequence": 18720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da6f3376f6353ed2"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:6424132f868193d9",
+  "lessonIds": [
+    "HI-C452-bhavna",
+    "HI-C452-ehsas",
+    "HI-C452-anubhuti",
+    "HI-C452-mahsuskarna",
+    "HI-C452-umarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch452.txt",
+  "json": "hindi/narration/ch452.json",
+  "textHash": "fnv1a64:1bb2506a1850e312",
+  "jsonHash": "fnv1a64:2558cfdf2c429af8",
+  "findings": []
+}

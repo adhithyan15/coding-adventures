@@ -1,0 +1,11 @@
+{
+  "id": "HI-C303-dhasna",
+  "pathSegment": "HI-PATH-303-BHUKAMP303",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-303-BHUKAMP303",
+      "order": 3
+    }
+  ]
+}

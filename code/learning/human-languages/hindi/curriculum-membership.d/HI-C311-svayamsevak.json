@@ -1,0 +1,11 @@
+{
+  "id": "HI-C311-svayamsevak",
+  "pathSegment": "HI-PATH-311-MADAD311",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-311-MADAD311",
+      "order": 1
+    }
+  ]
+}

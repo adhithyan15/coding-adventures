@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "What Caused It",
+  "label": "ch:hi-what-caused-it",
+  "canDo": "I can say what caused something and who was responsible.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C343-zimmedar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can say what caused something and who was responsible.",
+    "assesses": [
+      "HI-LEX-C343-KARAN343-03",
+      "HI-LEX-C343-KARAN343-04",
+      "HI-LEX-C343-KARAN343-05"
+    ]
+  }
+}

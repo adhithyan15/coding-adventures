@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-378-ZARURAT378",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-378-ZARURAT378"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C436-bud",
+    "language": "hindi",
+    "chapter": 436,
+    "sequence": 23940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40c38d6d40f5e3a6"
+  },
+  "findings": []
+}

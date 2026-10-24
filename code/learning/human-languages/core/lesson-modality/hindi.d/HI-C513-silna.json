@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C513-silna",
+    "language": "hindi",
+    "chapter": 513,
+    "sequence": 28350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:282b17d1395e5cb5"
+  },
+  "findings": []
+}

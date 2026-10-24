@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Earning and Spending",
+  "label": "ch:hi-earning-and-spending",
+  "canDo": "I can talk about what I earn and what I waste, profit and budget, and money collected.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C428-vasulna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can talk about what I earn and what I waste, profit and budget, and money collected.",
+    "assesses": [
+      "HI-LEX-C428-KAMANA428-03",
+      "HI-LEX-C428-KAMANA428-04",
+      "HI-LEX-C428-KAMANA428-05"
+    ]
+  }
+}

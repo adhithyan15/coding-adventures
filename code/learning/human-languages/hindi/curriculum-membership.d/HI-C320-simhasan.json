@@ -1,0 +1,11 @@
+{
+  "id": "HI-C320-simhasan",
+  "pathSegment": "HI-PATH-320-SAMRAT320",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-320-SAMRAT320",
+      "order": 2
+    }
+  ]
+}

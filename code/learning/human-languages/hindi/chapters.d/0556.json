@@ -1,0 +1,19 @@
+{
+  "chapter": 556,
+  "title": "How Sure Am I?",
+  "label": "ch:hi-how-sure-am-i",
+  "canDo": "I can say how sure or unsure I am.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C556-niscay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 556: I can say how sure or unsure I am.",
+    "assesses": [
+      "HI-LEX-C556-SANDEH556-03",
+      "HI-LEX-C556-SANDEH556-04",
+      "HI-LEX-C556-SANDEH556-05"
+    ]
+  }
+}

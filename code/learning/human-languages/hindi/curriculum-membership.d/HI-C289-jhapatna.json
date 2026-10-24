@@ -1,0 +1,11 @@
+{
+  "id": "HI-C289-jhapatna",
+  "pathSegment": "HI-PATH-289-BHAGA289",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-289-BHAGA289",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C519-buharna",
+    "language": "hindi",
+    "chapter": 519,
+    "sequence": 28690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f0aede1c274b4cf"
+  },
+  "findings": []
+}

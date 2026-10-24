@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:77615ff76570b491",
+  "lessonIds": [
+    "HI-C494-timardari",
+    "HI-C494-god",
+    "HI-C494-litana",
+    "HI-C494-sekna",
+    "HI-C494-orhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch494.txt",
+  "json": "hindi/narration/ch494.json",
+  "textHash": "fnv1a64:9ea3e124a3e5878f",
+  "jsonHash": "fnv1a64:77d37e474e72627e",
+  "findings": []
+}

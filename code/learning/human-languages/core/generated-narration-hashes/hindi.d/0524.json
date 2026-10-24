@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:d02d0886569a6047",
+  "lessonIds": [
+    "HI-C524-galana",
+    "HI-C524-parosna",
+    "HI-C524-ghotna",
+    "HI-C524-jamana",
+    "HI-C524-khagalna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch524.txt",
+  "json": "hindi/narration/ch524.json",
+  "textHash": "fnv1a64:b0c5cfbffa56a2da",
+  "jsonHash": "fnv1a64:d2e8d6f44da11474",
+  "findings": []
+}

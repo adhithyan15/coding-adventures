@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C521-jira",
+    "language": "hindi",
+    "chapter": 521,
+    "sequence": 28780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb7f3025b981d4cd"
+  },
+  "findings": []
+}

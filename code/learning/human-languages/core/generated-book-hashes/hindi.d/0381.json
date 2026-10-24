@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:b3d925018005e2eb",
+  "lessonIds": [
+    "HI-C381-kas",
+    "HI-C381-afsos",
+    "HI-C381-satana",
+    "HI-C381-gavana",
+    "HI-C381-bhala"
+  ],
+  "tex": "hindi/book/chapters/ch381-if-only.tex"
+}

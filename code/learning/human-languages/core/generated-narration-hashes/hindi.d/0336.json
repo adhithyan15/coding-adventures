@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:38dfe457ab9a7e6a",
+  "lessonIds": [
+    "HI-C336-tapasya",
+    "HI-C336-sap",
+    "HI-C336-kosna",
+    "HI-C336-pachtana",
+    "HI-C336-ruthna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch336.txt",
+  "json": "hindi/narration/ch336.json",
+  "textHash": "fnv1a64:d51682005fd055c6",
+  "jsonHash": "fnv1a64:455e710b9a48ee09",
+  "findings": []
+}

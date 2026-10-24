@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Cooking and Serving",
+  "label": "ch:hi-cooking-and-serving",
+  "canDo": "I can serve a meal and clear up after it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C524-khagalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can serve a meal and clear up after it.",
+    "assesses": [
+      "HI-LEX-C524-PAROSNA524-03",
+      "HI-LEX-C524-PAROSNA524-04",
+      "HI-LEX-C524-PAROSNA524-05"
+    ]
+  }
+}

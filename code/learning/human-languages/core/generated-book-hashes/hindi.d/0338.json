@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:b2540d3f1e81fa19",
+  "lessonIds": [
+    "HI-C338-pari",
+    "HI-C338-jadu",
+    "HI-C338-bhut",
+    "HI-C338-dayan",
+    "HI-C338-camatkar"
+  ],
+  "tex": "hindi/book/chapters/ch338-fairies-and-ghosts.tex"
+}

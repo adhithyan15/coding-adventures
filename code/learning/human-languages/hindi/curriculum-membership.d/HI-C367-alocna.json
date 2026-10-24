@@ -1,0 +1,11 @@
+{
+  "id": "HI-C367-alocna",
+  "pathSegment": "HI-PATH-367-TARIF367",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-367-TARIF367",
+      "order": 3
+    }
+  ]
+}

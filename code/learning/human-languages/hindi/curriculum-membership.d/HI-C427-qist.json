@@ -1,0 +1,11 @@
+{
+  "id": "HI-C427-qist",
+  "pathSegment": "HI-PATH-427-UDHAR427",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-427-UDHAR427",
+      "order": 1
+    }
+  ]
+}

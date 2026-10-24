@@ -1,0 +1,11 @@
+{
+  "id": "HI-C351-kartavya",
+  "pathSegment": "HI-PATH-351-ADHIKAR351",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-351-ADHIKAR351",
+      "order": 1
+    }
+  ]
+}

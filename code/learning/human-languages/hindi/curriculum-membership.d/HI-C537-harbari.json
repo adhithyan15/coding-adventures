@@ -1,0 +1,11 @@
+{
+  "id": "HI-C537-harbari",
+  "pathSegment": "HI-PATH-537-KARYAKRAM537",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-537-KARYAKRAM537",
+      "order": 2
+    }
+  ]
+}

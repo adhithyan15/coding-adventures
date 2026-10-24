@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "What Must Happen First",
+  "label": "ch:hi-what-must-happen-first",
+  "canDo": "I can say what is required before something can happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C378-manakarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can say what is required before something can happen.",
+    "assesses": [
+      "HI-LEX-C378-ZARURAT378-03",
+      "HI-LEX-C378-ZARURAT378-04",
+      "HI-LEX-C378-ZARURAT378-05"
+    ]
+  }
+}

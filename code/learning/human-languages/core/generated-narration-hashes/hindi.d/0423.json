@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:459f5ad4ddff8a6a",
+  "lessonIds": [
+    "HI-C423-gard",
+    "HI-C423-khambha",
+    "HI-C423-sor",
+    "HI-C423-gurrana",
+    "HI-C423-bhaukna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch423.txt",
+  "json": "hindi/narration/ch423.json",
+  "textHash": "fnv1a64:916f1a85bcddae49",
+  "jsonHash": "fnv1a64:1de419470a47c7d2",
+  "findings": []
+}

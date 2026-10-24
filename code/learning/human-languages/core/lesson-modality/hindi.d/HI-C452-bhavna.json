@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C452-bhavna",
+    "language": "hindi",
+    "chapter": 452,
+    "sequence": 25000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c38686824f6e0d8b"
+  },
+  "findings": []
+}

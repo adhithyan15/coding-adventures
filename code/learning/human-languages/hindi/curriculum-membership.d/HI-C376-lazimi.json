@@ -1,0 +1,11 @@
+{
+  "id": "HI-C376-lazimi",
+  "pathSegment": "HI-PATH-376-ZAHIR376",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-376-ZAHIR376",
+      "order": 3
+    }
+  ]
+}

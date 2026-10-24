@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:c51153b2bc5a0427",
+  "lessonIds": [
+    "HI-C555-phalna",
+    "HI-C555-dolna",
+    "HI-C555-tikana",
+    "HI-C555-giravat",
+    "HI-C555-patan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch555.txt",
+  "json": "hindi/narration/ch555.json",
+  "textHash": "fnv1a64:e3a9e5d3f5777d78",
+  "jsonHash": "fnv1a64:af17eef2baeaa2ac",
+  "findings": []
+}

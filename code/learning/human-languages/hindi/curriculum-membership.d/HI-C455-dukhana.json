@@ -1,0 +1,11 @@
+{
+  "id": "HI-C455-dukhana",
+  "pathSegment": "HI-PATH-455-GAM455",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-455-GAM455",
+      "order": 4
+    }
+  ]
+}

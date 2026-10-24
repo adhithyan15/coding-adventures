@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:2373b49c060f5cca",
+  "lessonIds": [
+    "HI-C439-tap",
+    "HI-C439-para",
+    "HI-C439-tapman",
+    "HI-C439-digri",
+    "HI-C439-tapna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch439.txt",
+  "json": "hindi/narration/ch439.json",
+  "textHash": "fnv1a64:b3f8d9bc5d777c10",
+  "jsonHash": "fnv1a64:291a9ba39258fddc",
+  "findings": []
+}

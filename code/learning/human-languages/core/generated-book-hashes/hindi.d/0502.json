@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:78125579895bc004",
+  "lessonIds": [
+    "HI-C502-pota",
+    "HI-C502-nati",
+    "HI-C502-bhanja",
+    "HI-C502-jhulana",
+    "HI-C502-iklauta"
+  ],
+  "tex": "hindi/book/chapters/ch502-grandchildren-and-nephews.tex"
+}

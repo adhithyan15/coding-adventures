@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 375,
+  "title": "Hopes and Fears",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:51341218e66b126a",
+  "lessons": [
+    {
+      "id": "HI-C375-asa",
+      "sequence": 20640,
+      "title": "आशा (āśā) — a hope, an expectation",
+      "headword": "आशा",
+      "romanization": "āśā",
+      "gloss": "a hope, an expectation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d207a05fba1ab1ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for usually, then the Hindi for to make out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आशा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आशा — āśā — \"a hope, an expectation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे आशा है कि अगर मौसम अच्छा रहेगा तो फ़सल अच्छी होगी। mujhe āśā hai ki agar mausam acchā rahegā to fasal acchī hogī. I hope that if the weather stays good, the harvest will be good."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आशा (āśā) is a tatsama, borrowed from Sanskrit āśā, \"a wish, a hope\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mujhe āśā hai ki agar mausam acchā rahegā to fasal acchī hogī. — I hope that if the weather stays good, the harvest will be good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mujhe āśā hai ki agar mausam acchā rahegā to fasal acchī hogī.* — I hope that if the weather stays good, the harvest will be good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for usually, then the Hindi for to make out, then say āśā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for usually, then the Hindi for to make out, then say *āśā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आशा (āśā) mean? (\"A hope, an expectation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C375-asanka",
+      "sequence": 20650,
+      "title": "आशंका (āśaṅkā) — an apprehension, a fear (that something will happen)",
+      "headword": "आशंका",
+      "romanization": "āśaṅkā",
+      "gloss": "an apprehension, a fear (that something will happen)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6c3d2fd1aeb49f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to make out, then the Hindi for an expectation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आशंका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आशंका — āśaṅkā — \"an apprehension, a fear (that something will happen)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आशंका है कि अगर बाढ़ आई तो पुल टूट जाएगा। āśaṅkā hai ki agar bāṛh āī to pul ṭūṭ jāegā. There are fears that if the flood comes, the bridge will collapse."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आशंका (āśaṅkā) is a tatsama, borrowed from Sanskrit āśaṅkā, \"a doubt, a fear\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśaṅkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśaṅkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśaṅkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśaṅkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśaṅkā hai ki agar bāṛh āī to pul ṭūṭ jāegā. — There are fears that if the flood comes, the bridge will collapse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśaṅkā hai ki agar bāṛh āī to pul ṭūṭ jāegā.* — There are fears that if the flood comes, the bridge will collapse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to make out, then the Hindi for an expectation, then say āśaṅkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to make out, then the Hindi for an expectation, then say *āśaṅkā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आशंका (āśaṅkā) mean? (\"An apprehension, a fear (that something will happen)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C375-sanket",
+      "sequence": 20660,
+      "title": "संकेत (saṅket) — a sign, an indication",
+      "headword": "संकेत",
+      "romanization": "saṅket",
+      "gloss": "a sign, an indication",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51e6ebd8989df5c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an expectation, then the Hindi for an apprehension."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संकेत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संकेत — saṅket — \"a sign, an indication\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर बच्चा खाना नहीं खाता तो यह बीमारी का संकेत हो सकता है। agar baccā khānā nahīṃ khātā to yah bīmārī kā saṅket ho saktā hai. If a child won't eat, it can be a sign of illness."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संकेत (saṅket) is a tatsama, borrowed from Sanskrit saṃketa, \"an agreement; a sign\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅket*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅket, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅket*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar baccā khānā nahīṃ khātā to yah bīmārī kā saṅket ho saktā hai. — If a child won't eat, it can be a sign of illness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar baccā khānā nahīṃ khātā to yah bīmārī kā saṅket ho saktā hai.* — If a child won't eat, it can be a sign of illness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an expectation, then the Hindi for an apprehension, then say saṅket again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an expectation, then the Hindi for an apprehension, then say *saṅket* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संकेत (saṅket) mean? (\"A sign, an indication\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C375-isara",
+      "sequence": 20670,
+      "title": "इशारा (iśārā) — a hint, a signal",
+      "headword": "इशारा",
+      "romanization": "iśārā",
+      "gloss": "a hint, a signal",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22c5ec0f48c92d67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an apprehension, then the Hindi for an indication."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इशारा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इशारा — iśārā — \"a hint, a signal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर मैं इशारा करूँगा तो अरुण दरवाज़ा खोलेगा। agar maiṁ iśārā karūṅgā to Aruṇ darvāzā kholegā. If I give a signal, Arun will open the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इशारा (iśārā) is usually traced to Arabic ishāra, \"a sign, a gesture\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iśārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iśārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iśārā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iśārā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar maiṁ iśārā karūṅgā to Aruṇ darvāzā kholegā. — If I give a signal, Arun will open the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar maiṁ iśārā karūṅgā to Aruṇ darvāzā kholegā.* — If I give a signal, Arun will open the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an apprehension, then the Hindi for an indication, then say iśārā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an apprehension, then the Hindi for an indication, then say *iśārā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इशारा (iśārā) mean? (\"A hint, a signal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C375-rijhana",
+      "sequence": 20680,
+      "title": "रिझाना (rijhānā) — to charm, to win over",
+      "headword": "रिझाना",
+      "romanization": "rijhānā",
+      "gloss": "to charm, to win over",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cc2e0082f9edd67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an indication, then the Hindi for a hint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रिझाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रिझाना — rijhānā — \"to charm, to win over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम अच्छा गाना गाओगे तो लोगों को रिझा लोगे। agar tum acchā gānā gāoge to logoṁ ko rijhā loge. If you sing a good song, you'll win people over."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने लोगों को रिझाया, usne logoṁ ko rijhāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रिझाना (rijhānā) is a tadbhava, inherited from Sanskrit ṛdhati, \"thrives\" (CDIAL 2457). CDIAL glosses the Hindi rijhānā \"to enchant\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rijhānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rijhānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rijhānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rijhānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum acchā gānā gāoge to logoṁ ko rijhā loge. — If you sing a good song, you'll win people over.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum acchā gānā gāoge to logoṁ ko rijhā loge.* — If you sing a good song, you'll win people over.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an indication, then the Hindi for a hint, then say rijhānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an indication, then the Hindi for a hint, then say *rijhānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रिझाना (rijhānā) mean? (\"To charm, to win over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

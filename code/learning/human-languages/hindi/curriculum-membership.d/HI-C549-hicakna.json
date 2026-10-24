@@ -1,0 +1,11 @@
+{
+  "id": "HI-C549-hicakna",
+  "pathSegment": "HI-PATH-549-VIKALP549",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-549-VIKALP549",
+      "order": 4
+    }
+  ]
+}

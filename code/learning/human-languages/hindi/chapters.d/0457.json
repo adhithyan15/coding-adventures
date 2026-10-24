@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Fear",
+  "label": "ch:hi-fear",
+  "canDo": "I can say what frightened someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C457-siharna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can say what frightened someone.",
+    "assesses": [
+      "HI-LEX-C457-BHAY457-03",
+      "HI-LEX-C457-BHAY457-04",
+      "HI-LEX-C457-BHAY457-05"
+    ]
+  }
+}

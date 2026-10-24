@@ -1,0 +1,21 @@
+{
+  "chapter": 444,
+  "title": "Harbours and Bays",
+  "label": "ch:hi-harbours-and-bays",
+  "canDo": "I can talk about a harbour, an anchor, a bay and a coast, and a cold dip in the sea.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-R444-review-438-444",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can talk about a harbour, an anchor, a bay and a coast, and a cold dip in the sea.",
+    "assesses": [
+      "HI-LEX-C444-BANDARGAH444-01",
+      "HI-LEX-C444-BANDARGAH444-02",
+      "HI-LEX-C444-BANDARGAH444-03",
+      "HI-LEX-C444-BANDARGAH444-04",
+      "HI-LEX-C444-BANDARGAH444-05"
+    ]
+  }
+}

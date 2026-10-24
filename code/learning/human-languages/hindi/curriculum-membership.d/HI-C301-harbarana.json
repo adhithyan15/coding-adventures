@@ -1,0 +1,11 @@
+{
+  "id": "HI-C301-harbarana",
+  "pathSegment": "HI-PATH-301-BUJHI301",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-301-BUJHI301",
+      "order": 1
+    }
+  ]
+}

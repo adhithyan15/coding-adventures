@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:ff57000bb465938c",
+  "lessonIds": [
+    "HI-C520-sulgana",
+    "HI-C520-gudhna",
+    "HI-C520-cakla",
+    "HI-C520-belna",
+    "HI-C520-phulna"
+  ],
+  "tex": "hindi/book/chapters/ch520-making-rotis.tex"
+}

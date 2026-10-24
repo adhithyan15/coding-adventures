@@ -1,0 +1,11 @@
+{
+  "id": "HI-C403-rahgir",
+  "pathSegment": "HI-PATH-403-STAIND403",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-403-STAIND403",
+      "order": 1
+    }
+  ]
+}

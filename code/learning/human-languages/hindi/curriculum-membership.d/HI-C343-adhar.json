@@ -1,0 +1,11 @@
+{
+  "id": "HI-C343-adhar",
+  "pathSegment": "HI-PATH-343-KARAN343",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-343-KARAN343",
+      "order": 3
+    }
+  ]
+}

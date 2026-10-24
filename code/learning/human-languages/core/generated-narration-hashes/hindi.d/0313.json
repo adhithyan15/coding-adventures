@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:d811449b32af7863",
+  "lessonIds": [
+    "HI-C313-patrakar",
+    "HI-C313-ghatnasthal",
+    "HI-C313-chaapna",
+    "HI-C313-sampadak",
+    "HI-C313-vivaran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch313.txt",
+  "json": "hindi/narration/ch313.json",
+  "textHash": "fnv1a64:2db57cfb4d715a34",
+  "jsonHash": "fnv1a64:53a9baaa1ec4cae7",
+  "findings": []
+}

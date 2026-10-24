@@ -1,0 +1,11 @@
+{
+  "id": "HI-C470-diler",
+  "pathSegment": "HI-PATH-470-SAHAS470",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-470-SAHAS470",
+      "order": 2
+    }
+  ]
+}

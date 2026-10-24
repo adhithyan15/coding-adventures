@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 350,
+  "title": "For Example",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6b4ec0f753020502",
+  "lessons": [
+    {
+      "id": "HI-C350-udaharan",
+      "sequence": 19350,
+      "title": "उदाहरण (udāharaṇ) — an example",
+      "headword": "उदाहरण",
+      "romanization": "udāharaṇ",
+      "gloss": "an example",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a707e77b7de9e8d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to admit, then the Hindi for a misunderstanding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उदाहरण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उदाहरण — udāharaṇ — \"an example\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिक्षक ने एक उदाहरण दिया। śikṣak ne ek udāharaṇ diyā. The teacher gave an example."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उदाहरण (udāharaṇ) is a tatsama, borrowed from Sanskrit udāharaṇa, \"an example, an illustration\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udāharaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udāharaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udāharaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udāharaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikṣak ne ek udāharaṇ diyā. — The teacher gave an example.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikṣak ne ek udāharaṇ diyā.* — The teacher gave an example.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to admit, then the Hindi for a misunderstanding, then say udāharaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to admit, then the Hindi for a misunderstanding, then say *udāharaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उदाहरण (udāharaṇ) mean? (\"An example\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C350-maslan",
+      "sequence": 19360,
+      "title": "मसलन (maslan) — for instance",
+      "headword": "मसलन",
+      "romanization": "maslan",
+      "gloss": "for instance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:960ebac1db8f59a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a misunderstanding, then the Hindi for an example."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मसलन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मसलन — maslan — \"for instance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे फल पसंद हैं, मसलन आम और केला। mujhe phal pasand haiṁ, maslan ām aur kelā. I like fruit, for instance mangoes and bananas."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मसलन (maslan) is usually traced to Arabic mathalan, \"for example\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maslan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maslan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maslan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maslan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mujhe phal pasand haiṁ, maslan ām aur kelā. — I like fruit, for instance mangoes and bananas.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mujhe phal pasand haiṁ, maslan ām aur kelā.* — I like fruit, for instance mangoes and bananas.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a misunderstanding, then the Hindi for an example, then say maslan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a misunderstanding, then the Hindi for an example, then say *maslan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मसलन (maslan) mean? (\"For instance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C350-yani",
+      "sequence": 19370,
+      "title": "यानी (yānī) — that is to say, in other words",
+      "headword": "यानी",
+      "romanization": "yānī",
+      "gloss": "that is to say, in other words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efb7f323dde5830b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an example, then the Hindi for for instance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: यानी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यानी — yānī — \"that is to say, in other words\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वह परसों आएगा, यानी बुधवार को। vah parsoṁ āegā, yānī budhvār ko. He'll come the day after tomorrow, that is, on Wednesday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यानी (yānī) is usually traced to Arabic yaʿnī, \"it means\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yānī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yānī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yānī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yānī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vah parsoṁ āegā, yānī budhvār ko. — He'll come the day after tomorrow, that is, on Wednesday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vah parsoṁ āegā, yānī budhvār ko.* — He'll come the day after tomorrow, that is, on Wednesday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an example, then the Hindi for for instance, then say yānī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an example, then the Hindi for for instance, then say *yānī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does यानी (yānī) mean? (\"That is to say, in other words\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C350-spast",
+      "sequence": 19380,
+      "title": "स्पष्ट (spaṣṭ) — clear, explicit",
+      "headword": "स्पष्ट",
+      "romanization": "spaṣṭ",
+      "gloss": "clear, explicit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43f7490adc3f0916",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for for instance, then the Hindi for that is to say."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्पष्ट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्पष्ट — spaṣṭ — \"clear, explicit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नियम बिलकुल स्पष्ट है। niyam bilkul spaṣṭ hai. The rule is perfectly clear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्पष्ट (spaṣṭ) is a tatsama, borrowed from Sanskrit spaṣṭa, \"plainly seen, evident\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spaṣṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spaṣṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spaṣṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spaṣṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyam bilkul spaṣṭ hai. — The rule is perfectly clear.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyam bilkul spaṣṭ hai.* — The rule is perfectly clear.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for for instance, then the Hindi for that is to say, then say spaṣṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for for instance, then the Hindi for that is to say, then say *spaṣṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्पष्ट (spaṣṭ) mean? (\"Clear, explicit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C350-ginana",
+      "sequence": 19390,
+      "title": "गिनाना (ginānā) — to list, to enumerate (reasons, faults)",
+      "headword": "गिनाना",
+      "romanization": "ginānā",
+      "gloss": "to list, to enumerate (reasons, faults)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34ddf089a3d91091",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for that is to say, then the Hindi for explicit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गिनाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गिनाना — ginānā — \"to list, to enumerate (reasons, faults)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा ने तीन कारण गिनाए। Mīrā ne tīn kāraṇ gināe. Mira listed three reasons."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने कई कारण गिनाए, usne kaī kāraṇ gināe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गिनाना (ginānā) is the causative of गिनना, \"to count\", which is inherited from Sanskrit gaṇayati, \"counts\" (CDIAL 3993): to make the items count out, one by one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ginānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ginānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ginānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ginānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā ne tīn kāraṇ gināe. — Mira listed three reasons.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā ne tīn kāraṇ gināe.* — Mira listed three reasons.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for that is to say, then the Hindi for explicit, then say ginānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for that is to say, then the Hindi for explicit, then say *ginānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गिनाना (ginānā) mean? (\"To list, to enumerate (reasons, faults)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R350-review-343-350",
+      "sequence": 19400,
+      "title": "Looking back: from What Caused It to For Example",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from What Caused It to For Example",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a07c6358a2109449",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for since and an effect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "since, an effect, to be joined, a basis, grounds, responsible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: since, an effect, to be joined, a basis, grounds, responsible]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a consequence, an influence, to rise, to make worse, a source",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a consequence, an influence, to rise, to make worse, a source]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a purpose, a motive, for the sake of, a means, an intention",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a purpose, a motive, for the sake of, a means, an intention]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an argument, a line of reasoning, to quarrel, to interrupt, but rather",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an argument, a line of reasoning, to quarrel, to interrupt, but rather]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a side, against, to oppose, to support, to agree",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a side, against, to oppose, to support, to agree]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "proof (formal), to prove, a fact, conclusive, an accusation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: proof (formal), to prove, a fact, conclusive, an accusation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to blurt out, to deny, to confirm, to admit, a misunderstanding",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to blurt out, to deny, to confirm, to admit, a misunderstanding]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an example, for instance, that is to say, explicit, to list",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an example, for instance, that is to say, explicit, to list]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Since? (चूँकि, cū̃ki.) An effect? (असर, asar.) To be joined? (जुड़ना, juṛnā.) A basis, grounds? (आधार, ādhār.) Responsible? (ज़िम्मेदार, zimmedār.) A consequence? (परिणाम, pariṇām.) An influence? (प्रभाव, prabhāv.) To rise? (बढ़ना, baṛhnā.) To make worse? (बिगाड़ना, bigāṛnā.) A source? (स्रोत, srot.) A purpose? (उद्देश्य, uddeśya.) A motive? (मक़सद, maqsad.) For the sake of? (ख़ातिर, khātir.) A means? (साधन, sādhan.) An intention? (इरादा, irādā.) An argument? (बहस, bahas.) A line of reasoning? (तर्क, tark.) To quarrel? (झगड़ना, jhagaṛnā.) To interrupt? (टोकना, ṭoknā.) But rather? (बल्कि, balki.) A side? (पक्ष, pakṣ.) Against? (ख़िलाफ़, khilāf.) To oppose? (विरोध करना, virodh karnā.) To support? (समर्थन करना, samarthan karnā.) To agree? (सहमत होना, sahmat honā.) Proof (formal)? (प्रमाण, pramāṇ.) To prove? (साबित करना, sābit karnā.) A fact? (तथ्य, tathya.) Conclusive? (पुख़्ता, pukhtā.) An accusation? (आरोप, ārop.) To blurt out? (उगलना, ugalnā.) To deny? (इनकार करना, inkār karnā.) To confirm? (पुष्टि करना, puṣṭi karnā.) To admit? (स्वीकार करना, svīkār karnā.) A misunderstanding? (ग़लतफ़हमी, ġalatfahmī.) An example? (उदाहरण, udāharaṇ.) For instance? (मसलन, maslan.) That is to say? (यानी, yānī.) Explicit? (स्पष्ट, spaṣṭ.) To list? (गिनाना, ginānā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

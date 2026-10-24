@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:ccc298c2b1b1720e",
+  "lessonIds": [
+    "HI-C524-galana",
+    "HI-C524-parosna",
+    "HI-C524-ghotna",
+    "HI-C524-jamana",
+    "HI-C524-khagalna"
+  ],
+  "tex": "hindi/book/chapters/ch524-cooking-and-serving.tex"
+}

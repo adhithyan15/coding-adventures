@@ -1,0 +1,11 @@
+{
+  "id": "HI-C536-ruprekha",
+  "pathSegment": "HI-PATH-536-YOJNA536",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-536-YOJNA536",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:105d23ea0d168316",
+  "lessonIds": [
+    "HI-C484-datun",
+    "HI-C484-katvana",
+    "HI-C484-nahlana",
+    "HI-C484-malna",
+    "HI-C484-ustara"
+  ],
+  "tex": "hindi/book/chapters/ch484-getting-ready.tex"
+}

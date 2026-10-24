@@ -1,0 +1,11 @@
+{
+  "id": "HI-C334-kahavat",
+  "pathSegment": "HI-PATH-334-KATHA334",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-334-KATHA334",
+      "order": 4
+    }
+  ]
+}

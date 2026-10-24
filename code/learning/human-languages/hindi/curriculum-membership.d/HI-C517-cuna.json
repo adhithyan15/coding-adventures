@@ -1,0 +1,11 @@
+{
+  "id": "HI-C517-cuna",
+  "pathSegment": "HI-PATH-517-EENT517",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-517-EENT517",
+      "order": 1
+    }
+  ]
+}

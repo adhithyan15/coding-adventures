@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C363-adhyayan",
+    "language": "hindi",
+    "chapter": 363,
+    "sequence": 20020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8169a807f3da0b9f"
+  },
+  "findings": []
+}

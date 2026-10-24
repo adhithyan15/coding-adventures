@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 421,
+  "title": "Settlements and Towns",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:adc4edaaebcbf836",
+  "lessons": [
+    {
+      "id": "HI-C421-basti",
+      "sequence": 23170,
+      "title": "बस्ती (bastī) — a settlement; a poor quarter",
+      "headword": "बस्ती",
+      "romanization": "bastī",
+      "gloss": "a settlement; a poor quarter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0a40f9ff8b63995",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to roll, then the Hindi for to dig into."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बस्ती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बस्ती — bastī — \"a settlement; a poor quarter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नदी के पार एक छोटी बस्ती है। nadī ke pār ek choṭī bastī hai. There is a small settlement across the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बस्ती (bastī) is usually traced to Sanskrit vasati, \"staying, a dwelling-place\" (Monier-Williams), from the root vas, \"to dwell\". A बस्ती can be a hamlet or a crowded poor quarter of a city."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bastī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bastī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bastī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bastī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadī ke pār ek choṭī bastī hai. — There is a small settlement across the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadī ke pār ek choṭī bastī hai.* — There is a small settlement across the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to roll, then the Hindi for to dig into, then say bastī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to roll, then the Hindi for to dig into, then say *bastī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बस्ती (bastī) mean? (\"A settlement; a poor quarter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C421-qasba",
+      "sequence": 23180,
+      "title": "क़स्बा (qasbā) — a small town",
+      "headword": "क़स्बा",
+      "romanization": "qasbā",
+      "gloss": "a small town",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e11b9043ef21f602",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to dig into, then the Hindi for a settlement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क़स्बा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क़स्बा — qasbā — \"a small town\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरे नाना एक छोटे क़स्बे में रहते हैं। mere nānā ek choṭe qasbe meṁ rahte haiṁ. My grandfather lives in a small town."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क़स्बा (qasbā) is usually traced to Arabic qaṣaba, \"a chief town, a fortress\", which came through Persian; in Hindi a क़स्बा is bigger than a village and smaller than a city."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qasbā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qasbā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qasbā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qasbā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mere nānā ek choṭe qasbe meṁ rahte haiṁ. — My grandfather lives in a small town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mere nānā ek choṭe qasbe meṁ rahte haiṁ.* — My grandfather lives in a small town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to dig into, then the Hindi for a settlement, then say qasbā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to dig into, then the Hindi for a settlement, then say *qasbā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क़स्बा (qasbā) mean? (\"A small town\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C421-basinda",
+      "sequence": 23190,
+      "title": "बाशिंदा (bāśindā) — a resident, an inhabitant",
+      "headword": "बाशिंदा",
+      "romanization": "bāśindā",
+      "gloss": "a resident, an inhabitant",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fce417e6f170652e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a settlement, then the Hindi for a small town."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाशिंदा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाशिंदा — bāśindā — \"a resident, an inhabitant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मैं इस शहर का पुराना बाशिंदा हूँ। maiṁ is śahar kā purānā bāśindā hūṁ. I am a long-time resident of this city."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाशिंदा (bāśindā) is usually traced to Persian bāšinda, \"one who stays, an inhabitant\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāśindā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāśindā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāśindā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāśindā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ is śahar kā purānā bāśindā hūṁ. — I am a long-time resident of this city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ is śahar kā purānā bāśindā hūṁ.* — I am a long-time resident of this city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a settlement, then the Hindi for a small town, then say bāśindā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a settlement, then the Hindi for a small town, then say *bāśindā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाशिंदा (bāśindā) mean? (\"A resident, an inhabitant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C421-paros",
+      "sequence": 23200,
+      "title": "पड़ोस (paṛos) — the neighbourhood; next door",
+      "headword": "पड़ोस",
+      "romanization": "paṛos",
+      "gloss": "the neighbourhood; next door",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58ff3ebf4772fadf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a small town, then the Hindi for a resident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पड़ोस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पड़ोस — paṛos — \"the neighbourhood; next door\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हमारे पड़ोस में एक नई दुकान खुली है। hamāre paṛos meṁ ek naī dukān khulī hai. A new shop has opened in our neighbourhood."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पड़ोस (paṛos) is a tadbhava of Sanskrit prativeśa, \"neighbouring; a neighbour\" (CDIAL 8598), which lists Hindi paṛos, \"neighbourhood\". पड़ोसी, a neighbour, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṛos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṛos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṛos, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṛos*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamāre paṛos meṁ ek naī dukān khulī hai. — A new shop has opened in our neighbourhood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamāre paṛos meṁ ek naī dukān khulī hai.* — A new shop has opened in our neighbourhood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a small town, then the Hindi for a resident, then say paṛos again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a small town, then the Hindi for a resident, then say *paṛos* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पड़ोस (paṛos) mean? (\"The neighbourhood; next door\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C421-dehat",
+      "sequence": 23210,
+      "title": "देहात (dehāt) — the countryside; villages",
+      "headword": "देहात",
+      "romanization": "dehāt",
+      "gloss": "the countryside; villages",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9485a86e20547401",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a resident, then the Hindi for next door."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: देहात",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "देहात — dehāt — \"the countryside; villages\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरे दादा देहात में रहते हैं। mere dādā dehāt meṁ rahte haiṁ. My grandfather lives in the countryside."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "देहात (dehāt) is usually traced to Persian dehāt, \"villages\", the plural of deh, \"a village\"; in Hindi it is the countryside as a whole, set against the town."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dehāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dehāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dehāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dehāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mere dādā dehāt meṁ rahte haiṁ. — My grandfather lives in the countryside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mere dādā dehāt meṁ rahte haiṁ.* — My grandfather lives in the countryside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a resident, then the Hindi for next door, then say dehāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a resident, then the Hindi for next door, then say *dehāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does देहात (dehāt) mean? (\"The countryside; villages\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R421-review-414-421",
+      "sequence": 23220,
+      "title": "Looking back: from Bathrooms and Comfort to Settlements and Towns",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Bathrooms and Comfort to Settlements and Towns",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe60ea6a62b17161",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for a bathroom and a toilet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bathroom, a toilet, a water heater, comfortable, to wake (someone)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bathroom, a toilet, a water heater, comfortable, to wake (someone)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a manager, a register, a booking, a place to stay, to send for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a manager, a register, a booking, a place to stay, to send for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tent (for camping), to put to sleep, a roost, to spend (time), to pass (time)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tent (for camping), to put to sleep, a roost, to spend (time), to pass (time)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a direction, a side (of a place), towards, a route, the way something faces",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a direction, a side (of a place), towards, a route, the way something faces]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "close by, near (formal), across, beside, to deliver",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: close by, near (formal), across, beside, to deliver]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a T-junction, a round, a mark left behind, a building, a signboard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a T-junction, a round, a mark left behind, a building, a signboard]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a slope, a corridor, to push in, to roll, to dig into",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a slope, a corridor, to push in, to roll, to dig into]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a settlement, a small town, a resident, next door, the countryside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a settlement, a small town, a resident, next door, the countryside]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A bathroom? (गुसलख़ाना, gusalkhānā.) A toilet? (शौचालय, śaucālay.) A water heater? (गीज़र, gīzar.) Comfortable? (आरामदेह, ārāmdeh.) To wake (someone)? (जगाना, jagānā.) A manager? (मैनेजर, mainejar.) A register? (रजिस्टर, rajisṭar.) A booking? (बुकिंग, buking.) A place to stay? (ठिकाना, ṭhikānā.) To send for? (मँगाना, mãgānā.) A tent (for camping)? (ख़ेमा, khemā.) To put to sleep? (सुलाना, sulānā.) A roost? (बसेरा, baserā.) To spend (time)? (गुज़ारना, guzārnā.) To pass (time)? (बिताना, bitānā.) A direction? (दिशा, diśā.) A side (of a place)? (तरफ़, taraf.) Towards? (ओर, or.) A route? (मार्ग, mārg.) The way something faces? (रुख़, rukh.) Close by? (नज़दीक, nazdīk.) Near (formal)? (निकट, nikaṭ.) Across? (पार, pār.) Beside? (बग़ल, baġal.) To deliver? (पहुँचाना, pahũcānā.) A T-junction? (तिराहा, tirāhā.) A round? (चक्कर, cakkar.) A mark left behind? (निशान, niśān.) A building? (इमारत, imārat.) A signboard? (बोर्ड, borḍ.) A slope? (ढलान, ḍhalān.) A corridor? (गलियारा, galiyārā.) To push in? (घुसना, ghusnā.) To roll? (लुढ़कना, luṛhaknā.) To dig into? (गड़ना, gaṛnā.) A settlement? (बस्ती, bastī.) A small town? (क़स्बा, qasbā.) A resident? (बाशिंदा, bāśindā.) Next door? (पड़ोस, paṛos.) The countryside? (देहात, dehāt.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

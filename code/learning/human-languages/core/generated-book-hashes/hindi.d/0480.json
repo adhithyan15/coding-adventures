@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:b1289cc5797ec994",
+  "lessonIds": [
+    "HI-C480-svad",
+    "HI-C480-spars",
+    "HI-C480-gandh",
+    "HI-C480-mahak",
+    "HI-C480-catna"
+  ],
+  "tex": "hindi/book/chapters/ch480-the-senses.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C478-gurda",
+  "pathSegment": "HI-PATH-478-PHEPHDA478",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-478-PHEPHDA478",
+      "order": 4
+    }
+  ]
+}

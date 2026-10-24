@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:ba60356a4670920a",
+  "lessonIds": [
+    "HI-C433-qatar",
+    "HI-C433-tokan",
+    "HI-C433-kauntar",
+    "HI-C433-hat",
+    "HI-C433-thamana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch433.txt",
+  "json": "hindi/narration/ch433.json",
+  "textHash": "fnv1a64:1d2efd5bc73b1453",
+  "jsonHash": "fnv1a64:620f157f249650eb",
+  "findings": []
+}

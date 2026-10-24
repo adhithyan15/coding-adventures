@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Denial and Confession",
+  "label": "ch:hi-denial-and-confession",
+  "canDo": "I can say who denied something and who owned up.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C349-galatfahmi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say who denied something and who owned up.",
+    "assesses": [
+      "HI-LEX-C349-INKAR349-03",
+      "HI-LEX-C349-INKAR349-04",
+      "HI-LEX-C349-INKAR349-05"
+    ]
+  }
+}

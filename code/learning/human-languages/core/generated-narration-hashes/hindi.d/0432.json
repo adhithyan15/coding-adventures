@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:6b150462d7356f36",
+  "lessonIds": [
+    "HI-C432-mal",
+    "HI-C432-bhandar",
+    "HI-C432-paiket",
+    "HI-C432-lebal",
+    "HI-C432-lapetna"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch432.txt",
+  "json": "hindi/narration/ch432.json",
+  "textHash": "fnv1a64:c8a95524f0f04ee3",
+  "jsonHash": "fnv1a64:8bf3034e78e1f45e",
+  "findings": []
+}

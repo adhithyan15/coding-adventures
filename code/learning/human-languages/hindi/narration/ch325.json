@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 325,
+  "title": "A Movement for Freedom",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:564963f13ed32ab1",
+  "lessons": [
+    {
+      "id": "HI-C325-angrez",
+      "sequence": 17890,
+      "title": "अंग्रेज़ (aṅgrez) — an English person",
+      "headword": "अंग्रेज़",
+      "romanization": "aṅgrez",
+      "gloss": "an English person",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6a769b31526987d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a rebellion, then the Hindi for to challenge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अंग्रेज़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंग्रेज़ — aṅgrez — \"an English person\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अंग्रेज़ दो सौ साल तक इस देश में रहे। aṅgrez do sau sāl tak is deś meṁ rahe. The English stayed in this country for two hundred years."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंग्रेज़ (aṅgrez) is usually traced to Portuguese inglês, \"English\", through Persian angrez. अंग्रेज़ी, the English language, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgrez",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgrez*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgrez, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgrez*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgrez do sau sāl tak is deś meṁ rahe. — The English stayed in this country for two hundred years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgrez do sau sāl tak is deś meṁ rahe.* — The English stayed in this country for two hundred years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a rebellion, then the Hindi for to challenge, then say aṅgrez again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a rebellion, then the Hindi for to challenge, then say *aṅgrez* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अंग्रेज़ (aṅgrez) mean? (\"An English person\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C325-andolan",
+      "sequence": 17900,
+      "title": "आंदोलन (āndolan) — a movement (of people)",
+      "headword": "आंदोलन",
+      "romanization": "āndolan",
+      "gloss": "a movement (of people)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:866c7b16bd448afc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to challenge, then the Hindi for an English person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आंदोलन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आंदोलन — āndolan — \"a movement (of people)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज़ादी का आंदोलन पूरे देश में फैल गया। āzādī kā āndolan pūre deś meṁ phail gayā. The freedom movement spread across the whole country."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आंदोलन (āndolan) is Sanskrit āndolana, \"a swinging, a rocking\" (Monier-Williams). Modern Hindi uses it for a political movement; the dictionary has only the older sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āndolan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āndolan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āndolan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āndolan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āzādī kā āndolan pūre deś meṁ phail gayā. — The freedom movement spread across the whole country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āzādī kā āndolan pūre deś meṁ phail gayā.* — The freedom movement spread across the whole country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to challenge, then the Hindi for an English person, then say āndolan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to challenge, then the Hindi for an English person, then say *āndolan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आंदोलन (āndolan) mean? (\"A movement (of people)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C325-sanghars",
+      "sequence": 17910,
+      "title": "संघर्ष (saṅgharṣ) — a struggle",
+      "headword": "संघर्ष",
+      "romanization": "saṅgharṣ",
+      "gloss": "a struggle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edda36dca85ec0b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an English person, then the Hindi for a movement (of people)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संघर्ष",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संघर्ष — saṅgharṣ — \"a struggle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज़ादी के लिए लोगों ने लंबा संघर्ष किया। āzādī ke liye logoṁ ne lambā saṅgharṣ kiyā. People waged a long struggle for freedom."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संघर्ष (saṅgharṣ) is Sanskrit saṁgharṣa (Monier-Williams), a rubbing together and so a rivalry: in Hindi, a long fight against hardship or against a ruler."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgharṣ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgharṣ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgharṣ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgharṣ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āzādī ke liye logoṁ ne lambā saṅgharṣ kiyā. — People waged a long struggle for freedom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āzādī ke liye logoṁ ne lambā saṅgharṣ kiyā.* — People waged a long struggle for freedom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an English person, then the Hindi for a movement (of people), then say saṅgharṣ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an English person, then the Hindi for a movement (of people), then say *saṅgharṣ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संघर्ष (saṅgharṣ) mean? (\"A struggle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C325-balidan",
+      "sequence": 17920,
+      "title": "बलिदान (balidān) — a sacrifice",
+      "headword": "बलिदान",
+      "romanization": "balidān",
+      "gloss": "a sacrifice",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca496ab3590f75cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a movement (of people), then the Hindi for a struggle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बलिदान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बलिदान — balidān — \"a sacrifice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उस आंदोलन में हज़ारों लोगों ने बलिदान दिया। us āndolan meṁ hazāroṁ logoṁ ne balidān diyā. Thousands of people gave their lives in that movement."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बलिदान (balidān) is Sanskrit balidāna, bali, an offering, and dāna, giving (Monier-Williams). In history it is giving one's life for others."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "balidān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *balidān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "balidān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *balidān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us āndolan meṁ hazāroṁ logoṁ ne balidān diyā. — Thousands of people gave their lives in that movement.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us āndolan meṁ hazāroṁ logoṁ ne balidān diyā.* — Thousands of people gave their lives in that movement.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a movement (of people), then the Hindi for a struggle, then say balidān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a movement (of people), then the Hindi for a struggle, then say *balidān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बलिदान (balidān) mean? (\"A sacrifice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C325-saumpna",
+      "sequence": 17930,
+      "title": "सौंपना (saumpnā) — to entrust; to hand over",
+      "headword": "सौंपना",
+      "romanization": "saumpnā",
+      "gloss": "to entrust; to hand over",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6fe241be185b365",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a struggle, then the Hindi for a sacrifice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सौंपना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सौंपना — saumpnā — \"to entrust; to hand over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जाने से पहले राजा ने क़िले की चाबी अपने बेटे को सौंपी। jāne se pahle rājā ne qile kī cābī apne beṭe ko saumpī. Before leaving, the king handed the key of the fort to his son."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने चाबी सौंपी, usne cābī saumpī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सौंपना (saumpnā) goes back to Sanskrit samarpayati, \"hands over\" (CDIAL 13192). What is handed over agrees with the verb: चाबी सौंपी; the person who receives it takes को."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saumpnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saumpnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saumpnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saumpnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāne se pahle rājā ne qile kī cābī apne beṭe ko saumpī. — Before leaving, the king handed the key of the fort to his son.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāne se pahle rājā ne qile kī cābī apne beṭe ko saumpī.* — Before leaving, the king handed the key of the fort to his son.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a struggle, then the Hindi for a sacrifice, then say saumpnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a struggle, then the Hindi for a sacrifice, then say *saumpnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सौंपना (saumpnā) mean? (\"To entrust; to hand over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

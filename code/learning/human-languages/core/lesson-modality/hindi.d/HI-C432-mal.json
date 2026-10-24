@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C432-mal",
+    "language": "hindi",
+    "chapter": 432,
+    "sequence": 23740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80cf24cc67b2b33c"
+  },
+  "findings": []
+}

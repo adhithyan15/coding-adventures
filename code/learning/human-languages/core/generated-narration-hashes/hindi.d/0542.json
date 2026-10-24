@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:a66970b73201eed6",
+  "lessonIds": [
+    "HI-C542-varta",
+    "HI-C542-riyayat",
+    "HI-C542-sahmati",
+    "HI-C542-peskas",
+    "HI-C542-madhyasth"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch542.txt",
+  "json": "hindi/narration/ch542.json",
+  "textHash": "fnv1a64:06e40c9637a4641c",
+  "jsonHash": "fnv1a64:565a561bcebbe2d4",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C305-kramsah",
+  "pathSegment": "HI-PATH-305-BAADH305",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-305-BAADH305",
+      "order": 2
+    }
+  ]
+}

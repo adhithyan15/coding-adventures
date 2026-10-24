@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C400-pratiksa",
+    "language": "hindi",
+    "chapter": 400,
+    "sequence": 22120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7388e73c91f6565c"
+  },
+  "findings": []
+}

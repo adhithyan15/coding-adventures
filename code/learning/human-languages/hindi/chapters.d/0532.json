@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "A Song to Dance To",
+  "label": "ch:hi-a-song-to-dance-to",
+  "canDo": "I can talk about songs, rhythm and dancing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C532-nacana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about songs, rhythm and dancing.",
+    "assesses": [
+      "HI-LEX-C532-GEET532-03",
+      "HI-LEX-C532-GEET532-04",
+      "HI-LEX-C532-GEET532-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C378-anivarya",
+  "pathSegment": "HI-PATH-378-ZARURAT378",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-378-ZARURAT378",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:f0e8b383164bd34e",
+  "lessonIds": [
+    "HI-C350-udaharan",
+    "HI-C350-maslan",
+    "HI-C350-yani",
+    "HI-C350-spast",
+    "HI-C350-ginana",
+    "HI-R350-review-343-350"
+  ],
+  "tex": "hindi/book/chapters/ch350-for-example.tex"
+}

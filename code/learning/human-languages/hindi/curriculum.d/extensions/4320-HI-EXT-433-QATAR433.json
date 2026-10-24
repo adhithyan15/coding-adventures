@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-433-QATAR433",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can stand in a queue, take a token, wait at a counter and shop at the weekly market.",
+  "prerequisites": []
+}

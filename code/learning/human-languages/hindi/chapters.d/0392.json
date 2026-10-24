@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Getting Ready",
+  "label": "ch:hi-getting-ready",
+  "canDo": "I can say what to try if the first plan fails.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C392-sujhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can say what to try if the first plan fails.",
+    "assesses": [
+      "HI-LEX-C392-TAIYARI392-03",
+      "HI-LEX-C392-TAIYARI392-04",
+      "HI-LEX-C392-TAIYARI392-05"
+    ]
+  }
+}

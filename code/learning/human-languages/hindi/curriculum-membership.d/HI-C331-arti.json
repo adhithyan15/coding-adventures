@@ -1,0 +1,11 @@
+{
+  "id": "HI-C331-arti",
+  "pathSegment": "HI-PATH-331-VRAT331",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-331-VRAT331",
+      "order": 1
+    }
+  ]
+}

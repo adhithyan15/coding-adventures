@@ -1,0 +1,11 @@
+{
+  "id": "HI-C335-devta",
+  "pathSegment": "HI-PATH-335-DEVTA335",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-335-DEVTA335",
+      "order": 1
+    }
+  ]
+}

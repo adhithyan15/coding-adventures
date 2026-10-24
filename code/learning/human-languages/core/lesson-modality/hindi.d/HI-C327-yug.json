@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C327-yug",
+    "language": "hindi",
+    "chapter": 327,
+    "sequence": 18020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4886a86892039e97"
+  },
+  "findings": []
+}

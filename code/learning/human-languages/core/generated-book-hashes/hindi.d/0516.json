@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:b7759939a53a9b05",
+  "lessonIds": [
+    "HI-C516-tapkana",
+    "HI-C516-darakna",
+    "HI-C516-paip",
+    "HI-C516-ched",
+    "HI-C516-dhalakna"
+  ],
+  "tex": "hindi/book/chapters/ch516-a-leak-in-the-roof.tex"
+}

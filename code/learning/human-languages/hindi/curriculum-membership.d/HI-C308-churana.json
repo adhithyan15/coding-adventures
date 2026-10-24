@@ -1,0 +1,11 @@
+{
+  "id": "HI-C308-churana",
+  "pathSegment": "HI-PATH-308-BACHAV308",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-308-BACHAV308",
+      "order": 3
+    }
+  ]
+}

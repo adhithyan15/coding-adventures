@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C461-dhith",
+    "language": "hindi",
+    "chapter": 461,
+    "sequence": 25500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1c7b1dc14dd34e9"
+  },
+  "findings": []
+}

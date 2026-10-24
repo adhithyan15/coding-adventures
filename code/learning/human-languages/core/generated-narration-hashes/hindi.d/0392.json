@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:949b17f0865a709d",
+  "lessonIds": [
+    "HI-C392-taiyari",
+    "HI-C392-azmana",
+    "HI-C392-tariqa",
+    "HI-C392-anubhav",
+    "HI-C392-sujhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch392.txt",
+  "json": "hindi/narration/ch392.json",
+  "textHash": "fnv1a64:b5e669e334e68ff8",
+  "jsonHash": "fnv1a64:5626a33e0e5a9d8b",
+  "findings": []
+}

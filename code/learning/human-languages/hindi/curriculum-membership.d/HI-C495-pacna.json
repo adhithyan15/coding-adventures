@@ -1,0 +1,11 @@
+{
+  "id": "HI-C495-pacna",
+  "pathSegment": "HI-PATH-495-KASRAT495",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-495-KASRAT495",
+      "order": 4
+    }
+  ]
+}

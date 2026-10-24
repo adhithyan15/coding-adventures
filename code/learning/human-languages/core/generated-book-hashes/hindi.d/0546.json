@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:f2f080f919e59f0b",
+  "lessonIds": [
+    "HI-C546-sagun",
+    "HI-C546-asar",
+    "HI-C546-manhus",
+    "HI-C546-saubhagya",
+    "HI-C546-ittafaq"
+  ],
+  "tex": "hindi/book/chapters/ch546-fate-and-chance.tex"
+}

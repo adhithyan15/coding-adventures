@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:41723c37e028769a",
+  "lessonIds": [
+    "HI-C297-phisalna",
+    "HI-C297-thokar",
+    "HI-C297-larkharana",
+    "HI-C297-chilna",
+    "HI-C297-lahuluhan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch297.txt",
+  "json": "hindi/narration/ch297.json",
+  "textHash": "fnv1a64:f32d2fdd833e798f",
+  "jsonHash": "fnv1a64:1bc6678bbb86b259",
+  "findings": []
+}

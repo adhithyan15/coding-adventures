@@ -1,0 +1,21 @@
+{
+  "chapter": 390,
+  "title": "Setting a Goal",
+  "label": "ch:hi-setting-a-goal",
+  "canDo": "I can say what I want to reach and what it will take.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-R390-review-383-390",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can say what I want to reach and what it will take.",
+    "assesses": [
+      "HI-LEX-C390-LAKSHYA390-01",
+      "HI-LEX-C390-LAKSHYA390-02",
+      "HI-LEX-C390-LAKSHYA390-03",
+      "HI-LEX-C390-LAKSHYA390-04",
+      "HI-LEX-C390-LAKSHYA390-05"
+    ]
+  }
+}

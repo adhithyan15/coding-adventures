@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:fee5b87b28908096",
+  "lessonIds": [
+    "HI-C301-sayran",
+    "HI-C301-harbarana",
+    "HI-C301-bujhna",
+    "HI-C301-pighalna",
+    "HI-C301-phaphola"
+  ],
+  "tex": "hindi/book/chapters/ch301-putting-the-fire-out.tex"
+}

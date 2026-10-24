@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:2ed5670d312be017",
+  "lessonIds": [
+    "HI-C530-sangit",
+    "HI-C530-sur",
+    "HI-C530-tal",
+    "HI-C530-rag",
+    "HI-C530-gungunana"
+  ],
+  "tex": "hindi/book/chapters/ch530-learning-a-raga.tex"
+}

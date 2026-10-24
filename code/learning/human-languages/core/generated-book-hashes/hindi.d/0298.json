@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:1d24a523d1541cb0",
+  "lessonIds": [
+    "HI-C298-hadsa",
+    "HI-C298-ghayal",
+    "HI-C298-behos",
+    "HI-C298-kucalna",
+    "HI-C298-sambhalna"
+  ],
+  "tex": "hindi/book/chapters/ch298-the-injured.tex"
+}

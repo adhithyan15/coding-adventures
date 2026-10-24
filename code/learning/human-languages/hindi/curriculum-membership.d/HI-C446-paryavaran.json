@@ -1,0 +1,11 @@
+{
+  "id": "HI-C446-paryavaran",
+  "pathSegment": "HI-PATH-446-PRAKRITI446",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-446-PRAKRITI446",
+      "order": 1
+    }
+  ]
+}

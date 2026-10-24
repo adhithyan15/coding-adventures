@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C555-giravat",
+    "language": "hindi",
+    "chapter": 555,
+    "sequence": 30540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:165ce313c20dccb8"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Swords and Shields",
+  "label": "ch:hi-swords-and-shields",
+  "canDo": "I can describe how battles were fought long ago.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C322-prayah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can describe how battles were fought long ago.",
+    "assesses": [
+      "HI-LEX-C322-HATHIYAR322-03",
+      "HI-LEX-C322-HATHIYAR322-04",
+      "HI-LEX-C322-HATHIYAR322-05"
+    ]
+  }
+}

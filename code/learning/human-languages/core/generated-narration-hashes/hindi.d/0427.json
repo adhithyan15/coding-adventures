@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:368f8b18c103f41a",
+  "lessonIds": [
+    "HI-C427-udhar",
+    "HI-C427-qist",
+    "HI-C427-hisab",
+    "HI-C427-dalal",
+    "HI-C427-cukana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch427.txt",
+  "json": "hindi/narration/ch427.json",
+  "textHash": "fnv1a64:7d59b5c129e106d9",
+  "jsonHash": "fnv1a64:4e2ca4142e9a0bd6",
+  "findings": []
+}

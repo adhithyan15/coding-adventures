@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C506-garhna",
+    "language": "hindi",
+    "chapter": 506,
+    "sequence": 28030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2ce2f8211c6b46f"
+  },
+  "findings": []
+}

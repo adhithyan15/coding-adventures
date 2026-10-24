@@ -1,0 +1,11 @@
+{
+  "id": "HI-C366-majbur",
+  "pathSegment": "HI-PATH-366-VAJIB366",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-366-VAJIB366",
+      "order": 4
+    }
+  ]
+}

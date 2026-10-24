@@ -1,0 +1,11 @@
+{
+  "id": "HI-C378-keval",
+  "pathSegment": "HI-PATH-378-ZARURAT378",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-378-ZARURAT378",
+      "order": 2
+    }
+  ]
+}

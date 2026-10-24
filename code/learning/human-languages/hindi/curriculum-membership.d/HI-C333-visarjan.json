@@ -1,0 +1,11 @@
+{
+  "id": "HI-C333-visarjan",
+  "pathSegment": "HI-PATH-333-GHAT333",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-333-GHAT333",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Kind and Cruel",
+  "label": "ch:hi-kind-and-cruel",
+  "canDo": "I can say whether someone is kind or harsh.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C466-kathor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can say whether someone is kind or harsh.",
+    "assesses": [
+      "HI-LEX-C466-DAYA466-03",
+      "HI-LEX-C466-DAYA466-04",
+      "HI-LEX-C466-DAYA466-05"
+    ]
+  }
+}

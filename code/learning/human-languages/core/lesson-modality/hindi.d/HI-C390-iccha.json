@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C390-iccha",
+    "language": "hindi",
+    "chapter": 390,
+    "sequence": 21410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8d3ad228b42e8bb"
+  },
+  "findings": []
+}

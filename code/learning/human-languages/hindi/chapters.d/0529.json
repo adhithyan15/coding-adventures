@@ -1,0 +1,21 @@
+{
+  "chapter": 529,
+  "title": "A Play in the Village",
+  "label": "ch:hi-a-play-in-the-village",
+  "canDo": "I can talk about a play and the people in it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-R529-review-522-529",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can talk about a play and the people in it.",
+    "assesses": [
+      "HI-LEX-C529-NATAK529-01",
+      "HI-LEX-C529-NATAK529-02",
+      "HI-LEX-C529-NATAK529-03",
+      "HI-LEX-C529-NATAK529-04",
+      "HI-LEX-C529-NATAK529-05"
+    ]
+  }
+}

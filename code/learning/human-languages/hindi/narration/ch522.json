@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 522,
+  "title": "Milk and Curd",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5c3e1a18ece65cf9",
+  "lessons": [
+    {
+      "id": "HI-C522-chach",
+      "sequence": 28820,
+      "title": "छाछ (chāch) — buttermilk",
+      "headword": "छाछ",
+      "romanization": "chāch",
+      "gloss": "buttermilk",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c8f2aea535b21dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to temper (with hot spiced oil), then the Hindi for to roast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छाछ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छाछ — chāch — \"buttermilk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गर्मी में हम दोपहर को ठंडी छाछ पीते हैं। Garmī meṁ ham dopahar ko ṭhaṇḍī chāch pīte haiṁ. In summer we drink cold buttermilk at midday."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छाछ (chāch) is a tadbhava, inherited from chācchī, \"buttermilk\", a form CDIAL reconstructs from its descendants (CDIAL 5012)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāch*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāch, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāch*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Garmī meṁ ham dopahar ko ṭhaṇḍī chāch pīte haiṁ. — In summer we drink cold buttermilk at midday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Garmī meṁ ham dopahar ko ṭhaṇḍī chāch pīte haiṁ.* — In summer we drink cold buttermilk at midday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to temper (with hot spiced oil), then the Hindi for to roast, then say chāch again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to temper (with hot spiced oil), then the Hindi for to roast, then say *chāch* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छाछ (chāch) mean? (\"Buttermilk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C522-mathna",
+      "sequence": 28830,
+      "title": "मथना (mathnā) — to churn",
+      "headword": "मथना",
+      "romanization": "mathnā",
+      "gloss": "to churn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36d4aca10ea632de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to roast, then the Hindi for buttermilk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मथना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मथना — mathnā — \"to churn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी दही मथकर मक्खन निकालती हैं। Dādī dahī mathkar makkhan nikāltī haiṁ. Grandmother churns yoghurt and takes out the butter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने दही मथा, usne dahī mathā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मथना (mathnā) is a tadbhava, inherited from Sanskrit mathnāti, \"stirs, churns\" (CDIAL 9771)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mathnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mathnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mathnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mathnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dādī dahī mathkar makkhan nikāltī haiṁ. — Grandmother churns yoghurt and takes out the butter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dādī dahī mathkar makkhan nikāltī haiṁ.* — Grandmother churns yoghurt and takes out the butter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to roast, then the Hindi for buttermilk, then say mathnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to roast, then the Hindi for buttermilk, then say *mathnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मथना (mathnā) mean? (\"To churn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C522-jaman",
+      "sequence": 28840,
+      "title": "जामन (jāman) — a starter (for setting curd)",
+      "headword": "जामन",
+      "romanization": "jāman",
+      "gloss": "a starter (for setting curd)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dacfcd67395bb59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for buttermilk, then the Hindi for to churn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जामन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जामन — jāman — \"a starter (for setting curd)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात को दूध में थोड़ा जामन मिलाइए, सुबह तक दही बन जाएगा। Rāt ko dūdh meṁ thoṛā jāman milāie, subah tak dahī ban jāegā. Mix a little starter into the milk at night, and by morning it will be yoghurt."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जामन (jāman) is a tadbhava, inherited from Sanskrit yamyatē, \"is held, is fixed\" (CDIAL 10428)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāman*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāman, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāman*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Rāt ko dūdh meṁ thoṛā jāman milāie, subah tak dahī ban jāegā. — Mix a little starter into the milk at night, and by morning it will be yoghurt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Rāt ko dūdh meṁ thoṛā jāman milāie, subah tak dahī ban jāegā.* — Mix a little starter into the milk at night, and by morning it will be yoghurt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for buttermilk, then the Hindi for to churn, then say jāman again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for buttermilk, then the Hindi for to churn, then say *jāman* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जामन (jāman) mean? (\"A starter (for setting curd)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C522-khaulna",
+      "sequence": 28850,
+      "title": "खौलना (khaulnā) — to seethe; to boil hard",
+      "headword": "खौलना",
+      "romanization": "khaulnā",
+      "gloss": "to seethe; to boil hard",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d36d43a2f85e8f0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to churn, then the Hindi for a starter (for setting curd)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खौलना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खौलना — khaulnā — \"to seethe; to boil hard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कड़ाही में तेल खौल रहा है। Kaṛāhī meṁ tel khaul rahā hai. The oil in the wok is seething."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह पानी खौल उठा, vah pānī khaul uṭhā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खौलना (khaulnā) is a tadbhava, inherited from kha-ul, \"be heated\", a form CDIAL reconstructs from its descendants (CDIAL 3760). CDIAL gives the Hindi verb as \"to be heated, boil\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaulnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaulnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaulnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaulnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kaṛāhī meṁ tel khaul rahā hai. — The oil in the wok is seething.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Kaṛāhī meṁ tel khaul rahā hai.* — The oil in the wok is seething.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to churn, then the Hindi for a starter (for setting curd), then say khaulnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to churn, then the Hindi for a starter (for setting curd), then say *khaulnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खौलना (khaulnā) mean? (\"To seethe; to boil hard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C522-nitharna",
+      "sequence": 28860,
+      "title": "निथारना (nithārnā) — to drain off (liquid); to let settle and pour",
+      "headword": "निथारना",
+      "romanization": "nithārnā",
+      "gloss": "to drain off (liquid); to let settle and pour",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e85cce4bbde98776",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a starter (for setting curd), then the Hindi for to seethe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निथारना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निथारना — nithārnā — \"to drain off (liquid); to let settle and pour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पनीर बनाकर माँ ने ऊपर का पानी निथारा। Panīr banākar māṁ ne ūpar kā pānī nithārā. After making the paneer my mother drained off the water on top."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने दाल का पानी निथारा, usne dāl kā pānī nithārā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निथारना (nithārnā) is a tadbhava, inherited from Sanskrit nistārayati, \"delivers from\" (CDIAL 7532). CDIAL gives the Hindi verb as \"to draw off, purify\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nithārnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nithārnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nithārnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nithārnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Panīr banākar māṁ ne ūpar kā pānī nithārā. — After making the paneer my mother drained off the water on top.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Panīr banākar māṁ ne ūpar kā pānī nithārā.* — After making the paneer my mother drained off the water on top.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a starter (for setting curd), then the Hindi for to seethe, then say nithārnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a starter (for setting curd), then the Hindi for to seethe, then say *nithārnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निथारना (nithārnā) mean? (\"To drain off (liquid); to let settle and pour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

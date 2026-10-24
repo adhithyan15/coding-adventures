@@ -1,0 +1,19 @@
+{
+  "chapter": 538,
+  "title": "Getting Things Ready",
+  "label": "ch:hi-getting-things-ready",
+  "canDo": "I can say how a feast or a celebration was got ready.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C538-binna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can say how a feast or a celebration was got ready.",
+    "assesses": [
+      "HI-LEX-C538-PRABANDH538-03",
+      "HI-LEX-C538-PRABANDH538-04",
+      "HI-LEX-C538-PRABANDH538-05"
+    ]
+  }
+}

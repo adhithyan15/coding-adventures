@@ -1,0 +1,11 @@
+{
+  "id": "HI-C548-lutana",
+  "pathSegment": "HI-PATH-548-AVADHI548",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-548-AVADHI548",
+      "order": 4
+    }
+  ]
+}

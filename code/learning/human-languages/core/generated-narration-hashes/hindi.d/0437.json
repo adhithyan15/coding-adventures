@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:063579ef25f7cfe5",
+  "lessonIds": [
+    "HI-C437-mansun",
+    "HI-C437-barsat",
+    "HI-C437-nami",
+    "HI-C437-chana",
+    "HI-C437-pasijna",
+    "HI-R437-review-430-437"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch437.txt",
+  "json": "hindi/narration/ch437.json",
+  "textHash": "fnv1a64:b8483643c506c750",
+  "jsonHash": "fnv1a64:c8a6e0aa39e43f23",
+  "findings": []
+}

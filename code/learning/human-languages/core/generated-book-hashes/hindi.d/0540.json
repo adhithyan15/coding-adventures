@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:682a5bf29b2b2858",
+  "lessonIds": [
+    "HI-C540-tajurba",
+    "HI-C540-yukti",
+    "HI-C540-zariya",
+    "HI-C540-tarkib",
+    "HI-C540-prayatn"
+  ],
+  "tex": "hindi/book/chapters/ch540-ways-and-means.tex"
+}

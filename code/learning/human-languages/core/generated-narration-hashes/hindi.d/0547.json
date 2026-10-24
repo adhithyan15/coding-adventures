@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:2f714de449abfa4d",
+  "lessonIds": [
+    "HI-C547-caukanna",
+    "HI-C547-hifazat",
+    "HI-C547-nigrani",
+    "HI-C547-bhanak",
+    "HI-C547-hidayat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch547.txt",
+  "json": "hindi/narration/ch547.json",
+  "textHash": "fnv1a64:983e0ac1cba2fc27",
+  "jsonHash": "fnv1a64:2598d559dc2a3c41",
+  "findings": []
+}

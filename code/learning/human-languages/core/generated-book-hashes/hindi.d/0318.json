@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:da5715028e465f7d",
+  "lessonIds": [
+    "HI-C318-dhamaka",
+    "HI-C318-bam",
+    "HI-C318-gujna",
+    "HI-C318-tharrana",
+    "HI-C318-sadma"
+  ],
+  "tex": "hindi/book/chapters/ch318-a-blast.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C329-uchalna",
+    "language": "hindi",
+    "chapter": 329,
+    "sequence": 18120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35bb5a93a258c1ab"
+  },
+  "findings": []
+}

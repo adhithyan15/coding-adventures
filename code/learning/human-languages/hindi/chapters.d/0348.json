@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Proof",
+  "label": "ch:hi-proof",
+  "canDo": "I can ask for proof and give it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C348-arop",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can ask for proof and give it.",
+    "assesses": [
+      "HI-LEX-C348-PRAMAN348-03",
+      "HI-LEX-C348-PRAMAN348-04",
+      "HI-LEX-C348-PRAMAN348-05"
+    ]
+  }
+}

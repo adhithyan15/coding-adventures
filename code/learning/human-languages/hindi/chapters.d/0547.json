@@ -1,0 +1,19 @@
+{
+  "chapter": 547,
+  "title": "Being Careful",
+  "label": "ch:hi-being-careful",
+  "canDo": "I can warn someone and say who is keeping watch.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C547-hidayat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 547: I can warn someone and say who is keeping watch.",
+    "assesses": [
+      "HI-LEX-C547-CHAUKANNA547-03",
+      "HI-LEX-C547-CHAUKANNA547-04",
+      "HI-LEX-C547-CHAUKANNA547-05"
+    ]
+  }
+}

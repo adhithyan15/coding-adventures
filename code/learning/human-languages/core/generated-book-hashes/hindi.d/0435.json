@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:96e24b90118bcc25",
+  "lessonIds": [
+    "HI-C435-rezgari",
+    "HI-C435-saiz",
+    "HI-C435-posak",
+    "HI-C435-rumal",
+    "HI-C435-simatna"
+  ],
+  "tex": "hindi/book/chapters/ch435-change-sizes-and-clothes.tex"
+}

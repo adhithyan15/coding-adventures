@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-409-UDAN409",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the airport, the plane and the pilot, and read the arrivals board.",
+  "prerequisites": []
+}

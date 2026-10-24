@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C512-kaatna",
+    "language": "hindi",
+    "chapter": 512,
+    "sequence": 28320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c780770b941e5fca"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C295-jurmana",
+    "language": "hindi",
+    "chapter": 295,
+    "sequence": 16380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a183bffa13b7b4d7"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C423-gurrana",
+  "pathSegment": "HI-PATH-423-GARD423",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-423-GARD423",
+      "order": 3
+    }
+  ]
+}

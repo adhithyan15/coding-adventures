@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Very, Extremely",
+  "label": "ch:hi-very-extremely",
+  "canDo": "I can say how strong something will be if it happens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C387-zabardast",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can say how strong something will be if it happens.",
+    "assesses": [
+      "HI-LEX-C387-BEHAD387-03",
+      "HI-LEX-C387-BEHAD387-04",
+      "HI-LEX-C387-BEHAD387-05"
+    ]
+  }
+}

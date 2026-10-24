@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:d42fa4be09d15ac7",
+  "lessonIds": [
+    "HI-C536-yojna",
+    "HI-C536-nirnay",
+    "HI-C536-vyavastha",
+    "HI-C536-ruprekha",
+    "HI-C536-masauda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch536.txt",
+  "json": "hindi/narration/ch536.json",
+  "textHash": "fnv1a64:8bbf1710c25df543",
+  "jsonHash": "fnv1a64:5b3ec5b60432dcd2",
+  "findings": []
+}

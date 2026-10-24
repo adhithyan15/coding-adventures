@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "At the Front Desk",
+  "label": "ch:hi-at-the-front-desk",
+  "canDo": "I can speak to the manager, sign the register and send for tea.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C415-magana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can speak to the manager, sign the register and send for tea.",
+    "assesses": [
+      "HI-LEX-C415-RAJISTAR415-03",
+      "HI-LEX-C415-RAJISTAR415-04",
+      "HI-LEX-C415-RAJISTAR415-05"
+    ]
+  }
+}

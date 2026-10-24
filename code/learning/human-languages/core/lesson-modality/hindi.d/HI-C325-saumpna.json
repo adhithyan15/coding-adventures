@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C325-saumpna",
+    "language": "hindi",
+    "chapter": 325,
+    "sequence": 17930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6fe241be185b365"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:c136a88bc8d214a5",
+  "lessonIds": [
+    "HI-C368-sudharnaa",
+    "HI-C368-vikas",
+    "HI-C368-unnati",
+    "HI-C368-anusasan",
+    "HI-C368-nikhaarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch368.txt",
+  "json": "hindi/narration/ch368.json",
+  "textHash": "fnv1a64:d1d9b93449020c21",
+  "jsonHash": "fnv1a64:01813a1010216eb6",
+  "findings": []
+}

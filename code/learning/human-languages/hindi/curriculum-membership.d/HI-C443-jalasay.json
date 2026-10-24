@@ -1,0 +1,11 @@
+{
+  "id": "HI-C443-jalasay",
+  "pathSegment": "HI-PATH-443-NAHAR443",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-443-NAHAR443",
+      "order": 1
+    }
+  ]
+}

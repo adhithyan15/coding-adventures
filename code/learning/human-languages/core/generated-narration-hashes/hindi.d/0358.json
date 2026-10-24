@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:b18ac1fdeafbe0f0",
+  "lessonIds": [
+    "HI-C358-seva",
+    "HI-C358-tyag",
+    "HI-C358-svarth",
+    "HI-C358-lalac",
+    "HI-C358-jatana",
+    "HI-R358-review-351-358"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch358.txt",
+  "json": "hindi/narration/ch358.json",
+  "textHash": "fnv1a64:63b24d4df831db8a",
+  "jsonHash": "fnv1a64:af97af85c297557a",
+  "findings": []
+}

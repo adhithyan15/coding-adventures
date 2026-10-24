@@ -1,0 +1,11 @@
+{
+  "id": "HI-C557-garanti",
+  "pathSegment": "HI-PATH-557-ANDESHA557",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-557-ANDESHA557",
+      "order": 2
+    }
+  ]
+}

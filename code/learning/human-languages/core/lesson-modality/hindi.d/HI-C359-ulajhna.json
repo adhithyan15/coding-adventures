@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C359-ulajhna",
+    "language": "hindi",
+    "chapter": 359,
+    "sequence": 19850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0eff2339d67afd6f"
+  },
+  "findings": []
+}

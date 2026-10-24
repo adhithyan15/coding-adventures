@@ -1,0 +1,11 @@
+{
+  "id": "HI-C528-godna",
+  "pathSegment": "HI-PATH-528-SHILP528",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-528-SHILP528",
+      "order": 3
+    }
+  ]
+}

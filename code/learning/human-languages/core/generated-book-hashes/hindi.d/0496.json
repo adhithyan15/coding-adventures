@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:8fc9eea00c2e4eb4",
+  "lessonIds": [
+    "HI-C496-anidra",
+    "HI-C496-uninda",
+    "HI-C496-pasarna",
+    "HI-C496-budbudana",
+    "HI-C496-bichauna"
+  ],
+  "tex": "hindi/book/chapters/ch496-sleep.tex"
+}

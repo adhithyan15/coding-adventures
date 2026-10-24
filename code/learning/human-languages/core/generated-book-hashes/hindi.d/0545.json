@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:ce8576b63af108d0",
+  "lessonIds": [
+    "HI-C545-jua",
+    "HI-C545-pasa",
+    "HI-C545-bazi",
+    "HI-C545-mohra",
+    "HI-C545-mat",
+    "HI-R545-review-538-545"
+  ],
+  "tex": "hindi/book/chapters/ch545-a-game-of-chance.tex"
+}

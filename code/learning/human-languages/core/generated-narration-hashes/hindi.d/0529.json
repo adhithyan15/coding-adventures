@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:ab9c01c1c094ca4f",
+  "lessonIds": [
+    "HI-C529-natak",
+    "HI-C529-manc",
+    "HI-C529-abhinay",
+    "HI-C529-kirdar",
+    "HI-C529-darsak",
+    "HI-R529-review-522-529"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch529.txt",
+  "json": "hindi/narration/ch529.json",
+  "textHash": "fnv1a64:f199dd61ba009a60",
+  "jsonHash": "fnv1a64:8bd1936684c2c608",
+  "findings": []
+}

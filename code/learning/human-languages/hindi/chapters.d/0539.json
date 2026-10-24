@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Wishes and Prayers",
+  "label": "ch:hi-wishes-and-prayers",
+  "canDo": "I can talk about what I wish and pray for and what I have resolved.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C539-thanna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can talk about what I wish and pray for and what I have resolved.",
+    "assesses": [
+      "HI-LEX-C539-DUA539-03",
+      "HI-LEX-C539-DUA539-04",
+      "HI-LEX-C539-DUA539-05"
+    ]
+  }
+}

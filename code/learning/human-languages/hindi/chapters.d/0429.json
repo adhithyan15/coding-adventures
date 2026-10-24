@@ -1,0 +1,21 @@
+{
+  "chapter": 429,
+  "title": "Slips, Cards and Signatures",
+  "label": "ch:hi-slips-cards-and-signatures",
+  "canDo": "I can fill in a slip, pay by card, sign my name and cash a cheque.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-R429-review-422-429",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can fill in a slip, pay by card, sign my name and cash a cheque.",
+    "assesses": [
+      "HI-LEX-C429-PARCHI429-01",
+      "HI-LEX-C429-PARCHI429-02",
+      "HI-LEX-C429-PARCHI429-03",
+      "HI-LEX-C429-PARCHI429-04",
+      "HI-LEX-C429-PARCHI429-05"
+    ]
+  }
+}

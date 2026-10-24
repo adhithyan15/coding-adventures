@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:f8ac3e85a51abbab",
+  "lessonIds": [
+    "HI-C415-mainejar",
+    "HI-C415-rajistar",
+    "HI-C415-buking",
+    "HI-C415-thikana",
+    "HI-C415-magana"
+  ],
+  "tex": "hindi/book/chapters/ch415-at-the-front-desk.tex"
+}

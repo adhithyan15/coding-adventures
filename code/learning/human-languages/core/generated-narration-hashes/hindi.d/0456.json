@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:96eb850b4af5647c",
+  "lessonIds": [
+    "HI-C456-naraz",
+    "HI-C456-krodh",
+    "HI-C456-cirhna",
+    "HI-C456-bipharna",
+    "HI-C456-khijhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch456.txt",
+  "json": "hindi/narration/ch456.json",
+  "textHash": "fnv1a64:512a2ecec8d71160",
+  "jsonHash": "fnv1a64:18e76e31db108989",
+  "findings": []
+}

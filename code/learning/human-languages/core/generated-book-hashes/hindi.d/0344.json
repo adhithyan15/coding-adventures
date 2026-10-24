@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:27b7998c8eab4dab",
+  "lessonIds": [
+    "HI-C344-parinam",
+    "HI-C344-prabhav",
+    "HI-C344-barhna",
+    "HI-C344-bigaarna",
+    "HI-C344-srot"
+  ],
+  "tex": "hindi/book/chapters/ch344-what-follows-from-it.tex"
+}

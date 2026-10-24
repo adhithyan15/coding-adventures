@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:f7d2ae931411479b",
+  "lessonIds": [
+    "HI-C454-cakit",
+    "HI-C454-ascarya",
+    "HI-C454-acambha",
+    "HI-C454-ajib",
+    "HI-C454-kamal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch454.txt",
+  "json": "hindi/narration/ch454.json",
+  "textHash": "fnv1a64:54ccbc18ef2ff745",
+  "jsonHash": "fnv1a64:a2c4588dc4e8ef41",
+  "findings": []
+}

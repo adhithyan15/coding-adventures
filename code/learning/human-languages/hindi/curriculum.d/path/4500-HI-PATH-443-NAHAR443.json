@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-443-NAHAR443",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "HI-EXT-443-NAHAR443"
+  ],
+  "after": []
+}

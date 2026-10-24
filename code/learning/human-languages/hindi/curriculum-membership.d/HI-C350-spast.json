@@ -1,0 +1,11 @@
+{
+  "id": "HI-C350-spast",
+  "pathSegment": "HI-PATH-350-MISAAL350",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-350-MISAAL350",
+      "order": 3
+    }
+  ]
+}

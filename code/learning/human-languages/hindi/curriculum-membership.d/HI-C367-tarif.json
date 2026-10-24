@@ -1,0 +1,11 @@
+{
+  "id": "HI-C367-tarif",
+  "pathSegment": "HI-PATH-367-TARIF367",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-367-TARIF367",
+      "order": 1
+    }
+  ]
+}

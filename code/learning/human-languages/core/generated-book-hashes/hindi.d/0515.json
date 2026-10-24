@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:48545a83c07d837a",
+  "lessonIds": [
+    "HI-C515-dhila",
+    "HI-C515-penc",
+    "HI-C515-peckas",
+    "HI-C515-kasna",
+    "HI-C515-kharkharana"
+  ],
+  "tex": "hindi/book/chapters/ch515-something-has-come-loose.tex"
+}

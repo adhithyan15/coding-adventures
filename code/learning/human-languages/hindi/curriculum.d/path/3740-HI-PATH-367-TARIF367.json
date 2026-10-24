@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-367-TARIF367",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "HI-EXT-367-TARIF367"
+  ],
+  "after": []
+}

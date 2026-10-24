@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:aa2a4a1f8cb2e2d1",
+  "lessonIds": [
+    "HI-C398-musafir",
+    "HI-C398-kuli",
+    "HI-C398-dhhona",
+    "HI-C398-ladna",
+    "HI-C398-bithana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch398.txt",
+  "json": "hindi/narration/ch398.json",
+  "textHash": "fnv1a64:d94e8bac84717714",
+  "jsonHash": "fnv1a64:061f8a33526216c3",
+  "findings": []
+}

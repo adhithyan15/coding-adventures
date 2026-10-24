@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:2875dd5345a2bae4",
+  "lessonIds": [
+    "HI-C439-tap",
+    "HI-C439-para",
+    "HI-C439-tapman",
+    "HI-C439-digri",
+    "HI-C439-tapna"
+  ],
+  "tex": "hindi/book/chapters/ch439-heat.tex"
+}

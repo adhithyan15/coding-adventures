@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:00d5619d5abc84d9",
+  "lessonIds": [
+    "HI-C521-ac",
+    "HI-C521-dalna",
+    "HI-C521-jira",
+    "HI-C521-bagharna",
+    "HI-C521-bhujna",
+    "HI-R521-review-514-521"
+  ],
+  "tex": "hindi/book/chapters/ch521-heat-in-the-kitchen.tex"
+}

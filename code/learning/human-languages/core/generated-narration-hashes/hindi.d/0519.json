@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:0c0d695646d4735e",
+  "lessonIds": [
+    "HI-C519-sanduq",
+    "HI-C519-makri",
+    "HI-C519-raddi",
+    "HI-C519-buharna",
+    "HI-C519-majna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch519.txt",
+  "json": "hindi/narration/ch519.json",
+  "textHash": "fnv1a64:4e9fb9485a5a72bd",
+  "jsonHash": "fnv1a64:cd33537fbf92dee1",
+  "findings": []
+}

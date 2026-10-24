@@ -1,0 +1,11 @@
+{
+  "id": "HI-C331-pakvan",
+  "pathSegment": "HI-PATH-331-VRAT331",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-331-VRAT331",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C447-kira",
+  "pathSegment": "HI-PATH-447-JHADI447",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-447-JHADI447",
+      "order": 3
+    }
+  ]
+}

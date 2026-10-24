@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Buried Treasure",
+  "label": "ch:hi-buried-treasure",
+  "canDo": "I can tell a tale of hidden treasure.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C337-dasna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can tell a tale of hidden treasure.",
+    "assesses": [
+      "HI-LEX-C337-KHAZANA337-03",
+      "HI-LEX-C337-KHAZANA337-04",
+      "HI-LEX-C337-KHAZANA337-05"
+    ]
+  }
+}

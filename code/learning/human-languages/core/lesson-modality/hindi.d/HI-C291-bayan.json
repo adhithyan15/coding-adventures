@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C291-bayan",
+    "language": "hindi",
+    "chapter": 291,
+    "sequence": 16160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:702817807b3200d4"
+  },
+  "findings": []
+}

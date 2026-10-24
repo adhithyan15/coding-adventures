@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-551-MAJBUR551",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-551-MAJBUR551"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Leaning on Others",
+  "label": "ch:hi-leaning-on-others",
+  "canDo": "I can say what will happen if someone leaves, stays or insists.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C386-yogya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can say what will happen if someone leaves, stays or insists.",
+    "assesses": [
+      "HI-LEX-C386-SAHARA386-03",
+      "HI-LEX-C386-SAHARA386-04",
+      "HI-LEX-C386-SAHARA386-05"
+    ]
+  }
+}

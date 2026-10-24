@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:ff0925256022507c",
+  "lessonIds": [
+    "HI-C326-khandhar",
+    "HI-C326-khodna",
+    "HI-C326-murti",
+    "HI-C326-silalekh",
+    "HI-C326-avses"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch326.txt",
+  "json": "hindi/narration/ch326.json",
+  "textHash": "fnv1a64:6a775166f536eca2",
+  "jsonHash": "fnv1a64:ebb614024831b39a",
+  "findings": []
+}

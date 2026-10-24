@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C516-paip",
+    "language": "hindi",
+    "chapter": 516,
+    "sequence": 28530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9679a163a523607f"
+  },
+  "findings": []
+}

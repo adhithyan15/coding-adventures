@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C349-galatfahmi",
+    "language": "hindi",
+    "chapter": 349,
+    "sequence": 19340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbf6fdc2bc227783"
+  },
+  "findings": []
+}

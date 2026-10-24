@@ -1,0 +1,11 @@
+{
+  "id": "HI-C300-tapis",
+  "pathSegment": "HI-PATH-300-DAHAK300",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-300-DAHAK300",
+      "order": 4
+    }
+  ]
+}

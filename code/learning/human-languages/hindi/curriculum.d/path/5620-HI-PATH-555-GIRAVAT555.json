@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-555-GIRAVAT555",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-555-GIRAVAT555"
+  ],
+  "after": []
+}

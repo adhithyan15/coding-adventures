@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C331-bhajan",
+    "language": "hindi",
+    "chapter": 331,
+    "sequence": 18220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40db9d945e9e3ad8"
+  },
+  "findings": []
+}

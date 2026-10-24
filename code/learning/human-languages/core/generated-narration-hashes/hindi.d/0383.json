@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:192f3a39c61f98b6",
+  "lessonIds": [
+    "HI-C383-sankat",
+    "HI-C383-hani",
+    "HI-C383-ghatak",
+    "HI-C383-udherna",
+    "HI-C383-bhigna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch383.txt",
+  "json": "hindi/narration/ch383.json",
+  "textHash": "fnv1a64:382c22a1d87f4dd9",
+  "jsonHash": "fnv1a64:849f4039583aeb93",
+  "findings": []
+}

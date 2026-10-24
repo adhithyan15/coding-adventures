@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Drops and Showers",
+  "label": "ch:hi-drops-and-showers",
+  "canDo": "I can talk about drops and spells of rain, steam, a raincoat and rain pouring down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C436-barasna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can talk about drops and spells of rain, steam, a raincoat and rain pouring down.",
+    "assesses": [
+      "HI-LEX-C436-BUND436-03",
+      "HI-LEX-C436-BUND436-04",
+      "HI-LEX-C436-BUND436-05"
+    ]
+  }
+}

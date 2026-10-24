@@ -1,0 +1,21 @@
+{
+  "chapter": 537,
+  "title": "A Change of Programme",
+  "label": "ch:hi-a-change-of-programme",
+  "canDo": "I can say that something was moved, rushed or given more time.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-R537-review-530-537",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can say that something was moved, rushed or given more time.",
+    "assesses": [
+      "HI-LEX-C537-KARYAKRAM537-01",
+      "HI-LEX-C537-KARYAKRAM537-02",
+      "HI-LEX-C537-KARYAKRAM537-03",
+      "HI-LEX-C537-KARYAKRAM537-04",
+      "HI-LEX-C537-KARYAKRAM537-05"
+    ]
+  }
+}

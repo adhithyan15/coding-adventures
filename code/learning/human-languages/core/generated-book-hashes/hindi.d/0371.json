@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:9c222efd2f5ab73b",
+  "lessonIds": [
+    "HI-C371-halaki",
+    "HI-C371-bavjud",
+    "HI-C371-bajay",
+    "HI-C371-alava",
+    "HI-C371-arna"
+  ],
+  "tex": "hindi/book/chapters/ch371-even-so.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Street Food and Sellers",
+  "label": "ch:hi-street-food-and-sellers",
+  "canDo": "I can eat at a roadside dhaba, buy sweets and paan, and talk about the hawkers in the lane.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C424-pan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can eat at a roadside dhaba, buy sweets and paan, and talk about the hawkers in the lane.",
+    "assesses": [
+      "HI-LEX-C424-DHABA424-03",
+      "HI-LEX-C424-DHABA424-04",
+      "HI-LEX-C424-DHABA424-05"
+    ]
+  }
+}

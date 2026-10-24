@@ -1,0 +1,11 @@
+{
+  "id": "HI-C490-dag",
+  "pathSegment": "HI-PATH-490-CHHALA490",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-490-CHHALA490",
+      "order": 4
+    }
+  ]
+}

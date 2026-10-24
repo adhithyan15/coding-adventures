@@ -1,0 +1,11 @@
+{
+  "id": "HI-C497-prasav",
+  "pathSegment": "HI-PATH-497-JANM497",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-497-JANM497",
+      "order": 2
+    }
+  ]
+}

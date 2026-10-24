@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C353-sasan",
+    "language": "hindi",
+    "chapter": 353,
+    "sequence": 19520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aec255bed4f2c090"
+  },
+  "findings": []
+}

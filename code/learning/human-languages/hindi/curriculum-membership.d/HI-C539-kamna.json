@@ -1,0 +1,11 @@
+{
+  "id": "HI-C539-kamna",
+  "pathSegment": "HI-PATH-539-DUA539",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-539-DUA539",
+      "order": 3
+    }
+  ]
+}

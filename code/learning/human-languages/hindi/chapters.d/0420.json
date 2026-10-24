@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Slopes and Passages",
+  "label": "ch:hi-slopes-and-passages",
+  "canDo": "I can go up and down a slope, push through a passage, roll downhill and say something is digging into my foot.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C420-garnaintr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can go up and down a slope, push through a passage, roll downhill and say something is digging into my foot.",
+    "assesses": [
+      "HI-LEX-C420-DHALAN420-03",
+      "HI-LEX-C420-DHALAN420-04",
+      "HI-LEX-C420-DHALAN420-05"
+    ]
+  }
+}

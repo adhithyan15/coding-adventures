@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C458-tarapna",
+    "language": "hindi",
+    "chapter": 458,
+    "sequence": 25330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b6cafa8cd7b637b"
+  },
+  "findings": []
+}

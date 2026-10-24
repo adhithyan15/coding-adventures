@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 438,
+  "title": "Winter Cold",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c67f71b36f7c1fd5",
+  "lessons": [
+    {
+      "id": "HI-C438-jara",
+      "sequence": 24050,
+      "title": "जाड़ा (jāṛā) — winter; the cold",
+      "headword": "जाड़ा",
+      "romanization": "jāṛā",
+      "gloss": "winter; the cold",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:405f37836d7dc300",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to spread over, then the Hindi for to sweat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जाड़ा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जाड़ा — jāṛā — \"winter; the cold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जाड़े में यहाँ बहुत ठंड पड़ती है। jāṛe meṁ yahā̃ bahut ṭhaṇḍ paṛtī hai. It gets very cold here in winter."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जाड़ा (jāṛā) is a tadbhava of Sanskrit jaḍa, \"dull, numb\" and also \"cold\" (CDIAL 5090), which lists Hindi jaṛā, \"cold, frost, winter\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāṛā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāṛā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāṛe meṁ yahā̃ bahut ṭhaṇḍ paṛtī hai. — It gets very cold here in winter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāṛe meṁ yahā̃ bahut ṭhaṇḍ paṛtī hai.* — It gets very cold here in winter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to spread over, then the Hindi for to sweat, then say jāṛā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to spread over, then the Hindi for to sweat, then say *jāṛā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जाड़ा (jāṛā) mean? (\"Winter; the cold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C438-ola",
+      "sequence": 24060,
+      "title": "ओला (olā) — a hailstone",
+      "headword": "ओला",
+      "romanization": "olā",
+      "gloss": "a hailstone",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a61ea82db42fcbc2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to sweat, then the Hindi for winter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओला — olā — \"a hailstone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कल रात ओले गिरे। kal rāt ole gire. It hailed last night."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Usually plural: ओले गिरे, ओले पड़े, it hailed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओला (olā) is a tadbhava of Sanskrit upala, \"a stone, a rock\" (CDIAL 2223), which lists Hindi olā, \"a hailstone\": a stone that falls from the sky."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "olā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *olā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "olā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *olā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kal rāt ole gire. — It hailed last night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kal rāt ole gire.* — It hailed last night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to sweat, then the Hindi for winter, then say olā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to sweat, then the Hindi for winter, then say *olā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ओला (olā) mean? (\"A hailstone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C438-sit",
+      "sequence": 24070,
+      "title": "शीत (śīt) — cold; the cold (formal)",
+      "headword": "शीत",
+      "romanization": "śīt",
+      "gloss": "cold; the cold (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39332f9115f0edf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for winter, then the Hindi for a hailstone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शीत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शीत — śīt — \"cold; the cold (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शीत लहर की वजह से स्कूल बंद हैं। śīt lahar kī vajah se skūl band haiṁ. The schools are closed because of the cold wave."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शीत (śīt) is a tatsama, Sanskrit śīta, \"cold, chilly\", and as a noun \"cold weather\" (Monier-Williams); the weather news speaks of शीत लहर, a cold wave."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śīt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śīt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śīt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śīt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śīt lahar kī vajah se skūl band haiṁ. — The schools are closed because of the cold wave.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śīt lahar kī vajah se skūl band haiṁ.* — The schools are closed because of the cold wave.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for winter, then the Hindi for a hailstone, then say śīt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for winter, then the Hindi for a hailstone, then say *śīt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शीत (śīt) mean? (\"Cold; the cold (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C438-himpat",
+      "sequence": 24080,
+      "title": "हिमपात (himpāt) — snowfall",
+      "headword": "हिमपात",
+      "romanization": "himpāt",
+      "gloss": "snowfall",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f48f37c30fe4823",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a hailstone, then the Hindi for cold (formal)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हिमपात",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिमपात — himpāt — \"snowfall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पहाड़ों में कल रात भारी हिमपात हुआ। pahāṛoṁ meṁ kal rāt bhārī himpāt huā. There was heavy snowfall in the hills last night."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिमपात (himpāt) is a tatsama, Sanskrit himapāta, \"a fall of snow\" (Monier-Williams), from hima, \"snow\", as in हिमालय, and pāta, \"a fall\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "himpāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *himpāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "himpāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *himpāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahāṛoṁ meṁ kal rāt bhārī himpāt huā. — There was heavy snowfall in the hills last night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahāṛoṁ meṁ kal rāt bhārī himpāt huā.* — There was heavy snowfall in the hills last night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a hailstone, then the Hindi for cold (formal), then say himpāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a hailstone, then the Hindi for cold (formal), then say *himpāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हिमपात (himpāt) mean? (\"Snowfall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C438-orhna",
+      "sequence": 24090,
+      "title": "ओढ़ना (oṛhnā) — to wrap oneself in (a shawl or a blanket)",
+      "headword": "ओढ़ना",
+      "romanization": "oṛhnā",
+      "gloss": "to wrap oneself in (a shawl or a blanket)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:049fa9d96a3d7493",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for cold (formal), then the Hindi for snowfall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओढ़ना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओढ़ना — oṛhnā — \"to wrap oneself in (a shawl or a blanket)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी ने कंबल ओढ़ा। dādī ne kambal oṛhā. Grandmother wrapped herself in a blanket."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने चादर ओढ़ी, usne cādar oṛhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओढ़ना (oṛhnā) goes back to ōḍḍh, \"put on, wear, cover\", a form CDIAL reconstructs and thinks may come from Dravidian (CDIAL 2547); it lists Hindi oṛhnā, \"to cover\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṛhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṛhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṛhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṛhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī ne kambal oṛhā. — Grandmother wrapped herself in a blanket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī ne kambal oṛhā.* — Grandmother wrapped herself in a blanket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for cold (formal), then the Hindi for snowfall, then say oṛhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for cold (formal), then the Hindi for snowfall, then say *oṛhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ओढ़ना (oṛhnā) mean? (\"To wrap oneself in (a shawl or a blanket)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

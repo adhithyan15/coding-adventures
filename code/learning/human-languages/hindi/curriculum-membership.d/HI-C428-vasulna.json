@@ -1,0 +1,11 @@
+{
+  "id": "HI-C428-vasulna",
+  "pathSegment": "HI-PATH-428-KAMANA428",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-428-KAMANA428",
+      "order": 4
+    }
+  ]
+}

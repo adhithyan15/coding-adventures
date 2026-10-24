@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C382-chalakna",
+    "language": "hindi",
+    "chapter": 382,
+    "sequence": 21010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b42d39e8e7c40a0"
+  },
+  "findings": []
+}

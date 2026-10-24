@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:d8cd6bcbb38e7b43",
+  "lessonIds": [
+    "HI-C348-praman",
+    "HI-C348-sabitkarna",
+    "HI-C348-tathya",
+    "HI-C348-pukhta",
+    "HI-C348-arop"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch348.txt",
+  "json": "hindi/narration/ch348.json",
+  "textHash": "fnv1a64:299b516bcaa59c55",
+  "jsonHash": "fnv1a64:88d8d783a0e4d99c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "In Court",
+  "label": "ch:hi-in-court",
+  "canDo": "I can follow what happens in a court case.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C352-zamanat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can follow what happens in a court case.",
+    "assesses": [
+      "HI-LEX-C352-ADALAT352-03",
+      "HI-LEX-C352-ADALAT352-04",
+      "HI-LEX-C352-ADALAT352-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C552-bhalehi",
+    "language": "hindi",
+    "chapter": 552,
+    "sequence": 30360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e16306f70401667b"
+  },
+  "findings": []
+}

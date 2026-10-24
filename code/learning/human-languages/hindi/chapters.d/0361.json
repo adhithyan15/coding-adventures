@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Research",
+  "label": "ch:hi-research",
+  "canDo": "I can say what a researcher is working on.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C361-prayogsala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can say what a researcher is working on.",
+    "assesses": [
+      "HI-LEX-C361-SHODH361-03",
+      "HI-LEX-C361-SHODH361-04",
+      "HI-LEX-C361-SHODH361-05"
+    ]
+  }
+}

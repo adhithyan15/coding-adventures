@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:e0d1b29ac3cbd4cf",
+  "lessonIds": [
+    "HI-C522-chach",
+    "HI-C522-mathna",
+    "HI-C522-jaman",
+    "HI-C522-khaulna",
+    "HI-C522-nitharna"
+  ],
+  "tex": "hindi/book/chapters/ch522-milk-and-curd.tex"
+}

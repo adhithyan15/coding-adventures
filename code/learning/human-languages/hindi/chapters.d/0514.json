@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Metal and Gold",
+  "label": "ch:hi-metal-and-gold",
+  "canDo": "I can describe how metal is filed, set and polished.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C514-pighlana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can describe how metal is filed, set and polished.",
+    "assesses": [
+      "HI-LEX-C514-SUNAR514-03",
+      "HI-LEX-C514-SUNAR514-04",
+      "HI-LEX-C514-SUNAR514-05"
+    ]
+  }
+}

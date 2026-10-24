@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-536-YOJNA536",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-536-YOJNA536"
+  ],
+  "after": []
+}

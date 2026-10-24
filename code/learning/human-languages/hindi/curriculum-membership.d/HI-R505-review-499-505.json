@@ -1,0 +1,11 @@
+{
+  "id": "HI-R505-review-499-505",
+  "pathSegment": "HI-PATH-505-SHOK505",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-505-SHOK505",
+      "order": 5
+    }
+  ]
+}

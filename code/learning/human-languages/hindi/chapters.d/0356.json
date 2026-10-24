@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Fair and Unfair",
+  "label": "ch:hi-fair-and-unfair",
+  "canDo": "I can say whether people are treated fairly.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C356-uksana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can say whether people are treated fairly.",
+    "assesses": [
+      "HI-LEX-C356-BARABAR356-03",
+      "HI-LEX-C356-BARABAR356-04",
+      "HI-LEX-C356-BARABAR356-05"
+    ]
+  }
+}

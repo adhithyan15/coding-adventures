@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C396-udar",
+    "language": "hindi",
+    "chapter": 396,
+    "sequence": 21730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80f83fae805dbf4a"
+  },
+  "findings": []
+}

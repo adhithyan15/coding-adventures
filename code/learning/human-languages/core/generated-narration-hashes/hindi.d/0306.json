@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:6f87346f6f2f10c8",
+  "lessonIds": [
+    "HI-C306-akal",
+    "HI-C306-bhukhmari",
+    "HI-C306-sarna",
+    "HI-C306-mahamari",
+    "HI-C306-haiza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch306.txt",
+  "json": "hindi/narration/ch306.json",
+  "textHash": "fnv1a64:54dc07f79629625f",
+  "jsonHash": "fnv1a64:e6b2e09dbca370be",
+  "findings": []
+}
