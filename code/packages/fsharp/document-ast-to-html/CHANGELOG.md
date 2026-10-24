@@ -14,4 +14,9 @@ All notable changes to this package will be documented in this file.
   explicit raw-HTML suppression for untrusted input boundaries.
 - Bounded depth, node count, URL normalization, and output size with no partial
   result returned after a resource-limit failure.
+- A per-render aggregate URL-input work budget that charges repeated aliases
+  and rejected destinations across links, images, and autolinks.
 - Native xUnit coverage plus Unix and Windows repository build fronts.
+- Clean-checkout build fronts prebuild the full project graph before Coverlet
+  instrumentation so project-reference copy ordering cannot report false 0%
+  coverage.
