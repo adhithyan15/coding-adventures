@@ -1,0 +1,13 @@
+[package]
+name = "vax11-780-simulator"
+version = "0.1.0"
+edition = "2024"
+description = "Checked DEC VAX-11/780 integer architectural simulator"
+license = "MIT"
+
+[lib]
+path = "src/lib.rs"
+
+[lints]
+workspace = true
+
