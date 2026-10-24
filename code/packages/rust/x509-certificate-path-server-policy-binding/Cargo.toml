@@ -1,0 +1,17 @@
+[package]
+name = "x509-certificate-path-server-policy-binding"
+version = "0.1.0"
+edition = "2021"
+description = "Exact target server-policy binding for constructed X.509 certificate paths"
+license = "MIT"
+
+[dependencies]
+x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }
+x509-server-certificate-policy = { path = "../x509-server-certificate-policy" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+tls-server-identity = { path = "../tls-server-identity" }
+x509-certificate = { path = "../x509-certificate" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-time = { path = "../x509-time" }

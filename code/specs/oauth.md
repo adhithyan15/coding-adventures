@@ -831,6 +831,17 @@ to a different path certificate. The binding does not authenticate any path
 link, validate the terminal certificate's role or self-signature, apply anchor
 constraints, or provide complete path validation, revocation, TLS, HTTP, OAuth
 transport, or network authority.
+A bounded constructed-target binding follow-up now consumes that constructed
+path together with complete validated server-certificate policy. It fails
+closed unless the server-policy evidence retains the same exact decoded target
+certificate object as the path, then returns distinct non-copyable evidence
+retaining both complete inputs. This prevents callers from attaching hostname,
+validity, purpose, end-entity role, critical-extension, or algorithm policy for
+another certificate, including a byte-equal re-decode, to the constructed
+chain. The binding does not authenticate any path link, validate an issuer or
+trust anchor, apply path-length or name constraints, check revocation, or
+provide complete path validation, TLS, HTTP, OAuth transport, or network
+authority.
 The RSA SHA-256 issuer-link composition can now consume that non-copyable
 selection evidence directly. It derives the exact child and selected candidate
 from the evidence, then performs issuing-CA role, caller-owned RSA key-policy,
