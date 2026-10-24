@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/x509-rsa-sha256-issuer-link",
   "capabilities": [],
-  "justification": "Pure validation and path-length accounting over public certificate, name, signature, and RSA-key data. No filesystem, network, process, environment, clock, FFI, secret-key, or signing access is required."
+  "justification": "Pure validation, constructed-path order and complete intermediate-policy retention, and path-length accounting over public certificate, name, signature, and RSA-key data. No filesystem, network, process, environment, clock, FFI, secret-key, or signing access is required."
 }

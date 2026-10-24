@@ -13690,7 +13690,11 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                             break;
                         }
                     }
-                    let comment = cursor.consume_if("STRING").map(|token| token.value);
+                    let comment = matches!(
+                        token_name(cursor.current()),
+                        "STRING" | "ENTITY_STRING"
+                    )
+                    .then(|| cursor.advance().value.clone());
                     let mut field = format!("{attribute_name}: {attribute_type}");
                     if !keys.is_empty() {
                         field.push_str(&format!(" [{}]", keys.join(", ")));
@@ -13758,7 +13762,7 @@ fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
             | "NUMBER"
             | "ATTRIBUTE_KEY"
             | "MD_PARENT"
-            | "STRING"
+            | "ENTITY_STRING"
             | "TITLE_KW"
             | "DIRECTION_KW"
             | "CLASSDEF_KW"

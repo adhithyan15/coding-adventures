@@ -1525,6 +1525,90 @@ mod tests {
     }
 
     #[test]
+    fn distinguishes_er_entity_strings_from_general_quoted_text() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\n\"Customer Account\" ||--|| ORDER : \"100% complete\"\n",
+        );
+        let quoted: Vec<(&str, &str)> = tokens
+            .iter()
+            .filter_map(|token| {
+                if token.type_name.as_deref() == Some("ENTITY_STRING") {
+                    Some(("ENTITY_STRING", token.value.as_str()))
+                } else if token.type_ == TokenType::String {
+                    Some(("STRING", token.value.as_str()))
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        assert_eq!(
+            quoted,
+            [
+                ("ENTITY_STRING", "Customer Account"),
+                ("STRING", "100% complete")
+            ]
+        );
+    }
+
+    #[test]
+    fn tokenizes_er_attribute_type_forms() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
+        );
+        let values: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ != TokenType::Eof)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        for expected in ["type~T~", "string", "character(10)", "?"] {
+            assert!(values.contains(&expected));
+        }
+        assert_eq!(
+            values
+                .iter()
+                .filter(|value| matches!(**value, "FK" | "PK" | "UK"))
+                .count(),
+            4
+        );
+    }
+
+    #[test]
+    fn tokenizes_er_aliases_and_class_shorthand_after_relationships() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nORDER ||--o{ customer : placed_by\ncustomer[\"Customer Account\"]:::primary {\n  string id PK\n}\n",
+        );
+        let names: Vec<&str> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert!(names.contains(&"ENTITY_STRING"));
+        assert!(names.contains(&"STYLE_SEPARATOR"));
+        for expected in ["[", "Customer Account", "]", ":::"] {
+            assert!(values.contains(&expected));
+        }
+    }
+
+    #[test]
+    fn tokenizes_er_parent_cardinality_and_u_entity_name() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nPROJECT u--o{ TEAM_MEMBER : parent\nu ||--|| ORDER : places\n",
+        );
+        let parent_tokens: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("MD_PARENT"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(parent_tokens, ["u", "u"]);
+        assert!(tokens.iter().any(|token| token.value == "PROJECT"));
+        assert!(tokens.iter().any(|token| token.value == "TEAM_MEMBER"));
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",

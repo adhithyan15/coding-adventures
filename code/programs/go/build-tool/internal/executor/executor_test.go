@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"strings"
 	"sync"
@@ -1609,5 +1610,61 @@ func TestBuildResourceKeysSerializeRubyGemInstalls(t *testing.T) {
 				t.Fatalf("ruby-gems lock for %q = %v, want %v", tc.command, got, tc.want)
 			}
 		})
+	}
+}
+
+// On Linux every SwiftPM verb that plans a build gets the legacy native
+// planner (Swift 6.4's swift-build planner segfaults in libdispatch);
+// other hosts, other tools and an explicit --build-system are untouched.
+func TestSwiftNativeBuildSystemCommands(t *testing.T) {
+	zip := "if command -v xcrun >/dev/null 2>&1; then xcrun swift format lint Tests/ZipTests/PortableConformanceTests.swift && xcrun swift test --enable-code-coverage --verbose && xcrun swift build -c release -Xswiftc -warnings-as-errors; else swift format lint Tests/ZipTests/PortableConformanceTests.swift && swift test --enable-code-coverage --verbose && swift build -c release -Xswiftc -warnings-as-errors; fi"
+	for _, tc := range []struct{ in, want string }{
+		{"swift test", "swift test --build-system native"},
+		{"swift build -c release", "swift build --build-system native -c release"},
+		{"cd Sources && swift run demo", "cd Sources && swift run --build-system native demo"},
+		{"(swift test --enable-code-coverage)", "(swift test --build-system native --enable-code-coverage)"},
+		{"swift test && swift build -c release", "swift test --build-system native && swift build --build-system native -c release"},
+		// The common Linux shape: the verb meets `;`, not a space.
+		{"if command -v xcrun >/dev/null 2>&1; then xcrun swift test; else swift test; fi",
+			"if command -v xcrun >/dev/null 2>&1; then xcrun swift test --build-system native; else swift test --build-system native; fi"},
+		{`if command -v swift >/dev/null 2>&1; then swift build && swift test; else echo "swift not found -- skipping swift test"; fi`,
+			`if command -v swift >/dev/null 2>&1; then swift build --build-system native && swift test --build-system native; else echo "swift not found -- skipping swift test"; fi`},
+		{"(swift test)", "(swift test --build-system native)"},
+		{"swift test|tee log", "swift test --build-system native|tee log"},
+		{"swift test;swift build", "swift test --build-system native;swift build --build-system native"},
+		{"/usr/bin/swift test", "/usr/bin/swift test --build-system native"},
+		{zip, strings.NewReplacer(
+			"swift test --enable", "swift test --build-system native --enable",
+			"swift build -c", "swift build --build-system native -c",
+		).Replace(zip)},
+		// Untouched: an explicit choice, `swift format`, paths and other tools.
+		{"swift build --build-system swiftbuild", "swift build --build-system swiftbuild"},
+		{"swift format lint Sources", "swift format lint Sources"},
+		{"swiftc main.swift && ./main", "swiftc main.swift && ./main"},
+		{"python3 build_swift test", "python3 build_swift test"},
+		{"swift testing", "swift testing"},
+		{`echo "run swift test"`, `echo "run swift test"`},
+		{"cargo test -p swift-bridge", "cargo test -p swift-bridge"},
+	} {
+		got := swiftNativeBuildSystemCommands([]string{tc.in}, "linux")
+		if len(got) != 1 || got[0] != tc.want {
+			t.Errorf("linux %q:\n got %q\nwant %q", tc.in, got, tc.want)
+		}
+	}
+
+	for _, goos := range []string{"darwin", "windows"} {
+		in := []string{"swift test", "swift build -c release"}
+		if got := swiftNativeBuildSystemCommands(in, goos); !reflect.DeepEqual(got, in) {
+			t.Errorf("%s must keep the toolchain's planner: %q", goos, got)
+		}
+	}
+
+	pkg := []string{"set -e", "swift test"}
+	got := swiftNativeBuildSystemCommands(pkg, "linux")
+	if pkg[1] != "swift test" {
+		t.Fatalf("rewrite mutated the caller's slice: %q", pkg)
+	}
+	if !reflect.DeepEqual(got, []string{"set -e", "swift test --build-system native"}) {
+		t.Fatalf("multi-command rewrite: %q", got)
 	}
 }

@@ -1,0 +1,29 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER quoted entity lexical constraints vertical slice",
+  "valid": [
+    {
+      "name": "percent-in-relationship-role",
+      "source": "erDiagram\nACCOUNT ||--|| ORDER : \"%\""
+    },
+    {
+      "name": "percent-in-attribute-comment",
+      "source": "erDiagram\nACCOUNT {\n  string status \"100% sourced\"\n}"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "empty-quoted-entity",
+      "source": "erDiagram\n\"\""
+    },
+    {
+      "name": "percent-in-quoted-entity",
+      "source": "erDiagram\n\"Customer%\""
+    },
+    {
+      "name": "backslash-in-quoted-entity",
+      "source": "erDiagram\n\"Customer\\\\Account\""
+    }
+  ]
+}

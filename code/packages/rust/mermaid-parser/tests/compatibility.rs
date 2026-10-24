@@ -125,6 +125,38 @@ const ER_NUMERIC_CARDINALITY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-numeric-cardinality-11.16.1-visual-corpus.json"
 ));
+const ER_QUOTED_ENTITY_VALIDATION_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-quoted-entity-validation-11.16.1-corpus.json"
+));
+const ER_QUOTED_ENTITY_VALIDATION_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-quoted-entity-validation-11.16.1-visual-corpus.json"
+));
+const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
+));
+const ER_ATTRIBUTE_FORMS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-attribute-forms-11.16.1-visual-corpus.json"
+));
+const ER_ALIAS_ORDER_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-alias-order-11.16.1-corpus.json"
+));
+const ER_ALIAS_ORDER_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-alias-order-11.16.1-visual-corpus.json"
+));
+const ER_PARENT_CARDINALITY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-parent-cardinality-11.16.1-corpus.json"
+));
+const ER_PARENT_CARDINALITY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-parent-cardinality-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2294,6 +2326,159 @@ fn pinned_er_numeric_cardinality_disambiguates_numeric_entities() {
     assert_eq!(diagram.relationships[1].from_mult.as_deref(), Some("0..*"));
     assert_eq!(diagram.relationships[1].to_mult.as_deref(), Some("1"));
     assert!(diagram.nodes.iter().any(|node| node.id == "1"));
+}
+
+#[test]
+fn pinned_er_quoted_entity_constraints_preserve_general_quoted_text() {
+    let syntax: Value = serde_json::from_str(ER_QUOTED_ENTITY_VALIDATION_CORPUS)
+        .expect("ER quoted entity validation corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_QUOTED_ENTITY_VALIDATION_VISUAL_CORPUS)
+        .expect("ER quoted entity validation visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["valid"][0]["name"]);
+    let relationship_diagram = parse_er_diagram(
+        syntax["valid"][0]["source"]
+            .as_str()
+            .expect("valid ER quoted text source"),
+    )
+    .expect("general ER quoted text fixture must parse");
+    let attribute_diagram = parse_er_diagram(
+        syntax["valid"][1]["source"]
+            .as_str()
+            .expect("valid ER attribute comment source"),
+    )
+    .expect("general ER attribute comment fixture must parse");
+    let account = attribute_diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "ACCOUNT")
+        .expect("ACCOUNT");
+
+    assert_eq!(
+        relationship_diagram.relationships[0].label.as_deref(),
+        Some("%")
+    );
+    assert_eq!(
+        account.compartments[0].entries,
+        ["status: string - 100% sourced"]
+    );
+    for fixture in syntax["invalid"]
+        .as_array()
+        .expect("invalid ER quoted entity fixtures")
+    {
+        assert!(
+            parse_er_diagram(fixture["source"].as_str().expect("invalid ER source")).is_err(),
+            "invalid quoted entity fixture {:?} parsed",
+            fixture["name"]
+        );
+    }
+}
+
+#[test]
+fn pinned_er_attribute_forms_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_ATTRIBUTE_FORMS_CORPUS)
+        .expect("ER attribute forms corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ATTRIBUTE_FORMS_VISUAL_CORPUS)
+        .expect("ER attribute forms visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER attribute forms source"),
+    )
+    .expect("ER attribute forms fixture must parse");
+    let customer = diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "CUSTOMER")
+        .expect("CUSTOMER");
+
+    assert_eq!(
+        customer.compartments[0].entries,
+        [
+            "genericValue: type~T~",
+            "readers: string[] [FK] - Readers",
+            "isbn: character(10) [PK, FK]",
+            "alias: string? [UK] - Optional display name"
+        ]
+    );
+}
+
+#[test]
+fn pinned_er_aliases_update_entities_across_declaration_order() {
+    let syntax: Value = serde_json::from_str(ER_ALIAS_ORDER_CORPUS)
+        .expect("ER alias order corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ALIAS_ORDER_VISUAL_CORPUS)
+        .expect("ER alias order visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(syntax["fixtures"].as_array().expect("ER alias fixtures").len(), 2);
+    assert_eq!(visual["fixtures"].as_array().expect("ER alias visuals").len(), 2);
+
+    let relationship_first = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("relationship-first ER alias source"),
+    )
+    .expect("relationship-first ER alias fixture must parse");
+    let customer = relationship_first
+        .nodes
+        .iter()
+        .find(|node| node.id == "customer")
+        .expect("customer");
+    assert_eq!(customer.label, "Customer Account");
+    assert_eq!(customer.compartments[0].entries, ["id: string [PK]"]);
+    assert_eq!(
+        customer.style.as_ref().and_then(|style| style.fill.as_deref()),
+        Some("#dbeafe")
+    );
+
+    let declaration_first = parse_er_diagram(
+        syntax["fixtures"][1]["source"]
+            .as_str()
+            .expect("declaration-first ER alias source"),
+    )
+    .expect("declaration-first ER alias fixture must parse");
+    let supplier = declaration_first
+        .nodes
+        .iter()
+        .find(|node| node.id == "supplier")
+        .expect("supplier");
+    assert_eq!(supplier.label, "SUPPLIER");
+    assert_eq!(supplier.compartments[0].entries, ["id: string [PK]"]);
+    assert_eq!(declaration_first.relationships[0].from, "supplier");
+}
+
+#[test]
+fn pinned_er_parent_cardinality_disambiguates_u_entity_names() {
+    let syntax: Value = serde_json::from_str(ER_PARENT_CARDINALITY_CORPUS)
+        .expect("ER parent cardinality corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_PARENT_CARDINALITY_VISUAL_CORPUS)
+        .expect("ER parent cardinality visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(syntax["fixtures"].as_array().expect("ER parent fixtures").len(), 2);
+
+    let parent = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER parent cardinality source"),
+    )
+    .expect("ER parent cardinality fixture must parse");
+    assert_eq!(parent.relationships[0].from, "PROJECT");
+    assert_eq!(parent.relationships[0].to, "TEAM_MEMBER");
+    assert_eq!(parent.relationships[0].from_mult.as_deref(), Some("parent"));
+    assert_eq!(parent.relationships[0].to_mult.as_deref(), Some("0..*"));
+
+    let entity = parse_er_diagram(
+        syntax["fixtures"][1]["source"]
+            .as_str()
+            .expect("ER u entity source"),
+    )
+    .expect("ER u entity fixture must parse");
+    let u = entity.nodes.iter().find(|node| node.id == "u").expect("u entity");
+    assert_eq!(u.compartments[0].entries, ["id: string [PK]"]);
+    assert_eq!(entity.relationships[0].from, "u");
+    assert_eq!(entity.relationships[0].from_mult.as_deref(), Some("1"));
 }
 
 #[test]

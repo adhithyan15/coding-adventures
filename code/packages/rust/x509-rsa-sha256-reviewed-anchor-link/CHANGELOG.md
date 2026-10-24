@@ -18,9 +18,19 @@
   decoded intermediate object.
 - Added success and byte-equal distinct-object rejection coverage for the
   reviewed intermediate path composition.
+- Added a construction-bound fixed two-link composition that retains one exact
+  target-to-intermediate path-length transition, the same construction's
+  authenticated terminal adjacency, and reviewed-root selection for that exact
+  terminal certificate.
+- Added real public-chain coverage plus rejection tests for independently
+  constructed paths, a nonterminal second projection, and reviewed-root
+  evidence from a byte-equal re-decode.
 
 ### Security
 
 - The two-link composition retains both adjacent-link proofs and the advanced
   path-length state, but grants no target policy, anchor-constraint, general
   path, revocation, TLS, HTTP, OAuth transport, or network authority.
+- The construction-bound composition additionally requires one exact two-link
+  path shape and construction-object identity. Its initial path-length state
+  remains caller-supplied, and it grants no generalized validation or trust.

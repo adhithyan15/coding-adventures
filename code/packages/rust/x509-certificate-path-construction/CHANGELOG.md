@@ -6,6 +6,23 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added non-copyable adjacent-link projection that derives the exact child and
+  selected issuer at one retained path depth without rerunning selection.
+- Added explicit target-child and candidate-child accessors that preserve their
+  original decoded-certificate lifetimes.
+
+### Security
+
+- Out-of-range depths expose no partial evidence, projected endpoints remain
+  bound to the borrowed construction, and redacted debug output contains no
+  certificate data.
+- Adjacency evidence grants no signature, certificate-policy, path-validation,
+  trust, revocation, TLS, HTTP, OAuth, or network authority.
+
 ## [0.1.0] - 2026-10-23
 
 ### Added

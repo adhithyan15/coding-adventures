@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.8.0 - 2026-10-24
+
+### Added
+
+- Bound complete target-server policy to the exact target object retained by
+  the construction-bound authenticated two-link path and reviewed terminal.
+- Added distinct non-copyable evidence retaining the complete server policy,
+  constructed path, both authenticated adjacencies, complete intermediate
+  policy, advanced path-length state, and reviewed-root selection.
+- Added real public-chain coverage for exact target acceptance and byte-equal
+  independently decoded target rejection without changing production
+  dependencies or capabilities.
+
 ## 0.7.0 - 2026-10-23
 
 ### Added

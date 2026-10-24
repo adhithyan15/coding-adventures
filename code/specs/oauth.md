@@ -852,14 +852,90 @@ consumption of the non-copyable path or allowing either endpoint to be silently
 discarded. The composition does not authenticate path links, apply issuer,
 anchor, path-length, or name-constraint policy, check revocation, or provide
 complete path validation, TLS, HTTP, OAuth transport, or network authority.
-The RSA SHA-256 issuer-link composition can now consume that non-copyable
-selection evidence directly. It derives the exact child and selected candidate
-from the evidence, then performs issuing-CA role, caller-owned RSA key-policy,
-and exact child-signature checks without a second Name callback. This closes a
-cross-certificate mixing gap between selection and authentication for the one
-implemented algorithm, but does not add algorithm routing, construct or
-validate a complete path, recognize trust, process constraints or revocation,
-or provide TLS, HTTP, OAuth transport, or network authority.
+A bounded adjacent-link projection now borrows one exact constructed path and
+one selected-issuer depth below its retained issuer count. Depth zero derives
+the target as child; every later depth derives the preceding selected candidate
+as child; and the current selected candidate is always the issuer. Out-of-range
+depths return no evidence. The non-copyable projection retains the construction
+borrow and derives both endpoints from its private depth, so later signature
+verification can consume an exact ordered pair without rerunning Name policy or
+accepting caller-substituted certificates. Projection alone does not authenticate
+a signature, validate either certificate, route an algorithm, advance path-length
+state, apply constraints or revocation, establish trust, or provide complete path
+validation, TLS, HTTP, OAuth transport, or network authority.
+The RSA SHA-256 issuer-link composition can now consume non-copyable unique
+candidate-selection evidence directly. It derives the exact child and selected
+candidate from that evidence, then performs issuing-CA role, caller-owned RSA
+key-policy, and exact child-signature checks without a second Name callback.
+This closes a cross-certificate mixing gap between one-step selection and
+authentication for the one implemented algorithm, but does not add algorithm
+routing, construct or validate a complete path, recognize trust, process
+constraints or revocation, or provide TLS, HTTP, OAuth transport, or network
+authority.
+A bounded constructed-path authentication follow-up now consumes one adjacent-
+link projection from the exact retained path. It authenticates only the
+projection's derived target-or-candidate child against its derived selected
+issuer with the existing fixed RSA PKCS #1 v1.5 SHA-256 verifier, without
+rerunning Name policy, then returns distinct non-copyable evidence retaining
+both the construction projection and validated issuer key. This prevents path
+order from being discarded or either endpoint from being substituted between
+construction and authentication. It still does not route algorithms, retain
+complete issuer policy, authenticate any other link, validate the whole path,
+recognize or constrain trust, process name constraints or revocation, perform
+TLS or HTTP, authorize OAuth transport, or open a network connection.
+A bounded complete-intermediate-policy follow-up now strengthens that
+construction-bound authentication without accepting either endpoint
+separately. It consumes one constructed-path adjacency together with complete
+intermediate policy for the exact projected non-terminal issuer, rejects the
+construction's terminal adjacency and any certificate-object mismatch before
+RSA key parsing or signature verification, and then retains
+both the authenticated construction projection and the complete intermediate
+policy in distinct non-copyable evidence. This binds caller-owned critical-
+extension recognition, issuing-CA role, data-driven algorithm profile,
+self-issued classification, and explicit-time validity to the same ordered
+issuer that authenticated the projected child. It does not advance path-length
+state, authenticate another link, route algorithms, validate the whole path,
+recognize or constrain trust, process name constraints or revocation, perform
+TLS or HTTP, authorize OAuth transport, or open a network connection.
+A bounded construction-bound path-length follow-up now consumes that exact
+non-terminal intermediate proof together with one caller-supplied path-length
+state. It derives issuing-CA role, self-issued classification, and any decoded
+`pathLenConstraint` only from the complete intermediate policy retained by the
+ordered proof, then returns distinct non-copyable evidence retaining both the
+construction-bound authenticated link and the advanced state. Terminal
+certificates cannot enter this transition because the consumed proof already
+rejects the construction's final adjacency. The result covers one retained
+non-terminal adjacency only: it does not prove that the input state represents
+earlier construction depths, authenticate another link, route algorithms,
+validate the whole path, recognize or constrain trust, process name constraints
+or revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection.
+A bounded construction-bound reviewed-path follow-up now consumes that
+path-length result, the authenticated terminal adjacency projected from the
+same construction, and reviewed-root selection for the terminal issuer. It
+accepts only an exact two-link target-to-intermediate-to-terminal construction:
+the first retained adjacency must be depth zero, the terminal adjacency must be
+depth one, both must retain the identical constructed-path object, and the
+terminal issuer must be the exact decoded certificate retained by the reviewed
+root evidence. Distinct non-copyable success evidence keeps all three inputs,
+including complete intermediate policy and the advanced path-length state, so
+callers cannot splice authenticated links from separately constructed paths or
+discard the reviewed terminal. The caller-supplied initial path-length state
+still is not derived from anchor policy, and this fixed-shape composition does
+not apply anchor constraints, target policy, revocation, generalized path
+validation, TLS, HTTP, OAuth transport, or network authority.
+A bounded construction-bound target-policy follow-up now consumes that complete
+authenticated reviewed path together with complete validated server-certificate
+policy. It fails closed unless the server-policy certificate is the same exact
+decoded target object retained by the constructed path, then returns distinct
+non-copyable evidence retaining both complete inputs. This prevents callers
+from attaching hostname, validity, purpose, end-entity role, critical-extension,
+and algorithm policy for one certificate to a separately constructed and
+authenticated target, including a byte-equal re-decode. The result still uses
+the caller-supplied initial path-length state retained by the prior proof and
+does not apply anchor or intermediate name constraints, other anchor policy,
+revocation, generalized path validation, TLS, HTTP, OAuth transport, or network
+authority.
 Certificate-wide role policy can now bind caller-owned critical-extension
 recognition and algorithm-independent role semantics to the same exact decoded
 certificate. The non-copyable result prevents checking critical extensions on

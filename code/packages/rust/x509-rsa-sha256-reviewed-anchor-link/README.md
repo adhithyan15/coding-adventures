@@ -28,14 +28,28 @@ both inputs, including the advanced path-length state. This prevents a caller
 from joining independently authenticated links through byte-equal but
 separately decoded intermediates.
 
+The construction-bound entry point instead consumes one
+`ValidatedX509RsaSha256ConstructedPathIntermediatePathLength`, one
+`VerifiedX509RsaSha256ConstructedPathAdjacentLink`, and reviewed-root
+selection. It accepts only an exact two-link construction whose retained
+intermediate transition is depth zero and whose authenticated terminal link is
+depth one. Both authenticated inputs must retain the identical constructed-path
+object, the terminal child must be the exact retained intermediate, and the
+terminal issuer must be the exact reviewed-root certificate object. Success
+retains all three non-copyable proofs, including the advanced path-length
+state.
+
 ## Boundary
 
 These are fixed-shape evidence bindings, not general certificate-path
 validation. The two-link result covers exactly one caller-ordered
 child-to-intermediate-to-reviewed-root chain for the repository-owned RSA
-SHA-256 path. It does not apply the anchor's optional name constraints, check
-target role, purpose, validity, or hostname, search or generalize paths, check
-revocation, perform TLS or HTTP, or authorize OAuth network access.
+SHA-256 path. The construction-bound result additionally retains the exact
+constructed order, but its caller-supplied initial path-length state is not
+derived from anchor policy. Neither result applies the anchor's optional name
+constraints, checks target role, purpose, validity, or hostname, searches or
+generalizes paths, checks revocation, performs TLS or HTTP, or authorizes OAuth
+network access.
 `webpki-roots` remains reviewed public data only; no external TLS, X.509, or
 cryptographic implementation is linked here.
 

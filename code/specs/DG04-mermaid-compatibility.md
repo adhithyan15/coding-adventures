@@ -132,8 +132,16 @@ IR, layout, and paint. ER headers, statements, directions, and word-form
 relationships and attribute key markers match case-insensitively from family
 detection through paint, while authored entity and attribute text retains its
 original case. Numeric `1` cardinalities are disambiguated from numeric entity
-identifiers, including compact relationship operators. ER remains partial while the
-rest of the pinned upstream syntax and visual corpus is incomplete.
+identifiers, including compact relationship operators. Quoted entity names follow
+the pinned non-empty character constraints without narrowing quoted relationship
+roles or attribute comments. Generic, array, nullable, and length-limited
+attribute types preserve ordered key lists and comments through paint. Aliased
+declarations update entities introduced by earlier relationships, preserve
+authored IDs, and combine with shorthand classes through semantic IR, layout,
+and paint. The `u` parent cardinality is disambiguated from an entity literally
+named `u`, with both forms preserved through semantic IR, layout, and paint. ER
+remains partial while the rest of the pinned upstream syntax and visual corpus
+is incomplete.
 
 ## Required New Semantic Families
 

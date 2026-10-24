@@ -4,6 +4,8 @@
 //! reviewed-root selection evidence for one exact issuer object. It can also
 //! join that reviewed parent link to one authenticated child-to-intermediate
 //! path-length transition through the same exact intermediate object. It
+//! can retain the equivalent exact two-link proof from one constructed path,
+//! including its authenticated terminal adjacency and reviewed root. It
 //! performs no new certificate parsing, signature work, root lookup, or path
 //! search.
 
@@ -12,7 +14,8 @@
 use core::fmt;
 use x509_rsa_sha256_issuer_link::{
     ValidatedX509RsaSha256AuthenticatedIntermediatePathLength,
-    VerifiedX509RsaSha256IssuerPolicyLink,
+    ValidatedX509RsaSha256ConstructedPathIntermediatePathLength,
+    VerifiedX509RsaSha256ConstructedPathAdjacentLink, VerifiedX509RsaSha256IssuerPolicyLink,
 };
 use x509_webpki_root_anchor_selection::SelectedReviewedWebPkiRootAnchor;
 
@@ -87,6 +90,43 @@ impl fmt::Display for X509RsaSha256ReviewedIntermediatePathError {
 }
 
 impl std::error::Error for X509RsaSha256ReviewedIntermediatePathError {}
+
+/// Stable, payload-free failures while binding one constructed two-link path.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaSha256ConstructedReviewedIntermediatePathErrorKind {
+    /// The retained construction is not exactly target -> intermediate -> terminal.
+    InvalidPathShape,
+    /// Independently produced evidence does not retain the same exact objects.
+    EvidenceMismatch,
+}
+
+/// A redacted construction-bound reviewed-path binding failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaSha256ConstructedReviewedIntermediatePathError {
+    kind: X509RsaSha256ConstructedReviewedIntermediatePathErrorKind,
+}
+
+impl X509RsaSha256ConstructedReviewedIntermediatePathError {
+    const fn new(kind: X509RsaSha256ConstructedReviewedIntermediatePathErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509RsaSha256ConstructedReviewedIntermediatePathErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaSha256ConstructedReviewedIntermediatePathError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA SHA-256 constructed reviewed intermediate path error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaSha256ConstructedReviewedIntermediatePathError {}
 
 /// Non-copyable evidence that one authenticated link terminates at the exact
 /// certificate selected from the reviewed Mozilla root snapshot.
@@ -329,5 +369,176 @@ pub fn bind_x509_rsa_sha256_authenticated_intermediate_path_to_reviewed_anchor<
     Ok(BoundX509RsaSha256ReviewedIntermediatePath {
         authenticated_path,
         reviewed_parent_link,
+    })
+}
+
+/// Non-copyable evidence for one exact constructed two-link reviewed path.
+///
+/// The first retained proof authenticates the target-to-intermediate adjacency,
+/// binds complete intermediate policy, and advances path-length state. The
+/// second authenticates the same construction's intermediate-to-terminal
+/// adjacency. The third selects that exact terminal certificate from reviewed
+/// Mozilla root data. This fixed-shape evidence does not derive the initial
+/// path-length state from anchor policy, apply constraints, check revocation,
+/// generalize path validation, or grant TLS or network authority.
+pub struct BoundX509RsaSha256ConstructedReviewedIntermediatePath<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    authenticated_path: ValidatedX509RsaSha256ConstructedPathIntermediatePathLength<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    authenticated_terminal_link: VerifiedX509RsaSha256ConstructedPathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    reviewed_anchor: SelectedReviewedWebPkiRootAnchor<'candidates, 'candidate_encoded>,
+}
+
+impl<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    BoundX509RsaSha256ConstructedReviewedIntermediatePath<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the construction-bound authenticated intermediate transition.
+    pub const fn authenticated_path(
+        &self,
+    ) -> &ValidatedX509RsaSha256ConstructedPathIntermediatePathLength<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.authenticated_path
+    }
+
+    /// Return the exact authenticated terminal adjacency.
+    pub const fn authenticated_terminal_link(
+        &self,
+    ) -> &VerifiedX509RsaSha256ConstructedPathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.authenticated_terminal_link
+    }
+
+    /// Return reviewed-root selection for the exact terminal certificate.
+    pub const fn reviewed_anchor(
+        &self,
+    ) -> &SelectedReviewedWebPkiRootAnchor<'candidates, 'candidate_encoded> {
+        &self.reviewed_anchor
+    }
+}
+
+impl fmt::Debug for BoundX509RsaSha256ConstructedReviewedIntermediatePath<'_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509RsaSha256ConstructedReviewedIntermediatePath")
+    }
+}
+
+/// Bind one exact constructed target -> intermediate -> reviewed-root path.
+///
+/// Both authenticated inputs must retain the identical constructed-path object.
+/// The retained path must contain exactly two issuer projections: the complete
+/// intermediate-policy transition at depth zero and the terminal link at depth
+/// one. The terminal child must be the same exact intermediate retained by the
+/// first proof, and its issuer must be the same exact decoded certificate
+/// retained by reviewed-root selection. No encoded-byte fallback is accepted.
+pub fn bind_x509_rsa_sha256_constructed_intermediate_path_to_reviewed_anchor<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    authenticated_path: ValidatedX509RsaSha256ConstructedPathIntermediatePathLength<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    authenticated_terminal_link: VerifiedX509RsaSha256ConstructedPathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    reviewed_anchor: SelectedReviewedWebPkiRootAnchor<'candidates, 'candidate_encoded>,
+) -> Result<
+    BoundX509RsaSha256ConstructedReviewedIntermediatePath<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509RsaSha256ConstructedReviewedIntermediatePathError,
+> {
+    let intermediate_adjacent_link = authenticated_path
+        .authenticated_intermediate()
+        .verified_link()
+        .adjacent_link();
+    let terminal_adjacent_link = authenticated_terminal_link.adjacent_link();
+    let constructed_path = intermediate_adjacent_link.constructed_path();
+
+    if !std::ptr::eq(constructed_path, terminal_adjacent_link.constructed_path()) {
+        return Err(X509RsaSha256ConstructedReviewedIntermediatePathError::new(
+            X509RsaSha256ConstructedReviewedIntermediatePathErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    if constructed_path.issuer_count() != 2
+        || intermediate_adjacent_link.issuer_depth() != 0
+        || terminal_adjacent_link.issuer_depth() != 1
+    {
+        return Err(X509RsaSha256ConstructedReviewedIntermediatePathError::new(
+            X509RsaSha256ConstructedReviewedIntermediatePathErrorKind::InvalidPathShape,
+        ));
+    }
+
+    let Some(terminal_child) = terminal_adjacent_link.child_candidate_certificate() else {
+        return Err(X509RsaSha256ConstructedReviewedIntermediatePathError::new(
+            X509RsaSha256ConstructedReviewedIntermediatePathErrorKind::InvalidPathShape,
+        ));
+    };
+    let policy_intermediate = authenticated_path
+        .authenticated_intermediate()
+        .intermediate_policy()
+        .certificate();
+    if !std::ptr::eq(terminal_child, policy_intermediate)
+        || !std::ptr::eq(
+            terminal_adjacent_link.issuer_certificate(),
+            reviewed_anchor.candidate_certificate(),
+        )
+    {
+        return Err(X509RsaSha256ConstructedReviewedIntermediatePathError::new(
+            X509RsaSha256ConstructedReviewedIntermediatePathErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    Ok(BoundX509RsaSha256ConstructedReviewedIntermediatePath {
+        authenticated_path,
+        authenticated_terminal_link,
+        reviewed_anchor,
     })
 }
