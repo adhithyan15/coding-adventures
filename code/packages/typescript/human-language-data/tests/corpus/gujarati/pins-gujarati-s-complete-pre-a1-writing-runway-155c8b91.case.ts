@@ -256,5 +256,26 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "observe-trace",
     "guided-copy",
     "delayed-copy",
+    // 213 -> 229. The B1 core's five letters, each on the same three-stage
+    // ladder and each written from a word read one lesson earlier: ઝ from ઝડપી
+    // (chapter 280), ઃ from દુઃખ and ઇ from ઇચ્છા (281), ૌ from સૌથી and ઋ from
+    // ઋતુ (282). Then the six-line task of chapter 284, a second connected
+    // composition with no model.
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "connected-composition",
   ]);
 });

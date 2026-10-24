@@ -1,0 +1,18 @@
+{
+  "language": "gujarati",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:5c2c489104cb0078",
+  "lessonIds": [
+    "GU-C278-javu-joie",
+    "GU-C278-etle",
+    "GU-C278-tethi-etle",
+    "GU-R278-advice-and-result"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "gujarati/narration/ch278.txt",
+  "json": "gujarati/narration/ch278.json",
+  "textHash": "fnv1a64:3143e1a700635523",
+  "jsonHash": "fnv1a64:ab3168ead1237042",
+  "findings": []
+}

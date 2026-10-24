@@ -1,0 +1,20 @@
+{
+  "chapter": 273,
+  "title": "Who did it, and what has happened",
+  "label": "ch:gu-who-did-it-and-what-has-happened",
+  "canDo": "I can say who did something with a name or a noun (Aruṇe cā pīdhī, Mīrāe patra lakhyo), and say what has happened and what had happened (gayo che, karyũ hatũ).",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-R273-who-did-it",
+    "kind": "production",
+    "summary": "Complete GU-R273-who-did-it: say who did something, and what has and had happened.",
+    "assesses": [
+      "GU-GRAMMAR-C273-NOUN-AGENT-01",
+      "GU-GRAMMAR-C273-NE-OBJECT-01",
+      "GU-GRAMMAR-C273-PERFECT-01",
+      "GU-GRAMMAR-C273-PLUPERFECT-01"
+    ]
+  }
+}

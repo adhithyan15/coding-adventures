@@ -1,0 +1,11 @@
+{
+  "id": "GU-C275-vanchto-hato",
+  "pathSegment": "GU-PATH-275-NARRATE-SCENE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-275-NARRATE-SCENE",
+      "order": 0
+    }
+  ]
+}
