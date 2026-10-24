@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-197-A2-DINCHARIYA",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "PA-EXT-197-A2-DINCHARIYA"
+  ],
+  "after": []
+}
