@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R285-comparing-and-time",
+    "language": "hindi",
+    "chapter": 285,
+    "sequence": 15700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce2a2679f803c54b"
+  },
+  "findings": []
+}

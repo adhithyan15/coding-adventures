@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C312-prasaran",
+    "language": "hindi",
+    "chapter": 312,
+    "sequence": 17250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21a921bce643f974"
+  },
+  "findings": []
+}

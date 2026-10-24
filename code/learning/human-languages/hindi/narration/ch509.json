@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 509,
+  "title": "Trouble at the Factory",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:23363523e345a2b9",
+  "lessons": [
+    {
+      "id": "HI-C509-hartal",
+      "sequence": 28150,
+      "title": "हड़ताल (haṛtāl) — a strike (stopping work)",
+      "headword": "हड़ताल",
+      "romanization": "haṛtāl",
+      "gloss": "a strike (stopping work)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e9044b3b71f7e2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for admission (to a school or course), then the Hindi for a salary, pay (formal)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हड़ताल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हड़ताल — haṛtāl — \"a strike (stopping work)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कारख़ाने के मज़दूर तीन दिन से हड़ताल पर हैं। Kārkhāne ke mazdūr tīn din se haṛtāl par haiṁ. The factory workers have been on strike for three days."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हड़ताल (haṛtāl) is filed by CDIAL under Sanskrit haṭṭa, \"a market, a shop\", with the Hindi sense \"closing shops in mourning or protest\" (CDIAL 13944). Today it is any stopping of work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṛtāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṛtāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṛtāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṛtāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kārkhāne ke mazdūr tīn din se haṛtāl par haiṁ. — The factory workers have been on strike for three days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Kārkhāne ke mazdūr tīn din se haṛtāl par haiṁ.* — The factory workers have been on strike for three days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for admission (to a school or course), then the Hindi for a salary, pay (formal), then say haṛtāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for admission (to a school or course), then the Hindi for a salary, pay (formal), then say *haṛtāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हड़ताल (haṛtāl) mean? (\"A strike (stopping work)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C509-istifa",
+      "sequence": 28160,
+      "title": "इस्तीफ़ा (istīfā) — a resignation",
+      "headword": "इस्तीफ़ा",
+      "romanization": "istīfā",
+      "gloss": "a resignation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31e1b97e5b6e64e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a salary, pay (formal), then the Hindi for a strike (stopping work)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इस्तीफ़ा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इस्तीफ़ा — istīfā — \"a resignation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा ने अपना इस्तीफ़ा मालिक को दे दिया। Mīrā ne apnā istīfā mālik ko de diyā. Mira handed her resignation to the owner."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इस्तीफ़ा (istīfā) is usually traced to Arabic istiʿfā, \"asking to be let off\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istīfā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istīfā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istīfā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istīfā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā ne apnā istīfā mālik ko de diyā. — Mira handed her resignation to the owner.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā ne apnā istīfā mālik ko de diyā.* — Mira handed her resignation to the owner.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a salary, pay (formal), then the Hindi for a strike (stopping work), then say istīfā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a salary, pay (formal), then the Hindi for a strike (stopping work), then say *istīfā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इस्तीफ़ा (istīfā) mean? (\"A resignation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C509-canda",
+      "sequence": 28170,
+      "title": "चंदा (candā) — a contribution; a collection (of money)",
+      "headword": "चंदा",
+      "romanization": "candā",
+      "gloss": "a contribution; a collection (of money)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90cc6a2a03daf7c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a strike (stopping work), then the Hindi for a resignation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चंदा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चंदा — candā — \"a contribution; a collection (of money)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मज़दूरों ने एक बीमार साथी के लिए चंदा दिया। Mazdūroṁ ne ek bīmār sāthī ke liye candā diyā. The workers chipped in money for a sick companion."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चंदा (candā) is usually traced to Persian chanda, \"a contribution\", built on chand, \"how many, how much\": what each person puts in. It is not the candā, \"moon\", that CDIAL derives from Sanskrit candra (CDIAL 4661)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "candā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *candā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "candā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *candā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mazdūroṁ ne ek bīmār sāthī ke liye candā diyā. — The workers chipped in money for a sick companion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mazdūroṁ ne ek bīmār sāthī ke liye candā diyā.* — The workers chipped in money for a sick companion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a strike (stopping work), then the Hindi for a resignation, then say candā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a strike (stopping work), then the Hindi for a resignation, then say *candā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चंदा (candā) mean? (\"A contribution; a collection (of money)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C509-manmani",
+      "sequence": 28180,
+      "title": "मनमानी (manmānī) — high-handedness; doing as one pleases",
+      "headword": "मनमानी",
+      "romanization": "manmānī",
+      "gloss": "high-handedness; doing as one pleases",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dea20ad91cfa87cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a resignation, then the Hindi for a contribution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मनमानी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनमानी — manmānī — \"high-handedness; doing as one pleases\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मालिक की मनमानी से सब मज़दूर परेशान हैं। Mālik kī manmānī se sab mazdūr pareśān haiṁ. All the workers are fed up with the owner's high-handedness."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनमानी (manmānī) joins man, \"mind\", from Sanskrit manas (CDIAL 9822), and a form of mānnā, \"to respect, obey\", from Sanskrit manyate, \"thinks fit\" (CDIAL 9857): doing only what one's own mind will have."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manmānī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manmānī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manmānī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manmānī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mālik kī manmānī se sab mazdūr pareśān haiṁ. — All the workers are fed up with the owner's high-handedness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mālik kī manmānī se sab mazdūr pareśān haiṁ.* — All the workers are fed up with the owner's high-handedness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a resignation, then the Hindi for a contribution, then say manmānī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a resignation, then the Hindi for a contribution, then say *manmānī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मनमानी (manmānī) mean? (\"High-handedness; doing as one pleases\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C509-nara",
+      "sequence": 28190,
+      "title": "नारा (nārā) — a slogan; a rallying cry",
+      "headword": "नारा",
+      "romanization": "nārā",
+      "gloss": "a slogan; a rallying cry",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0bb1cfb0327ee98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a contribution, then the Hindi for high-handedness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नारा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नारा — nārā — \"a slogan; a rallying cry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मज़दूरों के नारे कारख़ाने के अंदर तक सुनाई दे रहे थे। Mazdūroṁ ke nāre kārkhāne ke andar tak sunāī de rahe the. The workers' slogans could be heard right inside the factory."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नारा (nārā) is usually traced to Arabic naʿra, \"a shout, a cry\", through Persian; Hindi uses it for the words a crowd shouts together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nārā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nārā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mazdūroṁ ke nāre kārkhāne ke andar tak sunāī de rahe the. — The workers' slogans could be heard right inside the factory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mazdūroṁ ke nāre kārkhāne ke andar tak sunāī de rahe the.* — The workers' slogans could be heard right inside the factory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a contribution, then the Hindi for high-handedness, then say nārā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a contribution, then the Hindi for high-handedness, then say *nārā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नारा (nārā) mean? (\"A slogan; a rallying cry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

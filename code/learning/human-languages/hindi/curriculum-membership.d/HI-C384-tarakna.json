@@ -1,0 +1,11 @@
+{
+  "id": "HI-C384-tarakna",
+  "pathSegment": "HI-PATH-384-BARF384",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-384-BARF384",
+      "order": 0
+    }
+  ]
+}

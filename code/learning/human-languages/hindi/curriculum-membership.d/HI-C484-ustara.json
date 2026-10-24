@@ -1,0 +1,11 @@
+{
+  "id": "HI-C484-ustara",
+  "pathSegment": "HI-PATH-484-SANVARNA484",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-484-SANVARNA484",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C465-mazaq",
+  "pathSegment": "HI-PATH-465-VILAP465",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-465-VILAP465",
+      "order": 0
+    }
+  ]
+}

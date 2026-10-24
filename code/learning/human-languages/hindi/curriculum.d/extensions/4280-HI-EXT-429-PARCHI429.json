@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-429-PARCHI429",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can fill in a slip, pay by card, sign my name and cash a cheque.",
+  "prerequisites": []
+}

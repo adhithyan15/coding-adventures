@@ -1,0 +1,11 @@
+{
+  "id": "HI-C338-camatkar",
+  "pathSegment": "HI-PATH-338-PARI338",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-338-PARI338",
+      "order": 4
+    }
+  ]
+}

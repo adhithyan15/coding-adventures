@@ -1,0 +1,22 @@
+{
+  "chapter": 281,
+  "title": "Should, Must, and So",
+  "label": "ch:hi-should-must-and-so",
+  "canDo": "I can say what someone should do (jānā cāhiye) and has to do (jānā paṛegā), join a cause to its result with isliye and to, and read and write ः in ataḥ.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-R281-advice-and-reasons",
+    "kind": "production",
+    "summary": "Complete HI-R281-advice-and-reasons: give advice, say what must be done, and draw the result.",
+    "assesses": [
+      "HI-GRAMMAR-C281-CHAHIYE-SHOULD-01",
+      "HI-LEX-C281-ATAH-01",
+      "HI-SCRIPT-C281-VISARGA-01",
+      "HI-GRAMMAR-C281-PADNA-MUST-01",
+      "HI-GRAMMAR-C281-ISLIYE-RESULT-01",
+      "HI-GRAMMAR-C281-TO-SO-01"
+    ]
+  }
+}

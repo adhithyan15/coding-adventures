@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:673d0e9e621f6b63",
+  "lessonIds": [
+    "HI-C429-parci",
+    "HI-C429-kard",
+    "HI-C429-dastkhat",
+    "HI-C429-mudra",
+    "HI-C429-bhunana",
+    "HI-R429-review-422-429"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch429.txt",
+  "json": "hindi/narration/ch429.json",
+  "textHash": "fnv1a64:4d15148ba08c2c80",
+  "jsonHash": "fnv1a64:7cb40a4f03925bbe",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C303-hilna",
+    "language": "hindi",
+    "chapter": 303,
+    "sequence": 16760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a9ad59a6b2725c5"
+  },
+  "findings": []
+}

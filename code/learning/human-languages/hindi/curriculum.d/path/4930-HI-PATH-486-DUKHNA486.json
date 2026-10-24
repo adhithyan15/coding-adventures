@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-486-DUKHNA486",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-486-DUKHNA486"
+  ],
+  "after": []
+}

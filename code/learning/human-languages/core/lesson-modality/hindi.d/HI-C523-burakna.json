@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C523-burakna",
+    "language": "hindi",
+    "chapter": 523,
+    "sequence": 28900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9e316062a342e6d"
+  },
+  "findings": []
+}

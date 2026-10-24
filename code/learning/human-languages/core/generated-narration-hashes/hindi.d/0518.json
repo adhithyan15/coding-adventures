@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:51e558d9936fe06d",
+  "lessonIds": [
+    "HI-C518-tar",
+    "HI-C518-balb",
+    "HI-C518-svic",
+    "HI-C518-khuti",
+    "HI-C518-tagna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch518.txt",
+  "json": "hindi/narration/ch518.json",
+  "textHash": "fnv1a64:d7215b45128552bd",
+  "jsonHash": "fnv1a64:c4961b534e359932",
+  "findings": []
+}

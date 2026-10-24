@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C339-chal",
+    "language": "hindi",
+    "chapter": 339,
+    "sequence": 18640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd80a42a9c4fe808"
+  },
+  "findings": []
+}

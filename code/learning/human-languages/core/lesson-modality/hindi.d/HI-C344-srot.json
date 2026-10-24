@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C344-srot",
+    "language": "hindi",
+    "chapter": 344,
+    "sequence": 19090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f84af5371ae78df"
+  },
+  "findings": []
+}

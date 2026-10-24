@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C522-khaulna",
+    "language": "hindi",
+    "chapter": 522,
+    "sequence": 28850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d36d43a2f85e8f0a"
+  },
+  "findings": []
+}

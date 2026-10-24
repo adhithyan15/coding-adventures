@@ -1,0 +1,11 @@
+{
+  "id": "HI-C370-parti",
+  "pathSegment": "HI-PATH-370-SABHA370",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-370-SABHA370",
+      "order": 3
+    }
+  ]
+}

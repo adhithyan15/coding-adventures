@@ -1,0 +1,11 @@
+{
+  "id": "HI-C500-mehndi",
+  "pathSegment": "HI-PATH-500-BARAT500",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-500-BARAT500",
+      "order": 1
+    }
+  ]
+}

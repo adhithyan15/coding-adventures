@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:21c29f26d6ca23d9",
+  "lessonIds": [
+    "HI-C461-sarminda",
+    "HI-C461-sakucana",
+    "HI-C461-hickicana",
+    "HI-C461-lajana",
+    "HI-C461-dhith"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch461.txt",
+  "json": "hindi/narration/ch461.json",
+  "textHash": "fnv1a64:981a2848caf3ceba",
+  "jsonHash": "fnv1a64:3eac5e41dfa1046e",
+  "findings": []
+}

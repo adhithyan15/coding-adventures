@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:7ae9f61053294217",
+  "lessonIds": [
+    "HI-C370-sabha",
+    "HI-C370-pradhan",
+    "HI-C370-zila",
+    "HI-C370-parti",
+    "HI-C370-taykarna"
+  ],
+  "tex": "hindi/book/chapters/ch370-the-village-meeting.tex"
+}

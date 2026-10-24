@@ -1,0 +1,11 @@
+{
+  "id": "HI-C354-loktantra",
+  "pathSegment": "HI-PATH-354-NAGRIK354",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-354-NAGRIK354",
+      "order": 3
+    }
+  ]
+}

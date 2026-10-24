@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C559-udghatan",
+    "language": "hindi",
+    "chapter": 559,
+    "sequence": 30730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32e8389c5ec9da6c"
+  },
+  "findings": []
+}

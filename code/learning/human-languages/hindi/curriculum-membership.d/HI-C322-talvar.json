@@ -1,0 +1,11 @@
+{
+  "id": "HI-C322-talvar",
+  "pathSegment": "HI-PATH-322-HATHIYAR322",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-322-HATHIYAR322",
+      "order": 0
+    }
+  ]
+}

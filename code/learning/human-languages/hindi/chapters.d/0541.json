@@ -1,0 +1,19 @@
+{
+  "chapter": 541,
+  "title": "Something in the Way",
+  "label": "ch:hi-something-in-the-way",
+  "canDo": "I can say what got in the way and who held things up.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C541-uljhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can say what got in the way and who held things up.",
+    "assesses": [
+      "HI-LEX-C541-RUKAVAT541-03",
+      "HI-LEX-C541-RUKAVAT541-04",
+      "HI-LEX-C541-RUKAVAT541-05"
+    ]
+  }
+}

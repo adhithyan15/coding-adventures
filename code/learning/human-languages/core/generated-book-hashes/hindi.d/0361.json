@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:cc118b943c9459e7",
+  "lessonIds": [
+    "HI-C361-sodh",
+    "HI-C361-prayog",
+    "HI-C361-vaijnanik",
+    "HI-C361-mapna",
+    "HI-C361-prayogsala"
+  ],
+  "tex": "hindi/book/chapters/ch361-research.tex"
+}

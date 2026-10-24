@@ -1,0 +1,19 @@
+{
+  "chapter": 558,
+  "title": "Longings and Passions",
+  "label": "ch:hi-longings-and-passions",
+  "canDo": "I can talk about wishes, ambitions and passions.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C558-junun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 558: I can talk about wishes, ambitions and passions.",
+    "assesses": [
+      "HI-LEX-C558-KHVAHISH558-03",
+      "HI-LEX-C558-KHVAHISH558-04",
+      "HI-LEX-C558-KHVAHISH558-05"
+    ]
+  }
+}

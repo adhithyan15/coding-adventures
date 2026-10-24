@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:97558d2e770b6830",
+  "lessonIds": [
+    "HI-C369-bhrastacar",
+    "HI-C369-ghus",
+    "HI-C369-samstha",
+    "HI-C369-karmacari",
+    "HI-C369-pabandi"
+  ],
+  "tex": "hindi/book/chapters/ch369-corruption.tex"
+}

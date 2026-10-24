@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:21f8745ceacc3eb5",
+  "lessonIds": [
+    "HI-C300-dhadhakna",
+    "HI-C300-dahakna",
+    "HI-C300-jvala",
+    "HI-C300-ujala",
+    "HI-C300-tapis"
+  ],
+  "tex": "hindi/book/chapters/ch300-the-blaze.tex"
+}

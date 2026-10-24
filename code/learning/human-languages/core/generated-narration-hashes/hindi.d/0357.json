@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:fe7e2faa6c52a6ed",
+  "lessonIds": [
+    "HI-C357-mulya",
+    "HI-C357-iman",
+    "HI-C357-izzat",
+    "HI-C357-astha",
+    "HI-C357-apnana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch357.txt",
+  "json": "hindi/narration/ch357.json",
+  "textHash": "fnv1a64:cd1ec52e0fe9a953",
+  "jsonHash": "fnv1a64:70a60700822eb91f",
+  "findings": []
+}

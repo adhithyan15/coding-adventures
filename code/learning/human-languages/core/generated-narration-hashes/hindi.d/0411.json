@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:225c2a3b7c6d6472",
+  "lessonIds": [
+    "HI-C411-vazan",
+    "HI-C411-vilamb",
+    "HI-C411-peti",
+    "HI-C411-radd",
+    "HI-C411-prasthan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch411.txt",
+  "json": "hindi/narration/ch411.json",
+  "textHash": "fnv1a64:200ccd653b96bec7",
+  "jsonHash": "fnv1a64:ec72334adbbb0517",
+  "findings": []
+}

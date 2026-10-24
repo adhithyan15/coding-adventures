@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C546-manhus",
+    "language": "hindi",
+    "chapter": 546,
+    "sequence": 30070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd84dc8b850dd080"
+  },
+  "findings": []
+}

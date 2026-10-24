@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-330-MELA330",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "HI-EXT-330-MELA330"
+  ],
+  "after": []
+}

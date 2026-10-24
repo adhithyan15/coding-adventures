@@ -1,0 +1,21 @@
+{
+  "chapter": 397,
+  "title": "Choosing What to Study",
+  "label": "ch:hi-choosing-what-to-study",
+  "canDo": "I can say what I will study if I get the chance.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-R397-review-final-397",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can say what I will study if I get the chance.",
+    "assesses": [
+      "HI-LEX-C397-VISHAY397-01",
+      "HI-LEX-C397-VISHAY397-02",
+      "HI-LEX-C397-VISHAY397-03",
+      "HI-LEX-C397-VISHAY397-04",
+      "HI-LEX-C397-VISHAY397-05"
+    ]
+  }
+}

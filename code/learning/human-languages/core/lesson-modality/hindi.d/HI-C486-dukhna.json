@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C486-dukhna",
+    "language": "hindi",
+    "chapter": 486,
+    "sequence": 26740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdce8e3156b73f5e"
+  },
+  "findings": []
+}

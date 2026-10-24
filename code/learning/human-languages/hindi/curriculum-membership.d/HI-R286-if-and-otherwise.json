@@ -1,0 +1,11 @@
+{
+  "id": "HI-R286-if-and-otherwise",
+  "pathSegment": "HI-PATH-286-IFOTHERWISE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-286-IFOTHERWISE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C341-sirsak",
+  "pathSegment": "HI-PATH-341-PANNA341",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-341-PANNA341",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:37a9e4035ae1ff9d",
+  "lessonIds": [
+    "HI-C486-dukhna",
+    "HI-C486-pindli",
+    "HI-C486-kasakna",
+    "HI-C486-rirh",
+    "HI-C486-sujna"
+  ],
+  "tex": "hindi/book/chapters/ch486-aches-and-pains.tex"
+}

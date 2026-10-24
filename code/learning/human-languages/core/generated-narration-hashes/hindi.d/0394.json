@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:4563c15092898060",
+  "lessonIds": [
+    "HI-C394-inam",
+    "HI-C394-pratiyogita",
+    "HI-C394-pad",
+    "HI-C394-qabil",
+    "HI-C394-savarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch394.txt",
+  "json": "hindi/narration/ch394.json",
+  "textHash": "fnv1a64:70f970aec98ef717",
+  "jsonHash": "fnv1a64:e4110479e4d8b395",
+  "findings": []
+}

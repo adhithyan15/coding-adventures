@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 510,
+  "title": "In the Carpenter's Shop",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5b28771c7475e8cc",
+  "lessons": [
+    {
+      "id": "HI-C510-randa",
+      "sequence": 28200,
+      "title": "रंदा (randā) — a carpenter's plane",
+      "headword": "रंदा",
+      "romanization": "randā",
+      "gloss": "a carpenter's plane",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2e5bc7198256c95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for high-handedness, then the Hindi for a slogan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रंदा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रंदा — randā — \"a carpenter's plane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बढ़ई ने रंदे से दरवाज़ा चिकना किया। Baṛhaī ne rande se darvāzā cikanā kiyā. The carpenter made the door smooth with a plane."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रंदा (randā) is usually traced to Persian randa, \"a plane (the tool)\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "randā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *randā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "randā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *randā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Baṛhaī ne rande se darvāzā cikanā kiyā. — The carpenter made the door smooth with a plane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Baṛhaī ne rande se darvāzā cikanā kiyā.* — The carpenter made the door smooth with a plane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for high-handedness, then the Hindi for a slogan, then say randā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for high-handedness, then the Hindi for a slogan, then say *randā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रंदा (randā) mean? (\"A carpenter's plane\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C510-cheni",
+      "sequence": 28210,
+      "title": "छेनी (chenī) — a chisel",
+      "headword": "छेनी",
+      "romanization": "chenī",
+      "gloss": "a chisel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cf38be20781e9aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a slogan, then the Hindi for a carpenter's plane."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छेनी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छेनी — chenī — \"a chisel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छेनी (chenī) और हथौड़े से वह लकड़ी में फूल बना रहा है। Chenī aur hathauṛe se vah lakṛī meṁ phūl banā rahā hai. With a chisel and a hammer he is carving flowers into the wood."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छेनी (chenī) is a tadbhava, inherited from Sanskrit chēdana, \"cutting\" (CDIAL 5066)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chenī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chenī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chenī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chenī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chenī aur hathauṛe se vah lakṛī meṁ phūl banā rahā hai. — With a chisel and a hammer he is carving flowers into the wood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chenī aur hathauṛe se vah lakṛī meṁ phūl banā rahā hai.* — With a chisel and a hammer he is carving flowers into the wood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a slogan, then the Hindi for a carpenter's plane, then say chenī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a slogan, then the Hindi for a carpenter's plane, then say *chenī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छेनी (chenī) mean? (\"A chisel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C510-ghisna",
+      "sequence": 28220,
+      "title": "घिसना (ghisnā) — to rub, to wear down",
+      "headword": "घिसना",
+      "romanization": "ghisnā",
+      "gloss": "to rub, to wear down",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8facdb18fe060d7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a carpenter's plane, then the Hindi for a chisel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घिसना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घिसना — ghisnā — \"to rub, to wear down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बढ़ई ने लकड़ी को पत्थर पर घिसा। Baṛhaī ne lakṛī ko patthar par ghisā. The carpenter rubbed the wood on a stone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने छुरी पत्थर पर घिसी, usne churī patthar par ghisī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घिसना (ghisnā) is a tadbhava, inherited from Sanskrit gharṣati, \"rubs\" (CDIAL 4450)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghisnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghisnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghisnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghisnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Baṛhaī ne lakṛī ko patthar par ghisā. — The carpenter rubbed the wood on a stone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Baṛhaī ne lakṛī ko patthar par ghisā.* — The carpenter rubbed the wood on a stone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a carpenter's plane, then the Hindi for a chisel, then say ghisnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a carpenter's plane, then the Hindi for a chisel, then say *ghisnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घिसना (ghisnā) mean? (\"To rub, to wear down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C510-thokna",
+      "sequence": 28230,
+      "title": "ठोकना (ṭhoknā) — to knock in; to drive (a nail)",
+      "headword": "ठोकना",
+      "romanization": "ṭhoknā",
+      "gloss": "to knock in; to drive (a nail)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b73449c5e4085eae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a chisel, then the Hindi for to rub, to wear down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ठोकना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठोकना — ṭhoknā — \"to knock in; to drive (a nail)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उसने दीवार में एक कील ठोकी। Usne dīvār meṁ ek kīl ṭhokī. He drove a nail into the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने मेज़ में कील ठोकी, usne mez meṁ kīl ṭhokī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठोकना (ṭhoknā) is a tadbhava, inherited from ṭhōkk, \"knock\", a form CDIAL reconstructs from its descendants (CDIAL 5513)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhoknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhoknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhoknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhoknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Usne dīvār meṁ ek kīl ṭhokī. — He drove a nail into the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Usne dīvār meṁ ek kīl ṭhokī.* — He drove a nail into the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a chisel, then the Hindi for to rub, to wear down, then say ṭhoknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a chisel, then the Hindi for to rub, to wear down, then say *ṭhoknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ठोकना (ṭhoknā) mean? (\"To knock in; to drive (a nail)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C510-chedna",
+      "sequence": 28240,
+      "title": "छेदना (chednā) — to bore; to pierce",
+      "headword": "छेदना",
+      "romanization": "chednā",
+      "gloss": "to bore; to pierce",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce064c5dff8049b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to rub, to wear down, then the Hindi for to knock in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छेदना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छेदना — chednā — \"to bore; to pierce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बढ़ई ने कील से लकड़ी छेदी। Baṛhaī ne kīl se lakṛī chedī. The carpenter bored through the wood with a nail."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने काग़ज़ छेदा, usne kāġaz chedā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छेदना (chednā) is a tadbhava, inherited from Sanskrit chidra, \"a hole\" (CDIAL 5043). CDIAL gives the Hindi verb as \"to bore\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chednā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chednā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chednā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chednā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Baṛhaī ne kīl se lakṛī chedī. — The carpenter bored through the wood with a nail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Baṛhaī ne kīl se lakṛī chedī.* — The carpenter bored through the wood with a nail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to rub, to wear down, then the Hindi for to knock in, then say chednā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to rub, to wear down, then the Hindi for to knock in, then say *chednā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छेदना (chednā) mean? (\"To bore; to pierce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

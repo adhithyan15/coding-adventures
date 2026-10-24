@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 526,
+  "title": "Free Time",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:174bc57c4557ea28",
+  "lessons": [
+    {
+      "id": "HI-C526-fursat",
+      "sequence": 29020,
+      "title": "फ़ुरसत (fursat) — free time; leisure",
+      "headword": "फ़ुरसत",
+      "romanization": "fursat",
+      "gloss": "free time; leisure",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d271811aa1b31dc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to plant (a sapling), then the Hindi for to pull up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फ़ुरसत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फ़ुरसत — fursat — \"free time; leisure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "फ़ुरसत (fursat) में मैं कहानियाँ पढ़ता हूँ। Fursat meṁ maiṁ kahāniyā̃ paṛhtā hūṁ. In my free time I read stories."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फ़ुरसत (fursat) is usually traced to Arabic furṣa, \"an occasion, a chance\", which reached Hindi through Persian; in Hindi it is time with nothing that must be done."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fursat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fursat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fursat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fursat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Fursat meṁ maiṁ kahāniyā̃ paṛhtā hūṁ. — In my free time I read stories.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Fursat meṁ maiṁ kahāniyā̃ paṛhtā hūṁ.* — In my free time I read stories.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to plant (a sapling), then the Hindi for to pull up, then say fursat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to plant (a sapling), then the Hindi for to pull up, then say *fursat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फ़ुरसत (fursat) mean? (\"Free time; leisure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C526-sangrah",
+      "sequence": 29030,
+      "title": "संग्रह (saṅgrah) — a collection",
+      "headword": "संग्रह",
+      "romanization": "saṅgrah",
+      "gloss": "a collection",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:466ae120c9c1243e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to pull up, then the Hindi for free time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संग्रह",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संग्रह — saṅgrah — \"a collection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुण के पास पुराने सिक्कों का बड़ा संग्रह है। Aruṇ ke pās purāne sikkoṁ kā baṛā saṅgrah hai. Arun has a big collection of old coins."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संग्रह (saṅgrah) is a tatsama, taken whole from Sanskrit saṃgraha, \"holding together, gathering\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgrah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgrah*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgrah, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgrah*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ ke pās purāne sikkoṁ kā baṛā saṅgrah hai. — Arun has a big collection of old coins.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ ke pās purāne sikkoṁ kā baṛā saṅgrah hai.* — Arun has a big collection of old coins.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to pull up, then the Hindi for free time, then say saṅgrah again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to pull up, then the Hindi for free time, then say *saṅgrah* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संग्रह (saṅgrah) mean? (\"A collection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C526-kasida",
+      "sequence": 29040,
+      "title": "कसीदा (kasīdā) — embroidery (a pattern sewn in thread)",
+      "headword": "कसीदा",
+      "romanization": "kasīdā",
+      "gloss": "embroidery (a pattern sewn in thread)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e395621550cd6643",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for free time, then the Hindi for a collection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कसीदा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कसीदा — kasīdā — \"embroidery (a pattern sewn in thread)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरी नानी दुपट्टे पर सुंदर कसीदा करती हैं। Merī nānī dupaṭṭe par sundar kasīdā kartī haiṁ. My grandmother embroiders beautiful patterns on dupattas."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कसीदा (kasīdā) is usually traced to Persian kashīda, \"drawn (out)\". The threads are drawn through the cloth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasīdā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasīdā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasīdā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasīdā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Merī nānī dupaṭṭe par sundar kasīdā kartī haiṁ. — My grandmother embroiders beautiful patterns on dupattas.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Merī nānī dupaṭṭe par sundar kasīdā kartī haiṁ.* — My grandmother embroiders beautiful patterns on dupattas.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for free time, then the Hindi for a collection, then say kasīdā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for free time, then the Hindi for a collection, then say *kasīdā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कसीदा (kasīdā) mean? (\"Embroidery (a pattern sewn in thread)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C526-ikka",
+      "sequence": 29050,
+      "title": "इक्का (ikkā) — an ace (in cards)",
+      "headword": "इक्का",
+      "romanization": "ikkā",
+      "gloss": "an ace (in cards)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00e63ca9f4ef1027",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a collection, then the Hindi for embroidery (a pattern sewn in thread)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इक्का",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इक्का — ikkā — \"an ace (in cards)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा के हाथ में चार इक्के थे। Mīrā ke hāth meṁ cār ikke the. Mira had four aces in her hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इक्का (ikkā) is usually traced to Persian yakka, \"single, one alone\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā ke hāth meṁ cār ikke the. — Mira had four aces in her hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā ke hāth meṁ cār ikke the.* — Mira had four aces in her hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a collection, then the Hindi for embroidery (a pattern sewn in thread), then say ikkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a collection, then the Hindi for embroidery (a pattern sewn in thread), then say *ikkā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इक्का (ikkā) mean? (\"An ace (in cards)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C526-satranj",
+      "sequence": 29060,
+      "title": "शतरंज (śatrañj) — chess",
+      "headword": "शतरंज",
+      "romanization": "śatrañj",
+      "gloss": "chess",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:724370587571030a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for embroidery (a pattern sewn in thread), then the Hindi for an ace (in cards)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शतरंज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शतरंज — śatrañj — \"chess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादा जी हर शाम अपने दोस्त के साथ शतरंज खेलते हैं। Dādā jī har śām apne dost ke sāth śatrañj khelte haiṁ. My grandfather plays chess with his friend every evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शतरंज (śatrañj) is usually traced to Persian shatranj, which goes back to Sanskrit caturaṅga, \"having four limbs\", the four arms of an army, and already \"a kind of chess\" (CDIAL 4596)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śatrañj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śatrañj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śatrañj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śatrañj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dādā jī har śām apne dost ke sāth śatrañj khelte haiṁ. — My grandfather plays chess with his friend every evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dādā jī har śām apne dost ke sāth śatrañj khelte haiṁ.* — My grandfather plays chess with his friend every evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for embroidery (a pattern sewn in thread), then the Hindi for an ace (in cards), then say śatrañj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for embroidery (a pattern sewn in thread), then the Hindi for an ace (in cards), then say *śatrañj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शतरंज (śatrañj) mean? (\"Chess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

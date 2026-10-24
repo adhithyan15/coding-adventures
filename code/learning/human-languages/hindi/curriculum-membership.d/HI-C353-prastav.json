@@ -1,0 +1,11 @@
+{
+  "id": "HI-C353-prastav",
+  "pathSegment": "HI-PATH-353-SHASAN353",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-353-SHASAN353",
+      "order": 3
+    }
+  ]
+}

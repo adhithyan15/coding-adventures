@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "The Investigation",
+  "label": "ch:hi-the-investigation",
+  "canDo": "I can say what the police found and what will happen next.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C294-khojna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say what the police found and what will happen next.",
+    "assesses": [
+      "HI-LEX-C294-TAFTISH294-03",
+      "HI-LEX-C294-TAFTISH294-04",
+      "HI-LEX-C294-TAFTISH294-05"
+    ]
+  }
+}

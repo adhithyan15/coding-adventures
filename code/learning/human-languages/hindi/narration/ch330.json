@@ -1,0 +1,724 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 330,
+  "title": "At the Fair",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d7ad65e38c6a45ba",
+  "lessons": [
+    {
+      "id": "HI-C330-ikattha",
+      "sequence": 18150,
+      "title": "इकट्ठा (ikaṭṭhā) — gathered together",
+      "headword": "इकट्ठा",
+      "romanization": "ikaṭṭhā",
+      "gloss": "gathered together",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b419da5811d32df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to sway (with joy or music), then the Hindi for merriment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इकट्ठा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इकट्ठा — ikaṭṭhā — \"gathered together\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेले में पूरा गाँव इकट्ठा हुआ। mele meṁ pūrā gā̃v ikaṭṭhā huā. The whole village gathered at the fair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इकट्ठा (ikaṭṭhā) goes back to Sanskrit ekastha, \"standing together\" (CDIAL 2480): all in one spot. इकट्ठा होना is to gather; इकट्ठा करना, to collect."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikaṭṭhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikaṭṭhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikaṭṭhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikaṭṭhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mele meṁ pūrā gā̃v ikaṭṭhā huā. — The whole village gathered at the fair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mele meṁ pūrā gā̃v ikaṭṭhā huā.* — The whole village gathered at the fair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to sway (with joy or music), then the Hindi for merriment, then say ikaṭṭhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to sway (with joy or music), then the Hindi for merriment, then say *ikaṭṭhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इकट्ठा (ikaṭṭhā) mean? (\"Gathered together\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C330-jhaki",
+      "sequence": 18160,
+      "title": "झाँकी (jhā̃kī) — a tableau; a float in a procession",
+      "headword": "झाँकी",
+      "romanization": "jhā̃kī",
+      "gloss": "a tableau; a float in a procession",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b7691ecb75c7f7a8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for merriment, then the Hindi for gathered together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झाँकी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झाँकी — jhā̃kī — \"a tableau; a float in a procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जुलूस में बच्चों की झाँकी सबसे सुंदर थी। julūs meṁ baccoṁ kī jhā̃kī sabse sundar thī. The children's float was the most beautiful in the procession."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झाँकी (jhā̃kī) is built on jhā̃knā, to peep, which CDIAL 5325 records as jhā̃khnā under jhaṅkh: a glimpse, and then a scene set up for people to look at."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhā̃kī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhā̃kī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhā̃kī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhā̃kī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "julūs meṁ baccoṁ kī jhā̃kī sabse sundar thī. — The children's float was the most beautiful in the procession.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *julūs meṁ baccoṁ kī jhā̃kī sabse sundar thī.* — The children's float was the most beautiful in the procession.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for merriment, then the Hindi for gathered together, then say jhā̃kī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for merriment, then the Hindi for gathered together, then say *jhā̃kī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झाँकी (jhā̃kī) mean? (\"A tableau; a float in a procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C330-jhulna",
+      "sequence": 18170,
+      "title": "झूलना (jhūlnā) — to swing",
+      "headword": "झूलना",
+      "romanization": "jhūlnā",
+      "gloss": "to swing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8d4abe000756d3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for gathered together, then the Hindi for a tableau."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झूलना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झूलना — jhūlnā — \"to swing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चे झूले पर झूल रहे थे। bacce jhūle par jhūl rahe the. The children were swinging on the swing."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह झूले पर झूला, vah jhūle par jhūlā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झूलना (jhūlnā) is inherited from jhulyati, a form CDIAL reconstructs (CDIAL 5406). झूला, a swing, belongs with it: you झूलते हो on a झूला."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhūlnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhūlnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhūlnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhūlnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bacce jhūle par jhūl rahe the. — The children were swinging on the swing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bacce jhūle par jhūl rahe the.* — The children were swinging on the swing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for gathered together, then the Hindi for a tableau, then say jhūlnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for gathered together, then the Hindi for a tableau, then say *jhūlnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झूलना (jhūlnā) mean? (\"To swing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C330-sobhayatra",
+      "sequence": 18180,
+      "title": "शोभायात्रा (śobhāyātrā) — a festive procession",
+      "headword": "शोभायात्रा",
+      "romanization": "śobhāyātrā",
+      "gloss": "a festive procession",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59c5560849a18797",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a tableau, then the Hindi for to swing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शोभायात्रा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शोभायात्रा — śobhāyātrā — \"a festive procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शोभायात्रा कितने बजे चलेगी? śobhāyātrā kitne baje calegī? What time will the procession set off?"
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शोभायात्रा (śobhāyātrā) joins Sanskrit śobhā, \"splendour, beauty\" (Monier-Williams), and यात्रा, a journey or procession: a procession for show, with music and decorated floats. Like जुलूस, it निकलती है."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śobhāyātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śobhāyātrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śobhāyātrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śobhāyātrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śobhāyātrā kitne baje calegī? — What time will the procession set off?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śobhāyātrā kitne baje calegī?* — What time will the procession set off?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a tableau, then the Hindi for to swing, then say śobhāyātrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a tableau, then the Hindi for to swing, then say *śobhāyātrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शोभायात्रा (śobhāyātrā) mean? (\"A festive procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C330-bhakt",
+      "sequence": 18190,
+      "title": "भक्त (bhakt) — a devotee",
+      "headword": "भक्त",
+      "romanization": "bhakt",
+      "gloss": "a devotee",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1cbf327813bbdf99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to swing, then the Hindi for a festive procession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भक्त",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भक्त — bhakt — \"a devotee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हज़ारों भक्त मंदिर के बाहर इकट्ठा हुए। hazāroṁ bhakt mandir ke bāhar ikaṭṭhā hue. Thousands of devotees gathered outside the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भक्त (bhakt) is Sanskrit bhakta, \"devoted, attached\" (Monier-Williams): a person devoted to a god."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhakt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhakt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhakt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhakt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hazāroṁ bhakt mandir ke bāhar ikaṭṭhā hue. — Thousands of devotees gathered outside the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hazāroṁ bhakt mandir ke bāhar ikaṭṭhā hue.* — Thousands of devotees gathered outside the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to swing, then the Hindi for a festive procession, then say bhakt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to swing, then the Hindi for a festive procession, then say *bhakt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भक्त (bhakt) mean? (\"A devotee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

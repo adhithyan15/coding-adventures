@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:988bb2aa748d3caf",
+  "lessonIds": [
+    "HI-C444-bandargah",
+    "HI-C444-langar",
+    "HI-C444-khari",
+    "HI-C444-tat",
+    "HI-C444-dubki",
+    "HI-R444-review-438-444"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch444.txt",
+  "json": "hindi/narration/ch444.json",
+  "textHash": "fnv1a64:4e8b104a94adaa2b",
+  "jsonHash": "fnv1a64:2827631680025bfb",
+  "findings": []
+}

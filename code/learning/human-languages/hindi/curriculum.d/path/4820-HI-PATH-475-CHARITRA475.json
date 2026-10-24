@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-475-CHARITRA475",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-475-CHARITRA475"
+  ],
+  "after": []
+}

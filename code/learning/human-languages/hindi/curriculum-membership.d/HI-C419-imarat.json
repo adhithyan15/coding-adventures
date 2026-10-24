@@ -1,0 +1,11 @@
+{
+  "id": "HI-C419-imarat",
+  "pathSegment": "HI-PATH-419-TIRAHA419",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-419-TIRAHA419",
+      "order": 3
+    }
+  ]
+}

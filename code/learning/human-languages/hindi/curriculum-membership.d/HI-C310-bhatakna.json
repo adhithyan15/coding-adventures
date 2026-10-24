@@ -1,0 +1,11 @@
+{
+  "id": "HI-C310-bhatakna",
+  "pathSegment": "HI-PATH-310-BICHHUD310",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-310-BICHHUD310",
+      "order": 1
+    }
+  ]
+}

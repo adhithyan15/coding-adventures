@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C451-nazara",
+    "language": "hindi",
+    "chapter": 451,
+    "sequence": 24730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca6294a86ee0c9af"
+  },
+  "findings": []
+}

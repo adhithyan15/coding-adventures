@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:76493ae1a3ba2bf0",
+  "lessonIds": [
+    "HI-C280-lagna",
+    "HI-C280-aisa",
+    "HI-W280-letter-ai",
+    "HI-C280-mujhelagtahai",
+    "HI-C280-kivajahse",
+    "HI-R280-opinion-and-reason"
+  ],
+  "tex": "hindi/book/chapters/ch280-what-i-think-and-why.tex"
+}

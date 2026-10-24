@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 382,
+  "title": "Haste and Care",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6d1b4423f102f57e",
+  "lessons": [
+    {
+      "id": "HI-C382-jaldbazi",
+      "sequence": 20990,
+      "title": "जल्दबाज़ी (jaldbāzī) — haste, rushing",
+      "headword": "जल्दबाज़ी",
+      "romanization": "jaldbāzī",
+      "gloss": "haste, rushing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0ecaac983e845d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to waste, then the Hindi for decent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जल्दबाज़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जल्दबाज़ी — jaldbāzī — \"haste, rushing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जल्दबाज़ी मत करो, वरना ग़लती होगी। jaldbāzī mat karo, varnā ġaltī hogī. Don't rush, or you'll make a mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जल्दबाज़ी (jaldbāzī) is usually traced to Persian jald, \"quick\", and bāzī, \"play, a game\": playing at speed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaldbāzī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaldbāzī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaldbāzī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaldbāzī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaldbāzī mat karo, varnā ġaltī hogī. — Don't rush, or you'll make a mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaldbāzī mat karo, varnā ġaltī hogī.* — Don't rush, or you'll make a mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to waste, then the Hindi for decent, then say jaldbāzī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to waste, then the Hindi for decent, then say *jaldbāzī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जल्दबाज़ी (jaldbāzī) mean? (\"Haste, rushing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C382-laparvah",
+      "sequence": 21000,
+      "title": "लापरवाह (lāparvāh) — careless",
+      "headword": "लापरवाह",
+      "romanization": "lāparvāh",
+      "gloss": "careless",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e3b2248ac11a3c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for decent, then the Hindi for haste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लापरवाह",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लापरवाह — lāparvāh — \"careless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर ड्राइवर लापरवाह होगा तो दुर्घटना हो सकती है। agar ḍrāivar lāparvāh hogā to durghaṭnā ho saktī hai. If the driver is careless, there can be an accident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लापरवाह (lāparvāh) is usually traced to Persian lāparvā, \"heedless\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāparvāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāparvāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāparvāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāparvāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar ḍrāivar lāparvāh hogā to durghaṭnā ho saktī hai. — If the driver is careless, there can be an accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar ḍrāivar lāparvāh hogā to durghaṭnā ho saktī hai.* — If the driver is careless, there can be an accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for decent, then the Hindi for haste, then say lāparvāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for decent, then the Hindi for haste, then say *lāparvāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लापरवाह (lāparvāh) mean? (\"Careless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C382-chalakna",
+      "sequence": 21010,
+      "title": "छलकना (chalaknā) — to spill over, to slop",
+      "headword": "छलकना",
+      "romanization": "chalaknā",
+      "gloss": "to spill over, to slop",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b42d39e8e7c40a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for haste, then the Hindi for careless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छलकना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छलकना — chalaknā — \"to spill over, to slop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गिलास धीरे से उठाओ, वरना पानी छलक जाएगा। gilās dhīre se uṭhāo, varnā pānī chalak jāegā. Lift the glass slowly, or the water will spill."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह दूध छलक गया, vah dūdh chalak gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छलकना (chalaknā) is inherited from chala, \"a splash\", a form CDIAL reconstructs from its descendants (CDIAL 5002)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chalaknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chalaknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chalaknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chalaknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gilās dhīre se uṭhāo, varnā pānī chalak jāegā. — Lift the glass slowly, or the water will spill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gilās dhīre se uṭhāo, varnā pānī chalak jāegā.* — Lift the glass slowly, or the water will spill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for haste, then the Hindi for careless, then say chalaknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for haste, then the Hindi for careless, then say *chalaknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छलकना (chalaknā) mean? (\"To spill over, to slop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C382-masalna",
+      "sequence": 21020,
+      "title": "मसलना (masalnā) — to rub hard, to crush",
+      "headword": "मसलना",
+      "romanization": "masalnā",
+      "gloss": "to rub hard, to crush",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb1c44137f9b538e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for careless, then the Hindi for to spill over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मसलना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मसलना — masalnā — \"to rub hard, to crush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आँखें मत मसलो, वरना वे और लाल हो जाएँगी। āṅkheṁ mat maslo, varnā ve aur lāl ho jāeṅgī. Don't rub your eyes, or they'll get even redder."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने फूल मसला, usne phūl maslā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मसलना (masalnā) is a tadbhava, inherited from Sanskrit maṣati, \"rubs, crushes\" (CDIAL 9919)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masalnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masalnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masalnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masalnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṅkheṁ mat maslo, varnā ve aur lāl ho jāeṅgī. — Don't rub your eyes, or they'll get even redder.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṅkheṁ mat maslo, varnā ve aur lāl ho jāeṅgī.* — Don't rub your eyes, or they'll get even redder.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for careless, then the Hindi for to spill over, then say masalnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for careless, then the Hindi for to spill over, then say *masalnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मसलना (masalnā) mean? (\"To rub hard, to crush\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C382-nazuk",
+      "sequence": 21030,
+      "title": "नाज़ुक (nāzuk) — delicate, fragile",
+      "headword": "नाज़ुक",
+      "romanization": "nāzuk",
+      "gloss": "delicate, fragile",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea81efbf84ccb839",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to spill over, then the Hindi for to rub hard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाज़ुक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाज़ुक — nāzuk — \"delicate, fragile\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यह शीशा नाज़ुक है, अगर गिरेगा तो टूट जाएगा। yah śīśā nāzuk hai, agar giregā to ṭūṭ jāegā. This glass is fragile; if it falls, it will break."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाज़ुक (nāzuk) is usually traced to Persian nāzuk, \"delicate, slender\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāzuk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāzuk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāzuk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāzuk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yah śīśā nāzuk hai, agar giregā to ṭūṭ jāegā. — This glass is fragile; if it falls, it will break.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yah śīśā nāzuk hai, agar giregā to ṭūṭ jāegā.* — This glass is fragile; if it falls, it will break.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to spill over, then the Hindi for to rub hard, then say nāzuk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to spill over, then the Hindi for to rub hard, then say *nāzuk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नाज़ुक (nāzuk) mean? (\"Delicate, fragile\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R382-review-375-382",
+      "sequence": 21040,
+      "title": "Looking back: from Hopes and Fears to Haste and Care",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Hopes and Fears to Haste and Care",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7f02a4aad296d46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for an expectation and an apprehension."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an expectation, an apprehension, an indication, a hint, to charm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an expectation, an apprehension, an indication, a hint, to charm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evident, definite, without fail, bound to happen, to emerge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: evident, definite, without fail, bound to happen, to emerge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a situation, a state (of health, repair), a need, a hardship, to trap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a situation, a state (of health, repair), a need, a hardship, to trap]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "essential, compulsory, solely, except, to forbid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: essential, compulsory, solely, except, to forbid]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "if (formal), otherwise (formal), mere, beware, to slam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: if (formal), otherwise (formal), mere, beware, to slam]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hassle, an obstacle, a solution, to get stuck, to pull out of trouble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hassle, an obstacle, a solution, to get stuck, to pull out of trouble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "if only, a pity, to torment, to waste, decent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: if only, a pity, to torment, to waste, decent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haste, careless, to spill over, to rub hard, fragile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: haste, careless, to spill over, to rub hard, fragile]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An expectation? (आशा, āśā.) An apprehension? (आशंका, āśaṅkā.) An indication? (संकेत, saṅket.) A hint? (इशारा, iśārā.) To charm? (रिझाना, rijhānā.) Evident? (ज़ाहिर, zāhir.) Definite? (निश्चित, niścit.) Without fail? (अवश्य, avaśya.) Bound to happen? (लाज़िमी, lāzimī.) To emerge? (उभरना, ubharnā.) A situation? (स्थिति, sthiti.) A state (of health, repair)? (हालत, hālat.) A need? (ज़रूरत, zarūrat.) A hardship? (मुसीबत, musībat.) To trap? (फँसाना, phãsānā.) Essential? (आवश्यक, āvaśyak.) Compulsory? (अनिवार्य, anivārya.) Solely? (केवल, keval.) Except? (सिवाय, sivāy.) To forbid? (मना करना, manā karnā.) If (formal)? (यदि, yadi.) Otherwise (formal)? (अन्यथा, anyathā.) Mere? (मात्र, mātra.) Beware? (ख़बरदार, khabardār.) To slam? (पटकना, paṭaknā.) A hassle? (दिक़्क़त, diqqat.) An obstacle? (बाधा, bādhā.) A solution? (हल, hal.) To get stuck? (अटकना, aṭaknā.) To pull out of trouble? (उबारना, ubārnā.) If only? (काश, kāś.) A pity? (अफ़सोस, afsos.) To torment? (सताना, satānā.) To waste? (गँवाना, gãvānā.) Decent? (भला, bhalā.) Haste? (जल्दबाज़ी, jaldbāzī.) Careless? (लापरवाह, lāparvāh.) To spill over? (छलकना, chalaknā.) To rub hard? (मसलना, masalnā.) Fragile? (नाज़ुक, nāzuk.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

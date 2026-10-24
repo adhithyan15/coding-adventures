@@ -1,0 +1,11 @@
+{
+  "id": "HI-C440-chatnaintr",
+  "pathSegment": "HI-PATH-440-GHIRNA440",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-440-GHIRNA440",
+      "order": 3
+    }
+  ]
+}

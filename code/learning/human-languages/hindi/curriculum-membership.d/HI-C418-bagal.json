@@ -1,0 +1,11 @@
+{
+  "id": "HI-C418-bagal",
+  "pathSegment": "HI-PATH-418-NAZDIK418",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-418-NAZDIK418",
+      "order": 3
+    }
+  ]
+}

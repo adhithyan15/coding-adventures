@@ -1,0 +1,11 @@
+{
+  "id": "HI-C400-pratiksa",
+  "pathSegment": "HI-PATH-400-AARAKSHAN400",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-400-AARAKSHAN400",
+      "order": 2
+    }
+  ]
+}

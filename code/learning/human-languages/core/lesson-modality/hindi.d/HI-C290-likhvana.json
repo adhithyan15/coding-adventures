@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C290-likhvana",
+    "language": "hindi",
+    "chapter": 290,
+    "sequence": 16120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6103b3e9377e4d12"
+  },
+  "findings": []
+}

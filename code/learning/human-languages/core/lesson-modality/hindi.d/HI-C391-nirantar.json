@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C391-nirantar",
+    "language": "hindi",
+    "chapter": 391,
+    "sequence": 21490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef6e1d6333f75eeb"
+  },
+  "findings": []
+}

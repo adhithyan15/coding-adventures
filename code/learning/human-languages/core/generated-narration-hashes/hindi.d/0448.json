@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:6242897bf9561ef1",
+  "lessonIds": [
+    "HI-C448-conc",
+    "HI-C448-pankh",
+    "HI-C448-sikar",
+    "HI-C448-cugna",
+    "HI-C448-cubhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch448.txt",
+  "json": "hindi/narration/ch448.json",
+  "textHash": "fnv1a64:bb49f2729e8179fc",
+  "jsonHash": "fnv1a64:5f15fb3fbd9094ad",
+  "findings": []
+}

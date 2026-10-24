@@ -1,0 +1,11 @@
+{
+  "id": "HI-C296-palatna",
+  "pathSegment": "HI-PATH-296-TAKKAR296",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-296-TAKKAR296",
+      "order": 4
+    }
+  ]
+}

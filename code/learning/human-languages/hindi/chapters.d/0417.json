@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Which Way?",
+  "label": "ch:hi-which-way",
+  "canDo": "I can ask which direction and which route to take, and say which way the wind is blowing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C417-rukh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can ask which direction and which route to take, and say which way the wind is blowing.",
+    "assesses": [
+      "HI-LEX-C417-DISHA417-03",
+      "HI-LEX-C417-DISHA417-04",
+      "HI-LEX-C417-DISHA417-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C454-cakit",
+    "language": "hindi",
+    "chapter": 454,
+    "sequence": 25100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c5ee7358bea859a"
+  },
+  "findings": []
+}

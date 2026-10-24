@@ -1,0 +1,11 @@
+{
+  "id": "HI-C312-chapna",
+  "pathSegment": "HI-PATH-312-SAMACHAR312",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-312-SAMACHAR312",
+      "order": 4
+    }
+  ]
+}

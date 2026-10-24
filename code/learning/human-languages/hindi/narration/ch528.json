@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 528,
+  "title": "Craft and Carving",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ac7a13403c4c6cf1",
+  "lessons": [
+    {
+      "id": "HI-C528-tarasna",
+      "sequence": 29120,
+      "title": "तराशना (tarāśnā) — to carve; to cut into shape",
+      "headword": "तराशना",
+      "romanization": "tarāśnā",
+      "gloss": "to carve; to cut into shape",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f186ef94f6b1e655",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a line (drawn), then the Hindi for to colour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तराशना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तराशना — tarāśnā — \"to carve; to cut into shape\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कारीगर ने पत्थर तराशकर एक हाथी बनाया। Kārīgar ne patthar tarāśkar ek hāthī banāyā. The craftsman carved the stone into an elephant."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने पत्थर तराशा, usne patthar tarāśā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तराशना (tarāśnā) is usually traced to Persian tarāsh, \"cutting\", the stem of tarāshīdan, \"to shave, to carve\", with the Hindi verb ending -nā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarāśnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarāśnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarāśnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarāśnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kārīgar ne patthar tarāśkar ek hāthī banāyā. — The craftsman carved the stone into an elephant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Kārīgar ne patthar tarāśkar ek hāthī banāyā.* — The craftsman carved the stone into an elephant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a line (drawn), then the Hindi for to colour, then say tarāśnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a line (drawn), then the Hindi for to colour, then say *tarāśnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तराशना (tarāśnā) mean? (\"To carve; to cut into shape\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C528-naqqasi",
+      "sequence": 29130,
+      "title": "नक़्क़ाशी (naqqāśī) — carving; engraved decoration",
+      "headword": "नक़्क़ाशी",
+      "romanization": "naqqāśī",
+      "gloss": "carving; engraved decoration",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7134bc7ead1b89f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to colour, then the Hindi for to carve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नक़्क़ाशी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नक़्क़ाशी — naqqāśī — \"carving; engraved decoration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "महल के दरवाज़ों पर सुंदर नक़्क़ाशी है। Mahal ke darvāzoṁ par sundar naqqāśī hai. There is beautiful carving on the palace doors."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नक़्क़ाशी (naqqāśī) is usually traced to Arabic naqqāsh, \"a painter, an engraver\", through Persian. Hindi adds -ī for the work itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naqqāśī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naqqāśī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naqqāśī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naqqāśī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mahal ke darvāzoṁ par sundar naqqāśī hai. — There is beautiful carving on the palace doors.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mahal ke darvāzoṁ par sundar naqqāśī hai.* — There is beautiful carving on the palace doors.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to colour, then the Hindi for to carve, then say naqqāśī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to colour, then the Hindi for to carve, then say *naqqāśī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नक़्क़ाशी (naqqāśī) mean? (\"Carving; engraved decoration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C528-silp",
+      "sequence": 29140,
+      "title": "शिल्प (śilp) — a craft; craftsmanship",
+      "headword": "शिल्प",
+      "romanization": "śilp",
+      "gloss": "a craft; craftsmanship",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:909acf27ad74dc75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to carve, then the Hindi for carving."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिल्प",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिल्प — śilp — \"a craft; craftsmanship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यह गाँव लकड़ी के शिल्प के लिए मशहूर है। Yah gā̃v lakṛī ke śilp ke liye maśhūr hai. This village is famous for its woodcraft."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिल्प (śilp) is a tatsama, taken whole from Sanskrit śilpa, \"artistic work, decoration\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yah gā̃v lakṛī ke śilp ke liye maśhūr hai. — This village is famous for its woodcraft.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yah gā̃v lakṛī ke śilp ke liye maśhūr hai.* — This village is famous for its woodcraft.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to carve, then the Hindi for carving, then say śilp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to carve, then the Hindi for carving, then say *śilp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिल्प (śilp) mean? (\"A craft; craftsmanship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C528-godna",
+      "sequence": 29150,
+      "title": "गोदना (godnā) — to prick, to tattoo",
+      "headword": "गोदना",
+      "romanization": "godnā",
+      "gloss": "to prick, to tattoo",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9051a08cb7b18842",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for carving, then the Hindi for a craft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गोदना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोदना — godnā — \"to prick, to tattoo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेले में एक औरत लोगों के हाथ पर फूल गोद रही थी। Mele meṁ ek aurat logoṁ ke hāth par phūl god rahī thī. At the fair a woman was tattooing flowers on people's hands."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने हाथ पर नाम गोदा, usne hāth par nām godā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोदना (godnā) is a tadbhava, inherited from khōdd, \"dig\", a form CDIAL reconstructs from its descendants (CDIAL 3934). CDIAL gives the Hindi verb as \"to pierce, hoe\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "godnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *godnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "godnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *godnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mele meṁ ek aurat logoṁ ke hāth par phūl god rahī thī. — At the fair a woman was tattooing flowers on people's hands.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mele meṁ ek aurat logoṁ ke hāth par phūl god rahī thī.* — At the fair a woman was tattooing flowers on people's hands.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for carving, then the Hindi for a craft, then say godnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for carving, then the Hindi for a craft, then say *godnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गोदना (godnā) mean? (\"To prick, to tattoo\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C528-pradarsani",
+      "sequence": 29160,
+      "title": "प्रदर्शनी (pradarśanī) — an exhibition",
+      "headword": "प्रदर्शनी",
+      "romanization": "pradarśanī",
+      "gloss": "an exhibition",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e87d423f6715f115",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a craft, then the Hindi for to prick, to tattoo."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रदर्शनी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रदर्शनी — pradarśanī — \"an exhibition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संग्रहालय में चित्रों की एक प्रदर्शनी लगी है। Saṅgrahālay meṁ citroṁ kī ek pradarśanī lagī hai. There is an exhibition of paintings at the museum."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रदर्शनी (pradarśanī) is a modern formation built on Sanskrit pradarśana, \"look, appearance; showing\" (Monier-Williams), with the feminine -ī: a place where things are shown."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradarśanī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradarśanī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradarśanī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradarśanī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Saṅgrahālay meṁ citroṁ kī ek pradarśanī lagī hai. — There is an exhibition of paintings at the museum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Saṅgrahālay meṁ citroṁ kī ek pradarśanī lagī hai.* — There is an exhibition of paintings at the museum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a craft, then the Hindi for to prick, to tattoo, then say pradarśanī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a craft, then the Hindi for to prick, to tattoo, then say *pradarśanī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रदर्शनी (pradarśanī) mean? (\"An exhibition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

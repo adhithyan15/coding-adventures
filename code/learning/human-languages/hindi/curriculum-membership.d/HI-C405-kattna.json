@@ -1,0 +1,11 @@
+{
+  "id": "HI-C405-kattna",
+  "pathSegment": "HI-PATH-405-GATI405",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-405-GATI405",
+      "order": 4
+    }
+  ]
+}

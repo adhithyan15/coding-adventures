@@ -1,0 +1,11 @@
+{
+  "id": "HI-C494-litana",
+  "pathSegment": "HI-PATH-494-DEKHBHAL494",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-494-DEKHBHAL494",
+      "order": 2
+    }
+  ]
+}

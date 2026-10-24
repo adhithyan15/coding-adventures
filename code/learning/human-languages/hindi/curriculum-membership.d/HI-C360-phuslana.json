@@ -1,0 +1,11 @@
+{
+  "id": "HI-C360-phuslana",
+  "pathSegment": "HI-PATH-360-APATTI360",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-360-APATTI360",
+      "order": 4
+    }
+  ]
+}

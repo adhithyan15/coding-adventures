@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:54423318279e36db",
+  "lessonIds": [
+    "HI-C543-vacan",
+    "HI-C543-qasam",
+    "HI-C543-razi",
+    "HI-C543-sapath",
+    "HI-C543-paband"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch543.txt",
+  "json": "hindi/narration/ch543.json",
+  "textHash": "fnv1a64:301fa909d4d2199a",
+  "jsonHash": "fnv1a64:0f8b4ecc17b7bda3",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Reservations and Berths",
+  "label": "ch:hi-reservations-and-berths",
+  "canDo": "I can say I have a reservation and a berth, wait for a train and have my ticket checked.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C400-ravana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can say I have a reservation and a berth, wait for a train and have my ticket checked.",
+    "assesses": [
+      "HI-LEX-C400-AARAKSHAN400-03",
+      "HI-LEX-C400-AARAKSHAN400-04",
+      "HI-LEX-C400-AARAKSHAN400-05"
+    ]
+  }
+}

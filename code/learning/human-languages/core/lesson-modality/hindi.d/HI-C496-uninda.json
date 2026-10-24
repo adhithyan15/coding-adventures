@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C496-uninda",
+    "language": "hindi",
+    "chapter": 496,
+    "sequence": 27260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61655432117a9866"
+  },
+  "findings": []
+}

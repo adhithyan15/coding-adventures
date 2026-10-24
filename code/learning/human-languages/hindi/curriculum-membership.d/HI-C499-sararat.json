@@ -1,0 +1,11 @@
+{
+  "id": "HI-C499-sararat",
+  "pathSegment": "HI-PATH-499-KISHOR499",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-499-KISHOR499",
+      "order": 2
+    }
+  ]
+}

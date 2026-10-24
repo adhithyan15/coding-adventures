@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "The Rescue",
+  "label": "ch:hi-the-rescue",
+  "canDo": "I can tell how people were rescued.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C308-lapakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can tell how people were rescued.",
+    "assesses": [
+      "HI-LEX-C308-BACHAV308-03",
+      "HI-LEX-C308-BACHAV308-04",
+      "HI-LEX-C308-BACHAV308-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:df793053581b8f6f",
+  "lessonIds": [
+    "HI-C415-mainejar",
+    "HI-C415-rajistar",
+    "HI-C415-buking",
+    "HI-C415-thikana",
+    "HI-C415-magana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch415.txt",
+  "json": "hindi/narration/ch415.json",
+  "textHash": "fnv1a64:5aa6fa06cbfff059",
+  "jsonHash": "fnv1a64:2b65b8a00cd3eb30",
+  "findings": []
+}

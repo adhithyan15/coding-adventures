@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C355-ades",
+    "language": "hindi",
+    "chapter": 355,
+    "sequence": 19640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9966b8bddd3da88"
+  },
+  "findings": []
+}

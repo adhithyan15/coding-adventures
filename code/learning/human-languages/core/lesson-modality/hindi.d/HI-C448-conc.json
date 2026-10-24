@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C448-conc",
+    "language": "hindi",
+    "chapter": 448,
+    "sequence": 24560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ced5f5d8ebc164b"
+  },
+  "findings": []
+}

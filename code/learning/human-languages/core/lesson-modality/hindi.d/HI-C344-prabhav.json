@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C344-prabhav",
+    "language": "hindi",
+    "chapter": 344,
+    "sequence": 19060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bf3324809364a69"
+  },
+  "findings": []
+}

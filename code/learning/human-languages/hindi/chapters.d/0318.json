@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "A Blast",
+  "label": "ch:hi-a-blast",
+  "canDo": "I can describe a sudden loud event.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C318-sadma",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can describe a sudden loud event.",
+    "assesses": [
+      "HI-LEX-C318-DHAMAKA318-03",
+      "HI-LEX-C318-DHAMAKA318-04",
+      "HI-LEX-C318-DHAMAKA318-05"
+    ]
+  }
+}

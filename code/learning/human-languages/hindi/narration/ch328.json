@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 328,
+  "title": "A Night of Lights",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:23d3fa1321c4ae6f",
+  "lessons": [
+    {
+      "id": "HI-C328-rangoli",
+      "sequence": 18050,
+      "title": "रंगोली (raṅgolī) — a rangoli, a coloured pattern on the floor",
+      "headword": "रंगोली",
+      "romanization": "raṅgolī",
+      "gloss": "a rangoli, a coloured pattern on the floor",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92e9b593b4dfe7f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an age, then the Hindi for to be ruined."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रंगोली",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रंगोली — raṅgolī — \"a rangoli, a coloured pattern on the floor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा ने आँगन में रंगोली बनाई। Mīrā ne āṁgan meṁ raṅgolī banāī. Mira made a rangoli in the courtyard."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रंगोली (raṅgolī) is probably built on रंग, colour, from Sanskrit raṅga (Monier-Williams); the rest of the word is not settled. It is drawn on the floor at the door for a festival."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṅgolī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṅgolī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṅgolī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṅgolī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā ne āṁgan meṁ raṅgolī banāī. — Mira made a rangoli in the courtyard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā ne āṁgan meṁ raṅgolī banāī.* — Mira made a rangoli in the courtyard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an age, then the Hindi for to be ruined, then say raṅgolī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an age, then the Hindi for to be ruined, then say *raṅgolī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रंगोली (raṅgolī) mean? (\"A rangoli, a coloured pattern on the floor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C328-jagmagana",
+      "sequence": 18060,
+      "title": "जगमगाना (jagmagānā) — to glitter; to be lit up",
+      "headword": "जगमगाना",
+      "romanization": "jagmagānā",
+      "gloss": "to glitter; to be lit up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e97c61d60da31cb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to be ruined, then the Hindi for a rangoli, a coloured pattern on the floor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जगमगाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जगमगाना — jagmagānā — \"to glitter; to be lit up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्योहार की रात पूरा शहर जगमगा रहा था। tyohār kī rāt pūrā śahar jagmagā rahā thā. On the night of the festival the whole city was lit up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह घर जगमगाया, vah ghar jagmagāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जगमगाना (jagmagānā) is the verb of jagmag, glittering, which CDIAL 5076 sets under jag, a form it reconstructs for shining: a place full of lights जगमगाता है."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jagmagānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jagmagānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jagmagānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jagmagānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyohār kī rāt pūrā śahar jagmagā rahā thā. — On the night of the festival the whole city was lit up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyohār kī rāt pūrā śahar jagmagā rahā thā.* — On the night of the festival the whole city was lit up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to be ruined, then the Hindi for a rangoli, a coloured pattern on the floor, then say jagmagānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to be ruined, then the Hindi for a rangoli, a coloured pattern on the floor, then say *jagmagānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जगमगाना (jagmagānā) mean? (\"To glitter; to be lit up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C328-jhilmilana",
+      "sequence": 18070,
+      "title": "झिलमिलाना (jhilmilānā) — to twinkle; to flicker",
+      "headword": "झिलमिलाना",
+      "romanization": "jhilmilānā",
+      "gloss": "to twinkle; to flicker",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad9fbfe5380bf297",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a rangoli, a coloured pattern on the floor, then the Hindi for to glitter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झिलमिलाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झिलमिलाना — jhilmilānā — \"to twinkle; to flicker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खिड़कियों पर दीये झिलमिला रहे थे। khiṛkiyoṁ par dīye jhilmilā rahe the. Lamps were flickering on the windowsills."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह तारा झिलमिलाया, vah tārā jhilmilāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झिलमिलाना (jhilmilānā) is the verb of jhilmil, flickering, which CDIAL 5391 sets under jhil: small lights and stars झिलमिलाते हैं."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhilmilānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhilmilānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhilmilānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhilmilānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiṛkiyoṁ par dīye jhilmilā rahe the. — Lamps were flickering on the windowsills.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiṛkiyoṁ par dīye jhilmilā rahe the.* — Lamps were flickering on the windowsills.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a rangoli, a coloured pattern on the floor, then the Hindi for to glitter, then say jhilmilānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a rangoli, a coloured pattern on the floor, then the Hindi for to glitter, then say *jhilmilānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झिलमिलाना (jhilmilānā) mean? (\"To twinkle; to flicker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C328-patakha",
+      "sequence": 18080,
+      "title": "पटाख़ा (paṭākhā) — a firecracker",
+      "headword": "पटाख़ा",
+      "romanization": "paṭākhā",
+      "gloss": "a firecracker",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e83a8888bd89218",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to glitter, then the Hindi for to twinkle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पटाख़ा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पटाख़ा — paṭākhā — \"a firecracker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चों ने रात भर पटाख़े चलाए। baccoṁ ne rāt bhar paṭākhe calāe. The children set off firecrackers all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पटाख़ा (paṭākhā) is probably imitative, built on paṭ, the sound of a sharp crack. You पटाख़े चलाते हो: you set them off."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭākhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭākhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭākhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭākhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baccoṁ ne rāt bhar paṭākhe calāe. — The children set off firecrackers all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baccoṁ ne rāt bhar paṭākhe calāe.* — The children set off firecrackers all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to glitter, then the Hindi for to twinkle, then say paṭākhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to glitter, then the Hindi for to twinkle, then say *paṭākhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पटाख़ा (paṭākhā) mean? (\"A firecracker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C328-atisbazi",
+      "sequence": 18090,
+      "title": "आतिशबाज़ी (ātiśbāzī) — fireworks",
+      "headword": "आतिशबाज़ी",
+      "romanization": "ātiśbāzī",
+      "gloss": "fireworks",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32c8faabfe63273f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to twinkle, then the Hindi for a firecracker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आतिशबाज़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आतिशबाज़ी — ātiśbāzī — \"fireworks\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आतिशबाज़ी से आसमान रंगों से भर गया। ātiśbāzī se āsmān raṅgoṁ se bhar gayā. The fireworks filled the sky with colour."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आतिशबाज़ी (ātiśbāzī) is usually traced to Persian ātišbāzī, built from ātiš, fire, and bāzī, play: playing with fire, for a festival."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātiśbāzī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātiśbāzī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātiśbāzī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātiśbāzī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātiśbāzī se āsmān raṅgoṁ se bhar gayā. — The fireworks filled the sky with colour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātiśbāzī se āsmān raṅgoṁ se bhar gayā.* — The fireworks filled the sky with colour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to twinkle, then the Hindi for a firecracker, then say ātiśbāzī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to twinkle, then the Hindi for a firecracker, then say *ātiśbāzī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आतिशबाज़ी (ātiśbāzī) mean? (\"Fireworks\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

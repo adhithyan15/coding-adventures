@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C398-ladna",
+    "language": "hindi",
+    "chapter": 398,
+    "sequence": 22030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd945ec4d5134b21"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C386-khisakna",
+    "language": "hindi",
+    "chapter": 386,
+    "sequence": 21200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c63c0e04d92e7a35"
+  },
+  "findings": []
+}

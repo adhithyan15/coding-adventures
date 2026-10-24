@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "What Follows From It",
+  "label": "ch:hi-what-follows-from-it",
+  "canDo": "I can say what an event led to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C344-srot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can say what an event led to.",
+    "assesses": [
+      "HI-LEX-C344-PARINAM344-03",
+      "HI-LEX-C344-PARINAM344-04",
+      "HI-LEX-C344-PARINAM344-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-373-MUMKIN373",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether something is possible, and on what condition.",
+  "prerequisites": []
+}

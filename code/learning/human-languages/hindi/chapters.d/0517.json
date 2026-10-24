@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Bricks and Mortar",
+  "label": "ch:hi-bricks-and-mortar",
+  "canDo": "I can talk about building and mending walls.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C517-cinna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about building and mending walls.",
+    "assesses": [
+      "HI-LEX-C517-EENT517-03",
+      "HI-LEX-C517-EENT517-04",
+      "HI-LEX-C517-EENT517-05"
+    ]
+  }
+}

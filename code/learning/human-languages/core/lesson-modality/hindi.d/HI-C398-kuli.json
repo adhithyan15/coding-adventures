@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C398-kuli",
+    "language": "hindi",
+    "chapter": 398,
+    "sequence": 22010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c02f1e3350df738"
+  },
+  "findings": []
+}

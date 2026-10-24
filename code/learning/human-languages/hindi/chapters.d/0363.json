@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "A Study",
+  "label": "ch:hi-a-study",
+  "canDo": "I can report what a study found.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C363-akna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can report what a study found.",
+    "assesses": [
+      "HI-LEX-C363-ADHYAYAN363-03",
+      "HI-LEX-C363-ADHYAYAN363-04",
+      "HI-LEX-C363-ADHYAYAN363-05"
+    ]
+  }
+}

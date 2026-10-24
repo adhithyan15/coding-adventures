@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C288-bahar",
+    "language": "hindi",
+    "chapter": 288,
+    "sequence": 16040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16d568f98e87aa82"
+  },
+  "findings": []
+}

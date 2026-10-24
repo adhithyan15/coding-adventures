@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C384-tarakna",
+    "language": "hindi",
+    "chapter": 384,
+    "sequence": 21100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:527a35a7f440f6e0"
+  },
+  "findings": []
+}

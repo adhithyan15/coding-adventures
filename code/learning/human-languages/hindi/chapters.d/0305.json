@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "The Water Rose",
+  "label": "ch:hi-the-water-rose",
+  "canDo": "I can say how a flood rose little by little.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C305-bhavar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can say how a flood rose little by little.",
+    "assesses": [
+      "HI-LEX-C305-BAADH305-03",
+      "HI-LEX-C305-BAADH305-04",
+      "HI-LEX-C305-BAADH305-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C398-dhhona",
+    "language": "hindi",
+    "chapter": 398,
+    "sequence": 22020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6368f8ab8ca4c97"
+  },
+  "findings": []
+}

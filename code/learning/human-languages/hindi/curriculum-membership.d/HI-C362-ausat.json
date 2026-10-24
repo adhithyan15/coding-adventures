@@ -1,0 +1,11 @@
+{
+  "id": "HI-C362-ausat",
+  "pathSegment": "HI-PATH-362-NISHKARSH362",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-362-NISHKARSH362",
+      "order": 1
+    }
+  ]
+}

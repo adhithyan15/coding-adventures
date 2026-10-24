@@ -1,0 +1,11 @@
+{
+  "id": "HI-C278-pichla",
+  "pathSegment": "HI-PATH-278-PASTSCENE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-278-PASTSCENE",
+      "order": 1
+    }
+  ]
+}

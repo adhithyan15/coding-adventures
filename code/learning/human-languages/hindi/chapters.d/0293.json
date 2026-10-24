@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "Cheats",
+  "label": "ch:hi-cheats",
+  "canDo": "I can say how someone was cheated and what to do if it happens.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C293-naqli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can say how someone was cheated and what to do if it happens.",
+    "assesses": [
+      "HI-LEX-C293-THAGI293-03",
+      "HI-LEX-C293-THAGI293-04",
+      "HI-LEX-C293-THAGI293-05"
+    ]
+  }
+}

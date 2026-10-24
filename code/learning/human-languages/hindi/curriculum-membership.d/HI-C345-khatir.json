@@ -1,0 +1,11 @@
+{
+  "id": "HI-C345-khatir",
+  "pathSegment": "HI-PATH-345-UDDESHYA345",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-345-UDDESHYA345",
+      "order": 2
+    }
+  ]
+}

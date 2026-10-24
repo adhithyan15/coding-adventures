@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:d4e5929ccbac2ad1",
+  "lessonIds": [
+    "HI-C489-gholna",
+    "HI-C489-catana",
+    "HI-C489-khurak",
+    "HI-C489-marham",
+    "HI-C489-karha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch489.txt",
+  "json": "hindi/narration/ch489.json",
+  "textHash": "fnv1a64:6cbf7d0cb075d739",
+  "jsonHash": "fnv1a64:61ed4a98237fabb0",
+  "findings": []
+}

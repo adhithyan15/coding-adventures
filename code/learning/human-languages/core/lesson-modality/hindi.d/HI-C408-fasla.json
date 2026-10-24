@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C408-fasla",
+    "language": "hindi",
+    "chapter": 408,
+    "sequence": 22530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90b2f331936bafc0"
+  },
+  "findings": []
+}

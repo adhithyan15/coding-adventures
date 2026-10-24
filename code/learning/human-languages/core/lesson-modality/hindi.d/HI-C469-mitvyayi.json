@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C469-mitvyayi",
+    "language": "hindi",
+    "chapter": 469,
+    "sequence": 25880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54717fe1ad27e7e8"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:cf851d1b48c5c408",
+  "lessonIds": [
+    "HI-C552-jabki",
+    "HI-C552-bhalehi",
+    "HI-C552-baharhal",
+    "HI-C552-khair",
+    "HI-C552-magar",
+    "HI-R552-review-546-552"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch552.txt",
+  "json": "hindi/narration/ch552.json",
+  "textHash": "fnv1a64:22087000d21c30bd",
+  "jsonHash": "fnv1a64:580ef509d46a8c3d",
+  "findings": []
+}

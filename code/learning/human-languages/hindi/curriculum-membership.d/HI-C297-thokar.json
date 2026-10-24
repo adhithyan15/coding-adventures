@@ -1,0 +1,11 @@
+{
+  "id": "HI-C297-thokar",
+  "pathSegment": "HI-PATH-297-PHISAL297",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-297-PHISAL297",
+      "order": 1
+    }
+  ]
+}

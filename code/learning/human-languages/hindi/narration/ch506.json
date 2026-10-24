@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 506,
+  "title": "The Craftsman's Bench",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3a711b66d0e910d6",
+  "lessons": [
+    {
+      "id": "HI-C506-karigar",
+      "sequence": 28000,
+      "title": "कारीगर (kārīgar) — a craftsman; an artisan",
+      "headword": "कारीगर",
+      "romanization": "kārīgar",
+      "gloss": "a craftsman; an artisan",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3387bf8de87ea211",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for turning over (in bed), then the Hindi for a stretch (of the body)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कारीगर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कारीगर — kārīgar — \"a craftsman; an artisan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यह कुर्सी गाँव के एक कारीगर ने बनाई। Yah kursī gā̃v ke ek kārīgar ne banāī. A craftsman from the village made this chair."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कारीगर (kārīgar) is usually traced to Persian kārīgar, \"a craftsman\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārīgar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārīgar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārīgar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārīgar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yah kursī gā̃v ke ek kārīgar ne banāī. — A craftsman from the village made this chair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yah kursī gā̃v ke ek kārīgar ne banāī.* — A craftsman from the village made this chair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for turning over (in bed), then the Hindi for a stretch (of the body), then say kārīgar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for turning over (in bed), then the Hindi for a stretch (of the body), then say *kārīgar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कारीगर (kārīgar) mean? (\"A craftsman; an artisan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C506-auzar",
+      "sequence": 28010,
+      "title": "औज़ार (auzār) — a tool",
+      "headword": "औज़ार",
+      "romanization": "auzār",
+      "gloss": "a tool",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f788aac6c54b959b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a stretch (of the body), then the Hindi for a craftsman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: औज़ार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "औज़ार — auzār — \"a tool\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बढ़ई अपने औज़ार लकड़ी के एक डिब्बे में रखता है। Baṛhaī apne auzār lakṛī ke ek ḍibbe meṁ rakhtā hai. The carpenter keeps his tools in a wooden box."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "औज़ार (auzār) is usually traced to Arabic awzār, a plural meaning \"loads\" or \"gear\", which reached Hindi through Persian; the sense \"tools\" is the one Persian and Hindi use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auzār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auzār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auzār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auzār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Baṛhaī apne auzār lakṛī ke ek ḍibbe meṁ rakhtā hai. — The carpenter keeps his tools in a wooden box.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Baṛhaī apne auzār lakṛī ke ek ḍibbe meṁ rakhtā hai.* — The carpenter keeps his tools in a wooden box.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a stretch (of the body), then the Hindi for a craftsman, then say auzār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a stretch (of the body), then the Hindi for a craftsman, then say *auzār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does औज़ार (auzār) mean? (\"A tool\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C506-hunar",
+      "sequence": 28020,
+      "title": "हुनर (hunar) — a skill; a craft",
+      "headword": "हुनर",
+      "romanization": "hunar",
+      "gloss": "a skill; a craft",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1dc95610e5864e04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a craftsman, then the Hindi for a tool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हुनर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हुनर — hunar — \"a skill; a craft\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरे दादा के हाथों में बहुत हुनर था। Mere dādā ke hāthoṁ meṁ bahut hunar thā. My grandfather had great skill in his hands."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हुनर (hunar) is usually traced to Persian hunar, \"skill, art\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hunar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hunar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hunar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hunar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mere dādā ke hāthoṁ meṁ bahut hunar thā. — My grandfather had great skill in his hands.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mere dādā ke hāthoṁ meṁ bahut hunar thā.* — My grandfather had great skill in his hands.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a craftsman, then the Hindi for a tool, then say hunar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a craftsman, then the Hindi for a tool, then say *hunar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हुनर (hunar) mean? (\"A skill; a craft\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C506-garhna",
+      "sequence": 28030,
+      "title": "गढ़ना (gaṛhnā) — to shape; to forge",
+      "headword": "गढ़ना",
+      "romanization": "gaṛhnā",
+      "gloss": "to shape; to forge",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2ce2f8211c6b46f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a tool, then the Hindi for a skill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गढ़ना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गढ़ना — gaṛhnā — \"to shape; to forge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोहार गरम लोहे से एक कुदाल गढ़ रहा है। Lohār garam lohe se ek kudāl gaṛh rahā hai. The blacksmith is shaping a hoe from hot iron."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने लोहे से एक बर्तन गढ़ा, usne lohe se ek bartan gaṛhā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गढ़ना (gaṛhnā) is a tadbhava, inherited from gaṭhati, \"makes, forms\", a form CDIAL reconstructs from its descendants (CDIAL 3966). CDIAL gives the Hindi verb as \"to form by hammering\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṛhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṛhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṛhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṛhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Lohār garam lohe se ek kudāl gaṛh rahā hai. — The blacksmith is shaping a hoe from hot iron.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Lohār garam lohe se ek kudāl gaṛh rahā hai.* — The blacksmith is shaping a hoe from hot iron.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a tool, then the Hindi for a skill, then say gaṛhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a tool, then the Hindi for a skill, then say *gaṛhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गढ़ना (gaṛhnā) mean? (\"To shape; to forge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C506-mistri",
+      "sequence": 28040,
+      "title": "मिस्त्री (mistrī) — a mechanic; a mason",
+      "headword": "मिस्त्री",
+      "romanization": "mistrī",
+      "gloss": "a mechanic; a mason",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:adbead44184008ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a skill, then the Hindi for to shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मिस्त्री",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिस्त्री — mistrī — \"a mechanic; a mason\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हमारी गाड़ी बिगड़ गई, इसलिए हमने एक मिस्त्री को बुलाया। Hamārī gāṛī bigaṛ gaī, isliye hamne ek mistrī ko bulāyā. Our car broke down, so we called a mechanic."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिस्त्री (mistrī) is usually traced to Portuguese mestre, \"a master (of a trade)\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mistrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mistrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mistrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mistrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hamārī gāṛī bigaṛ gaī, isliye hamne ek mistrī ko bulāyā. — Our car broke down, so we called a mechanic.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hamārī gāṛī bigaṛ gaī, isliye hamne ek mistrī ko bulāyā.* — Our car broke down, so we called a mechanic.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a skill, then the Hindi for to shape, then say mistrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a skill, then the Hindi for to shape, then say *mistrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मिस्त्री (mistrī) mean? (\"A mechanic; a mason\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

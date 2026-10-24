@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:c60c2f4e497679fa",
+  "lessonIds": [
+    "HI-C329-chirakna",
+    "HI-C329-bhigona",
+    "HI-C329-uchalna",
+    "HI-C329-jhumna",
+    "HI-C329-masti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch329.txt",
+  "json": "hindi/narration/ch329.json",
+  "textHash": "fnv1a64:5b8d1fe26968fe8b",
+  "jsonHash": "fnv1a64:560925bb4f4db59b",
+  "findings": []
+}

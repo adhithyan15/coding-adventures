@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:d2fdfe15c891e2d0",
+  "lessonIds": [
+    "HI-C441-savera",
+    "HI-C441-suryoday",
+    "HI-C441-suryast",
+    "HI-C441-ksitij",
+    "HI-C441-godhuli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch441.txt",
+  "json": "hindi/narration/ch441.json",
+  "textHash": "fnv1a64:b555c7d8067fc84a",
+  "jsonHash": "fnv1a64:40b1abf4105a1507",
+  "findings": []
+}

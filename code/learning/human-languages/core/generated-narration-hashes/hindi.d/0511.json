@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:d0f97e68838bad26",
+  "lessonIds": [
+    "HI-C511-cak",
+    "HI-C511-sanna",
+    "HI-C511-ava",
+    "HI-C511-saca",
+    "HI-C511-dhaalna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch511.txt",
+  "json": "hindi/narration/ch511.json",
+  "textHash": "fnv1a64:f879ffda9ecd8932",
+  "jsonHash": "fnv1a64:46b0370dd5fd54ad",
+  "findings": []
+}

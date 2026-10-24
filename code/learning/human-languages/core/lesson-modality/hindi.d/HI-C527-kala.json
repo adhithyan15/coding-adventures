@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C527-kala",
+    "language": "hindi",
+    "chapter": 527,
+    "sequence": 29070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06cac1097dabf6fc"
+  },
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:5546d91155134e26",
+  "lessonIds": [
+    "HI-C286-agarto",
+    "HI-C286-chutgayito",
+    "HI-C286-varna",
+    "HI-R286-if-and-otherwise"
+  ],
+  "tex": "hindi/book/chapters/ch286-if-and-otherwise.tex"
+}

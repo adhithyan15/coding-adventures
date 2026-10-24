@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Making Rotis",
+  "label": "ch:hi-making-rotis",
+  "canDo": "I can describe lighting the stove and making rotis.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C520-phulna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can describe lighting the stove and making rotis.",
+    "assesses": [
+      "HI-LEX-C520-AATA520-03",
+      "HI-LEX-C520-AATA520-04",
+      "HI-LEX-C520-AATA520-05"
+    ]
+  }
+}

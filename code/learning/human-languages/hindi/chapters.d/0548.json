@@ -1,0 +1,19 @@
+{
+  "chapter": 548,
+  "title": "Time Running Out",
+  "label": "ch:hi-time-running-out",
+  "canDo": "I can talk about time limits, endings and wasted chances.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C548-lutana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 548: I can talk about time limits, endings and wasted chances.",
+    "assesses": [
+      "HI-LEX-C548-AVADHI548-03",
+      "HI-LEX-C548-AVADHI548-04",
+      "HI-LEX-C548-AVADHI548-05"
+    ]
+  }
+}

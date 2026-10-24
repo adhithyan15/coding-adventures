@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:2d895e1950cd25c2",
+  "lessonIds": [
+    "HI-C306-akal",
+    "HI-C306-bhukhmari",
+    "HI-C306-sarna",
+    "HI-C306-mahamari",
+    "HI-C306-haiza"
+  ],
+  "tex": "hindi/book/chapters/ch306-famine-and-sickness.tex"
+}

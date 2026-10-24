@@ -1,0 +1,11 @@
+{
+  "id": "HI-C455-niras",
+  "pathSegment": "HI-PATH-455-GAM455",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-455-GAM455",
+      "order": 1
+    }
+  ]
+}

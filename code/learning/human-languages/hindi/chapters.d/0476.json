@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "The Face",
+  "label": "ch:hi-the-face",
+  "canDo": "I can describe someone's face.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C476-jabra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can describe someone's face.",
+    "assesses": [
+      "HI-LEX-C476-CHEHRA476-03",
+      "HI-LEX-C476-CHEHRA476-04",
+      "HI-LEX-C476-CHEHRA476-05"
+    ]
+  }
+}

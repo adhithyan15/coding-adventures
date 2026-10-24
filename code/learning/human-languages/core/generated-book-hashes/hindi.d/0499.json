@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:b964546bfe19e66f",
+  "lessonIds": [
+    "HI-C499-kisor",
+    "HI-C499-balig",
+    "HI-C499-sararat",
+    "HI-C499-yauvan",
+    "HI-C499-bisurna"
+  ],
+  "tex": "hindi/book/chapters/ch499-growing-up.tex"
+}

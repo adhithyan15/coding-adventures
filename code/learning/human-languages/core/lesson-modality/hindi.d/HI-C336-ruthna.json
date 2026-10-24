@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C336-ruthna",
+    "language": "hindi",
+    "chapter": 336,
+    "sequence": 18500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08627d69fa91316e"
+  },
+  "findings": []
+}

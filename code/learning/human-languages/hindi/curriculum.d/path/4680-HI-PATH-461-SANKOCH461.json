@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-461-SANKOCH461",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-461-SANKOCH461"
+  ],
+  "after": []
+}

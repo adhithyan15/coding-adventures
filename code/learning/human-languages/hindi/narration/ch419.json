@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 419,
+  "title": "Landmarks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f256d50b73aa8e6d",
+  "lessons": [
+    {
+      "id": "HI-C419-tiraha",
+      "sequence": 23070,
+      "title": "तिराहा (tirāhā) — a T-junction, a meeting of three roads",
+      "headword": "तिराहा",
+      "romanization": "tirāhā",
+      "gloss": "a T-junction, a meeting of three roads",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8dff6f24a6ec07b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for beside, then the Hindi for to deliver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तिराहा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिराहा — tirāhā — \"a T-junction, a meeting of three roads\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तिराहे से बाएँ मुड़िए। tirāhe se bāẽ muṛiye. Turn left at the T-junction."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिराहा (tirāhā) is the three-way partner of चौराहा: ti-, \"three\", as in तिकोना, with rāh, \"road\", usually traced to Persian rāh."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirāhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirāhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirāhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirāhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirāhe se bāẽ muṛiye. — Turn left at the T-junction.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirāhe se bāẽ muṛiye.* — Turn left at the T-junction.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for beside, then the Hindi for to deliver, then say tirāhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for beside, then the Hindi for to deliver, then say *tirāhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तिराहा (tirāhā) mean? (\"A T-junction, a meeting of three roads\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C419-cakkar",
+      "sequence": 23080,
+      "title": "चक्कर (cakkar) — a round; a detour; dizziness",
+      "headword": "चक्कर",
+      "romanization": "cakkar",
+      "gloss": "a round; a detour; dizziness",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebd13d4d2e78d2bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to deliver, then the Hindi for a T-junction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चक्कर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चक्कर — cakkar — \"a round; a detour; dizziness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ग़लत रास्ते की वजह से हमें लंबा चक्कर लगाना पड़ा। ġalat rāste kī vajah se hamẽ lambā cakkar lagānā paṛā. Because of the wrong road we had to go a long way round."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "चक्कर (cakkar) आना, to feel dizzy: मुझे चक्कर (cakkar) आ रहा है."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चक्कर (cakkar) is a semi-learned form of Sanskrit cakra, \"a wheel, a circle\" (CDIAL 4538); the fully inherited Hindi form in that entry is cāk, \"a wheel, a millstone\". A चक्कर is any going round: a detour, a round of the market, a spinning head."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakkar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakkar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakkar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakkar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ġalat rāste kī vajah se hamẽ lambā cakkar lagānā paṛā. — Because of the wrong road we had to go a long way round.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ġalat rāste kī vajah se hamẽ lambā cakkar lagānā paṛā.* — Because of the wrong road we had to go a long way round.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to deliver, then the Hindi for a T-junction, then say cakkar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to deliver, then the Hindi for a T-junction, then say *cakkar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चक्कर (cakkar) mean? (\"A round; a detour; dizziness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C419-nisan",
+      "sequence": 23090,
+      "title": "निशान (niśān) — a mark left behind; a sign; a scar",
+      "headword": "निशान",
+      "romanization": "niśān",
+      "gloss": "a mark left behind; a sign; a scar",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82ed9e071d80ae6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a T-junction, then the Hindi for a round."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निशान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निशान — niśān — \"a mark left behind; a sign; a scar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दीवार पर लाल निशान है, वहाँ से दाएँ मुड़िए। dīvār par lāl niśān hai, vahā̃ se dāẽ muṛiye. There is a red mark on the wall; turn right there."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निशान (niśān) is usually traced to Persian nišān, \"a sign, a mark\": a scar, a stain, a mark to steer by."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niśān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niśān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niśān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niśān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīvār par lāl niśān hai, vahā̃ se dāẽ muṛiye. — There is a red mark on the wall; turn right there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīvār par lāl niśān hai, vahā̃ se dāẽ muṛiye.* — There is a red mark on the wall; turn right there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a T-junction, then the Hindi for a round, then say niśān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a T-junction, then the Hindi for a round, then say *niśān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निशान (niśān) mean? (\"A mark left behind; a sign; a scar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C419-imarat",
+      "sequence": 23100,
+      "title": "इमारत (imārat) — a building",
+      "headword": "इमारत",
+      "romanization": "imārat",
+      "gloss": "a building",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6e2700f5504cc4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a round, then the Hindi for a mark left behind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इमारत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इमारत — imārat — \"a building\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वह सफ़ेद इमारत अस्पताल है। vah safed imārat aspatāl hai. That white building is the hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इमारत (imārat) is usually traced to Arabic imāra, \"a building\", through Persian, which gave it its final t; it is feminine."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imārat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imārat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imārat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imārat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vah safed imārat aspatāl hai. — That white building is the hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vah safed imārat aspatāl hai.* — That white building is the hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a round, then the Hindi for a mark left behind, then say imārat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a round, then the Hindi for a mark left behind, then say *imārat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इमारत (imārat) mean? (\"A building\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C419-bord",
+      "sequence": 23110,
+      "title": "बोर्ड (borḍ) — a signboard; a board",
+      "headword": "बोर्ड",
+      "romanization": "borḍ",
+      "gloss": "a signboard; a board",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cbcc8471aba22ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a mark left behind, then the Hindi for a building."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बोर्ड",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोर्ड — borḍ — \"a signboard; a board\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बोर्ड पर लिखा है कि अस्पताल दाईं तरफ़ है। borḍ par likhā hai ki aspatāl dāīṁ taraf hai. The board says the hospital is on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोर्ड (borḍ) is borrowed from English board, above all the signboard over a shop or at a turning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "borḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *borḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "borḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *borḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "borḍ par likhā hai ki aspatāl dāīṁ taraf hai. — The board says the hospital is on the right.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *borḍ par likhā hai ki aspatāl dāīṁ taraf hai.* — The board says the hospital is on the right.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a mark left behind, then the Hindi for a building, then say borḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a mark left behind, then the Hindi for a building, then say *borḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बोर्ड (borḍ) mean? (\"A signboard; a board\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

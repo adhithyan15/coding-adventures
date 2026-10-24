@@ -1,0 +1,11 @@
+{
+  "id": "HI-C299-sola",
+  "pathSegment": "HI-PATH-299-AAG299",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-299-AAG299",
+      "order": 2
+    }
+  ]
+}

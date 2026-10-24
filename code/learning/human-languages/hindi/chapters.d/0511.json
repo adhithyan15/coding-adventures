@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Clay and Fire",
+  "label": "ch:hi-clay-and-fire",
+  "canDo": "I can talk about how a potter works.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C511-dhaalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about how a potter works.",
+    "assesses": [
+      "HI-LEX-C511-KUMHAR511-03",
+      "HI-LEX-C511-KUMHAR511-04",
+      "HI-LEX-C511-KUMHAR511-05"
+    ]
+  }
+}

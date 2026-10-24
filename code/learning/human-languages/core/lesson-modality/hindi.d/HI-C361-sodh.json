@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C361-sodh",
+    "language": "hindi",
+    "chapter": 361,
+    "sequence": 19920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7e3839dd3fb329c"
+  },
+  "findings": []
+}

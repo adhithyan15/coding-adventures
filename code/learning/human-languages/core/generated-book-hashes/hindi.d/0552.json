@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:1ac408af26fbf793",
+  "lessonIds": [
+    "HI-C552-jabki",
+    "HI-C552-bhalehi",
+    "HI-C552-baharhal",
+    "HI-C552-khair",
+    "HI-C552-magar",
+    "HI-R552-review-546-552"
+  ],
+  "tex": "hindi/book/chapters/ch552-even-so.tex"
+}

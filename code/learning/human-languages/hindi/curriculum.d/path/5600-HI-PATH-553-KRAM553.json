@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-553-KRAM553",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-553-KRAM553"
+  ],
+  "after": []
+}

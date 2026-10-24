@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:039b0a4a3f21abb4",
+  "lessonIds": [
+    "HI-C495-kasrat",
+    "HI-C495-yog",
+    "HI-C495-parhez",
+    "HI-C495-paustik",
+    "HI-C495-pacna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch495.txt",
+  "json": "hindi/narration/ch495.json",
+  "textHash": "fnv1a64:7f6ccbb96330f5f3",
+  "jsonHash": "fnv1a64:f320892e17196711",
+  "findings": []
+}

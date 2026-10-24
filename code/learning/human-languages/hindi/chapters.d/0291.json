@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "What the Witness Saw",
+  "label": "ch:hi-what-the-witness-saw",
+  "canDo": "I can say what I saw and what would have been different.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C291-ghurna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can say what I saw and what would have been different.",
+    "assesses": [
+      "HI-LEX-C291-GAVAHI291-03",
+      "HI-LEX-C291-GAVAHI291-04",
+      "HI-LEX-C291-GAVAHI291-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:b36875428420f5d1",
+  "lessonIds": [
+    "HI-C332-parampara",
+    "HI-C332-rivaj",
+    "HI-C332-utsav",
+    "HI-C332-alav",
+    "HI-C332-putla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch332.txt",
+  "json": "hindi/narration/ch332.json",
+  "textHash": "fnv1a64:a29fd73e09b8d12e",
+  "jsonHash": "fnv1a64:607c09627da3659c",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-481-LETNA481",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-481-LETNA481"
+  ],
+  "after": []
+}

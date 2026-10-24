@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-541-RUKAVAT541",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-541-RUKAVAT541"
+  ],
+  "after": []
+}

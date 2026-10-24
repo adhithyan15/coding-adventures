@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:8b1a6b19dc65e32e",
+  "lessonIds": [
+    "HI-C369-bhrastacar",
+    "HI-C369-ghus",
+    "HI-C369-samstha",
+    "HI-C369-karmacari",
+    "HI-C369-pabandi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch369.txt",
+  "json": "hindi/narration/ch369.json",
+  "textHash": "fnv1a64:f025be301871c6bd",
+  "jsonHash": "fnv1a64:a121f6b89e3dac7a",
+  "findings": []
+}

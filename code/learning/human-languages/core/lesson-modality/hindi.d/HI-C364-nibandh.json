@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C364-nibandh",
+    "language": "hindi",
+    "chapter": 364,
+    "sequence": 20100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29acd7b67eaa2c23"
+  },
+  "findings": []
+}

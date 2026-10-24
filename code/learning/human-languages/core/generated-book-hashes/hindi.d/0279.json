@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:9c289776a419c54f",
+  "lessonIds": [
+    "HI-C279-khakar",
+    "HI-C279-akhir",
+    "HI-C279-pahlephir",
+    "HI-C279-chuttikadin",
+    "HI-R279-a-story-in-order"
+  ],
+  "tex": "hindi/book/chapters/ch279-telling-it-in-order.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C342-atmakatha",
+  "pathSegment": "HI-PATH-342-PRAKASHAK342",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-342-PRAKASHAK342",
+      "order": 1
+    }
+  ]
+}

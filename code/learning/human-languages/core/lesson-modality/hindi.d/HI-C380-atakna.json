@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C380-atakna",
+    "language": "hindi",
+    "chapter": 380,
+    "sequence": 20920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbd1b3aa4dcecb32"
+  },
+  "findings": []
+}

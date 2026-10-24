@@ -1,0 +1,11 @@
+{
+  "id": "HI-C486-pindli",
+  "pathSegment": "HI-PATH-486-DUKHNA486",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-486-DUKHNA486",
+      "order": 1
+    }
+  ]
+}

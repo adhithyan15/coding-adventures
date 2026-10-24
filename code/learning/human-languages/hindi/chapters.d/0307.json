@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Trapped",
+  "label": "ch:hi-trapped",
+  "canDo": "I can say who was trapped and how they called for help.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C307-behal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can say who was trapped and how they called for help.",
+    "assesses": [
+      "HI-LEX-C307-PHANSA307-03",
+      "HI-LEX-C307-PHANSA307-04",
+      "HI-LEX-C307-PHANSA307-05"
+    ]
+  }
+}

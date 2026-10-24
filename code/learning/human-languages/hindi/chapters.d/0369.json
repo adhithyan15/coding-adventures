@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Corruption",
+  "label": "ch:hi-corruption",
+  "canDo": "I can talk about bribes, bans and honest institutions.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C369-pabandi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can talk about bribes, bans and honest institutions.",
+    "assesses": [
+      "HI-LEX-C369-SANSTHA369-03",
+      "HI-LEX-C369-SANSTHA369-04",
+      "HI-LEX-C369-SANSTHA369-05"
+    ]
+  }
+}

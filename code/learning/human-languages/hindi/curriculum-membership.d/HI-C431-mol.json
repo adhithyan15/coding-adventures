@@ -1,0 +1,11 @@
+{
+  "id": "HI-C431-mol",
+  "pathSegment": "HI-PATH-431-SAUDA431",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-431-SAUDA431",
+      "order": 1
+    }
+  ]
+}

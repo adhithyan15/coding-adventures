@@ -1,0 +1,11 @@
+{
+  "id": "HI-C509-canda",
+  "pathSegment": "HI-PATH-509-HADTAL509",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-509-HADTAL509",
+      "order": 2
+    }
+  ]
+}

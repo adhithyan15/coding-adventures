@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:f320f2729c6e4d60",
+  "lessonIds": [
+    "HI-C404-traifik",
+    "HI-C404-jam",
+    "HI-C404-motarsaikil",
+    "HI-C404-rengna",
+    "HI-C404-hakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch404.txt",
+  "json": "hindi/narration/ch404.json",
+  "textHash": "fnv1a64:66c876e4a91af092",
+  "jsonHash": "fnv1a64:e7b1a0274f2f7d55",
+  "findings": []
+}

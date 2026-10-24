@@ -1,0 +1,11 @@
+{
+  "id": "HI-C282-dur",
+  "pathSegment": "HI-PATH-282-ASKWAY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-282-ASKWAY",
+      "order": 1
+    }
+  ]
+}

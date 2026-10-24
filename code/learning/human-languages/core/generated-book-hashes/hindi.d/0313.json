@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:7c1e63c82c677905",
+  "lessonIds": [
+    "HI-C313-patrakar",
+    "HI-C313-ghatnasthal",
+    "HI-C313-chaapna",
+    "HI-C313-sampadak",
+    "HI-C313-vivaran"
+  ],
+  "tex": "hindi/book/chapters/ch313-reporters.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:066a919948a59f52",
+  "lessonIds": [
+    "HI-C294-taftis",
+    "HI-C294-surag",
+    "HI-C294-jasus",
+    "HI-C294-sabut",
+    "HI-C294-khojna"
+  ],
+  "tex": "hindi/book/chapters/ch294-the-investigation.tex"
+}

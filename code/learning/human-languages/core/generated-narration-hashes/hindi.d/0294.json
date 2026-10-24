@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:65999bfed8534bd6",
+  "lessonIds": [
+    "HI-C294-taftis",
+    "HI-C294-surag",
+    "HI-C294-jasus",
+    "HI-C294-sabut",
+    "HI-C294-khojna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch294.txt",
+  "json": "hindi/narration/ch294.json",
+  "textHash": "fnv1a64:7f127b139b136ec4",
+  "jsonHash": "fnv1a64:3160fecf001e0ff9",
+  "findings": []
+}

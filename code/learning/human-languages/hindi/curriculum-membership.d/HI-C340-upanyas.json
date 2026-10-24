@@ -1,0 +1,11 @@
+{
+  "id": "HI-C340-upanyas",
+  "pathSegment": "HI-PATH-340-UPANYAS340",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-340-UPANYAS340",
+      "order": 0
+    }
+  ]
+}

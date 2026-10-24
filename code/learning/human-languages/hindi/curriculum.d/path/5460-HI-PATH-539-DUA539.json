@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-539-DUA539",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-539-DUA539"
+  ],
+  "after": []
+}

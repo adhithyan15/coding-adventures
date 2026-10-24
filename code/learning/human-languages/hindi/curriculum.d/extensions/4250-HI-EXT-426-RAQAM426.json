@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-426-RAQAM426",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can pay in cash or by cheque, deposit a sum and find a cash machine.",
+  "prerequisites": []
+}

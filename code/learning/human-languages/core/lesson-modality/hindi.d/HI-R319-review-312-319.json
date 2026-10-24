@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R319-review-312-319",
+    "language": "hindi",
+    "chapter": 319,
+    "sequence": 17630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e938f0155b48e251"
+  },
+  "findings": []
+}

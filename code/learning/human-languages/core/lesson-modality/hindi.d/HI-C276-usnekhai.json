@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C276-usnekhai",
+    "language": "hindi",
+    "chapter": 276,
+    "sequence": 15310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:faf92f39f6622d0c"
+  },
+  "findings": []
+}

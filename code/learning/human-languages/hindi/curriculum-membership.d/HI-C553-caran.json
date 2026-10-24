@@ -1,0 +1,11 @@
+{
+  "id": "HI-C553-caran",
+  "pathSegment": "HI-PATH-553-KRAM553",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-553-KRAM553",
+      "order": 3
+    }
+  ]
+}

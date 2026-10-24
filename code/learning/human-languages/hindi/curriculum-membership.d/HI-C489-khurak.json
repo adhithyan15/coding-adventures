@@ -1,0 +1,11 @@
+{
+  "id": "HI-C489-khurak",
+  "pathSegment": "HI-PATH-489-MARHAM489",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-489-MARHAM489",
+      "order": 2
+    }
+  ]
+}

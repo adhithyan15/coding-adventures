@@ -1,0 +1,11 @@
+{
+  "id": "HI-C541-phanda",
+  "pathSegment": "HI-PATH-541-RUKAVAT541",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-541-RUKAVAT541",
+      "order": 3
+    }
+  ]
+}

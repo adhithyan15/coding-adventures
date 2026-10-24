@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C341-panna",
+    "language": "hindi",
+    "chapter": 341,
+    "sequence": 18710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9be438a8e9049ccc"
+  },
+  "findings": []
+}

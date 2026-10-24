@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C531-sahnai",
+    "language": "hindi",
+    "chapter": 531,
+    "sequence": 29290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a92ae017afc70a45"
+  },
+  "findings": []
+}

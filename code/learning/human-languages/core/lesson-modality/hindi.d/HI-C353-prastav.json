@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C353-prastav",
+    "language": "hindi",
+    "chapter": 353,
+    "sequence": 19540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f794f1e8760f74f6"
+  },
+  "findings": []
+}

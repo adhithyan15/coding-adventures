@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-411-VAZAN411",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask about the weight of my bags, hear of a delay and say a flight was cancelled.",
+  "prerequisites": []
+}

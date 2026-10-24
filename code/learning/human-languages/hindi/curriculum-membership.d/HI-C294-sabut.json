@@ -1,0 +1,11 @@
+{
+  "id": "HI-C294-sabut",
+  "pathSegment": "HI-PATH-294-TAFTISH294",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-294-TAFTISH294",
+      "order": 3
+    }
+  ]
+}

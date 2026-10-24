@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C423-gurrana",
+    "language": "hindi",
+    "chapter": 423,
+    "sequence": 23310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f700459cc320052"
+  },
+  "findings": []
+}

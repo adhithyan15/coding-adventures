@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-550-CHAYAN550",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-550-CHAYAN550"
+  ],
+  "after": []
+}

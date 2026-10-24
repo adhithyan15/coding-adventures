@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "At the Fair",
+  "label": "ch:hi-at-the-fair",
+  "canDo": "I can describe the crowds and the sights at a fair.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C330-bhakt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can describe the crowds and the sights at a fair.",
+    "assesses": [
+      "HI-LEX-C330-MELA330-03",
+      "HI-LEX-C330-MELA330-04",
+      "HI-LEX-C330-MELA330-05"
+    ]
+  }
+}

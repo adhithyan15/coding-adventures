@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:d1a97ef310154099",
+  "lessonIds": [
+    "HI-C445-kisti",
+    "HI-C445-mallah",
+    "HI-C445-jal",
+    "HI-C445-jvar",
+    "HI-C445-sip"
+  ],
+  "tex": "hindi/book/chapters/ch445-boats-nets-and-shells.tex"
+}

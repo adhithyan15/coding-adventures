@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Houses Large and Small",
+  "label": "ch:hi-houses-large-and-small",
+  "canDo": "I can describe a hut, a bungalow, a house, a compound and a thatched roof.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C422-chappar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can describe a hut, a bungalow, a house, a compound and a thatched roof.",
+    "assesses": [
+      "HI-LEX-C422-KOTHI422-03",
+      "HI-LEX-C422-KOTHI422-04",
+      "HI-LEX-C422-KOTHI422-05"
+    ]
+  }
+}

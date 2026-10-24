@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C515-kharkharana",
+    "language": "hindi",
+    "chapter": 515,
+    "sequence": 28500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac090f4898d794bb"
+  },
+  "findings": []
+}

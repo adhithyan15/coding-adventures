@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Medicines",
+  "label": "ch:hi-medicines",
+  "canDo": "I can say how to take or use a medicine.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C489-karha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can say how to take or use a medicine.",
+    "assesses": [
+      "HI-LEX-C489-MARHAM489-03",
+      "HI-LEX-C489-MARHAM489-04",
+      "HI-LEX-C489-MARHAM489-05"
+    ]
+  }
+}

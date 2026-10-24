@@ -1,0 +1,11 @@
+{
+  "id": "HI-C436-barasna",
+  "pathSegment": "HI-PATH-436-BUND436",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-436-BUND436",
+      "order": 4
+    }
+  ]
+}

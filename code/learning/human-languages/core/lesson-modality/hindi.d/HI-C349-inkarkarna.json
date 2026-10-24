@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C349-inkarkarna",
+    "language": "hindi",
+    "chapter": 349,
+    "sequence": 19310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32320df0062bb74a"
+  },
+  "findings": []
+}

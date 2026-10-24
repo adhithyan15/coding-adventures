@@ -1,0 +1,11 @@
+{
+  "id": "HI-C467-bhola",
+  "pathSegment": "HI-PATH-467-KAPAT467",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-467-KAPAT467",
+      "order": 2
+    }
+  ]
+}

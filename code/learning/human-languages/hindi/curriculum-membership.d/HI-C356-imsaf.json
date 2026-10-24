@@ -1,0 +1,11 @@
+{
+  "id": "HI-C356-imsaf",
+  "pathSegment": "HI-PATH-356-BARABAR356",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-356-BARABAR356",
+      "order": 3
+    }
+  ]
+}

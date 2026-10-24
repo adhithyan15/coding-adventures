@@ -1,0 +1,11 @@
+{
+  "id": "HI-C430-puji",
+  "pathSegment": "HI-PATH-430-DIVALA430",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-430-DIVALA430",
+      "order": 2
+    }
+  ]
+}

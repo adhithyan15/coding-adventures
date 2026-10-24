@@ -1,0 +1,21 @@
+{
+  "chapter": 366,
+  "title": "Reasonable or Not",
+  "label": "ch:hi-reasonable-or-not",
+  "canDo": "I can say whether a demand is fair.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-R366-review-359-366",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can say whether a demand is fair.",
+    "assesses": [
+      "HI-LEX-C366-VAJIB366-01",
+      "HI-LEX-C366-VAJIB366-02",
+      "HI-LEX-C366-VAJIB366-03",
+      "HI-LEX-C366-VAJIB366-04",
+      "HI-LEX-C366-VAJIB366-05"
+    ]
+  }
+}

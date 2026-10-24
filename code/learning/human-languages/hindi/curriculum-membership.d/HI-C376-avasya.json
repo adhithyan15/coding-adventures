@@ -1,0 +1,11 @@
+{
+  "id": "HI-C376-avasya",
+  "pathSegment": "HI-PATH-376-ZAHIR376",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-376-ZAHIR376",
+      "order": 2
+    }
+  ]
+}

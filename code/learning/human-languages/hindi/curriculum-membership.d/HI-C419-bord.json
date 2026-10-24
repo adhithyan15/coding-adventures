@@ -1,0 +1,11 @@
+{
+  "id": "HI-C419-bord",
+  "pathSegment": "HI-PATH-419-TIRAHA419",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-419-TIRAHA419",
+      "order": 4
+    }
+  ]
+}

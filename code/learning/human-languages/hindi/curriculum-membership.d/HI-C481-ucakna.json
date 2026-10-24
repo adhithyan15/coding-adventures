@@ -1,0 +1,11 @@
+{
+  "id": "HI-C481-ucakna",
+  "pathSegment": "HI-PATH-481-LETNA481",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-481-LETNA481",
+      "order": 3
+    }
+  ]
+}

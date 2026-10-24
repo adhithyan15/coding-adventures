@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Dawn and Dusk",
+  "label": "ch:hi-dawn-and-dusk",
+  "canDo": "I can talk about early morning, sunrise and sunset, the horizon and dusk.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C441-godhuli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can talk about early morning, sunrise and sunset, the horizon and dusk.",
+    "assesses": [
+      "HI-LEX-C441-SAVERA441-03",
+      "HI-LEX-C441-SAVERA441-04",
+      "HI-LEX-C441-SAVERA441-05"
+    ]
+  }
+}

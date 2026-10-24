@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:f031778e93f6f444",
+  "lessonIds": [
+    "HI-C293-thagna",
+    "HI-C293-dhokha",
+    "HI-C293-risvat",
+    "HI-C293-badmas",
+    "HI-C293-naqli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch293.txt",
+  "json": "hindi/narration/ch293.json",
+  "textHash": "fnv1a64:96e2c9b7ffc172c4",
+  "jsonHash": "fnv1a64:93821c3982438210",
+  "findings": []
+}

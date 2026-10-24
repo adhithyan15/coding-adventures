@@ -1,0 +1,21 @@
+{
+  "chapter": 327,
+  "title": "Ancestors",
+  "label": "ch:hi-ancestors",
+  "canDo": "I can tell the story of a family line.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-R327-review-320-327",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can tell the story of a family line.",
+    "assesses": [
+      "HI-LEX-C327-VANSH327-01",
+      "HI-LEX-C327-VANSH327-02",
+      "HI-LEX-C327-VANSH327-03",
+      "HI-LEX-C327-VANSH327-04",
+      "HI-LEX-C327-VANSH327-05"
+    ]
+  }
+}

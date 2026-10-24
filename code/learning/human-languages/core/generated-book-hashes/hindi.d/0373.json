@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:4fe6112fa70ed6bb",
+  "lessonIds": [
+    "HI-C373-mumkin",
+    "HI-C373-sambhav",
+    "HI-C373-sambhavna",
+    "HI-C373-cukna",
+    "HI-C373-upayogi"
+  ],
+  "tex": "hindi/book/chapters/ch373-is-it-possible.tex"
+}

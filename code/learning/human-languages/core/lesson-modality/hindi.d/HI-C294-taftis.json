@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C294-taftis",
+    "language": "hindi",
+    "chapter": 294,
+    "sequence": 16300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe836edae4d0c4da"
+  },
+  "findings": []
+}

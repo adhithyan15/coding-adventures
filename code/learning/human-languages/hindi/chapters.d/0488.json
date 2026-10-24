@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "At the Doctor's",
+  "label": "ch:hi-at-the-doctor-s",
+  "canDo": "I can talk about a visit to the doctor.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C488-karana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about a visit to the doctor.",
+    "assesses": [
+      "HI-LEX-C488-JANCH488-03",
+      "HI-LEX-C488-JANCH488-04",
+      "HI-LEX-C488-JANCH488-05"
+    ]
+  }
+}

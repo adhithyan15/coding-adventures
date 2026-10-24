@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Turning the Pages",
+  "label": "ch:hi-turning-the-pages",
+  "canDo": "I can describe a book and say how well it sold.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C341-bikna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can describe a book and say how well it sold.",
+    "assesses": [
+      "HI-LEX-C341-PANNA341-03",
+      "HI-LEX-C341-PANNA341-04",
+      "HI-LEX-C341-PANNA341-05"
+    ]
+  }
+}

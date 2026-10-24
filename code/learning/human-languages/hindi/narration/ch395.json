@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 395,
+  "title": "Getting the Go-Ahead",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4a2e736b5cb7e6c1",
+  "lessons": [
+    {
+      "id": "HI-C395-mamzuri",
+      "sequence": 21660,
+      "title": "मंज़ूरी (maṁzūrī) — approval, sanction",
+      "headword": "मंज़ूरी",
+      "romanization": "maṁzūrī",
+      "gloss": "approval, sanction",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b70e020df3dcb98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for capable, then the Hindi for to put in order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मंज़ूरी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंज़ूरी — maṁzūrī — \"approval, sanction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर सरकार मंज़ूरी देगी तो पुल बनेगा। agar sarkār maṁzūrī degī to pul banegā. If the government gives approval, the bridge will be built."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंज़ूरी (maṁzūrī) is usually traced to Arabic manẓūr, \"seen, approved\", which reached Hindi through Persian. The Hindi noun adds the ending -ī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṁzūrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṁzūrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṁzūrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṁzūrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar sarkār maṁzūrī degī to pul banegā. — If the government gives approval, the bridge will be built.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar sarkār maṁzūrī degī to pul banegā.* — If the government gives approval, the bridge will be built.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for capable, then the Hindi for to put in order, then say maṁzūrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for capable, then the Hindi for to put in order, then say *maṁzūrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मंज़ूरी (maṁzūrī) mean? (\"Approval, sanction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C395-intazam",
+      "sequence": 21670,
+      "title": "इंतज़ाम (intazām) — an arrangement",
+      "headword": "इंतज़ाम",
+      "romanization": "intazām",
+      "gloss": "an arrangement",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7b814744b6aecaf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to put in order, then the Hindi for approval."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इंतज़ाम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इंतज़ाम — intazām — \"an arrangement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम खाने का इंतज़ाम करोगे तो मैं मेहमानों को बुलाऊँगा। agar tum khāne kā intazām karoge to maiṁ mehmānoṁ ko bulāūṅgā. If you arrange the food, I'll invite the guests."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इंतज़ाम (intazām) is usually traced to Arabic intiẓām, \"putting in order\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intazām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intazām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intazām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intazām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum khāne kā intazām karoge to maiṁ mehmānoṁ ko bulāūṅgā. — If you arrange the food, I'll invite the guests.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum khāne kā intazām karoge to maiṁ mehmānoṁ ko bulāūṅgā.* — If you arrange the food, I'll invite the guests.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to put in order, then the Hindi for approval, then say intazām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to put in order, then the Hindi for approval, then say *intazām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इंतज़ाम (intazām) mean? (\"An arrangement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C395-batorna",
+      "sequence": 21680,
+      "title": "बटोरना (baṭornā) — to collect up, to sweep together",
+      "headword": "बटोरना",
+      "romanization": "baṭornā",
+      "gloss": "to collect up, to sweep together",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8506211100fcf5f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for approval, then the Hindi for an arrangement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बटोरना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बटोरना — baṭornā — \"to collect up, to sweep together\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर बारिश होगी तो कपड़े जल्दी बटोरो। agar bāriś hogī to kapṛe jaldī baṭoro. If it rains, bring the washing in quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने अपनी चीज़ें बटोरीं, usne apnī cīzeṁ baṭorīṁ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बटोरना (baṭornā) is a tadbhava, inherited from Sanskrit vartula, \"round\" (CDIAL 11365). CDIAL lists the Hindi verb, \"to collect\", under this entry; how \"round\" led to gathering up is not spelled out there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṭornā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṭornā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṭornā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṭornā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar bāriś hogī to kapṛe jaldī baṭoro. — If it rains, bring the washing in quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar bāriś hogī to kapṛe jaldī baṭoro.* — If it rains, bring the washing in quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for approval, then the Hindi for an arrangement, then say baṭornā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for approval, then the Hindi for an arrangement, then say *baṭornā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बटोरना (baṭornā) mean? (\"To collect up, to sweep together\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C395-felhona",
+      "sequence": 21690,
+      "title": "फ़ेल होना (fel honā) — to fail (an exam)",
+      "headword": "फ़ेल होना",
+      "romanization": "fel honā",
+      "gloss": "to fail (an exam)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff27d2cc9e6504ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an arrangement, then the Hindi for to collect up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फ़ेल होना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फ़ेल होना — fel honā — \"to fail (an exam)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम नहीं पढ़ोगे तो फ़ेल हो जाओगे। agar tum nahīṃ paṛhoge to fel ho jāoge. If you don't study, you'll fail."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह परीक्षा में फ़ेल हो गया, vah parīkṣā meṁ fel ho gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फ़ेल होना (fel honā) joins फ़ेल to होना, \"to be, to become\". फ़ेल is a loan from English fail."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fel honā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fel honā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fel honā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fel honā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum nahīṃ paṛhoge to fel ho jāoge. — If you don't study, you'll fail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum nahīṃ paṛhoge to fel ho jāoge.* — If you don't study, you'll fail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an arrangement, then the Hindi for to collect up, then say fel honā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an arrangement, then the Hindi for to collect up, then say *fel honā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फ़ेल होना (fel honā) mean? (\"To fail (an exam)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C395-qatai",
+      "sequence": 21700,
+      "title": "क़तई (qataī) — at all, in the least (with नहीं)",
+      "headword": "क़तई",
+      "romanization": "qataī",
+      "gloss": "at all, in the least (with नहीं)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e52abde8d4abcae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to collect up, then the Hindi for to fail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क़तई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क़तई — qataī — \"at all, in the least (with नहीं)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम देर करोगे तो मैं क़तई नहीं रुकूँगा। agar tum der karoge to maiṁ qataī nahīṃ rukūṅgā. If you're late, I won't wait at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क़तई (qataī) is usually traced to Arabic qaṭʿī, \"decisive, final\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qataī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qataī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qataī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qataī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum der karoge to maiṁ qataī nahīṃ rukūṅgā. — If you're late, I won't wait at all.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum der karoge to maiṁ qataī nahīṃ rukūṅgā.* — If you're late, I won't wait at all.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to collect up, then the Hindi for to fail, then say qataī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to collect up, then the Hindi for to fail, then say *qataī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क़तई (qataī) mean? (\"At all, in the least (with नहीं)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

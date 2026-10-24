@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Training Hard",
+  "label": "ch:hi-training-hard",
+  "canDo": "I can talk about rounds, speed and scores.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C535-daurana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can talk about rounds, speed and scores.",
+    "assesses": [
+      "HI-LEX-C535-DAUR535-03",
+      "HI-LEX-C535-DAUR535-04",
+      "HI-LEX-C535-DAUR535-05"
+    ]
+  }
+}

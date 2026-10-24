@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Danger and Damage",
+  "label": "ch:hi-danger-and-damage",
+  "canDo": "I can say what harm will follow if nothing is done.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C383-bhigna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can say what harm will follow if nothing is done.",
+    "assesses": [
+      "HI-LEX-C383-SANKAT383-03",
+      "HI-LEX-C383-SANKAT383-04",
+      "HI-LEX-C383-SANKAT383-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C535-daur",
+    "language": "hindi",
+    "chapter": 535,
+    "sequence": 29480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fac47db5d977e0b4"
+  },
+  "findings": []
+}

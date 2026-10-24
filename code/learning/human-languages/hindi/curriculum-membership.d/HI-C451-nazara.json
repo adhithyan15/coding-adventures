@@ -1,0 +1,11 @@
+{
+  "id": "HI-C451-nazara",
+  "pathSegment": "HI-PATH-451-SAIR451",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-451-SAIR451",
+      "order": 2
+    }
+  ]
+}

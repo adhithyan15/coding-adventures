@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:86a16b05fd5a4cf2",
+  "lessonIds": [
+    "HI-C305-uphanna",
+    "HI-C305-badh",
+    "HI-C305-kramsah",
+    "HI-C305-sailab",
+    "HI-C305-bhavar"
+  ],
+  "tex": "hindi/book/chapters/ch305-the-water-rose.tex"
+}

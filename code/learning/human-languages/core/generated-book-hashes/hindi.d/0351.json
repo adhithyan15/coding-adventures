@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:db6885827fd0df7a",
+  "lessonIds": [
+    "HI-C351-adhikar",
+    "HI-C351-kartavya",
+    "HI-C351-palankarna",
+    "HI-C351-ucit",
+    "HI-C351-nyay"
+  ],
+  "tex": "hindi/book/chapters/ch351-rights-and-duties.tex"
+}

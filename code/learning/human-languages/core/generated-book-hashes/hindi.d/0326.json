@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:694e32167e3e545d",
+  "lessonIds": [
+    "HI-C326-khandhar",
+    "HI-C326-khodna",
+    "HI-C326-murti",
+    "HI-C326-silalekh",
+    "HI-C326-avses"
+  ],
+  "tex": "hindi/book/chapters/ch326-ruins-of-the-past.tex"
+}

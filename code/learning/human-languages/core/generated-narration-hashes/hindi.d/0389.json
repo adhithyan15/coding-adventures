@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:2fbdd1673b0ef1b3",
+  "lessonIds": [
+    "HI-C389-behtar",
+    "HI-C389-badtar",
+    "HI-C389-barhiya",
+    "HI-C389-samanya",
+    "HI-C389-nikharna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch389.txt",
+  "json": "hindi/narration/ch389.json",
+  "textHash": "fnv1a64:da2a72bc1b02da15",
+  "jsonHash": "fnv1a64:9ad1d2f84d401094",
+  "findings": []
+}

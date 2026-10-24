@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C509-canda",
+    "language": "hindi",
+    "chapter": 509,
+    "sequence": 28170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90cc6a2a03daf7c7"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C511-ava",
+  "pathSegment": "HI-PATH-511-KUMHAR511",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-511-KUMHAR511",
+      "order": 2
+    }
+  ]
+}

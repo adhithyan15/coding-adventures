@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:6c0c00e58bbcaa7f",
+  "lessonIds": [
+    "HI-C323-harana",
+    "HI-C323-pacharna",
+    "HI-C323-vijay",
+    "HI-C323-sahid",
+    "HI-C323-sandhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch323.txt",
+  "json": "hindi/narration/ch323.json",
+  "textHash": "fnv1a64:8c80ea5ccdb81316",
+  "jsonHash": "fnv1a64:6a9c8eac1a5cb380",
+  "findings": []
+}

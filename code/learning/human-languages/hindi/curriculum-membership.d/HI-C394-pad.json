@@ -1,0 +1,11 @@
+{
+  "id": "HI-C394-pad",
+  "pathSegment": "HI-PATH-394-INAAM394",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-394-INAAM394",
+      "order": 2
+    }
+  ]
+}

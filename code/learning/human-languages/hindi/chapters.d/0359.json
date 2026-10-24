@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "The Issue at Hand",
+  "label": "ch:hi-the-issue-at-hand",
+  "canDo": "I can say what a discussion is about and how it was settled.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C359-cherna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can say what a discussion is about and how it was settled.",
+    "assesses": [
+      "HI-LEX-C359-MUDDA359-03",
+      "HI-LEX-C359-MUDDA359-04",
+      "HI-LEX-C359-MUDDA359-05"
+    ]
+  }
+}

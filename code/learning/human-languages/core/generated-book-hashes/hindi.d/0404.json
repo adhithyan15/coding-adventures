@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:5b2e8c62a4b730c7",
+  "lessonIds": [
+    "HI-C404-traifik",
+    "HI-C404-jam",
+    "HI-C404-motarsaikil",
+    "HI-C404-rengna",
+    "HI-C404-hakna"
+  ],
+  "tex": "hindi/book/chapters/ch404-traffic-jams.tex"
+}

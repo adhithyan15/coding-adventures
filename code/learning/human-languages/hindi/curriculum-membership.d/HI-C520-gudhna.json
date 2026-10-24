@@ -1,0 +1,11 @@
+{
+  "id": "HI-C520-gudhna",
+  "pathSegment": "HI-PATH-520-AATA520",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-520-AATA520",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:9ea605cfefce66fd",
+  "lessonIds": [
+    "HI-C478-phephra",
+    "HI-C478-dimag",
+    "HI-C478-nas",
+    "HI-C478-pasli",
+    "HI-C478-gurda"
+  ],
+  "tex": "hindi/book/chapters/ch478-inside-the-body.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:43ae4a2f8657a613",
+  "lessonIds": [
+    "HI-C308-bera",
+    "HI-C308-gotakhor",
+    "HI-C308-zinda",
+    "HI-C308-churana",
+    "HI-C308-lapakna"
+  ],
+  "tex": "hindi/book/chapters/ch308-the-rescue.tex"
+}

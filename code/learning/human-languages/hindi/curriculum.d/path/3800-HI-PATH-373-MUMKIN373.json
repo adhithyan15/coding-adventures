@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-373-MUMKIN373",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-373-MUMKIN373"
+  ],
+  "after": []
+}

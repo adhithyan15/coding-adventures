@@ -1,0 +1,11 @@
+{
+  "id": "HI-C372-daya",
+  "pathSegment": "HI-PATH-372-DAYA372",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-372-DAYA372",
+      "order": 0
+    }
+  ]
+}

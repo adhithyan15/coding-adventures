@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:1f6ee8db228fccbc",
+  "lessonIds": [
+    "HI-C428-kamana",
+    "HI-C428-phukna",
+    "HI-C428-munafa",
+    "HI-C428-bajat",
+    "HI-C428-vasulna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch428.txt",
+  "json": "hindi/narration/ch428.json",
+  "textHash": "fnv1a64:f7fceacfb0fd196d",
+  "jsonHash": "fnv1a64:2255fd7ed4c168ce",
+  "findings": []
+}

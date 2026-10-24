@@ -1,0 +1,11 @@
+{
+  "id": "HI-C348-tathya",
+  "pathSegment": "HI-PATH-348-PRAMAN348",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-348-PRAMAN348",
+      "order": 2
+    }
+  ]
+}

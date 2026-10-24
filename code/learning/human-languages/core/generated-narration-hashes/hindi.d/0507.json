@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:c9a702fe1036eb40",
+  "lessonIds": [
+    "HI-C507-sahkarmi",
+    "HI-C507-afsar",
+    "HI-C507-ustad",
+    "HI-C507-kausal",
+    "HI-C507-pratibha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch507.txt",
+  "json": "hindi/narration/ch507.json",
+  "textHash": "fnv1a64:eecd1fbb56d93ce7",
+  "jsonHash": "fnv1a64:f06fa730aa68ea80",
+  "findings": []
+}

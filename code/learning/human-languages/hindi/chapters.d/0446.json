@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Nature",
+  "label": "ch:hi-nature",
+  "canDo": "I can talk about nature and the environment, and plants that bloom and plants that wilt.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C446-kumhlana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can talk about nature and the environment, and plants that bloom and plants that wilt.",
+    "assesses": [
+      "HI-LEX-C446-PRAKRITI446-03",
+      "HI-LEX-C446-PRAKRITI446-04",
+      "HI-LEX-C446-PRAKRITI446-05"
+    ]
+  }
+}

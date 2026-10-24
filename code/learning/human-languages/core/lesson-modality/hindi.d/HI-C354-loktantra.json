@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C354-loktantra",
+    "language": "hindi",
+    "chapter": 354,
+    "sequence": 19590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1c1d88bc2f255d7"
+  },
+  "findings": []
+}

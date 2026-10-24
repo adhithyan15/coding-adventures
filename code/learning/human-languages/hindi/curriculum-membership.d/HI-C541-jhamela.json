@@ -1,0 +1,11 @@
+{
+  "id": "HI-C541-jhamela",
+  "pathSegment": "HI-PATH-541-RUKAVAT541",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-541-RUKAVAT541",
+      "order": 1
+    }
+  ]
+}

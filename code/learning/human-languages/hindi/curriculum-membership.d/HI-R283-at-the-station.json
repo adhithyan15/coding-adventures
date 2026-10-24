@@ -1,0 +1,11 @@
+{
+  "id": "HI-R283-at-the-station",
+  "pathSegment": "HI-PATH-283-TICKETTROUBLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-283-TICKETTROUBLE",
+      "order": 4
+    }
+  ]
+}

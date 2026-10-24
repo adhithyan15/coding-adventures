@@ -1,0 +1,11 @@
+{
+  "id": "HI-C480-spars",
+  "pathSegment": "HI-PATH-480-SPARSH480",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-480-SPARSH480",
+      "order": 1
+    }
+  ]
+}

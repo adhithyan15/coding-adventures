@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C387-behad",
+    "language": "hindi",
+    "chapter": 387,
+    "sequence": 21250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0444eb19e656139b"
+  },
+  "findings": []
+}

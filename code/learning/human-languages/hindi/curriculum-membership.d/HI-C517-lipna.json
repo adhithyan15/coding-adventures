@@ -1,0 +1,11 @@
+{
+  "id": "HI-C517-lipna",
+  "pathSegment": "HI-PATH-517-EENT517",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-517-EENT517",
+      "order": 3
+    }
+  ]
+}

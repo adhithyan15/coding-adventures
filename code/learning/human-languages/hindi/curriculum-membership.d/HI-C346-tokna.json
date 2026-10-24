@@ -1,0 +1,11 @@
+{
+  "id": "HI-C346-tokna",
+  "pathSegment": "HI-PATH-346-BAHAS346",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-346-BAHAS346",
+      "order": 3
+    }
+  ]
+}

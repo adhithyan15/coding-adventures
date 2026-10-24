@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Weights and Delays",
+  "label": "ch:hi-weights-and-delays",
+  "canDo": "I can ask about the weight of my bags, hear of a delay and say a flight was cancelled.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C411-prasthan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can ask about the weight of my bags, hear of a delay and say a flight was cancelled.",
+    "assesses": [
+      "HI-LEX-C411-VAZAN411-03",
+      "HI-LEX-C411-VAZAN411-04",
+      "HI-LEX-C411-VAZAN411-05"
+    ]
+  }
+}

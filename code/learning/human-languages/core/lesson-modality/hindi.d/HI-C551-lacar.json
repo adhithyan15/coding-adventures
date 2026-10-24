@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C551-lacar",
+    "language": "hindi",
+    "chapter": 551,
+    "sequence": 30320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0338410047c42cc3"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C388-tadad",
+  "pathSegment": "HI-PATH-388-PARYAPT388",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-388-PARYAPT388",
+      "order": 1
+    }
+  ]
+}

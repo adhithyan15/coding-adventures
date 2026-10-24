@@ -1,0 +1,11 @@
+{
+  "id": "HI-C329-masti",
+  "pathSegment": "HI-PATH-329-RANG329",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-329-RANG329",
+      "order": 4
+    }
+  ]
+}

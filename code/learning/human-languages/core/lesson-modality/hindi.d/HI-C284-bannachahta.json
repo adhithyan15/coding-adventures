@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C284-bannachahta",
+    "language": "hindi",
+    "chapter": 284,
+    "sequence": 15650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab6fde7d0fcebc21"
+  },
+  "findings": []
+}

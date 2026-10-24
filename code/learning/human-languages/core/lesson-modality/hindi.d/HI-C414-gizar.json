@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C414-gizar",
+    "language": "hindi",
+    "chapter": 414,
+    "sequence": 22840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:785728fc52fe413e"
+  },
+  "findings": []
+}

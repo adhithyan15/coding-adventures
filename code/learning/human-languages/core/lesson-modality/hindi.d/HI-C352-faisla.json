@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C352-faisla",
+    "language": "hindi",
+    "chapter": 352,
+    "sequence": 19480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a981683c7aa3c179"
+  },
+  "findings": []
+}

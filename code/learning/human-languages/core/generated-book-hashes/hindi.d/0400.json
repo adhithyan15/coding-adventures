@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:1aa95f7433e2e4c4",
+  "lessonIds": [
+    "HI-C400-araksan",
+    "HI-C400-barth",
+    "HI-C400-pratiksa",
+    "HI-C400-jacna",
+    "HI-C400-ravana"
+  ],
+  "tex": "hindi/book/chapters/ch400-reservations-and-berths.tex"
+}

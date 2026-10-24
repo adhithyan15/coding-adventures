@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C506-hunar",
+    "language": "hindi",
+    "chapter": 506,
+    "sequence": 28020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1dc95610e5864e04"
+  },
+  "findings": []
+}

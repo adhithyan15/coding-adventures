@@ -1,0 +1,21 @@
+{
+  "chapter": 303,
+  "title": "When the Ground Shook",
+  "label": "ch:hi-when-the-ground-shook",
+  "canDo": "I can tell what happened in an earthquake.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-R303-review-296-303",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can tell what happened in an earthquake.",
+    "assesses": [
+      "HI-LEX-C303-BHUKAMP303-01",
+      "HI-LEX-C303-BHUKAMP303-02",
+      "HI-LEX-C303-BHUKAMP303-03",
+      "HI-LEX-C303-BHUKAMP303-04",
+      "HI-LEX-C303-BHUKAMP303-05"
+    ]
+  }
+}

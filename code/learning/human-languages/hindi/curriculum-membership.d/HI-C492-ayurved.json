@@ -1,0 +1,11 @@
+{
+  "id": "HI-C492-ayurved",
+  "pathSegment": "HI-PATH-492-SUDHAR492",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-492-SUDHAR492",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:aa91535c7a242c4c",
+  "lessonIds": [
+    "HI-C333-ghat",
+    "HI-C333-visarjan",
+    "HI-C333-dubona",
+    "HI-C333-bikharna",
+    "HI-C333-dipdan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch333.txt",
+  "json": "hindi/narration/ch333.json",
+  "textHash": "fnv1a64:3e6abba277ed16c5",
+  "jsonHash": "fnv1a64:fe377e34926b79f4",
+  "findings": []
+}

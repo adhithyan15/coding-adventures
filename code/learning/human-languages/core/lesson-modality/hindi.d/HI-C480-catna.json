@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C480-catna",
+    "language": "hindi",
+    "chapter": 480,
+    "sequence": 26470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0525bd904f065847"
+  },
+  "findings": []
+}

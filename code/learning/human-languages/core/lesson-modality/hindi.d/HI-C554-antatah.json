@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C554-antatah",
+    "language": "hindi",
+    "chapter": 554,
+    "sequence": 30470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0992a731bd6bddaa"
+  },
+  "findings": []
+}

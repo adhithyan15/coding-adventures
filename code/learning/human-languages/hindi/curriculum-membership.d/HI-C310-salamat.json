@@ -1,0 +1,11 @@
+{
+  "id": "HI-C310-salamat",
+  "pathSegment": "HI-PATH-310-BICHHUD310",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-310-BICHHUD310",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 548,
+  "sourceHash": "fnv1a64:bc8c74228ae12c3d",
+  "lessonIds": [
+    "HI-C548-avadhi",
+    "HI-C548-miyad",
+    "HI-C548-ant",
+    "HI-C548-alas",
+    "HI-C548-lutana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch548.txt",
+  "json": "hindi/narration/ch548.json",
+  "textHash": "fnv1a64:5cc13d3fc0686041",
+  "jsonHash": "fnv1a64:6c5d3de3cdcaf326",
+  "findings": []
+}

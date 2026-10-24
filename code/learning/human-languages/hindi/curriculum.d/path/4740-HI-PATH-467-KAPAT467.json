@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-467-KAPAT467",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-467-KAPAT467"
+  ],
+  "after": []
+}

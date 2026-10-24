@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Praise and Blame",
+  "label": "ch:hi-praise-and-blame",
+  "canDo": "I can say who was praised and who was blamed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C367-jhelna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can say who was praised and who was blamed.",
+    "assesses": [
+      "HI-LEX-C367-TARIF367-03",
+      "HI-LEX-C367-TARIF367-04",
+      "HI-LEX-C367-TARIF367-05"
+    ]
+  }
+}

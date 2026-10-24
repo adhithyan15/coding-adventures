@@ -1,0 +1,11 @@
+{
+  "id": "HI-C360-ninda",
+  "pathSegment": "HI-PATH-360-APATTI360",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-360-APATTI360",
+      "order": 1
+    }
+  ]
+}

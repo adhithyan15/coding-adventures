@@ -1,0 +1,19 @@
+{
+  "chapter": 554,
+  "title": "How It Turned Out",
+  "label": "ch:hi-how-it-turned-out",
+  "canDo": "I can say how something ended up and what I learned.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C554-darasal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 554: I can say how something ended up and what I learned.",
+    "assesses": [
+      "HI-LEX-C554-NATIJATAN554-03",
+      "HI-LEX-C554-NATIJATAN554-04",
+      "HI-LEX-C554-NATIJATAN554-05"
+    ]
+  }
+}

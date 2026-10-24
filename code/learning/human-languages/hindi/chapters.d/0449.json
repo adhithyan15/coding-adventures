@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Night in the Fields",
+  "label": "ch:hi-night-in-the-fields",
+  "canDo": "I can describe night in the fields: jackals, fireflies and crickets, and cattle out grazing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C449-carana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can describe night in the fields: jackals, fireflies and crickets, and cattle out grazing.",
+    "assesses": [
+      "HI-LEX-C449-SIYAR449-03",
+      "HI-LEX-C449-SIYAR449-04",
+      "HI-LEX-C449-SIYAR449-05"
+    ]
+  }
+}

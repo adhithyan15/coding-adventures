@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Bundles and Naps",
+  "label": "ch:hi-bundles-and-naps",
+  "canDo": "I can stow my bags, carry a bundle and doze on the way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C402-sustana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can stow my bags, carry a bundle and doze on the way.",
+    "assesses": [
+      "HI-LEX-C402-GATHRI402-03",
+      "HI-LEX-C402-GATHRI402-04",
+      "HI-LEX-C402-GATHRI402-05"
+    ]
+  }
+}

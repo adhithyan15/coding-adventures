@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:5baafcc1b3841a7a",
+  "lessonIds": [
+    "HI-C477-hatheli",
+    "HI-C477-mutthi",
+    "HI-C477-bah",
+    "HI-C477-tag",
+    "HI-C477-eri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch477.txt",
+  "json": "hindi/narration/ch477.json",
+  "textHash": "fnv1a64:5d0ceaa582a87bf8",
+  "jsonHash": "fnv1a64:27d7262c053adb5a",
+  "findings": []
+}

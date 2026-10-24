@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:45c19e4df456a749",
+  "lessonIds": [
+    "HI-C446-prakrti",
+    "HI-C446-paryavaran",
+    "HI-C446-paudha",
+    "HI-C446-khilna",
+    "HI-C446-kumhlana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch446.txt",
+  "json": "hindi/narration/ch446.json",
+  "textHash": "fnv1a64:6a04f3cd4e9819dd",
+  "jsonHash": "fnv1a64:860771a2c6d2fcb8",
+  "findings": []
+}

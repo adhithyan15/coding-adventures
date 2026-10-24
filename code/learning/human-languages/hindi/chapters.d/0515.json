@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Something Has Come Loose",
+  "label": "ch:hi-something-has-come-loose",
+  "canDo": "I can say what is loose and fix it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C515-kharkharana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can say what is loose and fix it.",
+    "assesses": [
+      "HI-LEX-C515-PENCH515-03",
+      "HI-LEX-C515-PENCH515-04",
+      "HI-LEX-C515-PENCH515-05"
+    ]
+  }
+}

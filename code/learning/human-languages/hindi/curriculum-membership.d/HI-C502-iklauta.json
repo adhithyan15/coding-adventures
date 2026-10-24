@@ -1,0 +1,11 @@
+{
+  "id": "HI-C502-iklauta",
+  "pathSegment": "HI-PATH-502-POTA502",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-502-POTA502",
+      "order": 4
+    }
+  ]
+}

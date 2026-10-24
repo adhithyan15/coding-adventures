@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C354-thopna",
+    "language": "hindi",
+    "chapter": 354,
+    "sequence": 19600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:089d54ba58e54244"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:5a117c30a69dfd54",
+  "lessonIds": [
+    "HI-C390-laksya",
+    "HI-C390-iccha",
+    "HI-C390-sankalp",
+    "HI-C390-qadam",
+    "HI-C390-kosiskarna",
+    "HI-R390-review-383-390"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch390.txt",
+  "json": "hindi/narration/ch390.json",
+  "textHash": "fnv1a64:3bbb3d86fcd461f7",
+  "jsonHash": "fnv1a64:00c91cf9a1253d5e",
+  "findings": []
+}

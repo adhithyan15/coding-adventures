@@ -1,0 +1,11 @@
+{
+  "id": "HI-C549-asmanjas",
+  "pathSegment": "HI-PATH-549-VIKALP549",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-549-VIKALP549",
+      "order": 2
+    }
+  ]
+}

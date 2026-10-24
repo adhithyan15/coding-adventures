@@ -1,0 +1,11 @@
+{
+  "id": "HI-C525-ropna",
+  "pathSegment": "HI-PATH-525-PAUDHA525",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-525-PAUDHA525",
+      "order": 3
+    }
+  ]
+}

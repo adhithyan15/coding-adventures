@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:44bd446d36c4ea78",
+  "lessonIds": [
+    "HI-C401-phatak",
+    "HI-C401-signal",
+    "HI-C401-janksan",
+    "HI-C401-laghna",
+    "HI-C401-takna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch401.txt",
+  "json": "hindi/narration/ch401.json",
+  "textHash": "fnv1a64:a502685eed25368c",
+  "jsonHash": "fnv1a64:c157e465401d840e",
+  "findings": []
+}

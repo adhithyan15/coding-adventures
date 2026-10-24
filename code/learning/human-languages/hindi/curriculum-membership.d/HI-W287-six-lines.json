@@ -1,0 +1,11 @@
+{
+  "id": "HI-W287-six-lines",
+  "pathSegment": "HI-PATH-287-DEPENDSWOULD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-287-DEPENDSWOULD",
+      "order": 3
+    }
+  ]
+}

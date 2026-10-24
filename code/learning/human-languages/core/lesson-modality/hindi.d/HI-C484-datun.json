@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C484-datun",
+    "language": "hindi",
+    "chapter": 484,
+    "sequence": 26640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b89b09e3b67f518"
+  },
+  "findings": []
+}

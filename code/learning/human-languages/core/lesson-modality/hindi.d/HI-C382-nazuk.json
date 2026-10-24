@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C382-nazuk",
+    "language": "hindi",
+    "chapter": 382,
+    "sequence": 21030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea81efbf84ccb839"
+  },
+  "findings": []
+}

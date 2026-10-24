@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-403-STAIND403",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find the bus stand, walk along the pavement and say I am out of breath.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Colours on the Wall",
+  "label": "ch:hi-colours-on-the-wall",
+  "canDo": "I can talk about pictures, colours and lines.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C527-rangna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about pictures, colours and lines.",
+    "assesses": [
+      "HI-LEX-C527-KALA527-03",
+      "HI-LEX-C527-KALA527-04",
+      "HI-LEX-C527-KALA527-05"
+    ]
+  }
+}

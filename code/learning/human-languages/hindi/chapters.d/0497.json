@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "A New Baby",
+  "label": "ch:hi-a-new-baby",
+  "canDo": "I can talk about the birth of a baby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C497-paidahona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about the birth of a baby.",
+    "assesses": [
+      "HI-LEX-C497-JANM497-03",
+      "HI-LEX-C497-JANM497-04",
+      "HI-LEX-C497-JANM497-05"
+    ]
+  }
+}

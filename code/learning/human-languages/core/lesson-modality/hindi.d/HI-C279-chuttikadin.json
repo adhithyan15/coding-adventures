@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C279-chuttikadin",
+    "language": "hindi",
+    "chapter": 279,
+    "sequence": 15410,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2dc0331b940825e5"
+  },
+  "findings": []
+}

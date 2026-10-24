@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C305-badh",
+    "language": "hindi",
+    "chapter": 305,
+    "sequence": 16880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2e27a54e17437fd"
+  },
+  "findings": []
+}

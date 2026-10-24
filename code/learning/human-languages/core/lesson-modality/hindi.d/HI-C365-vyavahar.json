@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C365-vyavahar",
+    "language": "hindi",
+    "chapter": 365,
+    "sequence": 20130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0d89bb945539849"
+  },
+  "findings": []
+}

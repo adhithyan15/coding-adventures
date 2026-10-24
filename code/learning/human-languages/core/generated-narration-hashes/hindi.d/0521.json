@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:454d44985c8586b0",
+  "lessonIds": [
+    "HI-C521-ac",
+    "HI-C521-dalna",
+    "HI-C521-jira",
+    "HI-C521-bagharna",
+    "HI-C521-bhujna",
+    "HI-R521-review-514-521"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch521.txt",
+  "json": "hindi/narration/ch521.json",
+  "textHash": "fnv1a64:2e650cdee9da24d6",
+  "jsonHash": "fnv1a64:627b1a2f24210118",
+  "findings": []
+}

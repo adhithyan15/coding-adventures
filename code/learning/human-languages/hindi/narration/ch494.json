@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 494,
+  "title": "Looking After Someone",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:77615ff76570b491",
+  "lessons": [
+    {
+      "id": "HI-C494-timardari",
+      "sequence": 27150,
+      "title": "तीमारदारी (tīmārdārī) — nursing the sick",
+      "headword": "तीमारदारी",
+      "romanization": "tīmārdārī",
+      "gloss": "nursing the sick",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0174d0f8a6522135",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for cancer, then the Hindi for to stiffen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तीमारदारी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तीमारदारी — tīmārdārī — \"nursing the sick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बीमारी में मीरा ने अपनी माँ की बहुत तीमारदारी की। bīmārī meṁ Mīrā ne apnī māṁ kī bahut tīmārdārī kī. Mira nursed her mother devotedly through her illness."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तीमारदारी (tīmārdārī) is usually traced to Persian tīmārdārī, \"tending the sick\", built on tīmār, \"care of the sick\", and -dārī, \"keeping\". tīmārdār is the person at the bedside."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīmārdārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīmārdārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīmārdārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīmārdārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīmārī meṁ Mīrā ne apnī māṁ kī bahut tīmārdārī kī. — Mira nursed her mother devotedly through her illness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīmārī meṁ Mīrā ne apnī māṁ kī bahut tīmārdārī kī.* — Mira nursed her mother devotedly through her illness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for cancer, then the Hindi for to stiffen, then say tīmārdārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for cancer, then the Hindi for to stiffen, then say *tīmārdārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तीमारदारी (tīmārdārī) mean? (\"Nursing the sick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C494-god",
+      "sequence": 27160,
+      "title": "गोद (god) — a lap",
+      "headword": "गोद",
+      "romanization": "god",
+      "gloss": "a lap",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:beb6b17f31fac3de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to stiffen, then the Hindi for nursing the sick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गोद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोद — god — \"a lap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चा माँ की गोद में सो गया। baccā māṁ kī god meṁ so gayā. The baby fell asleep in its mother's lap."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोद (god) is a tadbhava: CDIAL lists Hindi god, \"lap\", under gōddī, a form it reconstructs (CDIAL 4284). god lenā, \"to take into one's lap\", is to adopt a child."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "god",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *god*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "god, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *god*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baccā māṁ kī god meṁ so gayā. — The baby fell asleep in its mother's lap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baccā māṁ kī god meṁ so gayā.* — The baby fell asleep in its mother's lap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to stiffen, then the Hindi for nursing the sick, then say god again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to stiffen, then the Hindi for nursing the sick, then say *god* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गोद (god) mean? (\"A lap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C494-litana",
+      "sequence": 27170,
+      "title": "लिटाना (liṭānā) — to lay someone down",
+      "headword": "लिटाना",
+      "romanization": "liṭānā",
+      "gloss": "to lay someone down",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc20fb6474d84cf8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for nursing the sick, then the Hindi for a lap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लिटाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिटाना — liṭānā — \"to lay someone down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नर्स ने मरीज़ को बिस्तर पर लिटाया। nars ne marīz ko bistar par liṭāyā. The nurse laid the patient down on the bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बच्चे को लिटाया, usne bacce ko liṭāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिटाना (liṭānā) is the causative partner of leṭnā, \"to lie down\", which CDIAL lists under Sanskrit lēṭyáti (CDIAL 11109); the vowel shortens before the causative ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liṭānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liṭānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liṭānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liṭānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nars ne marīz ko bistar par liṭāyā. — The nurse laid the patient down on the bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nars ne marīz ko bistar par liṭāyā.* — The nurse laid the patient down on the bed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for nursing the sick, then the Hindi for a lap, then say liṭānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for nursing the sick, then the Hindi for a lap, then say *liṭānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लिटाना (liṭānā) mean? (\"To lay someone down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C494-sekna",
+      "sequence": 27180,
+      "title": "सेंकना (sẽknā) — to warm (a sore part); to toast",
+      "headword": "सेंकना",
+      "romanization": "sẽknā",
+      "gloss": "to warm (a sore part); to toast",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a172571a95bec949",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a lap, then the Hindi for to lay someone down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सेंकना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सेंकना — sẽknā — \"to warm (a sore part); to toast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माँ ने गरम पानी की बोतल से मेरा पेट सेंका। māṁ ne garam pānī kī botal se merā peṭ sẽkā. Mother warmed my stomach with a hot-water bottle."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने घुटना सेंका, usne ghuṭnā sẽkā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सेंकना (sẽknā) is a tadbhava: CDIAL lists Hindi sẽknā, \"to warm, foment, toast\", under sēkk, a form it reconstructs (CDIAL 13581). Bread is toasted and a sore knee warmed with the same verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sẽknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sẽknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sẽknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sẽknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṁ ne garam pānī kī botal se merā peṭ sẽkā. — Mother warmed my stomach with a hot-water bottle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṁ ne garam pānī kī botal se merā peṭ sẽkā.* — Mother warmed my stomach with a hot-water bottle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a lap, then the Hindi for to lay someone down, then say sẽknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a lap, then the Hindi for to lay someone down, then say *sẽknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सेंकना (sẽknā) mean? (\"To warm (a sore part); to toast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C494-orhana",
+      "sequence": 27190,
+      "title": "ओढ़ाना (oṛhānā) — to cover someone (with a blanket)",
+      "headword": "ओढ़ाना",
+      "romanization": "oṛhānā",
+      "gloss": "to cover someone (with a blanket)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e515101dfe1fe47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to lay someone down, then the Hindi for to warm (a sore part)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओढ़ाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओढ़ाना — oṛhānā — \"to cover someone (with a blanket)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माँ ने बच्चे को कंबल ओढ़ाया। māṁ ne bacce ko kambal oṛhāyā. Mother tucked a blanket round the child."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने कंबल ओढ़ाया, usne kambal oṛhāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओढ़ाना (oṛhānā) is the causative partner of oṛhnā, \"to cover oneself\", which CDIAL lists under ōḍḍh, a form it reconstructs (CDIAL 2547): to wrap someone else up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṛhānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṛhānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṛhānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṛhānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṁ ne bacce ko kambal oṛhāyā. — Mother tucked a blanket round the child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṁ ne bacce ko kambal oṛhāyā.* — Mother tucked a blanket round the child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to lay someone down, then the Hindi for to warm (a sore part), then say oṛhānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to lay someone down, then the Hindi for to warm (a sore part), then say *oṛhānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ओढ़ाना (oṛhānā) mean? (\"To cover someone (with a blanket)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

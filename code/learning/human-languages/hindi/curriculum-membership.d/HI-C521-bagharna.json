@@ -1,0 +1,11 @@
+{
+  "id": "HI-C521-bagharna",
+  "pathSegment": "HI-PATH-521-TADKA521",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-521-TADKA521",
+      "order": 3
+    }
+  ]
+}

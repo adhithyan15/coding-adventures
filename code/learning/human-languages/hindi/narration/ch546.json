@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 546,
+  "title": "Fate and Chance",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2b59191fd3d60ea3",
+  "lessons": [
+    {
+      "id": "HI-C546-sagun",
+      "sequence": 30050,
+      "title": "शगुन (śagun) — an omen (a good sign)",
+      "headword": "शगुन",
+      "romanization": "śagun",
+      "gloss": "an omen (a good sign)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb411cb61265b7c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a piece (in chess or a board game), then the Hindi for defeat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शगुन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शगुन — śagun — \"an omen (a good sign)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी मानती हैं कि यह एक अच्छा शगुन है। Dādī māntī haiṁ ki yah ek acchā śagun hai. Grandmother believes that this is a good omen."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शगुन (śagun) is probably a later borrowing of Sanskrit śakuna, \"a bird\", which also meant \"an omen\", read from birds. The forms Hindi inherited, saun and son, \"a good omen\", are the ones CDIAL lists (CDIAL 12245); śagun itself is not among them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śagun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śagun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śagun, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śagun*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dādī māntī haiṁ ki yah ek acchā śagun hai. — Grandmother believes that this is a good omen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dādī māntī haiṁ ki yah ek acchā śagun hai.* — Grandmother believes that this is a good omen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a piece (in chess or a board game), then the Hindi for defeat, then say śagun again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a piece (in chess or a board game), then the Hindi for defeat, then say *śagun* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शगुन (śagun) mean? (\"An omen (a good sign)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C546-asar",
+      "sequence": 30060,
+      "title": "आसार (āsār) — signs; prospects (of something coming)",
+      "headword": "आसार",
+      "romanization": "āsār",
+      "gloss": "signs; prospects (of something coming)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b0857a5041abcde",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for defeat, then the Hindi for an omen (a good sign)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आसार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसार — āsār — \"signs; prospects (of something coming)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आसमान में बादल हैं, बारिश के आसार हैं। Āsmān meṁ bādal haiṁ, bāriś ke āsār haiṁ. There are clouds in the sky: rain looks likely."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Used in the plural: बारिश के आसार (āsār) हैं."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसार (āsār) is usually traced to Arabic āthār, \"traces, signs\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āsmān meṁ bādal haiṁ, bāriś ke āsār haiṁ. — There are clouds in the sky: rain looks likely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āsmān meṁ bādal haiṁ, bāriś ke āsār haiṁ.* — There are clouds in the sky: rain looks likely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for defeat, then the Hindi for an omen (a good sign), then say āsār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for defeat, then the Hindi for an omen (a good sign), then say *āsār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आसार (āsār) mean? (\"Signs; prospects (of something coming)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C546-manhus",
+      "sequence": 30070,
+      "title": "मनहूस (manhūs) — unlucky; ill-omened",
+      "headword": "मनहूस",
+      "romanization": "manhūs",
+      "gloss": "unlucky; ill-omened",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd84dc8b850dd080",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an omen (a good sign), then the Hindi for signs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मनहूस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनहूस — manhūs — \"unlucky; ill-omened\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुराने लोग कहते थे कि टूटा शीशा मनहूस होता है। Purāne log kahte the ki ṭūṭā śīśā manhūs hotā hai. Old people used to say that a broken mirror is unlucky."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनहूस (manhūs) is usually traced to Arabic manḥūs, \"ill-omened\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manhūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manhūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manhūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manhūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Purāne log kahte the ki ṭūṭā śīśā manhūs hotā hai. — Old people used to say that a broken mirror is unlucky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Purāne log kahte the ki ṭūṭā śīśā manhūs hotā hai.* — Old people used to say that a broken mirror is unlucky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an omen (a good sign), then the Hindi for signs, then say manhūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an omen (a good sign), then the Hindi for signs, then say *manhūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मनहूस (manhūs) mean? (\"Unlucky; ill-omened\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C546-saubhagya",
+      "sequence": 30080,
+      "title": "सौभाग्य (saubhāgya) — good fortune",
+      "headword": "सौभाग्य",
+      "romanization": "saubhāgya",
+      "gloss": "good fortune",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40792c43e4510241",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for signs, then the Hindi for unlucky."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सौभाग्य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सौभाग्य — saubhāgya — \"good fortune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आपसे मिलना मेरा सौभाग्य है। Āpse milnā merā saubhāgya hai. It is my good fortune to meet you."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सौभाग्य (saubhāgya) is a tatsama, taken whole from Sanskrit saubhāgya, \"welfare, good fortune\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saubhāgya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saubhāgya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saubhāgya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saubhāgya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āpse milnā merā saubhāgya hai. — It is my good fortune to meet you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āpse milnā merā saubhāgya hai.* — It is my good fortune to meet you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for signs, then the Hindi for unlucky, then say saubhāgya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for signs, then the Hindi for unlucky, then say *saubhāgya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सौभाग्य (saubhāgya) mean? (\"Good fortune\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C546-ittafaq",
+      "sequence": 30090,
+      "title": "इत्तफ़ाक़ (ittafāq) — chance; a chance happening",
+      "headword": "इत्तफ़ाक़",
+      "romanization": "ittafāq",
+      "gloss": "chance; a chance happening",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bff25237ac60190",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for unlucky, then the Hindi for good fortune."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इत्तफ़ाक़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इत्तफ़ाक़ — ittafāq — \"chance; a chance happening\"."
+            },
+            {
+              "kind": "speech",
+              "text": "इत्तफ़ाक़ (ittafāq) से हम दोनों एक ही ट्रेन में थे। Ittafāq se ham donõ ek hī ṭren meṁ the. By chance we were both on the same train."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इत्तफ़ाक़ (ittafāq) is usually traced to Arabic ittifāq, \"a coming together, agreement\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ittafāq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ittafāq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ittafāq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ittafāq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ittafāq se ham donõ ek hī ṭren meṁ the. — By chance we were both on the same train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ittafāq se ham donõ ek hī ṭren meṁ the.* — By chance we were both on the same train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for unlucky, then the Hindi for good fortune, then say ittafāq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for unlucky, then the Hindi for good fortune, then say *ittafāq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इत्तफ़ाक़ (ittafāq) mean? (\"Chance; a chance happening\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

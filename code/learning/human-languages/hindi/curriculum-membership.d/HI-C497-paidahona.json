@@ -1,0 +1,11 @@
+{
+  "id": "HI-C497-paidahona",
+  "pathSegment": "HI-PATH-497-JANM497",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-497-JANM497",
+      "order": 4
+    }
+  ]
+}

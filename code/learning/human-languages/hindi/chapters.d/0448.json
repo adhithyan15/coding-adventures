@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Beaks, Wings and Thorns",
+  "label": "ch:hi-beaks-wings-and-thorns",
+  "canDo": "I can talk about beaks and wings, a hunt, birds pecking grain and a thorn that pricks.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C448-cubhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can talk about beaks and wings, a hunt, birds pecking grain and a thorn that pricks.",
+    "assesses": [
+      "HI-LEX-C448-CHONCH448-03",
+      "HI-LEX-C448-CHONCH448-04",
+      "HI-LEX-C448-CHONCH448-05"
+    ]
+  }
+}

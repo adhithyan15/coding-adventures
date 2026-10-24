@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R284-feelings-and-hopes",
+    "language": "hindi",
+    "chapter": 284,
+    "sequence": 15660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e1f6f40739bfb00"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:fa4b9bd7e628d3ef",
+  "lessonIds": [
+    "HI-C391-prayas",
+    "HI-C391-parisram",
+    "HI-C391-jos",
+    "HI-C391-nirantar",
+    "HI-C391-dohrana"
+  ],
+  "tex": "hindi/book/chapters/ch391-effort.tex"
+}

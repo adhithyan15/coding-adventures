@@ -1,0 +1,11 @@
+{
+  "id": "HI-C398-kuli",
+  "pathSegment": "HI-PATH-398-MUSAFIR398",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-398-MUSAFIR398",
+      "order": 1
+    }
+  ]
+}

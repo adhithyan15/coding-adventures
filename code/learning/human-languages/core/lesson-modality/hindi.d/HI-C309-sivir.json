@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C309-sivir",
+    "language": "hindi",
+    "chapter": 309,
+    "sequence": 17080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:edd1de617acd46fe"
+  },
+  "findings": []
+}

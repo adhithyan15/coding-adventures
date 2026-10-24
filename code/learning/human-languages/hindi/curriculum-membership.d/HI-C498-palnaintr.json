@@ -1,0 +1,11 @@
+{
+  "id": "HI-C498-palnaintr",
+  "pathSegment": "HI-PATH-498-PARVARISH498",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-498-PARVARISH498",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C483-cust",
+  "pathSegment": "HI-PATH-483-TAQAT483",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-483-TAQAT483",
+      "order": 1
+    }
+  ]
+}

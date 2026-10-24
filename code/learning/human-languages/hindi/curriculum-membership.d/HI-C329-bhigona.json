@@ -1,0 +1,11 @@
+{
+  "id": "HI-C329-bhigona",
+  "pathSegment": "HI-PATH-329-RANG329",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-329-RANG329",
+      "order": 1
+    }
+  ]
+}

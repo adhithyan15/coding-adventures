@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C391-prayas",
+    "language": "hindi",
+    "chapter": 391,
+    "sequence": 21460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50a4033185909f9e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C292-lutna",
+  "pathSegment": "HI-PATH-292-DAKAITI292",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-292-DAKAITI292",
+      "order": 1
+    }
+  ]
+}

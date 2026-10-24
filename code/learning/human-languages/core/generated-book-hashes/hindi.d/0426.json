@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:d4cc3e3c0203a9a4",
+  "lessonIds": [
+    "HI-C426-raqam",
+    "HI-C426-naqad",
+    "HI-C426-cek",
+    "HI-C426-bailens",
+    "HI-C426-etiem"
+  ],
+  "tex": "hindi/book/chapters/ch426-sums-and-cash.tex"
+}

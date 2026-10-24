@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C428-bajat",
+    "language": "hindi",
+    "chapter": 428,
+    "sequence": 23560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:286b3ba6cc194b5c"
+  },
+  "findings": []
+}

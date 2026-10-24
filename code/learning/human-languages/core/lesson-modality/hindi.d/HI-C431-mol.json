@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C431-mol",
+    "language": "hindi",
+    "chapter": 431,
+    "sequence": 23700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4bb3f9979fad185"
+  },
+  "findings": []
+}

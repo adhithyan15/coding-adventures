@@ -1,0 +1,11 @@
+{
+  "id": "HI-C507-kausal",
+  "pathSegment": "HI-PATH-507-DAFTAR507",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-507-DAFTAR507",
+      "order": 3
+    }
+  ]
+}

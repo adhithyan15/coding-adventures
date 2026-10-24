@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:e4a4ec087fa88c52",
+  "lessonIds": [
+    "HI-C517-it",
+    "HI-C517-cuna",
+    "HI-C517-palastar",
+    "HI-C517-lipna",
+    "HI-C517-cinna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch517.txt",
+  "json": "hindi/narration/ch517.json",
+  "textHash": "fnv1a64:d017611578ae5eee",
+  "jsonHash": "fnv1a64:554977ede2730f91",
+  "findings": []
+}

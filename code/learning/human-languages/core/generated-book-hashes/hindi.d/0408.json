@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:1f77fc6ceb91b04f",
+  "lessonIds": [
+    "HI-C408-mil",
+    "HI-C408-kos",
+    "HI-C408-fasla",
+    "HI-C408-rah",
+    "HI-C408-bhagana"
+  ],
+  "tex": "hindi/book/chapters/ch408-miles-and-distances.tex"
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 459,
+  "title": "Affection",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:09bcec6f53435efa",
+  "lessons": [
+    {
+      "id": "HI-C459-sneh",
+      "sequence": 25350,
+      "title": "स्नेह (sneh) — affection; fondness",
+      "headword": "स्नेह",
+      "romanization": "sneh",
+      "gloss": "affection; fondness",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8033e6ed93a3558d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to writhe, then the Hindi for an assurance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्नेह",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्नेह — sneh — \"affection; fondness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी सब बच्चों से बहुत स्नेह करती हैं। dādī sab baccoṁ se bahut sneh kartī haiṁ. Grandmother is very fond of all the children."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्नेह (sneh) is a tatsama, borrowed from Sanskrit sneha, first \"oiliness\" and then \"tenderness, love, fondness\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sneh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sneh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sneh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sneh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī sab baccoṁ se bahut sneh kartī haiṁ. — Grandmother is very fond of all the children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī sab baccoṁ se bahut sneh kartī haiṁ.* — Grandmother is very fond of all the children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to writhe, then the Hindi for an assurance, then say sneh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to writhe, then the Hindi for an assurance, then say *sneh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्नेह (sneh) mean? (\"Affection; fondness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C459-mamta",
+      "sequence": 25360,
+      "title": "ममता (mamtā) — a mother's love",
+      "headword": "ममता",
+      "romanization": "mamtā",
+      "gloss": "a mother's love",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:086df34b24364348",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an assurance, then the Hindi for affection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ममता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ममता — mamtā — \"a mother's love\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माँ की ममता की कोई क़ीमत नहीं होती। māṁ kī mamtā kī koī qīmat nahīṃ hotī. No price can be put on a mother's love."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ममता (mamtā) is a tatsama, borrowed from Sanskrit mamatā, \"the state of 'mine'\", built on mama, \"mine\" (Monier-Williams). Hindi turned the sense of ownership into the tender love of a mother."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mamtā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mamtā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mamtā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mamtā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṁ kī mamtā kī koī qīmat nahīṃ hotī. — No price can be put on a mother's love.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṁ kī mamtā kī koī qīmat nahīṃ hotī.* — No price can be put on a mother's love.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an assurance, then the Hindi for affection, then say mamtā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an assurance, then the Hindi for affection, then say *mamtā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ममता (mamtā) mean? (\"A mother's love\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C459-lar",
+      "sequence": 25370,
+      "title": "लाड़ (lāṛ) — fond pampering; fondness",
+      "headword": "लाड़",
+      "romanization": "lāṛ",
+      "gloss": "fond pampering; fondness",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f3ff91bf959b7c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for affection, then the Hindi for a mother's love."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लाड़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाड़ — lāṛ — \"fond pampering; fondness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नाना के लाड़ में मीरा का बचपन बीता। nānā ke lāṛ meṁ Mīrā kā bacpan bītā. Mira's childhood was spent in her grandfather's fond care."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाड़ (lāṛ) is a tadbhava: CDIAL lists Hindi lāṛ, \"affection\", under lāḍya, a form it reconstructs (CDIAL 11013)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāṛ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāṛ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāṛ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāṛ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānā ke lāṛ meṁ Mīrā kā bacpan bītā. — Mira's childhood was spent in her grandfather's fond care.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānā ke lāṛ meṁ Mīrā kā bacpan bītā.* — Mira's childhood was spent in her grandfather's fond care.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for affection, then the Hindi for a mother's love, then say lāṛ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for affection, then the Hindi for a mother's love, then say *lāṛ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लाड़ (lāṛ) mean? (\"Fond pampering; fondness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C459-cumna",
+      "sequence": 25380,
+      "title": "चूमना (cūmnā) — to kiss",
+      "headword": "चूमना",
+      "romanization": "cūmnā",
+      "gloss": "to kiss",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f077ea0046dd2664",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a mother's love, then the Hindi for fond pampering."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चूमना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चूमना — cūmnā — \"to kiss\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माँ ने बच्चे का माथा चूमा। māṁ ne bacce kā māthā cūmā. The mother kissed the child's forehead."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने माथा चूमा, usne māthā cūmā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चूमना (cūmnā) is a tadbhava: CDIAL lists Hindi cūmnā, \"to kiss\", under Sanskrit cúmbati, \"kisses\" (CDIAL 4870)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūmnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūmnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūmnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūmnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṁ ne bacce kā māthā cūmā. — The mother kissed the child's forehead.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṁ ne bacce kā māthā cūmā.* — The mother kissed the child's forehead.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a mother's love, then the Hindi for fond pampering, then say cūmnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a mother's love, then the Hindi for fond pampering, then say *cūmnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चूमना (cūmnā) mean? (\"To kiss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C459-puckarna",
+      "sequence": 25390,
+      "title": "पुचकारना (puckārnā) — to soothe with soft words",
+      "headword": "पुचकारना",
+      "romanization": "puckārnā",
+      "gloss": "to soothe with soft words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d38fa002a3a498ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for fond pampering, then the Hindi for to kiss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुचकारना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुचकारना — puckārnā — \"to soothe with soft words\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चा रो रहा था, तो दादी ने उसे पुचकारा। baccā ro rahā thā, to dādī ne use puckārā. The child was crying, so my grandmother soothed him with soft words."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बच्चे को पुचकारा, usne bacce ko puckārā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुचकारना (puckārnā) is a tadbhava: CDIAL lists Hindi puckārnā, \"to caress\", under pucca, a form it reconstructs (CDIAL 8248). It is the soft clicking and cooing used to calm a child or an animal."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puckārnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puckārnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puckārnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puckārnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baccā ro rahā thā, to dādī ne use puckārā. — The child was crying, so my grandmother soothed him with soft words.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baccā ro rahā thā, to dādī ne use puckārā.* — The child was crying, so my grandmother soothed him with soft words.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for fond pampering, then the Hindi for to kiss, then say puckārnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for fond pampering, then the Hindi for to kiss, then say *puckārnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुचकारना (puckārnā) mean? (\"To soothe with soft words\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R459-review-452-459",
+      "sequence": 25400,
+      "title": "Looking back: from Naming a Feeling to Affection",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Naming a Feeling to Affection",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ec19289ee2e0e29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for a feeling and an awareness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a feeling, an awareness, a deep feeling, to feel, to well up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a feeling, an awareness, a deep feeling, to feel, to well up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joy, zeal, a smile, elation, pleased",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: joy, zeal, a smile, elation, pleased]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taken aback, surprise, astonishment, strange, a marvel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: taken aback, surprise, astonishment, strange, a marvel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grief, disappointed, dejected, to fret, to hurt someone's feelings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grief, disappointed, dejected, to fret, to hurt someone's feelings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cross, wrath, to get irritated, to fly into a rage, to get fed up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cross, wrath, to get irritated, to fly into a rage, to get fed up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dread, to panic, to frighten, cowardly, to shudder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dread, to panic, to frighten, cowardly, to shudder]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stress, concern, a burden, to writhe, an assurance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stress, concern, a burden, to writhe, an assurance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "affection, a mother's love, fond pampering, to kiss, to soothe with soft words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: affection, a mother's love, fond pampering, to kiss, to soothe with soft words]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A feeling? (भावना, bhāvnā.) An awareness? (एहसास, ehsās.) A deep feeling? (अनुभूति, anubhūti.) To feel? (महसूस करना, mahsūs karnā.) To well up? (उमड़ना, umaṛnā.) Joy? (आनंद, ānand.) Zeal? (उत्साह, utsāh.) A smile? (मुस्कान, muskān.) Elation? (उल्लास, ullās.) Pleased? (प्रसन्न, prasann.) Taken aback? (चकित, cakit.) Surprise? (आश्चर्य, āścarya.) Astonishment? (अचंभा, acambhā.) Strange? (अजीब, ajīb.) A marvel? (कमाल, kamāl.) Grief? (ग़म, ġam.) Disappointed? (निराश, nirāś.) Dejected? (मायूस, māyūs.) To fret? (कुढ़ना, kuṛhnā.) To hurt someone's feelings? (दुखाना, dukhānā.) Cross? (नाराज़, nārāz.) Wrath? (क्रोध, krodh.) To get irritated? (चिढ़ना, ciṛhnā.) To fly into a rage? (बिफरना, bipharnā.) To get fed up? (खीझना, khījhnā.) Dread? (भय, bhay.) To panic? (घबराना, ghabrānā.) To frighten? (डराना, ḍarānā.) Cowardly? (कायर, kāyar.) To shudder? (सिहरना, siharnā.) Stress? (तनाव, tanāv.) Concern? (फ़िक्र, fikr.) A burden? (बोझ, bojh.) To writhe? (तड़पना, taṛapnā.) An assurance? (आश्वासन, āśvāsan.) Affection? (स्नेह, sneh.) A mother's love? (ममता, mamtā.) Fond pampering? (लाड़, lāṛ.) To kiss? (चूमना, cūmnā.) To soothe with soft words? (पुचकारना, puckārnā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

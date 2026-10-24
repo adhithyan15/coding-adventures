@@ -1,0 +1,11 @@
+{
+  "id": "HI-C301-phaphola",
+  "pathSegment": "HI-PATH-301-BUJHI301",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-301-BUJHI301",
+      "order": 4
+    }
+  ]
+}

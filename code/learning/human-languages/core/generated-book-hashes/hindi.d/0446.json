@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:9263a9c1ed1998ac",
+  "lessonIds": [
+    "HI-C446-prakrti",
+    "HI-C446-paryavaran",
+    "HI-C446-paudha",
+    "HI-C446-khilna",
+    "HI-C446-kumhlana"
+  ],
+  "tex": "hindi/book/chapters/ch446-nature.tex"
+}

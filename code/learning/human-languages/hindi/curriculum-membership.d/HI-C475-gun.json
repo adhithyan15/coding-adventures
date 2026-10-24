@@ -1,0 +1,11 @@
+{
+  "id": "HI-C475-gun",
+  "pathSegment": "HI-PATH-475-CHARITRA475",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-475-CHARITRA475",
+      "order": 3
+    }
+  ]
+}

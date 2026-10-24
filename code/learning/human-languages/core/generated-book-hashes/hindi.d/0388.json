@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:7f7bdffee173dcb2",
+  "lessonIds": [
+    "HI-C388-adhik",
+    "HI-C388-tadad",
+    "HI-C388-paryapt",
+    "HI-C388-mamuli",
+    "HI-C388-qarib"
+  ],
+  "tex": "hindi/book/chapters/ch388-more-and-less.tex"
+}

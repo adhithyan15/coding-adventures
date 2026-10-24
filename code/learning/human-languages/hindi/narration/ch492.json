@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 492,
+  "title": "Getting Better",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0793ad411145da1b",
+  "lessons": [
+    {
+      "id": "HI-C492-malis",
+      "sequence": 27050,
+      "title": "मालिश (māliś) — a massage; a rub",
+      "headword": "मालिश",
+      "romanization": "māliś",
+      "gloss": "a massage; a rub",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e55ce5d37cb8b2a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to have someone sent for, then the Hindi for a life."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मालिश",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मालिश — māliś — \"a massage; a rub\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रोज़ की मालिश से दादी के घुटनों का दर्द कम हो गया। roz kī māliś se dādī ke ghuṭnoṁ kā dard kam ho gayā. With a daily massage, the pain in my grandmother's knees eased."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मालिश (māliś) is usually traced to Persian mālish, \"rubbing\", the noun of the Persian verb for \"to rub\". māliś karnā is to massage; malnā, \"to rub in\", is a separate, inherited word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māliś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māliś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māliś, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māliś*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roz kī māliś se dādī ke ghuṭnoṁ kā dard kam ho gayā. — With a daily massage, the pain in my grandmother's knees eased.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roz kī māliś se dādī ke ghuṭnoṁ kā dard kam ho gayā.* — With a daily massage, the pain in my grandmother's knees eased.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to have someone sent for, then the Hindi for a life, then say māliś again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to have someone sent for, then the Hindi for a life, then say *māliś* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मालिश (māliś) mean? (\"A massage; a rub\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C492-svasth",
+      "sequence": 27060,
+      "title": "स्वस्थ (svasth) — healthy; well",
+      "headword": "स्वस्थ",
+      "romanization": "svasth",
+      "gloss": "healthy; well",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6fda2d6cfabc1f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a life, then the Hindi for a massage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्वस्थ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वस्थ — svasth — \"healthy; well\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रोज़ दौड़कर अरुण स्वस्थ रहता है। roz dauṛkar Aruṇ svasth rahtā hai. Arun keeps healthy by running every day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वस्थ (svasth) is a tatsama, borrowed from Sanskrit svastha, \"self-abiding, being in one's natural state\", and so \"well, healthy\" (Monier-Williams), built on sva, \"self\", and stha, \"standing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svasth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svasth*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svasth, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svasth*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roz dauṛkar Aruṇ svasth rahtā hai. — Arun keeps healthy by running every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roz dauṛkar Aruṇ svasth rahtā hai.* — Arun keeps healthy by running every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a life, then the Hindi for a massage, then say svasth again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a life, then the Hindi for a massage, then say *svasth* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्वस्थ (svasth) mean? (\"Healthy; well\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C492-canga",
+      "sequence": 27070,
+      "title": "चंगा (caṅgā) — well again; cured",
+      "headword": "चंगा",
+      "romanization": "caṅgā",
+      "gloss": "well again; cured",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5086fd7c1e64cd90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a massage, then the Hindi for healthy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चंगा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चंगा — caṅgā — \"well again; cured\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आराम से तुम जल्दी चंगे हो जाओगे। ārām se tum jaldī caṅge ho jāoge. With rest you'll soon be well again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चंगा (caṅgā) is a tadbhava: CDIAL lists Hindi caṅgā, \"good, sound, well\", under Sanskrit caṅga (CDIAL 4564)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṅgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṅgā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṅgā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṅgā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārām se tum jaldī caṅge ho jāoge. — With rest you'll soon be well again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārām se tum jaldī caṅge ho jāoge.* — With rest you'll soon be well again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a massage, then the Hindi for healthy, then say caṅgā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a massage, then the Hindi for healthy, then say *caṅgā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चंगा (caṅgā) mean? (\"Well again; cured\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C492-ayurved",
+      "sequence": 27080,
+      "title": "आयुर्वेद (āyurved) — ayurveda; traditional Indian medicine",
+      "headword": "आयुर्वेद",
+      "romanization": "āyurved",
+      "gloss": "ayurveda; traditional Indian medicine",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c2ce428e8af6d0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for healthy, then the Hindi for well again."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आयुर्वेद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आयुर्वेद — āyurved — \"ayurveda; traditional Indian medicine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आयुर्वेद की दवा से दादा जल्दी ठीक हो गए। āyurved kī davā se dādā jaldī ṭhīk ho gae. With ayurvedic medicine, my grandfather soon got well."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आयुर्वेद (āyurved) is a tatsama, borrowed from Sanskrit āyurveda, which Monier-Williams explains as the learning of health and healing (Monier-Williams), built on āyus, \"life\", and veda, \"knowledge\". It names India's traditional medicine and its herbal remedies."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyurved",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyurved*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyurved, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyurved*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyurved kī davā se dādā jaldī ṭhīk ho gae. — With ayurvedic medicine, my grandfather soon got well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyurved kī davā se dādā jaldī ṭhīk ho gae.* — With ayurvedic medicine, my grandfather soon got well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for healthy, then the Hindi for well again, then say āyurved again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for healthy, then the Hindi for well again, then say *āyurved* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आयुर्वेद (āyurved) mean? (\"Ayurveda; traditional Indian medicine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C492-sphurti",
+      "sequence": 27090,
+      "title": "स्फूर्ति (sphūrti) — vigour; fresh energy",
+      "headword": "स्फूर्ति",
+      "romanization": "sphūrti",
+      "gloss": "vigour; fresh energy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b9096fc67508aad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for well again, then the Hindi for ayurveda."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्फूर्ति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्फूर्ति — sphūrti — \"vigour; fresh energy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सुबह की सैर के बाद दादी में नई स्फूर्ति थी। subah kī sair ke bād dādī meṁ naī sphūrti thī. After her morning walk my grandmother felt full of fresh energy."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्फूर्ति (sphūrti) is a tatsama, borrowed from Sanskrit sphūrti, \"quivering, throbbing\" (Monier-Williams); Hindi uses it for the lively energy one feels after rest, a sense the dictionary does not give. It is the learned cousin of phurtī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sphūrti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sphūrti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sphūrti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sphūrti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subah kī sair ke bād dādī meṁ naī sphūrti thī. — After her morning walk my grandmother felt full of fresh energy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subah kī sair ke bād dādī meṁ naī sphūrti thī.* — After her morning walk my grandmother felt full of fresh energy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for well again, then the Hindi for ayurveda, then say sphūrti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for well again, then the Hindi for ayurveda, then say *sphūrti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्फूर्ति (sphūrti) mean? (\"Vigour; fresh energy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

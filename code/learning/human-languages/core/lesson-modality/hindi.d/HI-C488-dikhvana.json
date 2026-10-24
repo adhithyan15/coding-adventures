@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C488-dikhvana",
+    "language": "hindi",
+    "chapter": 488,
+    "sequence": 26870,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ef3efa07521e10d6"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:4200d9c45a78d07f",
+  "lessonIds": [
+    "HI-C537-karyakram",
+    "HI-C537-mohlat",
+    "HI-C537-harbari",
+    "HI-C537-muhurt",
+    "HI-C537-khiskana",
+    "HI-R537-review-530-537"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch537.txt",
+  "json": "hindi/narration/ch537.json",
+  "textHash": "fnv1a64:e16ea1e71307301c",
+  "jsonHash": "fnv1a64:238974e2576da82a",
+  "findings": []
+}

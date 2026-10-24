@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Growing Up",
+  "label": "ch:hi-growing-up",
+  "canDo": "I can talk about growing up and coming of age.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C499-bisurna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can talk about growing up and coming of age.",
+    "assesses": [
+      "HI-LEX-C499-KISHOR499-03",
+      "HI-LEX-C499-KISHOR499-04",
+      "HI-LEX-C499-KISHOR499-05"
+    ]
+  }
+}

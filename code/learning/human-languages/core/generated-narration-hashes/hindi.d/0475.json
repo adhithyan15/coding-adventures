@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:fd14be55ad63834d",
+  "lessonIds": [
+    "HI-C475-caritra",
+    "HI-C475-acran",
+    "HI-C475-mizaj",
+    "HI-C475-gun",
+    "HI-C475-pravrtti",
+    "HI-R475-review-468-475"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch475.txt",
+  "json": "hindi/narration/ch475.json",
+  "textHash": "fnv1a64:7ed7e3dd76bcaf2a",
+  "jsonHash": "fnv1a64:f1c9156fb4ed7572",
+  "findings": []
+}

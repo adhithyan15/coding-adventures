@@ -1,0 +1,21 @@
+{
+  "chapter": 374,
+  "title": "Perhaps, Probably",
+  "label": "ch:hi-perhaps-probably",
+  "canDo": "I can guess what will happen if things go a certain way.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-R374-review-367-374",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can guess what will happen if things go a certain way.",
+    "assesses": [
+      "HI-LEX-C374-ANDAZA374-01",
+      "HI-LEX-C374-ANDAZA374-02",
+      "HI-LEX-C374-ANDAZA374-03",
+      "HI-LEX-C374-ANDAZA374-04",
+      "HI-LEX-C374-ANDAZA374-05"
+    ]
+  }
+}

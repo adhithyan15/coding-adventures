@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "Better and Worse",
+  "label": "ch:hi-better-and-worse",
+  "canDo": "I can say whether things will get better or worse.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C389-nikharna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can say whether things will get better or worse.",
+    "assesses": [
+      "HI-LEX-C389-BEHTAR389-03",
+      "HI-LEX-C389-BEHTAR389-04",
+      "HI-LEX-C389-BEHTAR389-05"
+    ]
+  }
+}

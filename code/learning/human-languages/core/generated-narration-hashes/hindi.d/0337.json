@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:c911d8d59858886c",
+  "lessonIds": [
+    "HI-C337-khazana",
+    "HI-C337-garna",
+    "HI-C337-nag",
+    "HI-C337-mani",
+    "HI-C337-dasna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch337.txt",
+  "json": "hindi/narration/ch337.json",
+  "textHash": "fnv1a64:cb5f961511ab0a09",
+  "jsonHash": "fnv1a64:354f53b1367f91fd",
+  "findings": []
+}

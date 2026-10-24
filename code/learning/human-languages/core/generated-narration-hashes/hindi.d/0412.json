@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:49386a445bec55f5",
+  "lessonIds": [
+    "HI-C412-vides",
+    "HI-C412-pardes",
+    "HI-C412-sarhad",
+    "HI-C412-utaarna",
+    "HI-C412-carhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch412.txt",
+  "json": "hindi/narration/ch412.json",
+  "textHash": "fnv1a64:4057a11637a22f5b",
+  "jsonHash": "fnv1a64:8948c74d01451c6e",
+  "findings": []
+}

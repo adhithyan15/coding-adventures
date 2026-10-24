@@ -1,0 +1,11 @@
+{
+  "id": "HI-C358-tyag",
+  "pathSegment": "HI-PATH-358-SEVA358",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-358-SEVA358",
+      "order": 1
+    }
+  ]
+}

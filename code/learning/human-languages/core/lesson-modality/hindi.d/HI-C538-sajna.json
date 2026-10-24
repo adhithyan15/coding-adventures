@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C538-sajna",
+    "language": "hindi",
+    "chapter": 538,
+    "sequence": 29670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3f0286e3e1dd615"
+  },
+  "findings": []
+}

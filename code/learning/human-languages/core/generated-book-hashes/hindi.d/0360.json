@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:b23ed0d1b2757bc7",
+  "lessonIds": [
+    "HI-C360-apatti",
+    "HI-C360-ninda",
+    "HI-C360-drstikon",
+    "HI-C360-dhamkana",
+    "HI-C360-phuslana"
+  ],
+  "tex": "hindi/book/chapters/ch360-objecting-and-persuading.tex"
+}

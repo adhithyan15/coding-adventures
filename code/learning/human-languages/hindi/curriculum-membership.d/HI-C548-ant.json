@@ -1,0 +1,11 @@
+{
+  "id": "HI-C548-ant",
+  "pathSegment": "HI-PATH-548-AVADHI548",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-548-AVADHI548",
+      "order": 2
+    }
+  ]
+}

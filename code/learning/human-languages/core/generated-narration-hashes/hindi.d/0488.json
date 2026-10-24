@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:cb9282c05e6c845b",
+  "lessonIds": [
+    "HI-C488-jac",
+    "HI-C488-nuskha",
+    "HI-C488-nars",
+    "HI-C488-dikhvana",
+    "HI-C488-karana"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch488.txt",
+  "json": "hindi/narration/ch488.json",
+  "textHash": "fnv1a64:b73af276d8b094ae",
+  "jsonHash": "fnv1a64:334e8071faf89f83",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Showing Off",
+  "label": "ch:hi-showing-off",
+  "canDo": "I can say that someone is showing off.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C462-nakhra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can say that someone is showing off.",
+    "assesses": [
+      "HI-LEX-C462-ABHIMAN462-03",
+      "HI-LEX-C462-ABHIMAN462-04",
+      "HI-LEX-C462-ABHIMAN462-05"
+    ]
+  }
+}

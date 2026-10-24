@@ -1,0 +1,11 @@
+{
+  "id": "HI-C467-dhurt",
+  "pathSegment": "HI-PATH-467-KAPAT467",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-467-KAPAT467",
+      "order": 1
+    }
+  ]
+}

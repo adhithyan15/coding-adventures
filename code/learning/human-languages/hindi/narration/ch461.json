@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 461,
+  "title": "Shyness and Shame",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:21c29f26d6ca23d9",
+  "lessons": [
+    {
+      "id": "HI-C461-sarminda",
+      "sequence": 25460,
+      "title": "शर्मिंदा (śarmindā) — ashamed; embarrassed",
+      "headword": "शर्मिंदा",
+      "romanization": "śarmindā",
+      "gloss": "ashamed; embarrassed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e432d04c3d9c01b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for desolate, then the Hindi for a longing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शर्मिंदा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शर्मिंदा — śarmindā — \"ashamed; embarrassed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अपनी ग़लती पर अरुण शर्मिंदा था। apnī ġaltī par Aruṇ śarmindā thā. Arun was ashamed of his mistake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शर्मिंदा (śarmindā) is usually traced to Persian sharminda, \"ashamed\", the adjective beside the noun that gave Hindi śarm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śarmindā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śarmindā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śarmindā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śarmindā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apnī ġaltī par Aruṇ śarmindā thā. — Arun was ashamed of his mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apnī ġaltī par Aruṇ śarmindā thā.* — Arun was ashamed of his mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for desolate, then the Hindi for a longing, then say śarmindā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for desolate, then the Hindi for a longing, then say *śarmindā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शर्मिंदा (śarmindā) mean? (\"Ashamed; embarrassed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C461-sakucana",
+      "sequence": 25470,
+      "title": "सकुचाना (sakucānā) — to shrink back shyly",
+      "headword": "सकुचाना",
+      "romanization": "sakucānā",
+      "gloss": "to shrink back shyly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f09acf93770526d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a longing, then the Hindi for ashamed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सकुचाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सकुचाना — sakucānā — \"to shrink back shyly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पहली मुलाक़ात में मीरा थोड़ा सकुचाई। pahlī mulāqāt meṁ Mīrā thoṛā sakucāī. At the first meeting Mira was a little shy and held back."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): वह सकुचाई, vah sakucāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सकुचाना (sakucānā) is inherited: CDIAL lists Hindi sakucnā, \"to shrink, become narrow or tight\", under Sanskrit saṁkucyatē, \"shrinks\" (CDIAL 12824); sakucānā is its common form for a person who shrinks back out of shyness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakucānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakucānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakucānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakucānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahlī mulāqāt meṁ Mīrā thoṛā sakucāī. — At the first meeting Mira was a little shy and held back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahlī mulāqāt meṁ Mīrā thoṛā sakucāī.* — At the first meeting Mira was a little shy and held back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a longing, then the Hindi for ashamed, then say sakucānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a longing, then the Hindi for ashamed, then say *sakucānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सकुचाना (sakucānā) mean? (\"To shrink back shyly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C461-hickicana",
+      "sequence": 25480,
+      "title": "हिचकिचाना (hickicānā) — to hesitate",
+      "headword": "हिचकिचाना",
+      "romanization": "hickicānā",
+      "gloss": "to hesitate",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c523fc03360f84f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for ashamed, then the Hindi for to shrink back shyly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हिचकिचाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिचकिचाना — hickicānā — \"to hesitate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सवाल पूछने से पहले अरुण थोड़ा हिचकिचाया। savāl pūchne se pahle Aruṇ thoṛā hickicāyā. Arun hesitated a little before asking his question."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह हिचकिचाया, vah hickicāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिचकिचाना (hickicānā) is probably built on hicaknā, \"to draw back\", which CDIAL lists under hicc, a form it reconstructs (CDIAL 14083); the doubled -cki- paints the stop-and-start of hesitation."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hickicānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hickicānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hickicānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hickicānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savāl pūchne se pahle Aruṇ thoṛā hickicāyā. — Arun hesitated a little before asking his question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savāl pūchne se pahle Aruṇ thoṛā hickicāyā.* — Arun hesitated a little before asking his question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for ashamed, then the Hindi for to shrink back shyly, then say hickicānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for ashamed, then the Hindi for to shrink back shyly, then say *hickicānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हिचकिचाना (hickicānā) mean? (\"To hesitate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C461-lajana",
+      "sequence": 25490,
+      "title": "लजाना (lajānā) — to blush; to be bashful",
+      "headword": "लजाना",
+      "romanization": "lajānā",
+      "gloss": "to blush; to be bashful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6978596ddd383809",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to shrink back shyly, then the Hindi for to hesitate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लजाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लजाना — lajānā — \"to blush; to be bashful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सब लोगों के सामने अपना नाम सुनकर मीरा लजा गई। sab logoṁ ke sāmne apnā nām sunkar Mīrā lajā gaī. Mira blushed when she heard her name in front of everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): वह लजा गई, vah lajā gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लजाना (lajānā) is a tadbhava: CDIAL lists Hindi lajānā, \"to shame, be ashamed\", under Sanskrit lajjátē, \"is ashamed\" (CDIAL 10909)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lajānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lajānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lajānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lajānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sab logoṁ ke sāmne apnā nām sunkar Mīrā lajā gaī. — Mira blushed when she heard her name in front of everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sab logoṁ ke sāmne apnā nām sunkar Mīrā lajā gaī.* — Mira blushed when she heard her name in front of everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to shrink back shyly, then the Hindi for to hesitate, then say lajānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to shrink back shyly, then the Hindi for to hesitate, then say *lajānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लजाना (lajānā) mean? (\"To blush; to be bashful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C461-dhith",
+      "sequence": 25500,
+      "title": "ढीठ (ḍhīṭh) — brazen; cheeky",
+      "headword": "ढीठ",
+      "romanization": "ḍhīṭh",
+      "gloss": "brazen; cheeky",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1c7b1dc14dd34e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to hesitate, then the Hindi for to blush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ढीठ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढीठ — ḍhīṭh — \"brazen; cheeky\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वह बच्चा बहुत ढीठ है, डाँटने पर भी हँसता है। vah baccā bahut ḍhīṭh hai, ḍā̃ṭne par bhī hãstā hai. That child is very cheeky; he laughs even when he's scolded."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढीठ (ḍhīṭh) is a tadbhava: CDIAL lists Hindi ḍhīṭh, \"bold, impudent\", under Sanskrit dhṛṣṭá, \"bold\" (CDIAL 6875)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhīṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhīṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhīṭh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhīṭh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vah baccā bahut ḍhīṭh hai, ḍā̃ṭne par bhī hãstā hai. — That child is very cheeky; he laughs even when he's scolded.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vah baccā bahut ḍhīṭh hai, ḍā̃ṭne par bhī hãstā hai.* — That child is very cheeky; he laughs even when he's scolded.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to hesitate, then the Hindi for to blush, then say ḍhīṭh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to hesitate, then the Hindi for to blush, then say *ḍhīṭh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ढीठ (ḍhīṭh) mean? (\"Brazen; cheeky\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

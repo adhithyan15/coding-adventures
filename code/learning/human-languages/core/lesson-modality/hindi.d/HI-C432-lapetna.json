@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C432-lapetna",
+    "language": "hindi",
+    "chapter": 432,
+    "sequence": 23780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06a0b1ed7efdc746"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:3c1a9d73fa2a1731",
+  "lessonIds": [
+    "HI-C360-apatti",
+    "HI-C360-ninda",
+    "HI-C360-drstikon",
+    "HI-C360-dhamkana",
+    "HI-C360-phuslana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch360.txt",
+  "json": "hindi/narration/ch360.json",
+  "textHash": "fnv1a64:620737790030cee3",
+  "jsonHash": "fnv1a64:497f2ae9653d06d1",
+  "findings": []
+}

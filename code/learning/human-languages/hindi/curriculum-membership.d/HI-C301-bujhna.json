@@ -1,0 +1,11 @@
+{
+  "id": "HI-C301-bujhna",
+  "pathSegment": "HI-PATH-301-BUJHI301",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-301-BUJHI301",
+      "order": 2
+    }
+  ]
+}

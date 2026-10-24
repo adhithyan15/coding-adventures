@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:9ad303b529bfb95e",
+  "lessonIds": [
+    "HI-C324-praja",
+    "HI-C324-hukm",
+    "HI-C324-gulam",
+    "HI-C324-vidroh",
+    "HI-C324-lalkarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch324.txt",
+  "json": "hindi/narration/ch324.json",
+  "textHash": "fnv1a64:64aa33c7d2891057",
+  "jsonHash": "fnv1a64:55eb3cb381e9f3e2",
+  "findings": []
+}

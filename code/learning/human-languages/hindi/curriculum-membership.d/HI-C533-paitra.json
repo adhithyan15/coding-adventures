@@ -1,0 +1,11 @@
+{
+  "id": "HI-C533-paitra",
+  "pathSegment": "HI-PATH-533-KUSHTI533",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-533-KUSHTI533",
+      "order": 4
+    }
+  ]
+}

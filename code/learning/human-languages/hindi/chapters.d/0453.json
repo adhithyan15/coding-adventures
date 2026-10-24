@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Joy and Delight",
+  "label": "ch:hi-joy-and-delight",
+  "canDo": "I can say how glad someone was.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C453-prasann",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can say how glad someone was.",
+    "assesses": [
+      "HI-LEX-C453-ANAND453-03",
+      "HI-LEX-C453-ANAND453-04",
+      "HI-LEX-C453-ANAND453-05"
+    ]
+  }
+}

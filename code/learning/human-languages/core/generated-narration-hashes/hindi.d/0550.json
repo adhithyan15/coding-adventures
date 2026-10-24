@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:c9c8e69e600efd00",
+  "lessonIds": [
+    "HI-C550-marzi",
+    "HI-C550-manpasand",
+    "HI-C550-manahi",
+    "HI-C550-pasandida",
+    "HI-C550-cayan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch550.txt",
+  "json": "hindi/narration/ch550.json",
+  "textHash": "fnv1a64:2339e84ec69c3cca",
+  "jsonHash": "fnv1a64:b24aea2f0dc7b658",
+  "findings": []
+}

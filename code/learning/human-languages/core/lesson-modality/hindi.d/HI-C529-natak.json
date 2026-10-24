@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C529-natak",
+    "language": "hindi",
+    "chapter": 529,
+    "sequence": 29170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac6d6791e2e57197"
+  },
+  "findings": []
+}

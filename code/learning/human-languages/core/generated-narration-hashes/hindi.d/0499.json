@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:abc0d775021a9371",
+  "lessonIds": [
+    "HI-C499-kisor",
+    "HI-C499-balig",
+    "HI-C499-sararat",
+    "HI-C499-yauvan",
+    "HI-C499-bisurna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch499.txt",
+  "json": "hindi/narration/ch499.json",
+  "textHash": "fnv1a64:85169a48d69525f5",
+  "jsonHash": "fnv1a64:69360f1a025c8d05",
+  "findings": []
+}

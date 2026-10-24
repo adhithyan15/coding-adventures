@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C476-cehra",
+    "language": "hindi",
+    "chapter": 476,
+    "sequence": 26230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7a11e87bfc4d16f"
+  },
+  "findings": []
+}

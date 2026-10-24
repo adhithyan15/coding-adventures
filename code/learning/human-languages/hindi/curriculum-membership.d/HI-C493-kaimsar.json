@@ -1,0 +1,11 @@
+{
+  "id": "HI-C493-kaimsar",
+  "pathSegment": "HI-PATH-493-DAMA493",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-493-DAMA493",
+      "order": 3
+    }
+  ]
+}

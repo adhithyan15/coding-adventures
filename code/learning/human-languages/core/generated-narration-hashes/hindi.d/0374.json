@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:f62bc7389b6098e6",
+  "lessonIds": [
+    "HI-C374-atkal",
+    "HI-C374-anuman",
+    "HI-C374-yaqin",
+    "HI-C374-amuman",
+    "HI-C374-buujhna",
+    "HI-R374-review-367-374"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch374.txt",
+  "json": "hindi/narration/ch374.json",
+  "textHash": "fnv1a64:d1660402bb22850c",
+  "jsonHash": "fnv1a64:2169fca714027996",
+  "findings": []
+}

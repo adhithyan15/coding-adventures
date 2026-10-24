@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C483-dam",
+    "language": "hindi",
+    "chapter": 483,
+    "sequence": 26600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1468b37212801399"
+  },
+  "findings": []
+}

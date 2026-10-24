@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:88a4adb70b8e4e1a",
+  "lessonIds": [
+    "HI-C450-jharnaa",
+    "HI-C450-ukharna",
+    "HI-C450-jotna",
+    "HI-C450-upajna",
+    "HI-C450-duhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch450.txt",
+  "json": "hindi/narration/ch450.json",
+  "textHash": "fnv1a64:b47c448f40a9e357",
+  "jsonHash": "fnv1a64:8ff314d528d7262c",
+  "findings": []
+}

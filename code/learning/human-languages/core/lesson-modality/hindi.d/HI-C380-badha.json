@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C380-badha",
+    "language": "hindi",
+    "chapter": 380,
+    "sequence": 20900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f2cd72dad1e7526"
+  },
+  "findings": []
+}

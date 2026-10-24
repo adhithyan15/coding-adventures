@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C321-top",
+    "language": "hindi",
+    "chapter": 321,
+    "sequence": 17710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd814c7f45f005f0"
+  },
+  "findings": []
+}

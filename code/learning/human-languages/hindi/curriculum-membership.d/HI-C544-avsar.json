@@ -1,0 +1,11 @@
+{
+  "id": "HI-C544-avsar",
+  "pathSegment": "HI-PATH-544-KISMAT544",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-544-KISMAT544",
+      "order": 3
+    }
+  ]
+}

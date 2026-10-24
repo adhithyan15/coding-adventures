@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Prizes and Rewards",
+  "label": "ch:hi-prizes-and-rewards",
+  "canDo": "I can say what someone will win if they do well.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C394-savarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can say what someone will win if they do well.",
+    "assesses": [
+      "HI-LEX-C394-INAAM394-03",
+      "HI-LEX-C394-INAAM394-04",
+      "HI-LEX-C394-INAAM394-05"
+    ]
+  }
+}

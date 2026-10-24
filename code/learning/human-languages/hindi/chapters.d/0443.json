@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Canals and Fields",
+  "label": "ch:hi-canals-and-fields",
+  "canDo": "I can talk about canals, reservoirs and currents, and watering and weeding the fields.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C443-nirana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can talk about canals, reservoirs and currents, and watering and weeding the fields.",
+    "assesses": [
+      "HI-LEX-C443-NAHAR443-03",
+      "HI-LEX-C443-NAHAR443-04",
+      "HI-LEX-C443-NAHAR443-05"
+    ]
+  }
+}

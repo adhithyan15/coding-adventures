@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:b54d5a0bf2a49a45",
+  "lessonIds": [
+    "HI-C341-panna",
+    "HI-C341-jild",
+    "HI-C341-sirsak",
+    "HI-C341-pathak",
+    "HI-C341-bikna"
+  ],
+  "tex": "hindi/book/chapters/ch341-turning-the-pages.tex"
+}

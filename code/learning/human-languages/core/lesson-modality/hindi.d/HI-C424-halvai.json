@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C424-halvai",
+    "language": "hindi",
+    "chapter": 424,
+    "sequence": 23340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4735f0d5d33cfd8e"
+  },
+  "findings": []
+}

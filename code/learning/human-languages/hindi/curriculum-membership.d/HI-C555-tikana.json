@@ -1,0 +1,11 @@
+{
+  "id": "HI-C555-tikana",
+  "pathSegment": "HI-PATH-555-GIRAVAT555",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-555-GIRAVAT555",
+      "order": 2
+    }
+  ]
+}

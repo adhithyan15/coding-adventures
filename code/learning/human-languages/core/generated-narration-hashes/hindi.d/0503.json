@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:8a7c116aea3f1c45",
+  "lessonIds": [
+    "HI-C503-grhasthi",
+    "HI-C503-mukhiya",
+    "HI-C503-buzurg",
+    "HI-C503-pirhi",
+    "HI-C503-posna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch503.txt",
+  "json": "hindi/narration/ch503.json",
+  "textHash": "fnv1a64:a84ae1bbe7611c4c",
+  "jsonHash": "fnv1a64:2bbc2a85ee570933",
+  "findings": []
+}

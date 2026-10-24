@@ -290,7 +290,9 @@ describe("corpus level summary", () => {
     // Marathi leaves it with chapters 278-287, the same five nodes (276-277
     // bridge the A2 past and future first), so the list is 9. Bengali leaves
     // it with chapters 266-275, the same five nodes (264-265 bridge the A2
-    // past and future first), so the list is 8.
+    // past and future first), so the list is 8. Hindi leaves it with chapters
+    // 278-287, the same five nodes (276-277 bridge the perfective with ne and
+    // the full future first), so the list is 7.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
     ).toEqual([
@@ -300,7 +302,6 @@ describe("corpus level summary", () => {
       // never reached. Both are one character each.
       "chinese",
       "gujarati",
-      "hindi",
       // Japanese joins with chapters 138-142: what I do, negation and
       // questions, the past, the future and practical texts, the five A2 spine
       // nodes. `reach` only TOUCHES A2; attained stays A1 until the A2
@@ -311,7 +312,7 @@ describe("corpus level summary", () => {
       "sanskrit",
       "urdu",
     ]);
-    // Fifteen tracks now exceed A2, and naming them is stronger than a blanket
+    // Sixteen tracks now exceed A2, and naming them is stronger than a blanket
     // "nothing does" -- it says which rung was climbed and by whom. Italian joins
     // Spanish with its B1 core, chapters 263-272, Portuguese with its B1
     // core, chapters 259-268, French with its B1 core, chapters 258-267,
@@ -321,12 +322,12 @@ describe("corpus level summary", () => {
     // chapters 283-292, Malayalam with its B1 core, chapters 339-348, Telugu
     // with its B1 core, chapters 316-325, Kannada with its B1 core, chapters
     // 309-318, Tamil with its B1 core, chapters 284-293, Marathi with its
-    // B1 core, chapters 276-287, and Bengali with its B1 core, chapters
-    // 264-275.
+    // B1 core, chapters 276-287, Bengali with its B1 core, chapters 264-275,
+    // and Hindi with its B1 core, chapters 276-287.
     expect(
       summary.tracks.filter((track) => track.reach !== null && levelRank(track.reach) > levelRank("A2"))
         .map((track) => track.language),
-    ).toEqual(["arabic", "bengali", "french", "german", "italian", "kannada", "latin", "malayalam", "marathi", "persian", "portuguese", "russian", "spanish", "tamil", "telugu"]);
+    ).toEqual(["arabic", "bengali", "french", "german", "hindi", "italian", "kannada", "latin", "malayalam", "marathi", "persian", "portuguese", "russian", "spanish", "tamil", "telugu"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
       // HL-C230: chinese leaves this list. Its numerals chapter realizes

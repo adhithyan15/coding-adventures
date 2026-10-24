@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:97367f3a04ceb5e5",
+  "lessonIds": [
+    "HI-C342-qissa",
+    "HI-C342-atmakatha",
+    "HI-C342-prakasak",
+    "HI-C342-samskaran",
+    "HI-C342-anuvad",
+    "HI-R342-review-336-342",
+    "HI-R342-review-final-342"
+  ],
+  "tex": "hindi/book/chapters/ch342-books-and-their-makers.tex"
+}

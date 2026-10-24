@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:125d50058084dfe0",
+  "lessonIds": [
+    "HI-C285-sabse",
+    "HI-C285-sezyada",
+    "HI-C285-dosaalse",
+    "HI-R285-comparing-and-time"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "hindi/narration/ch285.txt",
+  "json": "hindi/narration/ch285.json",
+  "textHash": "fnv1a64:79f7098502b2a853",
+  "jsonHash": "fnv1a64:8ec3326017bc5a7c",
+  "findings": []
+}

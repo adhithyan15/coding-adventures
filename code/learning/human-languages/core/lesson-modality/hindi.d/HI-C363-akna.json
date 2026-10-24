@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C363-akna",
+    "language": "hindi",
+    "chapter": 363,
+    "sequence": 20060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63f45ee1d387ea0d"
+  },
+  "findings": []
+}

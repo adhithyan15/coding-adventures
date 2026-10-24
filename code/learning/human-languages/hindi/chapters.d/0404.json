@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Traffic Jams",
+  "label": "ch:hi-traffic-jams",
+  "canDo": "I can say the traffic is heavy, that we got caught in a jam and that the cars crawled.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C404-hakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can say the traffic is heavy, that we got caught in a jam and that the cars crawled.",
+    "assesses": [
+      "HI-LEX-C404-TRAIFIK404-03",
+      "HI-LEX-C404-TRAIFIK404-04",
+      "HI-LEX-C404-TRAIFIK404-05"
+    ]
+  }
+}

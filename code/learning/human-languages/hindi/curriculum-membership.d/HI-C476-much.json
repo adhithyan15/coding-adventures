@@ -1,0 +1,11 @@
+{
+  "id": "HI-C476-much",
+  "pathSegment": "HI-PATH-476-CHEHRA476",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-476-CHEHRA476",
+      "order": 2
+    }
+  ]
+}

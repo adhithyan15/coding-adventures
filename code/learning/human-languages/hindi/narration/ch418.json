@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 418,
+  "title": "Near and Across",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b2bf7b14e2b29ad0",
+  "lessons": [
+    {
+      "id": "HI-C418-nazdik",
+      "sequence": 23020,
+      "title": "नज़दीक (nazdīk) — close by; near",
+      "headword": "नज़दीक",
+      "romanization": "nazdīk",
+      "gloss": "close by; near",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49aa2cb736257b2e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a route, then the Hindi for the way something faces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नज़दीक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नज़दीक — nazdīk — \"close by; near\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरा घर स्टेशन के नज़दीक है। merā ghar sṭeśan ke nazdīk hai. My house is close to the station."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नज़दीक (nazdīk) is usually traced to Persian nazdīk, \"near\"; like पास it follows के: घर के नज़दीक."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazdīk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazdīk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazdīk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazdīk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā ghar sṭeśan ke nazdīk hai. — My house is close to the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā ghar sṭeśan ke nazdīk hai.* — My house is close to the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a route, then the Hindi for the way something faces, then say nazdīk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a route, then the Hindi for the way something faces, then say *nazdīk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नज़दीक (nazdīk) mean? (\"Close by; near\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C418-nikat",
+      "sequence": 23030,
+      "title": "निकट (nikaṭ) — near (formal)",
+      "headword": "निकट",
+      "romanization": "nikaṭ",
+      "gloss": "near (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac515bbeff10640a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for the way something faces, then the Hindi for close by."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निकट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निकट — nikaṭ — \"near (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "होटल स्टेशन के निकट है। hoṭal sṭeśan ke nikaṭ hai. The hotel is near the station."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निकट (nikaṭ) is a tatsama, Sanskrit nikaṭa, \"being at the side, near\" (Monier-Williams); it is the formal partner of नज़दीक (nazdīk) and पास."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikaṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikaṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoṭal sṭeśan ke nikaṭ hai. — The hotel is near the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoṭal sṭeśan ke nikaṭ hai.* — The hotel is near the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for the way something faces, then the Hindi for close by, then say nikaṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for the way something faces, then the Hindi for close by, then say *nikaṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निकट (nikaṭ) mean? (\"Near (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C418-par",
+      "sequence": 23040,
+      "title": "पार (pār) — across; the far side",
+      "headword": "पार",
+      "romanization": "pār",
+      "gloss": "across; the far side",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b692761ea5f4be4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for close by, then the Hindi for near (formal)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पार — pār — \"across; the far side\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हमने नाव से नदी पार की। hamne nāv se nadī pār kī. We crossed the river by boat."
+            },
+            {
+              "kind": "speech",
+              "text": "पार (pār) करना, to cross; नदी के पार (pār), across the river; उस पार (pār), on the far side."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पार (pār) is a tadbhava of Sanskrit pāra, \"the further bank, the far end\" (CDIAL 8100), which lists Hindi pār, \"on the other side of, across\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamne nāv se nadī pār kī. — We crossed the river by boat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamne nāv se nadī pār kī.* — We crossed the river by boat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for close by, then the Hindi for near (formal), then say pār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for close by, then the Hindi for near (formal), then say *pār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पार (pār) mean? (\"Across; the far side\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C418-bagal",
+      "sequence": 23050,
+      "title": "बग़ल (baġal) — the side; beside (with में)",
+      "headword": "बग़ल",
+      "romanization": "baġal",
+      "gloss": "the side; beside (with में)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e925820f82088e54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for near (formal), then the Hindi for across."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बग़ल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बग़ल — baġal — \"the side; beside (with में)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बैंक के बग़ल में एक दवाख़ाना है। baiṅk ke baġal meṁ ek davākhānā hai. There is a pharmacy next to the bank."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बग़ल (baġal) is usually traced to Persian baġal, \"the armpit, the side of the body\": what is in your armpit is right beside you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baġal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baġal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baġal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baġal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baiṅk ke baġal meṁ ek davākhānā hai. — There is a pharmacy next to the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baiṅk ke baġal meṁ ek davākhānā hai.* — There is a pharmacy next to the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for near (formal), then the Hindi for across, then say baġal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for near (formal), then the Hindi for across, then say *baġal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बग़ल (baġal) mean? (\"The side; beside (with में)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C418-pahucana",
+      "sequence": 23060,
+      "title": "पहुँचाना (pahũcānā) — to take (someone) to; to deliver",
+      "headword": "पहुँचाना",
+      "romanization": "pahũcānā",
+      "gloss": "to take (someone) to; to deliver",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c3479335005be42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for across, then the Hindi for beside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पहुँचाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पहुँचाना — pahũcānā — \"to take (someone) to; to deliver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ड्राइवर ने हमें होटल तक पहुँचाया। ḍrāivar ne hamẽ hoṭal tak pahũcāyā. The driver took us all the way to the hotel."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने चिट्ठी घर तक पहुँचाई, usne ciṭṭhī ghar tak pahũcāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पहुँचाना (pahũcānā) is the causative partner of पहुँचना, \"to arrive\", which CDIAL files under Sanskrit prabhūta, \"much, great\" (CDIAL 8716): to make someone or something arrive."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahũcānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahũcānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahũcānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahũcānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍrāivar ne hamẽ hoṭal tak pahũcāyā. — The driver took us all the way to the hotel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍrāivar ne hamẽ hoṭal tak pahũcāyā.* — The driver took us all the way to the hotel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for across, then the Hindi for beside, then say pahũcānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for across, then the Hindi for beside, then say *pahũcānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पहुँचाना (pahũcānā) mean? (\"To take (someone) to; to deliver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

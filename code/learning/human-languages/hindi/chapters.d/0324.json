@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Rebellion",
+  "label": "ch:hi-rebellion",
+  "canDo": "I can tell how people rose against a ruler.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C324-lalkarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can tell how people rose against a ruler.",
+    "assesses": [
+      "HI-LEX-C324-VIDROH324-03",
+      "HI-LEX-C324-VIDROH324-04",
+      "HI-LEX-C324-VIDROH324-05"
+    ]
+  }
+}

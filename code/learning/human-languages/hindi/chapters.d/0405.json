@@ -1,0 +1,21 @@
+{
+  "chapter": 405,
+  "title": "Speed and Bumps",
+  "label": "ch:hi-speed-and-bumps",
+  "canDo": "I can talk about speed, potholes and the conductor, a bumpy ride and a road that branches off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-R405-review-398-405",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can talk about speed, potholes and the conductor, a bumpy ride and a road that branches off.",
+    "assesses": [
+      "HI-LEX-C405-GATI405-01",
+      "HI-LEX-C405-GATI405-02",
+      "HI-LEX-C405-GATI405-03",
+      "HI-LEX-C405-GATI405-04",
+      "HI-LEX-C405-GATI405-05"
+    ]
+  }
+}

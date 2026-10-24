@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:ccecf8a176d35820",
+  "lessonIds": [
+    "HI-C379-yadi",
+    "HI-C379-anyatha",
+    "HI-C379-matra",
+    "HI-C379-khabardar",
+    "HI-C379-patakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch379.txt",
+  "json": "hindi/narration/ch379.json",
+  "textHash": "fnv1a64:092bed24f39924ec",
+  "jsonHash": "fnv1a64:f519169d18b7c486",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C556-yaqinan",
+  "pathSegment": "HI-PATH-556-SANDEH556",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-556-SANDEH556",
+      "order": 1
+    }
+  ]
+}

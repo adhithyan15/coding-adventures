@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "The Thief Got Away",
+  "label": "ch:hi-the-thief-got-away",
+  "canDo": "I can say how a thief got away and who went after him.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C289-picha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can say how a thief got away and who went after him.",
+    "assesses": [
+      "HI-LEX-C289-BHAGA289-03",
+      "HI-LEX-C289-BHAGA289-04",
+      "HI-LEX-C289-BHAGA289-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C435-posak",
+    "language": "hindi",
+    "chapter": 435,
+    "sequence": 23910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4229a41e03d9b46"
+  },
+  "findings": []
+}

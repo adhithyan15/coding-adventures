@@ -1,0 +1,11 @@
+{
+  "id": "HI-C382-nazuk",
+  "pathSegment": "HI-PATH-382-JALDBAZI382",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-382-JALDBAZI382",
+      "order": 4
+    }
+  ]
+}

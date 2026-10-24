@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C454-acambha",
+    "language": "hindi",
+    "chapter": 454,
+    "sequence": 25120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b6175025c77ec2a"
+  },
+  "findings": []
+}

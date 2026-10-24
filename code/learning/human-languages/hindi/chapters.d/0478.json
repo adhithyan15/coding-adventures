@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Inside the Body",
+  "label": "ch:hi-inside-the-body",
+  "canDo": "I can name some organs inside the body.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C478-gurda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can name some organs inside the body.",
+    "assesses": [
+      "HI-LEX-C478-PHEPHDA478-03",
+      "HI-LEX-C478-PHEPHDA478-04",
+      "HI-LEX-C478-PHEPHDA478-05"
+    ]
+  }
+}

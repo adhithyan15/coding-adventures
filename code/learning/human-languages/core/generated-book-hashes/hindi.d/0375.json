@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:49d72151ad7fd04e",
+  "lessonIds": [
+    "HI-C375-asa",
+    "HI-C375-asanka",
+    "HI-C375-sanket",
+    "HI-C375-isara",
+    "HI-C375-rijhana"
+  ],
+  "tex": "hindi/book/chapters/ch375-hopes-and-fears.tex"
+}

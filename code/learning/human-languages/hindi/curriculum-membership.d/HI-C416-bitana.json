@@ -1,0 +1,11 @@
+{
+  "id": "HI-C416-bitana",
+  "pathSegment": "HI-PATH-416-KHEMA416",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-416-KHEMA416",
+      "order": 4
+    }
+  ]
+}

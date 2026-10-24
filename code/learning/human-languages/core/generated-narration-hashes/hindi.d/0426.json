@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:a9aedb6c38fa9fb1",
+  "lessonIds": [
+    "HI-C426-raqam",
+    "HI-C426-naqad",
+    "HI-C426-cek",
+    "HI-C426-bailens",
+    "HI-C426-etiem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch426.txt",
+  "json": "hindi/narration/ch426.json",
+  "textHash": "fnv1a64:6dea510a58968166",
+  "jsonHash": "fnv1a64:98d9c7f5bbb89584",
+  "findings": []
+}

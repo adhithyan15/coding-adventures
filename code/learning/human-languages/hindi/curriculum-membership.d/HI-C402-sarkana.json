@@ -1,0 +1,11 @@
+{
+  "id": "HI-C402-sarkana",
+  "pathSegment": "HI-PATH-402-GATHRI402",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-402-GATHRI402",
+      "order": 2
+    }
+  ]
+}

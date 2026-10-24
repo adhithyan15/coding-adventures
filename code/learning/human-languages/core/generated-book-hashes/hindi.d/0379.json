@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:c60eb9b3021ec0c8",
+  "lessonIds": [
+    "HI-C379-yadi",
+    "HI-C379-anyatha",
+    "HI-C379-matra",
+    "HI-C379-khabardar",
+    "HI-C379-patakna"
+  ],
+  "tex": "hindi/book/chapters/ch379-formal-conditions.tex"
+}

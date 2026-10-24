@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:c817abf7b9affd05",
+  "lessonIds": [
+    "HI-C280-lagna",
+    "HI-C280-aisa",
+    "HI-W280-letter-ai",
+    "HI-C280-mujhelagtahai",
+    "HI-C280-kivajahse",
+    "HI-R280-opinion-and-reason"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch280.txt",
+  "json": "hindi/narration/ch280.json",
+  "textHash": "fnv1a64:7e04bf796e97314f",
+  "jsonHash": "fnv1a64:536bf7bae4de3f37",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:3730c8679db1659d",
+  "lessonIds": [
+    "HI-C472-phurtila",
+    "HI-C472-sust",
+    "HI-C472-nikamma",
+    "HI-C472-karmath",
+    "HI-C472-mustaid"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch472.txt",
+  "json": "hindi/narration/ch472.json",
+  "textHash": "fnv1a64:35ffed5ca178060b",
+  "jsonHash": "fnv1a64:c3d75541f1952667",
+  "findings": []
+}

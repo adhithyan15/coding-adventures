@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C437-pasijna",
+    "language": "hindi",
+    "chapter": 437,
+    "sequence": 24030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d1edd73af01d0e7"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C426-etiem",
+  "pathSegment": "HI-PATH-426-RAQAM426",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-426-RAQAM426",
+      "order": 4
+    }
+  ]
+}

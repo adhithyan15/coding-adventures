@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Aches and Pains",
+  "label": "ch:hi-aches-and-pains",
+  "canDo": "I can say where it hurts and how.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C486-sujna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can say where it hurts and how.",
+    "assesses": [
+      "HI-LEX-C486-DUKHNA486-03",
+      "HI-LEX-C486-DUKHNA486-04",
+      "HI-LEX-C486-DUKHNA486-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C407-rajmarg",
+    "language": "hindi",
+    "chapter": 407,
+    "sequence": 22460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88b6555ac5073d3f"
+  },
+  "findings": []
+}

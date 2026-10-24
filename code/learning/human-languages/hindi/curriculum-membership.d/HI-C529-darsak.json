@@ -1,0 +1,11 @@
+{
+  "id": "HI-C529-darsak",
+  "pathSegment": "HI-PATH-529-NATAK529",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-529-NATAK529",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:b55b981dcaa3eb1f",
+  "lessonIds": [
+    "HI-C363-adhyayan",
+    "HI-C363-anusar",
+    "HI-C363-namuna",
+    "HI-C363-tulnakarna",
+    "HI-C363-akna"
+  ],
+  "tex": "hindi/book/chapters/ch363-a-study.tex"
+}

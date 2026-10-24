@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C333-ghat",
+    "language": "hindi",
+    "chapter": 333,
+    "sequence": 18300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55988f66bfc4c46e"
+  },
+  "findings": []
+}

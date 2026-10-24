@@ -1,0 +1,11 @@
+{
+  "id": "HI-C324-gulam",
+  "pathSegment": "HI-PATH-324-VIDROH324",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-324-VIDROH324",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C380-hal",
+    "language": "hindi",
+    "chapter": 380,
+    "sequence": 20910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2151aef6e4da7be2"
+  },
+  "findings": []
+}

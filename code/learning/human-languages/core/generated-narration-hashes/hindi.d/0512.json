@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:d387c2c6faf8dca2",
+  "lessonIds": [
+    "HI-C512-kapas",
+    "HI-C512-carkha",
+    "HI-C512-kaatna",
+    "HI-C512-kargha",
+    "HI-C512-gath"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch512.txt",
+  "json": "hindi/narration/ch512.json",
+  "textHash": "fnv1a64:46c0516e62cab763",
+  "jsonHash": "fnv1a64:e3b7dddd5bb2a8f6",
+  "findings": []
+}

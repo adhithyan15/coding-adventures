@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Capital and Bankruptcy",
+  "label": "ch:hi-capital-and-bankruptcy",
+  "canDo": "I can talk about capital and funds, collecting money, a debt paid off and a business gone bankrupt.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C430-ugahna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk about capital and funds, collecting money, a debt paid off and a business gone bankrupt.",
+    "assesses": [
+      "HI-LEX-C430-DIVALA430-03",
+      "HI-LEX-C430-DIVALA430-04",
+      "HI-LEX-C430-DIVALA430-05"
+    ]
+  }
+}

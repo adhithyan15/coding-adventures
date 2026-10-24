@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:08c531616646061a",
+  "lessonIds": [
+    "HI-C364-visesajna",
+    "HI-C364-vidvan",
+    "HI-C364-lekh",
+    "HI-C364-nibandh",
+    "HI-C364-chatna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch364.txt",
+  "json": "hindi/narration/ch364.json",
+  "textHash": "fnv1a64:291b7d87d734a86e",
+  "jsonHash": "fnv1a64:4a103b7017c43138",
+  "findings": []
+}

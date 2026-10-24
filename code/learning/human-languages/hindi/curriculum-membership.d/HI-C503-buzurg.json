@@ -1,0 +1,11 @@
+{
+  "id": "HI-C503-buzurg",
+  "pathSegment": "HI-PATH-503-PIDHI503",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-503-PIDHI503",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:5740d61e12c24e00",
+  "lessonIds": [
+    "HI-C493-madhumeh",
+    "HI-C493-dama",
+    "HI-C493-lakva",
+    "HI-C493-kaimsar",
+    "HI-C493-jakarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch493.txt",
+  "json": "hindi/narration/ch493.json",
+  "textHash": "fnv1a64:c17a7e4d6eff22db",
+  "jsonHash": "fnv1a64:f2a449d9e94a5bdd",
+  "findings": []
+}

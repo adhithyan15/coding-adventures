@@ -1,0 +1,11 @@
+{
+  "id": "HI-C535-medal",
+  "pathSegment": "HI-PATH-535-DAUR535",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-535-DAUR535",
+      "order": 3
+    }
+  ]
+}

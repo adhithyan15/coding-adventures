@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Rates and Deals",
+  "label": "ch:hi-rates-and-deals",
+  "canDo": "I can ask the going rate, talk about worth, strike a deal and find a sale or good value.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C431-kifayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can ask the going rate, talk about worth, strike a deal and find a sale or good value.",
+    "assesses": [
+      "HI-LEX-C431-SAUDA431-03",
+      "HI-LEX-C431-SAUDA431-04",
+      "HI-LEX-C431-SAUDA431-05"
+    ]
+  }
+}

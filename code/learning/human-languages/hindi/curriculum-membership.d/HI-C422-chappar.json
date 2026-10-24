@@ -1,0 +1,11 @@
+{
+  "id": "HI-C422-chappar",
+  "pathSegment": "HI-PATH-422-KOTHI422",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-422-KOTHI422",
+      "order": 4
+    }
+  ]
+}

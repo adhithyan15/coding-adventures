@@ -1,0 +1,11 @@
+{
+  "id": "HI-C552-baharhal",
+  "pathSegment": "HI-PATH-552-BAHARHAAL552",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-552-BAHARHAAL552",
+      "order": 2
+    }
+  ]
+}

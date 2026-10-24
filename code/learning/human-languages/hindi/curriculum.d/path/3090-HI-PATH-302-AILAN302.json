@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-302-AILAN302",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "HI-EXT-302-AILAN302"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C559-bhavi",
+    "language": "hindi",
+    "chapter": 559,
+    "sequence": 30740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:023027c111acfaac"
+  },
+  "findings": []
+}

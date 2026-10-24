@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:6dc7011b158840a7",
+  "lessonIds": [
+    "HI-C436-bud",
+    "HI-C436-megh",
+    "HI-C436-bhap",
+    "HI-C436-renkot",
+    "HI-C436-barasna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch436.txt",
+  "json": "hindi/narration/ch436.json",
+  "textHash": "fnv1a64:3cc653ef56fd7917",
+  "jsonHash": "fnv1a64:f69bfad6a96e9ee8",
+  "findings": []
+}

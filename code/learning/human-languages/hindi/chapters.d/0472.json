@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Lazy or Brisk",
+  "label": "ch:hi-lazy-or-brisk",
+  "canDo": "I can say whether someone gets things done.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C472-mustaid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can say whether someone gets things done.",
+    "assesses": [
+      "HI-LEX-C472-PHURTI472-03",
+      "HI-LEX-C472-PHURTI472-04",
+      "HI-LEX-C472-PHURTI472-05"
+    ]
+  }
+}

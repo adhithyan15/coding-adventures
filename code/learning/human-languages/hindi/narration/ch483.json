@@ -1,0 +1,854 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 483,
+  "title": "Strength and Breath",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6aa2fedda59563c0",
+  "lessons": [
+    {
+      "id": "HI-C483-taqat",
+      "sequence": 26580,
+      "title": "ताक़त (tāqat) — strength; power",
+      "headword": "ताक़त",
+      "romanization": "tāqat",
+      "gloss": "strength; power",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d484720c7776738e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for fair-skinned, then the Hindi for lean."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ताक़त",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ताक़त — tāqat — \"strength; power\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दूध पीने से बच्चों को ताक़त मिलती है। dūdh pīne se baccoṁ ko tāqat miltī hai. Drinking milk gives children strength."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ताक़त (tāqat) is usually traced to Arabic ṭāqa, \"ability, strength\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāqat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāqat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāqat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāqat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūdh pīne se baccoṁ ko tāqat miltī hai. — Drinking milk gives children strength.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūdh pīne se baccoṁ ko tāqat miltī hai.* — Drinking milk gives children strength.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for fair-skinned, then the Hindi for lean, then say tāqat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for fair-skinned, then the Hindi for lean, then say *tāqat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ताक़त (tāqat) mean? (\"Strength; power\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C483-cust",
+      "sequence": 26590,
+      "title": "चुस्त (cust) — spry; fit",
+      "headword": "चुस्त",
+      "romanization": "cust",
+      "gloss": "spry; fit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da7dcf3c8349c6c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for lean, then the Hindi for strength."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चुस्त",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चुस्त — cust — \"spry; fit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अस्सी की उम्र में भी नानी बहुत चुस्त हैं। assī kī umr meṁ bhī nānī bahut cust haiṁ. Even at eighty, my grandmother is very spry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चुस्त (cust) is usually traced to Persian chust, \"quick, active, tight\". Clothes can be cust too: close-fitting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cust",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cust*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cust, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cust*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "assī kī umr meṁ bhī nānī bahut cust haiṁ. — Even at eighty, my grandmother is very spry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *assī kī umr meṁ bhī nānī bahut cust haiṁ.* — Even at eighty, my grandmother is very spry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for lean, then the Hindi for strength, then say cust again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for lean, then the Hindi for strength, then say *cust* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चुस्त (cust) mean? (\"Spry; fit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C483-dam",
+      "sequence": 26600,
+      "title": "दम (dam) — stamina; breath",
+      "headword": "दम",
+      "romanization": "dam",
+      "gloss": "stamina; breath",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1468b37212801399",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for strength, then the Hindi for spry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दम — dam — \"stamina; breath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादा में अभी भी बहुत दम है। dādā meṁ abhī bhī bahut dam hai. Grandfather still has plenty of stamina."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दम (dam) is usually traced to Persian dam, \"breath\", and so the strength to keep going. dam lenā is to catch one's breath."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādā meṁ abhī bhī bahut dam hai. — Grandfather still has plenty of stamina.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādā meṁ abhī bhī bahut dam hai.* — Grandfather still has plenty of stamina.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for strength, then the Hindi for spry, then say dam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for strength, then the Hindi for spry, then say *dam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दम (dam) mean? (\"Stamina; breath\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C483-bal",
+      "sequence": 26610,
+      "title": "बल (bal) — force; might",
+      "headword": "बल",
+      "romanization": "bal",
+      "gloss": "force; might",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:855bec09c0ecaf37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for spry, then the Hindi for stamina."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बल — bal — \"force; might\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुण ने पूरे बल से दरवाज़ा धकेला। Aruṇ ne pūre bal se darvāzā dhakelā. Arun pushed the door with all his strength."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बल (bal) is inherited from Sanskrit bála, \"strength, power\": CDIAL lists Hindi bal, \"strength, ability\", under it (CDIAL 9161). dublā is built on its opposite, durbala."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ ne pūre bal se darvāzā dhakelā. — Arun pushed the door with all his strength.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ ne pūre bal se darvāzā dhakelā.* — Arun pushed the door with all his strength.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for spry, then the Hindi for stamina, then say bal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for spry, then the Hindi for stamina, then say *bal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बल (bal) mean? (\"Force; might\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C483-thakana",
+      "sequence": 26620,
+      "title": "थकाना (thakānā) — to tire someone out",
+      "headword": "थकाना",
+      "romanization": "thakānā",
+      "gloss": "to tire someone out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f1e6239aec79c39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for stamina, then the Hindi for force."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: थकाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थकाना — thakānā — \"to tire someone out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लंबे सफ़र ने बच्चों को थका दिया। lambe safar ne baccoṁ ko thakā diyā. The long journey tired the children out."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बच्चों को थकाया, usne baccoṁ ko thakāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थकाना (thakānā) is the causative partner of thaknā, \"to become weary\", which CDIAL lists under sthakk, a form it reconstructs (CDIAL 13737)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thakānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thakānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thakānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thakānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lambe safar ne baccoṁ ko thakā diyā. — The long journey tired the children out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lambe safar ne baccoṁ ko thakā diyā.* — The long journey tired the children out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for stamina, then the Hindi for force, then say thakānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for stamina, then the Hindi for force, then say *thakānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does थकाना (thakānā) mean? (\"To tire someone out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R483-review-476-483",
+      "sequence": 26630,
+      "title": "Looking back: from The Face to Strength and Breath",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from The Face to Strength and Breath",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87f748f1efa31926",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for a face and an eyebrow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a face, an eyebrow, a moustache, a beard, a jaw",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a face, an eyebrow, a moustache, a beard, a jaw]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the palm of the hand, a fist, an arm, a leg, a heel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the palm of the hand, a fist, an arm, a leg, a heel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lung, the brain, a vein, a rib, a kidney",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lung, the brain, a vein, a rib, a kidney]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the mouth, a gum (of the teeth), to suck, to chew, to spit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the mouth, a gum (of the teeth), to suck, to chew, to spit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a taste, a touch, a smell, an aroma, to lick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a taste, a touch, a smell, an aroma, to lick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lie down, to draw in, to limp, to stand on tiptoe, to jump",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lie down, to draw in, to limp, to stand on tiptoe, to jump]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "height, appearance, dusky, fair-skinned, lean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: height, appearance, dusky, fair-skinned, lean]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strength, spry, stamina, force, to tire someone out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: strength, spry, stamina, force, to tire someone out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A face? (चेहरा, cehrā.) An eyebrow? (भौंह, bhauṁh.) A moustache? (मूँछ, mū̃ch.) A beard? (दाढ़ी, dāṛhī.) A jaw? (जबड़ा, jabṛā.) The palm of the hand? (हथेली, hathelī.) A fist? (मुट्ठी, muṭṭhī.) An arm? (बाँह, bā̃h.) A leg? (टाँग, ṭā̃g.) A heel? (एड़ी, eṛī.) A lung? (फेफड़ा, phephṛā.) The brain? (दिमाग़, dimāġ.) A vein? (नस, nas.) A rib? (पसली, paslī.) A kidney? (गुर्दा, gurdā.) The mouth? (मुँह, mũh.) A gum (of the teeth)? (मसूड़ा, masūṛā.) To suck? (चूसना, cūsnā.) To chew? (चबाना, cabānā.) To spit? (थूकना, thūknā.) A taste? (स्वाद, svād.) A touch? (स्पर्श, sparś.) A smell? (गंध, gandh.) An aroma? (महक, mahak.) To lick? (चाटना, cāṭnā.) To lie down? (लेटना, leṭnā.) To draw in? (सिकोड़ना, sikoṛnā.) To limp? (लँगड़ाना, lãgṛānā.) To stand on tiptoe? (उचकना, ucaknā.) To jump? (कूदना, kūdnā.) Height? (क़द, qad.) Appearance? (हुलिया, huliyā.) Dusky? (साँवला, sā̃vlā.) Fair-skinned? (गोरा, gorā.) Lean? (दुबला, dublā.) Strength? (ताक़त, tāqat.) Spry? (चुस्त, cust.) Stamina? (दम, dam.) Force? (बल, bal.) To tire someone out? (थकाना, thakānā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

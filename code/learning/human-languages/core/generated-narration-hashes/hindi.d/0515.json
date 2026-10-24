@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:6499a6a0a0da794a",
+  "lessonIds": [
+    "HI-C515-dhila",
+    "HI-C515-penc",
+    "HI-C515-peckas",
+    "HI-C515-kasna",
+    "HI-C515-kharkharana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch515.txt",
+  "json": "hindi/narration/ch515.json",
+  "textHash": "fnv1a64:ba0e3ca69be6b861",
+  "jsonHash": "fnv1a64:c46e01c9f0a6f47e",
+  "findings": []
+}

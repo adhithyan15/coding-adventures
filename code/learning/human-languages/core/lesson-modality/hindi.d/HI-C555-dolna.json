@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C555-dolna",
+    "language": "hindi",
+    "chapter": 555,
+    "sequence": 30520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1383a06b45ccaf7"
+  },
+  "findings": []
+}

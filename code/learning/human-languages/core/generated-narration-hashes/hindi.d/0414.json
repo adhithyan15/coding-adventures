@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:81a0f1e3de485876",
+  "lessonIds": [
+    "HI-C414-gusalkhana",
+    "HI-C414-saucalay",
+    "HI-C414-gizar",
+    "HI-C414-aramdeh",
+    "HI-C414-jagana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch414.txt",
+  "json": "hindi/narration/ch414.json",
+  "textHash": "fnv1a64:c6737118225e5579",
+  "jsonHash": "fnv1a64:2a1c4ae9a0ad5119",
+  "findings": []
+}

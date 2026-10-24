@@ -1,0 +1,11 @@
+{
+  "id": "HI-C338-bhut",
+  "pathSegment": "HI-PATH-338-PARI338",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-338-PARI338",
+      "order": 2
+    }
+  ]
+}

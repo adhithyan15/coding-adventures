@@ -1,0 +1,11 @@
+{
+  "id": "HI-C347-virodhkarna",
+  "pathSegment": "HI-PATH-347-PAKSH347",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-347-PAKSH347",
+      "order": 2
+    }
+  ]
+}

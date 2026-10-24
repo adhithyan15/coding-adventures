@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:efe5fc270b019657",
+  "lessonIds": [
+    "HI-C504-yaddast",
+    "HI-C504-chari",
+    "HI-C504-pemsan",
+    "HI-C504-bisarna",
+    "HI-C504-virasat"
+  ],
+  "tex": "hindi/book/chapters/ch504-growing-old.tex"
+}

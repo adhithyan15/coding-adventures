@@ -1,0 +1,11 @@
+{
+  "id": "HI-C521-jira",
+  "pathSegment": "HI-PATH-521-TADKA521",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-521-TADKA521",
+      "order": 2
+    }
+  ]
+}

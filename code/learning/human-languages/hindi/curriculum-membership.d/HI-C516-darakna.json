@@ -1,0 +1,11 @@
+{
+  "id": "HI-C516-darakna",
+  "pathSegment": "HI-PATH-516-RISNA516",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-516-RISNA516",
+      "order": 1
+    }
+  ]
+}

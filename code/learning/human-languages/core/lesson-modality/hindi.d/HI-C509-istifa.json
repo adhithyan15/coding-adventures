@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C509-istifa",
+    "language": "hindi",
+    "chapter": 509,
+    "sequence": 28160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31e1b97e5b6e64e9"
+  },
+  "findings": []
+}

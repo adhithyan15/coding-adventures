@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Thread and Loom",
+  "label": "ch:hi-thread-and-loom",
+  "canDo": "I can talk about cotton, spinning and weaving.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C512-gath",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about cotton, spinning and weaving.",
+    "assesses": [
+      "HI-LEX-C512-KARGHA512-03",
+      "HI-LEX-C512-KARGHA512-04",
+      "HI-LEX-C512-KARGHA512-05"
+    ]
+  }
+}

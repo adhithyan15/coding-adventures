@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C381-satana",
+    "language": "hindi",
+    "chapter": 381,
+    "sequence": 20960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4309281bc966435"
+  },
+  "findings": []
+}

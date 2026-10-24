@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C370-parti",
+    "language": "hindi",
+    "chapter": 370,
+    "sequence": 20410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e87d7986e30c3bf1"
+  },
+  "findings": []
+}

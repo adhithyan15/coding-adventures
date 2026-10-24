@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C532-mahfil",
+    "language": "hindi",
+    "chapter": 532,
+    "sequence": 29360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ecbbe5bf91848d91"
+  },
+  "findings": []
+}

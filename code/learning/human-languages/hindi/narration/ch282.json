@@ -1,0 +1,521 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 282,
+  "title": "Asking the Way",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:c9a7fd0f5c1243a8",
+  "lessons": [
+    {
+      "id": "HI-C282-batana",
+      "sequence": 15540,
+      "title": "बताना (batānā) — to tell, to let someone know",
+      "headword": "बताना",
+      "romanization": "batānā",
+      "gloss": "to tell, to let someone know",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbb35141e63c6d2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"he said that he would come tomorrow\". (usne kahā ki vah kal āegā.) कहना reports words. This lesson's verb hands someone a piece of information."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बताना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बताना — batānā — \"to tell, to let someone know\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे रास्ता बताइए। mujhe rāstā batāie. — \"Please tell me the way.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The one who is told takes को or its short form: मुझे, उसे. What is told is the thing, and in the past the verb follows it:"
+            },
+            {
+              "kind": "speech",
+              "text": "उसने मुझे अपना नाम बताया। (usne mujhe apnā nām batāyā.) — She told me her name."
+            },
+            {
+              "kind": "speech",
+              "text": "क्या आप मुझे बता सकते हैं? (kyā āp mujhe batā sakte haiṁ?) — Can you tell me?"
+            },
+            {
+              "kind": "speech",
+              "text": "कहना reports what someone said: उसने कहा कि …. बताना (batānā) gives someone news or directions: उसने मुझे बताया कि … (usne mujhe batāyā ki …), \"she told me that …\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बताना (batānā) has no row in CDIAL, and its origin is not settled. Its ending is the -आना of दिखाना, \"to show\", and समझाना, \"to explain\": verbs of passing something on to someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "batānā, then mujhe rāstā batāie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *batānā*, then *mujhe rāstā batāie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She told me her name\" — usne mujhe apnā nām batāyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She told me her name\" — *usne mujhe apnā nām batāyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Can you tell me?\" — kyā āp mujhe batā sakte haiṁ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Can you tell me?\" — *kyā āp mujhe batā sakte haiṁ?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बताना (batānā) mean? (\"To tell, to let someone know\".) \"Please tell me the way\"? (मुझे रास्ता बताइए.) Which verb reports what someone said? (कहना.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C282-dur",
+      "sequence": 15550,
+      "title": "दूर (dūr) — far",
+      "headword": "दूर",
+      "romanization": "dūr",
+      "gloss": "far, far away",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43b27baf160a664a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"near the house\". (घर के पास.) This lesson's word is its opposite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दूर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूर — dūr — \"far, far away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "स्टेशन यहाँ से कितनी दूर है? sṭeśan yahā̃ se kitnī dūr hai? — \"How far is the station from here?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Hindi asks कितनी दूर (dūr), with the feminine कितनी, whatever the place. दूर (dūr) itself never changes: गाँव दूर (dūr) है, नदी दूर (dūr) है. The place you measure from takes से, as in यहाँ से."
+            },
+            {
+              "kind": "speech",
+              "text": "बहुत दूर नहीं है। (bahut dūr nahīṃ hai.) — It's not very far."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरा घर स्टेशन से दूर है। (merā ghar sṭeśan se dūr hai.) — My house is far from the station."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूर (dūr) comes from Sanskrit dūra, \"distant\" (CDIAL 6495), and has kept its shape almost unchanged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūr, then kitnī dūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūr*, then *kitnī dūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How far is the station from here?\" — sṭeśan yahā̃ se kitnī dūr hai?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How far is the station from here?\" — *sṭeśan yahā̃ se kitnī dūr hai?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It's not very far\" — bahut dūr nahīṃ hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It's not very far\" — *bahut dūr nahīṃ hai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दूर (dūr) mean? (\"Far\".) \"How far is it?\" (कितनी दूर (dūr) है?) \"From here\"? (यहाँ से.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C282-kaisejatehain",
+      "sequence": 15560,
+      "title": "स्टेशन कैसे जाते हैं? (sṭeśan kaise jāte haiṁ?) — asking the way, and following it",
+      "headword": "स्टेशन कैसे जाते हैं?",
+      "romanization": "sṭeśan kaise jāte haiṁ?",
+      "gloss": "how do I get to the station? — asking the way, and following the answer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e19ee788eb9ec46e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"Please tell me the way\" and \"How far is it?\" (mujhe rāstā batāie, kitnī dūr hai?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: asking the way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माफ़ कीजिए, स्टेशन कैसे जाते हैं? māf kījiye, sṭeśan kaise jāte haiṁ? — \"Excuse me, how do I get to the station?\""
+            },
+            {
+              "kind": "speech",
+              "text": "जाते हैं with no one named is \"people go\": it asks for the way, not for anyone's plans. Or ask where it is: स्टेशन कहाँ है? (sṭeśan kahā̃ hai?)"
+            },
+            {
+              "kind": "speech",
+              "text": "The answer often comes in minutes: पाँच मिनट का रास्ता है (pā̃c minaṭ kā rāstā hai), \"it's five minutes away\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: following the way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सीधे जाइए, फिर बाएँ मुड़िए। sīdhe jāie, phir bāẽ muṛiye. — \"Go straight on, then turn left.\""
+            },
+            {
+              "kind": "speech",
+              "text": "मुड़ना (muṛnā) is \"to turn\", and मुड़िए asks it politely, as बोलिए does. सीधे, बाएँ, दाएँ (sīdhe, bāẽ, dāẽ) are the forms of सीधा, बायाँ and दायाँ that say which way."
+            },
+            {
+              "kind": "speech",
+              "text": "चौराहे से दाएँ मुड़िए। (caurāhe se dāẽ muṛiye.) — Turn right at the crossroads."
+            },
+            {
+              "kind": "speech",
+              "text": "पुल के बाद दूसरी गली में बाएँ मुड़िए। (pul ke bād dūsrī galī meṁ bāẽ muṛiye.) — After the bridge, take the second side street on the left. गली is feminine, so दूसरी."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Excuse me, where is the post office?\" — māf kījiye, ḍākghar kahā̃ hai?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Excuse me, where is the post office?\" — *māf kījiye, ḍākghar kahā̃ hai?*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C282-kaisejatehain-r1",
+              "prompt": "Ask how to get to the station, then give the answer: go straight on, then turn right at the crossroads.",
+              "assesses": [
+                "HI-GRAMMAR-C282-ASK-WAY-01",
+                "HI-GRAMMAR-C282-GIVE-WAY-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "sṭeśan kaise jāte haiṁ? sīdhe jāie, phir caurāhe se dāẽ muṛiye",
+                "स्टेशन कैसे जाते हैं? सीधे जाइए, फिर चौराहे से दाएँ मुड़िए।"
+              ],
+              "feedback": {
+                "correct": "kaise jāte haiṁ asks the way; sīdhe and dāẽ say where to go.",
+                "incorrect": "Ask with kaise jāte haiṁ; answer with sīdhe jāie and dāẽ muṛiye."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you ask the way to the station? (स्टेशन कैसे जाते हैं? (sṭeśan kaise jāte haiṁ?)) Then say \"go straight on\" and \"turn left\". (सीधे जाइए, बाएँ मुड़िए.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R282-asking-the-way",
+      "sequence": 15570,
+      "title": "Review — asking the way",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "asking the way, and following it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98fdda533499cfcd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask \"How do I get to the station?\" (sṭeśan kaise jāte haiṁ?) Then \"How far is it?\" (kitnī dūr hai?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Excuse me, how do I get to the market?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Excuse me, how do I get to the market?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Is it far? No, it's ten minutes away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Is it far? No, it's ten minutes away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Go straight on, then turn right at the crossroads.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Go straight on, then turn right at the crossroads.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Can you tell me the way to the hospital?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Can you tell me the way to the hospital?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yesterday a man told me the way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Yesterday a man told me the way.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Please tell me the way\"? (मुझे रास्ता बताइए.) \"How far?\" (कितनी दूर (dūr)?) \"Turn right\"? (दाएँ मुड़िए.) \"A man told me the way\"? (एक आदमी ने मुझे रास्ता बताया: ने, and बताया for रास्ता.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

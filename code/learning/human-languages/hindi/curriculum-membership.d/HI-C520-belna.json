@@ -1,0 +1,11 @@
+{
+  "id": "HI-C520-belna",
+  "pathSegment": "HI-PATH-520-AATA520",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-520-AATA520",
+      "order": 3
+    }
+  ]
+}

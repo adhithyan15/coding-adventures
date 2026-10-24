@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "A Tale of Long Ago",
+  "label": "ch:hi-a-tale-of-long-ago",
+  "canDo": "I can begin and tell a traditional tale.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C334-kahavat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can begin and tell a traditional tale.",
+    "assesses": [
+      "HI-LEX-C334-KATHA334-03",
+      "HI-LEX-C334-KATHA334-04",
+      "HI-LEX-C334-KATHA334-05"
+    ]
+  }
+}

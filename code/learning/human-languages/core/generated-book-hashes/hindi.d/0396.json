@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:2ca3fc40a4ab2028",
+  "lessonIds": [
+    "HI-C396-samskar",
+    "HI-C396-adars",
+    "HI-C396-udar",
+    "HI-C396-punya",
+    "HI-C396-ratna"
+  ],
+  "tex": "hindi/book/chapters/ch396-values-passed-on.tex"
+}

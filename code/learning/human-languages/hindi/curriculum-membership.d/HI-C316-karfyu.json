@@ -1,0 +1,11 @@
+{
+  "id": "HI-C316-karfyu",
+  "pathSegment": "HI-PATH-316-UPADRAV316",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-316-UPADRAV316",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:8e2bda2b712e5ad0",
+  "lessonIds": [
+    "HI-C380-diqqat",
+    "HI-C380-badha",
+    "HI-C380-hal",
+    "HI-C380-atakna",
+    "HI-C380-ubarna"
+  ],
+  "tex": "hindi/book/chapters/ch380-getting-out-of-trouble.tex"
+}

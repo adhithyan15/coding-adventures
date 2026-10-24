@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C514-camkana",
+    "language": "hindi",
+    "chapter": 514,
+    "sequence": 28440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f043a0da15214cc"
+  },
+  "findings": []
+}

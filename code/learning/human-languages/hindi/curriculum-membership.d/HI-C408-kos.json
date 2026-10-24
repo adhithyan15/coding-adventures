@@ -1,0 +1,11 @@
+{
+  "id": "HI-C408-kos",
+  "pathSegment": "HI-PATH-408-MIL408",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-408-MIL408",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 556,
+  "sourceHash": "fnv1a64:838c6241dfbcc7f5",
+  "lessonIds": [
+    "HI-C556-sandeh",
+    "HI-C556-yaqinan",
+    "HI-C556-hargiz",
+    "HI-C556-vaham",
+    "HI-C556-niscay"
+  ],
+  "tex": "hindi/book/chapters/ch556-how-sure-am-i.tex"
+}

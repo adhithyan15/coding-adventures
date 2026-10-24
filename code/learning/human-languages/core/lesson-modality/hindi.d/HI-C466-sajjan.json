@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C466-sajjan",
+    "language": "hindi",
+    "chapter": 466,
+    "sequence": 25740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f06a533b14b75b96"
+  },
+  "findings": []
+}

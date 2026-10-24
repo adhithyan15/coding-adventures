@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Boats, Nets and Shells",
+  "label": "ch:hi-boats-nets-and-shells",
+  "canDo": "I can talk about a small boat, the boatman and his net, the tide and shells on the shore.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C445-sip",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can talk about a small boat, the boatman and his net, the tide and shells on the shore.",
+    "assesses": [
+      "HI-LEX-C445-KISHTI445-03",
+      "HI-LEX-C445-KISHTI445-04",
+      "HI-LEX-C445-KISHTI445-05"
+    ]
+  }
+}

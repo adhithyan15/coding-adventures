@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C495-paustik",
+    "language": "hindi",
+    "chapter": 495,
+    "sequence": 27230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:121b741a654b5ec7"
+  },
+  "findings": []
+}

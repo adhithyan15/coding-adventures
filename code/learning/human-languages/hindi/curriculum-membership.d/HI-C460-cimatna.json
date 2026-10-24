@@ -1,0 +1,11 @@
+{
+  "id": "HI-C460-cimatna",
+  "pathSegment": "HI-PATH-460-BICHHAD460",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-460-BICHHAD460",
+      "order": 1
+    }
+  ]
+}

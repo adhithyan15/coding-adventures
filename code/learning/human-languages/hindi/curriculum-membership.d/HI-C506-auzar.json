@@ -1,0 +1,11 @@
+{
+  "id": "HI-C506-auzar",
+  "pathSegment": "HI-PATH-506-KARIGAR506",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-506-KARIGAR506",
+      "order": 1
+    }
+  ]
+}

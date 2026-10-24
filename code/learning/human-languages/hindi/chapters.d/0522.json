@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Milk and Curd",
+  "label": "ch:hi-milk-and-curd",
+  "canDo": "I can talk about churning, setting curd and draining whey.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C522-nitharna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can talk about churning, setting curd and draining whey.",
+    "assesses": [
+      "HI-LEX-C522-CHAACH522-03",
+      "HI-LEX-C522-CHAACH522-04",
+      "HI-LEX-C522-CHAACH522-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C416-guzaarna",
+    "language": "hindi",
+    "chapter": 416,
+    "sequence": 22950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c81bb1587785543d"
+  },
+  "findings": []
+}

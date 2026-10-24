@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C550-pasandida",
+    "language": "hindi",
+    "chapter": 550,
+    "sequence": 30280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:390e07f86eecbc72"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:153457a700bfb8db",
+  "lessonIds": [
+    "HI-C405-gati",
+    "HI-C405-gaddha",
+    "HI-C405-kandaktar",
+    "HI-C405-uchalnaintr",
+    "HI-C405-kattna",
+    "HI-R405-review-398-405"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch405.txt",
+  "json": "hindi/narration/ch405.json",
+  "textHash": "fnv1a64:963a8d1b18b8fa1f",
+  "jsonHash": "fnv1a64:24374a584da0ade7",
+  "findings": []
+}

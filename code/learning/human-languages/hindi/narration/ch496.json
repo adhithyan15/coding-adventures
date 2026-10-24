@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 496,
+  "title": "Sleep",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:402526ea52d46c36",
+  "lessons": [
+    {
+      "id": "HI-C496-anidra",
+      "sequence": 27250,
+      "title": "अनिद्रा (anidrā) — insomnia; sleeplessness",
+      "headword": "अनिद्रा",
+      "romanization": "anidrā",
+      "gloss": "insomnia; sleeplessness",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:470ce917a17723cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for nourishing, then the Hindi for to be digested."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनिद्रा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनिद्रा — anidrā — \"insomnia; sleeplessness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तनाव से अरुण को अनिद्रा की शिकायत है। tanāv se Aruṇ ko anidrā kī śikāyat hai. Because of stress, Arun suffers from insomnia."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनिद्रा (anidrā) is a tatsama, borrowed from Sanskrit a-nidrā, \"sleeplessness\", built on a-, \"not\", and nidrā, \"sleep\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anidrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anidrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anidrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anidrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanāv se Aruṇ ko anidrā kī śikāyat hai. — Because of stress, Arun suffers from insomnia.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanāv se Aruṇ ko anidrā kī śikāyat hai.* — Because of stress, Arun suffers from insomnia.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for nourishing, then the Hindi for to be digested, then say anidrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for nourishing, then the Hindi for to be digested, then say *anidrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनिद्रा (anidrā) mean? (\"Insomnia; sleeplessness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C496-uninda",
+      "sequence": 27260,
+      "title": "उनींदा (unīndā) — drowsy; heavy with sleep",
+      "headword": "उनींदा",
+      "romanization": "unīndā",
+      "gloss": "drowsy; heavy with sleep",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61655432117a9866",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to be digested, then the Hindi for insomnia."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उनींदा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उनींदा — unīndā — \"drowsy; heavy with sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सुबह छह बजे बच्चे उनींदे थे। subah chah baje bacce unīnde the. At six in the morning the children were still drowsy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उनींदा (unīndā) is inherited: CDIAL lists Hindi unī̃dā, with the sense \"sleepless, with eyes open\", under Sanskrit unnidra, \"sleepless\" (CDIAL 2108). Today it means eyes heavy from too little sleep, a turn CDIAL does not give."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unīndā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unīndā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unīndā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unīndā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subah chah baje bacce unīnde the. — At six in the morning the children were still drowsy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subah chah baje bacce unīnde the.* — At six in the morning the children were still drowsy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to be digested, then the Hindi for insomnia, then say unīndā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to be digested, then the Hindi for insomnia, then say *unīndā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उनींदा (unīndā) mean? (\"Drowsy; heavy with sleep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C496-pasarna",
+      "sequence": 27270,
+      "title": "पसरना (pasarnā) — to sprawl; to stretch out",
+      "headword": "पसरना",
+      "romanization": "pasarnā",
+      "gloss": "to sprawl; to stretch out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4898e044d68cf387",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for insomnia, then the Hindi for drowsy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पसरना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पसरना — pasarnā — \"to sprawl; to stretch out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "काम से लौटकर अरुण बिस्तर पर पसर गया। kām se lauṭkar Aruṇ bistar par pasar gayā. Back from work, Arun sprawled out on the bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह बिस्तर पर पसर गया, vah bistar par pasar gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पसरना (pasarnā) is a tadbhava: CDIAL lists Hindi pasarnā, \"to spread out\", under Sanskrit prásarati, \"spreads out\" (CDIAL 8825): a tired body spreads out across the bed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pasarnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pasarnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pasarnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pasarnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kām se lauṭkar Aruṇ bistar par pasar gayā. — Back from work, Arun sprawled out on the bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kām se lauṭkar Aruṇ bistar par pasar gayā.* — Back from work, Arun sprawled out on the bed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for insomnia, then the Hindi for drowsy, then say pasarnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for insomnia, then the Hindi for drowsy, then say *pasarnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पसरना (pasarnā) mean? (\"To sprawl; to stretch out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C496-budbudana",
+      "sequence": 27280,
+      "title": "बुदबुदाना (budbudānā) — to mumble",
+      "headword": "बुदबुदाना",
+      "romanization": "budbudānā",
+      "gloss": "to mumble",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f96d361fa3cc7e79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for drowsy, then the Hindi for to sprawl."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बुदबुदाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुदबुदाना — budbudānā — \"to mumble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बुख़ार में दादा कुछ बुदबुदा रहे थे। bukhār meṁ dādā kuch budbudā rahe the. In his fever my grandfather was mumbling something."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह कुछ बुदबुदाया, vah kuch budbudāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुदबुदाना (budbudānā) is a tadbhava: CDIAL lists Hindi budbudānā, \"to mutter\", under budabuda, a form it reconstructs (CDIAL 9274); the doubled syllable is the sound of lips moving with no clear words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "budbudānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *budbudānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "budbudānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *budbudānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bukhār meṁ dādā kuch budbudā rahe the. — In his fever my grandfather was mumbling something.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bukhār meṁ dādā kuch budbudā rahe the.* — In his fever my grandfather was mumbling something.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for drowsy, then the Hindi for to sprawl, then say budbudānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for drowsy, then the Hindi for to sprawl, then say *budbudānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बुदबुदाना (budbudānā) mean? (\"To mumble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C496-bichauna",
+      "sequence": 27290,
+      "title": "बिछौना (bichaunā) — a bedroll; bedding laid out",
+      "headword": "बिछौना",
+      "romanization": "bichaunā",
+      "gloss": "a bedroll; bedding laid out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1856e631b702321b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to sprawl, then the Hindi for to mumble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बिछौना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिछौना — bichaunā — \"a bedroll; bedding laid out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी ने मेहमानों के लिए फ़र्श पर बिछौना बिछाया। dādī ne mehmānoṁ ke liye farś par bichaunā bichāyā. Grandmother laid out bedding on the floor for the guests."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिछौना (bichaunā) is a tadbhava: CDIAL lists Hindi bichaunā, \"bedding\", under vicchādana, a form it reconstructs (CDIAL 11691): what is spread out to sleep on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bichaunā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bichaunā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bichaunā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bichaunā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī ne mehmānoṁ ke liye farś par bichaunā bichāyā. — Grandmother laid out bedding on the floor for the guests.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī ne mehmānoṁ ke liye farś par bichaunā bichāyā.* — Grandmother laid out bedding on the floor for the guests.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to sprawl, then the Hindi for to mumble, then say bichaunā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to sprawl, then the Hindi for to mumble, then say *bichaunā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बिछौना (bichaunā) mean? (\"A bedroll; bedding laid out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C542-peskas",
+    "language": "hindi",
+    "chapter": 542,
+    "sequence": 29870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f0a1b68aba8bf1d"
+  },
+  "findings": []
+}

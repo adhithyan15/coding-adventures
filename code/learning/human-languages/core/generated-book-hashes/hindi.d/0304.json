@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:6a4210d8270ea4cf",
+  "lessonIds": [
+    "HI-C304-adhera",
+    "HI-C304-garajna",
+    "HI-C304-camakna",
+    "HI-C304-musladhar",
+    "HI-C304-tabahi"
+  ],
+  "tex": "hindi/book/chapters/ch304-the-storm.tex"
+}

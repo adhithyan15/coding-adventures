@@ -1,0 +1,11 @@
+{
+  "id": "HI-C513-silna",
+  "pathSegment": "HI-PATH-513-DARZI513",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-513-DARZI513",
+      "order": 0
+    }
+  ]
+}

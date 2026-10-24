@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:2820bebc6add5e6a",
+  "lessonIds": [
+    "HI-C311-sahayta",
+    "HI-C311-svayamsevak",
+    "HI-C311-jutna",
+    "HI-C311-jutana",
+    "HI-C311-hausla",
+    "HI-R311-review-304-311"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch311.txt",
+  "json": "hindi/narration/ch311.json",
+  "textHash": "fnv1a64:a657e36e1af613c5",
+  "jsonHash": "fnv1a64:5eabd130255b97ed",
+  "findings": []
+}

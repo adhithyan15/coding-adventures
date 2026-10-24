@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-287-DEPENDSWOULD",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-287-DEPENDSWOULD"
+  ],
+  "after": []
+}

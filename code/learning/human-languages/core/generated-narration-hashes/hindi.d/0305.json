@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:a82db51f80b13129",
+  "lessonIds": [
+    "HI-C305-uphanna",
+    "HI-C305-badh",
+    "HI-C305-kramsah",
+    "HI-C305-sailab",
+    "HI-C305-bhavar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch305.txt",
+  "json": "hindi/narration/ch305.json",
+  "textHash": "fnv1a64:7f98cbf7fb57b542",
+  "jsonHash": "fnv1a64:1063845bbe9a5368",
+  "findings": []
+}

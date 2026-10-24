@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:1e51c985f59be1c4",
+  "lessonIds": [
+    "HI-C317-rahasya",
+    "HI-C317-mukhbir",
+    "HI-C317-andaza",
+    "HI-C317-caunkna",
+    "HI-C317-hairan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch317.txt",
+  "json": "hindi/narration/ch317.json",
+  "textHash": "fnv1a64:9c1d40d970614b22",
+  "jsonHash": "fnv1a64:369190a6efd4ff9b",
+  "findings": []
+}

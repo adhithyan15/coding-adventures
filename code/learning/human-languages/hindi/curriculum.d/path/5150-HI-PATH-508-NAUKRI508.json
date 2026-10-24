@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-508-NAUKRI508",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-508-NAUKRI508"
+  ],
+  "after": []
+}

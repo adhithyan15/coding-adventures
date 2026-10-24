@@ -1,0 +1,11 @@
+{
+  "id": "HI-C510-randa",
+  "pathSegment": "HI-PATH-510-BADHAI510",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-510-BADHAI510",
+      "order": 0
+    }
+  ]
+}

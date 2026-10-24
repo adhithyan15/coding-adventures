@@ -1,0 +1,11 @@
+{
+  "id": "HI-C510-cheni",
+  "pathSegment": "HI-PATH-510-BADHAI510",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-510-BADHAI510",
+      "order": 1
+    }
+  ]
+}

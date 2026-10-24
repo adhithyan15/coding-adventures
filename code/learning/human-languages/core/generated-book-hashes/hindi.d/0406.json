@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:5f76fd9e0cddb2de",
+  "lessonIds": [
+    "HI-C406-taiksi",
+    "HI-C406-tayar",
+    "HI-C406-pancar",
+    "HI-C406-helmet",
+    "HI-C406-laisens"
+  ],
+  "tex": "hindi/book/chapters/ch406-taxis-and-tyres.tex"
+}

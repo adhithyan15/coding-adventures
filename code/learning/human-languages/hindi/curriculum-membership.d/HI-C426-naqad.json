@@ -1,0 +1,11 @@
+{
+  "id": "HI-C426-naqad",
+  "pathSegment": "HI-PATH-426-RAQAM426",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-426-RAQAM426",
+      "order": 1
+    }
+  ]
+}

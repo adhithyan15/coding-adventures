@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:42252c0c6aaae088",
+  "lessonIds": [
+    "HI-C350-udaharan",
+    "HI-C350-maslan",
+    "HI-C350-yani",
+    "HI-C350-spast",
+    "HI-C350-ginana",
+    "HI-R350-review-343-350"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch350.txt",
+  "json": "hindi/narration/ch350.json",
+  "textHash": "fnv1a64:97da5ad895ac26f3",
+  "jsonHash": "fnv1a64:3009d17e66a3c0ca",
+  "findings": []
+}

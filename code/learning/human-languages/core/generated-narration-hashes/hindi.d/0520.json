@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:f413d284440500a1",
+  "lessonIds": [
+    "HI-C520-sulgana",
+    "HI-C520-gudhna",
+    "HI-C520-cakla",
+    "HI-C520-belna",
+    "HI-C520-phulna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch520.txt",
+  "json": "hindi/narration/ch520.json",
+  "textHash": "fnv1a64:571b24f680e068a4",
+  "jsonHash": "fnv1a64:32523361aac69ab0",
+  "findings": []
+}

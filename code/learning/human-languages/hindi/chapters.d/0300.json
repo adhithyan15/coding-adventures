@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "The Blaze",
+  "label": "ch:hi-the-blaze",
+  "canDo": "I can describe a fire at its height.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C300-tapis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can describe a fire at its height.",
+    "assesses": [
+      "HI-LEX-C300-DAHAK300-03",
+      "HI-LEX-C300-DAHAK300-04",
+      "HI-LEX-C300-DAHAK300-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:09bcec6f53435efa",
+  "lessonIds": [
+    "HI-C459-sneh",
+    "HI-C459-mamta",
+    "HI-C459-lar",
+    "HI-C459-cumna",
+    "HI-C459-puckarna",
+    "HI-R459-review-452-459"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch459.txt",
+  "json": "hindi/narration/ch459.json",
+  "textHash": "fnv1a64:bcf11e1be66f66d5",
+  "jsonHash": "fnv1a64:0759ec4bd31db2e8",
+  "findings": []
+}

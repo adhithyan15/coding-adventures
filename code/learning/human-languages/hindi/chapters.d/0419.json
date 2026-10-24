@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Landmarks",
+  "label": "ch:hi-landmarks",
+  "canDo": "I can find the way by a T-junction, a mark on a wall, a signboard or a white building.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C419-bord",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can find the way by a T-junction, a mark on a wall, a signboard or a white building.",
+    "assesses": [
+      "HI-LEX-C419-TIRAHA419-03",
+      "HI-LEX-C419-TIRAHA419-04",
+      "HI-LEX-C419-TIRAHA419-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:3a711b66d0e910d6",
+  "lessonIds": [
+    "HI-C506-karigar",
+    "HI-C506-auzar",
+    "HI-C506-hunar",
+    "HI-C506-garhna",
+    "HI-C506-mistri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch506.txt",
+  "json": "hindi/narration/ch506.json",
+  "textHash": "fnv1a64:8f7ce9ae5f5c7838",
+  "jsonHash": "fnv1a64:b8fd241e3004e313",
+  "findings": []
+}

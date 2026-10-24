@@ -1,0 +1,11 @@
+{
+  "id": "HI-C345-irada",
+  "pathSegment": "HI-PATH-345-UDDESHYA345",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-345-UDDESHYA345",
+      "order": 4
+    }
+  ]
+}

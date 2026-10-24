@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Growing Old",
+  "label": "ch:hi-growing-old",
+  "canDo": "I can talk about growing old.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C504-virasat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about growing old.",
+    "assesses": [
+      "HI-LEX-C504-BUDHAPA504-03",
+      "HI-LEX-C504-BUDHAPA504-04",
+      "HI-LEX-C504-BUDHAPA504-05"
+    ]
+  }
+}

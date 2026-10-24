@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Getting the Go-Ahead",
+  "label": "ch:hi-getting-the-go-ahead",
+  "canDo": "I can say what will happen once approval comes.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C395-qatai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can say what will happen once approval comes.",
+    "assesses": [
+      "HI-LEX-C395-MANZURI395-03",
+      "HI-LEX-C395-MANZURI395-04",
+      "HI-LEX-C395-MANZURI395-05"
+    ]
+  }
+}

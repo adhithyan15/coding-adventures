@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Eating Well, Keeping Fit",
+  "label": "ch:hi-eating-well-keeping-fit",
+  "canDo": "I can say what I do to stay fit.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C495-pacna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can say what I do to stay fit.",
+    "assesses": [
+      "HI-LEX-C495-KASRAT495-03",
+      "HI-LEX-C495-KASRAT495-04",
+      "HI-LEX-C495-KASRAT495-05"
+    ]
+  }
+}

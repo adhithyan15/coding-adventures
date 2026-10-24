@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C333-bikharna",
+    "language": "hindi",
+    "chapter": 333,
+    "sequence": 18330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97d8a4e5b5ef2096"
+  },
+  "findings": []
+}

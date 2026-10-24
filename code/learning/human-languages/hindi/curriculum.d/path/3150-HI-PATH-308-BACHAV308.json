@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-308-BACHAV308",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "HI-EXT-308-BACHAV308"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C420-dhalan",
+    "language": "hindi",
+    "chapter": 420,
+    "sequence": 23120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f67f64fcce4799b5"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C479-thukna",
+  "pathSegment": "HI-PATH-479-MUNH479",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-479-MUNH479",
+      "order": 4
+    }
+  ]
+}
