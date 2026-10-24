@@ -178,6 +178,25 @@ impl Asn1Decoder {
         Ok(Asn1Element { element, depth: 0 })
     }
 
+    /// Decode one exact DER document embedded in an existing element's value.
+    ///
+    /// The returned root is one level deeper than `container`, while framing
+    /// and total-element accounting remain transactional and share this
+    /// decoder's existing authority. The caller's schema must establish that
+    /// `input` is the embedded document carried by `container`; errors use
+    /// offsets local to `input`.
+    pub fn decode_exact_embedded<'a>(
+        &mut self,
+        container: Asn1Element<'_>,
+        input: &'a [u8],
+    ) -> Result<Asn1Element<'a>, Asn1Error> {
+        let depth = self.child_depth(container)?;
+        self.require_element_capacity(0)?;
+        let element = decode_exact(input, self.limits.der).map_err(Asn1Error::framing)?;
+        self.elements_read += 1;
+        Ok(Asn1Element { element, depth })
+    }
+
     /// Open an exact universal SEQUENCE as a bounded child cursor.
     pub fn sequence<'a>(&self, element: Asn1Element<'a>) -> Result<Asn1Cursor<'a>, Asn1Error> {
         self.constructed(element, TagClass::Universal, SEQUENCE_TAG)

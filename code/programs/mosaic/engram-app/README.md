@@ -233,7 +233,8 @@ wasm build and installs nothing), review the lockfile diff, and commit it.
 Two more guards: `npm ci` runs with `--ignore-scripts` (nothing in the build
 needs an install script, and their fallbacks fetch unpinned code), and
 `--update-lock` resolves only versions published at least seven days earlier,
-since most compromised npm releases are pulled within days. The lock test also
+since most compromised npm releases are pulled within days. It needs npm 11
+or newer: npm 10 crashes resolving vitest 4's peer graph from scratch. The lock test also
 fails on an entry no dependency reaches, a tarball that is not the entry's own,
 and any new package that declares an install script. It cannot tell one
 in-range version from another (that needs registry data), so a lockfile diff is

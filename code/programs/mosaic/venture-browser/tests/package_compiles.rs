@@ -2234,28 +2234,23 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
             && powershell.contains("$env:VENTURE_BOOKMARKS_PATH = $composeBookmarksPath"),
         "PowerShell native acceptance gates must use isolated bookmark profiles"
     );
-    let backends = [
-        "react",
-        "electron",
-        "swiftui",
-        "qt",
-        "webcomponent",
-        "html",
-        "xaml",
-        "flutter",
-        "compose",
-    ];
-    assert_eq!(
-        backends.len(),
-        mosaic_package_artifact_builder::Backend::ALL.len(),
-        "the Venture build matrix must track Mosaic's exhaustive backend list"
+    // The build matrix is the compiler's own backend list: both scripts ask
+    // `mosaic-compile backends` instead of keeping a copy, so a new Mosaic
+    // backend joins the Venture build without editing them. A copied list is
+    // what this test used to police, name by name.
+    assert!(
+        shell.contains("-- backends))"),
+        "POSIX build must read its matrix from `mosaic-compile backends`"
     );
-
-    for backend in backends {
-        assert!(shell.contains(backend), "POSIX build omits {backend}");
+    assert!(
+        powershell.contains("$backendListArgs += @(\"--\", \"backends\")"),
+        "PowerShell build must read its matrix from `mosaic-compile backends`"
+    );
+    for script in [&shell, &powershell] {
         assert!(
-            powershell.contains(backend),
-            "PowerShell build omits {backend}"
+            !script.contains("\"react\", \"electron\", \"swiftui\"")
+                && !script.contains("backends=(react electron"),
+            "a build script carries its own backend list again"
         );
     }
 
