@@ -1203,6 +1203,19 @@ response signature, authorize a responder, bind status to a `CertID`,
 certificate, or constructed path, decide freshness, fetch or cache revocation
 data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or network
 authority. Concrete HTTPS remains unavailable.
+A bounded `x509-ocsp-single-response` prerequisite now composes exactly one
+RFC 6960 `SingleResponse` SEQUENCE within caller-owned DER depth, element,
+length, OID-arc, and extension-count limits. It requires one structural
+`CertID`, one structural `CertStatus`, and one OCSP GeneralizedTime
+`thisUpdate`, followed in schema order by an optional explicit `nextUpdate [0]`
+and optional explicit `singleExtensions [1]`. Present extension collections
+reuse the bounded generic RFC 5280 `Extensions` decoder, remain non-empty and
+unique by OID, and retain no OCSP extension semantics. The structural layer
+does not select or validate the CertID hash algorithm, authenticate a response
+signature, authorize a responder, bind the identifier or status to a
+certificate or constructed path, interpret extensions, decide freshness,
+fetch or cache revocation data, read a clock, or grant path, trust, TLS, HTTP,
+OAuth transport, or network authority. Concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
