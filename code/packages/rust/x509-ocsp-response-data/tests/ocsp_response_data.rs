@@ -123,6 +123,10 @@ fn decodes_default_v1_by_name_and_one_response() {
     );
     assert_eq!(decoded.iter().count(), 1);
     assert_eq!(decoded.response_extensions(), None);
+    assert_eq!(decoded.version().as_u8(), 0);
+    let responder_debug = format!("{:?}", decoded.responder_id());
+    assert!(responder_debug.contains("rdn_count"));
+    assert!(responder_debug.contains("attribute_count"));
 }
 
 #[test]
@@ -206,6 +210,25 @@ fn default_version_must_be_omitted_and_other_versions_are_unsupported() {
         decode(&sequence(&malformed)).unwrap_err().kind(),
         X509OcspResponseDataErrorKind::InvalidVersionWrapper(_)
     ));
+
+    for (wrapper, expected) in [
+        (
+            vec![0x80, 0],
+            X509OcspResponseDataErrorKind::InvalidVersionWrapper(Asn1ErrorKind::UnexpectedTag),
+        ),
+        (
+            element(0xa0, &element(0x05, &[])),
+            X509OcspResponseDataErrorKind::InvalidVersionInteger(Asn1ErrorKind::UnexpectedTag),
+        ),
+        (
+            element(0xa0, &element(0x02, &[0xff])),
+            X509OcspResponseDataErrorKind::InvalidVersionInteger(Asn1ErrorKind::NegativeInteger),
+        ),
+    ] {
+        let mut fields = vec![wrapper];
+        fields.extend_from_slice(&required);
+        assert_eq!(decode(&sequence(&fields)).unwrap_err().kind(), expected);
+    }
 }
 
 #[test]
@@ -248,6 +271,16 @@ fn responses_are_non_empty_and_fixed_capacity() {
     assert_eq!(
         decode(&encoded).unwrap_err().kind(),
         X509OcspResponseDataErrorKind::TooManyResponses
+    );
+
+    let wrong_tag = sequence(&[
+        responder_by_name(),
+        time(b"20261024120000Z"),
+        element(0x05, &[]),
+    ]);
+    assert_eq!(
+        decode(&wrong_tag).unwrap_err().kind(),
+        X509OcspResponseDataErrorKind::InvalidResponses(Asn1ErrorKind::UnexpectedTag)
     );
 }
 
@@ -323,6 +356,55 @@ fn malformed_children_report_offsets_in_the_whole_response() {
     value.extend_from_slice(&time(b"20261024120000Z"));
     value.extend_from_slice(&[0x30, 0x02, 0x30]);
     let encoded = element(0x30, &value);
+    let error = decode(&encoded).unwrap_err();
+    assert!(matches!(
+        error.kind(),
+        X509OcspResponseDataErrorKind::Structure(Asn1ErrorKind::Framing(_))
+    ));
+    assert_eq!(error.offset(), encoded.len());
+
+    let encoded = sequence(&[
+        responder_by_name(),
+        time(b"20261024120000Z"),
+        element(0x30, &[0x30, 0x02, 0x30]),
+    ]);
+    let error = decode(&encoded).unwrap_err();
+    assert!(matches!(
+        error.kind(),
+        X509OcspResponseDataErrorKind::Structure(Asn1ErrorKind::Framing(_))
+    ));
+    assert_eq!(error.offset(), encoded.len());
+}
+
+#[test]
+fn malformed_optional_and_trailing_fields_are_rebased() {
+    let required = [
+        responder_by_name(),
+        time(b"20261024120000Z"),
+        responses(&[single_response(1)]),
+    ];
+
+    let mut malformed_optional = required.to_vec();
+    malformed_optional.push(vec![0xa1, 0x02, 0x30]);
+    let encoded = sequence(&malformed_optional);
+    let error = decode(&encoded).unwrap_err();
+    assert!(matches!(
+        error.kind(),
+        X509OcspResponseDataErrorKind::Structure(Asn1ErrorKind::Framing(_))
+    ));
+    assert_eq!(error.offset(), encoded.len());
+
+    let mut empty_wrapper = required.to_vec();
+    empty_wrapper.push(element(0xa1, &[]));
+    assert!(matches!(
+        decode(&sequence(&empty_wrapper)).unwrap_err().kind(),
+        X509OcspResponseDataErrorKind::InvalidResponseExtensionsWrapper(Asn1ErrorKind::Framing(_))
+    ));
+
+    let mut malformed_trailing = required.to_vec();
+    malformed_trailing.push(response_extensions(&[extension(17, &[])]));
+    malformed_trailing.push(vec![0x05, 0x02, 0x00]);
+    let encoded = sequence(&malformed_trailing);
     let error = decode(&encoded).unwrap_err();
     assert!(matches!(
         error.kind(),
