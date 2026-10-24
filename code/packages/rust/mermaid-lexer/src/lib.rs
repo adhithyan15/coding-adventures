@@ -1575,6 +1575,24 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_aliases_and_class_shorthand_after_relationships() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nORDER ||--o{ customer : placed_by\ncustomer[\"Customer Account\"]:::primary {\n  string id PK\n}\n",
+        );
+        let names: Vec<&str> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert!(names.contains(&"ENTITY_STRING"));
+        assert!(names.contains(&"STYLE_SEPARATOR"));
+        for expected in ["[", "Customer Account", "]", ":::"] {
+            assert!(values.contains(&expected));
+        }
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
