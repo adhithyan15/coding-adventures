@@ -225,6 +225,64 @@ public sealed class DocumentAstToHtmlTests
             Paragraph(new AutolinkNode(new string(' ', 400_000), false)))));
     }
 
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void ToHtml_BoundsUrlNormalizationAcrossRepeatedAliases(bool image, bool blocked)
+    {
+        // The old renderer returned tiny HTML after scanning the same borrowed
+        // 10,000-unit destination 101 times. Neither node nor output limits
+        // account for that discarded work. Keep this witness small and assert
+        // the intended resource failure rather than relying on a timeout.
+        var destination = blocked
+            ? "javascript:" + new string('x', 9_989)
+            : new string('\0', 10_000);
+        IInlineNode alias = image
+            ? new ImageNode(destination, null, "")
+            : new LinkNode(destination, null, []);
+        var document = Document(new ParagraphNode(Enumerable.Repeat(alias, 101).ToArray()));
+
+        var error = Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(document));
+        Assert.Contains("URL normalization", error.Message);
+    }
+
+    [Fact]
+    public void ToHtml_UrlNormalizationBudgetIsInclusiveAndResetsAfterEveryCall()
+    {
+        var alias = new LinkNode(new string('\0', 10_000), null, []);
+        var accepted = Document(new ParagraphNode(Enumerable.Repeat<IInlineNode>(alias, 100).ToArray()));
+        var expected = "<p>" + string.Concat(Enumerable.Repeat("<a href=\"\"></a>", 100)) + "</p>\n";
+        Assert.Equal(expected, Renderer.ToHtml(accepted));
+        Assert.Equal(expected, Renderer.ToHtml(accepted));
+
+        var rejected = Document(new ParagraphNode(Enumerable.Repeat<IInlineNode>(alias, 100)
+            .Append(new LinkNode("\0", null, [])).ToArray()));
+        var error = Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(rejected));
+        Assert.Contains("URL normalization", error.Message);
+        Assert.Equal(expected, Renderer.ToHtml(accepted));
+    }
+
+    [Fact]
+    public void ToHtml_UrlNormalizationSharesOneUtf16BudgetAcrossAllUrlNodeKinds()
+    {
+        // An astral scalar consumes two UTF-16 units. Its visible autolink text
+        // stays tiny so the output limit cannot mask the URL-work boundary.
+        IInlineNode[] nodes = [
+            new LinkNode(new string('\0', 499_999), null, []),
+            new ImageNode(new string('\0', 499_999), null, ""),
+            new AutolinkNode("\U0001F600", false),
+        ];
+        Assert.Equal("<p><a href=\"\"></a><img src=\"\" alt=\"\" />" +
+            "<a href=\"%F0%9F%98%80\">\U0001F600</a></p>\n",
+            Renderer.ToHtml(Document(new ParagraphNode(nodes))));
+
+        var rejected = Document(new ParagraphNode(nodes.Append(new ImageNode("\0", null, "")).ToArray()));
+        var error = Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(rejected));
+        Assert.Contains("URL normalization", error.Message);
+    }
+
     [Fact]
     public void ToHtml_RejectsUnknownAstVariants()
     {
