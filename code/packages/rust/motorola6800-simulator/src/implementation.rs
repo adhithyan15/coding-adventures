@@ -737,6 +737,7 @@ impl Motorola6800Simulator {
             0xd => {
                 self.set_nz8(value);
                 self.set_flag(CC_V, false);
+                self.set_flag(CC_C, false);
                 value
             }
             0xf => {

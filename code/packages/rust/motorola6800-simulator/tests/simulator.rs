@@ -356,3 +356,22 @@ fn post_halt_fetch_and_transaction_failures_preserve_state() {
     memory.write_memory(0x2000, &[1]).unwrap();
     assert_eq!(memory.step().unwrap().mnemonic, "NEG");
 }
+
+#[test]
+fn test_instructions_clear_overflow_and_carry_for_accumulator_and_memory() {
+    let mut accumulator = Motorola6800Simulator::new();
+    accumulator.load(&[0x4d], 0).unwrap();
+    accumulator.write_a(0x80);
+    accumulator.write_cc(CC_V | CC_C);
+    accumulator.step().unwrap();
+    assert_eq!(accumulator.read_cc() & (CC_N | CC_Z | CC_V | CC_C), CC_N);
+
+    let mut memory = Motorola6800Simulator::new();
+    memory.load(&[0x6d, 0], 0).unwrap();
+    memory.write_x(0x2000);
+    memory.write_memory(0x2000, &[0]).unwrap();
+    memory.write_cc(CC_V | CC_C);
+    memory.step().unwrap();
+    assert_eq!(memory.read_cc() & (CC_N | CC_Z | CC_V | CC_C), CC_Z);
+    assert_eq!(memory.read_memory(0x2000, 1).unwrap(), vec![0]);
+}
