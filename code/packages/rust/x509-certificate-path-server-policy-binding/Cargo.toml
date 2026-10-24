@@ -7,6 +7,7 @@ license = "MIT"
 
 [dependencies]
 x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }
+x509-certificate-path-reviewed-anchor-binding = { path = "../x509-certificate-path-reviewed-anchor-binding" }
 x509-server-certificate-policy = { path = "../x509-server-certificate-policy" }
 
 [dev-dependencies]
@@ -15,3 +16,5 @@ tls-server-identity = { path = "../tls-server-identity" }
 x509-certificate = { path = "../x509-certificate" }
 x509-certificate-policy = { path = "../x509-certificate-policy" }
 x509-time = { path = "../x509-time" }
+x509-webpki-root-anchor-selection = { path = "../x509-webpki-root-anchor-selection" }
+x509-webpki-roots-snapshot = { path = "../x509-webpki-roots-snapshot" }
