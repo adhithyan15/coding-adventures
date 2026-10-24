@@ -820,6 +820,17 @@ does not search alternate ambiguous branches, define Name equality, decide
 trust, authenticate any link, apply certificate roles, algorithms, validity,
 path length, name constraints, hostname or revocation policy, or provide TLS,
 HTTP, OAuth transport, or network authority.
+A bounded reviewed-terminal binding follow-up now consumes that constructed
+path together with reviewed-root selection evidence. It requires the path to
+contain at least one selected issuer, derives the exact terminal certificate
+from the path's final retained candidate index, and fails closed unless the
+reviewed-root evidence retains that same decoded certificate object. Distinct
+non-copyable success evidence keeps both complete inputs, preventing a caller
+from substituting a byte-equal re-decode or attaching reviewed-root membership
+to a different path certificate. The binding does not authenticate any path
+link, validate the terminal certificate's role or self-signature, apply anchor
+constraints, or provide complete path validation, revocation, TLS, HTTP, OAuth
+transport, or network authority.
 The RSA SHA-256 issuer-link composition can now consume that non-copyable
 selection evidence directly. It derives the exact child and selected candidate
 from the evidence, then performs issuing-CA role, caller-owned RSA key-policy,
