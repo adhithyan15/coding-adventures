@@ -88,13 +88,42 @@ impl std::error::Error for TokenGrammarError {}
 /// - `alias` — Optional type alias. When a definition has `-> ALIAS`, tokens
 ///   matching this pattern are emitted with the alias name instead. For example,
 ///   `STRING_DQ = /"[^"]*"/ -> STRING` means the lexer emits `STRING` tokens.
-#[derive(Debug, Clone, PartialEq)]
+/// - `guard` — LANG84 E1 position guard, written as a trailing `@line_start`
+///   or `@input_start`. A guarded definition is tried only where its guard
+///   holds; [`TokenGuard::None`] (the default) means "anywhere".
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct TokenDefinition {
     pub name: String,
     pub pattern: String,
     pub is_regex: bool,
     pub line_number: usize,
     pub alias: Option<String>,
+    pub guard: TokenGuard,
+}
+
+/// Where in the source a [`TokenDefinition`] may match (LANG84 E1).
+///
+/// Ruby's `=begin`/`=end` and `__END__`, Perl's POD, and a hashbang are only
+/// lexical at a line start or at the very start of the input. A regex cannot
+/// say that portably (the `regex` crate has no lookbehind), so the guard is a
+/// separate, constant-time check the lexer makes before trying the pattern.
+///
+/// | Suffix         | Variant      | Holds when                                   |
+/// |----------------|--------------|----------------------------------------------|
+/// | (none)         | `None`       | always                                       |
+/// | `@line_start`  | `LineStart`  | offset 0, or the previous character is `\n`  |
+/// | `@input_start` | `InputStart` | offset 0 only                                |
+///
+/// The default line terminators are `\r\n` and `\n`, so "the previous character
+/// is `\n`" covers both; a lone `\r` is not a line end, matching how the lexer
+/// counts lines. `@column(N)` and a `line_terminators:` directive are specified
+/// in LANG84 E1 but not implemented yet, and are rejected.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum TokenGuard {
+    #[default]
+    None,
+    LineStart,
+    InputStart,
 }
 
 /// A named set of token definitions that are active together.
@@ -135,6 +164,9 @@ pub struct PatternGroup {
 /// - `Pop`        — restore the saved mode (F04 pop). No-op at the floor.
 /// - `EnableSkip` / `DisableSkip` — toggle skip-pattern processing, for regions
 ///   where whitespace is significant (mirrors F04's `set_skip_enabled`).
+/// - `Refuse` (LANG84 E8) — stop lexing with an error at the token. A lexer
+///   ported in slices uses it to fail closed on a construct a later slice
+///   owns, instead of mis-lexing it. It is always a rule's only action.
 #[derive(Debug, Clone, PartialEq)]
 pub enum TransitionAction {
     SetMode(String),
@@ -142,10 +174,38 @@ pub enum TransitionAction {
     Pop,
     EnableSkip,
     DisableSkip,
+    Refuse,
+}
+
+/// One condition in a transition rule's `if` list (LANG84 E8).
+///
+/// Each reads one fact about the token just emitted; all of a rule's
+/// conditions must hold for it to fire, otherwise the rule is skipped like a
+/// rule whose `in MODE` guard fails.
+///
+/// | Written          | Variant         | Holds when                                       |
+/// |------------------|-----------------|--------------------------------------------------|
+/// | `space_before`   | `SpaceBefore`   | trivia or a line end preceded the token (F11 flag) |
+/// | `!space_before`  | `NoSpaceBefore` | nothing separated it from the previous token     |
+/// | `space_after`    | `SpaceAfter`    | the next character is whitespace, or input ends  |
+/// | `!space_after`   | `NoSpaceAfter`  | the next character is not whitespace             |
+/// | `line_start`     | `LineStart`     | the token starts a line (E1)                     |
+/// | `!line_start`    | `NotLineStart`  | it does not                                      |
+///
+/// Ruby needs these to tell `puts /re/` (a regexp: space before, none after)
+/// from `a / b` (a division).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TransitionCondition {
+    SpaceBefore,
+    NoSpaceBefore,
+    SpaceAfter,
+    NoSpaceAfter,
+    LineStart,
+    NotLineStart,
 }
 
 /// One declarative lexer mode transition rule, parsed from a `transitions:`
-/// section line of the form `on TOKENS [in MODE] -> ACTION [, ACTION ...]`.
+/// section line of the form `on TOKENS [in MODE] [if COND && ...] -> ACTION [, ACTION ...]`.
 ///
 /// This is pure data — the lexer interprets it after each token is emitted
 /// (first matching rule wins). It replaces the hand-written per-language
@@ -161,6 +221,8 @@ pub enum TransitionAction {
 /// - `on_value` — Optional keyword-value guard, e.g. `Some("return")`. When set,
 ///   the rule fires only if the emitted token's value equals this string.
 /// - `in_mode` — Optional active-mode guard. `None` means "in any mode".
+/// - `conditions` — LANG84 E8 `if` list; every condition must hold. Empty means
+///   no condition, which is how every rule behaved before E8.
 /// - `actions` — Ordered actions applied when the rule fires.
 /// - `line_number` — Source line for diagnostics.
 #[derive(Debug, Clone, PartialEq)]
@@ -168,6 +230,7 @@ pub struct ModeTransition {
     pub on_tokens: Vec<String>,
     pub on_value: Option<String>,
     pub in_mode: Option<String>,
+    pub conditions: Vec<TransitionCondition>,
     pub actions: Vec<TransitionAction>,
     pub line_number: usize,
 }
@@ -477,7 +540,7 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
                     });
                 }
                 let after_pattern = rest[close_idx + 1..].trim();
-                let alias = parse_alias(after_pattern, line_number)?;
+                let (alias, guard) = parse_suffix(after_pattern, line_number)?;
                 (
                     TokenDefinition {
                         name: name_part.to_string(),
@@ -485,6 +548,7 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
                         is_regex: true,
                         line_number,
                         alias: alias.clone(),
+                        guard,
                     },
                     alias,
                 )
@@ -508,7 +572,7 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
                     });
                 }
                 let after_pattern = rest[close_idx + 1..].trim();
-                let alias = parse_alias(after_pattern, line_number)?;
+                let (alias, guard) = parse_suffix(after_pattern, line_number)?;
                 (
                     TokenDefinition {
                         name: name_part.to_string(),
@@ -516,6 +580,7 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
                         is_regex: false,
                         line_number,
                         alias: alias.clone(),
+                        guard,
                     },
                     alias,
                 )
@@ -536,6 +601,69 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
 
     let _ = alias; // already stored in pattern_str
     Ok(pattern_str)
+}
+
+/// Parse what follows a pattern: an optional `-> ALIAS`, then an optional
+/// LANG84 E1 guard (`@line_start` or `@input_start`).
+///
+/// ```text
+/// NAME = /pattern/                         -> (None,          None)
+/// NAME = /pattern/ -> ALIAS                -> (Some(ALIAS),   None)
+/// NAME = /pattern/ @line_start             -> (None,          LineStart)
+/// NAME = /pattern/ -> ALIAS @input_start   -> (Some(ALIAS),   InputStart)
+/// ```
+///
+/// A guard is an `@` that starts a whitespace-separated word, before any `#`.
+/// Anything else after the pattern keeps its historical meaning (text that is
+/// not `-> ALIAS` is ignored), so no existing grammar changes. An `@` word
+/// that is not a known guard is an error: silently ignoring a guard would
+/// make the definition match where the author said it must not.
+fn parse_suffix(
+    after_pattern: &str,
+    line_number: usize,
+) -> Result<(Option<String>, TokenGuard), TokenGrammarError> {
+    let comment_start = after_pattern.find('#').unwrap_or(after_pattern.len());
+    let head = &after_pattern[..comment_start];
+    let guard_start = head.char_indices().find_map(|(i, c)| {
+        let starts_word = i == 0 || head[..i].ends_with(char::is_whitespace);
+        (c == '@' && starts_word).then_some(i)
+    });
+    let Some(at) = guard_start else {
+        return Ok((parse_alias(after_pattern, line_number)?, TokenGuard::None));
+    };
+    let guard_text = head[at..].trim();
+    let word_end = guard_text.find(char::is_whitespace).unwrap_or(guard_text.len());
+    let (word, rest) = guard_text.split_at(word_end);
+    if !rest.trim().is_empty() {
+        return Err(TokenGrammarError {
+            message: format!("Unexpected text after the guard '{}': '{}'", word, rest.trim()),
+            line_number,
+        });
+    }
+    let guard = match word {
+        "@line_start" => TokenGuard::LineStart,
+        "@input_start" => TokenGuard::InputStart,
+        _ if word.starts_with("@column") => {
+            return Err(TokenGrammarError {
+                message: format!(
+                    "The '{}' guard is specified (LANG84 E1) but not implemented yet",
+                    word
+                ),
+                line_number,
+            });
+        }
+        _ => {
+            return Err(TokenGrammarError {
+                message: format!(
+                    "Unknown definition guard '{}' (expected @line_start or @input_start)",
+                    word
+                ),
+                line_number,
+            });
+        }
+    };
+    let alias = parse_alias(head[..at].trim(), line_number)?;
+    Ok((alias, guard))
 }
 
 /// Parse an optional `-> ALIAS` suffix from the text after a pattern.
@@ -742,10 +870,24 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         // --- F10: transitions section ---
         //
         // The `transitions:` section holds declarative lexer mode transition
-        // rules. Each indented line is `on TOKENS [in MODE] -> ACTION, ...`.
+        // rules. Each indented line is `on TOKENS [in MODE] [if COND && ...] -> ACTION, ...`.
         if stripped == "transitions:" || stripped == "transitions :" {
             current_section = String::from("transitions");
             continue;
+        }
+
+        // --- LANG84 E1: `line_terminators:` is specified but not implemented ---
+        //
+        // Accepting and ignoring it would make `@line_start` hold at different
+        // places than the author asked for, so it is refused until a consumer
+        // needs it.
+        if stripped.starts_with("line_terminators:") || stripped.starts_with("line_terminators :") {
+            return Err(TokenGrammarError {
+                message: "The 'line_terminators:' directive is specified (LANG84 E1) but not \
+                          implemented yet; the default terminators are \\r\\n and \\n"
+                    .to_string(),
+                line_number,
+            });
         }
 
         // --- Escapes directive ---
@@ -928,7 +1070,7 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
 /// Grammar of a rule line (keywords are lowercase):
 ///
 /// ```text
-/// on TOKENS [in MODE] -> ACTION [, ACTION ...]
+/// on TOKENS [in MODE] [if COND [&& COND ...]] -> ACTION [, ACTION ...]
 /// ```
 ///
 /// where
@@ -960,13 +1102,20 @@ fn parse_transition(line: &str, line_number: usize) -> Result<ModeTransition, To
         });
     }
 
-    // --- Head: `on TOKENS [in MODE]` ---
+    // --- Head: `on TOKENS [in MODE] [if COND && ...]` ---
     let head = head.strip_prefix("on ").map(str::trim).ok_or_else(|| {
         TokenGrammarError {
             message: format!("Transition rule must start with 'on ': '{}'", line),
             line_number,
         }
     })?;
+
+    // Optional `if COND [&& COND ...]` list (LANG84 E8). It is the last part
+    // of the head, so split it off before looking for the `in MODE` guard.
+    let (head, conditions) = match split_top_level(head, " if ") {
+        Some((before, conds)) => (before.trim(), parse_conditions(conds, line, line_number)?),
+        None => (head, Vec::new()),
+    };
 
     // Optional `in MODE` guard. We split on the whitespace-delimited ` in `
     // token so that a token-set like `(A | B)` is not mistaken for the guard.
@@ -1026,11 +1175,13 @@ fn parse_transition(line: &str, line_number: usize) -> Result<ModeTransition, To
             TransitionAction::EnableSkip
         } else if act == "disable-skip" {
             TransitionAction::DisableSkip
+        } else if act == "refuse" {
+            TransitionAction::Refuse
         } else {
             return Err(TokenGrammarError {
                 message: format!(
                     "Unknown transition action '{}' \
-                     (expected set-mode/push/pop/enable-skip/disable-skip)",
+                     (expected set-mode/push/pop/enable-skip/disable-skip/refuse)",
                     act
                 ),
                 line_number,
@@ -1044,14 +1195,81 @@ fn parse_transition(line: &str, line_number: usize) -> Result<ModeTransition, To
             line_number,
         });
     }
+    // A refusal ends lexing, so any action next to it could never run;
+    // writing one is a mistake about what the rule does.
+    if actions.len() > 1 && actions.contains(&TransitionAction::Refuse) {
+        return Err(TokenGrammarError {
+            message: format!("'refuse' must be a transition rule's only action: '{}'", line),
+            line_number,
+        });
+    }
 
     Ok(ModeTransition {
         on_tokens,
         on_value,
         in_mode,
+        conditions,
         actions,
         line_number,
     })
+}
+
+/// Parse the condition list of an `if` clause (LANG84 E8):
+/// `COND [&& COND ...]`, where `COND` is `space_before`, `space_after` or
+/// `line_start`, optionally negated with `!`.
+fn parse_conditions(
+    text: &str,
+    line: &str,
+    line_number: usize,
+) -> Result<Vec<TransitionCondition>, TokenGrammarError> {
+    let mut conditions = Vec::new();
+    for raw in text.split("&&") {
+        let cond = raw.trim();
+        let (negated, name) = match cond.strip_prefix('!') {
+            Some(rest) => (true, rest.trim()),
+            None => (false, cond),
+        };
+        let parsed = match (name, negated) {
+            ("space_before", false) => TransitionCondition::SpaceBefore,
+            ("space_before", true) => TransitionCondition::NoSpaceBefore,
+            ("space_after", false) => TransitionCondition::SpaceAfter,
+            ("space_after", true) => TransitionCondition::NoSpaceAfter,
+            ("line_start", false) => TransitionCondition::LineStart,
+            ("line_start", true) => TransitionCondition::NotLineStart,
+            _ => {
+                return Err(TokenGrammarError {
+                    message: format!(
+                        "Unknown transition condition '{}' in '{}' \
+                         (expected space_before, space_after or line_start, optionally negated with '!')",
+                        cond, line
+                    ),
+                    line_number,
+                });
+            }
+        };
+        conditions.push(parsed);
+    }
+    Ok(conditions)
+}
+
+/// Split `head` at the first occurrence of `separator` that is outside any
+/// parenthesised token set and outside any `"…"` keyword value, returning the
+/// text before and after it.
+fn split_top_level<'h>(head: &'h str, separator: &str) -> Option<(&'h str, &'h str)> {
+    let mut depth = 0i32;
+    let mut in_quotes = false;
+    for (i, c) in head.char_indices() {
+        match c {
+            '"' => in_quotes = !in_quotes,
+            '(' if !in_quotes => depth += 1,
+            ')' if !in_quotes => depth -= 1,
+            _ if depth == 0 && !in_quotes && head[i..].starts_with(separator) => {
+                return Some((&head[..i], &head[i + separator.len()..]));
+            }
+            _ => {}
+        }
+    }
+    None
 }
 
 /// Split a transition head on a top-level ` in ` mode guard, ignoring any ` in `
@@ -1276,7 +1494,8 @@ pub fn validate_token_grammar(grammar: &TokenGrammar) -> Vec<String> {
                 }
                 TransitionAction::Pop
                 | TransitionAction::EnableSkip
-                | TransitionAction::DisableSkip => {}
+                | TransitionAction::DisableSkip
+                | TransitionAction::Refuse => {}
             }
         }
     }
@@ -1486,6 +1705,7 @@ keywords:
                     is_regex: true,
                     line_number: 1,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: "NUMBER".to_string(),
@@ -1493,6 +1713,7 @@ keywords:
                     is_regex: true,
                     line_number: 2,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -1526,6 +1747,7 @@ case_sensitive: true,
                 is_regex: true,
                 line_number: 1,
                 alias: None,
+                guard: Default::default(),
             }],
             keywords: vec![],
             mode: None,
@@ -1558,6 +1780,7 @@ case_sensitive: true,
                 is_regex: true,
                 line_number: 1,
                 alias: None,
+                guard: Default::default(),
             }],
             keywords: vec![],
             mode: None,
@@ -1962,6 +2185,7 @@ case_sensitive: true,
                     is_regex: true,
                     line_number: 5,
                     alias: None,
+                    guard: Default::default(),
                 }],
             },
         );
@@ -2512,5 +2736,112 @@ transitions:
         let grammar = parse_token_grammar("NAME = /x/\nstart_mode: nope\n").unwrap();
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("start_mode")));
+    }
+
+    // -----------------------------------------------------------------------
+    // LANG84 E1: definition guards
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn e1_guard_suffixes_parse_in_every_section() {
+        let src = "\
+EMBDOC = /=begin[^\\n]*/ @line_start
+SHEBANG = /#![^\\n]*/ -> COMMENT @input_start
+NAME = /[a-z]+/
+group doc:
+  HEAD = /=[a-z]+/ @line_start
+skip:
+  DATA = /__END__[\\s\\S]*/ @line_start
+errors:
+  BAD = /=bad/ @line_start
+";
+        let g = parse_token_grammar(src).unwrap();
+        assert_eq!(g.definitions[0].guard, TokenGuard::LineStart);
+        assert_eq!(g.definitions[1].guard, TokenGuard::InputStart);
+        assert_eq!(g.definitions[1].alias.as_deref(), Some("COMMENT"));
+        assert_eq!(g.definitions[2].guard, TokenGuard::None);
+        assert_eq!(g.groups["doc"].definitions[0].guard, TokenGuard::LineStart);
+        assert_eq!(g.skip_definitions[0].guard, TokenGuard::LineStart);
+        assert_eq!(g.error_definitions[0].guard, TokenGuard::LineStart);
+        assert!(validate_token_grammar(&g).is_empty());
+    }
+
+    #[test]
+    fn e1_literal_patterns_take_a_guard_and_a_comment_may_follow() {
+        let g = parse_token_grammar("END = \"__END__\" @line_start # Ruby data section\n").unwrap();
+        assert_eq!(g.definitions[0].guard, TokenGuard::LineStart);
+        assert_eq!(g.definitions[0].pattern, "__END__");
+    }
+
+    #[test]
+    fn e1_unknown_or_unimplemented_guards_are_errors() {
+        for (src, needle) in [
+            ("X = /x/ @linestart", "Unknown definition guard '@linestart'"),
+            ("X = /x/ @column(7)", "not implemented yet"),
+            ("X = /x/ @line_start junk", "Unexpected text after the guard"),
+            ("X = /x/ -> Y @nope", "Unknown definition guard '@nope'"),
+        ] {
+            let error = parse_token_grammar(src).unwrap_err();
+            assert!(error.message.contains(needle), "{src}: {}", error.message);
+        }
+        let error = parse_token_grammar("line_terminators: /\\n/\nX = /x/\n").unwrap_err();
+        assert!(error.message.contains("not implemented yet"), "{}", error.message);
+    }
+
+    #[test]
+    fn e1_an_at_sign_inside_the_pattern_or_a_comment_is_not_a_guard() {
+        let g = parse_token_grammar("AT = /@[a-z]+/\nEMAIL = \"a@b\"\nX = /x/ # see @line_start\n").unwrap();
+        assert!(g.definitions.iter().all(|d| d.guard == TokenGuard::None));
+        assert_eq!(g.definitions[0].pattern, "@[a-z]+");
+    }
+
+    // -----------------------------------------------------------------------
+    // LANG84 E8: refusal transitions and conditions
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn e8_refuse_and_conditions_parse() {
+        let src = "\
+SLASH = \"/\"
+NAME = /[a-z]+/
+group beg:
+  SLASH = \"/\"
+transitions:
+  on SLASH in beg -> refuse
+  on (SLASH | NAME) in beg if space_before && !space_after -> refuse
+  on NAME if line_start -> set-mode beg
+  on KEYWORD=\"if\" if !line_start -> set-mode beg
+";
+        let g = parse_token_grammar(src).unwrap();
+        let t = &g.transitions;
+        assert_eq!(t[0].actions, vec![TransitionAction::Refuse]);
+        assert_eq!(t[0].in_mode.as_deref(), Some("beg"));
+        assert!(t[0].conditions.is_empty());
+        assert_eq!(t[1].on_tokens, vec!["SLASH", "NAME"]);
+        assert_eq!(t[1].in_mode.as_deref(), Some("beg"));
+        assert_eq!(
+            t[1].conditions,
+            vec![TransitionCondition::SpaceBefore, TransitionCondition::NoSpaceAfter]
+        );
+        assert_eq!(t[2].conditions, vec![TransitionCondition::LineStart]);
+        assert_eq!(t[2].in_mode, None);
+        // A keyword value of "if" is not the start of a condition list.
+        assert_eq!(t[3].on_value.as_deref(), Some("if"));
+        assert_eq!(t[3].conditions, vec![TransitionCondition::NotLineStart]);
+        assert!(validate_token_grammar(&g).is_empty());
+    }
+
+    #[test]
+    fn e8_malformed_rules_are_errors() {
+        for (rule, needle) in [
+            ("on X -> refuse, pop", "only action"),
+            ("on X -> pop, refuse", "only action"),
+            ("on X if spaces_before -> pop", "Unknown transition condition 'spaces_before'"),
+            ("on X if space_before && -> pop", "Unknown transition condition ''"),
+            ("on X -> refuse-now", "Unknown transition action"),
+        ] {
+            let error = parse_token_grammar(&format!("X = /x/\ntransitions:\n  {rule}\n")).unwrap_err();
+            assert!(error.message.contains(needle), "{rule}: {}", error.message);
+        }
     }
 }

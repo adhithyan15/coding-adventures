@@ -1009,3 +1009,29 @@ describe("F10 declarative lexer mode transitions", () => {
     ).toBe(false);
   });
 });
+
+// ---------------------------------------------------------------------------
+// LANG84 E1/E8: syntax this port does not implement is refused, not ignored
+// ---------------------------------------------------------------------------
+
+describe("LANG84 E1/E8 syntax", () => {
+  it.each([
+    ["X = /x/ @line_start\n", "@line_start"],
+    ["X = /x/ @input_start\n", "@input_start"],
+    ["X = /x/ -> Y @line_start\n", "not implemented"],
+    ['X = "x" -> Y @input_start\n', "not implemented"],
+    ["X = /x/\ntransitions:\n  on X -> refuse\n", "refuse"],
+    ["X = /x/\ntransitions:\n  on X if space_before && !space_after -> pop\n", "not implemented"],
+    ["X = /x/\ntransitions:\n  on (X | Y) in default if line_start -> pop\n", "not implemented"],
+  ])("rejects %j", (source, needle) => {
+    expect(() => parseTokenGrammar(source)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(source)).toThrow(needle);
+  });
+
+  it("does not read a KEYWORD=\"if\" value as a condition", () => {
+    const grammar = parseTokenGrammar(
+      'X = /x/\ntransitions:\n  on KEYWORD="if" -> set-mode default\n',
+    );
+    expect(grammar.transitions?.[0]?.onValue).toBe("if");
+  });
+});

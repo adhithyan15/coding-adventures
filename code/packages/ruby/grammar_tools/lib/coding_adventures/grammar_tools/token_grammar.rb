@@ -272,6 +272,20 @@ module CodingAdventures
     #
     # Returns a TokenDefinition. The pattern_part may have a "-> ALIAS"
     # suffix after the closing delimiter.
+    # Refuse "-> ALIAS @line_start" (LANG84 E1), which this port does not
+    # implement. Without this check the guard would silently become part of
+    # the alias name and the definition would match everywhere.
+    def self.reject_definition_guard(alias_name, name_part, line_number)
+      guard = alias_name.split.find { |word| word.start_with?("@") }
+      return if guard.nil?
+
+      raise TokenGrammarError.new(
+        "Definition guards (#{guard.inspect}, LANG84 E1) are not implemented by " \
+        "the Ruby grammar-tools for token #{name_part.inspect}; use the Rust grammar-tools",
+        line_number
+      )
+    end
+
     def self.parse_definition(pattern_part, name_part, line_number)
       alias_name = nil
 
@@ -304,6 +318,7 @@ module CodingAdventures
               line_number
             )
           end
+          reject_definition_guard(alias_name, name_part, line_number)
         elsif !remainder.empty?
           raise TokenGrammarError.new(
             "Unexpected text after pattern for token #{name_part.inspect}: #{remainder.inspect}",
@@ -343,6 +358,7 @@ module CodingAdventures
               line_number
             )
           end
+          reject_definition_guard(alias_name, name_part, line_number)
         elsif !remainder.empty?
           raise TokenGrammarError.new(
             "Unexpected text after pattern for token #{name_part.inspect}: #{remainder.inspect}",
@@ -383,6 +399,27 @@ module CodingAdventures
       [head, nil]
     end
 
+    # Whether a transition head has an " if " outside any parenthesised token
+    # set and outside a KEYWORD="..." value (LANG84 E8).
+    def self.top_level_if?(head)
+      depth = 0
+      in_quotes = false
+      head.each_char.with_index do |ch, i|
+        if ch == '"'
+          in_quotes = !in_quotes
+        elsif in_quotes
+          next
+        elsif ch == "("
+          depth += 1
+        elsif ch == ")"
+          depth -= 1
+        elsif ch == " " && depth.zero? && head[i..].start_with?(" if ")
+          return true
+        end
+      end
+      false
+    end
+
     # Parse one transitions: line into a ModeTransition (F10).
     #
     # Grammar: +on TOKENS [in MODE] -> ACTION [, ACTION ...]+ where TOKENS is a
@@ -407,6 +444,17 @@ module CodingAdventures
         )
       end
       head = head[3..].strip
+
+      # LANG84 E8 adds an "if COND && ..." condition list to a rule head. This
+      # port does not implement it, so it refuses the rule rather than read
+      # "X if space_before" as one (never-matching) token name.
+      if top_level_if?(head)
+        raise TokenGrammarError.new(
+          "Transition conditions ('if ...', LANG84 E8) are not implemented by " \
+          "the Ruby grammar-tools; use the Rust grammar-tools: #{line.inspect}",
+          line_number
+        )
+      end
 
       tokens_part, in_mode = split_in_guard(head)
       tokens_part = tokens_part.strip

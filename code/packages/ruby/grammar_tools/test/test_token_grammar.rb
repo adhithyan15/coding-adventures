@@ -1018,4 +1018,24 @@ class TestTokenGrammar < Minitest::Test
     issues = GT.validate_token_grammar(grammar)
     refute(issues.any? { |i| i.include?("undeclared") || i.include?("start_mode") })
   end
+  # LANG84 E1/E8: syntax this port does not implement is refused, not ignored.
+  def test_lang84_e1_e8_syntax_is_rejected
+    [
+      ["X = /x/ @line_start\n", "@line_start"],
+      ["X = /x/ @input_start\n", "@input_start"],
+      ["X = /x/ -> Y @line_start\n", "not implemented"],
+      ["X = \"x\" -> Y @input_start\n", "not implemented"],
+      ["X = /x/\ntransitions:\n  on X -> refuse\n", "refuse"],
+      ["X = /x/\ntransitions:\n  on X if space_before && !space_after -> pop\n", "not implemented"],
+      ["X = /x/\ntransitions:\n  on (X | Y) in default if line_start -> pop\n", "not implemented"]
+    ].each do |source, needle|
+      error = assert_raises(GT::TokenGrammarError) { GT.parse_token_grammar(source) }
+      assert_includes(error.message, needle, source)
+    end
+  end
+
+  def test_lang84_e8_keyword_value_if_is_not_a_condition
+    grammar = GT.parse_token_grammar(%(X = /x/\ntransitions:\n  on KEYWORD="if" -> set-mode default\n))
+    assert_equal("if", grammar.transitions[0].on_value)
+  end
 end

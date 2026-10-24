@@ -1037,7 +1037,7 @@ on NAME if line_start -> set-mode beg
 - `-> refuse` is a new action. When the rule fires, the lexer stops with a
   `LexerError` at the token: `token SLASH ("/") is not supported in mode
   'beg' by this grammar (refused at line L, column C)`. `refuse` must be the
-  rule's only action; the validator rejects a rule that mixes it with others.
+  rule's only action; a rule that mixes it with others is a parse error.
 - `if COND [&& COND …]` is an optional condition list between the mode guard
   and the arrow. Each `COND` is `space_before`, `space_after` or
   `line_start`, optionally negated with `!`. All must hold for the rule to

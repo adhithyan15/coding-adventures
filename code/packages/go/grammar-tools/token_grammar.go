@@ -262,6 +262,9 @@ func parseDefinition(patternPart, namePart string, lineNumber int) (TokenDefinit
 			if alias == "" {
 				return defn, fmt.Errorf("Line %d: Missing alias after '->' for token %q", lineNumber, namePart)
 			}
+			if err := rejectDefinitionGuard(alias, namePart, lineNumber); err != nil {
+				return defn, err
+			}
 			defn.Alias = alias
 		} else if remainder != "" {
 			return defn, fmt.Errorf("Line %d: Unexpected text after pattern for token %q: %q", lineNumber, namePart, remainder)
@@ -285,6 +288,9 @@ func parseDefinition(patternPart, namePart string, lineNumber int) (TokenDefinit
 			alias := strings.TrimSpace(remainder[2:])
 			if alias == "" {
 				return defn, fmt.Errorf("Line %d: Missing alias after '->' for token %q", lineNumber, namePart)
+			}
+			if err := rejectDefinitionGuard(alias, namePart, lineNumber); err != nil {
+				return defn, err
 			}
 			defn.Alias = alias
 		} else if remainder != "" {
@@ -336,6 +342,41 @@ var reservedGroupNames = map[string]bool{
 // identifier. All subsequent indented lines belong to that group. Groups
 // enable context-sensitive lexing: the lexer maintains a stack of active
 // groups and only tries patterns from the group on top of the stack.
+// rejectDefinitionGuard refuses "-> ALIAS @line_start" (LANG84 E1), which
+// this port does not implement. Without this check the guard would silently
+// become part of the alias name and the definition would match everywhere.
+func rejectDefinitionGuard(alias, name string, lineNumber int) error {
+	for _, word := range strings.Fields(alias) {
+		if strings.HasPrefix(word, "@") {
+			return fmt.Errorf(
+				"Line %d: Definition guards (%q, LANG84 E1) are not implemented by the Go grammar-tools for token %q; use the Rust grammar-tools",
+				lineNumber, word, name)
+		}
+	}
+	return nil
+}
+
+// hasTopLevelIf reports whether a transition head has an " if " outside any
+// parenthesised token set and outside a KEYWORD="..." value (LANG84 E8).
+func hasTopLevelIf(head string) bool {
+	depth := 0
+	inQuotes := false
+	for i := 0; i < len(head); i++ {
+		switch ch := head[i]; {
+		case ch == '"':
+			inQuotes = !inQuotes
+		case inQuotes:
+		case ch == '(':
+			depth++
+		case ch == ')':
+			depth--
+		case ch == ' ' && depth == 0 && strings.HasPrefix(head[i:], " if "):
+			return true
+		}
+	}
+	return false
+}
+
 // splitInGuard splits a transition rule head on a top-level " in " mode guard,
 // ignoring any " in " that appears inside a parenthesised token set (F10).
 //
@@ -385,6 +426,15 @@ func parseTransition(line string, lineNumber int) (ModeTransition, error) {
 		return ModeTransition{}, fmt.Errorf("Line %d: Transition rule must start with 'on ': %q", lineNumber, line)
 	}
 	head = strings.TrimSpace(head[3:])
+
+	// LANG84 E8 adds an "if COND && ..." condition list to a rule head. This
+	// port does not implement it, so it refuses the rule rather than read
+	// "X if space_before" as one (never-matching) token name.
+	if hasTopLevelIf(head) {
+		return ModeTransition{}, fmt.Errorf(
+			"Line %d: Transition conditions ('if ...', LANG84 E8) are not implemented by the Go grammar-tools; use the Rust grammar-tools: %q",
+			lineNumber, line)
+	}
 
 	tokensRaw, inMode := splitInGuard(head)
 	tokensRaw = strings.TrimSpace(tokensRaw)

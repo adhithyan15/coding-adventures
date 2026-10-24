@@ -395,6 +395,19 @@ def _find_closing_slash(pattern_part: str) -> int:
     return last if last > 0 else -1
 
 
+def _reject_definition_guard(alias: str, name: str, line_number: int) -> None:
+    """Refuse ``-> ALIAS @line_start`` (LANG84 E1), which this port does not
+    implement. Without this check the guard would silently become part of the
+    alias name and the definition would match everywhere."""
+    if any(word.startswith("@") for word in alias.split()):
+        raise TokenGrammarError(
+            f"Definition guards ({alias.split()[-1]!r}, LANG84 E1) are not "
+            f"implemented by the Python grammar-tools for token {name!r}; "
+            "use the Rust grammar-tools",
+            line_number,
+        )
+
+
 def _parse_definition(
     pattern_part: str,
     name_part: str,
@@ -453,6 +466,7 @@ def _parse_definition(
                     f"Missing alias after '->' for token {name_part!r}",
                     line_number,
                 )
+            _reject_definition_guard(alias, name_part, line_number)
         elif remainder:
             raise TokenGrammarError(
                 f"Unexpected text after pattern for token {name_part!r}: "
@@ -493,6 +507,7 @@ def _parse_definition(
                     f"Missing alias after '->' for token {name_part!r}",
                     line_number,
                 )
+            _reject_definition_guard(alias, name_part, line_number)
         elif remainder:
             raise TokenGrammarError(
                 f"Unexpected text after pattern for token {name_part!r}: "
@@ -533,6 +548,25 @@ def _split_in_guard(head: str) -> tuple[str, str | None]:
     return head, None
 
 
+def _has_top_level_if(head: str) -> bool:
+    """Whether a transition head has an `` if `` outside any parenthesised
+    token set and outside a ``KEYWORD="..."`` value (LANG84 E8)."""
+    depth = 0
+    in_quotes = False
+    for i, ch in enumerate(head):
+        if ch == '"':
+            in_quotes = not in_quotes
+        elif in_quotes:
+            continue
+        elif ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+        elif ch == " " and depth == 0 and head[i:].startswith(" if "):
+            return True
+    return False
+
+
 def _parse_transition(line: str, line_number: int) -> ModeTransition:
     """Parse one ``transitions:`` line into a :class:`ModeTransition` (F10).
 
@@ -555,6 +589,16 @@ def _parse_transition(line: str, line_number: int) -> ModeTransition:
             f"Transition rule must start with 'on ': {line!r}", line_number
         )
     head = head[3:].strip()
+
+    # LANG84 E8 adds an ``if COND && ...`` condition list to a rule head. This
+    # port does not implement it, so it must refuse the rule rather than read
+    # ``X if space_before`` as one (never-matching) token name.
+    if _has_top_level_if(head):
+        raise TokenGrammarError(
+            "Transition conditions ('if ...', LANG84 E8) are not implemented "
+            f"by the Python grammar-tools; use the Rust grammar-tools: {line!r}",
+            line_number,
+        )
 
     tokens_part, in_mode = _split_in_guard(head)
     tokens_part = tokens_part.strip()

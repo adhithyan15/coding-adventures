@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.7.1] - 2026-10-24
+
+### Changed
+- LANG84 E1/E8 syntax is refused with a clear "not implemented" error instead
+  of being misread: a definition guard after an alias
+  (`X = /x/ -> Y @line_start` used to become the alias `Y @line_start`) and an
+  `if` condition list in a transition head (`on X if space_before -> pop` used
+  to become the token name `X if space_before`). These features are
+  implemented by the Rust grammar-tools only. Tests: `lang84_e1_e8_test.go`.
+
 ## [0.7.0] - 2026-06-14
 
 ### Added (F10 — declarative lexer mode transitions, Go port)

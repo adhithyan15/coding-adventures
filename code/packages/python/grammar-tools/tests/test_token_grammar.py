@@ -1216,3 +1216,39 @@ def test_f10_compiler_round_trips_transitions() -> None:
     g2 = namespace["TOKEN_GRAMMAR"]
     assert g2.start_mode == g.start_mode
     assert g2.transitions == g.transitions
+
+
+# ---------------------------------------------------------------------------
+# LANG84 E1/E8: syntax this port does not implement is refused, not ignored
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("source", "needle"),
+    [
+        ("X = /x/ @line_start\n", "@line_start"),
+        ("X = /x/ @input_start\n", "@input_start"),
+        ("X = /x/ -> Y @line_start\n", "not implemented"),
+        ('X = "x" -> Y @input_start\n', "not implemented"),
+        ("X = /x/\ntransitions:\n  on X -> refuse\n", "Unknown transition action 'refuse'"),
+        (
+            "X = /x/\ntransitions:\n  on X if space_before && !space_after -> pop\n",
+            "not implemented",
+        ),
+        (
+            "X = /x/\ntransitions:\n  on (X | Y) in default if line_start -> pop\n",
+            "not implemented",
+        ),
+    ],
+)
+def test_lang84_e1_e8_syntax_is_rejected(source: str, needle: str) -> None:
+    with pytest.raises(TokenGrammarError) as excinfo:
+        parse_token_grammar(source)
+    assert needle in str(excinfo.value)
+
+
+def test_lang84_e8_keyword_value_if_is_not_a_condition() -> None:
+    grammar = parse_token_grammar(
+        'X = /x/\ntransitions:\n  on KEYWORD="if" -> set-mode default\n'
+    )
+    assert grammar.transitions[0].on_value == "if"

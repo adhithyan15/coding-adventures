@@ -730,8 +730,19 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
     # We must be careful not to confuse "->" inside a regex pattern with
     # the alias separator. Strategy: find the closing delimiter first
     # (/ for regex, " for literal), then check for -> in the remainder.
-    {pattern_str, alias_name} = split_pattern_and_alias(rest)
-    parse_pattern(name, pattern_str, line_number, alias_name)
+    {pattern_str, alias_name, guard} = split_pattern_and_alias(rest)
+
+    # LANG84 E1 definition guards (`@line_start`, `@input_start`) are
+    # implemented by the Rust grammar-tools only. Text after a pattern that is
+    # not `-> ALIAS` is otherwise ignored here, so without this check the guard
+    # would be dropped and the definition would match everywhere.
+    if guard do
+      {:error,
+       "Definition guards (#{inspect(guard)}, LANG84 E1) are not implemented by the " <>
+         "Elixir grammar-tools for token '#{name}'; use the Rust grammar-tools"}
+    else
+      parse_pattern(name, pattern_str, line_number, alias_name)
+    end
   end
 
   # Find the closing delimiter of the pattern, then check for -> alias
@@ -747,7 +758,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
         case close_idx do
           nil ->
             # No closing slash found — return as-is, let parse_pattern error
-            {rest, nil}
+            {rest, nil, nil}
 
           close_idx ->
             pattern = String.slice(rest, 0, close_idx + 1)
@@ -759,7 +770,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
         # Literal pattern — find the closing "
         case find_closing_quote(rest, 1) do
           nil ->
-            {rest, nil}
+            {rest, nil, nil}
 
           close_idx ->
             pattern = String.slice(rest, 0, close_idx + 1)
@@ -769,7 +780,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
 
       true ->
         # Neither regex nor literal — return as-is for error handling
-        {rest, nil}
+        {rest, nil, nil}
     end
   end
 
@@ -832,18 +843,26 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
     end
   end
 
-  # Extract alias from remainder after closing delimiter
+  # Extract alias from remainder after closing delimiter, and any LANG84 E1
+  # guard word (`@...`) found there, which the caller refuses.
   defp extract_alias(pattern, remainder) do
+    guard =
+      remainder
+      |> String.split("#", parts: 2)
+      |> hd()
+      |> String.split()
+      |> Enum.find(&String.starts_with?(&1, "@"))
+
     if String.starts_with?(remainder, "->") do
       alias_name = String.trim(String.slice(remainder, 2..-1//1))
 
       if alias_name == "" do
-        {pattern, nil}
+        {pattern, nil, guard}
       else
-        {pattern, alias_name}
+        {pattern, alias_name, guard}
       end
     else
-      {pattern, nil}
+      {pattern, nil, guard}
     end
   end
 
@@ -909,6 +928,14 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
 
           not String.starts_with?(head, "on ") ->
             {:error, "Transition rule must start with 'on ': #{inspect(line)}"}
+
+          # LANG84 E8 adds an `if COND && ...` condition list to a rule head.
+          # This port does not implement it, so it refuses the rule rather
+          # than read `X if space_before` as one (never-matching) token name.
+          has_top_level_if?(String.replace_prefix(head, "on ", "") |> String.trim()) ->
+            {:error,
+             "Transition conditions ('if ...', LANG84 E8) are not implemented by the " <>
+               "Elixir grammar-tools; use the Rust grammar-tools: #{inspect(line)}"}
 
           true ->
             rest_head = String.replace_prefix(head, "on ", "") |> String.trim()
@@ -1022,6 +1049,37 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
   # Returns `{tokens_part, guard_mode}` — `guard_mode` is nil when no guard.
   defp split_in_guard(head) do
     do_split_in_guard(head, 0, 0)
+  end
+
+  # Whether a transition head has an " if " outside any parenthesised token set
+  # and outside a `KEYWORD="..."` value (LANG84 E8).
+  defp has_top_level_if?(head), do: do_has_top_level_if?(head, 0, 0, false)
+
+  defp do_has_top_level_if?(head, idx, _depth, _in_quotes) when idx >= byte_size(head), do: false
+
+  defp do_has_top_level_if?(head, idx, depth, in_quotes) do
+    ch = binary_part(head, idx, 1)
+
+    cond do
+      ch == "\"" ->
+        do_has_top_level_if?(head, idx + 1, depth, not in_quotes)
+
+      in_quotes ->
+        do_has_top_level_if?(head, idx + 1, depth, in_quotes)
+
+      ch == "(" ->
+        do_has_top_level_if?(head, idx + 1, depth + 1, in_quotes)
+
+      ch == ")" ->
+        do_has_top_level_if?(head, idx + 1, depth - 1, in_quotes)
+
+      ch == " " and depth == 0 and byte_size(head) - idx >= 4 and
+          binary_part(head, idx, 4) == " if " ->
+        true
+
+      true ->
+        do_has_top_level_if?(head, idx + 1, depth, in_quotes)
+    end
   end
 
   defp do_split_in_guard(head, idx, depth) do

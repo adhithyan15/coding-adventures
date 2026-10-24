@@ -183,6 +183,7 @@ mod legacy {
                     is_regex: true,
                     line_number: 5,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NAME"#.to_string(),
@@ -190,6 +191,7 @@ mod legacy {
                     is_regex: true,
                     line_number: 6,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -197,6 +199,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 7,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -204,6 +207,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 8,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -211,6 +215,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 9,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -218,6 +223,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 10,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -225,6 +231,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 11,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -232,6 +239,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 12,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -239,6 +247,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 13,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -250,6 +259,7 @@ mod legacy {
                     is_regex: true,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -290,6 +300,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 10,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"INT"#.to_string(),
@@ -297,6 +308,7 @@ mod g_5a960085add9 {
                     is_regex: true,
                     line_number: 11,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -304,6 +316,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 12,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -311,6 +324,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 13,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -318,6 +332,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 14,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -325,6 +340,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 15,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -332,6 +348,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -339,6 +356,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 17,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -346,6 +364,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 18,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -357,6 +376,7 @@ mod g_5a960085add9 {
                     is_regex: true,
                     line_number: 21,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -397,6 +417,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 8,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"INT"#.to_string(),
@@ -404,6 +425,7 @@ mod g_c4f61ac43123 {
                     is_regex: true,
                     line_number: 9,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -411,6 +433,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 10,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -418,6 +441,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 11,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -425,6 +449,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 12,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -432,6 +457,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 13,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -439,6 +465,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 14,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -446,6 +473,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 15,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -453,6 +481,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -464,6 +493,7 @@ mod g_c4f61ac43123 {
                     is_regex: true,
                     line_number: 19,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -504,6 +534,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 9,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"INT"#.to_string(),
@@ -511,6 +542,7 @@ mod g_e27cead68fd9 {
                     is_regex: true,
                     line_number: 10,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -518,6 +550,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 11,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -525,6 +558,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 12,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -532,6 +566,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 13,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -539,6 +574,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 14,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -546,6 +582,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 15,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -553,6 +590,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -560,6 +598,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 17,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -571,6 +610,7 @@ mod g_e27cead68fd9 {
                     is_regex: true,
                     line_number: 20,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -611,6 +651,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 13,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"INT"#.to_string(),
@@ -618,6 +659,7 @@ mod g_c8dae440f6c9 {
                     is_regex: true,
                     line_number: 14,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -625,6 +667,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 15,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -632,6 +675,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -639,6 +683,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 17,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -646,6 +691,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 18,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -653,6 +699,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 19,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -660,6 +707,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 20,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -667,6 +715,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 21,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -678,6 +727,7 @@ mod g_c8dae440f6c9 {
                     is_regex: true,
                     line_number: 24,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -718,6 +768,7 @@ mod g_175a6d7f46ee {
                     is_regex: true,
                     line_number: 15,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NAME"#.to_string(),
@@ -725,6 +776,7 @@ mod g_175a6d7f46ee {
                     is_regex: true,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -732,6 +784,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 17,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -739,6 +792,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 18,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -746,6 +800,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 19,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -753,6 +808,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 20,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -760,6 +816,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 21,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -767,6 +824,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 22,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -774,6 +832,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 23,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -785,6 +844,7 @@ mod g_175a6d7f46ee {
                     is_regex: true,
                     line_number: 26,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],

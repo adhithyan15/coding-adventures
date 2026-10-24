@@ -850,4 +850,39 @@ defmodule CodingAdventures.GrammarTools.TokenGrammarTest do
       assert Enum.any?(issues, &String.contains?(&1, "Too many transition rules"))
     end
   end
+  # LANG84 E1/E8 syntax is implemented by the Rust grammar-tools only; this
+  # port must refuse it rather than ignore it and lex differently.
+  describe "parse/1 — LANG84 E1/E8 syntax is rejected" do
+    for {source, needle} <- [
+          {"X = /x/ @line_start\n", "@line_start"},
+          {"X = /x/ @input_start\n", "@input_start"},
+          {"X = /x/ -> Y @line_start\n", "not implemented"},
+          {~s(X = "x" -> Y @input_start\n), "not implemented"},
+          {"X = /x/\ntransitions:\n  on X -> refuse\n", "refuse"},
+          {"X = /x/\ntransitions:\n  on X if space_before && !space_after -> pop\n",
+           "not implemented"},
+          {"X = /x/\ntransitions:\n  on (X | Y) in default if line_start -> pop\n",
+           "not implemented"}
+        ] do
+      @source source
+      @needle needle
+      test "rejects #{inspect(source)}" do
+        assert {:error, msg} = TokenGrammar.parse(@source)
+        assert msg =~ @needle
+      end
+    end
+
+    test "an @ inside a trailing comment is not a guard" do
+      assert {:ok, grammar} = TokenGrammar.parse("X = /x/ # see @line_start\n")
+      assert length(grammar.definitions) == 1
+    end
+
+    test "a KEYWORD=\"if\" value is not a condition" do
+      {:ok, grammar} =
+        TokenGrammar.parse(~s(X = /x/\ntransitions:\n  on KEYWORD="if" -> set-mode default\n))
+
+      [rule] = grammar.transitions
+      assert rule.on_value == "if"
+    end
+  end
 end

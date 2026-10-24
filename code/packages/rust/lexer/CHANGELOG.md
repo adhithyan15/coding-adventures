@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased — LANG84 E1 line-start guards and E8 refusal transitions
+
+### Added
+- `GrammarLexer` honours `TokenDefinition::guard`: a `@line_start` pattern is
+  tried only at offset 0 or right after a `\n` (so `\r\n` counts and a lone
+  `\r` does not); an `@input_start` pattern only at offset 0. The check is one
+  array read, independent of whether the preceding text was a token, a skip
+  match, the built-in `NEWLINE` or built-in whitespace. Guards apply to
+  token, group and skip patterns, and never reorder definitions.
+- The F10 transition table evaluates LANG84 E8 `if` conditions:
+  `space_before` reads the token's F11 `TOKEN_PRECEDED_BY_SPACE` flag,
+  `space_after` peeks one character past the token (whitespace or end of
+  input), `line_start` is E1's line start at the token's first character.
+  A rule whose conditions fail is skipped like a failed `in MODE` guard.
+- `TransitionAction::Refuse` stops lexing with a `LexerError` at the token:
+  `token SLASH ("/") is not supported in mode 'beg' by this grammar`. The
+  built-in `NEWLINE` can trigger it too.
+- New suite `tests/position_guards_and_refusals.rs` (16 tests).
+
+### Unchanged
+- Grammars that use neither feature lex identically: the guard check passes
+  every unguarded pattern, and rules without conditions behave as before.
+
 ## Unreleased — `LexerContext` borrows the previous token
 
 `LexerContext::previous_token` is now a borrow of the lexer's last emitted
