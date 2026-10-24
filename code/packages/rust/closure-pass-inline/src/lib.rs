@@ -50,8 +50,10 @@
 //!      This is the capture guard: with no *free* identifiers, the
 //!      substituted expression can neither read a global that might
 //!      be shadowed at the call site nor reference `f` itself
-//!      (so recursion is excluded for free). `this` / `arguments`
-//!      are identifiers too, so a body using them is rejected here.
+//!      (so recursion is excluded for free). `arguments` is an
+//!      identifier, and the walk records `this`, `super` and `new.target`
+//!      under their keyword spellings (#18115), so a body using any of
+//!      them, directly or through an arrow, is rejected here.
 //!   4. **`f`'s name is declared exactly once in the whole program.**
 //!      No other binding (a `var f`, a parameter `f`, a second
 //!      `function f`) anywhere shadows the name, so *every* use of
@@ -854,16 +856,34 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // A regex literal is an inert leaf (no sub-expression, references no
         // identifier) — these traversals treat it exactly like a StringLiteral.
         | Expression::RegExpLiteral(_)
-        // `this` is a leaf keyword — it binds/references no identifier and has
-        // no sub-expression, so these traversals do nothing for it. (It is
-        // deliberately NOT treated as a freely-substitutable primary: `this` is
-        // bound at the call site, so the inliner's triv-/pure-expression
-        // predicates leave it conservative.)
-        | Expression::ThisExpression(_)
-        | Expression::Super(_)
-        | Expression::NewTarget(_)
         | Expression::ImportMeta(_)
         | Expression::UndefinedLiteral(_) => {}
+        // #18115: `this`, `super` and `new.target` are bound by the CALL, not
+        // by any declaration. A plain call `t()` gives `t`'s body its own
+        // `this` (the global object, or `undefined` in strict code); spliced
+        // into a caller, the same keyword means the CALLER's `this`:
+        //
+        //   function t(){return this}
+        //   var o={m:function(){return t()}};
+        //   o.m()===o      // false; after a splice into `m`, true
+        //
+        // They are not identifiers, so they used to slip past every capture
+        // guard built from this walk. Record each under its keyword spelling.
+        // A reserved word can never be a parameter, local or declaration
+        // name, so the expression inliner's "every name is a parameter"
+        // guard rejects the function, and the statement inliner rejects the
+        // names explicitly (`void_candidate_from_function`). For the
+        // avoid-sets this walk also feeds, an extra reserved word changes
+        // nothing.
+        Expression::ThisExpression(_) => {
+            out.insert("this".to_string());
+        }
+        Expression::Super(_) => {
+            out.insert("super".to_string());
+        }
+        Expression::NewTarget(_) => {
+            out.insert("new.target".to_string());
+        }
         Expression::BinaryExpression(be) => {
             collect_binding_idents_expr(&be.left, out);
             collect_binding_idents_expr(&be.right, out);
@@ -1027,6 +1047,15 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         }
         // An arrow binds its params at its boundary (it has no name);
         // record them so an inline never captures or collides with them.
+        //
+        // #18115: unlike a `function`, an arrow has no `this`, `super`,
+        // `new.target` or `arguments` of its own; it reads its enclosing
+        // function's. So `function t(){return ()=>this}` is as call-bound as
+        // `return this`, and the arrow's BODY must be walked too. Walking it
+        // also records every name the body reads, which the capture guards
+        // need for the same reason they need the outer body's names. Names
+        // the arrow declares itself are over-collected; that only makes the
+        // guards more conservative.
         Expression::ArrowFunctionExpression(ae) => {
             for p in &ae.params {
                 out.insert(p.binding_identifier().name.clone());
@@ -1034,14 +1063,31 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                     collect_binding_idents_expr(def, out);
                 }
             }
+            match &ae.body {
+                ArrowBody::Expression(e) => collect_binding_idents_expr(e, out),
+                ArrowBody::Block(b) => {
+                    for s in &b.body {
+                        collect_used_idents_stmt(s, out);
+                    }
+                }
+            }
         }
-        // A template literal introduces NO boundary bindings; its quasis are
-        // leaf strings. Mirror the arrow arm's non-recursion into sub-bodies
-        // (it only records params, and a template has none) — nothing to do.
-        Expression::TemplateLiteral(_) => {}
-        // A tagged template introduces no boundary bindings either (the tag is
-        // a callee, the quasi a template) — mirror the template arm.
-        Expression::TaggedTemplateExpression(_) => {}
+        // A template literal's quasis are leaf strings, but each `${…}` is an
+        // ordinary expression evaluated in the enclosing scope (#18115:
+        // `` `${this.x}` `` reads the call's `this`). Walk them.
+        Expression::TemplateLiteral(t) => {
+            for e in &t.expressions {
+                collect_binding_idents_expr(e, out);
+            }
+        }
+        // A tagged template evaluates its tag and its substitutions in the
+        // enclosing scope, like a call's callee and arguments.
+        Expression::TaggedTemplateExpression(tt) => {
+            collect_binding_idents_expr(&tt.tag, out);
+            for e in &tt.quasi.expressions {
+                collect_binding_idents_expr(e, out);
+            }
+        }
         // `...arg` — recurse into the spread argument to collect its bindings.
         Expression::SpreadElement(s) => collect_binding_idents_expr(&s.argument, out),
         Expression::YieldExpression(y) => { if let Some(a) = &y.argument { collect_binding_idents_expr(a, out); } }
@@ -2800,7 +2846,7 @@ fn void_candidate_from_function(
     }
     let mut free_top_level: HashSet<String> = HashSet::new();
     for name in &used {
-        if name == "this" || name == "arguments" {
+        if matches!(name.as_str(), "this" | "arguments" | "super" | "new.target") {
             return None; // (4) frame-bound meaning would change on splice
         }
         if param_set.contains(name) || local_set.contains(name) {
@@ -5971,5 +6017,69 @@ mod tests {
             ),
             other => panic!("expected an identifier default, got {other:?}"),
         }
+    }
+
+    // ---- #18115: `this`, `super`, `new.target` are bound by the call ---------
+
+    /// A body that reads `this` is never spliced into a caller: the caller's
+    /// `this` is a different binding. Each output is its input, unchanged.
+    /// (Before #18115 the first became
+    /// `…var o={m:function(){return this}};`, so `o.m()===o` turned true.)
+    #[test]
+    fn issue18115_this_reading_helper_is_not_inlined() {
+        for (src, expected) in [
+            // The expression inliner (`{ return EXPR; }`).
+            (
+                "function t(){return this}var o={m:function(){return t()}};",
+                "function t(){return this}var o={m:function(){return t()}};",
+            ),
+            (
+                "function t(){return this===void 0}log(t());",
+                "function t(){return this===void 0}log(t());",
+            ),
+            // Through an arrow, which inherits `this`.
+            (
+                "function t(){return ()=>this}var o={m:function(){return t()()}};",
+                "function t(){return ()=>this}var o={m:function(){return t()()}};",
+            ),
+            // The statement inliner (a void helper).
+            (
+                "function t(){log(this)}var o={m:function(){t()}};",
+                "function t(){log(this)}var o={m:function(){t()}};",
+            ),
+            (
+                "function t(){log(()=>this)}var o={m:function(){t()}};",
+                "function t(){log(()=>this)}var o={m:function(){t()}};",
+            ),
+        ] {
+            assert_eq!(inline_source(src), expected, "{src:?}");
+        }
+    }
+
+    #[test]
+    fn issue18115_new_target_reading_helper_is_not_inlined() {
+        let out = inline_source("function t(){return new.target}function F(){return t()}new F;");
+        assert!(out.contains("return t()"), "inlined new.target: {out}");
+    }
+
+    /// A function expression has its own `this`, so a helper that only
+    /// *returns* one is still inlined.
+    #[test]
+    fn issue18115_a_nested_function_keeps_its_own_this() {
+        assert_eq!(
+            inline_source("function t(){return function(){return this}}log(t());"),
+            "function t(){return function(){return this}}log(function(){return this});"
+        );
+    }
+
+    /// The walk now reads arrow bodies and template substitutions, so the
+    /// capture guard sees the free names in them.
+    #[test]
+    fn issue18115_free_names_in_arrow_bodies_are_seen() {
+        let mut out = HashSet::new();
+        let node = parse_javascript_typed("()=>y;", EsVersion::Es2025).expect("parse");
+        let prog = bridge::grammar_to_program(&node, EsVersion::Es2025).expect("bridge");
+        collect_used_idents_program(&prog, &mut out);
+        assert!(out.contains("y"), "arrow body name missed: {out:?}");
     }
 }
