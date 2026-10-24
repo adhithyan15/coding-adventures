@@ -5102,6 +5102,7 @@ impl Compiler {
             return None;
         }
         match target_name.as_str() {
+            "sign" if self.exact_static_integer_reduction_leaf_value(node).is_some() => None,
             "sign" => Some(ExactIntegerSignProof {
                 operand: actuals[0],
                 magnitude: 1,
@@ -16103,6 +16104,43 @@ mod tests {
                     && instr.srcs.first().and_then(Operand::as_var)
                         == Some("__basic_print_real")
             }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_static_sign_factors() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(sign(3.75) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; boolean flag; real result; flag := pick() > 0; result := entier(sign(if flag then 0.25 else 7.5) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier((sign(if flag then -0.25 else -7.5) + 2) * sign(pick())); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!("statically exact sign calls remain ordinary factors for {source:?}: {error}")
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_static_sign_factors_reject_unproven_forms() {
+        for source in [
+            "begin real procedure left; left := 3.5; real procedure right; right := 2.25; real result; result := entier(sign(left()) * sign(right())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(sign(if flag then -0.25 else 7.5) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean procedure choose; choose := true; real result; result := entier(sign(if choose() then 0.25 else 7.5) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(sign(if flag then pick() else 7.5) * sign(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "two dynamic sign roots, path-dependent signs, calling selectors, and dynamic branches must remain outside the static sign-factor proof",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "unexpected error for {source:?}: {err:?}"
+            );
         }
     }
 
