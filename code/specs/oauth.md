@@ -886,8 +886,9 @@ TLS or HTTP, authorize OAuth transport, or open a network connection.
 A bounded complete-intermediate-policy follow-up now strengthens that
 construction-bound authentication without accepting either endpoint
 separately. It consumes one constructed-path adjacency together with complete
-intermediate policy for the exact projected issuer, rejects a certificate-object
-mismatch before RSA key parsing or signature verification, and then retains
+intermediate policy for the exact projected non-terminal issuer, rejects the
+construction's terminal adjacency and any certificate-object mismatch before
+RSA key parsing or signature verification, and then retains
 both the authenticated construction projection and the complete intermediate
 policy in distinct non-copyable evidence. This binds caller-owned critical-
 extension recognition, issuing-CA role, data-driven algorithm profile,
