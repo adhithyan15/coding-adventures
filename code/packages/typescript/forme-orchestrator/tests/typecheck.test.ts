@@ -102,6 +102,20 @@ describe("areKindsCompatible — version compatibility", () => {
       { name: "ContentSource", version: "v2" },
     )).toBe(false);
   });
+
+  it("compares arbitrarily large version components without precision loss", () => {
+    expect(areKindsCompatible(
+      { name: "ContentSource", version: "9007199254740993.0" },
+      { name: "ContentSource", version: "9007199254740992.0" },
+    )).toBe(false);
+  });
+
+  it("does not parse a valid-looking version prefix as the whole version", () => {
+    expect(areKindsCompatible(
+      { name: "ContentSource", version: "1.2-not-semver?" },
+      { name: "ContentSource", version: "1.2-also-not-semver?" },
+    )).toBe(false);
+  });
 });
 
 describe("areKindsCompatible — discriminants", () => {
@@ -172,12 +186,44 @@ describe("areKindsCompatible — registered extension subtypes", () => {
     )).toBe(false);
   });
 
+  it("requires registry binding even when extension names match exactly", () => {
+    expect(areKindsCompatible(
+      { name: "ext:unknown", version: "1.0" },
+      { name: "ext:unknown", version: "1.0" },
+    )).toBe(false);
+    expect(areKindsCompatible(
+      { name: "ext:blog-post", version: "1.2" },
+      { name: "ext:blog-post", version: "1.2" },
+      extensionRegistry(),
+    )).toBe(false);
+  });
+
   it("checks version compatibility across every ancestry edge", () => {
     const incompatibleFeatured = { name: "ext:featured-post", version: "2.0" } as const;
     expect(areKindsCompatible(
       incompatibleFeatured,
       Kinds.ContentNode,
       extensionRegistry(incompatibleFeatured),
+    )).toBe(false);
+  });
+});
+
+describe("areKindsCompatible — stream wrapper metadata", () => {
+  it("rejects incompatible wrapper versions for stream and promoted edges", () => {
+    const incompatible = {
+      name: "Stream" as const,
+      version: "2.0",
+      inner: Kinds.ContentSource,
+    };
+    expect(areKindsCompatible(incompatible, streamOf(Kinds.ContentSource))).toBe(false);
+    expect(areKindsCompatible(incompatible, Kinds.ContentSource)).toBe(false);
+  });
+
+  it("checks stream-wrapper discriminants before inner covariance", () => {
+    expect(areKindsCompatible(
+      { name: "Stream", version: "1.0", discriminant: "left", inner: featuredPost },
+      { name: "Stream", version: "1.0", discriminant: "right", inner: Kinds.ContentNode },
+      extensionRegistry(),
     )).toBe(false);
   });
 });

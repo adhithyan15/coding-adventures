@@ -98,4 +98,13 @@ describe("buildKindRegistry", () => {
       { name: "ext:c", version: "1.0", subtypeOf: "ext:a" },
     ])])).toThrow(/cycle.*ext:/i);
   });
+
+  it("caps the exported registry builder independently of discovery", () => {
+    const kinds = Array.from({ length: 4_097 }, (_, index) => ({
+      name: `ext:kind-${index}`,
+      version: "1.0",
+    }));
+    expect(() => buildKindRegistry([manifest("@example/too-many", kinds)]))
+      .toThrow(/4096.*kind/i);
+  });
 });
