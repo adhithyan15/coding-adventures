@@ -82,6 +82,17 @@ it("adds Japanese pre-A1 full mock 1 with separate secure four-skill packets", (
   expect(count("prea1-writing-dictation")).toBe(2);
   expect(count("prea1-writing-bounded-production")).toBe(2);
   expect(count("prea1-speaking-doorway-exchange")).toBe(5);
+  expect(part(key, "prea1-reading-kana-and-doorway-words")).toMatch(/1 B; 2 A; 3 C; 4 A; 5 B/);
+  expect(part(key, "prea1-listening-greetings-and-one-turn-details")).toMatch(/1 A; 2 B; 3 B; 4 C; 5 A/);
+  for (const [file, utterance, keyedChoice] of [
+    ["l01", "こんにちは", "A"], ["l02", "はい", "B"],
+    ["l03", "いいえ", "B"], ["l04", "なまえ", "C"],
+    ["l05", "おねがいします", "A"],
+  ]) {
+    const line = examiner.split("\n").find((entry) => entry.includes(`mock-1-${file}`));
+    expect(line).toContain(`**${utterance}**`);
+    expect(line).toContain(`key ${keyedChoice}`);
+  }
   expect(paper).toMatch(/20 written minutes.*5 speaking minutes/is);
   expect(paper).toMatch(/collect.*Reading.*before.*Listening.*collect.*Listening.*before.*Writing.*collect.*Writing.*before.*Speaking/is);
   expect(paper).toMatch(/project-defined.*precursor/is);
