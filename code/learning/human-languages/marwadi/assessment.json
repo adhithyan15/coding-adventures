@@ -28,8 +28,10 @@
         {
           "id": "pre-a1-mock-2",
           "timed": true,
+          "paper": "mocks/pre-a1/mock-2.md",
           "rubric": "mocks/pre-a1/rubric.md",
-          "answerKey": "mocks/pre-a1/mock-2-answer-key.md"
+          "answerKey": "mocks/pre-a1/mock-2-answer-key.md",
+          "manifest": "mocks/pre-a1/mock-2-manifest.json"
         }
       ]
     },
