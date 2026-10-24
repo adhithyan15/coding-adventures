@@ -249,6 +249,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-role-line-breaks-11.16.1-visual-corpus.json"
     ));
+    const ER_PROTOTYPE_IDENTIFIERS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-prototype-identifiers-11.16.1-corpus.json"
+    ));
+    const ER_PROTOTYPE_IDENTIFIERS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-prototype-identifiers-11.16.1-visual-corpus.json"
+    ));
     const TIMELINE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
@@ -2937,6 +2945,47 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_er_role_line_breaks_e2e.png")
             .expect("ER role line-break PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_prototype_identifiers_to_png() {
+        let syntax: Value = serde_json::from_str(ER_PROTOTYPE_IDENTIFIERS_CORPUS)
+            .expect("ER prototype identifier corpus JSON");
+        let visual: Value = serde_json::from_str(ER_PROTOTYPE_IDENTIFIERS_VISUAL_CORPUS)
+            .expect("ER prototype identifier visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"]
+                .as_str()
+                .expect("ER prototype identifier source"),
+        )
+        .expect("ER prototype identifier fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.nodes.len(), 3);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dcfce7")
+        )));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_prototype_identifiers_e2e.png")
+            .expect("ER prototype identifier PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 

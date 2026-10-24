@@ -144,8 +144,10 @@ entities accept empty blocks and single-line compact attribute blocks without
 requiring whitespace around braces, preserving any fields through semantic IR,
 layout, and paint. HTML-style break variants in quoted relationship roles become
 semantic newlines and lower as multiline backend-neutral text. ER remains
-partial while the rest of the pinned upstream syntax and visual corpus is
-incomplete.
+prototype-safe for entity and class identifiers such as `__proto__`,
+`constructor`, and `prototype` through semantic IR, style resolution, layout,
+and paint. ER remains partial while the rest of the pinned upstream syntax and
+visual corpus is incomplete.
 
 ## Required New Semantic Families
 
