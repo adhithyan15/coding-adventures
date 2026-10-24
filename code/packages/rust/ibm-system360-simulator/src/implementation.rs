@@ -540,7 +540,7 @@ fn span(first: usize, last: usize) -> usize {
 fn instruction_width(op: u8) -> Option<u8> {
     match op {
         0x05..=0x07 | 0x0a | 0x10..=0x3f => Some(2),
-        0x40..=0x7f | 0x86..=0x98 | 0xba..=0xbf => Some(4),
+        0x40..=0x7f | 0x86..=0x98 => Some(4),
         0xd2 | 0xd4..=0xd7 => Some(6),
         _ => None,
     }
@@ -679,7 +679,7 @@ impl System360Simulator {
     fn exec_four(&mut self, raw: &[u8]) -> Result<(&'static str, String), System360Error> {
         match raw[0] {
             0x91..=0x97 => self.exec_si(raw),
-            0x86..=0x90 | 0x98 | 0xba..=0xbf => self.exec_rs(raw),
+            0x86..=0x90 | 0x98 => self.exec_rs(raw),
             _ => self.exec_rx(raw),
         }
     }
@@ -852,47 +852,53 @@ impl System360Simulator {
                 "LM"
             }
             0x89 => {
-                self.state.gprs[r1] = self.state.gprs[r1].wrapping_shl(count);
+                self.state.gprs[r1] = self.state.gprs[r1].checked_shl(count).unwrap_or(0);
                 "SLL"
             }
             0x88 => {
-                self.state.gprs[r1] = self.state.gprs[r1].wrapping_shr(count);
+                self.state.gprs[r1] = self.state.gprs[r1].checked_shr(count).unwrap_or(0);
                 "SRL"
             }
-            0xba => {
-                let v = (self.state.gprs[r1] as i32).wrapping_shr(count);
+            0x8a => {
+                let source = self.state.gprs[r1] as i32;
+                let v = source
+                    .checked_shr(count)
+                    .unwrap_or(if source < 0 { -1 } else { 0 });
                 self.state.gprs[r1] = v as u32;
                 self.signed_cc(v);
                 "SRA"
             }
-            0xbb => {
-                let wide = i64::from(self.state.gprs[r1] as i32) << count;
-                let v = wide as i32;
-                if i64::from(v) != wide {
+            0x8b => {
+                let source = self.state.gprs[r1];
+                let wide = i128::from(source as i32) << count;
+                let sign = source & 0x8000_0000;
+                let shifted = source.checked_shl(count).unwrap_or(0) & 0x7fff_ffff;
+                let v = (sign | shifted) as i32;
+                if !(i128::from(i32::MIN)..=i128::from(i32::MAX)).contains(&wide) {
                     return Err(System360Error::FixedPointOverflow);
                 }
                 self.state.gprs[r1] = v as u32;
                 self.signed_cc(v);
                 "SLA"
             }
-            0xbc | 0xbd => {
+            0x8c | 0x8d => {
                 self.pair(r1)?;
                 let pair =
                     (u64::from(self.state.gprs[r1]) << 32) | u64::from(self.state.gprs[r1 + 1]);
-                let v = if op == 0xbc {
+                let v = if op == 0x8c {
                     pair.wrapping_shr(count)
                 } else {
                     pair.wrapping_shl(count)
                 };
                 self.state.gprs[r1] = (v >> 32) as u32;
                 self.state.gprs[r1 + 1] = v as u32;
-                if op == 0xbc {
+                if op == 0x8c {
                     "SRDL"
                 } else {
                     "SLDL"
                 }
             }
-            0xbe => {
+            0x8e => {
                 self.pair(r1)?;
                 let pair = ((u64::from(self.state.gprs[r1]) << 32)
                     | u64::from(self.state.gprs[r1 + 1])) as i64;
@@ -902,13 +908,16 @@ impl System360Simulator {
                 self.state.condition_code = ord(v.cmp(&0));
                 "SRDA"
             }
-            0xbf => {
+            0x8f => {
                 self.pair(r1)?;
-                let pair = ((u64::from(self.state.gprs[r1]) << 32)
-                    | u64::from(self.state.gprs[r1 + 1])) as i64;
+                let source =
+                    (u64::from(self.state.gprs[r1]) << 32) | u64::from(self.state.gprs[r1 + 1]);
+                let pair = source as i64;
                 let wide = i128::from(pair) << count;
-                let v = wide as i64;
-                if i128::from(v) != wide {
+                let sign = source & 0x8000_0000_0000_0000;
+                let shifted = source.wrapping_shl(count) & 0x7fff_ffff_ffff_ffff;
+                let v = (sign | shifted) as i64;
+                if !(i128::from(i64::MIN)..=i128::from(i64::MAX)).contains(&wide) {
                     return Err(System360Error::FixedPointOverflow);
                 }
                 self.state.gprs[r1] = (v >> 32) as u32;
@@ -984,7 +993,12 @@ impl System360Simulator {
                 };
                 "TM"
             }
-            _ => unreachable!(),
+            _ => {
+                return Err(System360Error::UnknownOpcode {
+                    opcode: op,
+                    pc: self.state.pc.wrapping_sub(4),
+                })
+            }
         };
         Ok((name, format!("{name} {ea:#08x},{imm:#04x}")))
     }
@@ -1185,13 +1199,23 @@ impl Hfp {
         if self.fraction == 0 && other.fraction == 0 {
             return 0;
         }
+        if self.fraction == 0 {
+            return if other.negative { 2 } else { 1 };
+        }
+        if other.fraction == 0 {
+            return if self.negative { 1 } else { 2 };
+        }
         if self.negative != other.negative {
             return if self.negative { 1 } else { 2 };
         }
-        let ordering = self
-            .exponent
-            .cmp(&other.exponent)
-            .then_with(|| self.fraction.cmp(&other.fraction));
+        let normalized = |mut value: Self| {
+            while value.fraction < (1_u128 << 124) {
+                value.fraction <<= 4;
+                value.exponent -= 1;
+            }
+            (value.exponent, value.fraction)
+        };
+        let ordering = normalized(self).cmp(&normalized(other));
         ord(if self.negative {
             ordering.reverse()
         } else {

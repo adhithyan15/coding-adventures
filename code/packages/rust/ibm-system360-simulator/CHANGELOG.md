@@ -14,4 +14,6 @@ All notable changes to `ibm-system360-simulator` are documented here.
   register-pair, and shift instruction families.
 - Four raw 64-bit floating registers and exact integer-fraction implementations
   of short and long System/360 hexadecimal floating-point operations.
-- Fifteen focused tests with 100% function and 93.20% line coverage.
+- Eighteen focused tests, including invalid-decode atomicity, the complete
+  architectural shift opcode/count boundary, and unnormalized hexadecimal
+  floating comparison witnesses, with 100% function and 93.24% line coverage.

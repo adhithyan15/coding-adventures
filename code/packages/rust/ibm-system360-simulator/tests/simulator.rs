@@ -147,8 +147,8 @@ fn multiply_divide_and_shift_register_pairs_follow_specification_rules() {
         rr(0x1d, 2, 5),
         rs(0x89, 6, 0, 0, 4),
         rs(0x88, 6, 0, 0, 1),
-        rs(0xbd, 8, 0, 0, 4),
-        rs(0xbc, 8, 0, 0, 2),
+        rs(0x8d, 8, 0, 0, 4),
+        rs(0x8c, 8, 0, 0, 2),
         halt(),
     ]);
     let mut cpu = System360Simulator::new();
@@ -372,10 +372,10 @@ fn remaining_fixed_point_register_storage_and_shift_orders_execute() {
     }
 
     let shifts = program(&[
-        rs(0xba, 2, 0, 0, 1),
-        rs(0xbb, 2, 0, 0, 1),
-        rs(0xbe, 4, 0, 0, 1),
-        rs(0xbf, 4, 0, 0, 1),
+        rs(0x8a, 2, 0, 0, 1),
+        rs(0x8b, 2, 0, 0, 1),
+        rs(0x8e, 4, 0, 0, 1),
+        rs(0x8f, 4, 0, 0, 1),
         halt(),
     ]);
     let mut cpu = System360Simulator::new();
@@ -385,6 +385,83 @@ fn remaining_fixed_point_register_storage_and_shift_orders_execute() {
     cpu.write_gpr(5, 0xffff_fff0).unwrap();
     cpu.run(10).unwrap();
     assert_eq!(cpu.read_gpr(2), Ok((-8_i32) as u32));
+}
+
+#[test]
+fn invalid_si_opcode_is_a_typed_atomic_fault() {
+    let mut cpu = System360Simulator::new();
+    cpu.load(&[0x93, 0, 0, 0], 0).unwrap();
+    let before = cpu.get_state();
+    assert_eq!(
+        cpu.step(),
+        Err(System360Error::UnknownOpcode {
+            opcode: 0x93,
+            pc: 0,
+        })
+    );
+    assert_eq!(cpu.get_state(), before);
+}
+
+#[test]
+fn architectural_shift_opcodes_and_large_counts_are_exact() {
+    let mut logical = System360Simulator::new();
+    logical
+        .load(
+            &program(&[
+                rs(0x89, 1, 0, 0, 32),
+                rs(0x88, 2, 0, 0, 63),
+                rs(0x8a, 3, 0, 0, 63),
+                halt(),
+            ]),
+            0,
+        )
+        .unwrap();
+    logical.write_gpr(1, 1).unwrap();
+    logical.write_gpr(2, u32::MAX).unwrap();
+    logical.write_gpr(3, 0x8000_0000).unwrap();
+    logical.run(8).unwrap();
+    assert_eq!(logical.read_gpr(1), Ok(0));
+    assert_eq!(logical.read_gpr(2), Ok(0));
+    assert_eq!(logical.read_gpr(3), Ok(u32::MAX));
+
+    let mut arithmetic_left_zero = System360Simulator::new();
+    arithmetic_left_zero
+        .load(&program(&[rs(0x8b, 1, 0, 0, 63), halt()]), 0)
+        .unwrap();
+    arithmetic_left_zero.run(4).unwrap();
+    assert_eq!(arithmetic_left_zero.read_gpr(1), Ok(0));
+
+    let mut arithmetic_left_overflow = System360Simulator::new();
+    arithmetic_left_overflow
+        .load(&rs(0x8b, 1, 0, 0, 32), 0)
+        .unwrap();
+    arithmetic_left_overflow.write_gpr(1, 1).unwrap();
+    let before = arithmetic_left_overflow.get_state();
+    assert_eq!(
+        arithmetic_left_overflow.step(),
+        Err(System360Error::FixedPointOverflow)
+    );
+    assert_eq!(arithmetic_left_overflow.get_state(), before);
+
+    let mut wrong_opcode = System360Simulator::new();
+    wrong_opcode.load(&[0xba, 0, 0, 0], 0).unwrap();
+    assert_eq!(
+        wrong_opcode.step(),
+        Err(System360Error::UnknownOpcode {
+            opcode: 0xba,
+            pc: 0,
+        })
+    );
+}
+
+#[test]
+fn hexadecimal_float_compare_normalizes_unnormalized_operands() {
+    let mut cpu = System360Simulator::new();
+    cpu.load(&program(&[rr(0x29, 0, 2), halt()]), 0).unwrap();
+    cpu.write_fpr(0, 0x4110_0000_0000_0000).unwrap();
+    cpu.write_fpr(2, 0x4201_0000_0000_0000).unwrap();
+    cpu.step().unwrap();
+    assert_eq!(cpu.get_state().condition_code, 0);
 }
 
 #[test]
