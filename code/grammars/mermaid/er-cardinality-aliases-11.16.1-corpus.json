@@ -1,0 +1,14 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER cardinality word and numeric aliases",
+  "fixtures": [
+    { "name": "one-or-zero-to-many", "source": "erDiagram\nA one or zero to many B : has", "from": "0..1", "to": "0..*" },
+    { "name": "one-or-many-to-zero-or-one", "source": "erDiagram\nA one or many optionally to zero or one B : has", "from": "1..*", "to": "0..1" },
+    { "name": "zero-or-more-to-zero-or-many", "source": "erDiagram\nA zero or more to zero or many B : has", "from": "0..*", "to": "0..*" },
+    { "name": "many-zero-to-many-one", "source": "erDiagram\nA many(0) to many(1) B : has", "from": "0..*", "to": "1..*" },
+    { "name": "many-to-one", "source": "erDiagram\nA many optionally to one B : has", "from": "0..*", "to": "1" },
+    { "name": "only-one-to-one-plus", "source": "erDiagram\nA only one optionally to 1+ B : has", "from": "1", "to": "1..*" },
+    { "name": "zero-plus-to-numeric-one", "source": "erDiagram\nA 0+ optionally to 1 B : has", "from": "0..*", "to": "1" }
+  ]
+}

@@ -1,0 +1,10 @@
+[package]
+name = "edsac-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Source-backed 1949 EDSAC functional simulator"
+license = "MIT"
+
+[lib]
+name = "edsac_simulator"
+path = "src/lib.rs"

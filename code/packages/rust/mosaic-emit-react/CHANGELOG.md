@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-24 (patched vite and vitest pins)
+
+- **Emitted projects pin `vite` 7.3.7 and `vitest` 4.1.12.** `EmitOptions::default().pinned_vite` moves from 7.3.6, which GHSA-587h-7wmj-h5pm, GHSA-698v-4r3x-3vcv, GHSA-r825-w8mm-5pxw, GHSA-rq7h-c2jc-7f22 and GHSA-9jrq-w75r-8gcw cover (fixed in 7.3.7). The project `package.json` moves `vitest` from 3.2.7 to 4.1.12: vitest 3.x pulls `@vitest/mocker` 3.x, and GHSA-82fw-gwwq-j7x9 / GHSA-qxg6-89mg-rqv8 have no fix in that line. The `vitest run --environment jsdom` script is unchanged; vitest 4 accepts vite `^6 || ^7 || ^8`.
+
 ## 2026-10-19 (slot-bound number placeholder)
 
 - **`HostNumberInput ( placeholder : slot: x )` reaches the field (EM-14).** The number field read `placeholder` with a string-literal-only lookup, so `mosaic-pkg-toolkit`'s `NumberInput` emitted no placeholder at all, and the degradation report said nothing. It now uses `push_text_field_placeholder`, as `HostInput` does: a literal is `placeholder="..."`, a slot is `placeholder={x}`, and a `For` binding or expression passes through. A name that is not a JavaScript identifier is an `UnsafeSlotName` error.

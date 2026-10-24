@@ -1,0 +1,32 @@
+{
+  "lesson": {
+    "id": "GU-W50-visarga",
+    "language": "gujarati",
+    "chapter": 281,
+    "sequence": 15130,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:eb2dbf505bd641c2",
+    "detachableSegments": [
+      "Script you'll notice: ઃ",
+      "Writing — notice and trace",
+      "Writing — copy with the model",
+      "Writing — recall after hiding"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:f7cfcceef322c593",
+  "lessonIds": [
+    "GU-C280-jhadpi",
+    "GU-W49-jha",
+    "GU-C280-ek-tikit",
+    "GU-C280-phariyad",
+    "GU-C280-khovai-gai",
+    "GU-R280-at-the-station"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "gujarati/narration/ch280.txt",
+  "json": "gujarati/narration/ch280.json",
+  "textHash": "fnv1a64:06f3a8246f97243e",
+  "jsonHash": "fnv1a64:d2a0268ae2ab93df",
+  "findings": []
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 276,
+  "title": "A story in order",
+  "label": "ch:gu-a-story-in-order",
+  "canDo": "I can join two actions with the -īne form (jaīne, khāīne) and -yā pachī, keep a story in order with pahelā̃, pachī, tyār pachī and chevṭe, and read a short story told in the past.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-R276-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete GU-R276-a-story-in-order: tell a short story in order, and read one.",
+    "assesses": [
+      "GU-GRAMMAR-C276-INE-FORM-01",
+      "GU-GRAMMAR-C276-YA-PACHI-01",
+      "GU-GRAMMAR-C276-FIRST-THEN-01",
+      "GU-GRAMMAR-C276-TYAR-PACHI-01",
+      "GU-LEX-C276-CHEVTE-01",
+      "GU-SKILL-C276-READ-STORY-01"
+    ]
+  }
+}
