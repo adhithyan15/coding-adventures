@@ -38,7 +38,7 @@ and recording quality; a file-system check cannot substitute for that review.
 
 ## Form and security contract
 
-- Reading: five 1–3-word kana/doorway selections in five minutes.
+- Reading: five 1–3-word known Japanese-script selections in five minutes.
 - Listening: five 2–8-second recordings, each played twice, testing a
   greeting, yes/no response, identity detail, or classroom cue in five minutes.
 - Writing: one delayed kana recall after a ten-second card view (5 points),
