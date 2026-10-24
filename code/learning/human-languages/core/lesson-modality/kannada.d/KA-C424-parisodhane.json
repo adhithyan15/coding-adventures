@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C424-parisodhane",
+    "language": "kannada",
+    "chapter": 424,
+    "sequence": 21500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64ea4c185dfdc6a4"
+  },
+  "findings": []
+}

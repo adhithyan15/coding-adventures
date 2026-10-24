@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C384-amsa",
+    "language": "kannada",
+    "chapter": 384,
+    "sequence": 19440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d931530fbef3216e"
+  },
+  "findings": []
+}

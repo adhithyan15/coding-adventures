@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C310-svaccha",
+    "language": "kannada",
+    "chapter": 310,
+    "sequence": 15040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9209c104bb9e704c"
+  },
+  "findings": []
+}

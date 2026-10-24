@@ -1,0 +1,11 @@
+{
+  "id": "KA-C533-ponisu",
+  "pathSegment": "KA-PATH-533-KASUTI533",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-533-KASUTI533",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C512-raktasrava",
+    "language": "kannada",
+    "chapter": 512,
+    "sequence": 26150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cd0212920811d34"
+  },
+  "findings": []
+}

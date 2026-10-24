@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 352,
+  "title": "A Revolt Against the King",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dabfff9c04080975",
+  "lessons": [
+    {
+      "id": "KA-C352-dange",
+      "sequence": 17690,
+      "title": "ದಂಗೆ (daṅge) — a revolt; an uprising",
+      "headword": "ದಂಗೆ",
+      "romanization": "daṅge",
+      "gloss": "a revolt; an uprising",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6049ce31466f3c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to engulf, then the Kannada for to be washed away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದಂಗೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದಂಗೆ — daṅge — \"a revolt; an uprising\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜನರು ಆ ರಾಜನ ವಿರುದ್ಧ ದಂಗೆ ಎದ್ದರು. janaru ā rājana viruddha daṅge eddaru. The people rose in revolt against that king."
+            },
+            {
+              "kind": "speech",
+              "text": "One \"rises\" in revolt: ದಂಗೆ (daṅge) ಏಳು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದಂಗೆ (daṅge) is usually traced to Hindustani daṅgā, \"a riot, a disturbance\"; its earlier history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṅge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṅge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṅge, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṅge*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janaru ā rājana viruddha daṅge eddaru. — The people rose in revolt against that king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janaru ā rājana viruddha daṅge eddaru.* — The people rose in revolt against that king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to engulf, then the Kannada for to be washed away, then say daṅge again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to engulf, then the Kannada for to be washed away, then say *daṅge* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದಂಗೆ (daṅge) mean? (\"A revolt; an uprising\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C352-kranti",
+      "sequence": 17700,
+      "title": "ಕ್ರಾಂತಿ (krānti) — a revolution",
+      "headword": "ಕ್ರಾಂತಿ",
+      "romanization": "krānti",
+      "gloss": "a revolution",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3740f2fa06189f85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to be washed away, then the Kannada for a revolt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕ್ರಾಂತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕ್ರಾಂತಿ — krānti — \"a revolution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಕ್ರಾಂತಿ ದೇಶದ ಇತಿಹಾಸವನ್ನೇ ಬದಲಿಸಿತು. ā krānti dēśada itihāsavannē badalisitu. That revolution changed the country's history."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಕ್ರಾಂತಿಗಳು, krāntigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a great change: ಹಸಿರು ಕ್ರಾಂತಿ (krānti), the green revolution in farming."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕ್ರಾಂತಿ (krānti) is borrowed from Sanskrit krānti, \"going, proceeding, a step\", and \"overcoming\" (Monier-Williams); \"a revolution\" is a modern sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krānti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krānti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krānti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krānti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā krānti dēśada itihāsavannē badalisitu. — That revolution changed the country's history.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā krānti dēśada itihāsavannē badalisitu.* — That revolution changed the country's history.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to be washed away, then the Kannada for a revolt, then say krānti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to be washed away, then the Kannada for a revolt, then say *krānti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕ್ರಾಂತಿ (krānti) mean? (\"A revolution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C352-gulama",
+      "sequence": 17710,
+      "title": "ಗುಲಾಮ (gulāma) — a slave",
+      "headword": "ಗುಲಾಮ",
+      "romanization": "gulāma",
+      "gloss": "a slave",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f93f7b804347442f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a revolt, then the Kannada for a revolution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗುಲಾಮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗುಲಾಮ — gulāma — \"a slave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಥೆಯಲ್ಲಿ ಆ ಗುಲಾಮ ಕೊನೆಗೆ ಸ್ವತಂತ್ರನಾದನು. katheyalli ā gulāma konege svatantranādanu. In the story the slave became free at last."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಗುಲಾಮರು, gulāmaru."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗುಲಾಮಗಿರಿ is slavery."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗುಲಾಮ (gulāma) is a loan from Arabic ġulām, \"a boy, a servant, a slave\", which came through Persian and Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gulāma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gulāma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gulāma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gulāma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katheyalli ā gulāma konege svatantranādanu. — In the story the slave became free at last.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katheyalli ā gulāma konege svatantranādanu.* — In the story the slave became free at last.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a revolt, then the Kannada for a revolution, then say gulāma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a revolt, then the Kannada for a revolution, then say *gulāma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗುಲಾಮ (gulāma) mean? (\"A slave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C352-bidugade-madu",
+      "sequence": 17720,
+      "title": "ಬಿಡುಗಡೆ ಮಾಡು (biḍugaḍe māḍu) — to set free; to release",
+      "headword": "ಬಿಡುಗಡೆ ಮಾಡು",
+      "romanization": "biḍugaḍe māḍu",
+      "gloss": "to set free; to release",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99a1d2ca5e71232b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a revolution, then the Kannada for a slave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಿಡುಗಡೆ ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿಡುಗಡೆ ಮಾಡು — biḍugaḍe māḍu — \"to set free; to release\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಸ ರಾಜ ಎಲ್ಲ ಗುಲಾಮರನ್ನು ಬಿಡುಗಡೆ ಮಾಡಿದನು. hosa rāja ella gulāmarannu biḍugaḍe māḍidanu. The new king set all the slaves free."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಬಿಡುಗಡೆ ಮಾಡಿದೆ, biḍugaḍe māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "Also used of a film or a book coming out: ಸಿನಿಮಾ ಬಿಡುಗಡೆ ಆಯಿತು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿಡುಗಡೆ ಮಾಡು (biḍugaḍe māḍu) is native Dravidian: ಬಿಡುಗಡೆ, \"release\", is built on biḍu, \"to let loose, to let go\" (DEDR 5393), with māḍu, \"to do\" (DEDR 4797)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biḍugaḍe māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biḍugaḍe māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biḍugaḍe māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biḍugaḍe māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hosa rāja ella gulāmarannu biḍugaḍe māḍidanu. — The new king set all the slaves free.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hosa rāja ella gulāmarannu biḍugaḍe māḍidanu.* — The new king set all the slaves free.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a revolution, then the Kannada for a slave, then say biḍugaḍe māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a revolution, then the Kannada for a slave, then say *biḍugaḍe māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಿಡುಗಡೆ ಮಾಡು (biḍugaḍe māḍu) mean? (\"To set free; to release\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C352-vasapadisiko",
+      "sequence": 17730,
+      "title": "ವಶಪಡಿಸಿಕೊ (vaśapaḍisiko) — to capture; to take control of",
+      "headword": "ವಶಪಡಿಸಿಕೊ",
+      "romanization": "vaśapaḍisiko",
+      "gloss": "to capture; to take control of",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d389b65b2ffc98c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a slave, then the Kannada for to set free."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಶಪಡಿಸಿಕೊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಶಪಡಿಸಿಕೊ — vaśapaḍisiko — \"to capture; to take control of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ದಂಗೆಕೋರರು ಕೋಟೆಯನ್ನು ವಶಪಡಿಸಿಕೊಂಡರು. daṅgekōraru kōṭeyannu vaśapaḍisikoṇḍaru. The rebels captured the fort."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವಶಪಡಿಸಿಕೊಂಡೆ, vaśapaḍisikoṇḍe."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಶ, control, with -ಪಡಿಸು, to bring, and -ಕೊ, for oneself. The police ವಶಪಡಿಸಿಕೊ (vaśapaḍisiko) stolen goods too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಶಪಡಿಸಿಕೊ (vaśapaḍisiko) is built from Sanskrit vaśa, \"will, authority, power\" (CDIAL 11430), with the native verb-makers -paḍisu (DEDR 3853) and -ko, from koḷ, \"to take\" (DEDR 2151)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaśapaḍisiko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaśapaḍisiko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaśapaḍisiko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaśapaḍisiko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṅgekōraru kōṭeyannu vaśapaḍisikoṇḍaru. — The rebels captured the fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṅgekōraru kōṭeyannu vaśapaḍisikoṇḍaru.* — The rebels captured the fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a slave, then the Kannada for to set free, then say vaśapaḍisiko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a slave, then the Kannada for to set free, then say *vaśapaḍisiko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಶಪಡಿಸಿಕೊ (vaśapaḍisiko) mean? (\"To capture; to take control of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

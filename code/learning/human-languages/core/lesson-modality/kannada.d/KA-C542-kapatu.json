@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C542-kapatu",
+    "language": "kannada",
+    "chapter": 542,
+    "sequence": 27710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67298c366625af52"
+  },
+  "findings": []
+}

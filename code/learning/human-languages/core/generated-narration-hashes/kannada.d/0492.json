@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:d7a3a2cdd4ff7fbf",
+  "lessonIds": [
+    "KA-C492-ullasa",
+    "KA-C492-anandisu",
+    "KA-C492-hummassu",
+    "KA-C492-harsa",
+    "KA-C492-trpti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch492.txt",
+  "json": "kannada/narration/ch492.json",
+  "textHash": "fnv1a64:f0a379fc398d817a",
+  "jsonHash": "fnv1a64:6c3ca4a41fba1ef9",
+  "findings": []
+}

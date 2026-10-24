@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Protest and Struggle",
+  "label": "ch:ka-protest-and-struggle",
+  "canDo": "I can say to protest, a struggle, a petition, to mobilise and an activist.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C398-karyakarta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can say to protest, a struggle, a petition, to mobilise and an activist.",
+    "assesses": [
+      "KA-LEX-C398-PRATIBHATISU398-03",
+      "KA-LEX-C398-PRATIBHATISU398-04",
+      "KA-LEX-C398-PRATIBHATISU398-05"
+    ]
+  }
+}

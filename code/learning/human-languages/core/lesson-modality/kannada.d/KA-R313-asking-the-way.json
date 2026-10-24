@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R313-asking-the-way",
+    "language": "kannada",
+    "chapter": 313,
+    "sequence": 15180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:39efa9f1087e7f09"
+  },
+  "findings": []
+}

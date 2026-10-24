@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:cbe790ab5709c82b",
+  "lessonIds": [
+    "KA-C417-kantu",
+    "KA-C417-baki",
+    "KA-C417-ulitaya",
+    "KA-C417-vasuli-madu",
+    "KA-C417-sallisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch417.txt",
+  "json": "kannada/narration/ch417.json",
+  "textHash": "fnv1a64:420d606941493e2e",
+  "jsonHash": "fnv1a64:9eda59c87b1d2f7f",
+  "findings": []
+}

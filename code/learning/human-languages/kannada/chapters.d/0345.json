@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "The Spy in the Palace",
+  "label": "ch:ka-the-spy-in-the-palace",
+  "canDo": "I can say to hide oneself, to go into hiding, to chase, a spy and to sneak in.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C345-nusulu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can say to hide oneself, to go into hiding, to chase, a spy and to sneak in.",
+    "assesses": [
+      "KA-LEX-C345-ADAGU345-03",
+      "KA-LEX-C345-ADAGU345-04",
+      "KA-LEX-C345-ADAGU345-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C364-pithike",
+  "pathSegment": "KA-PATH-364-DINACHARI364",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-364-DINACHARI364",
+      "order": 3
+    }
+  ]
+}

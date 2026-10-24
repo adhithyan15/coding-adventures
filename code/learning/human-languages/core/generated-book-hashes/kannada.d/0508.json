@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:f4aab3b0f45341cf",
+  "lessonIds": [
+    "KA-C508-medulu",
+    "KA-C508-svasakosa",
+    "KA-C508-mutrapinda",
+    "KA-C508-karulu",
+    "KA-C508-snayu"
+  ],
+  "tex": "kannada/book/chapters/ch508-inside-the-body.tex"
+}

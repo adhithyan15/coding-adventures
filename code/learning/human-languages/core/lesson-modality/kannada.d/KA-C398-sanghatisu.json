@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C398-sanghatisu",
+    "language": "kannada",
+    "chapter": 398,
+    "sequence": 20160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6408f96746935a2e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C391-sosisu",
+    "language": "kannada",
+    "chapter": 391,
+    "sequence": 19790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d26d58100366786"
+  },
+  "findings": []
+}

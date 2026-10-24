@@ -1,0 +1,11 @@
+{
+  "id": "KA-C391-sabalikarana",
+  "pathSegment": "KA-PATH-391-SAMANATE391",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-391-SAMANATE391",
+      "order": 3
+    }
+  ]
+}

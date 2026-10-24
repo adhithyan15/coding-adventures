@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 400,
+  "title": "Public Money",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8b93570bd87cb083",
+  "lessons": [
+    {
+      "id": "KA-C400-bajet",
+      "sequence": 20230,
+      "title": "ಬಜೆಟ್ (bajeṭ) — a budget",
+      "headword": "ಬಜೆಟ್",
+      "romanization": "bajeṭ",
+      "gloss": "a budget",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf5a6a0e813f4815",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to distribute, then the Kannada for rural."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಜೆಟ್",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಜೆಟ್ — bajeṭ — \"a budget\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಸಲದ ಬಜೆಟ್ ರೈತರಿಗೆ ಒಳ್ಳೆಯದು. ī salada bajeṭ raitarige oḷḷeyadu. This year's budget is good for farmers."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮುಂಗಡ ಪತ್ರ is the formal Kannada name."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಜೆಟ್ (bajeṭ) is a loan from English budget."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bajeṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bajeṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bajeṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bajeṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī salada bajeṭ raitarige oḷḷeyadu. — This year's budget is good for farmers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī salada bajeṭ raitarige oḷḷeyadu.* — This year's budget is good for farmers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to distribute, then the Kannada for rural, then say bajeṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to distribute, then the Kannada for rural, then say *bajeṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಜೆಟ್ (bajeṭ) mean? (\"A budget\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C400-adaya",
+      "sequence": 20240,
+      "title": "ಆದಾಯ (ādāya) — income",
+      "headword": "ಆದಾಯ",
+      "romanization": "ādāya",
+      "gloss": "income",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d8ff7140ccb1d10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for rural, then the Kannada for a budget."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆದಾಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆದಾಯ — ādāya — \"income\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರ ತಿಂಗಳ ಆದಾಯ ಕಡಿಮೆ. avara tiṅgaḷa ādāya kaḍime. Their monthly income is low."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆದಾಯ (ādāya) ತೆರಿಗೆ, income tax."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆದಾಯ (ādāya) is borrowed from Sanskrit ādāya, \"taking, seizing\" (Monier-Williams), from ā-dā, \"to take\": what one receives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avara tiṅgaḷa ādāya kaḍime. — Their monthly income is low.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avara tiṅgaḷa ādāya kaḍime.* — Their monthly income is low.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for rural, then the Kannada for a budget, then say ādāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for rural, then the Kannada for a budget, then say *ādāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆದಾಯ (ādāya) mean? (\"Income\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C400-sabsidi",
+      "sequence": 20250,
+      "title": "ಸಬ್ಸಿಡಿ (sabsiḍi) — a subsidy",
+      "headword": "ಸಬ್ಸಿಡಿ",
+      "romanization": "sabsiḍi",
+      "gloss": "a subsidy",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c469a03f94efcdb8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a budget, then the Kannada for income."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಬ್ಸಿಡಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಬ್ಸಿಡಿ — sabsiḍi — \"a subsidy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರೈತರಿಗೆ ಗೊಬ್ಬರದ ಮೇಲೆ ಸಬ್ಸಿಡಿ ಸಿಗುತ್ತದೆ. raitarige gobbarada mēle sabsiḍi siguttade. Farmers get a subsidy on fertiliser."
+            },
+            {
+              "kind": "speech",
+              "text": "The Kannada word is ಸಹಾಯಧನ, help money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಬ್ಸಿಡಿ (sabsiḍi) is a loan from English subsidy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabsiḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabsiḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabsiḍi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabsiḍi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raitarige gobbarada mēle sabsiḍi siguttade. — Farmers get a subsidy on fertiliser.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raitarige gobbarada mēle sabsiḍi siguttade.* — Farmers get a subsidy on fertiliser.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a budget, then the Kannada for income, then say sabsiḍi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a budget, then the Kannada for income, then say *sabsiḍi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಬ್ಸಿಡಿ (sabsiḍi) mean? (\"A subsidy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C400-viniyogisu",
+      "sequence": 20260,
+      "title": "ವಿನಿಯೋಗಿಸು (viniyōgisu) — to utilise; to spend",
+      "headword": "ವಿನಿಯೋಗಿಸು",
+      "romanization": "viniyōgisu",
+      "gloss": "to utilise; to spend",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54d0e6324275f0a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for income, then the Kannada for a subsidy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿನಿಯೋಗಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿನಿಯೋಗಿಸು — viniyōgisu — \"to utilise; to spend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪಂಚಾಯಿತಿ ಹಣವನ್ನು ರಸ್ತೆಗಾಗಿ ವಿನಿಯೋಗಿಸಿತು. pañcāyiti haṇavannu rastegāgi viniyōgisitu. The village council spent the money on roads."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವಿನಿಯೋಗಿಸಿದೆ, viniyōgiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿನಿಯೋಗ, use or allocation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿನಿಯೋಗಿಸು (viniyōgisu) is built on Sanskrit viniyoga, \"apportionment, distribution, use\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viniyōgisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viniyōgisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viniyōgisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viniyōgisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pañcāyiti haṇavannu rastegāgi viniyōgisitu. — The village council spent the money on roads.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pañcāyiti haṇavannu rastegāgi viniyōgisitu.* — The village council spent the money on roads.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for income, then the Kannada for a subsidy, then say viniyōgisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for income, then the Kannada for a subsidy, then say *viniyōgisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿನಿಯೋಗಿಸು (viniyōgisu) mean? (\"To utilise; to spend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C400-vyartha-madu",
+      "sequence": 20270,
+      "title": "ವ್ಯರ್ಥ ಮಾಡು (vyartha māḍu) — to waste",
+      "headword": "ವ್ಯರ್ಥ ಮಾಡು",
+      "romanization": "vyartha māḍu",
+      "gloss": "to waste",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbfbbef7118142be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a subsidy, then the Kannada for to utilise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವ್ಯರ್ಥ ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವ್ಯರ್ಥ ಮಾಡು — vyartha māḍu — \"to waste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಇಡೀ ದಿನ ಫೋನಿನಲ್ಲಿ ಸಮಯ ವ್ಯರ್ಥ ಮಾಡಿದೆ. nānu iḍī dina phōninalli samaya vyartha māḍide. I wasted the whole day on the phone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವ್ಯರ್ಥ ಮಾಡಿದೆ, vyartha māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "ವ್ಯರ್ಥ alone means in vain: ವ್ಯರ್ಥವಾಯಿತು, it was in vain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವ್ಯರ್ಥ ಮಾಡು (vyartha māḍu) is built from Sanskrit vyartha, \"useless, vain\" (Monier-Williams), from vi- \"without\" and artha \"purpose\", with māḍu, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyartha māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyartha māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyartha māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyartha māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu iḍī dina phōninalli samaya vyartha māḍide. — I wasted the whole day on the phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu iḍī dina phōninalli samaya vyartha māḍide.* — I wasted the whole day on the phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a subsidy, then the Kannada for to utilise, then say vyartha māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a subsidy, then the Kannada for to utilise, then say *vyartha māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವ್ಯರ್ಥ ಮಾಡು (vyartha māḍu) mean? (\"To waste\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

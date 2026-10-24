@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Supply and Demand",
+  "label": "ch:ka-supply-and-demand",
+  "canDo": "I can say a demand, to supply, a shortage, export and inflation.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C421-hanadubbara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can say a demand, to supply, a shortage, export and inflation.",
+    "assesses": [
+      "KA-LEX-C421-BEDIKE421-03",
+      "KA-LEX-C421-BEDIKE421-04",
+      "KA-LEX-C421-BEDIKE421-05"
+    ]
+  }
+}

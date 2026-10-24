@@ -1,0 +1,11 @@
+{
+  "id": "KA-C392-pracara-madu",
+  "pathSegment": "KA-PATH-392-CHUNAVANE392",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-392-CHUNAVANE392",
+      "order": 3
+    }
+  ]
+}

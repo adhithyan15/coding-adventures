@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C493-udvega",
+    "language": "kannada",
+    "chapter": 493,
+    "sequence": 25190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bb706a57f5e9b18"
+  },
+  "findings": []
+}

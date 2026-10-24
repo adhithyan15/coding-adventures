@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:7f1f4dc937cdc933",
+  "lessonIds": [
+    "KA-C317-bandare",
+    "KA-C317-male-bandare",
+    "KA-R317-if-and-otherwise"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "kannada/narration/ch317.txt",
+  "json": "kannada/narration/ch317.json",
+  "textHash": "fnv1a64:5bd22716b83e28f9",
+  "jsonHash": "fnv1a64:a8c05e9518f3e492",
+  "findings": []
+}

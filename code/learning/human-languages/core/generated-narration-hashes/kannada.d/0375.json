@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:a1aab7a737017b32",
+  "lessonIds": [
+    "KA-C375-sibira",
+    "KA-C375-nirasrita",
+    "KA-C375-santapa",
+    "KA-C375-hastantarisu",
+    "KA-C375-dhavisu",
+    "KA-R375-review-369-375",
+    "KA-R375-review-final-375"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch375.txt",
+  "json": "kannada/narration/ch375.json",
+  "textHash": "fnv1a64:599b8869dd6f1a6e",
+  "jsonHash": "fnv1a64:606c1c85bbf368e2",
+  "findings": []
+}

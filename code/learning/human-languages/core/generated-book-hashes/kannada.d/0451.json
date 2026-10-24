@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:f5920eb18d509076",
+  "lessonIds": [
+    "KA-C451-lari",
+    "KA-C451-jipu",
+    "KA-C451-tyaksi",
+    "KA-C451-baik",
+    "KA-C451-ettinagadi"
+  ],
+  "tex": "kannada/book/chapters/ch451-lorries-jeeps-and-taxis.tex"
+}

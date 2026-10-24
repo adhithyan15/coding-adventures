@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C363-mudu",
+    "language": "kannada",
+    "chapter": 363,
+    "sequence": 18270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc3cdcb4b1bfe53a"
+  },
+  "findings": []
+}

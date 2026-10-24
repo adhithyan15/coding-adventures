@@ -1,0 +1,861 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 347,
+  "title": "The Press Conference",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:347384498dbf8eab",
+  "lessons": [
+    {
+      "id": "KA-C347-suddigosthi",
+      "sequence": 17430,
+      "title": "ಸುದ್ದಿಗೋಷ್ಠಿ (suddigōṣṭhi) — a press conference",
+      "headword": "ಸುದ್ದಿಗೋಷ್ಠಿ",
+      "romanization": "suddigōṣṭhi",
+      "gloss": "a press conference",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa083d36530be086",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a deluge, then the Kannada for an injured person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸುದ್ದಿಗೋಷ್ಠಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸುದ್ದಿಗೋಷ್ಠಿ — suddigōṣṭhi — \"a press conference\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೊಲೀಸ್ ಅಧಿಕಾರಿ ಸಂಜೆ ಸುದ್ದಿಗೋಷ್ಠಿ ಕರೆದರು. polīs adhikāri sañje suddigōṣṭhi karedaru. The police officer called a press conference in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "A press conference is \"called\": ಸುದ್ದಿಗೋಷ್ಠಿ (suddigōṣṭhi) ಕರೆ, or \"held\": ಸುದ್ದಿಗೋಷ್ಠಿ (suddigōṣṭhi) ನಡೆಸು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸುದ್ದಿಗೋಷ್ಠಿ (suddigōṣṭhi) is a Kannada compound of ಸುದ್ದಿ, \"news\", which comes from Sanskrit śuddhi (CDIAL 12523), and ಗೋಷ್ಠಿ, borrowed from Sanskrit goṣṭhī, \"an assembly, a meeting, a conversation\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suddigōṣṭhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suddigōṣṭhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suddigōṣṭhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suddigōṣṭhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīs adhikāri sañje suddigōṣṭhi karedaru. — The police officer called a press conference in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīs adhikāri sañje suddigōṣṭhi karedaru.* — The police officer called a press conference in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a deluge, then the Kannada for an injured person, then say suddigōṣṭhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a deluge, then the Kannada for an injured person, then say *suddigōṣṭhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸುದ್ದಿಗೋಷ್ಠಿ (suddigōṣṭhi) mean? (\"A press conference\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C347-prasnisu",
+      "sequence": 17440,
+      "title": "ಪ್ರಶ್ನಿಸು (praśnisu) — to question",
+      "headword": "ಪ್ರಶ್ನಿಸು",
+      "romanization": "praśnisu",
+      "gloss": "to question",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc881891066b7fbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an injured person, then the Kannada for a press conference."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಶ್ನಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಶ್ನಿಸು — praśnisu — \"to question\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವರದಿಗಾರರು ಅಧಿಕಾರಿಯನ್ನು ಅಪಘಾತದ ಬಗ್ಗೆ ಪ್ರಶ್ನಿಸಿದರು. varadigāraru adhikāriyannu apaghātada bagge praśnisidaru. The reporters questioned the officer about the accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪ್ರಶ್ನಿಸಿದೆ, praśniside."
+            },
+            {
+              "kind": "speech",
+              "text": "The person questioned takes -ಅನ್ನು. It can also mean to challenge: ನಿರ್ಧಾರವನ್ನು ಪ್ರಶ್ನಿಸು (praśnisu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಶ್ನಿಸು (praśnisu) is built on Sanskrit praśna, \"a question\" (CDIAL 8818), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśnisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśnisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśnisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśnisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varadigāraru adhikāriyannu apaghātada bagge praśnisidaru. — The reporters questioned the officer about the accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varadigāraru adhikāriyannu apaghātada bagge praśnisidaru.* — The reporters questioned the officer about the accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an injured person, then the Kannada for a press conference, then say praśnisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an injured person, then the Kannada for a press conference, then say *praśnisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಶ್ನಿಸು (praśnisu) mean? (\"To question\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C347-pratikriyisu",
+      "sequence": 17450,
+      "title": "ಪ್ರತಿಕ್ರಿಯಿಸು (pratikriyisu) — to give a reaction; to respond",
+      "headword": "ಪ್ರತಿಕ್ರಿಯಿಸು",
+      "romanization": "pratikriyisu",
+      "gloss": "to give a reaction; to respond",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7161ef2b252917cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a press conference, then the Kannada for to question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರತಿಕ್ರಿಯಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಕ್ರಿಯಿಸು — pratikriyisu — \"to give a reaction; to respond\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಪ್ರಶ್ನೆಗೆ ಅಧಿಕಾರಿ ಪ್ರತಿಕ್ರಿಯಿಸಲಿಲ್ಲ. ā praśnege adhikāri pratikriyisalilla. The officer did not respond to that question."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪ್ರತಿಕ್ರಿಯಿಸಿದೆ, pratikriyiside."
+            },
+            {
+              "kind": "speech",
+              "text": "What one responds to takes -ಗೆ. The noun is ಪ್ರತಿಕ್ರಿಯೆ, a response."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಕ್ರಿಯಿಸು (pratikriyisu) is built on Sanskrit pratikriyā, \"requital, counteraction\" (Monier-Williams), from prati \"back, in return\" and kriyā \"an act\", with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratikriyisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratikriyisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratikriyisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratikriyisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā praśnege adhikāri pratikriyisalilla. — The officer did not respond to that question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā praśnege adhikāri pratikriyisalilla.* — The officer did not respond to that question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a press conference, then the Kannada for to question, then say pratikriyisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a press conference, then the Kannada for to question, then say *pratikriyisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರತಿಕ್ರಿಯಿಸು (pratikriyisu) mean? (\"To give a reaction; to respond\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C347-ullekhisu",
+      "sequence": 17460,
+      "title": "ಉಲ್ಲೇಖಿಸು (ullēkhisu) — to mention; to refer to",
+      "headword": "ಉಲ್ಲೇಖಿಸು",
+      "romanization": "ullēkhisu",
+      "gloss": "to mention; to refer to",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7dfb7aee5bc62377",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to question, then the Kannada for to give a reaction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉಲ್ಲೇಖಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಲ್ಲೇಖಿಸು — ullēkhisu — \"to mention; to refer to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರು ಮಾತಿನಲ್ಲಿ ನಿನ್ನೆಯ ಘಟನೆಯನ್ನು ಉಲ್ಲೇಖಿಸಿದರು. avaru mātinalli ninneya ghaṭaneyannu ullēkhisidaru. In the talk he mentioned yesterday's incident."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಉಲ್ಲೇಖಿಸಿದೆ, ullēkhiside."
+            },
+            {
+              "kind": "speech",
+              "text": "What is mentioned takes -ಅನ್ನು. A formal word; in talk people say ಹೇಳು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಲ್ಲೇಖಿಸು (ullēkhisu) is built on Sanskrit ullekha, \"causing to come forth clearly\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ullēkhisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ullēkhisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ullēkhisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ullēkhisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaru mātinalli ninneya ghaṭaneyannu ullēkhisidaru. — In the talk he mentioned yesterday's incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaru mātinalli ninneya ghaṭaneyannu ullēkhisidaru.* — In the talk he mentioned yesterday's incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to question, then the Kannada for to give a reaction, then say ullēkhisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to question, then the Kannada for to give a reaction, then say *ullēkhisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉಲ್ಲೇಖಿಸು (ullēkhisu) mean? (\"To mention; to refer to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C347-saramsa",
+      "sequence": 17470,
+      "title": "ಸಾರಾಂಶ (sārāṃśa) — a summary; the gist",
+      "headword": "ಸಾರಾಂಶ",
+      "romanization": "sārāṃśa",
+      "gloss": "a summary; the gist",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6fd2074e70e505cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to give a reaction, then the Kannada for to mention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಾರಾಂಶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಾರಾಂಶ — sārāṃśa — \"a summary; the gist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸುದ್ದಿಗೋಷ್ಠಿಯ ಸಾರಾಂಶ ರಾತ್ರಿಯ ವಾರ್ತೆಯಲ್ಲಿ ಬಂತು. suddigōṣṭhiya sārāṃśa rātriya vārteyalli bantu. A summary of the press conference came on the night news."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಾರ is the essence: the essential part of something said or written."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಾರಾಂಶ (sārāṃśa) is borrowed from Sanskrit, a compound of sāra, \"the core, the essence\", and aṃśa, \"a part, a share\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārāṃśa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārāṃśa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārāṃśa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārāṃśa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suddigōṣṭhiya sārāṃśa rātriya vārteyalli bantu. — A summary of the press conference came on the night news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suddigōṣṭhiya sārāṃśa rātriya vārteyalli bantu.* — A summary of the press conference came on the night news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to give a reaction, then the Kannada for to mention, then say sārāṃśa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to give a reaction, then the Kannada for to mention, then say *sārāṃśa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಾರಾಂಶ (sārāṃśa) mean? (\"A summary; the gist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R347-review-341-347",
+      "sequence": 17480,
+      "title": "Looking back: from Our Family Line to The Press Conference",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Our Family Line to The Press Conference",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f697758948946787",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for a lineage and an ancestor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lineage, an ancestor, a family generation, a family line, a monarch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lineage, an ancestor, a family generation, a family line, a monarch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to besiege, a moat, to surround, to surrender, a cannon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to besiege, a moat, to surround, to surrender, a cannon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to narrate, to describe vividly, a situation, an episode, a background",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to narrate, to describe vividly, a situation, an episode, a background]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a weapon, a gun, a battlefield, a chariot, to do battle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a weapon, a gun, a battlefield, a chariot, to do battle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hide oneself, to go into hiding, to chase, a spy, to sneak in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hide oneself, to go into hiding, to chase, a spy, to sneak in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an explosion, to reel, to tremble, a deluge, an injured person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an explosion, to reel, to tremble, a deluge, an injured person]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a press conference, to question, to give a reaction, to mention, a summary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a press conference, to question, to give a reaction, to mention, a summary]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A lineage? (ವಂಶ, vaṃśa.) An ancestor? (ಪೂರ್ವಜ, pūrvaja.) A family generation? (ತಲೆಮಾರು, talemāru.) A family line? (ಮನೆತನ, manetana.) A monarch? (ಅರಸ, arasa.) To besiege? (ಮುತ್ತಿಗೆ ಹಾಕು, muttige hāku.) A moat? (ಕಂದಕ, kandaka.) To surround? (ಸುತ್ತುವರಿ, suttuvari.) To surrender? (ಶರಣಾಗು, śaraṇāgu.) A cannon? (ಫಿರಂಗಿ, phiraṅgi.) To narrate? (ನಿರೂಪಿಸು, nirūpisu.) To describe vividly? (ವರ್ಣಿಸು, varṇisu.) A situation? (ಸನ್ನಿವೇಶ, sannivēśa.) An episode? (ಪ್ರಸಂಗ, prasaṅga.) A background? (ಹಿನ್ನೆಲೆ, hinnele.) A weapon? (ಆಯುಧ, āyudha.) A gun? (ಬಂದೂಕು, bandūku.) A battlefield? (ರಣರಂಗ, raṇaraṅga.) A chariot? (ರಥ, ratha.) To do battle? (ಕಾದಾಡು, kādāḍu.) To hide oneself? (ಅಡಗು, aḍagu.) To go into hiding? (ತಲೆಮರೆಸಿಕೊ, talemaresiko.) To chase? (ಬೆನ್ನಟ್ಟು, bennaṭṭu.) A spy? (ಗೂಢಚಾರ, gūḍhacāra.) To sneak in? (ನುಸುಳು, nusuḷu.) An explosion? (ಸ್ಫೋಟ, sphōṭa.) To reel? (ತತ್ತರಿಸು, tattarisu.) To tremble? (ಕಂಪಿಸು, kampisu.) A deluge? (ಪ್ರಳಯ, praḷaya.) An injured person? (ಗಾಯಾಳು, gāyāḷu.) A press conference? (ಸುದ್ದಿಗೋಷ್ಠಿ, suddigōṣṭhi.) To question? (ಪ್ರಶ್ನಿಸು, praśnisu.) To give a reaction? (ಪ್ರತಿಕ್ರಿಯಿಸು, pratikriyisu.) To mention? (ಉಲ್ಲೇಖಿಸು, ullēkhisu.) A summary? (ಸಾರಾಂಶ, sārāṃśa.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

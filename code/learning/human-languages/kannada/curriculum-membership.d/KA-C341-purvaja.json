@@ -1,0 +1,11 @@
+{
+  "id": "KA-C341-purvaja",
+  "pathSegment": "KA-PATH-341-VAMSHA341",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-341-VAMSHA341",
+      "order": 1
+    }
+  ]
+}

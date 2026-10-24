@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:c68526f7b059883f",
+  "lessonIds": [
+    "KA-C460-vasati",
+    "KA-C460-ladj",
+    "KA-C460-kothadi",
+    "KA-C460-svagatakara",
+    "KA-C460-kauntar"
+  ],
+  "tex": "kannada/book/chapters/ch460-finding-a-room.tex"
+}

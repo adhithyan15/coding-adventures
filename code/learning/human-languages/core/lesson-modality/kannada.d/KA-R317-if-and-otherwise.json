@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R317-if-and-otherwise",
+    "language": "kannada",
+    "chapter": 317,
+    "sequence": 15350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6d7e48a88093c5d"
+  },
+  "findings": []
+}

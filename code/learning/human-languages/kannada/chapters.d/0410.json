@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Linking Ideas",
+  "label": "ch:ka-linking-ideas",
+  "canDo": "I can say thus, however, on account of, above all and not only that.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C410-matravallade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can say thus, however, on account of, above all and not only that.",
+    "assesses": [
+      "KA-LEX-C410-HIGAGI410-03",
+      "KA-LEX-C410-HIGAGI410-04",
+      "KA-LEX-C410-HIGAGI410-05"
+    ]
+  }
+}

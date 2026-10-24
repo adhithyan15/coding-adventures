@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:654e04399273d4ec",
+  "lessonIds": [
+    "KA-C331-hindomme",
+    "KA-C331-andu",
+    "KA-C331-bahukala",
+    "KA-C331-pracina",
+    "KA-C331-yuga"
+  ],
+  "tex": "kannada/book/chapters/ch331-long-ago.tex"
+}

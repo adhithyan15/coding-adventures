@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "The Weather Report",
+  "label": "ch:ka-the-weather-report",
+  "canDo": "I can say temperature, humidity, climate, dampness and to worsen.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C484-hadagedu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can say temperature, humidity, climate, dampness and to worsen.",
+    "assesses": [
+      "KA-LEX-C484-TAPAMANA484-03",
+      "KA-LEX-C484-TAPAMANA484-04",
+      "KA-LEX-C484-TAPAMANA484-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C518-nivrtti",
+    "language": "kannada",
+    "chapter": 518,
+    "sequence": 26460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43d34d58fd90bd12"
+  },
+  "findings": []
+}

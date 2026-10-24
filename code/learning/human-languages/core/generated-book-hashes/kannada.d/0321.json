@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:bc39ca0dce8616fe",
+  "lessonIds": [
+    "KA-C321-nyayalaya",
+    "KA-C321-nyayadhisa",
+    "KA-C321-aropisu",
+    "KA-C321-tirpu",
+    "KA-C321-sikse"
+  ],
+  "tex": "kannada/book/chapters/ch321-in-court.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C321-nyayadhisa",
+    "language": "kannada",
+    "chapter": 321,
+    "sequence": 16110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1333c38b8158d2cb"
+  },
+  "findings": []
+}

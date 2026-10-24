@@ -1,0 +1,11 @@
+{
+  "id": "KA-C332-santrasta",
+  "pathSegment": "KA-PATH-332-VIPATTU332",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-332-VIPATTU332",
+      "order": 3
+    }
+  ]
+}

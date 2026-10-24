@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 335,
+  "title": "Making a Newspaper",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:477dcd2eccd24630",
+  "lessons": [
+    {
+      "id": "KA-C335-sampadaka",
+      "sequence": 16820,
+      "title": "ಸಂಪಾದಕ (sampādaka) — an editor",
+      "headword": "ಸಂಪಾದಕ",
+      "romanization": "sampādaka",
+      "gloss": "an editor",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70fc59b0918b588f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a baby shower, then the Kannada for a successor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂಪಾದಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಪಾದಕ — sampādaka — \"an editor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂಪಾದಕರು ಆ ಸುದ್ದಿಯನ್ನು ಓದಿ ಒಪ್ಪಿದರು. sampādakaru ā suddiyannu ōdi oppidaru. The editor read that news report and approved it."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸಂಪಾದಕರು, sampādakaru."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂಪಾದಿಸು is to edit, and also to earn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಪಾದಕ (sampādaka) is borrowed from Sanskrit sampādaka, \"procuring, bringing about\" (Monier-Williams); the sense \"an editor\", one who puts a work together, is modern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādakaru ā suddiyannu ōdi oppidaru. — The editor read that news report and approved it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādakaru ā suddiyannu ōdi oppidaru.* — The editor read that news report and approved it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a baby shower, then the Kannada for a successor, then say sampādaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a baby shower, then the Kannada for a successor, then say *sampādaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂಪಾದಕ (sampādaka) mean? (\"An editor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C335-lekhana",
+      "sequence": 16830,
+      "title": "ಲೇಖನ (lēkhana) — an article; a piece of writing",
+      "headword": "ಲೇಖನ",
+      "romanization": "lēkhana",
+      "gloss": "an article; a piece of writing",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f58c1e192ca210a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a successor, then the Kannada for an editor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಲೇಖನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಲೇಖನ — lēkhana — \"an article; a piece of writing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳ ಲೇಖನ ಭಾನುವಾರದ ಪತ್ರಿಕೆಯಲ್ಲಿ ಬಂತು. avaḷa lēkhana bhānuvārada patrikeyalli bantu. Her article came out in the Sunday paper."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಲೇಖನಗಳು, lēkhanagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Not to be confused with ಲೇಖನಿ, a pen. ಲೇಖಕ is a writer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಲೇಖನ (lēkhana) is borrowed from Sanskrit lekhana, \"scratching, writing\" (Monier-Williams), from the root likh, \"to scratch, to write\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lēkhana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lēkhana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lēkhana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lēkhana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷa lēkhana bhānuvārada patrikeyalli bantu. — Her article came out in the Sunday paper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷa lēkhana bhānuvārada patrikeyalli bantu.* — Her article came out in the Sunday paper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a successor, then the Kannada for an editor, then say lēkhana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a successor, then the Kannada for an editor, then say *lēkhana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಲೇಖನ (lēkhana) mean? (\"An article; a piece of writing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C335-mukhaputa",
+      "sequence": 16840,
+      "title": "ಮುಖಪುಟ (mukhapuṭa) — the front page",
+      "headword": "ಮುಖಪುಟ",
+      "romanization": "mukhapuṭa",
+      "gloss": "the front page",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93824778d47c27a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an editor, then the Kannada for an article."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮುಖಪುಟ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಖಪುಟ — mukhapuṭa — \"the front page\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಅಪಘಾತದ ಸುದ್ದಿ ಮುಖಪುಟದಲ್ಲಿ ಇತ್ತು. ā apaghātada suddi mukhapuṭadalli ittu. The news of that accident was on the front page."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮುಖ, face, and ಪುಟ, a page: the face page. A website has one too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಖಪುಟ (mukhapuṭa) is a Kannada compound built from two Sanskrit words: mukha, \"face, front\" (CDIAL 10158), and puṭa, \"a fold\" (CDIAL 8253), which Kannada uses for \"a page\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhapuṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhapuṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhapuṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhapuṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā apaghātada suddi mukhapuṭadalli ittu. — The news of that accident was on the front page.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā apaghātada suddi mukhapuṭadalli ittu.* — The news of that accident was on the front page.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an editor, then the Kannada for an article, then say mukhapuṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an editor, then the Kannada for an article, then say *mukhapuṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮುಖಪುಟ (mukhapuṭa) mean? (\"The front page\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C335-karapatra",
+      "sequence": 16850,
+      "title": "ಕರಪತ್ರ (karapatra) — a leaflet; a pamphlet",
+      "headword": "ಕರಪತ್ರ",
+      "romanization": "karapatra",
+      "gloss": "a leaflet; a pamphlet",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:146ef1dcb6e55ec6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an article, then the Kannada for the front page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕರಪತ್ರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕರಪತ್ರ — karapatra — \"a leaflet; a pamphlet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹುಡುಗರು ಬಸ್ ನಿಲ್ದಾಣದಲ್ಲಿ ಕರಪತ್ರ ಹಂಚಿದರು. huḍugaru bas nildāṇadalli karapatra hañcidaru. The boys handed out leaflets at the bus stand."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಕರಪತ್ರಗಳು, karapatragaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕರ, hand, and ಪತ್ರ, a leaf: a sheet put into people's hands."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕರಪತ್ರ (karapatra) is borrowed from Sanskrit, a modern compound of kara, \"the hand\" (Monier-Williams), and pattra, \"a leaf, the leaf of a book\" (CDIAL 7733)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karapatra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karapatra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karapatra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karapatra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huḍugaru bas nildāṇadalli karapatra hañcidaru. — The boys handed out leaflets at the bus stand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huḍugaru bas nildāṇadalli karapatra hañcidaru.* — The boys handed out leaflets at the bus stand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an article, then the Kannada for the front page, then say karapatra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an article, then the Kannada for the front page, then say *karapatra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕರಪತ್ರ (karapatra) mean? (\"A leaflet; a pamphlet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C335-prakasaka",
+      "sequence": 16860,
+      "title": "ಪ್ರಕಾಶಕ (prakāśaka) — a publisher",
+      "headword": "ಪ್ರಕಾಶಕ",
+      "romanization": "prakāśaka",
+      "gloss": "a publisher",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2ecd8606ece7369",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for the front page, then the Kannada for a leaflet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಕಾಶಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕಾಶಕ — prakāśaka — \"a publisher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕಾಶಕರು ಅಜ್ಜನ ಕಥೆಗಳನ್ನು ಪುಸ್ತಕವಾಗಿ ಪ್ರಕಟಿಸಿದರು. prakāśakaru ajjana kathegaḷannu pustakavāgi prakaṭisidaru. The publisher brought out Grandfather's stories as a book."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಪ್ರಕಾಶಕರು, prakāśakaru."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕಾಶ is light: a publisher brings a work into the light."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕಾಶಕ (prakāśaka) is borrowed from Sanskrit prakāśaka, \"bright, shining, making known\" (Monier-Williams), from prakāśa, \"light, publicity\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakāśaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakāśaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakāśaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakāśaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakāśakaru ajjana kathegaḷannu pustakavāgi prakaṭisidaru. — The publisher brought out Grandfather's stories as a book.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakāśakaru ajjana kathegaḷannu pustakavāgi prakaṭisidaru.* — The publisher brought out Grandfather's stories as a book.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for the front page, then the Kannada for a leaflet, then say prakāśaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for the front page, then the Kannada for a leaflet, then say *prakāśaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಕಾಶಕ (prakāśaka) mean? (\"A publisher\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

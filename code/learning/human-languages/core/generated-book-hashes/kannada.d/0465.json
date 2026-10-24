@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:1e13ed3ff01bbadf",
+  "lessonIds": [
+    "KA-C465-pattana",
+    "KA-C465-rajadhani",
+    "KA-C465-pradesa",
+    "KA-C465-sthala",
+    "KA-C465-kendra"
+  ],
+  "tex": "kannada/book/chapters/ch465-town-and-capital.tex"
+}

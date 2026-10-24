@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C454-ubbara",
+    "language": "kannada",
+    "chapter": 454,
+    "sequence": 23100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ead9b804cfddc8f0"
+  },
+  "findings": []
+}

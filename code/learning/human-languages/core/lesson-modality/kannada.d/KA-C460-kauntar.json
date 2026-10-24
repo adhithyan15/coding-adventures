@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C460-kauntar",
+    "language": "kannada",
+    "chapter": 460,
+    "sequence": 23420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e2f4455f95fc08e"
+  },
+  "findings": []
+}

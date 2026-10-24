@@ -1,0 +1,11 @@
+{
+  "id": "KA-C403-jagrti",
+  "pathSegment": "KA-PATH-403-SAMAJA403",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-403-SAMAJA403",
+      "order": 2
+    }
+  ]
+}

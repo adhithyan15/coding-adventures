@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:783eb5eed4a0dbbf",
+  "lessonIds": [
+    "KA-C510-noyu",
+    "KA-C510-jomu",
+    "KA-C510-ubbu",
+    "KA-C510-osadu",
+    "KA-C510-davade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch510.txt",
+  "json": "kannada/narration/ch510.json",
+  "textHash": "fnv1a64:a72dbb7d8ea4b816",
+  "jsonHash": "fnv1a64:1ebe534ec4d633c7",
+  "findings": []
+}

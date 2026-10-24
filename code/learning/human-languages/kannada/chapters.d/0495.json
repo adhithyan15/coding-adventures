@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Love and Care",
+  "label": "ch:ka-love-and-care",
+  "canDo": "I can say to cuddle, to kiss, tender affection, motherly love and care.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C495-kalaji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can say to cuddle, to kiss, tender affection, motherly love and care.",
+    "assesses": [
+      "KA-LEX-C495-MAMATE495-03",
+      "KA-LEX-C495-MAMATE495-04",
+      "KA-LEX-C495-MAMATE495-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C481-cippu",
+    "language": "kannada",
+    "chapter": 481,
+    "sequence": 24490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d942d5b33d4f6fb0"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-413-PANA413",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "KA-EXT-413-PANA413"
+  ],
+  "after": []
+}

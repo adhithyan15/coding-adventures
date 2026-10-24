@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Sleepy Nights",
+  "label": "ch:ka-sleepy-nights",
+  "canDo": "I can say to cover oneself, to talk in sleep, to roll over, to stretch and an eyelid.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C506-reppe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can say to cover oneself, to talk in sleep, to roll over, to stretch and an eyelid.",
+    "assesses": [
+      "KA-LEX-C506-NIDDE506-03",
+      "KA-LEX-C506-NIDDE506-04",
+      "KA-LEX-C506-NIDDE506-05"
+    ]
+  }
+}

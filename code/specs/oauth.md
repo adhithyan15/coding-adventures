@@ -808,6 +808,18 @@ anchor, or validate a path. Complete RFC 4518 and schema-specific Name
 comparison, algorithm routing and link authentication, full path construction
 and validation, trust-anchor and name constraints, revocation, TLS, HTTP, and
 network effects remain blockers.
+A bounded `x509-certificate-path-construction` follow-up now repeats that unique
+issuer selection into one caller-bounded target-to-terminal chain. Candidate
+pool size and requested path depth are rejected before policy callbacks;
+caller-owned terminal policy runs exactly once per accepted path certificate;
+and exact certificate-encoding cycles or exhaustion before a terminal match
+fail closed. Non-copyable success evidence retains the exact target, candidate
+pool, and ordered selected indices, so a later validator can consume the one
+constructed chain without caller substitution. This deterministic primitive
+does not search alternate ambiguous branches, define Name equality, decide
+trust, authenticate any link, apply certificate roles, algorithms, validity,
+path length, name constraints, hostname or revocation policy, or provide TLS,
+HTTP, OAuth transport, or network authority.
 The RSA SHA-256 issuer-link composition can now consume that non-copyable
 selection evidence directly. It derives the exact child and selected candidate
 from the evidence, then performs issuing-CA role, caller-owned RSA key-policy,
@@ -904,25 +916,26 @@ the missing IMPLICIT-constructed traversal primitive required by the
 `permittedSubtrees [0]` and `excludedSubtrees [1]` NameConstraints fields; it
 does not recognize either field, decode GeneralSubtree, apply a constraint, or
 grant certificate-path, trust, TLS, HTTP, OAuth, or network authority.
-A bounded repository-owned NameConstraints structural decoder now consumes the
-out-of-band SEQUENCE contents carried by reviewed trust anchors. Its first
+A bounded repository-owned NameConstraints structural decoder first consumed
+the out-of-band SEQUENCE contents carried by reviewed trust anchors. Its first
 fail-closed subset accepts one `permittedSubtrees [0]` field containing one or
 more dNSName GeneralSubtree sequences with absent distance fields, retaining
 the non-empty ASCII subtree strings in fixed capacity and wire order. The
 decoder is data-driven and covers the reviewed `.tr` constraint without
-hard-coding that suffix. It does not validate DNS syntax, support excluded or
-non-DNS subtrees, evaluate a certificate name, bind the parsed bytes back to
+hard-coding that suffix. That initial slice did not validate DNS syntax,
+support excluded or non-DNS subtrees, evaluate a certificate name, bind the
+parsed bytes back to
 selected-anchor evidence, construct or validate a path, grant trust, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection.
-A separate bounded evaluator now validates every decoded permitted DNS subtree
-before matching caller-supplied DNS names. It enforces strict ASCII labels,
+A separate bounded evaluator initially validated every decoded permitted DNS
+subtree before matching caller-supplied DNS names. It enforces strict ASCII labels,
 case-insensitive label-boundary matching, the reviewed leading-dot semantics,
 and a complete-leftmost-label-only presented wildcard, then requires every
 supplied name to match at least one data-driven subtree. Both collections are
-capped at 256 and evaluation allocates nothing. The result retains only the
-evaluated count: it is not bound to certificate SAN evidence or the selected
-anchor, does not handle excluded or non-DNS subtrees, construct or validate a
+capped at 256 and evaluation allocates nothing. The result retained only the
+evaluated count: it was not bound to certificate SAN evidence or the selected
+anchor and did not yet handle excluded or non-DNS subtrees, construct or validate a
 path, check trust or revocation, perform TLS or HTTP, authorize OAuth transport,
 or open a network connection. Concrete HTTPS therefore remains unavailable.
 The direct reviewed-server anchor-policy composition is the sole consumer in
@@ -965,21 +978,42 @@ cannot substitute another root, target certificate, or SAN collection. This
 does not add excluded or non-DNS constraint forms, other anchor constraints,
 path search or generalized construction, revocation, TLS, HTTP, OAuth transport,
 or network authority.
-A bounded intermediate-constraint follow-up consumes that anchor-policy result
-and inspects only the exact intermediate certificate already retained by the
+A bounded intermediate-constraint follow-up first consumed that anchor-policy
+result and inspected only the exact intermediate certificate already retained by the
 authenticated two-link path. An absent NameConstraints extension preserves the
 complete prior proof without new DNS evidence. A present extension must be
-critical, must contain one exact DER NameConstraints SEQUENCE, and must decode
-within caller-owned limits to the repository's supported permitted-DNS-only
-subset; malformed, non-critical, excluded, or non-DNS forms fail closed. The
+critical, contain one exact DER NameConstraints SEQUENCE, and decode within
+caller-owned limits to the then-supported permitted-DNS-only subset; malformed,
+non-critical, excluded, or non-DNS forms failed closed. The
 same exact target certificate's separately bounded Subject Alternative Name is
 then required, and every dNSName must satisfy at least one permitted subtree.
 Success retains the complete anchor-policy proof plus optional payload-free
 intermediate constraint evidence, so callers cannot substitute an intermediate,
-target, root, or SAN collection. This remains a fixed two-link policy step: it
-does not implement excluded or non-DNS constraint semantics, apply other anchor
+target, root, or SAN collection. That initial form remained a fixed two-link
+policy step and did not implement excluded or non-DNS constraint semantics,
+apply other anchor
 constraints, search or generalize paths, check revocation, perform TLS or HTTP,
 authorize OAuth transport, or grant network authority.
+A bounded excluded-DNS follow-up extends the repository-owned complete
+NameConstraints parser and shared evaluator without widening the reviewed-root
+snapshot format. A certificate extension may carry a non-empty
+`permittedSubtrees [0]` field, a non-empty `excludedSubtrees [1]` field, or both
+in schema order; the supported GeneralSubtree form remains dNSName with absent
+minimum and maximum. The snapshot-contents decoder remains restricted to its
+reviewed permitted-DNS-only input. Evaluation validates every retained
+permitted and excluded subtree before examining a presented name, rejects a
+name matching any excluded subtree, rejects a presented wildcard when any of
+its concrete expansions falls within an excluded subtree, and, when permitted
+subtrees are present, requires every represented name to stay within that set.
+The exact direct and two-link anchor-policy
+consumers use the shared evaluator, while the exact intermediate-policy
+consumer now accepts and enforces supported critical excluded-DNS constraints
+instead of rejecting their field solely by tag. Empty fields, duplicates,
+reversed order, distance fields, non-DNS GeneralName choices, malformed DER,
+and caller-limit exhaustion continue to fail closed with redacted categories.
+This remains fixed-path DNS policy only: it does not implement other name
+forms, generalized path construction or validation, revocation, TLS, HTTP,
+OAuth transport, or network authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

@@ -36,6 +36,11 @@ fn permitted(subtrees: &[Vec<u8>]) -> Vec<u8> {
     element(0xa0, &contents)
 }
 
+fn excluded(subtrees: &[Vec<u8>]) -> Vec<u8> {
+    let contents: Vec<u8> = subtrees.iter().flatten().copied().collect();
+    element(0xa1, &contents)
+}
+
 fn decode_with_limits(
     encoded: &[u8],
     limits: Asn1Limits,
@@ -71,6 +76,129 @@ fn decodes_one_exact_name_constraints_sequence() {
 }
 
 #[test]
+fn full_der_decoder_retains_permitted_and_excluded_dns_subtrees() {
+    let fields = [
+        permitted(&[general_subtree(b"example.test", &[])]),
+        excluded(&[general_subtree(b"private.example.test", &[])]),
+    ]
+    .concat();
+    let encoded = element(0x30, &fields);
+    let constraints = decode_der_with_limits(&encoded, Asn1Limits::default()).unwrap();
+
+    assert_eq!(constraints.permitted_dns_subtrees(), &["example.test"]);
+    assert_eq!(
+        constraints.excluded_dns_subtrees(),
+        &["private.example.test"]
+    );
+    assert_eq!(constraints.permitted_len(), 1);
+    assert_eq!(constraints.excluded_len(), 1);
+}
+
+#[test]
+fn full_der_decoder_accepts_excluded_only_but_snapshot_contents_do_not() {
+    let field = excluded(&[general_subtree(b"private.example.test", &[])]);
+    let encoded = element(0x30, &field);
+    let constraints = decode_der_with_limits(&encoded, Asn1Limits::default()).unwrap();
+
+    assert!(constraints.permitted_dns_subtrees().is_empty());
+    assert_eq!(
+        constraints.excluded_dns_subtrees(),
+        &["private.example.test"]
+    );
+    assert_eq!(
+        decode(&field).unwrap_err().kind(),
+        NameConstraintsErrorKind::UnsupportedTopLevelField
+    );
+}
+
+#[test]
+fn full_der_decoder_rejects_empty_duplicate_and_reversed_fields() {
+    let permitted_field = permitted(&[general_subtree(b"example.test", &[])]);
+    let excluded_field = excluded(&[general_subtree(b"private.example.test", &[])]);
+    let cases = [
+        (
+            element(0x30, &excluded(&[])),
+            NameConstraintsErrorKind::EmptyExcludedSubtrees,
+        ),
+        (
+            element(
+                0x30,
+                &[permitted_field.clone(), permitted_field.clone()].concat(),
+            ),
+            NameConstraintsErrorKind::DuplicateTopLevelField,
+        ),
+        (
+            element(
+                0x30,
+                &[excluded_field.clone(), excluded_field.clone()].concat(),
+            ),
+            NameConstraintsErrorKind::DuplicateTopLevelField,
+        ),
+        (
+            element(0x30, &[excluded_field, permitted_field].concat()),
+            NameConstraintsErrorKind::UnsupportedTopLevelFieldOrder,
+        ),
+    ];
+
+    for (encoded, expected) in cases {
+        assert_eq!(
+            decode_der_with_limits(&encoded, Asn1Limits::default())
+                .unwrap_err()
+                .kind(),
+            expected
+        );
+    }
+}
+
+#[test]
+fn excluded_subtrees_reject_non_dns_bases_and_distance_fields() {
+    let non_dns = element(0x30, &element(0x87, &[192, 0, 2, 1]));
+    let error =
+        decode_der_with_limits(&element(0x30, &excluded(&[non_dns])), Asn1Limits::default())
+            .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        NameConstraintsErrorKind::UnsupportedGeneralName
+    );
+
+    let distance = general_subtree(b"private.example.test", &[element(0x80, &[0])]);
+    let error = decode_der_with_limits(
+        &element(0x30, &excluded(&[distance])),
+        Asn1Limits::default(),
+    )
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        NameConstraintsErrorKind::UnsupportedGeneralSubtreeField
+    );
+}
+
+#[test]
+fn permitted_and_excluded_capacities_are_independent() {
+    let permitted_entries: Vec<_> = (0..MAX_DNS_SUBTREES)
+        .map(|_| general_subtree(b"example.test", &[]))
+        .collect();
+    let excluded_entries: Vec<_> = (0..MAX_DNS_SUBTREES)
+        .map(|_| general_subtree(b"private.example.test", &[]))
+        .collect();
+    let fields = [permitted(&permitted_entries), excluded(&excluded_entries)].concat();
+    let encoded = element(0x30, &fields);
+    let constraints = decode_der_with_limits(&encoded, Asn1Limits::default()).unwrap();
+    assert_eq!(constraints.permitted_len(), MAX_DNS_SUBTREES);
+    assert_eq!(constraints.excluded_len(), MAX_DNS_SUBTREES);
+
+    let mut too_many = excluded_entries;
+    too_many.push(general_subtree(b"blocked.example.test", &[]));
+    let fields = [permitted(&permitted_entries), excluded(&too_many)].concat();
+    assert_eq!(
+        decode_der_with_limits(&element(0x30, &fields), Asn1Limits::default())
+            .unwrap_err()
+            .kind(),
+        NameConstraintsErrorKind::TooManySubtrees
+    );
+}
+
+#[test]
 fn full_der_decoder_rejects_contents_trailing_bytes_and_tight_limits() {
     let contents = permitted(&[general_subtree(b".tr", &[])]);
     let trailing = [element(0x30, &contents), vec![0x05, 0]].concat();
@@ -101,7 +229,7 @@ fn decodes_the_exact_reviewed_constraint_bytes() {
     assert!(!constraints.is_empty());
     assert_eq!(
         format!("{constraints:?}"),
-        "NameConstraints { permitted_dns_subtrees: 1 }"
+        "NameConstraints { permitted_dns_subtrees: 1, excluded_dns_subtrees: 0 }"
     );
 }
 

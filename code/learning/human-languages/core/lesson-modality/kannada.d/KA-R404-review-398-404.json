@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R404-review-398-404",
+    "language": "kannada",
+    "chapter": 404,
+    "sequence": 20480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76928ec20d08b159"
+  },
+  "findings": []
+}

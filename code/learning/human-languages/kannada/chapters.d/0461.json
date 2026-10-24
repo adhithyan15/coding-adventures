@@ -1,0 +1,21 @@
+{
+  "chapter": 461,
+  "title": "Guest Houses and Deposits",
+  "label": "ch:ka-guest-houses-and-deposits",
+  "canDo": "I can say a guest house, a hostel, a security deposit, a locker and a refund.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-R461-review-455-461",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can say a guest house, a hostel, a security deposit, a locker and a refund.",
+    "assesses": [
+      "KA-LEX-C461-ATITHI461-01",
+      "KA-LEX-C461-ATITHI461-02",
+      "KA-LEX-C461-ATITHI461-03",
+      "KA-LEX-C461-ATITHI461-04",
+      "KA-LEX-C461-ATITHI461-05"
+    ]
+  }
+}

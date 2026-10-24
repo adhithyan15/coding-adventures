@@ -1,0 +1,11 @@
+{
+  "id": "KA-C435-asana",
+  "pathSegment": "KA-PATH-435-BERTH435",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-435-BERTH435",
+      "order": 1
+    }
+  ]
+}

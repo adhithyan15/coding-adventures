@@ -1,0 +1,11 @@
+{
+  "id": "KA-C428-ottare",
+  "pathSegment": "KA-PATH-428-ONDOMME428",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-428-ONDOMME428",
+      "order": 4
+    }
+  ]
+}

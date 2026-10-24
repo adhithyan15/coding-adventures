@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C513-cetarisiko",
+    "language": "kannada",
+    "chapter": 513,
+    "sequence": 26180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c02bf28e4c38f3ab"
+  },
+  "findings": []
+}

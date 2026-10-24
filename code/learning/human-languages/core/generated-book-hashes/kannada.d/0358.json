@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:3c12ee1eee7c62ec",
+  "lessonIds": [
+    "KA-C358-vicarane",
+    "KA-C358-mokaddame",
+    "KA-C358-prakarana",
+    "KA-C358-jaminu",
+    "KA-C358-tappoppiko"
+  ],
+  "tex": "kannada/book/chapters/ch358-the-case-goes-to-court.tex"
+}

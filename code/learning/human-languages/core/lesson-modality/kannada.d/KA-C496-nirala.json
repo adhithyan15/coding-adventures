@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C496-nirala",
+    "language": "kannada",
+    "chapter": 496,
+    "sequence": 25340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42ae4b984e0b4f34"
+  },
+  "findings": []
+}

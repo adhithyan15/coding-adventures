@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-384-GRAHISU384",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-384-GRAHISU384"
+  ],
+  "after": []
+}

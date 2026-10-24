@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 412,
+  "title": "When Danger Comes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5adcced9b978d161",
+  "lessons": [
+    {
+      "id": "KA-C412-apaya",
+      "sequence": 20850,
+      "title": "ಅಪಾಯ (apāya) — a danger; a risk",
+      "headword": "ಅಪಾಯ",
+      "romanization": "apāya",
+      "gloss": "a danger; a risk",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c992e44c0b9d7d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to fulfil, then the Kannada for an obligation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಪಾಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಪಾಯ — apāya — \"a danger; a risk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಳೆಗಾಲದಲ್ಲಿ ನದಿಯಲ್ಲಿ ಈಜುವುದು ಅಪಾಯ. maḷegāladalli nadiyalli ījuvudu apāya. Swimming in the river in the rainy season is dangerous."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಪಾಯದಲ್ಲಿ ಇರು, to be in danger."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಪಾಯ (apāya) is borrowed from Sanskrit apāya, \"going away; loss, harm\" (CDIAL 481)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷegāladalli nadiyalli ījuvudu apāya. — Swimming in the river in the rainy season is dangerous.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷegāladalli nadiyalli ījuvudu apāya.* — Swimming in the river in the rainy season is dangerous.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to fulfil, then the Kannada for an obligation, then say apāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to fulfil, then the Kannada for an obligation, then say *apāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಪಾಯ (apāya) mean? (\"A danger; a risk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C412-munneccarike",
+      "sequence": 20860,
+      "title": "ಮುನ್ನೆಚ್ಚರಿಕೆ (munneccarike) — a precaution",
+      "headword": "ಮುನ್ನೆಚ್ಚರಿಕೆ",
+      "romanization": "munneccarike",
+      "gloss": "a precaution",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:316bdff7db14d8f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an obligation, then the Kannada for a danger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮುನ್ನೆಚ್ಚರಿಕೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುನ್ನೆಚ್ಚರಿಕೆ — munneccarike — \"a precaution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮುನ್ನೆಚ್ಚರಿಕೆಯಾಗಿ ನಾನು ಕೊಡೆ ತೆಗೆದುಕೊಂಡು ಹೋದೆ. munneccarikeyāgi nānu koḍe tegedukoṇḍu hōde. I took an umbrella as a precaution."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮುನ್ (before) + ಎಚ್ಚರಿಕೆ (warning)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುನ್ನೆಚ್ಚರಿಕೆ (munneccarike) is native Dravidian, built from mun, \"before\" (DEDR 5020), and eccaṟike, \"a warning, watchfulness\" (DEDR 851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munneccarike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munneccarike*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munneccarike, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munneccarike*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munneccarikeyāgi nānu koḍe tegedukoṇḍu hōde. — I took an umbrella as a precaution.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munneccarikeyāgi nānu koḍe tegedukoṇḍu hōde.* — I took an umbrella as a precaution.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an obligation, then the Kannada for a danger, then say munneccarike again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an obligation, then the Kannada for a danger, then say *munneccarike* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮುನ್ನೆಚ್ಚರಿಕೆ (munneccarike) mean? (\"A precaution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C412-sambhavaniya",
+      "sequence": 20870,
+      "title": "ಸಂಭವನೀಯ (sambhavanīya) — probable; likely",
+      "headword": "ಸಂಭವನೀಯ",
+      "romanization": "sambhavanīya",
+      "gloss": "probable; likely",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6516ecd16ff695d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a danger, then the Kannada for a precaution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂಭವನೀಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಭವನೀಯ — sambhavanīya — \"probable; likely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಳೆ ಬಂದರೆ ಪ್ರವಾಹ ಬರುವುದು ಸಂಭವನೀಯ. maḷe bandare pravāha baruvudu sambhavanīya. If it rains, a flood is likely."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂಭವ, a possibility or an event."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಭವನೀಯ (sambhavanīya) is built on Sanskrit saṃbhava, \"coming together, coming into being\" (Monier-Williams), with -anīya, \"that may be\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhavanīya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhavanīya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhavanīya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhavanīya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷe bandare pravāha baruvudu sambhavanīya. — If it rains, a flood is likely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷe bandare pravāha baruvudu sambhavanīya.* — If it rains, a flood is likely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a danger, then the Kannada for a precaution, then say sambhavanīya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a danger, then the Kannada for a precaution, then say *sambhavanīya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂಭವನೀಯ (sambhavanīya) mean? (\"Probable; likely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C412-sankasta",
+      "sequence": 20880,
+      "title": "ಸಂಕಷ್ಟ (saṅkaṣṭa) — hardship; distress",
+      "headword": "ಸಂಕಷ್ಟ",
+      "romanization": "saṅkaṣṭa",
+      "gloss": "hardship; distress",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:654e1240d79715f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a precaution, then the Kannada for probable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂಕಷ್ಟ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಕಷ್ಟ — saṅkaṣṭa — \"hardship; distress\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರವಾಹದ ನಂತರ ಹಳ್ಳಿಯ ಜನರು ಸಂಕಷ್ಟದಲ್ಲಿ ಇದ್ದರು. pravāhada nantara haḷḷiya janaru saṅkaṣṭadalli iddaru. After the flood the villagers were in distress."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಷ್ಟ with ಸಂ-: a heavy trouble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಕಷ್ಟ (saṅkaṣṭa) is borrowed from Sanskrit saṃkaṣṭa, \"distress, trouble\" (Monier-Williams), built on kaṣṭa, \"hardship\" (CDIAL 2978)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkaṣṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkaṣṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkaṣṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkaṣṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravāhada nantara haḷḷiya janaru saṅkaṣṭadalli iddaru. — After the flood the villagers were in distress.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravāhada nantara haḷḷiya janaru saṅkaṣṭadalli iddaru.* — After the flood the villagers were in distress.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a precaution, then the Kannada for probable, then say saṅkaṣṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a precaution, then the Kannada for probable, then say *saṅkaṣṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂಕಷ್ಟ (saṅkaṣṭa) mean? (\"Hardship; distress\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C412-nivarisu",
+      "sequence": 20890,
+      "title": "ನಿವಾರಿಸು (nivārisu) — to ward off; to relieve",
+      "headword": "ನಿವಾರಿಸು",
+      "romanization": "nivārisu",
+      "gloss": "to ward off; to relieve",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d335795045a37bd7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for probable, then the Kannada for hardship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿವಾರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿವಾರಿಸು — nivārisu — \"to ward off; to relieve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವೈದ್ಯರು ನನ್ನ ನೋವನ್ನು ನಿವಾರಿಸಿದರು. vaidyaru nanna nōvannu nivārisidaru. The doctor relieved my pain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ನಿವಾರಿಸಿದೆ, nivāriside."
+            },
+            {
+              "kind": "speech",
+              "text": "What is removed takes -ಅನ್ನು. ನಿವಾರಣೆ, removal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿವಾರಿಸು (nivārisu) is built on Sanskrit nivāraṇa, \"keeping off, warding off\" (CDIAL 7418), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivārisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivārisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivārisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivārisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaidyaru nanna nōvannu nivārisidaru. — The doctor relieved my pain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaidyaru nanna nōvannu nivārisidaru.* — The doctor relieved my pain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for probable, then the Kannada for hardship, then say nivārisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for probable, then the Kannada for hardship, then say *nivārisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿವಾರಿಸು (nivārisu) mean? (\"To ward off; to relieve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

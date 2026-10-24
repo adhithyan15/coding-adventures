@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C366-khulase",
+    "language": "kannada",
+    "chapter": 366,
+    "sequence": 18410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24db680e9fbf935a"
+  },
+  "findings": []
+}

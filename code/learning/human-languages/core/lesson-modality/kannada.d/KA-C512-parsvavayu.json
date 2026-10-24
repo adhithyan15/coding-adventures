@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C512-parsvavayu",
+    "language": "kannada",
+    "chapter": 512,
+    "sequence": 26160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b93d2e8506f9d122"
+  },
+  "findings": []
+}

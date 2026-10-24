@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:1ef9431dc38031f2",
+  "lessonIds": [
+    "KA-C377-tarka",
+    "KA-C377-samarthisu",
+    "KA-C377-vivada",
+    "KA-C377-aksepisu",
+    "KA-C377-samanjasa"
+  ],
+  "tex": "kannada/book/chapters/ch377-logic-and-objections.tex"
+}

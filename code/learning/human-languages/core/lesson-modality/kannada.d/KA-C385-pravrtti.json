@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C385-pravrtti",
+    "language": "kannada",
+    "chapter": 385,
+    "sequence": 19490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c7a7afc2c6ab14f"
+  },
+  "findings": []
+}

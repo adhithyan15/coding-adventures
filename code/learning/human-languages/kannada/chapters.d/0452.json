@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Moving Goods",
+  "label": "ch:ka-moving-goods",
+  "canDo": "I can say transport, a depot, goods, to transport and a courier.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C452-koriyar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can say transport, a depot, goods, to transport and a courier.",
+    "assesses": [
+      "KA-LEX-C452-SARIGE452-03",
+      "KA-LEX-C452-SARIGE452-04",
+      "KA-LEX-C452-SARIGE452-05"
+    ]
+  }
+}

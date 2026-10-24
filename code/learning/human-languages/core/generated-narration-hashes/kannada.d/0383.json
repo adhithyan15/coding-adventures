@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:09424ea8a330a80f",
+  "lessonIds": [
+    "KA-C383-sandeha",
+    "KA-C383-tirucu",
+    "KA-C383-nirnayisu",
+    "KA-C383-asadhya",
+    "KA-C383-allagale",
+    "KA-R383-review-376-383"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch383.txt",
+  "json": "kannada/narration/ch383.json",
+  "textHash": "fnv1a64:cbe916401482f5ca",
+  "jsonHash": "fnv1a64:9c26af9be0b102d2",
+  "findings": []
+}

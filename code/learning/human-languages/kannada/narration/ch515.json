@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 515,
+  "title": "Blindness, Deafness and Pain",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:17fb6982ad40c2ad",
+  "lessons": [
+    {
+      "id": "KA-C515-kuruda",
+      "sequence": 26280,
+      "title": "ಕುರುಡ (kuruḍa) — a blind man; blind",
+      "headword": "ಕುರುಡ",
+      "romanization": "kuruḍa",
+      "gloss": "a blind man; blind",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a653a8c8d575dae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to get tired, then the Kannada for lifespan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕುರುಡ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕುರುಡ — kuruḍa — \"a blind man; blind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಕುರುಡ ಸಂಗೀತಗಾರ ಸುಂದರವಾಗಿ ಹಾಡುತ್ತಾನೆ. ā kuruḍa saṅgītagāra sundaravāgi hāḍuttāne. That blind musician sings beautifully."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಕುರುಡರು, kuruḍaru."
+            },
+            {
+              "kind": "speech",
+              "text": "A blind woman is ಕುರುಡಿ. Politer: ದೃಷ್ಟಿ ಇಲ್ಲದವರು, those without sight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕುರುಡ (kuruḍa) is native Dravidian: DEDR 1787 lists Kannada kuruḍu, \"blindness\", and kuruḍa, \"a blind man\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuruḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuruḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuruḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuruḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kuruḍa saṅgītagāra sundaravāgi hāḍuttāne. — That blind musician sings beautifully.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kuruḍa saṅgītagāra sundaravāgi hāḍuttāne.* — That blind musician sings beautifully.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to get tired, then the Kannada for lifespan, then say kuruḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to get tired, then the Kannada for lifespan, then say *kuruḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕುರುಡ (kuruḍa) mean? (\"A blind man; blind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C515-kivuda",
+      "sequence": 26290,
+      "title": "ಕಿವುಡ (kivuḍa) — deaf; a deaf man",
+      "headword": "ಕಿವುಡ",
+      "romanization": "kivuḍa",
+      "gloss": "deaf; a deaf man",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbb130b2ab522c7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for lifespan, then the Kannada for a blind man."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಿವುಡ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಿವುಡ — kivuḍa — \"deaf; a deaf man\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಜ್ಜ ಸ್ವಲ್ಪ ಕಿವುಡ, ಜೋರಾಗಿ ಮಾತಾಡಬೇಕು. ajja svalpa kivuḍa, jōrāgi mātāḍabēku. Grandfather is a little deaf; you have to speak loudly."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ಕಿವಿ, the ear. A deaf woman is ಕಿವುಡಿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಿವುಡ (kivuḍa) is native Dravidian: DEDR 1977 lists Kannada kivi, \"ear\", and kivuḍa, \"a deaf man\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kivuḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kivuḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kivuḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kivuḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajja svalpa kivuḍa, jōrāgi mātāḍabēku. — Grandfather is a little deaf; you have to speak loudly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajja svalpa kivuḍa, jōrāgi mātāḍabēku.* — Grandfather is a little deaf; you have to speak loudly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for lifespan, then the Kannada for a blind man, then say kivuḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for lifespan, then the Kannada for a blind man, then say *kivuḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಿವುಡ (kivuḍa) mean? (\"Deaf; a deaf man\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C515-muka",
+      "sequence": 26300,
+      "title": "ಮೂಕ (mūka) — mute; unable to speak",
+      "headword": "ಮೂಕ",
+      "romanization": "mūka",
+      "gloss": "mute; unable to speak",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71ce90d4f45ef2ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a blind man, then the Kannada for deaf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೂಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೂಕ — mūka — \"mute; unable to speak\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಮೂಕ ಹುಡುಗ ಕೈಸನ್ನೆಯಿಂದ ಮಾತಾಡುತ್ತಾನೆ. ā mūka huḍuga kaisanneyinda mātāḍuttāne. That mute boy talks with hand signs."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೂಕ (mūka) ಪ್ರಾಣಿ, a dumb creature, an animal that cannot complain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೂಕ (mūka) is borrowed from Sanskrit mūka, \"tied, tongue-tied, dumb, silent\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā mūka huḍuga kaisanneyinda mātāḍuttāne. — That mute boy talks with hand signs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā mūka huḍuga kaisanneyinda mātāḍuttāne.* — That mute boy talks with hand signs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a blind man, then the Kannada for deaf, then say mūka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a blind man, then the Kannada for deaf, then say *mūka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೂಕ (mūka) mean? (\"Mute; unable to speak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C515-naralu",
+      "sequence": 26310,
+      "title": "ನರಳು (naraḷu) — to groan; to moan",
+      "headword": "ನರಳು",
+      "romanization": "naraḷu",
+      "gloss": "to groan; to moan",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b84703ccff1e0fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for deaf, then the Kannada for mute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನರಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನರಳು — naraḷu — \"to groan; to moan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೋವಿನಿಂದ ರೋಗಿ ರಾತ್ರಿಯೆಲ್ಲ ನರಳಿದನು. nōvininda rōgi rātriyella naraḷidanu. The patient groaned with pain all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ನರಳಿದೆ, naraḷide."
+            },
+            {
+              "kind": "speech",
+              "text": "A low sound of pain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನರಳು (naraḷu) is native Dravidian: DEDR 2904 lists Kannada naral and neraḷu, \"to groan, moan\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naraḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naraḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naraḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naraḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nōvininda rōgi rātriyella naraḷidanu. — The patient groaned with pain all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nōvininda rōgi rātriyella naraḷidanu.* — The patient groaned with pain all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for deaf, then the Kannada for mute, then say naraḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for deaf, then the Kannada for mute, then say *naraḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನರಳು (naraḷu) mean? (\"To groan; to moan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C515-nalugu",
+      "sequence": 26320,
+      "title": "ನಲುಗು (nalugu) — to droop; to be worn down",
+      "headword": "ನಲುಗು",
+      "romanization": "nalugu",
+      "gloss": "to droop; to be worn down",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d79644c5839bb62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for mute, then the Kannada for to groan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಲುಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಲುಗು — nalugu — \"to droop; to be worn down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಿಸಿಲಿಗೆ ತೋಟದ ಹೂವುಗಳು ನಲುಗಿದವು. bisilige tōṭada hūvugaḷu nalugidavu. The garden flowers drooped in the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ನಲುಗಿದೆ, nalugide."
+            },
+            {
+              "kind": "speech",
+              "text": "Of people too: ಕಷ್ಟದಿಂದ ನಲುಗು (nalugu), to be worn down by hardship."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಲುಗು (nalugu) is native Dravidian: DEDR 3611 lists Kannada nalagu, nalugu, \"to become rumpled, to droop, to grow weak or faint from sickness, trouble or grief\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nalugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nalugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nalugu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nalugu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bisilige tōṭada hūvugaḷu nalugidavu. — The garden flowers drooped in the sun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bisilige tōṭada hūvugaḷu nalugidavu.* — The garden flowers drooped in the sun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for mute, then the Kannada for to groan, then say nalugu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for mute, then the Kannada for to groan, then say *nalugu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಲುಗು (nalugu) mean? (\"To droop; to be worn down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

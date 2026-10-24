@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 474,
+  "title": "Waste and Recycling",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c03526bb43df88a6",
+  "lessons": [
+    {
+      "id": "KA-C474-tyajya",
+      "sequence": 24100,
+      "title": "ತ್ಯಾಜ್ಯ (tyājya) — waste matter; refuse",
+      "headword": "ತ್ಯಾಜ್ಯ",
+      "romanization": "tyājya",
+      "gloss": "waste matter; refuse",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:903f892ba0cb7748",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for soot, then the Kannada for carbon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತ್ಯಾಜ್ಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತ್ಯಾಜ್ಯ — tyājya — \"waste matter; refuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಾರ್ಖಾನೆಯ ತ್ಯಾಜ್ಯ ನದಿಗೆ ಹರಿಯುತ್ತಿತ್ತು. kārkhāneya tyājya nadige hariyuttittu. Waste from the factory was flowing into the river."
+            },
+            {
+              "kind": "speech",
+              "text": "ಘನ ತ್ಯಾಜ್ಯ (tyājya), solid waste; ಕಸ is the everyday word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತ್ಯಾಜ್ಯ (tyājya) is borrowed from Sanskrit tyājya, \"to be left, to be abandoned\" (Monier-Williams): what is thrown away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyājya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyājya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyājya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyājya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārkhāneya tyājya nadige hariyuttittu. — Waste from the factory was flowing into the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārkhāneya tyājya nadige hariyuttittu.* — Waste from the factory was flowing into the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for soot, then the Kannada for carbon, then say tyājya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for soot, then the Kannada for carbon, then say *tyājya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತ್ಯಾಜ್ಯ (tyājya) mean? (\"Waste matter; refuse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C474-marubalake",
+      "sequence": 24110,
+      "title": "ಮರುಬಳಕೆ (marubaḷake) — recycling; reuse",
+      "headword": "ಮರುಬಳಕೆ",
+      "romanization": "marubaḷake",
+      "gloss": "recycling; reuse",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10636226c8068e0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for carbon, then the Kannada for waste matter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮರುಬಳಕೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮರುಬಳಕೆ — marubaḷake — \"recycling; reuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ಲಾಸ್ಟಿಕ್ ಬಾಟಲಿಗಳ ಮರುಬಳಕೆ ಸಾಧ್ಯ. plāsṭik bāṭaligaḷa marubaḷake sādhya. Plastic bottles can be recycled."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮರು-, again, plus ಬಳಕೆ, use, the noun of ಬಳಸು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮರುಬಳಕೆ (marubaḷake) joins the native prefix maṟu, \"again\" (DEDR 4766), and baḷake, \"use\", the noun of ಬಳಸು."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marubaḷake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marubaḷake*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marubaḷake, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marubaḷake*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plāsṭik bāṭaligaḷa marubaḷake sādhya. — Plastic bottles can be recycled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plāsṭik bāṭaligaḷa marubaḷake sādhya.* — Plastic bottles can be recycled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for carbon, then the Kannada for waste matter, then say marubaḷake again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for carbon, then the Kannada for waste matter, then say *marubaḷake* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮರುಬಳಕೆ (marubaḷake) mean? (\"Recycling; reuse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C474-vingadisu",
+      "sequence": 24120,
+      "title": "ವಿಂಗಡಿಸು (viṅgaḍisu) — to sort; to separate",
+      "headword": "ವಿಂಗಡಿಸು",
+      "romanization": "viṅgaḍisu",
+      "gloss": "to sort; to separate",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9556432175c6ba07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for waste matter, then the Kannada for recycling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿಂಗಡಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಂಗಡಿಸು — viṅgaḍisu — \"to sort; to separate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾವು ಮನೆಯ ಕಸವನ್ನು ಒಣ ಮತ್ತು ಹಸಿ ಕಸ ಅಂತ ವಿಂಗಡಿಸುತ್ತೇವೆ. nāvu maneya kasavannu oṇa mattu hasi kasa anta viṅgaḍisuttēve. We sort the household rubbish into dry and wet waste."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವಿಂಗಡಿಸಿದೆ, viṅgaḍiside."
+            },
+            {
+              "kind": "speech",
+              "text": "What is sorted takes -ಅನ್ನು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಂಗಡಿಸು (viṅgaḍisu) is a Kannada verb whose origin is not settled; DEDR shows no clear source for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṅgaḍisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṅgaḍisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṅgaḍisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṅgaḍisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvu maneya kasavannu oṇa mattu hasi kasa anta viṅgaḍisuttēve. — We sort the household rubbish into dry and wet waste.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvu maneya kasavannu oṇa mattu hasi kasa anta viṅgaḍisuttēve.* — We sort the household rubbish into dry and wet waste.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for waste matter, then the Kannada for recycling, then say viṅgaḍisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for waste matter, then the Kannada for recycling, then say *viṅgaḍisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿಂಗಡಿಸು (viṅgaḍisu) mean? (\"To sort; to separate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C474-tyajisu",
+      "sequence": 24130,
+      "title": "ತ್ಯಜಿಸು (tyajisu) — to forsake; to give up",
+      "headword": "ತ್ಯಜಿಸು",
+      "romanization": "tyajisu",
+      "gloss": "to forsake; to give up",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77275c46af74482c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for recycling, then the Kannada for to sort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತ್ಯಜಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತ್ಯಜಿಸು — tyajisu — \"to forsake; to give up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನು ಪ್ಲಾಸ್ಟಿಕ್ ಚೀಲಗಳನ್ನು ತ್ಯಜಿಸಿದನು. avanu plāsṭik cīlagaḷannu tyajisidanu. He gave up plastic bags."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತ್ಯಜಿಸಿದೆ, tyajiside."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word; what is given up takes -ಅನ್ನು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತ್ಯಜಿಸು (tyajisu) is built from the Sanskrit root tyaj, \"to leave, to let go\" (CDIAL 5984, tyajati), with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyajisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyajisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyajisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyajisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanu plāsṭik cīlagaḷannu tyajisidanu. — He gave up plastic bags.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanu plāsṭik cīlagaḷannu tyajisidanu.* — He gave up plastic bags.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for recycling, then the Kannada for to sort, then say tyajisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for recycling, then the Kannada for to sort, then say *tyajisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತ್ಯಜಿಸು (tyajisu) mean? (\"To forsake; to give up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C474-saurasakti",
+      "sequence": 24140,
+      "title": "ಸೌರಶಕ್ತಿ (sauraśakti) — solar power",
+      "headword": "ಸೌರಶಕ್ತಿ",
+      "romanization": "sauraśakti",
+      "gloss": "solar power",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45b51abfb95b345d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to sort, then the Kannada for to forsake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸೌರಶಕ್ತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೌರಶಕ್ತಿ — sauraśakti — \"solar power\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಮ್ಮ ಶಾಲೆ ಸೌರಶಕ್ತಿಯಿಂದ ನಡೆಯುತ್ತದೆ. namma śāle sauraśaktiyinda naḍeyuttade. Our school runs on solar power."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸೌರ, of the sun, plus ಶಕ್ತಿ, power."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೌರಶಕ್ತಿ (sauraśakti) is a modern compound built from Sanskrit words: saura, \"relating to the sun\", and śakti, \"power, energy\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sauraśakti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sauraśakti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sauraśakti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sauraśakti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namma śāle sauraśaktiyinda naḍeyuttade. — Our school runs on solar power.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namma śāle sauraśaktiyinda naḍeyuttade.* — Our school runs on solar power.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to sort, then the Kannada for to forsake, then say sauraśakti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to sort, then the Kannada for to forsake, then say *sauraśakti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸೌರಶಕ್ತಿ (sauraśakti) mean? (\"Solar power\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

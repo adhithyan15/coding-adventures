@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C367-khalanayaka",
+    "language": "kannada",
+    "chapter": 367,
+    "sequence": 18460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ceaace3c5ec00da3"
+  },
+  "findings": []
+}

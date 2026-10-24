@@ -1,0 +1,11 @@
+{
+  "id": "KA-C519-kudidu",
+  "pathSegment": "KA-PATH-519-HANAKASU519",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-519-HANAKASU519",
+      "order": 4
+    }
+  ]
+}

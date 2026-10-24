@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Raising a Child",
+  "label": "ch:ka-raising-a-child",
+  "canDo": "I can say to adopt, to bring up, to nourish, crawling on all fours and a stepmother.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C527-malatayi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can say to adopt, to bring up, to nourish, crawling on all fours and a stepmother.",
+    "assesses": [
+      "KA-LEX-C527-POSHANE527-03",
+      "KA-LEX-C527-POSHANE527-04",
+      "KA-LEX-C527-POSHANE527-05"
+    ]
+  }
+}

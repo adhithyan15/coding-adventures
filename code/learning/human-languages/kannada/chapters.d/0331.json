@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Long Ago",
+  "label": "ch:ka-long-ago",
+  "canDo": "I can say once before, on that day, a long time, ancient and an era.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C331-yuga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can say once before, on that day, a long time, ancient and an era.",
+    "assesses": [
+      "KA-LEX-C331-HINDE331-03",
+      "KA-LEX-C331-HINDE331-04",
+      "KA-LEX-C331-HINDE331-05"
+    ]
+  }
+}

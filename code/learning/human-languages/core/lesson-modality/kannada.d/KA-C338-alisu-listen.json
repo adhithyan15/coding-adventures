@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C338-alisu-listen",
+    "language": "kannada",
+    "chapter": 338,
+    "sequence": 17010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14227c12c40e8db8"
+  },
+  "findings": []
+}

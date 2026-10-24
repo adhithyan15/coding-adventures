@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:e65260c002192b54",
+  "lessonIds": [
+    "KA-C457-oni",
+    "KA-C457-haduhogu",
+    "KA-C457-anvesisu",
+    "KA-C457-tana",
+    "KA-C457-kangolisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch457.txt",
+  "json": "kannada/narration/ch457.json",
+  "textHash": "fnv1a64:90b131d58c605bb7",
+  "jsonHash": "fnv1a64:1a12c4bd6a714512",
+  "findings": []
+}

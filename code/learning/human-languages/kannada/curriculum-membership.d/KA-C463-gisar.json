@@ -1,0 +1,11 @@
+{
+  "id": "KA-C463-gisar",
+  "pathSegment": "KA-PATH-463-SEVE463",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-463-SEVE463",
+      "order": 3
+    }
+  ]
+}

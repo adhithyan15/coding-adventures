@@ -1,0 +1,11 @@
+{
+  "id": "KA-C372-vidhisu",
+  "pathSegment": "KA-PATH-372-VANAVASA372",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-372-VANAVASA372",
+      "order": 1
+    }
+  ]
+}

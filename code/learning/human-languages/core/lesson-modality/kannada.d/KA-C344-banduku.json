@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C344-banduku",
+    "language": "kannada",
+    "chapter": 344,
+    "sequence": 17290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0cc241cf8f1649a"
+  },
+  "findings": []
+}

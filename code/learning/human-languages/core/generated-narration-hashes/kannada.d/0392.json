@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:ec250fad421b3b4c",
+  "lessonIds": [
+    "KA-C392-cunavane",
+    "KA-C392-mata",
+    "KA-C392-bahumata",
+    "KA-C392-pracara-madu",
+    "KA-C392-sambodhisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch392.txt",
+  "json": "kannada/narration/ch392.json",
+  "textHash": "fnv1a64:b73eeb0921af96ac",
+  "jsonHash": "fnv1a64:a9c364c49c0a5ad8",
+  "findings": []
+}

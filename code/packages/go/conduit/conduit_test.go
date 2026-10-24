@@ -100,6 +100,49 @@ func TestBindReturnsPort(t *testing.T) {
 	}
 }
 
+// Bind moves the native app into the server (Rust frees it whether the bind
+// succeeds or fails). Every later call on the Application must be refused
+// with a panic rather than hand the freed pointer to native code.
+func TestApplicationIsUnusableAfterBind(t *testing.T) {
+	mustPanic := func(name string, f func()) {
+		t.Helper()
+		defer func() {
+			if recover() == nil {
+				t.Errorf("%s after Bind did not panic", name)
+			}
+		}()
+		f()
+	}
+	h := func(*conduit.Request) conduit.Response { return conduit.Text("x") }
+
+	app := conduit.New()
+	server, err := app.Bind("127.0.0.1", 0)
+	if err != nil {
+		t.Fatalf("bind: %v", err)
+	}
+	defer server.Close()
+
+	mustPanic("Get", func() { app.Get("/late", h) })
+	mustPanic("Before", func() { app.Before(func(*conduit.Request) *conduit.Response { return nil }) })
+	mustPanic("After", func() { app.After(func(_ *conduit.Request, r conduit.Response) conduit.Response { return r }) })
+	mustPanic("NotFound", func() { app.NotFound(h) })
+	mustPanic("OnError", func() { app.OnError(h) })
+	mustPanic("Set", func() { app.Set("k", "v") })
+	mustPanic("GetSetting", func() { app.GetSetting("k") })
+	mustPanic("Bind", func() { _, _ = app.Bind("127.0.0.1", 0) })
+	app.Free() // still a harmless no-op
+
+	// A failed bind consumes the app too. Fail it deterministically by
+	// binding the port `server` already holds (an unparsable host would go
+	// through a DNS lookup first, which can stall on a slow resolver).
+	bad := conduit.New()
+	if _, err := bad.Bind("127.0.0.1", server.LocalPort()); err == nil {
+		t.Fatal("binding a port that is already in use should fail")
+	}
+	mustPanic("Get after a failed Bind", func() { bad.Get("/", h) })
+	bad.Free()
+}
+
 // ── End-to-end ───────────────────────────────────────────────────────────────
 
 func TestEndToEnd(t *testing.T) {

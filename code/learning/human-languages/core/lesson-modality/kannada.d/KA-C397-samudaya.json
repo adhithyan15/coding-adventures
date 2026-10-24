@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C397-samudaya",
+    "language": "kannada",
+    "chapter": 397,
+    "sequence": 20100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf8b04e1e5b7327e"
+  },
+  "findings": []
+}

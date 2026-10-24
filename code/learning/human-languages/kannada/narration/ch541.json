@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 541,
+  "title": "Fitness",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0446d997b4ece71e",
+  "lessons": [
+    {
+      "id": "KA-C541-kasarattu",
+      "sequence": 27620,
+      "title": "ಕಸರತ್ತು (kasarattu) — a workout; physical exercise",
+      "headword": "ಕಸರತ್ತು",
+      "romanization": "kasarattu",
+      "gloss": "a workout; physical exercise",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ab1dfdd77e4e095",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to kick, then the Kannada for to punch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಸರತ್ತು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಸರತ್ತು — kasarattu — \"a workout; physical exercise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿದಿನ ಬೆಳಗ್ಗೆ ಅಪ್ಪ ಅರ್ಧ ಗಂಟೆ ಕಸರತ್ತು ಮಾಡುತ್ತಾರೆ. pratidina beḷagge appa ardha gaṇṭe kasarattu māḍuttāre. Every morning father works out for half an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a clever trick or stunt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಸರತ್ತು (kasarattu) is usually traced to Persian kasrat, \"exercise\", which reached Kannada through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasarattu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasarattu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasarattu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasarattu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratidina beḷagge appa ardha gaṇṭe kasarattu māḍuttāre. — Every morning father works out for half an hour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratidina beḷagge appa ardha gaṇṭe kasarattu māḍuttāre.* — Every morning father works out for half an hour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to kick, then the Kannada for to punch, then say kasarattu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to kick, then the Kannada for to punch, then say *kasarattu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಸರತ್ತು (kasarattu) mean? (\"A workout; physical exercise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C541-sahisnute",
+      "sequence": 27630,
+      "title": "ಸಹಿಷ್ಣುತೆ (sahiṣṇute) — endurance; tolerance",
+      "headword": "ಸಹಿಷ್ಣುತೆ",
+      "romanization": "sahiṣṇute",
+      "gloss": "endurance; tolerance",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44a9ea56c498a5ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to punch, then the Kannada for a workout."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಹಿಷ್ಣುತೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಹಿಷ್ಣುತೆ — sahiṣṇute — \"endurance; tolerance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ದೂರ ಓಡಲು ಸಹಿಷ್ಣುತೆ ಬೇಕು. dūra ōḍalu sahiṣṇute bēku. Running far takes endurance."
+            },
+            {
+              "kind": "speech",
+              "text": "Also tolerance of other views."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಹಿಷ್ಣುತೆ (sahiṣṇute) is borrowed from Sanskrit sahiṣṇutā, from sahiṣṇu, \"bearing, enduring\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahiṣṇute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahiṣṇute*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahiṣṇute, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahiṣṇute*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūra ōḍalu sahiṣṇute bēku. — Running far takes endurance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūra ōḍalu sahiṣṇute bēku.* — Running far takes endurance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to punch, then the Kannada for a workout, then say sahiṣṇute again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to punch, then the Kannada for a workout, then say *sahiṣṇute* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಹಿಷ್ಣುತೆ (sahiṣṇute) mean? (\"Endurance; tolerance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C541-parvatarohana",
+      "sequence": 27640,
+      "title": "ಪರ್ವತಾರೋಹಣ (parvatārōhaṇa) — mountaineering",
+      "headword": "ಪರ್ವತಾರೋಹಣ",
+      "romanization": "parvatārōhaṇa",
+      "gloss": "mountaineering",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4453006b21ee5986",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a workout, then the Kannada for endurance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪರ್ವತಾರೋಹಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರ್ವತಾರೋಹಣ — parvatārōhaṇa — \"mountaineering\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಅಣ್ಣನಿಗೆ ಪರ್ವತಾರೋಹಣ ತುಂಬಾ ಇಷ್ಟ. nanna aṇṇanige parvatārōhaṇa tumbā iṣṭa. My elder brother loves mountaineering."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪರ್ವತ, mountain + ಆರೋಹಣ, climbing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರ್ವತಾರೋಹಣ (parvatārōhaṇa) is a learned compound built from Sanskrit parvata, \"rock, mountain\" (CDIAL 7945), and ārohaṇa, \"ascending\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parvatārōhaṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parvatārōhaṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parvatārōhaṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parvatārōhaṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna aṇṇanige parvatārōhaṇa tumbā iṣṭa. — My elder brother loves mountaineering.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna aṇṇanige parvatārōhaṇa tumbā iṣṭa.* — My elder brother loves mountaineering.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a workout, then the Kannada for endurance, then say parvatārōhaṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a workout, then the Kannada for endurance, then say *parvatārōhaṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪರ್ವತಾರೋಹಣ (parvatārōhaṇa) mean? (\"Mountaineering\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C541-billugarike",
+      "sequence": 27650,
+      "title": "ಬಿಲ್ಲುಗಾರಿಕೆ (billugārike) — archery",
+      "headword": "ಬಿಲ್ಲುಗಾರಿಕೆ",
+      "romanization": "billugārike",
+      "gloss": "archery",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:950985e53def3876",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for endurance, then the Kannada for mountaineering."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಿಲ್ಲುಗಾರಿಕೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿಲ್ಲುಗಾರಿಕೆ — billugārike — \"archery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳು ಬಿಲ್ಲುಗಾರಿಕೆಯಲ್ಲಿ ಪದಕ ಗೆದ್ದಳು. avaḷu billugārikeyalli padaka geddaḷu. She won a medal in archery."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಿಲ್ಲು, a bow + -ಗಾರಿಕೆ, the craft of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿಲ್ಲುಗಾರಿಕೆ (billugārike) is a Kannada compound of ಬಿಲ್ಲು, \"a bow\", and -gārike, \"the craft of\"; the origin of the suffix is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "billugārike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *billugārike*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "billugārike, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *billugārike*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷu billugārikeyalli padaka geddaḷu. — She won a medal in archery.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷu billugārikeyalli padaka geddaḷu.* — She won a medal in archery.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for endurance, then the Kannada for mountaineering, then say billugārike again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for endurance, then the Kannada for mountaineering, then say *billugārike* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಿಲ್ಲುಗಾರಿಕೆ (billugārike) mean? (\"Archery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C541-huridumbisu",
+      "sequence": 27660,
+      "title": "ಹುರಿದುಂಬಿಸು (huridumbisu) — to cheer on; to encourage",
+      "headword": "ಹುರಿದುಂಬಿಸು",
+      "romanization": "huridumbisu",
+      "gloss": "to cheer on; to encourage",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b673583bdad094c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for mountaineering, then the Kannada for archery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹುರಿದುಂಬಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹುರಿದುಂಬಿಸು — huridumbisu — \"to cheer on; to encourage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರೇಕ್ಷಕರು ಆಟಗಾರರನ್ನು ಜೋರಾಗಿ ಹುರಿದುಂಬಿಸಿದರು. prēkṣakaru āṭagārarannu jōrāgi huridumbisidaru. The spectators cheered the players on loudly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಹುರಿದುಂಬಿಸಿದೆ, huridumbiside."
+            },
+            {
+              "kind": "speech",
+              "text": "The ones cheered take -ಅನ್ನು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹುರಿದುಂಬಿಸು (huridumbisu) is a native Kannada verb, \"to fire up, to cheer on\"; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huridumbisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huridumbisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huridumbisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huridumbisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prēkṣakaru āṭagārarannu jōrāgi huridumbisidaru. — The spectators cheered the players on loudly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prēkṣakaru āṭagārarannu jōrāgi huridumbisidaru.* — The spectators cheered the players on loudly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for mountaineering, then the Kannada for archery, then say huridumbisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for mountaineering, then the Kannada for archery, then say *huridumbisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹುರಿದುಂಬಿಸು (huridumbisu) mean? (\"To cheer on; to encourage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

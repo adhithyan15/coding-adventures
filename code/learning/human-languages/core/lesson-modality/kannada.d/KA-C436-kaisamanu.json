@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C436-kaisamanu",
+    "language": "kannada",
+    "chapter": 436,
+    "sequence": 22180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c2f67c45ed60e36"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C315-hogabeku-anta-ase",
+  "pathSegment": "KA-PATH-315-FEELINGS-HOPES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-315-FEELINGS-HOPES",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:fa51090d116fdac3",
+  "lessonIds": [
+    "KA-C485-mungaru",
+    "KA-C485-karmoda",
+    "KA-C485-tunturu",
+    "KA-C485-jadimale",
+    "KA-C485-toyyu"
+  ],
+  "tex": "kannada/book/chapters/ch485-the-monsoon-arrives.tex"
+}

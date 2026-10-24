@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:0446d997b4ece71e",
+  "lessonIds": [
+    "KA-C541-kasarattu",
+    "KA-C541-sahisnute",
+    "KA-C541-parvatarohana",
+    "KA-C541-billugarike",
+    "KA-C541-huridumbisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch541.txt",
+  "json": "kannada/narration/ch541.json",
+  "textHash": "fnv1a64:7aedac35cc977e6b",
+  "jsonHash": "fnv1a64:41cd67511a2b86c2",
+  "findings": []
+}

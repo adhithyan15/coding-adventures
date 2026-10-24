@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-334-JANANA334",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-334-JANANA334"
+  ],
+  "after": []
+}

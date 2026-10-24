@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C500-svabhava",
+    "language": "kannada",
+    "chapter": 500,
+    "sequence": 25510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a4be15963d73e1e"
+  },
+  "findings": []
+}

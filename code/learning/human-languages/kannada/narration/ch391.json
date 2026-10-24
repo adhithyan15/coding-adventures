@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 391,
+  "title": "Fairness for All",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:90401508fdc7ab72",
+  "lessons": [
+    {
+      "id": "KA-C391-samanate",
+      "sequence": 19770,
+      "title": "ಸಮಾನತೆ (samānate) — equality",
+      "headword": "ಸಮಾನತೆ",
+      "romanization": "samānate",
+      "gloss": "equality",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84f31f8a91488e92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for official, then the Kannada for interference."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಮಾನತೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಾನತೆ — samānate — \"equality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗಂಡು ಹೆಣ್ಣಿನ ನಡುವೆ ಸಮಾನತೆ ಇರಬೇಕು. gaṇḍu heṇṇina naḍuve samānate irabēku. There must be equality between men and women."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಮಾನ, equal, + -ತೆ, -ness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಾನತೆ (samānate) is borrowed from Sanskrit samānatā, \"equality\" (Monier-Williams), from samāna, \"equal\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samānate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samānate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samānate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samānate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṇḍu heṇṇina naḍuve samānate irabēku. — There must be equality between men and women.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṇḍu heṇṇina naḍuve samānate irabēku.* — There must be equality between men and women.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for official, then the Kannada for interference, then say samānate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for official, then the Kannada for interference, then say *samānate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಮಾನತೆ (samānate) mean? (\"Equality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C391-taratamya-madu",
+      "sequence": 19780,
+      "title": "ತಾರತಮ್ಯ ಮಾಡು (tāratamya māḍu) — to discriminate",
+      "headword": "ತಾರತಮ್ಯ ಮಾಡು",
+      "romanization": "tāratamya māḍu",
+      "gloss": "to discriminate",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc75519c8b98817e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for interference, then the Kannada for equality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಾರತಮ್ಯ ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಾರತಮ್ಯ ಮಾಡು — tāratamya māḍu — \"to discriminate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಅಂಗಡಿಯವನು ಗ್ರಾಹಕರಲ್ಲಿ ತಾರತಮ್ಯ ಮಾಡುವುದಿಲ್ಲ. ā aṅgaḍiyavanu grāhakaralli tāratamya māḍuvudilla. That shopkeeper does not discriminate among customers."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತಾರತಮ್ಯ ಮಾಡಿದೆ, tāratamya māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "ತಾರತಮ್ಯ alone is discrimination."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಾರತಮ್ಯ ಮಾಡು (tāratamya māḍu) is built from Sanskrit tāratamya, \"gradation, difference\" (Monier-Williams), with māḍu, \"to do\": to rank people as more and less."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāratamya māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāratamya māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāratamya māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāratamya māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā aṅgaḍiyavanu grāhakaralli tāratamya māḍuvudilla. — That shopkeeper does not discriminate among customers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā aṅgaḍiyavanu grāhakaralli tāratamya māḍuvudilla.* — That shopkeeper does not discriminate among customers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for interference, then the Kannada for equality, then say tāratamya māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for interference, then the Kannada for equality, then say *tāratamya māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಾರತಮ್ಯ ಮಾಡು (tāratamya māḍu) mean? (\"To discriminate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C391-sosisu",
+      "sequence": 19790,
+      "title": "ಶೋಷಿಸು (śōṣisu) — to exploit",
+      "headword": "ಶೋಷಿಸು",
+      "romanization": "śōṣisu",
+      "gloss": "to exploit",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d26d58100366786",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for equality, then the Kannada for to discriminate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಶೋಷಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶೋಷಿಸು — śōṣisu — \"to exploit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಕಂಪನಿ ಕೆಲಸಗಾರರನ್ನು ಶೋಷಿಸಿತು. ā kampani kelasagārarannu śōṣisitu. That company exploited its workers."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಶೋಷಿಸಿದೆ, śōṣiside."
+            },
+            {
+              "kind": "speech",
+              "text": "Who is exploited takes -ಅನ್ನು. ಶೋಷಣೆ, exploitation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶೋಷಿಸು (śōṣisu) is built on Sanskrit śoṣaṇa, \"drying up, draining\" (Monier-Williams), with the Kannada verb ending -isu: to drain someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śōṣisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śōṣisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śōṣisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śōṣisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kampani kelasagārarannu śōṣisitu. — That company exploited its workers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kampani kelasagārarannu śōṣisitu.* — That company exploited its workers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for equality, then the Kannada for to discriminate, then say śōṣisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for equality, then the Kannada for to discriminate, then say *śōṣisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಶೋಷಿಸು (śōṣisu) mean? (\"To exploit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C391-sabalikarana",
+      "sequence": 19800,
+      "title": "ಸಬಲೀಕರಣ (sabalīkaraṇa) — empowerment",
+      "headword": "ಸಬಲೀಕರಣ",
+      "romanization": "sabalīkaraṇa",
+      "gloss": "empowerment",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdf3b1a15fb5b6ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to discriminate, then the Kannada for to exploit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಬಲೀಕರಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಬಲೀಕರಣ — sabalīkaraṇa — \"empowerment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಹಿಳೆಯರ ಸಬಲೀಕರಣಕ್ಕೆ ಶಿಕ್ಷಣ ಮುಖ್ಯ. mahiḷeyara sabalīkaraṇakke śikṣaṇa mukhya. Education is key to women's empowerment."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಬಲ (strong) + -ಈಕರಣ (making)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಬಲೀಕರಣ (sabalīkaraṇa) is a modern word built on Sanskrit sabala, \"powerful, strong\" (Monier-Williams), with -īkaraṇa, \"making into\": making strong."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabalīkaraṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabalīkaraṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabalīkaraṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabalīkaraṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahiḷeyara sabalīkaraṇakke śikṣaṇa mukhya. — Education is key to women's empowerment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahiḷeyara sabalīkaraṇakke śikṣaṇa mukhya.* — Education is key to women's empowerment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to discriminate, then the Kannada for to exploit, then say sabalīkaraṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to discriminate, then the Kannada for to exploit, then say *sabalīkaraṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಬಲೀಕರಣ (sabalīkaraṇa) mean? (\"Empowerment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C391-baddhate",
+      "sequence": 19810,
+      "title": "ಬದ್ಧತೆ (baddhate) — commitment",
+      "headword": "ಬದ್ಧತೆ",
+      "romanization": "baddhate",
+      "gloss": "commitment",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3f95f32168f3c57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to exploit, then the Kannada for empowerment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬದ್ಧತೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬದ್ಧತೆ — baddhate — \"commitment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳ ಕೆಲಸದಲ್ಲಿ ಬದ್ಧತೆ ಕಾಣುತ್ತದೆ. avaḷa kelasadalli baddhate kāṇuttade. Commitment shows in her work."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬದ್ಧ, bound: ಮಾತಿಗೆ ಬದ್ಧ, true to one's word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬದ್ಧತೆ (baddhate) is built on Sanskrit baddha, \"bound, tied\" (CDIAL 9126), with -tā, \"-ness\": being bound to something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baddhate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baddhate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baddhate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baddhate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷa kelasadalli baddhate kāṇuttade. — Commitment shows in her work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷa kelasadalli baddhate kāṇuttade.* — Commitment shows in her work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to exploit, then the Kannada for empowerment, then say baddhate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to exploit, then the Kannada for empowerment, then say *baddhate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬದ್ಧತೆ (baddhate) mean? (\"Commitment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

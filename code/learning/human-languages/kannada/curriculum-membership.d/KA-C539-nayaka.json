@@ -1,0 +1,11 @@
+{
+  "id": "KA-C539-nayaka",
+  "pathSegment": "KA-PATH-539-SPARDHE539",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-539-SPARDHE539",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C354-asthana",
+    "language": "kannada",
+    "chapter": 354,
+    "sequence": 17820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a94c91de94cec52"
+  },
+  "findings": []
+}

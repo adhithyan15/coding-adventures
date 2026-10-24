@@ -1,0 +1,11 @@
+{
+  "id": "KA-C527-salahu",
+  "pathSegment": "KA-PATH-527-POSHANE527",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-527-POSHANE527",
+      "order": 1
+    }
+  ]
+}

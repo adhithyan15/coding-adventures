@@ -1,0 +1,21 @@
+{
+  "chapter": 511,
+  "title": "Catching Something",
+  "label": "ch:ka-catching-something",
+  "canDo": "I can say to catch, drowsiness, to get worse, a symptom and a vaccine.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-R511-review-505-511",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can say to catch, drowsiness, to get worse, a symptom and a vaccine.",
+    "assesses": [
+      "KA-LEX-C511-SONKU511-01",
+      "KA-LEX-C511-SONKU511-02",
+      "KA-LEX-C511-SONKU511-03",
+      "KA-LEX-C511-SONKU511-04",
+      "KA-LEX-C511-SONKU511-05"
+    ]
+  }
+}

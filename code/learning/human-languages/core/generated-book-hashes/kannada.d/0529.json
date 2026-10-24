@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:8e77d877fe6d115a",
+  "lessonIds": [
+    "KA-C529-vayaska",
+    "KA-C529-hadihareya",
+    "KA-C529-ekanta",
+    "KA-C529-moha",
+    "KA-C529-baduku"
+  ],
+  "tex": "kannada/book/chapters/ch529-stages-of-life.tex"
+}

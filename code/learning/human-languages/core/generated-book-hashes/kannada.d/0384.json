@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:4d6f94976fbd6131",
+  "lessonIds": [
+    "KA-C384-grahisu",
+    "KA-C384-vyakhyana",
+    "KA-C384-kalpane",
+    "KA-C384-amsa",
+    "KA-C384-laksana"
+  ],
+  "tex": "kannada/book/chapters/ch384-grasping-an-idea.tex"
+}

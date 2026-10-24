@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:ba411d4dc3acadca",
+  "lessonIds": [
+    "KA-C490-hedaru",
+    "KA-C490-nacu",
+    "KA-C490-atanka",
+    "KA-C490-mujugara",
+    "KA-C490-kalavala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch490.txt",
+  "json": "kannada/narration/ch490.json",
+  "textHash": "fnv1a64:fd9f1d8f8d51574f",
+  "jsonHash": "fnv1a64:970e82e84c4e472a",
+  "findings": []
+}

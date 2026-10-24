@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Breakfast at the Hotel",
+  "label": "ch:ka-breakfast-at-the-hotel",
+  "canDo": "I can say breakfast, a menu, a waiter, a gratuity and to order.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C464-ardar-madu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can say breakfast, a menu, a waiter, a gratuity and to order.",
+    "assesses": [
+      "KA-LEX-C464-UPAHARA464-03",
+      "KA-LEX-C464-UPAHARA464-04",
+      "KA-LEX-C464-UPAHARA464-05"
+    ]
+  }
+}

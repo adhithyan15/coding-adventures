@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C370-saksyacitra",
+    "language": "kannada",
+    "chapter": 370,
+    "sequence": 18630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b8417e82f5bbab4"
+  },
+  "findings": []
+}

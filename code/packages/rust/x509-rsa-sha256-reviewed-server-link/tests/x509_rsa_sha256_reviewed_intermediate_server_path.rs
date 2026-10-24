@@ -333,7 +333,7 @@ fn applies_selected_anchor_policy_to_the_complete_real_two_link_server_path() {
     )
     .unwrap();
 
-    assert_eq!(validated.permitted_dns_names(), None);
+    assert_eq!(validated.constrained_dns_names(), None);
     let retained = validated.reviewed_intermediate_server_path();
     assert!(std::ptr::eq(retained.server_policy().certificate(), &leaf));
     assert!(std::ptr::eq(
@@ -375,7 +375,7 @@ fn retains_the_complete_real_path_when_the_intermediate_has_no_name_constraints(
     )
     .unwrap();
 
-    assert_eq!(validated.permitted_dns_names(), None);
+    assert_eq!(validated.constrained_dns_names(), None);
     let retained = validated
         .anchor_policy()
         .reviewed_intermediate_server_path();

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:3571edfbecea3e76",
+  "lessonIds": [
+    "KA-C339-galabhe",
+    "KA-C339-kolahala",
+    "KA-C339-janasandani",
+    "KA-C339-caduru",
+    "KA-C339-kaltulita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch339.txt",
+  "json": "kannada/narration/ch339.json",
+  "textHash": "fnv1a64:80c7a051adb8d46d",
+  "jsonHash": "fnv1a64:5bef76c78324e63d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "From Eagles to Whales",
+  "label": "ch:ka-from-eagles-to-whales",
+  "canDo": "I can say an eagle, a stork, a firefly, a crab and a whale.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C478-timingila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can say an eagle, a stork, a firefly, a crab and a whale.",
+    "assesses": [
+      "KA-LEX-C478-HADDU478-03",
+      "KA-LEX-C478-HADDU478-04",
+      "KA-LEX-C478-HADDU478-05"
+    ]
+  }
+}

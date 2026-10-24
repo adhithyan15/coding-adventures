@@ -1,0 +1,11 @@
+{
+  "id": "KA-R311-opinion-and-result",
+  "pathSegment": "KA-PATH-311-OPINION-SO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-311-OPINION-SO",
+      "order": 2
+    }
+  ]
+}

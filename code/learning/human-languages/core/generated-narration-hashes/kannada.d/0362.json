@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:85424151d16b1739",
+  "lessonIds": [
+    "KA-C362-nagarikate",
+    "KA-C362-sthapisu",
+    "KA-C362-nirmisu",
+    "KA-C362-kedavu",
+    "KA-C362-pratime"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch362.txt",
+  "json": "kannada/narration/ch362.json",
+  "textHash": "fnv1a64:cfb4e37c7bd246b2",
+  "jsonHash": "fnv1a64:f88df1cfd1d86298",
+  "findings": []
+}

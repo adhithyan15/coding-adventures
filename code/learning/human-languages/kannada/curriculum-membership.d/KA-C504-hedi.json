@@ -1,0 +1,11 @@
+{
+  "id": "KA-C504-hedi",
+  "pathSegment": "KA-PATH-504-MATU504",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-504-MATU504",
+      "order": 3
+    }
+  ]
+}

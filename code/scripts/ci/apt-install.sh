@@ -218,6 +218,7 @@ fi
 #   APT_RETRY_DELAY      base backoff in seconds, doubled each retry (default 10)
 #   APT_UPDATE_TIMEOUT   wall-clock seconds per `update` attempt (default 120)
 #   APT_INSTALL_TIMEOUT  wall-clock seconds per `install` attempt (default 600)
+#   APT_MIRROR_LIST      the runner's mirror list (default /etc/apt/apt-mirrors.txt)
 
 APT_GET="${APT_GET:-apt-get}"
 APT_ATTEMPTS="${APT_ATTEMPTS:-3}"
@@ -267,6 +268,88 @@ APT_OPTS=(
   -o DPkg::Lock::Timeout=60
 )
 
+# ## Leaving a slow mirror behind on a retry
+#
+# Layer 3 above assumes the next attempt "usually lands on a healthy mirror
+# connection". On a GitHub-hosted runner it lands on the SAME mirror: the
+# image's ubuntu.sources names `mirror+file:/etc/apt/apt-mirrors.txt`, a list
+# apt reads afresh at the start of every run --
+#
+#     http://azure.archive.ubuntu.com/ubuntu/<TAB>priority:1
+#     https://archive.ubuntu.com/ubuntu/<TAB>priority:2
+#     https://security.ubuntu.com/ubuntu/<TAB>priority:3
+#
+# -- and apt only moves down that list when a fetch FAILS. A mirror that
+# answers, slowly, is never left. The books job met exactly that: the Azure
+# mirror served its 180 MB TeX download at 50-170 KB/s, and all three
+# attempts were cut off on the same mirror, about 15 MB in:
+#
+#     Get:4 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 texlive-base all [21.7 MB]
+#     apt-get install attempt 2/3 failed (no result after 270s; treated as a stalled mirror)
+#
+# So before each retry the list is rotated: the mirror that had first go
+# moves to the back and every entry is renumbered, so attempt two starts on
+# the second mirror and attempt three on the third. Every mirror serves the
+# same signed archive and apt checks every archive against the index `update`
+# verified, so WHICH mirror answers never changes what is installed -- only
+# how fast. A mirror that lacks a file (security.ubuntu.com carries only the
+# -security pocket) fails that fetch at once, and apt moves to the next entry
+# as it always has.
+#
+# Anything unexpected -- no list (a self-hosted runner, a test), a symlink,
+# fewer than two mirrors, a write that fails -- leaves the list as it was, and
+# the retry goes ahead as it did before this existed (a failed write says so).
+APT_MIRROR_LIST="${APT_MIRROR_LIST:-/etc/apt/apt-mirrors.txt}"
+
+rotate_mirror_list() {
+  [[ -f "$APT_MIRROR_LIST" && ! -L "$APT_MIRROR_LIST" ]] || return 0
+  # One entry per line: the URI, then optional tab-separated `key:value`
+  # fields. Entries are put in apt's own order first (lowest priority number
+  # first; an entry without one after those, in file order), then the head of
+  # that order moves to the tail and priorities are renumbered 1..n. Comments
+  # and blank lines are dropped; apt ignores them anyway.
+  local rotated
+  rotated=$(awk -F'\t' '
+    /^[[:space:]]*(#|$)/ { next }
+    {
+      n++
+      uri[n] = $1
+      key[n] = 1000000 + n
+      rest[n] = ""
+      for (i = 2; i <= NF; i++) {
+        if ($i ~ /^priority:[0-9]+$/) { key[n] = substr($i, 10) + 0 }
+        else if ($i !~ /^priority:/) { rest[n] = rest[n] "\t" $i }
+      }
+    }
+    END {
+      if (n < 2) { exit 1 }
+      for (a = 1; a <= n; a++) { order[a] = a }
+      for (a = 1; a < n; a++) {
+        for (b = a + 1; b <= n; b++) {
+          if (key[order[b]] < key[order[a]]) { t = order[a]; order[a] = order[b]; order[b] = t }
+        }
+      }
+      for (k = 1; k <= n; k++) {
+        j = order[k % n + 1]
+        printf "%s\tpriority:%d%s\n", uri[j], k, rest[j]
+      }
+    }' "$APT_MIRROR_LIST") || return 0
+  # Written beside the list and renamed over it, never truncated in place: a
+  # write cut short (a full disk mid-TeX-install) must not leave apt an empty
+  # list, which fails every fetch outright. The rename also replaces the
+  # directory entry rather than writing through whatever it pointed at.
+  local tmp
+  tmp=$($SUDO mktemp "${APT_MIRROR_LIST%/*}/.apt-mirrors.XXXXXX") || return 1
+  if printf '%s\n' "$rotated" | $SUDO tee -- "$tmp" > /dev/null &&
+    $SUDO chmod --reference="$APT_MIRROR_LIST" -- "$tmp" &&
+    $SUDO mv -f -- "$tmp" "$APT_MIRROR_LIST"; then
+    echo "apt mirrors: the next attempt starts on ${rotated%%$'\t'*}" >&2
+  else
+    $SUDO rm -f -- "$tmp"
+    return 1
+  fi
+}
+
 # Run one apt-get command under a wall-clock cap, retrying with backoff.
 #
 #   apt_with_retry <seconds-per-attempt> <apt-get args...>
@@ -300,6 +383,7 @@ apt_with_retry() {
       return "$status"
     fi
     echo "apt-get $1 attempt $attempt/$APT_ATTEMPTS failed ($why); retrying in ${delay}s" >&2
+    rotate_mirror_list || echo "apt mirrors: could not rotate $APT_MIRROR_LIST" >&2
     sleep "$delay"
     attempt=$((attempt + 1))
     delay=$((delay * 2))

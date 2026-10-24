@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C545-ganji",
+    "language": "kannada",
+    "chapter": 545,
+    "sequence": 27860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcb7489c4a0c7d03"
+  },
+  "findings": []
+}

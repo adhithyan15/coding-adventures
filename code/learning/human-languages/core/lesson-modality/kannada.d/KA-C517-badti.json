@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C517-badti",
+    "language": "kannada",
+    "chapter": 517,
+    "sequence": 26380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e66d03515857bfd2"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C467-pete",
+    "language": "kannada",
+    "chapter": 467,
+    "sequence": 23750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9a56f73324f0dcc"
+  },
+  "findings": []
+}

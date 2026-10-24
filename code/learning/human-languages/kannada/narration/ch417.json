@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 417,
+  "title": "Paying Back",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cbe790ab5709c82b",
+  "lessons": [
+    {
+      "id": "KA-C417-kantu",
+      "sequence": 21100,
+      "title": "ಕಂತು (kantu) — an instalment",
+      "headword": "ಕಂತು",
+      "romanization": "kantu",
+      "gloss": "an instalment",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd1709cfefee1906",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to ask formally, then the Kannada for an oath of office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಂತು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂತು — kantu — \"an instalment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಪ್ರತಿ ತಿಂಗಳು ಸಾಲದ ಕಂತು ಕಟ್ಟುತ್ತೇನೆ. nānu prati tiṅgaḷu sālada kantu kaṭṭuttēne. I pay an instalment of the loan every month."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಂತು (kantu) ಕಟ್ಟು, to pay an instalment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂತು (kantu) is native Dravidian: DEDR 1209 lists Kannada kanta, kantu, \"an instalment, a fixed term of payment\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kantu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kantu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kantu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kantu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu prati tiṅgaḷu sālada kantu kaṭṭuttēne. — I pay an instalment of the loan every month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu prati tiṅgaḷu sālada kantu kaṭṭuttēne.* — I pay an instalment of the loan every month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to ask formally, then the Kannada for an oath of office, then say kantu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to ask formally, then the Kannada for an oath of office, then say *kantu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಂತು (kantu) mean? (\"An instalment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C417-baki",
+      "sequence": 21110,
+      "title": "ಬಾಕಿ (bāki) — arrears; the balance due",
+      "headword": "ಬಾಕಿ",
+      "romanization": "bāki",
+      "gloss": "arrears; the balance due",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ecfabda40661028e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an oath of office, then the Kannada for an instalment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಾಕಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಕಿ — bāki — \"arrears; the balance due\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಂಗಡಿಗೆ ಇನ್ನೂ ನೂರು ರೂಪಾಯಿ ಬಾಕಿ ಇದೆ. aṅgaḍige innū nūru rūpāyi bāki ide. A hundred rupees are still owed to the shop."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಾಕಿ (bāki) ಇರು, to be outstanding."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಕಿ (bāki) is a loan from Arabic bāqī, \"remaining\", which reached Kannada through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgaḍige innū nūru rūpāyi bāki ide. — A hundred rupees are still owed to the shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgaḍige innū nūru rūpāyi bāki ide.* — A hundred rupees are still owed to the shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an oath of office, then the Kannada for an instalment, then say bāki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an oath of office, then the Kannada for an instalment, then say *bāki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಾಕಿ (bāki) mean? (\"Arrears; the balance due\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C417-ulitaya",
+      "sequence": 21120,
+      "title": "ಉಳಿತಾಯ (uḷitāya) — savings",
+      "headword": "ಉಳಿತಾಯ",
+      "romanization": "uḷitāya",
+      "gloss": "savings",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b82052c7d3e7a2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an instalment, then the Kannada for arrears."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉಳಿತಾಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಳಿತಾಯ — uḷitāya — \"savings\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಉಳಿತಾಯದ ಹಣದಿಂದ ಅವಳು ಸೈಕಲ್ ಕೊಂಡಳು. uḷitāyada haṇadinda avaḷu saikal koṇḍaḷu. She bought a bicycle with her savings."
+            },
+            {
+              "kind": "speech",
+              "text": "ಉಳಿತಾಯ (uḷitāya) ಖಾತೆ, a savings account."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಳಿತಾಯ (uḷitāya) is built on the Kannada verb uḷi, \"to remain, to be left over\"; DEDR does not list uḷitāya, so the formation is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḷitāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḷitāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḷitāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḷitāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḷitāyada haṇadinda avaḷu saikal koṇḍaḷu. — She bought a bicycle with her savings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḷitāyada haṇadinda avaḷu saikal koṇḍaḷu.* — She bought a bicycle with her savings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an instalment, then the Kannada for arrears, then say uḷitāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an instalment, then the Kannada for arrears, then say *uḷitāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉಳಿತಾಯ (uḷitāya) mean? (\"Savings\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C417-vasuli-madu",
+      "sequence": 21130,
+      "title": "ವಸೂಲಿ ಮಾಡು (vasūli māḍu) — to recover dues",
+      "headword": "ವಸೂಲಿ ಮಾಡು",
+      "romanization": "vasūli māḍu",
+      "gloss": "to recover dues",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77130bdf9f4b0f6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for arrears, then the Kannada for savings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಸೂಲಿ ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಸೂಲಿ ಮಾಡು — vasūli māḍu — \"to recover dues\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬ್ಯಾಂಕ್ ಸಾಲವನ್ನು ವಸೂಲಿ ಮಾಡಿತು. byāṅk sālavannu vasūli māḍitu. The bank recovered the loan."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವಸೂಲಿ ಮಾಡಿದೆ, vasūli māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಸೂಲಿ alone is collection of money owed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಸೂಲಿ ಮಾಡು (vasūli māḍu) is built from vasūli, a loan from Hindustani vasūl, \"collected\", which comes from Arabic wuṣūl, \"arrival, receipt\", with māḍu, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vasūli māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vasūli māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vasūli māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vasūli māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byāṅk sālavannu vasūli māḍitu. — The bank recovered the loan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byāṅk sālavannu vasūli māḍitu.* — The bank recovered the loan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for arrears, then the Kannada for savings, then say vasūli māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for arrears, then the Kannada for savings, then say *vasūli māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಸೂಲಿ ಮಾಡು (vasūli māḍu) mean? (\"To recover dues\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C417-sallisu",
+      "sequence": 21140,
+      "title": "ಸಲ್ಲಿಸು (sallisu) — to submit; to pay",
+      "headword": "ಸಲ್ಲಿಸು",
+      "romanization": "sallisu",
+      "gloss": "to submit; to pay",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d92893cc6d31511",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for savings, then the Kannada for to recover dues."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಲ್ಲಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಲ್ಲಿಸು — sallisu — \"to submit; to pay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಕಚೇರಿಗೆ ಅರ್ಜಿ ಸಲ್ಲಿಸಿದೆ. nānu kacērige arji salliside. I submitted an application to the office."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಸಲ್ಲಿಸಿದೆ, salliside."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to offer: ಧನ್ಯವಾದ ಸಲ್ಲಿಸು (sallisu), to offer thanks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಲ್ಲಿಸು (sallisu) is native Dravidian: DEDR 2781 lists Kannada sal, \"to pass, to be current\", and its causative sallisu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sallisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sallisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sallisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sallisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu kacērige arji salliside. — I submitted an application to the office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu kacērige arji salliside.* — I submitted an application to the office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for savings, then the Kannada for to recover dues, then say sallisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for savings, then the Kannada for to recover dues, then say *sallisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಲ್ಲಿಸು (sallisu) mean? (\"To submit; to pay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

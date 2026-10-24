@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C468-masu",
+    "language": "kannada",
+    "chapter": 468,
+    "sequence": 23830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ff082618ad369a6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C410-matravallade",
+  "pathSegment": "KA-PATH-410-HIGAGI410",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-410-HIGAGI410",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:2fa585db33b5d669",
+  "lessonIds": [
+    "KA-C472-halagu",
+    "KA-C472-emaru",
+    "KA-C472-paragu",
+    "KA-C472-asraya",
+    "KA-C472-sahayavani"
+  ],
+  "tex": "kannada/book/chapters/ch472-when-things-go-wrong.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C456-heggurutu",
+  "pathSegment": "KA-PATH-456-SMARAKA456",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-456-SMARAKA456",
+      "order": 3
+    }
+  ]
+}

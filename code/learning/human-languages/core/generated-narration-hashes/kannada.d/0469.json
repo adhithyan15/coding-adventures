@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:cc0efdba776031f1",
+  "lessonIds": [
+    "KA-C469-kaicila",
+    "KA-C469-adalubadalu-madu",
+    "KA-C469-varanti",
+    "KA-C469-bekari",
+    "KA-C469-delivari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch469.txt",
+  "json": "kannada/narration/ch469.json",
+  "textHash": "fnv1a64:05644a4b258ab069",
+  "jsonHash": "fnv1a64:1b5b4ac8723b45a2",
+  "findings": []
+}

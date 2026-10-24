@@ -1,0 +1,11 @@
+{
+  "id": "KA-C367-nasamadu",
+  "pathSegment": "KA-PATH-367-KHALA367",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-367-KHALA367",
+      "order": 3
+    }
+  ]
+}

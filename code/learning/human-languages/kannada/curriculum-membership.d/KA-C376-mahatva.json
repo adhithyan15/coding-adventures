@@ -1,0 +1,11 @@
+{
+  "id": "KA-C376-mahatva",
+  "pathSegment": "KA-PATH-376-PURAVE376",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-376-PURAVE376",
+      "order": 3
+    }
+  ]
+}

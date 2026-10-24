@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C459-parvata",
+    "language": "kannada",
+    "chapter": 459,
+    "sequence": 23330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f452ce210b69290"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C410-higagi",
+    "language": "kannada",
+    "chapter": 410,
+    "sequence": 20740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e5f4062c62e03c3"
+  },
+  "findings": []
+}

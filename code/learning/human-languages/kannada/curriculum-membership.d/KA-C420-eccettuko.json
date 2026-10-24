@@ -1,0 +1,11 @@
+{
+  "id": "KA-C420-eccettuko",
+  "pathSegment": "KA-PATH-420-ALUKU420",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-420-ALUKU420",
+      "order": 1
+    }
+  ]
+}

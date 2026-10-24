@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Excuses and Explanations",
+  "label": "ch:ka-excuses-and-explanations",
+  "canDo": "I can say an explanation, a lame excuse, accidental, to portray and blame.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C386-hone",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can say an explanation, a lame excuse, accidental, to portray and blame.",
+    "assesses": [
+      "KA-LEX-C386-SAMAJAYISHI386-03",
+      "KA-LEX-C386-SAMAJAYISHI386-04",
+      "KA-LEX-C386-SAMAJAYISHI386-05"
+    ]
+  }
+}

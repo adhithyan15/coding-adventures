@@ -1,0 +1,11 @@
+{
+  "id": "KA-C483-antarjala",
+  "pathSegment": "KA-PATH-483-JALASHAYA483",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-483-JALASHAYA483",
+      "order": 3
+    }
+  ]
+}

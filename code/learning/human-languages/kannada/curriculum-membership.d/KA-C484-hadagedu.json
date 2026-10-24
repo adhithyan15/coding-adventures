@@ -1,0 +1,11 @@
+{
+  "id": "KA-C484-hadagedu",
+  "pathSegment": "KA-PATH-484-TAPAMANA484",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-484-TAPAMANA484",
+      "order": 4
+    }
+  ]
+}

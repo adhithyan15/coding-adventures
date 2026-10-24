@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:5013eca5fe707567",
+  "lessonIds": [
+    "KA-C372-vanavasa",
+    "KA-C372-vidhisu",
+    "KA-C372-gadiparu",
+    "KA-C372-maji",
+    "KA-C372-kallatana"
+  ],
+  "tex": "kannada/book/chapters/ch372-exile-and-punishment.tex"
+}

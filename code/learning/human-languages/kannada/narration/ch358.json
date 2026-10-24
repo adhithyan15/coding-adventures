@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 358,
+  "title": "The Case Goes to Court",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b46b793baccbae64",
+  "lessons": [
+    {
+      "id": "KA-C358-vicarane",
+      "sequence": 18000,
+      "title": "ವಿಚಾರಣೆ (vicāraṇe) — a hearing; an inquiry",
+      "headword": "ವಿಚಾರಣೆ",
+      "romanization": "vicāraṇe",
+      "gloss": "a hearing; an inquiry",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f0039e906229d90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to reveal, then the Kannada for a plot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿಚಾರಣೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಚಾರಣೆ — vicāraṇe — \"a hearing; an inquiry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕರಣದ ವಿಚಾರಣೆ ಮುಂದಿನ ವಾರ ನಡೆಯುತ್ತದೆ. prakaraṇada vicāraṇe mundina vāra naḍeyuttade. The hearing of the case takes place next week."
+            },
+            {
+              "kind": "speech",
+              "text": "In court, a hearing; at an office, an inquiry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಚಾರಣೆ (vicāraṇe) is borrowed from Sanskrit vicāraṇā, \"deliberation, investigation\" (Monier-Williams), from vicāra, \"consideration\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicāraṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicāraṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicāraṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicāraṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakaraṇada vicāraṇe mundina vāra naḍeyuttade. — The hearing of the case takes place next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakaraṇada vicāraṇe mundina vāra naḍeyuttade.* — The hearing of the case takes place next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to reveal, then the Kannada for a plot, then say vicāraṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to reveal, then the Kannada for a plot, then say *vicāraṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿಚಾರಣೆ (vicāraṇe) mean? (\"A hearing; an inquiry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C358-mokaddame",
+      "sequence": 18010,
+      "title": "ಮೊಕದ್ದಮೆ (mokaddame) — a lawsuit",
+      "headword": "ಮೊಕದ್ದಮೆ",
+      "romanization": "mokaddame",
+      "gloss": "a lawsuit",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59e763a16a13912b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a plot, then the Kannada for a hearing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೊಕದ್ದಮೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೊಕದ್ದಮೆ — mokaddame — \"a lawsuit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೆರೆಯವರ ನಡುವೆ ಜಮೀನಿನ ಮೊಕದ್ದಮೆ ಹತ್ತು ವರ್ಷ ನಡೆಯಿತು. nereyavara naḍuve jamīnina mokaddame hattu varṣa naḍeyitu. A land lawsuit between the neighbours went on for ten years."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಮೊಕದ್ದಮೆಗಳು, mokaddamegaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A lawsuit is brought against someone: ಅವನ ಮೇಲೆ ಮೊಕದ್ದಮೆ (mokaddame)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೊಕದ್ದಮೆ (mokaddame) is a loan from Arabic muqaddama, \"a beginning, a case at law\", which came through Persian and Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mokaddame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mokaddame*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mokaddame, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mokaddame*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nereyavara naḍuve jamīnina mokaddame hattu varṣa naḍeyitu. — A land lawsuit between the neighbours went on for ten years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nereyavara naḍuve jamīnina mokaddame hattu varṣa naḍeyitu.* — A land lawsuit between the neighbours went on for ten years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a plot, then the Kannada for a hearing, then say mokaddame again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a plot, then the Kannada for a hearing, then say *mokaddame* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೊಕದ್ದಮೆ (mokaddame) mean? (\"A lawsuit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C358-prakarana",
+      "sequence": 18020,
+      "title": "ಪ್ರಕರಣ (prakaraṇa) — a case; an affair",
+      "headword": "ಪ್ರಕರಣ",
+      "romanization": "prakaraṇa",
+      "gloss": "a case; an affair",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c19be5be448fe09a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a hearing, then the Kannada for a lawsuit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಕರಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕರಣ — prakaraṇa — \"a case; an affair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ದರೋಡೆಯ ಪ್ರಕರಣ ಇನ್ನೂ ಮುಗಿದಿಲ್ಲ. ā darōḍeya prakaraṇa innū mugidilla. That robbery case is not over yet."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಪ್ರಕರಣಗಳು, prakaraṇagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A matter for the police or a court. A book chapter is also a ಪ್ರಕರಣ (prakaraṇa)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕರಣ (prakaraṇa) is borrowed from Sanskrit prakaraṇa, \"treatment, a treatise, a subject\" (CDIAL 8432)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakaraṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakaraṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakaraṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakaraṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā darōḍeya prakaraṇa innū mugidilla. — That robbery case is not over yet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā darōḍeya prakaraṇa innū mugidilla.* — That robbery case is not over yet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a hearing, then the Kannada for a lawsuit, then say prakaraṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a hearing, then the Kannada for a lawsuit, then say *prakaraṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಕರಣ (prakaraṇa) mean? (\"A case; an affair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C358-jaminu",
+      "sequence": 18030,
+      "title": "ಜಾಮೀನು (jāmīnu) — bail",
+      "headword": "ಜಾಮೀನು",
+      "romanization": "jāmīnu",
+      "gloss": "bail",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:759fc19b707bc40d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a lawsuit, then the Kannada for a case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಜಾಮೀನು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜಾಮೀನು — jāmīnu — \"bail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನ್ಯಾಯಾಲಯ ಆರೋಪಿಗೆ ಜಾಮೀನು ಕೊಟ್ಟಿತು. nyāyālaya ārōpige jāmīnu koṭṭitu. The court granted bail to the accused."
+            },
+            {
+              "kind": "speech",
+              "text": "Bail is \"given\": ಜಾಮೀನು (jāmīnu) ಕೊಡು. One out on bail is ಜಾಮೀನಿನ ಮೇಲೆ ಹೊರಗೆ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜಾಮೀನು (jāmīnu) is a loan from Persian zāmin, \"a surety\", a word of Arabic origin, which came through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmīnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmīnu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmīnu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmīnu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyālaya ārōpige jāmīnu koṭṭitu. — The court granted bail to the accused.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyālaya ārōpige jāmīnu koṭṭitu.* — The court granted bail to the accused.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a lawsuit, then the Kannada for a case, then say jāmīnu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a lawsuit, then the Kannada for a case, then say *jāmīnu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಜಾಮೀನು (jāmīnu) mean? (\"Bail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C358-tappoppiko",
+      "sequence": 18040,
+      "title": "ತಪ್ಪೊಪ್ಪಿಕೊ (tappoppiko) — to confess",
+      "headword": "ತಪ್ಪೊಪ್ಪಿಕೊ",
+      "romanization": "tappoppiko",
+      "gloss": "to confess",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1264a910f28bc3f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a case, then the Kannada for bail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಪ್ಪೊಪ್ಪಿಕೊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಪ್ಪೊಪ್ಪಿಕೊ — tappoppiko — \"to confess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೊನೆಗೆ ಕಳ್ಳ ತಪ್ಪೊಪ್ಪಿಕೊಂಡನು. konege kaḷḷa tappoppikoṇḍanu. In the end the thief confessed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತಪ್ಪೊಪ್ಪಿಕೊಂಡೆ, tappoppikoṇḍe."
+            },
+            {
+              "kind": "speech",
+              "text": "ತಪ್ಪು, a wrong, ಒಪ್ಪು, to accept, and -ಕೊ: to accept one's wrong."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಪ್ಪೊಪ್ಪಿಕೊ (tappoppiko) is a native Dravidian compound: tappu, \"a slip, an error\" (DEDR 3071), oppu, \"to agree, to assent\" (DEDR 924), and -ko, from koḷ, \"to take\" (DEDR 2151)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tappoppiko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tappoppiko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tappoppiko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tappoppiko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konege kaḷḷa tappoppikoṇḍanu. — In the end the thief confessed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konege kaḷḷa tappoppikoṇḍanu.* — In the end the thief confessed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a case, then the Kannada for bail, then say tappoppiko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a case, then the Kannada for bail, then say *tappoppiko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಪ್ಪೊಪ್ಪಿಕೊ (tappoppiko) mean? (\"To confess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

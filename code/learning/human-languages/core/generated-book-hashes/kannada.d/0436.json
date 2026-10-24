@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:7e0097b496da4fef",
+  "lessonIds": [
+    "KA-C436-hamali",
+    "KA-C436-trali",
+    "KA-C436-heru",
+    "KA-C436-kaisamanu",
+    "KA-C436-bhartiyagu"
+  ],
+  "tex": "kannada/book/chapters/ch436-porters-and-trolleys.tex"
+}

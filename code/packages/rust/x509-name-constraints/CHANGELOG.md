@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 — 2026-10-23
+
+- Added bounded full-DER decoding for excluded dNSName subtrees, independently
+  capped alongside optional permitted dNSName subtrees.
+- Added allocation-free combined evaluation with complete constraint
+  prevalidation, exclusion precedence, and any-expansion overlap checks for
+  presented wildcards.
+- Kept reviewed-root snapshot contents decoding explicitly permitted-only and
+  rejected empty, duplicate, reversed, distance-bearing, and non-DNS forms.
+
 ## 0.2.0 — 2026-10-23
 
 - Added bounded decoding for one exact complete DER NameConstraints SEQUENCE

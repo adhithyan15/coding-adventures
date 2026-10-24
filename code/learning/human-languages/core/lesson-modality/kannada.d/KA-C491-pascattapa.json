@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C491-pascattapa",
+    "language": "kannada",
+    "chapter": 491,
+    "sequence": 25090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98dd5af5e50c2b4f"
+  },
+  "findings": []
+}

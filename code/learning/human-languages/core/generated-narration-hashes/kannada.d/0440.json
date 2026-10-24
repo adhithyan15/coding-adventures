@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:544db091d4856680",
+  "lessonIds": [
+    "KA-C440-paravanagi",
+    "KA-C440-navikarisu",
+    "KA-C440-drdhapadisu",
+    "KA-C440-rayabhara-kaceri",
+    "KA-C440-antararastriya",
+    "KA-R440-review-433-440"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch440.txt",
+  "json": "kannada/narration/ch440.json",
+  "textHash": "fnv1a64:f8b3d265cfd294b9",
+  "jsonHash": "fnv1a64:a0e6ab286cbb67ba",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:dabfff9c04080975",
+  "lessonIds": [
+    "KA-C352-dange",
+    "KA-C352-kranti",
+    "KA-C352-gulama",
+    "KA-C352-bidugade-madu",
+    "KA-C352-vasapadisiko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch352.txt",
+  "json": "kannada/narration/ch352.json",
+  "textHash": "fnv1a64:57267f66ccc6392b",
+  "jsonHash": "fnv1a64:569ffb01b1a182ab",
+  "findings": []
+}

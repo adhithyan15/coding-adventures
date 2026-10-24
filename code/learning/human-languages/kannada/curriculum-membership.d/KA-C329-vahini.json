@@ -1,0 +1,11 @@
+{
+  "id": "KA-C329-vahini",
+  "pathSegment": "KA-PATH-329-MADHYAMA329",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-329-MADHYAMA329",
+      "order": 1
+    }
+  ]
+}

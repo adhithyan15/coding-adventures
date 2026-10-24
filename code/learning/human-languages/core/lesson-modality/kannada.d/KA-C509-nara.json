@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C509-nara",
+    "language": "kannada",
+    "chapter": 509,
+    "sequence": 25970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b80fef082919e983"
+  },
+  "findings": []
+}

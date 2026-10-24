@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C493-hiyalisu",
+    "language": "kannada",
+    "chapter": 493,
+    "sequence": 25170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17e73ca9759928bf"
+  },
+  "findings": []
+}

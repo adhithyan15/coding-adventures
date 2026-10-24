@@ -1,0 +1,11 @@
+{
+  "id": "KA-C452-koriyar",
+  "pathSegment": "KA-PATH-452-SARIGE452",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-452-SARIGE452",
+      "order": 4
+    }
+  ]
+}

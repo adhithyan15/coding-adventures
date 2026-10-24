@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-422-MANADANDA422",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "KA-EXT-422-MANADANDA422"
+  ],
+  "after": []
+}

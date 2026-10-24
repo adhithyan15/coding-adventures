@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:c7ee76978b38c31a",
+  "lessonIds": [
+    "KA-C523-samsara",
+    "KA-C523-grhini",
+    "KA-C523-sangati",
+    "KA-C523-viraha",
+    "KA-C523-dampatya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch523.txt",
+  "json": "kannada/narration/ch523.json",
+  "textHash": "fnv1a64:d69ae131b354d10e",
+  "jsonHash": "fnv1a64:47d37d57d0c2babe",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C459-bidara",
+    "language": "kannada",
+    "chapter": 459,
+    "sequence": 23370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e33d02160d1d488"
+  },
+  "findings": []
+}

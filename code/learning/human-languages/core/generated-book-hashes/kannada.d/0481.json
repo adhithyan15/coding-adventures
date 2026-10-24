@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:2843be05a7c3bd82",
+  "lessonIds": [
+    "KA-C481-karavali",
+    "KA-C481-kolli",
+    "KA-C481-havala",
+    "KA-C481-cippu",
+    "KA-C481-nadimukha"
+  ],
+  "tex": "kannada/book/chapters/ch481-along-the-coast.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C320-varadigara",
+    "language": "kannada",
+    "chapter": 320,
+    "sequence": 16050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffc2606264ba0191"
+  },
+  "findings": []
+}

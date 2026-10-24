@@ -1,0 +1,11 @@
+{
+  "id": "KA-C351-svayamsevaka",
+  "pathSegment": "KA-PATH-351-KARYA351",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-351-KARYA351",
+      "order": 1
+    }
+  ]
+}

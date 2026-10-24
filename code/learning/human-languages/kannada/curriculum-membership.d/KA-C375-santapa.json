@@ -1,0 +1,11 @@
+{
+  "id": "KA-C375-santapa",
+  "pathSegment": "KA-PATH-375-SHIBIRA375",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-375-SHIBIRA375",
+      "order": 2
+    }
+  ]
+}

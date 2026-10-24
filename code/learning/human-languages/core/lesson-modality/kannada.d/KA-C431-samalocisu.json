@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C431-samalocisu",
+    "language": "kannada",
+    "chapter": 431,
+    "sequence": 21830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46dac1890b3d366c"
+  },
+  "findings": []
+}

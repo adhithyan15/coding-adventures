@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Teamwork",
+  "label": "ch:ka-teamwork",
+  "canDo": "I can say to get involved, to take charge of, to get practised, supervision and punctuality.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C520-samayapalane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can say to get involved, to take charge of, to get practised, supervision and punctuality.",
+    "assesses": [
+      "KA-LEX-C520-TANDA520-03",
+      "KA-LEX-C520-TANDA520-04",
+      "KA-LEX-C520-TANDA520-05"
+    ]
+  }
+}

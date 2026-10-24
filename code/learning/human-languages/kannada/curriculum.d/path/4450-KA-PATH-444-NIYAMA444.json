@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-444-NIYAMA444",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "KA-EXT-444-NIYAMA444"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C446-dari-tappu",
+    "language": "kannada",
+    "chapter": 446,
+    "sequence": 22690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fddc37ea02b19f8f"
+  },
+  "findings": []
+}

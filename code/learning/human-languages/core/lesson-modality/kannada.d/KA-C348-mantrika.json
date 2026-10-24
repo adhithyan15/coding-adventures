@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C348-mantrika",
+    "language": "kannada",
+    "chapter": 348,
+    "sequence": 17530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23752fcbe785ceaf"
+  },
+  "findings": []
+}

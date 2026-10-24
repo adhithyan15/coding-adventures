@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-192-A2-LOKAAN-OBLIQUE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can distinguish the standalone word for people from its form before three familiar postpositions.",
+  "prerequisites": [
+    "PA-EXT-191-A2-GHATT-QUANTITY"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:f64475fa7830dc76",
+  "lessonIds": [
+    "KA-C499-munisiko",
+    "KA-C499-mugulnagu",
+    "KA-C499-hinjari",
+    "KA-C499-hottekiccu",
+    "KA-C499-atmavisvasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch499.txt",
+  "json": "kannada/narration/ch499.json",
+  "textHash": "fnv1a64:6835ecbb451bb95b",
+  "jsonHash": "fnv1a64:e707eec3ee69116f",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C489-minugu",
+    "language": "kannada",
+    "chapter": 489,
+    "sequence": 24910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d91a8d0fc24f9fc0"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:4a0318876a5db498",
+  "lessonIds": [
+    "KA-C400-bajet",
+    "KA-C400-adaya",
+    "KA-C400-sabsidi",
+    "KA-C400-viniyogisu",
+    "KA-C400-vyartha-madu"
+  ],
+  "tex": "kannada/book/chapters/ch400-public-money.tex"
+}

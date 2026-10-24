@@ -1,0 +1,23 @@
+{
+  "chapter": 314,
+  "title": "Tickets, Seats and Trouble",
+  "label": "ch:ka-tickets-seats-and-trouble",
+  "canDo": "I can buy a ticket and a seat, ask when the bus or train leaves, say I have missed the bus or lost my bag and report it, ask for medicine, and read the letter ಔ in auṣadha.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-R314-at-the-station",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: buy a ticket, ask the time, report a problem on a trip, and read and write ಔ.",
+    "assesses": [
+      "KA-LEX-C314-AUSADHA-01",
+      "KA-SCRIPT-RECOG-175",
+      "KA-LEX-C314-SITU-01",
+      "KA-GRAMMAR-C314-BUY-TICKET-01",
+      "KA-GRAMMAR-C314-WHEN-LEAVES-01",
+      "KA-GRAMMAR-C314-MISSED-01",
+      "KA-GRAMMAR-C314-LOST-REPORT-01"
+    ]
+  }
+}
