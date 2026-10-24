@@ -1,0 +1,9 @@
+[package]
+name = "intel8085-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked Intel 8085A functional simulator with complete documented opcodes, vectored interrupts, and serial I/O"
+
+[dependencies]
+intel8080-simulator = { path = "../intel8080-simulator" }
+
