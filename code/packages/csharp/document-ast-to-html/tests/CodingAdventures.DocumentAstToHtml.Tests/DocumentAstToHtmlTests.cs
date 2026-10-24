@@ -240,14 +240,18 @@ public sealed class DocumentAstToHtmlTests
     }
 
     [Fact]
-    public void ToHtml_RejectsTreesPastTheDepthLimit()
+    public void ToHtml_AcceptsTheDepthLimitAndRejectsTheNextLevel()
     {
         IBlockNode current = Paragraph(Text("bottom"));
-        for (var index = 0; index < 300; index++)
+        // 254 blockquotes + one paragraph + one text leaf = depth 256.
+        for (var index = 0; index < 254; index++)
         {
             current = new BlockquoteNode([current]);
         }
 
+        Assert.Contains("<p>bottom</p>", Renderer.ToHtml(Document(current)));
+
+        current = new BlockquoteNode([current]);
         Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(Document(current)));
     }
 

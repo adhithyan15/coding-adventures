@@ -190,14 +190,14 @@ public static class DocumentAstToHtml
             Append(">\n");
             foreach (var item in list.Children)
             {
-                CountNode(depth);
+                CountNode(depth + 1);
                 switch (item)
                 {
                     case TaskItemNode task:
-                        RenderListItem(task.Children, list.Tight, depth, task.Checked);
+                        RenderListItem(task.Children, list.Tight, depth + 1, task.Checked);
                         break;
                     case ListItemNode ordinary:
-                        RenderListItem(ordinary.Children, list.Tight, depth, checkbox: null);
+                        RenderListItem(ordinary.Children, list.Tight, depth + 1, checkbox: null);
                         break;
                     default:
                         throw new InvalidOperationException($"Unsupported list child node type: {item.GetType().FullName}.");
