@@ -62,10 +62,20 @@ fn every_arithmetic_and_data_opcode_family_executes() {
                     encoding::literal(2),
                 ],
             ),
+            vec![0; 6],
             vec![encoding::HALT],
         ]);
-        let result = VaxSimulator::new().run_checked(&case_program, 4).unwrap();
+        let result = VaxSimulator::new().run_checked(&case_program, 3).unwrap();
         assert!(result.halted);
+        assert_eq!(
+            result.final_state.psl,
+            Psl {
+                n: false,
+                z: false,
+                v: false,
+                c: false,
+            }
+        );
     }
 }
 
@@ -84,7 +94,17 @@ fn case_table_taken_path_and_all_branch_conditions_execute() {
             vec![2, 0],
             vec![encoding::HALT],
         ]);
-        assert!(VaxSimulator::new().run_checked(&program, 3).unwrap().halted);
+        let result = VaxSimulator::new().run_checked(&program, 3).unwrap();
+        assert!(result.halted);
+        assert_eq!(
+            result.final_state.psl,
+            Psl {
+                n: true,
+                z: false,
+                v: false,
+                c: true,
+            }
+        );
     }
 
     for opcode in [
@@ -225,6 +245,58 @@ fn byte_and_word_memory_destinations_cover_partial_memory_access() {
 }
 
 #[test]
+fn increment_decrement_and_pushes_set_architectural_condition_codes() {
+    let program = encoding::assemble(&[
+        encoding::instruction(0x96, &[encoding::register(0)]),
+        encoding::instruction(0xb7, &[encoding::register(1)]),
+        encoding::instruction(0xdd, &[encoding::register(2)]),
+        vec![encoding::HALT],
+    ]);
+    let mut cpu = VaxSimulator::new();
+    cpu.load_checked(&program).unwrap();
+    cpu.write_register_checked(0, 0xff).unwrap();
+    cpu.write_register_checked(1, 0).unwrap();
+    cpu.write_register_checked(2, 0x8000_0000).unwrap();
+    cpu.write_register_checked(REGISTER_SP, 0x400).unwrap();
+
+    let increment = cpu.step_checked().unwrap();
+    assert!(increment.state_after.psl.c);
+    assert!(increment.state_after.psl.z);
+    let decrement = cpu.step_checked().unwrap();
+    assert!(decrement.state_after.psl.c);
+    assert!(decrement.state_after.psl.n);
+    let push = cpu.step_checked().unwrap();
+    assert!(push.state_after.psl.n);
+    assert!(!push.state_after.psl.z);
+    assert!(!push.state_after.psl.v);
+    assert!(push.state_after.psl.c);
+
+    let push_address = encoding::assemble(&[
+        encoding::instruction(0x9f, &[encoding::absolute(0)]),
+        vec![encoding::HALT],
+    ]);
+    let mut cpu = VaxSimulator::new();
+    cpu.load_checked(&push_address).unwrap();
+    cpu.write_register_checked(REGISTER_SP, 0x400).unwrap();
+    cpu.set_psl(Psl {
+        n: true,
+        z: false,
+        v: true,
+        c: true,
+    });
+    let trace = cpu.step_checked().unwrap();
+    assert_eq!(
+        trace.state_after.psl,
+        Psl {
+            n: false,
+            z: true,
+            v: false,
+            c: true,
+        }
+    );
+}
+
+#[test]
 fn fault_surface_and_error_messages_are_deterministic() {
     let errors = [
         VaxError::Halted,
@@ -313,6 +385,22 @@ fn fault_surface_and_error_messages_are_deterministic() {
             },
         ),
         (
+            vec![0xd0, 0x5f, 0x50],
+            None,
+            VaxError::ReservedAddressingMode {
+                specifier: 0x5f,
+                pc: 0,
+            },
+        ),
+        (
+            vec![0xd0, 0x6f, 0x50],
+            None,
+            VaxError::ReservedAddressingMode {
+                specifier: 0x6f,
+                pc: 0,
+            },
+        ),
+        (
             vec![0xd0, 0x40, 0x40, 0x60, 0x50],
             None,
             VaxError::RecursiveIndexMode { pc: 0 },
@@ -322,6 +410,30 @@ fn fault_surface_and_error_messages_are_deterministic() {
             None,
             VaxError::InvalidDestinationMode {
                 specifier: 0x50,
+                pc: 0,
+            },
+        ),
+        (
+            vec![0xd0, 0x40, 0x70, 0x50],
+            None,
+            VaxError::ReservedAddressingMode {
+                specifier: 0x70,
+                pc: 0,
+            },
+        ),
+        (
+            vec![0xd0, 0x41, 0x81, 0x50],
+            None,
+            VaxError::ReservedAddressingMode {
+                specifier: 0x81,
+                pc: 0,
+            },
+        ),
+        (
+            vec![0xd0, 0x42, 0x92, 0x50],
+            None,
+            VaxError::ReservedAddressingMode {
+                specifier: 0x92,
                 pc: 0,
             },
         ),

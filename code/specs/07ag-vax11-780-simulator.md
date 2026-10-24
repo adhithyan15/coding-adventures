@@ -109,6 +109,8 @@ a little-endian longword.
 - ADD sets signed overflow and unsigned carry;
 - SUB and CMP set C when an unsigned borrow occurs;
 - MNEG sets C when the result is nonzero;
+- INC sets C on carry and DEC sets C on borrow;
+- PUSHL and PUSHA set N/Z from the pushed value, clear V, and preserve C;
 - divide by zero is a typed atomic fault; and
 - instructions that do not define flags preserve them.
 

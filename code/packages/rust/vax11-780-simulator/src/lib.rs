@@ -512,6 +512,19 @@ impl VaxSimulator {
                     });
                 }
                 let base = self.decode_operand(start, raw, width, true)?;
+                let base_specifier = match base {
+                    Operand::Value { specifier, .. } | Operand::Place { specifier, .. } => {
+                        specifier
+                    }
+                };
+                let base_mode = base_specifier >> 4;
+                let base_register = usize::from(base_specifier & 0x0f);
+                if base_register == register && matches!(base_mode, 7..=9) {
+                    return Err(VaxError::ReservedAddressingMode {
+                        specifier: base_specifier,
+                        pc: start,
+                    });
+                }
                 let address = match base {
                     Operand::Place {
                         place: Place::Memory(address),
@@ -531,9 +544,17 @@ impl VaxSimulator {
                     specifier,
                 })
             }
+            5 if register == REGISTER_PC => Err(VaxError::ReservedAddressingMode {
+                specifier,
+                pc: start,
+            }),
             5 => Ok(Operand::Place {
                 place: Place::Register(register),
                 specifier,
+            }),
+            6 if register == REGISTER_PC => Err(VaxError::ReservedAddressingMode {
+                specifier,
+                pc: start,
             }),
             6 => Ok(Operand::Place {
                 place: Place::Memory(self.regs[register]),
@@ -750,6 +771,8 @@ impl VaxSimulator {
             0xdd => {
                 let value = self.read_operand(start, raw, 4)?;
                 self.push_long(value)?;
+                self.set_nz(value, 4);
+                self.psl.v = false;
                 Ok("PUSHL")
             }
             0xde => self.execute_address(start, raw, 4, false, "MOVAL"),
@@ -921,15 +944,17 @@ impl VaxSimulator {
         let base = self.read_operand(start, raw, width)?;
         let limit = self.read_operand(start, raw, width)?;
         let index = selector.wrapping_sub(base) & width_mask(width);
-        self.psl.n = index & sign_bit(width) != 0;
-        self.psl.z = index == 0;
+        self.psl.n = signed_value(index, width) < signed_value(limit, width);
+        self.psl.z = index == limit;
         self.psl.v = false;
-        self.psl.c = index > limit;
+        self.psl.c = index < limit;
+        let table = self.regs[REGISTER_PC];
         if index <= limit {
-            let table = self.regs[REGISTER_PC];
             let entry = table.wrapping_add(index.wrapping_mul(2));
             let displacement = i32::from(self.read_word_checked(entry)? as i16) as u32;
             self.regs[REGISTER_PC] = table.wrapping_add(displacement);
+        } else {
+            self.regs[REGISTER_PC] = table.wrapping_add(2_u32.wrapping_add(limit.wrapping_mul(2)));
         }
         Ok(width_name("CASE", width))
     }
@@ -1014,6 +1039,11 @@ impl VaxSimulator {
                 } else {
                     old & width_mask(width) == sign_bit(width)
                 };
+                self.psl.c = if operation == 6 {
+                    old & width_mask(width) == width_mask(width)
+                } else {
+                    old & width_mask(width) == 0
+                };
                 Ok(width_name(
                     if operation == 6 { "INC" } else { "DEC" },
                     width,
@@ -1050,6 +1080,8 @@ impl VaxSimulator {
         let address = self.decode_address(start, raw, source_width)?;
         if push {
             self.push_long(address)?;
+            self.set_nz(address, 4);
+            self.psl.v = false;
         } else {
             let destination = self.decode_destination(start, raw, 4)?;
             self.write_place(destination, 4, address)?;

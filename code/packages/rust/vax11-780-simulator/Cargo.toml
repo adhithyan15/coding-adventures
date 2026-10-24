@@ -7,4 +7,3 @@ license = "MIT"
 
 [lib]
 path = "src/lib.rs"
-

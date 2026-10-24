@@ -55,4 +55,3 @@ cargo clippy --package vax11-780-simulator --all-targets -- -D warnings
 RUSTDOCFLAGS="-D warnings" cargo doc --package vax11-780-simulator --no-deps
 cargo llvm-cov --package vax11-780-simulator --release --summary-only
 ```
-

@@ -15,4 +15,3 @@
   memory-safe scalar traces, and public encoding helpers.
 - Exhaustive family/addressing/control/fault tests with greater than 95 percent
   Rust line coverage.
-
