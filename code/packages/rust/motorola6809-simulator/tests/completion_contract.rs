@@ -269,6 +269,24 @@ fn traces_faults_and_bounded_execution_are_atomic() {
         })
     );
     assert_eq!(bounded.get_state(), before);
+
+    let mut self_modifying = Motorola6809Simulator::new();
+    self_modifying.load(&[0x0f, 0x00, 0x13], 0).unwrap(); // CLR <$00
+    let trace = self_modifying.step().unwrap();
+    assert_eq!(trace.raw, vec![0x0f, 0x00]);
+    assert_eq!(self_modifying.read_memory(0, 1).unwrap(), vec![0]);
+
+    let mut execute = Motorola6809Simulator::new();
+    execute.load(&[0x13], 0x100).unwrap();
+    let before = execute.get_state();
+    assert_eq!(
+        execute.execute(&[0x13], 0, MAX_RETAINED_STEPS + 1),
+        Err(Motorola6809Error::RetentionLimitExceeded {
+            requested: MAX_RETAINED_STEPS + 1,
+            limit: MAX_RETAINED_STEPS,
+        })
+    );
+    assert_eq!(execute.get_state(), before);
 }
 
 #[test]

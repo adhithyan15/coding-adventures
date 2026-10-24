@@ -245,6 +245,7 @@ enum Mode {
 pub struct Motorola6809Simulator {
     state: Motorola6809State,
     fetched: usize,
+    fetched_bytes: [u8; 8],
 }
 
 impl Motorola6809Simulator {
@@ -256,6 +257,7 @@ impl Motorola6809Simulator {
     pub fn reset(&mut self) {
         self.state = Motorola6809State::default();
         self.fetched = 0;
+        self.fetched_bytes = [0; 8];
     }
 
     pub fn load(&mut self, program: &[u8], origin: u16) -> Result<(), Motorola6809Error> {
@@ -284,6 +286,7 @@ impl Motorola6809Simulator {
         state.memory[start..end].copy_from_slice(program);
         self.state = state;
         self.fetched = 0;
+        self.fetched_bytes = [0; 8];
         Ok(())
     }
 
@@ -301,6 +304,7 @@ impl Motorola6809Simulator {
         }
         self.state = state;
         self.fetched = 0;
+        self.fetched_bytes = [0; 8];
         Ok(())
     }
 
@@ -457,6 +461,12 @@ impl Motorola6809Simulator {
         origin: u16,
         max_steps: usize,
     ) -> Result<ExecutionResult, Motorola6809Error> {
+        if max_steps > MAX_RETAINED_STEPS {
+            return Err(Motorola6809Error::RetentionLimitExceeded {
+                requested: max_steps,
+                limit: MAX_RETAINED_STEPS,
+            });
+        }
         let checkpoint = self.clone();
         self.load(program, origin)?;
         match self.run(max_steps) {
@@ -471,6 +481,7 @@ impl Motorola6809Simulator {
     fn step_inner(&mut self) -> Result<StepTrace, Motorola6809Error> {
         let pc_before = self.state.pc;
         self.fetched = 0;
+        self.fetched_bytes = [0; 8];
         let first = self.fetch_byte(pc_before)?;
         let (page, opcode) = if matches!(first, 0x10 | 0x11) {
             (first, self.fetch_byte(pc_before)?)
@@ -494,8 +505,7 @@ impl Motorola6809Simulator {
             0x11 => self.execute_page3(opcode, pc_before)?,
             _ => unreachable!(),
         };
-        let start = usize::from(pc_before);
-        let raw = self.state.memory[start..start + self.fetched].to_vec();
+        let raw = self.fetched_bytes[..self.fetched].to_vec();
         Ok(StepTrace {
             pc_before,
             pc_after: self.state.pc,
@@ -522,6 +532,12 @@ impl Motorola6809Simulator {
             };
         }
         let value = self.state.memory[index];
+        let Some(slot) = self.fetched_bytes.get_mut(self.fetched) else {
+            return Err(Motorola6809Error::InvalidState {
+                reason: "instruction exceeds the MC6809 maximum encoded width",
+            });
+        };
+        *slot = value;
         self.state.pc = pc.wrapping_add(1);
         self.fetched += 1;
         Ok(value)

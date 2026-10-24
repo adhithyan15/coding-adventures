@@ -8,4 +8,3 @@ license = "MIT"
 [lib]
 name = "motorola6809_simulator"
 path = "src/lib.rs"
-

@@ -31,4 +31,3 @@ The normative architecture and acceptance contract is
 ```bash
 bash BUILD
 ```
-
