@@ -213,31 +213,6 @@ pub fn tokenize_javascript_typed_with_ranges(
     GrammarLexer::tokenize_source_with_ranges(source, &grammar, limits)
 }
 
-/// Tokenize a JavaScript subset that does not admit regex literals.
-///
-/// This is an explicit division-only goal for LANG78's numeric frontend,
-/// not context-sensitive disambiguation for general JavaScript. Filter the
-/// compiled rules before matching: splitting a REGEX token afterwards would
-/// lose comments, string boundaries and source locations. All other rules,
-/// including comment trivia and division assignment, retain their priority.
-/// Callers must reject unsupported syntax after parsing and enforce their
-/// source/work limits, just as with [`tokenize_javascript_typed`].
-pub fn tokenize_javascript_division_only(
-    source: &str,
-    version: EsVersion,
-) -> Result<Vec<Token>, String> {
-    let mut grammar = _grammar::token_grammar(version.as_str())
-        .expect("compiled JavaScript token grammar missing supported version");
-    grammar.definitions.retain(|rule| rule.name != "REGEX");
-    grammar
-        .error_definitions
-        .retain(|rule| rule.name != "BAD_REGEX");
-    let mut lexer = javascript_lexer(source, grammar);
-    lexer
-        .tokenize()
-        .map_err(|e| format!("JavaScript tokenization failed: {e}"))
-}
-
 /// A token paired with the correlation-vector ID assigned to it by
 /// [`tokenize_javascript_with_cv`].
 ///
@@ -351,53 +326,113 @@ mod tests {
         assert_eq!(values("x = `$a`"), vec!["x", "=", "`$a`"]);
     }
 
+    /// Editions whose `.tokens` carry the F10 regex/division mode table.
+    /// es1 has no REGEX rule at all, so a `/` there is always division;
+    /// es3 and es5 still lack the table (LANG84 phase 6a defers them until
+    /// their embedded Swift/Haskell grammars can be regenerated with it).
+    fn moded(version: EsVersion) -> bool {
+        !matches!(version, EsVersion::Es1 | EsVersion::Es3 | EsVersion::Es5)
+    }
+
     #[test]
-    fn division_only_goal_keeps_slashes_separate_in_every_version() {
+    fn mode_table_reads_slashes_after_values_as_division_in_every_moded_edition() {
         for &version in EsVersion::ALL {
-            let tokens = tokenize_javascript_division_only("8/2/2;", version).unwrap();
-            let values: Vec<_> = tokens.iter().map(|t| t.value.as_str()).collect();
-            assert_eq!(&values[..6], &["8", "/", "2", "/", "2", ";"], "{version}");
-            assert_eq!(tokens[1].type_, TokenType::Slash);
-            assert_eq!(tokens[3].type_, TokenType::Slash);
-            assert!(tokens[1].type_name.is_none());
-            assert!(tokens[3].type_name.is_none());
-            assert!(tokens
-                .iter()
-                .all(|t| t.type_name.as_deref() != Some("REGEX")));
-            // Early editions have no REGEX rule. Only regex-capable editions
-            // can prove preservation of a complete regex token.
-            let grammar = _grammar::token_grammar(version.as_str()).unwrap();
-            if grammar.definitions.iter().any(|rule| rule.name == "REGEX") {
-                let full = tokenize_javascript_typed("var r=/x/g;", version).unwrap();
+            if !moded(version) && version != EsVersion::Es1 {
+                continue;
+            }
+            for (source, expected) in [
+                ("8/2/2;", &["8", "/", "2", "/", "2", ";"][..]),
+                ("a/b/c;", &["a", "/", "b", "/", "c", ";"][..]),
+                ("(1)/2/3;", &["(", "1", ")", "/", "2", "/", "3", ";"][..]),
+                (
+                    "x[0]/2/1;",
+                    &["x", "[", "0", "]", "/", "2", "/", "1", ";"][..],
+                ),
+                ("8 /= 2;", &["8", "/=", "2", ";"][..]),
+            ] {
+                let tokens = tokenize_javascript_typed(source, version).unwrap();
+                assert_eq!(token_values(&tokens)[..expected.len()], *expected, "{version} {source}");
                 assert!(
-                    full.iter()
-                        .any(|t| t.type_name.as_deref() == Some("REGEX") && t.value == "/x/g"),
-                    "{version}"
+                    tokens.iter().all(|t| t.type_name.as_deref() != Some("REGEX")),
+                    "{version} {source}"
                 );
             }
         }
     }
 
     #[test]
-    fn division_only_goal_preserves_trivia_locations_strings_and_errors() {
-        let tokens =
-            tokenize_javascript_division_only("8 /* / */ / 2\n/ 2", EsVersion::Es2020).unwrap();
+    fn mode_table_still_reads_a_regex_in_expression_position() {
+        // The table only turns `/` into division *after a value*; after an
+        // operator, opener or `return` it is still a regex literal.
+        for &version in EsVersion::ALL {
+            if !moded(version) {
+                continue;
+            }
+            for (source, regex) in [
+                ("var r=/x/g;", "/x/g"),
+                ("f(/a/);", "/a/"),
+                ("x = 1, /b/i;", "/b/i"),
+                ("8 / 2 + /c/.source;", "/c/"),
+            ] {
+                let tokens = tokenize_javascript_typed(source, version).unwrap();
+                assert!(
+                    tokens
+                        .iter()
+                        .any(|t| t.type_name.as_deref() == Some("REGEX") && t.value == regex),
+                    "{version} {source}: {:?}",
+                    token_values(&tokens)
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn bigint_is_a_value_so_a_following_slash_is_division() {
+        // `10n / 2n / 1n`: BIGINT joined the value list in phase 6a (it was
+        // missing from es2025's table, so the first `/` started a regex).
+        for &version in EsVersion::ALL {
+            let grammar = _grammar::token_grammar(version.as_str()).unwrap();
+            let has_bigint = grammar
+                .definitions
+                .iter()
+                .any(|rule| rule.alias.as_deref() == Some("BIGINT"));
+            if !moded(version) || !has_bigint {
+                continue;
+            }
+            let tokens = tokenize_javascript_typed("10n / 2n / 1n;", version).unwrap();
+            assert_eq!(
+                token_values(&tokens),
+                ["10n", "/", "2n", "/", "1n", ";", ""],
+                "{version}"
+            );
+        }
+    }
+
+    #[test]
+    fn mode_table_keeps_trivia_locations_and_errors() {
+        // Comments between operands are skipped without resetting the mode,
+        // and positions are the source positions.
+        let tokens = tokenize_javascript_typed("8 /* / */ / 2\n/ 2", EsVersion::Es2020).unwrap();
+        assert_eq!(token_values(&tokens), ["8", "/", "2", "/", "2", ""]);
         assert_eq!((tokens[1].line, tokens[1].column), (1, 11));
         assert_eq!((tokens[3].line, tokens[3].column), (2, 1));
         assert!(preceded_by_newline(&tokens[3]));
-        for source in [
-            "'a/b/c'; // / ignored /\n42;",
-            "\"/x/\"; /* / ignored / */ 42;",
-            "8 /= 2;",
+        for (source, expected) in [
+            // String values are stored without their quotes.
+            (
+                "'a/b/c'; // / ignored /\n42;",
+                &["a/b/c", ";", "42", ";", ""][..],
+            ),
+            (
+                "\"/x/\"; /* / ignored / */ 42;",
+                &["/x/", ";", "42", ";", ""][..],
+            ),
         ] {
-            assert_eq!(
-                tokenize_javascript_division_only(source, EsVersion::Es2020).unwrap(),
-                tokenize_javascript_typed(source, EsVersion::Es2020).unwrap(),
-                "{source}"
-            );
+            let tokens = tokenize_javascript_typed(source, EsVersion::Es2020).unwrap();
+            assert_eq!(token_values(&tokens), *expected, "{source}");
         }
         for source in ["'unterminated", "\"unterminated", "§"] {
-            assert!(tokenize_javascript_division_only(source, EsVersion::Es2020).is_err());
+            assert!(tokenize_javascript_typed(source, EsVersion::Es2020).is_err());
         }
     }
 
@@ -524,10 +559,6 @@ mod tests {
         let src = "a\n-->x\nb";
         let expected = ["a", "b", ""];
         assert_eq!(token_values(&tokenize_javascript(src, "es2025").unwrap()), expected);
-        assert_eq!(
-            token_values(&tokenize_javascript_division_only(src, EsVersion::Es2025).unwrap()),
-            expected
-        );
         assert_eq!(
             token_values(&create_javascript_lexer(src, "es2025").unwrap().tokenize().unwrap()),
             expected

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C280-jhadpi",
+    "language": "gujarati",
+    "chapter": 280,
+    "sequence": 15060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:102cefa93a0e465a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C283-nahintar",
+  "pathSegment": "GU-PATH-283-CONDITION-IF",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-283-CONDITION-IF",
+      "order": 2
+    }
+  ]
+}

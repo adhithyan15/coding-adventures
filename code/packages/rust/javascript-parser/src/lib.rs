@@ -17,8 +17,7 @@
 
 use coding_adventures_correlation_vector::{CVLog, Origin};
 use coding_adventures_javascript_lexer::{
-    tokenize_javascript, tokenize_javascript_division_only, tokenize_javascript_typed,
-    tokenize_javascript_with_cv,
+    tokenize_javascript, tokenize_javascript_typed, tokenize_javascript_with_cv,
 };
 use coding_adventures_javascript_tokens::EsVersion;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
@@ -50,29 +49,8 @@ pub fn parse_javascript_program(
     bridge::grammar_to_program(&node, version).map_err(|e| e.to_string())
 }
 
-/// Parse a typed AST for a subset that excludes regex literals.
-///
-/// LANG78's native numeric compiler originally selected this entry so
-/// repeated division cannot be consumed as a regex. The ordinary APIs retain
-/// their regex rules. ASI and parser depth protection use the same path as
-/// typed parsing; callers still own source limits and rejection of
-/// unsupported AST constructs. A separate pre-bridge spine check bounds flat
-/// chains before constructing recursively dropped typed nodes.
-/// Exponentiation is outside this restricted entry and rejects before parsing.
-///
-/// Since 0.63.0 this is exactly [`parse_javascript_cst_division_only`]
-/// followed by the typed bridge. The native IIR compiler now stops at the
-/// CST (LANG84: the IIR compiler walks the parse tree); this typed form stays
-/// for any other caller that wants the division-only goal *and* a typed AST.
-pub fn parse_javascript_program_division_only(
-    source: &str,
-    version: EsVersion,
-) -> Result<coding_adventures_javascript_ast::Program, String> {
-    let node = parse_javascript_cst_division_only(source, version)?;
-    bridge::grammar_to_program(&node, version).map_err(|e| e.to_string())
-}
-
-/// Parse the regex-free numeric subset to the post-ASI parse tree (CST).
+/// Parse JavaScript to the post-ASI parse tree (CST), with the bounds the
+/// IIR compiler relies on.
 ///
 /// This is the parse-tree entry point of LANG84 decision 6, "the IIR compiler
 /// walks the parse tree". It returns the `GrammarASTNode` that the generic
@@ -81,32 +59,45 @@ pub fn parse_javascript_program_division_only(
 ///
 /// ```text
 /// source
-///   │ tokenize_javascript_division_only   GrammarLexer, REGEX/BAD_REGEX off
+///   │ tokenize_javascript_typed           GrammarLexer + the F10 mode table
 ///   │ reject STAR_STAR / STAR_STAR_EQUALS  (right-recursive exponent rule)
 ///   ▼
 /// tokens
 ///   │ asi::parse_with_asi                 GrammarParser + depth guard + ASI
 ///   ▼
-/// GrammarASTNode  ── check_division_only_spines (flat-chain width bound)
+/// GrammarASTNode  ── check_bounded_spines (flat-chain width bound)
 /// ```
 ///
-/// Every step is the one [`parse_javascript_program_division_only`] has
-/// always run before calling the bridge, in the same order and with the same
-/// error messages. So the CST handed out here is precisely the tree that
-/// entry used to bridge, and a caller that walks it sees what the bridge saw.
+/// # Regex or division? The grammar decides (LANG84 phase 6a)
 ///
-/// The spine bound is kept even though no typed tree is built any more: it
-/// is part of this entry's contract (hostile `1/1/…/1` chains are reported as
-/// a "spine limit" diagnostic), and it also caps how wide a single operator
-/// or suffix chain can be for whoever walks the tree.
-pub fn parse_javascript_cst_division_only(
+/// A `/` is a regex literal in expression position and division in operand
+/// position. Until phase 6a this entry got division right by *deleting* the
+/// `REGEX` rule from the compiled grammar before lexing (the old
+/// `tokenize_javascript_division_only`), which LANG84 C2 forbids: no surgery
+/// on a compiled grammar. Every `es2015`+ `.tokens` file now carries the F10
+/// mode table instead, so the ordinary lexer reads `8 / 2 / 2` as division
+/// and `/x/g` after `=` or `(` as one REGEX token. A regex is a perfectly
+/// good parse; it is the IIR compiler's subset check that turns it away.
+///
+/// | source          | old division-only lexer   | moded lexer (here)  |
+/// |-----------------|---------------------------|---------------------|
+/// | `8 / 2 / 2`     | `8` `/` `2` `/` `2`       | the same            |
+/// | `f(/1/)`        | `f` `(` `/` `1` `/` `)`   | `f` `(` `/1/` `)`   |
+/// |                 | → parse error             | → parses; IIR says no |
+///
+/// # Bounds
+///
+/// Exponentiation's grammar rule is right-recursive, so a hostile `1**1**…`
+/// chain could exhaust the parser stack before a CST exists; the numeric IIR
+/// subset has no `**`, so its tokens are refused before parsing. The spine
+/// bound caps how wide a single operator, member or call chain can be for
+/// whoever walks the tree (hostile `1/1/…/1` chains are reported as a
+/// "spine limit" diagnostic). Callers still own source-size limits.
+pub fn parse_javascript_cst_bounded(
     source: &str,
     version: EsVersion,
 ) -> Result<GrammarASTNode, String> {
-    let tokens = tokenize_javascript_division_only(source, version)?;
-    // Exponentiation's grammar is right-recursive: a hostile chain can exhaust
-    // the parser stack before a CST exists. Native numeric lowering does not
-    // support it, so reject these operator tokens before entering ASI parsing.
+    let tokens = tokenize_javascript_typed(source, version)?;
     // Token kinds keep quoted spelling and comments outside this check.
     if tokens.iter().any(|token| {
         matches!(
@@ -115,25 +106,23 @@ pub fn parse_javascript_cst_division_only(
         )
     }) {
         return Err(
-            "JavaScript exponentiation is unsupported in the division-only numeric parser"
-                .to_string(),
+            "JavaScript exponentiation is unsupported in the bounded CST parser".to_string(),
         );
     }
     let node = asi::parse_with_asi(tokens, version)
         .map_err(|e| format!("JavaScript parse failed: {e}"))?;
-    check_division_only_spines(&node)?;
+    check_bounded_spines(&node)?;
     Ok(node)
 }
 
-// Grammar repetitions are shallow CSTs, but the bridge folds operator and
-// member/call chains into recursively dropped boxes. Charge their width before
-// construction, including nested chains. Ordinary lists only contribute their
-// maximum child height, so unrelated statements do not consume spine depth.
-fn check_division_only_spines(root: &GrammarASTNode) -> Result<(), String> {
+// Grammar repetitions are shallow CSTs, but operator and member/call chains
+// fold into nested nodes for whoever walks them. Charge their width,
+// including nested chains. Ordinary lists only contribute their maximum child
+// height, so unrelated statements do not consume spine depth.
+fn check_bounded_spines(root: &GrammarASTNode) -> Result<(), String> {
     const MAX_SPINE: usize = 512;
-    check_chain_spine(root, MAX_SPINE).map_err(|_| {
-        "JavaScript typed AST construction exceeds the division-only spine limit".to_string()
-    })
+    check_chain_spine(root, MAX_SPINE)
+        .map_err(|_| "JavaScript expression chain exceeds the bounded CST spine limit".to_string())
 }
 
 /// A CST whose operator / member / call chains would fold into a typed AST
@@ -460,78 +449,95 @@ mod tests {
     use super::*;
 
     #[test]
-    fn division_only_program_preserves_asi_and_rejects_regex() {
-        let ast = parse_javascript_program_division_only(
+    fn bounded_cst_keeps_asi_and_lexes_division_with_the_mode_table() {
+        // ASI ran: two statements without a semicolon between them, each a
+        // left-folded division chain.
+        let cst = parse_javascript_cst_bounded(
             "console.log(8 / 2 / 2)\nconsole.log(6 / 3 / 2)",
             EsVersion::Es2020,
         )
         .unwrap();
-        assert_eq!(ast.body.len(), 2);
-        for source in [
-            "console.log(/1/);",
-            "console.log(8 /);",
-            "console.log(8 / / 2);",
-        ] {
+        assert_eq!(cst.rule_name, "program");
+        assert_eq!(cst.children.len(), 2);
+        // A slash with no operand on one side is still a syntax error.
+        for source in ["console.log(8 /);", "console.log(8 / / 2);"] {
             assert!(
-                parse_javascript_program_division_only(source, EsVersion::Es2020).is_err(),
+                parse_javascript_cst_bounded(source, EsVersion::Es2020).is_err(),
                 "{source}"
             );
         }
-        // A dedicated token goal must still use the guarded parser path.
+        // Grouping depth still goes through the guarded parser path.
         let deep = format!("{}1{};", "(".repeat(200), ")".repeat(200));
-        assert!(parse_javascript_program_division_only(&deep, EsVersion::Es2020).is_err());
-        assert!(parse_javascript_program("var r=/x/g;", EsVersion::Es2020).is_ok());
+        assert!(parse_javascript_cst_bounded(&deep, EsVersion::Es2020).is_err());
     }
 
-    #[test]
-    fn division_only_cst_is_the_tree_the_typed_entry_bridges() {
-        // Same steps, same errors: the typed entry is the CST entry plus the
-        // bridge, so every failure text matches and every success bridges.
-        for source in [
-            "console.log(8 / 2 / 2)\nconsole.log(6 / 3 / 2)",
-            "let x = 1 / 2; const y = x * 4;",
-            "console.log(/1/);",
-            "console.log(8 /);",
-            "1 ** 2;",
-            &format!("console.log({});", vec!["1"; 5_000].join("/")),
-            &format!("{}1{};", "(".repeat(200), ")".repeat(200)),
-        ] {
-            let cst = parse_javascript_cst_division_only(source, EsVersion::Es2020);
-            let typed = parse_javascript_program_division_only(source, EsVersion::Es2020);
-            match (cst, typed) {
-                (Ok(cst), Ok(typed)) => {
-                    assert_eq!(cst.rule_name, "program");
-                    let bridged = bridge::grammar_to_program(&cst, EsVersion::Es2020).unwrap();
-                    assert_eq!(format!("{bridged:?}"), format!("{typed:?}"), "{source}");
-                }
-                (Err(cst), Err(typed)) => assert_eq!(cst, typed, "{source}"),
-                (cst, typed) => panic!("{source}: CST {cst:?} vs typed {typed:?}"),
+    /// Every terminal's (type name or kind, text), left to right.
+    fn leaves(node: &GrammarASTNode, out: &mut Vec<String>) {
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(n) => leaves(n, out),
+                ASTNodeOrToken::Token(t) => out.push(format!(
+                    "{}:{}",
+                    t.type_name
+                        .clone()
+                        .unwrap_or_else(|| format!("{:?}", t.type_)),
+                    t.value
+                )),
             }
         }
-        // ASI ran: two statements without a semicolon between them.
-        let cst =
-            parse_javascript_cst_division_only("console.log(1)\nconsole.log(2)", EsVersion::Es2020)
-                .unwrap();
-        assert_eq!(cst.children.len(), 2);
     }
 
     #[test]
-    fn division_only_rejects_flat_spines_before_typed_ast_construction() {
+    fn a_regex_in_expression_position_is_one_token_not_a_division_chain() {
+        // Before phase 6a the IIR entry deleted REGEX, so `/1/` became three
+        // tokens and the parse failed. The mode table makes it one REGEX
+        // leaf; rejecting it is the IIR compiler's subset check, not ours.
+        let cst = parse_javascript_cst_bounded("console.log(/1/);", EsVersion::Es2020).unwrap();
+        let mut out = Vec::new();
+        leaves(&cst, &mut out);
+        assert!(out.iter().any(|leaf| leaf == "REGEX:/1/"), "{out:?}");
+        // And in operand position the same characters are two divisions.
+        let cst = parse_javascript_cst_bounded("console.log(x /1/ 2);", EsVersion::Es2020).unwrap();
+        let mut out = Vec::new();
+        leaves(&cst, &mut out);
+        assert!(!out.iter().any(|leaf| leaf.starts_with("REGEX")), "{out:?}");
+    }
+
+    #[test]
+    fn bounded_cst_division_chains_lex_as_division_in_every_moded_edition() {
+        // Every edition from es2015 on carries the F10 table (es2025 first;
+        // es2015-es2024 since phase 6a), so the IIR entry's division chain
+        // means the same thing whichever of them a release selects.
+        for &version in EsVersion::ALL {
+            if matches!(version, EsVersion::Es1 | EsVersion::Es3 | EsVersion::Es5) {
+                continue;
+            }
+            let cst = parse_javascript_cst_bounded("console.log(8 / 2 / 2);", version).unwrap();
+            let mut out = Vec::new();
+            leaves(&cst, &mut out);
+            assert!(
+                !out.iter().any(|leaf| leaf.starts_with("REGEX")),
+                "{version}: {out:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn bounded_cst_rejects_flat_spines() {
         for length in [5_000, 20_000] {
             for source in [
                 format!("console.log({});", vec!["1"; length].join("/")),
                 format!("x{};", ".x".repeat(length)),
                 format!("x{};", "()".repeat(length)),
             ] {
-                let error =
-                    parse_javascript_program_division_only(&source, EsVersion::Es2020).unwrap_err();
+                let error = parse_javascript_cst_bounded(&source, EsVersion::Es2020).unwrap_err();
                 assert!(error.contains("spine limit"), "{error}");
             }
         }
         // List breadth must not be confused with recursively dropped depth.
         let source = "console.log(1);".repeat(1_000);
-        let ast = parse_javascript_program_division_only(&source, EsVersion::Es2020).unwrap();
-        assert_eq!(ast.body.len(), 1_000);
+        let cst = parse_javascript_cst_bounded(&source, EsVersion::Es2020).unwrap();
+        assert_eq!(cst.children.len(), 1_000);
     }
 
     // ---------------------------------------------------------------
@@ -624,19 +630,18 @@ mod tests {
     }
 
     #[test]
-    fn division_only_rejects_exponent_tokens_before_recursive_parsing() {
+    fn bounded_cst_rejects_exponent_tokens_before_recursive_parsing() {
         for source in [
             "1 ** 2;".to_string(),
             "x **= 2;".to_string(),
             format!("console.log({});", vec!["1"; 200].join("**")),
             format!("console.log({});", vec!["1"; 5_000].join("**")),
         ] {
-            let error =
-                parse_javascript_program_division_only(&source, EsVersion::Es2020).unwrap_err();
+            let error = parse_javascript_cst_bounded(&source, EsVersion::Es2020).unwrap_err();
             assert!(error.contains("exponentiation is unsupported"), "{error}");
         }
         for source in ["'**';", "console.log(1 /* ** */ / 2 / 2);"] {
-            assert!(parse_javascript_program_division_only(source, EsVersion::Es2020).is_ok());
+            assert!(parse_javascript_cst_bounded(source, EsVersion::Es2020).is_ok());
         }
         assert!(parse_javascript_program("1 ** 2;", EsVersion::Es2020).is_ok());
     }

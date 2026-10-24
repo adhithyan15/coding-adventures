@@ -1,0 +1,515 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 283,
+  "title": "If, then, or else",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:16cbd008512ce9c5",
+  "lessons": [
+    {
+      "id": "GU-C283-jo-to",
+      "sequence": 15280,
+      "title": "જો …, તો … (jo …, to …) — if, then",
+      "headword": "જો તમને તાવ છે, તો …",
+      "romanization": "jo tamne tāv che, to …",
+      "gloss": "if you have a fever, then … — jo opens the condition, to opens what follows",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc769fe87a9e96fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if\", then \"if … then\", from A2. (જો, જો … તો ….) Then \"you should rest\". (tamāre ārām karvo joīe.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two halves",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જો તમને તાવ છે, તો તમારે આરામ કરવો જોઈએ. jo tamne tāv che, to tamāre ārām karvo joīe. — \"If you have a fever, then you should rest.\""
+            },
+            {
+              "kind": "speech",
+              "text": "જો (jo) opens the condition, and તો (to), \"then\", opens what follows from it. Each half is a whole sentence with its own verb. In quick speech તો can drop, but written down it marks where the second half begins."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: if it is so now",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જો તમને ભૂખ છે, તો ખાઈ લો. jo tamne bhūkh che, to khāī lo. — \"If you're hungry, then go ahead and eat.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When the condition is about now, it takes the present: જો તમને ભૂખ છે, જો તે ઘરે છે. The second half can be advice, a request with -ઓ, or a plain statement: જો ઠંડી છે, તો હું ઘરે રહીશ (jo ṭhanḍī che, to hũ ghare rahīś)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If you're hungry, go ahead and eat\" — jo tamne bhūkh che, to khāī lo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If you're hungry, go ahead and eat\" — *jo tamne bhūkh che, to khāī lo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it's cold, I'll stay at home\" — jo ṭhanḍī che, to hũ ghare rahīś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it's cold, I'll stay at home\" — *jo ṭhanḍī che, to hũ ghare rahīś*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C283-jo-to-r1",
+              "prompt": "Tell someone, with respect: if you have a fever, then you should go to the doctor.",
+              "assesses": [
+                "GU-GRAMMAR-C283-JO-TO-01",
+                "GU-GRAMMAR-C283-JO-PRESENT-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "jo tamne tāv che, to tamāre dāktar pāse javũ joīe",
+                "જો તમને તાવ છે, તો તમારે દાક્તર પાસે જવું જોઈએ.",
+                "jo tamne tāv che, to tamāre dāktar pāse javũ joīe."
+              ],
+              "feedback": {
+                "correct": "jo for the condition, to for the advice.",
+                "incorrect": "Open with jo tamne tāv che, then to and the advice: tamāre dāktar pāse javũ joīe."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word opens the condition? (જો.) Which opens the second half? (તો.) \"If you have a fever\"? (જો તમને તાવ છે.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C283-jo-varsad-padshe",
+      "sequence": 15290,
+      "title": "જો વરસાદ પડશે, તો … (jo varsād paḍśe, to …) — if it happens",
+      "headword": "જો વરસાદ પડશે, તો …",
+      "romanization": "jo varsād paḍśe, to …",
+      "gloss": "if it rains, … — a condition about later takes the future, or the past when it would come first",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:566cfe2e574cb045",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if you have a fever, then you should rest\". (jo tamne tāv che, to tamāre ārām karvo joīe.) Then \"we will stay\". (ame rahīśũ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the future after જો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જો વરસાદ પડશે, તો અમે ઘરે રહીશું. jo varsād paḍśe, to ame ghare rahīśũ. — \"If it rains, we'll stay at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "English says \"if it rains\"; Gujarati says \"if it will rain\": a condition about later takes the future, પડશે, and so does the result, રહીશું. \"If it doesn't rain\" is the નહીં form: જો વરસાદ નહીં પડે, તો અમે જઈશું (jo varsād nahī̃ paḍe, to ame jaīśũ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the past after જો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જો ટ્રેન છૂટી ગઈ, તો હું બસમાં આવીશ. jo ṭren chūṭī gaī, to hũ basmā̃ āvīś. — \"If I miss the train, I'll come by bus.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When the condition would be over before the result starts, it can take the plain past: \"if the train has gone, then …\". જો મારું પાકીટ ખોવાઈ ગયું, તો હું પોલીસમાં ફરિયાદ કરીશ (jo mārũ pākīṭ khovāī gayũ, to hũ polīsmā̃ phariyād karīś)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it doesn't rain, we'll go\" — jo varsād nahī̃ paḍe, to ame jaīśũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it doesn't rain, we'll go\" — *jo varsād nahī̃ paḍe, to ame jaīśũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If my wallet is lost, I'll make a complaint\" — jo mārũ pākīṭ khovāī gayũ, to hũ phariyād karīś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If my wallet is lost, I'll make a complaint\" — *jo mārũ pākīṭ khovāī gayũ, to hũ phariyād karīś*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C283-jo-varsad-padshe-r1",
+              "prompt": "Say: if it rains, we'll stay at home; and if I miss the train, I'll come by bus.",
+              "assesses": [
+                "GU-GRAMMAR-C283-IF-FUTURE-01",
+                "GU-GRAMMAR-C283-IF-PERFECTIVE-01"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "jo varsād paḍśe, to ame ghare rahīśũ; jo ṭren chūṭī gaī, to hũ basmā̃ āvīś",
+                "જો વરસાદ પડશે, તો અમે ઘરે રહીશું. જો ટ્રેન છૂટી ગઈ, તો હું બસમાં આવીશ.",
+                "jo varsād paḍśe, to ame ghare rahīśũ. jo ṭren chūṭī gaī, to hũ basmā̃ āvīś."
+              ],
+              "feedback": {
+                "correct": "paḍśe, the future, for later; chūṭī gaī, the past, for what comes first.",
+                "incorrect": "After jo, use the future for later: varsād paḍśe. For the missed train, the past: ṭren chūṭī gaī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If it rains\"? (જો વરસાદ પડશે.) \"If it doesn't rain\"? (જો વરસાદ નહીં પડે.) \"If I miss the train\"? (જો ટ્રેન છૂટી ગઈ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C283-nahintar",
+      "sequence": 15300,
+      "title": "નહીંતર (nahī̃tar) — otherwise; or else",
+      "headword": "નહીંતર",
+      "romanization": "nahī̃tar",
+      "gloss": "otherwise; or else",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2f332da3c78a3d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"if it rains, we'll stay at home\". (jo varsād paḍśe, to ame ghare rahīśũ.) Then \"quickly\" and \"an umbrella\". (જલદી, છત્રી.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નહીંતર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નહીંતર — nahī̃tar — \"otherwise; or else\". First what to do, then નહીંતર, then what will happen if it is not done:"
+            },
+            {
+              "kind": "speech",
+              "text": "જલદી ચાલો, નહીંતર ટ્રેન છૂટી જશે. jaldī cālo, nahī̃tar ṭren chūṭī jaśe. — \"Walk quickly, or else we'll miss the train.\""
+            },
+            {
+              "kind": "speech",
+              "text": "છત્રી લો, નહીંતર તમે પલળી જશો. chatrī lo, nahī̃tar tame palḷī jaśo. — \"Take an umbrella, otherwise you'll get soaked.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It says in one word what જો … નહીં …, તો … says in a whole clause."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નહીંતર (nahī̃tar) is built from નહીં, \"not\", and -tar: \"if not, then\". CDIAL lists Gujarati nahitar, \"otherwise\", under Sanskrit tarhi, \"then\" (CDIAL 5730)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nahī̃tar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nahī̃tar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Walk quickly, or else we'll miss the train\" — jaldī cālo, nahī̃tar ṭren chūṭī jaśe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Walk quickly, or else we'll miss the train\" — *jaldī cālo, nahī̃tar ṭren chūṭī jaśe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Take an umbrella, otherwise you'll get soaked\" — chatrī lo, nahī̃tar tame palḷī jaśo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Take an umbrella, otherwise you'll get soaked\" — *chatrī lo, nahī̃tar tame palḷī jaśo*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નહીંતર (nahī̃tar) mean? (\"Otherwise; or else\".) Which two words are inside it? (નહીં and -tar, \"then\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R283-if-and-otherwise",
+      "sequence": 15310,
+      "title": "Review — if, then, or else",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what happens if, and what happens otherwise",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c1e6489c24536fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the city is bigger than the village\". (śaher gām kartā̃ moṭũ che.) Then \"I have lived here for two years\". (hũ be varasthī ahī̃ rahũ chũ.) And \"my wish is to live in the village\". (mārī icchā gāmmā̃ rahevānī che.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If you have a fever, then you should rest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If you have a fever, then you should rest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If you're hungry, go ahead and eat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If you're hungry, go ahead and eat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If it rains, we'll stay at home. If it doesn't rain, we'll go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If it rains, we'll stay at home. If it doesn't rain, we'll go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If I miss the train, I'll come by bus. The bus is the cheapest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If I miss the train, I'll come by bus. The bus is the cheapest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The shop is open from morning until evening. Go quickly, otherwise it will close.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The shop is open from morning until evening. Go quickly, otherwise it will close.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If it rains\", about tomorrow: which tense? (The future: પડશે.) \"If I miss the train\"? (જો ટ્રેન છૂટી ગઈ.) \"Or else\"? (નહીંતર (nahī̃tar).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

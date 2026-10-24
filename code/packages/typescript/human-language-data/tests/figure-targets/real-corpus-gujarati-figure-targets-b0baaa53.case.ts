@@ -3,8 +3,9 @@ import { realCorpusTargets as targets } from "./real-corpus-fixture.js";
 
 describe("Gujarati real-corpus figure targets", () => {
   it("draws every Gujarati sign lesson, and every Gujarati word or list whose signs are cited", () => {
-    // Ten lessons teach a sign by itself, and thirteen word lessons (eleven
-    // words, and હા twice) carry one: 23 in all. The six lists that carry one
+    // Twelve lessons teach a sign by itself, and thirteen word lessons (eleven
+    // words, and હા twice) carry one: 25 in all. The B1 core added the two
+    // newest sign lessons, ઃ after દુઃખ and ૌ after સૌથી. The six lists that carry one
     // (GU-R04 … GU-R19) and હા's dictation are writing from sound, so they
     // print no strip (no-strip-above-a-dictation). All are drawn
     // consonant first, sign after: KanoAI's barakhadi templates write every
@@ -43,6 +44,8 @@ describe("Gujarati real-corpus figure targets", () => {
       "GU-W07-uu-matra": "ૂ",
       "GU-W21-ai-matra": "ૈ",
       "GU-W45-ai-sign": "ૈ",
+      "GU-W50-visarga": "ઃ",
+      "GU-W52-au-sign": "ૌ",
     });
     // The virama ્ and the vocalic-r sign ૃ have no Gujarati source, so their
     // own lessons and every word that carries one stay undrawn. જો is refused

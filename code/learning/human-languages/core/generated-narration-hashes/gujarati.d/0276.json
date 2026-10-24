@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:87e0a2781c895b7d",
+  "lessonIds": [
+    "GU-C276-khaine",
+    "GU-C276-chevte",
+    "GU-C276-pahela-pachi",
+    "GU-C276-ek-ravivar",
+    "GU-R276-a-story-in-order"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "gujarati/narration/ch276.txt",
+  "json": "gujarati/narration/ch276.json",
+  "textHash": "fnv1a64:17d84bf59117174e",
+  "jsonHash": "fnv1a64:13257dae6e8619ce",
+  "findings": []
+}
