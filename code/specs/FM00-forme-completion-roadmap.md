@@ -1,8 +1,8 @@
 # Forme Completion Roadmap
 
-> **Status:** Completion record, freshly audited 2026-10-18; the shipped
-> release horizons remain intact while FM-B074 closes the remaining newly
-> discovered specification-conformance gap.
+> **Status:** Completion record, freshly audited 2026-10-24; the shipped
+> release horizons remain intact while FM-B074 closes the highest-priority
+> specification-conformance gap and FM-B075 remains ready behind it.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -11,7 +11,7 @@
 
 | Surface | Status | Canonical specification |
 |---|---|---|
-| Vision and delivery backlog | Reopened for FM-B074 | [FM00 vision](FM00-forme-vision.md) and this roadmap |
+| Vision and delivery backlog | Reopened for FM-B074–FM-B075 | [FM00 vision](FM00-forme-vision.md) and this roadmap |
 | Kernel | Product contract implemented; extension-kind subtype enforcement is tracked by FM-B074 | [FM01](FM01-forme-kernel.md) |
 | Plugin host | Extensible v1 implemented: installation, authority, runners, native sandboxes, product composition, and live storage watches | [FM02](FM02-forme-plugin-host.md) |
 | Orchestrator | Headless v0 product and declarative TOML parity implemented | [FM03](FM03-forme-orchestrator.md) |
@@ -204,6 +204,7 @@ blocked item names its dependency.
 | 71 | FM-B029 | done | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 | 72 | FM-B073 | done | Implement the declarative TOML pipeline form | Close FM03 §2.3 with a bounded parser that produces the same `PipelineConfig` shape as the canonical TypeScript form, rejects duplicate or unsupported input deterministically, resolves package stages through FM02, and runs through the real CLI product path. Differential and subprocess acceptance tests prove equivalent TOML and TypeScript pipelines. |
 | 73 | FM-B074 | active | Enforce plugin extension-kind subtype compatibility | Close FM01 §§2.5–2.6 by threading one immutable validated FM02 kind registry into DAG compatibility checks. Produced extension kinds may widen to their registered parent; generic producers may not narrow into specialized consumers without an explicit validating refinement stage. Bind every parent edge to its resolved descriptor/version, reject duplicate global names, missing parents and cycles, and preserve version, discriminant, stream, and named-port rules. Tests cover direct and transitive widening plus unsafe narrowing and every invalid registration. |
+| 74 | FM-B075 | ready | Reconcile plugin-manifest kernel-kind recognition | Derive or exhaustively pin FM02's accepted built-in kind names to the FM01 kernel roster so plugin stages can consume or produce the shipped `TerminalBuffer` kind without reopening unknown-kind acceptance. A parity regression fails whenever the two inventories drift again. |
 
 ## Dependency path
 
@@ -225,8 +226,9 @@ FM-B070 closes browser quality, FM-B071 closes the public API migration, and
 FM-B072 → FM-B018 closes the supported-platform release-quality milestone.
 FM-B029 closes the remaining CI-state clarity gap without reopening the shipped
 release horizon. Authoring v1 is complete. The 2026-10-18 conformance audit
-then found two independently reviewable gaps outside the already-proven product
-paths: FM-B073 is complete and FM-B074 is active.
+found two independently reviewable gaps outside the already-proven product
+paths: FM-B073 is complete and FM-B074 is active. The 2026-10-24 loop audit
+then found the smaller manifest/kernel inventory drift tracked as ready FM-B075.
 
 ### FM-B070 web-quality contract
 
@@ -352,6 +354,7 @@ work.
 
 | Date | Discovery | Disposition |
 |---|---|---|
+| 2026-10-24 | A fresh source and GitHub audit found no open Forme pull requests or issues, but FM02's static `RESERVED_KIND_NAMES` inventory omits the shipped FM01 `TerminalBuffer` kind. Plugin manifests therefore reject a real kernel kind even though the terminal backend and kernel descriptor are complete. | Keep FM-B074 active because it closes the broader unsafe type-compatibility boundary. Add FM-B075 as the next ready, independently verifiable parity repair. |
 | 2026-10-18 | FM-B073 now ships bounded TOML semantics and closed pipeline lowering in `forme-pipeline-config`, including hostile-input and differential parity tests. The real CLI accepts and discovers `.toml`, reads it within the same one-MiB limit, rejects invalid UTF-8/unknown extensions, resolves its package stages through the installed FM02 host, and completes subprocess DAG validation. | Close FM-B073 and activate FM-B074 as the sole remaining conformance gap. |
 | 2026-10-18 | FM03 specifies an expressively equivalent declarative TOML pipeline form, but `forme-pipeline-config` still exposes only the TypeScript loader and explicitly says the TOML sibling is not built. | FM-B073. This is the highest-priority active gap because it is a complete user-facing configuration surface with a crisp parser and CLI acceptance boundary. |
 | 2026-10-18 | FM01 requires plugin extension kinds to participate in name-or-subtype compatibility, and FM02 manifests already validate `subtypeOf`; `forme-orchestrator` still compares names exactly and carries a `TODO when ext: kinds land`. | FM-B074, ready after FM-B073. |

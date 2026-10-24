@@ -734,6 +734,29 @@ names across plugins, missing parents, cycles, and any subtype edge whose
 resolved parent descriptor changes identity or version while the registry is
 being built; discovery order must never choose a kind's meaning.
 
+The registry crosses the FM02/FM03 boundary through this read-only kernel
+surface:
+
+```typescript
+export interface RegisteredKind {
+  /** The one frozen descriptor selected for this global name. */
+  readonly descriptor: KindDescriptor;
+  /** The exact frozen parent descriptor bound at registration, if any. */
+  readonly parent: KindDescriptor | null;
+}
+
+export interface KindRegistry {
+  /** Return the immutable registration for a kind name, if registered. */
+  lookup(name: KindName): RegisteredKind | undefined;
+}
+```
+
+FM02 owns construction and validation; FM03 receives only this lookup surface.
+Neither stages nor callers receive the mutable map used while the registry is
+built. Extension descriptors and registrations are defensive frozen snapshots,
+so later manifest mutation cannot change the meaning of an already-resolved
+edge.
+
 Kernel-level kinds cannot be extended — plugins cannot change
 `ContentSource` — but they can declare kinds that are **subtypes** of
 kernel kinds. A stage producing `ext:youtube-embed` may feed a stage consuming
