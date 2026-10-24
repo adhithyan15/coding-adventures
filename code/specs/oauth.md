@@ -863,14 +863,26 @@ accepting caller-substituted certificates. Projection alone does not authenticat
 a signature, validate either certificate, route an algorithm, advance path-length
 state, apply constraints or revocation, establish trust, or provide complete path
 validation, TLS, HTTP, OAuth transport, or network authority.
-The RSA SHA-256 issuer-link composition can now consume that non-copyable
-selection evidence directly. It derives the exact child and selected candidate
-from the evidence, then performs issuing-CA role, caller-owned RSA key-policy,
-and exact child-signature checks without a second Name callback. This closes a
-cross-certificate mixing gap between selection and authentication for the one
-implemented algorithm, but does not add algorithm routing, construct or
-validate a complete path, recognize trust, process constraints or revocation,
-or provide TLS, HTTP, OAuth transport, or network authority.
+The RSA SHA-256 issuer-link composition can now consume non-copyable unique
+candidate-selection evidence directly. It derives the exact child and selected
+candidate from that evidence, then performs issuing-CA role, caller-owned RSA
+key-policy, and exact child-signature checks without a second Name callback.
+This closes a cross-certificate mixing gap between one-step selection and
+authentication for the one implemented algorithm, but does not add algorithm
+routing, construct or validate a complete path, recognize trust, process
+constraints or revocation, or provide TLS, HTTP, OAuth transport, or network
+authority.
+A bounded constructed-path authentication follow-up now consumes one adjacent-
+link projection from the exact retained path. It authenticates only the
+projection's derived target-or-candidate child against its derived selected
+issuer with the existing fixed RSA PKCS #1 v1.5 SHA-256 verifier, without
+rerunning Name policy, then returns distinct non-copyable evidence retaining
+both the construction projection and validated issuer key. This prevents path
+order from being discarded or either endpoint from being substituted between
+construction and authentication. It still does not route algorithms, retain
+complete issuer policy, authenticate any other link, validate the whole path,
+recognize or constrain trust, process name constraints or revocation, perform
+TLS or HTTP, authorize OAuth transport, or open a network connection.
 Certificate-wide role policy can now bind caller-owned critical-extension
 recognition and algorithm-independent role semantics to the same exact decoded
 certificate. The non-copyable result prevents checking critical extensions on
