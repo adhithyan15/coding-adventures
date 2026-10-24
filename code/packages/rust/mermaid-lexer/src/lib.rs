@@ -1494,6 +1494,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_attribute_keys_case_insensitively() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nACCOUNT {\n  string id pk\n  string owner_id fK, Uk\n}\n",
+        );
+        let keys: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ATTRIBUTE_KEY"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(keys, ["pk", "fK", "Uk"]);
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
