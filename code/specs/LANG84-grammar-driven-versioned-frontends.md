@@ -1465,6 +1465,62 @@ Divergences from this spec in 5b/7b slice 2:
    are `f64`, so B(S) for a printing subset depends on LANG83's `f64`
    formatting ops (`f64_to_str_js` / `write_f64_js`, LANG83 PR6). Until then,
    subsets are limited to what LANG83 has registered.
+
+   **6e plan (2026-10-24): blocked on a LANG83 slice, recorded here.**
+   `write_f64_js` (PR6a) landed, but it is not enough for B(`es-number-log`).
+   Two of the subset's twelve accepted cases need behaviour no registered op
+   gives on every backend:
+
+   | Case | Output (node v22) | Blocker |
+   | --- | --- | --- |
+   | `negative_zero`: `console.log(-0, 0 * -1, 5 - 5)` | `-0 -0 0` | `console.log` formats with `util.inspect`, which keeps the sign of zero. `write_f64_js` is `String(x)`, which prints `-0` as `0`. Telling `-0` from `0` needs the sign bit, and the usual `1 / x < 0` test divides by zero |
+   | `infinities_and_nan`: `console.log(1 / 0, -1 / 0, 0 / 0)` | `Infinity -Infinity NaN` | BEAM has no non-finite float: `erlang:'/'/2`, `'*'/2` and `'+'/2` raise `badarith` before one exists (`iir-to-beam` notes this beside its PR6a writer). The registry's `div` is also `DIV_ZERO_ONLY`, with edges that differ by backend (LANG83 "Legacy edge behaviour") |
+
+   B(S) allows a backend to refuse a module at compile time with
+   `UnsupportedOps`, but not at run time. A JavaScript module that emits the
+   classic `add`/`sub`/`mul`/`div` therefore fails B on BEAM as soon as any
+   case overflows to infinity or divides by zero, and `1e308 * 10` makes this
+   reachable for every arithmetic operator, not only `/`.
+
+   **Prerequisite (a LANG83 slice, "PR6c"):**
+   - **IEEE-754 binary64 ops with defined edges.** Type-first, like
+     `i64_*_ovf`: `f64_add`, `f64_sub`, `f64_mul`, `f64_div` and `f64_neg`.
+     Each returns the IEEE result, `±Infinity` or `NaN` included, and never
+     traps.
+     - Every backend whose floats are IEEE lowers them to its native float
+       op: LLVM `fadd` and friends, WASM `f64.*`, JVM `d*`, CLR `add`/`div`
+       on `float64`, x86-64 SSE2, AArch64 `fadd`, and vm-core and the JIT
+       on `f64`.
+     - BEAM declares them `Refused` until it has a non-finite
+       representation, so BEAM rejects a JavaScript module at compile time,
+       which B allows.
+     - The classic ops keep their legacy edges, as PR1b kept `div`'s.
+   - **`f64_signbit`** (one `f64`, `int` result 0/1). The frontend then
+     prints `-` before `write_f64_js` when a zero's sign bit is set, which
+     reproduces `util.inspect`'s `-0`. It is Lowered everywhere, including
+     BEAM (OTP 27 keeps `-0.0` distinct; test with a `<<S:1, _/bits>>` binary
+     match).
+
+   **Then 6e itself:**
+   - **Lowering.** `javascript-iir-compiler` lowers `console.log(a, …)` to
+     the ops below, in place of the VM-only `call_builtin js_console_log`:
+     each argument through `f64_signbit` and `write_f64_js`, `putchar 32`
+     between arguments, and `putchar 10` at the end. Arithmetic uses the
+     `f64_*` ops. The ReferenceError builtins become
+     `trap "Trap.ReferenceError"`, a new closed kind, so rows use
+     `StdoutThenTrap` for the TDZ and not-defined cases.
+   - **`run_module`** keeps its captured sink by registering `write_f64_js`
+     and `putchar` into the same buffer.
+   - **lang-aot.** `Language::JavaScript` (`javascript`, `js`, `.js`)
+     resolves `--lang javascript@<edition>` through 6d's
+     `compile_source_at` and `resolve_release`. `has_release_inventory` and
+     `MATRIX_LANGUAGES` gain JavaScript.
+   - **Rows.** `lang_matrix` gets a row for each case on each of 6d's two
+     IIR-identity class representatives, es2016 and es2021, checked against
+     host node v22.
+   - **Claim.** B(`es-number-log`) for es2016–es2025 only when every row
+     passes on all nine backends, with BEAM's compile-time refusal counting
+     as allowed.
 6. **Later.** E7 goals replace the F10 approximation for full JavaScript.
 
 ### Twig and McCarthy Lisp: rewrite to walk `GrammarASTNode`
