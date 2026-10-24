@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C281-dukh",
+    "language": "gujarati",
+    "chapter": 281,
+    "sequence": 15120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05fd9f2d7c58a844"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C284-adhar-rakhe-che",
+    "language": "gujarati",
+    "chapter": 284,
+    "sequence": 15330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19126ce73aa32d1a"
+  },
+  "findings": []
+}

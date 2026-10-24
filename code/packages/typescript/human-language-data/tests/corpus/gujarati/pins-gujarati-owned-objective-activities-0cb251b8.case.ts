@@ -18,6 +18,7 @@ it("pins Gujarati-owned objective activities", () => {
     .sort();
   expect(ids).toEqual([
     // Gujarati A2 core (chapters 145-152): +20 -- fifteen grammar and practice checks, two reading tasks, three letter recalls.
+    // Gujarati B1 core (chapters 273-284): +28 -- twenty-two grammar checks, one reading task, five letter recalls.
     "GU-C01-aabhaar-script-retrieval",
     "GU-C01-aavjo-script-retrieval",
     "GU-C01-haa-naa-script-retrieval",
@@ -117,6 +118,19 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C27-plate-five-carryover",
     "GU-C27-plate-five-listening",
     "GU-C27-plate-five-speaking",
+    "GU-C273-arune-pidhi-r1",
+    "GU-C273-gayo-che-r1",
+    "GU-C274-javano-hato-r1",
+    "GU-C274-nahi-avu-r1",
+    "GU-C275-vanchto-hato-r1",
+    "GU-C276-ek-ravivar-r1",
+    "GU-C276-khaine-r1",
+    "GU-C276-pahela-pachi-r1",
+    "GU-C277-karan-ke-r1",
+    "GU-C277-mane-lage-che-r1",
+    "GU-C278-javu-joie-r1",
+    "GU-C278-tethi-etle-r1",
+    "GU-C279-kevi-rite-javu-r1",
     "GU-C28-baari-guided-copy",
     "GU-C28-baari-reading",
     "GU-C28-baari-time-r3",
@@ -128,6 +142,16 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C28-house-five-carryover",
     "GU-C28-house-five-listening",
     "GU-C28-house-five-speaking",
+    "GU-C280-ek-tikit-r1",
+    "GU-C280-khovai-gai-r1",
+    "GU-C281-banvu-che-r1",
+    "GU-C281-mane-bik-r1",
+    "GU-C282-be-varasthi-r1",
+    "GU-C282-kartan-r1",
+    "GU-C283-jo-to-r1",
+    "GU-C283-jo-varsad-padshe-r1",
+    "GU-C284-adhar-rakhe-che-r1",
+    "GU-C284-hot-to-avat-r1",
     "GU-C29-hear-aakaash-recall",
     "GU-C29-hear-chandra-recall",
     "GU-C29-hear-nadi-recall",
@@ -336,6 +360,11 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-W22-ttha-recall",
     "GU-W46-o-recall",
     "GU-W47-dda-recall",
-    "GU-W48-uu-recall"
+    "GU-W48-uu-recall",
+    "GU-W49-jha-recall",
+    "GU-W50-visarga-recall",
+    "GU-W51-short-i-recall",
+    "GU-W52-au-sign-recall",
+    "GU-W53-vocalic-r-letter-recall",
   ]);
 });

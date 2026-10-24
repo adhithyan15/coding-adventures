@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C280-ek-tikit",
+    "language": "gujarati",
+    "chapter": 280,
+    "sequence": 15080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e061b16df05508a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C282-sudhi",
+  "pathSegment": "GU-PATH-282-COMPARE-TIME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-282-COMPARE-TIME",
+      "order": 3
+    }
+  ]
+}

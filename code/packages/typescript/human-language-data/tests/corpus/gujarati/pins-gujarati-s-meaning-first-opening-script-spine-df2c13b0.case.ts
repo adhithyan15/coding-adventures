@@ -387,5 +387,19 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["270", 5],
     ["271", 5],
     ["272", 7],
+    // The B1 core, chapters 273-284: one or two grammar lessons and a review a
+    // chapter, plus its word lessons, letters, reading and six-line task.
+    ["273", 3],
+    ["274", 3],
+    ["275", 3],
+    ["276", 5],
+    ["277", 5],
+    ["278", 4],
+    ["279", 3],
+    ["280", 6],
+    ["281", 8],
+    ["282", 8],
+    ["283", 4],
+    ["284", 5],
   ]);
 });
