@@ -229,6 +229,14 @@ const ER_MIXED_RELATIONSHIP_OPERATORS_VISUAL_CORPUS: &str = include_str!(concat!
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-mixed-relationship-operators-11.16.1-visual-corpus.json"
 ));
+const ER_CARDINALITY_MATRIX_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-cardinality-matrix-11.16.1-corpus.json"
+));
+const ER_CARDINALITY_MATRIX_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-cardinality-matrix-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2776,6 +2784,42 @@ fn pinned_er_mixed_relationship_operators_reach_semantic_ir() {
         relationship.from_mult.as_deref() == Some("1")
             && relationship.to_mult.as_deref() == Some("1..*")
     }));
+}
+
+#[test]
+fn pinned_er_symbolic_cardinality_matrix_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_CARDINALITY_MATRIX_CORPUS)
+        .expect("ER cardinality matrix corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_CARDINALITY_MATRIX_VISUAL_CORPUS)
+        .expect("ER cardinality matrix visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let fixtures = syntax["fixtures"]
+        .as_array()
+        .expect("ER cardinality matrix fixtures");
+    assert_eq!(fixtures.len(), 16);
+
+    for fixture in fixtures {
+        let diagram = parse_er_diagram(
+            fixture["source"]
+                .as_str()
+                .expect("ER cardinality matrix source"),
+        )
+        .expect("ER cardinality matrix fixture must parse");
+        assert_eq!(diagram.relationships.len(), 1, "fixture {}", fixture["name"]);
+        assert_eq!(
+            diagram.relationships[0].from_mult.as_deref(),
+            fixture["from"].as_str(),
+            "fixture {}",
+            fixture["name"]
+        );
+        assert_eq!(
+            diagram.relationships[0].to_mult.as_deref(),
+            fixture["to"].as_str(),
+            "fixture {}",
+            fixture["name"]
+        );
+    }
 }
 
 #[test]
