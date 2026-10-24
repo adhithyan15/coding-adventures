@@ -109,6 +109,12 @@ removes browser-ignored control and zero-width characters before rejecting
 - parsing retains the existing bounded public C# parser entry point;
 - rendering is an in-memory tree walk with explicit node-depth, node-count,
   and output-character ceilings;
+- one render admits at most 1,000,000 aggregate UTF-16 code units of raw URL
+  destinations across links, images, and autolinks. Every visit, including an
+  alias of an earlier node or string, charges the shared budget before URL
+  normalization allocates or scans. Values stripped empty or rejected as unsafe
+  still count. The inclusive budget resets for every `ToHtml` call and bounds
+  normalization work independently of the resulting HTML size;
 - input AST records and child collections are borrowed and never mutated;
 - rendering returns a newly owned string and performs no filesystem, network,
   process, environment, clock, or random access; and
