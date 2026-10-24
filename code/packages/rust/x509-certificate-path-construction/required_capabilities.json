@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/x509-certificate-path-construction",
   "capabilities": [],
-  "justification": "Pure bounded construction over public decoded certificates. No filesystem, network, process, environment, clock, randomness, FFI, credential, secret-key, signing, or external-service access is required."
+  "justification": "Pure bounded construction and adjacent-link projection over public decoded certificates. No filesystem, network, process, environment, clock, randomness, FFI, credential, secret-key, signing, or external-service access is required."
 }
