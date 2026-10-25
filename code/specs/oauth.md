@@ -1392,6 +1392,29 @@ fetch or cache revocation data, read a clock, implement nonce policy, establish
 trust, perform TLS or HTTP, authorize OAuth transport, or grant network
 authority. Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-authenticated-target-revocation` composition now consumes
+that exact good-and-fresh target/issuer result, one issuer-bound authenticated
+RSA SHA-256 responder, and one repository-owned RSA SHA-256 issuer link for the
+target certificate. It requires the revocation result's exact `SingleResponse`
+object to occur inside the signed `BasicOCSPResponse`, requires the target link
+to retain the exact target certificate, and requires both certificate links and
+the `CertID` binding to retain the same exact issuer certificate object.
+It requires the signed response to contain exactly one `SingleResponse`, so an
+unexamined entry encoded under another hash algorithm cannot conflict with the
+selected target status, and revalidates the responder certificate at the exact
+revocation observation time. Byte-equal re-decodes fail closed. Until outer
+extension and nonce policy is implemented, any `responseExtensions` collection
+is rejected. Non-copyable success evidence retains all three complete proofs
+and the exact-time responder-validity result, establishing only that the same
+candidate issuer signed the target and authorized the then-valid delegated
+responder whose key signed the exact unambiguous response containing the good-
+and-fresh target status. This fixed RSA SHA-256 composition does not construct
+or validate a
+certificate path, establish issuer trust, apply responder-path or responder-
+revocation policy, interpret any OCSP extension, fetch or cache data, read a
+clock, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
