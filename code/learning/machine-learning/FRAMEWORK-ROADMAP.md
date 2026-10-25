@@ -142,7 +142,7 @@ SGD training, inspection, and portable save/reload/resume.
 - [ ] Ruby matrix prerequisite: add missing BUILD/BUILD_windows, gem metadata,
   package-local test/lint/coverage and actual gem-install evidence (NN44).
   Existing pure-Ruby arithmetic passes 47 tests; this is not neural training.
-  NN44 now passes 54 tests/124 assertions at 100% library line coverage locally,
+  NN44 now passes 55 tests/125 assertions at 100% library line coverage locally,
   Standard lint and an actual isolated installed-gem dot-product oracle. Actual
   repository package discovery/build CI and verified merge still gate completion.
 - [ ] Ruby native framework.

@@ -5,6 +5,14 @@ require_relative "test_helper"
 # Package metadata is executable Ruby too. Pin its actual payload rather than
 # relying on a README claim that a source checkout can be published.
 class MatrixPackagingTest < Minitest::Test
+  def test_repository_pending_exemption_is_retired
+    # A BUILD front and a PENDING exemption are contradictory. The production
+    # planner rejects that stale exemption before any package tests can run.
+    exemptions = File.expand_path("../../../../BUILD-EXEMPTIONS", __dir__)
+    entries = File.readlines(exemptions).reject { |line| line.strip.start_with?("#") }
+    refute entries.any? { |line| line.split[1] == "code/packages/ruby/matrix" }
+  end
+
   def setup
     @root = File.expand_path("..", __dir__)
     @spec = Gem::Specification.load(File.join(@root, "coding_adventures_matrix.gemspec"))

@@ -52,7 +52,7 @@ about 374 MB; all source copies and unrelated work were preserved. Recheck disk
 before builds, keep installs/output bounded and avoid new full checkouts or Rust
 builds. The removed target can be regenerated from those retained sources.
 
-Local evidence: 54 tests/124 assertions pass at 100% library line coverage,
+Local evidence: 55 tests/125 assertions pass at 100% library line coverage,
 Standard Ruby passes with the Windows-only EndOfLine exception, and the actual
 gem is built/installed in an isolated temporary home. Its independently loaded
 copy produces dot product [[19,22],[43,50]] and reports no neural training.
@@ -64,3 +64,9 @@ development gems to avoid disk/network expansion.
 The standalone smoke helper also records 100% local line coverage under Ruby's
 built-in Coverage API. Temporary artifacts are removed by the mktmpdir block;
 installed-source verification prevents a checkout load path from earning credit.
+
+Publication discovered a required repository integration boundary: both CI and
+CodeQL planning rejected matrix's stale PENDING entry in code/BUILD-EXEMPTIONS
+as ORPHAN_EXEMPTION_STALE / COVERED. Retire only that exact entry and pin its
+absence in the package regressions; unrelated pending owners remain unchanged.
+Actual repaired-head CI must prove repository discovery before delivery.

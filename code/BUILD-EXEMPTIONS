@@ -103,7 +103,6 @@ PENDING code/packages/python/pdp11-simulator  # owned by pdp11-simulator-two-lan
 PENDING code/packages/python/sparc-v8-simulator  # owned by python-intel8051-mips-r2000-sparc-v8-build-front-coverage
 PENDING code/packages/python/wave_physics  # owned by python-wave-physics-orphan-package-root-classification
 PENDING code/packages/ruby/activation-functions  # owned by ruby-activation-matrix-perceptron-build-front-coverage
-PENDING code/packages/ruby/matrix  # owned by ruby-activation-matrix-perceptron-build-front-coverage
 PENDING code/packages/ruby/perceptron  # owned by ruby-activation-matrix-perceptron-build-front-coverage
 PENDING code/packages/typescript/activation-functions  # owned by typescript-activation-matrix-perceptron-build-front-coverage
 PENDING code/packages/typescript/macsyma-compiler  # owned by typescript-macsyma-frontend-build-front-coverage

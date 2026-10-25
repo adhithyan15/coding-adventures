@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Retire the matrix PENDING orphan exemption now that BUILD fronts cover it;
+  regression-test that metadata boundary so repository CI planning can run.
+
 - Package existing 0.2.0 pure-Ruby arithmetic as `coding_adventures_matrix`,
   with explicit gem files/license and no runtime dependencies. Retain matrix_ml
   and its public Matrix API rather than substituting a backend.
