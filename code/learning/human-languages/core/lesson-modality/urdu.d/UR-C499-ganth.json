@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C499-ganth",
+    "language": "urdu",
+    "chapter": 499,
+    "sequence": 29290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9221b944fbb08210"
+  },
+  "findings": []
+}

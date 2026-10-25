@@ -1,0 +1,11 @@
+{
+  "id": "UR-C487-barat",
+  "pathSegment": "UR-PATH-487-WEDDING487",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-487-WEDDING487",
+      "order": 2
+    }
+  ]
+}

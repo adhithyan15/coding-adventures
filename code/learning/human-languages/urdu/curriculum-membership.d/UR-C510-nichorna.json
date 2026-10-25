@@ -1,0 +1,11 @@
+{
+  "id": "UR-C510-nichorna",
+  "pathSegment": "UR-PATH-510-CHHALNI510",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-510-CHHALNI510",
+      "order": 4
+    }
+  ]
+}

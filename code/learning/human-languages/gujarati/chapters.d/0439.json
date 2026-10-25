@@ -1,0 +1,21 @@
+{
+  "chapter": 439,
+  "title": "Hills and Rocks",
+  "label": "ch:gu-hills-and-rocks",
+  "canDo": "I can describe hills, peaks and rocks.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-R439-review-433-439",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can describe hills, peaks and rocks.",
+    "assesses": [
+      "GU-LEX-C439-HILL439-01",
+      "GU-LEX-C439-HILL439-02",
+      "GU-LEX-C439-HILL439-03",
+      "GU-LEX-C439-HILL439-04",
+      "GU-LEX-C439-HILL439-05"
+    ]
+  }
+}

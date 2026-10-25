@@ -1,0 +1,11 @@
+{
+  "id": "GU-C509-kat",
+  "pathSegment": "GU-PATH-509-DHAMAN509",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-509-DHAMAN509",
+      "order": 3
+    }
+  ]
+}

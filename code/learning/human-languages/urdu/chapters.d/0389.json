@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "Dozing on the Train",
+  "label": "ch:ur-dozing-on-the-train",
+  "canDo": "I can describe a long night on a train: bundles, yawns and dozing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C389-unghna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can describe a long night on a train: bundles, yawns and dozing.",
+    "assesses": [
+      "UR-LEX-C389-UNGHNA389-03",
+      "UR-LEX-C389-UNGHNA389-04",
+      "UR-LEX-C389-UNGHNA389-05"
+    ]
+  }
+}

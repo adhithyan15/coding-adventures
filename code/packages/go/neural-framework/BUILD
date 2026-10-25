@@ -1,0 +1,6 @@
+go mod tidy
+go vet ./...
+go test ./... -cover
+go build ./...
+python -m unittest discover -s ../../../scripts/tests -p test_neural_framework_go.py
+python ../../../scripts/validate_neural_framework_go.py

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C272-banna-chahti-hun",
+  "pathSegment": "UR-PATH-272-FEELING",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "UR-EXT-272-FEELING",
+      "order": 5
+    }
+  ]
+}

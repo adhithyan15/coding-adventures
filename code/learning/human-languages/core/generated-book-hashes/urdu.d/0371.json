@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:72a08e2ca965d5b5",
+  "lessonIds": [
+    "UR-C371-buhran",
+    "UR-C371-zahr",
+    "UR-C371-jan-leva",
+    "UR-C371-risna",
+    "UR-C371-phatna"
+  ],
+  "tex": "urdu/book/chapters/ch371-danger-and-damage.tex"
+}

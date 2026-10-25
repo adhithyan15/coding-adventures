@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:0305994735b3ffdf",
+  "lessonIds": [
+    "GU-C379-atyant",
+    "GU-C379-sav",
+    "GU-C379-sampurn",
+    "GU-C379-bilkul",
+    "GU-C379-keval"
+  ],
+  "tex": "gujarati/book/chapters/ch379-very-extremely.tex"
+}

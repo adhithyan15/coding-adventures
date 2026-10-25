@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C347-tanaza",
+    "language": "urdu",
+    "chapter": 347,
+    "sequence": 20840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e91009e3979ed273"
+  },
+  "findings": []
+}

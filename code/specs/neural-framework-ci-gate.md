@@ -1,0 +1,52 @@
+# Required Neural Framework Conformance
+
+NN37's native training and portable checkpoint exchange must contribute to the
+required repository `CI gate`, not merely an independent optional workflow.
+
+## Scheduling contract
+
+Register `neural-framework-conformance` as a job-scoped gate. Both affected
+Python/TypeScript/Rust/Go framework or matrix packages and direct changes to their
+sources, the shared fixture, interchange validator, gate tests, registry, or
+either workflow select it. Unrelated documentation does not select it. Forced
+main builds select it through the existing registry evaluator.
+
+NN39 adds Rust bounded-JSON, the Rust workspace manifest, native Rust evidence
+runner/tests, and interchange regression tests. The reusable workflow uses a
+full CI checkout to resolve the real Rust workspace; local sparse validation
+may instead identify an exact-copy minimal manifest explicitly.
+
+NN42 adds Go framework/matrix, the Go evidence runner and its unit tests as
+selecting inputs. The reusable workflow validates the Go dependency first,
+then tests/vets/builds the framework and runs its native resume validator.
+It executes all twelve directed pairs among four independent native lanes,
+including Go, with full native baseline and return-trip comparisons. Existing
+selection and fail-closed roll-up semantics are unchanged.
+
+Use one reusable workflow for native package validation and checkpoint exchange.
+Keep manual dispatch, but let repository CI own automatic PR/main scheduling so
+the same source change does not claim duplicate conformance runners.
+
+## Fail-closed completion
+
+The required roll-up depends on the conformance job and inspects its result.
+When selected, only `success` is acceptable: failure, cancellation, skipped,
+missing, and unknown results fail. An unselected job may be skipped or pass.
+Missing/unknown selection flags fail. Preserve the existing exact-head handling
+for superseded workflows and the roll-up's `always()` guards.
+
+## Evidence
+
+Tests pin registry inputs, detect output, reusable invocation, dependency/result
+wiring, and execute the roll-up shell with selected/unselected success, failure,
+cancellation, skipped, and malformed states. Run native numerical/coverage builds
+and the real two-way checkpoint exchange; CI on the published head must show the
+reusable conformance job plus the required roll-up. NN39 executes all six directed
+exchanges across three independent native lanes, comparing return-trip state at
+steps 3001 and 3002. This changes validation coverage, not the training API or
+checkpoint format, and claims no binding lane.
+
+NN40's shared `checkpoints.json` fixture is covered by the existing fixture
+directory selection rule. All three native package suites directly execute its
+49 accept/reject cases, including accepted round-trip controls. No standalone
+workflow or shell-based checkpoint transport is added for malformed inputs.

@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Research",
+  "label": "ch:ur-research",
+  "canDo": "I can say what a researcher is working on.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C349-khojna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say what a researcher is working on.",
+    "assesses": [
+      "UR-LEX-C349-TAHQIQ349-03",
+      "UR-LEX-C349-TAHQIQ349-04",
+      "UR-LEX-C349-TAHQIQ349-05"
+    ]
+  }
+}

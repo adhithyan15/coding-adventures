@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:e28266647a464871",
+  "lessonIds": [
+    "GU-C396-gard",
+    "GU-C396-phanas",
+    "GU-C396-sakal",
+    "GU-C396-vagvu",
+    "GU-C396-ghant"
+  ],
+  "tex": "gujarati/book/chapters/ch396-the-guard-s-lantern.tex"
+}

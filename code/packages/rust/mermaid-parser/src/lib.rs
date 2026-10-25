@@ -11636,7 +11636,7 @@ fn preprocess_mermaid_source(source: &str) -> Result<PreprocessedMermaid, ParseE
     })
 }
 
-fn mermaid_front_matter_scalar(source: &str, key: &str) -> Option<String> {
+fn mermaid_front_matter_value(source: &str, key: &str) -> Option<String> {
     let mut lines = source.lines().skip_while(|line| line.trim().is_empty());
     if lines.next()?.trim() != "---" { return None; }
     for line in lines {
@@ -11644,10 +11644,14 @@ fn mermaid_front_matter_scalar(source: &str, key: &str) -> Option<String> {
         if trimmed == "---" { break; }
         let Some((name, value)) = trimmed.split_once(':') else { continue };
         if name.trim() == key {
-            return Some(value.trim().trim_matches(['\'', '"']).to_ascii_lowercase());
+            return Some(value.trim().trim_matches(['\'', '"']).to_string());
         }
     }
     None
+}
+
+fn mermaid_front_matter_scalar(source: &str, key: &str) -> Option<String> {
+    mermaid_front_matter_value(source, key).map(|value| value.to_ascii_lowercase())
 }
 
 fn blank_mermaid_front_matter(source: &str) -> Result<Vec<u8>, ParseError> {
@@ -13497,16 +13501,18 @@ fn expect_gitgraph_token(
 
 /// Parse Mermaid ER syntax into the shared structural IR.
 pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
-    parse_mermaid_er_ast(source)?;
+    let front_matter_title = mermaid_front_matter_value(source, "title");
+    let preprocessed = preprocess_mermaid_source(source)?;
+    parse_mermaid_er_ast(&preprocessed.source)?;
 
-    let mut cursor = TokenCursor::new(tokenize_mermaid_er(source));
+    let mut cursor = TokenCursor::new(tokenize_mermaid_er(&preprocessed.source));
     cursor.skip_terminators();
     cursor
         .consume_if("HEADER")
         .ok_or_else(|| token_error(cursor.current(), "expected erDiagram header"))?;
     cursor.skip_terminators();
 
-    let mut title = None;
+    let mut title = front_matter_title;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
     let mut nodes: Vec<StructuralNode> = Vec::new();

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C536-ar",
+  "pathSegment": "UR-PATH-536-MOHTAT536",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-536-MOHTAT536",
+      "order": 3
+    }
+  ]
+}

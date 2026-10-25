@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "A Flash of Temper",
+  "label": "ch:gu-a-flash-of-temper",
+  "canDo": "I can say when someone loses their temper.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C452-kalah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can say when someone loses their temper.",
+    "assesses": [
+      "GU-LEX-C452-KHIJ452-03",
+      "GU-LEX-C452-KHIJ452-04",
+      "GU-LEX-C452-KHIJ452-05"
+    ]
+  }
+}

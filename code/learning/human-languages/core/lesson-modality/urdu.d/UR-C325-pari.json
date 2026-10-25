@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C325-pari",
+    "language": "urdu",
+    "chapter": 325,
+    "sequence": 19520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8716d18ad4bb33eb"
+  },
+  "findings": []
+}

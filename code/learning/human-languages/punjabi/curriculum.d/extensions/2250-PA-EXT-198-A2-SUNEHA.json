@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-198-A2-SUNEHA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise and use the noun for a message in one bounded identity frame.",
+  "prerequisites": [
+    "PA-EXT-197-A2-DINCHARIYA"
+  ]
+}

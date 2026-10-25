@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C332-phailna",
+    "language": "urdu",
+    "chapter": 332,
+    "sequence": 20090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bad9cb5d47f69dd"
+  },
+  "findings": []
+}

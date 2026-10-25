@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:417ad21c6f68ee4c",
+  "lessonIds": [
+    "GU-C343-teko",
+    "GU-C343-himayat",
+    "GU-C343-viruddh",
+    "GU-C343-sahmat",
+    "GU-C343-dhalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch343.txt",
+  "json": "gujarati/narration/ch343.json",
+  "textHash": "fnv1a64:5d39f5ee79839446",
+  "jsonHash": "fnv1a64:b1b9334b722eb3ca",
+  "findings": []
+}

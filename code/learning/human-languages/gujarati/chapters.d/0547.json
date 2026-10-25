@@ -1,0 +1,21 @@
+{
+  "chapter": 547,
+  "title": "Even So",
+  "label": "ch:gu-even-so",
+  "canDo": "I can add a contrast to a condition with despite, rather, of course and by no means.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-R547-review-541-547",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 547: I can add a contrast to a condition with despite, rather, of course and by no means.",
+    "assesses": [
+      "GU-LEX-C547-CHATA547-01",
+      "GU-LEX-C547-CHATA547-02",
+      "GU-LEX-C547-CHATA547-03",
+      "GU-LEX-C547-CHATA547-04",
+      "GU-LEX-C547-CHATA547-05"
+    ]
+  }
+}

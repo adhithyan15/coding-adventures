@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:bf0c353092a30c9b",
+  "lessonIds": [
+    "UR-C513-fursat",
+    "UR-C513-mashghala",
+    "UR-C513-tafrih",
+    "UR-C513-piknik",
+    "UR-C513-album"
+  ],
+  "tex": "urdu/book/chapters/ch513-free-time.tex"
+}

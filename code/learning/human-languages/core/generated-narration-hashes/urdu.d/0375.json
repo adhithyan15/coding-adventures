@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:332b1d8bc3d3c2b4",
+  "lessonIds": [
+    "UR-C375-bahut",
+    "UR-C375-intihai",
+    "UR-C375-khub",
+    "UR-C375-zabardast",
+    "UR-C375-shadid"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch375.txt",
+  "json": "urdu/narration/ch375.json",
+  "textHash": "fnv1a64:63f8770ffc83e33b",
+  "jsonHash": "fnv1a64:763889d9e21374bc",
+  "findings": []
+}

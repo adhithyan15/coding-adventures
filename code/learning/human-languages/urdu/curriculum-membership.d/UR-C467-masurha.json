@@ -1,0 +1,11 @@
+{
+  "id": "UR-C467-masurha",
+  "pathSegment": "UR-PATH-467-MOUTH467",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-467-MOUTH467",
+      "order": 1
+    }
+  ]
+}

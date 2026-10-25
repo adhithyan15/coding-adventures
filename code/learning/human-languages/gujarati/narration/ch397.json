@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 397,
+  "title": "The Rush at the Door",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:385c626697dc8ada",
+  "lessons": [
+    {
+      "id": "GU-C397-dhamal",
+      "sequence": 22200,
+      "title": "ધમાલ (dhamāl) — a commotion; a bustle",
+      "headword": "ધમાલ",
+      "romanization": "dhamāl",
+      "gloss": "a commotion; a bustle",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd374ddda8b3700a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to ring, then the Gujarati for a large bell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ધમાલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધમાલ — dhamāl — \"a commotion; a bustle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ટ્રેન આવી ત્યારે પ્લેટફોર્મ પર ધમાલ થઈ. ṭren āvī tyāre pleṭphorm par dhamāl thaī. When the train came in there was a commotion on the platform."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધમાલ (dhamāl) No dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭren āvī tyāre pleṭphorm par dhamāl thaī. — When the train came in there was a commotion on the platform.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭren āvī tyāre pleṭphorm par dhamāl thaī.* — When the train came in there was a commotion on the platform.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to ring, then the Gujarati for a large bell, then say dhamāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to ring, then the Gujarati for a large bell, then say *dhamāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ધમાલ (dhamāl) mean? (\"A commotion; a bustle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C397-umbro",
+      "sequence": 22210,
+      "title": "ઉંબરો (umbro) — a threshold (of a door)",
+      "headword": "ઉંબરો",
+      "romanization": "umbro",
+      "gloss": "a threshold (of a door)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc1e4f64893998cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a large bell, then the Gujarati for a commotion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉંબરો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉંબરો — umbro — \"a threshold (of a door)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ઘરનો ઉંબરો ઓળંગીને તે બહાર ગયો. gharno umbro oḷangīne te bahār gayo. He stepped over the threshold of the house and went out."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉંબરો (umbro) is a tadbhava of Sanskrit umbara, the timber across the top of a door frame; CDIAL lists the Gujarati word, \"a threshold, a sill\" (CDIAL 2341): the beam has moved from the top of the door to the bottom."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umbro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umbro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umbro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umbro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharno umbro oḷangīne te bahār gayo. — He stepped over the threshold of the house and went out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharno umbro oḷangīne te bahār gayo.* — He stepped over the threshold of the house and went out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a large bell, then the Gujarati for a commotion, then say umbro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a large bell, then the Gujarati for a commotion, then say *umbro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઉંબરો (umbro) mean? (\"A threshold (of a door)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C397-patlo",
+      "sequence": 22220,
+      "title": "પાટલો (pāṭlo) — a low wooden seat; a bench",
+      "headword": "પાટલો",
+      "romanization": "pāṭlo",
+      "gloss": "a low wooden seat; a bench",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48e637e4fb0c3df9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a commotion, then the Gujarati for a threshold (of a door)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પાટલો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાટલો — pāṭlo — \"a low wooden seat; a bench\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદી પાટલા પર બેસીને જમે છે. dādī pāṭlā par besīne jame che. Grandmother sits on a low wooden seat to eat."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાટલો (pāṭlo) is a tadbhava of Sanskrit paṭṭa, \"a slab, a board\"; CDIAL lists the Gujarati word, \"a bench\" (CDIAL 7699). પાટિયું, a plank, comes from the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭlo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭlo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭlo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭlo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī pāṭlā par besīne jame che. — Grandmother sits on a low wooden seat to eat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī pāṭlā par besīne jame che.* — Grandmother sits on a low wooden seat to eat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a commotion, then the Gujarati for a threshold (of a door), then say pāṭlo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a commotion, then the Gujarati for a threshold (of a door), then say *pāṭlo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પાટલો (pāṭlo) mean? (\"A low wooden seat; a bench\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C397-hadselvu",
+      "sequence": 22230,
+      "title": "હડસેલવું (haḍselvũ) — to shove; to elbow aside",
+      "headword": "હડસેલવું",
+      "romanization": "haḍselvũ",
+      "gloss": "to shove; to elbow aside",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d5c9bd1634d27ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a threshold (of a door), then the Gujarati for a low wooden seat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: હડસેલવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હડસેલવું — haḍselvũ — \"to shove; to elbow aside\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ભીડમાં બધા માણસો બીજાને હડસેલતા હતા. bhīḍmā̃ badhā māṇso bījāne haḍseltā hatā. In the crowd everyone was shoving everyone else."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે થેલી હડસેલી, teṇe thelī haḍselī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હડસેલવું (haḍselvũ) goes back to haṭ, \"to move or cry out violently\", a form CDIAL reconstructs; CDIAL lists the Gujarati verb, \"to push violently\" (CDIAL 13942)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḍselvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḍselvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḍselvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḍselvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīḍmā̃ badhā māṇso bījāne haḍseltā hatā. — In the crowd everyone was shoving everyone else.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīḍmā̃ badhā māṇso bījāne haḍseltā hatā.* — In the crowd everyone was shoving everyone else.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a threshold (of a door), then the Gujarati for a low wooden seat, then say haḍselvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a threshold (of a door), then the Gujarati for a low wooden seat, then say *haḍselvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does હડસેલવું (haḍselvũ) mean? (\"To shove; to elbow aside\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C397-bharavu",
+      "sequence": 22240,
+      "title": "ભરાવું (bharāvũ) — to fill up; to become full",
+      "headword": "ભરાવું",
+      "romanization": "bharāvũ",
+      "gloss": "to fill up; to become full",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e74bff519513fc5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a low wooden seat, then the Gujarati for to shove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભરાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભરાવું — bharāvũ — \"to fill up; to become full\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સાંજે આ ટ્રેન તરત ભરાઈ જાય છે. sā̃je ā ṭren tarat bharāī jāy che. In the evening this train fills up at once."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે ડબ્બો ભરાઈ ગયો, te ḍabbo bharāī gayo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભરાવું (bharāvũ) is the intransitive partner of ભરવું, \"to fill\", a tadbhava of Sanskrit bhárati, \"bears, fills\" (CDIAL 9397): what you fill, ભરવું; what fills up by itself, ભરાવું."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃je ā ṭren tarat bharāī jāy che. — In the evening this train fills up at once.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃je ā ṭren tarat bharāī jāy che.* — In the evening this train fills up at once.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a low wooden seat, then the Gujarati for to shove, then say bharāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a low wooden seat, then the Gujarati for to shove, then say *bharāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભરાવું (bharāvũ) mean? (\"To fill up; to become full\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

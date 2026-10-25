@@ -1,0 +1,11 @@
+{
+  "id": "UR-C416-phailana",
+  "pathSegment": "UR-PATH-416-KURA416",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-416-KURA416",
+      "order": 4
+    }
+  ]
+}

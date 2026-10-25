@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C289-amla",
+    "language": "urdu",
+    "chapter": 289,
+    "sequence": 17670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b53bf24f2ca89add"
+  },
+  "findings": []
+}

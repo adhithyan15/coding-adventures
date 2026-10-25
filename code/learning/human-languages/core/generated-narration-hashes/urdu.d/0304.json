@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:3196b3ef0f620243",
+  "lessonIds": [
+    "UR-C304-fasad",
+    "UR-C304-hangama",
+    "UR-C304-phutna",
+    "UR-C304-lathi",
+    "UR-C304-karfyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch304.txt",
+  "json": "urdu/narration/ch304.json",
+  "textHash": "fnv1a64:9b47b61bafc699d7",
+  "jsonHash": "fnv1a64:53d668bf6e8737f4",
+  "findings": []
+}

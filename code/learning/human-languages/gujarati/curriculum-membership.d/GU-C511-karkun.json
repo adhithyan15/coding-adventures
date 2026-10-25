@@ -1,0 +1,11 @@
+{
+  "id": "GU-C511-karkun",
+  "pathSegment": "GU-PATH-511-MAJUR511",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-511-MAJUR511",
+      "order": 4
+    }
+  ]
+}

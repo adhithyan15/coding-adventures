@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "A Stay in Hospital",
+  "label": "ch:gu-a-stay-in-hospital",
+  "canDo": "I can talk about a hospital stay.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C485-pareji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can talk about a hospital stay.",
+    "assesses": [
+      "GU-LEX-C485-DAKHAL485-03",
+      "GU-LEX-C485-DAKHAL485-04",
+      "GU-LEX-C485-DAKHAL485-05"
+    ]
+  }
+}

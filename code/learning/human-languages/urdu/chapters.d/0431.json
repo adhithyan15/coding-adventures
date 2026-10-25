@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Clouds Gather and Clear",
+  "label": "ch:ur-clouds-gather-and-clear",
+  "canDo": "I can say the clouds are closing in, the mist is down, and the rain has let up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C431-thamna-let-up",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can say the clouds are closing in, the mist is down, and the rain has let up.",
+    "assesses": [
+      "UR-LEX-C431-ABR431-03",
+      "UR-LEX-C431-ABR431-04",
+      "UR-LEX-C431-ABR431-05"
+    ]
+  }
+}

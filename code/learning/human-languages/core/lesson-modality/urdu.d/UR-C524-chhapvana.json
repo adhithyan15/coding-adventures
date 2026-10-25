@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C524-chhapvana",
+    "language": "urdu",
+    "chapter": 524,
+    "sequence": 30550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b9f0d680f8ae603"
+  },
+  "findings": []
+}

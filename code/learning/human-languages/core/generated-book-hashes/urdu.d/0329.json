@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:2f659371d83f4ba0",
+  "lessonIds": [
+    "UR-C329-afsana",
+    "UR-C329-musannif",
+    "UR-C329-kirdar",
+    "UR-C329-bab",
+    "UR-C329-anjam"
+  ],
+  "tex": "urdu/book/chapters/ch329-a-story-in-a-book.tex"
+}

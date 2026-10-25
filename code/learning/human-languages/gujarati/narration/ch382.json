@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 382,
+  "title": "Setting a Goal",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5ffc96a142f280d2",
+  "lessons": [
+    {
+      "id": "GU-C382-dhyey",
+      "sequence": 21200,
+      "title": "ધ્યેય (dhyey) — a goal",
+      "headword": "ધ્યેય",
+      "romanization": "dhyey",
+      "gloss": "a goal",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fdd6945c2037321",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to long for someone, then the Gujarati for an opening."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ધ્યેય",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધ્યેય — dhyey — \"a goal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો ધ્યેય નક્કી હશે તો મહેનત કરવી સહેલી લાગશે. jo dhyey nakkī haśe to mahenat karvī sahelī lāgśe. If the goal is clear, the hard work will feel easier."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધ્યેય (dhyey) is a tatsama, borrowed from Sanskrit dhyeya, \"to be meditated on, to be pondered\" (Monier-Williams): what the mind is fixed on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhyey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhyey*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhyey, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhyey*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo dhyey nakkī haśe to mahenat karvī sahelī lāgśe. — If the goal is clear, the hard work will feel easier.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo dhyey nakkī haśe to mahenat karvī sahelī lāgśe.* — If the goal is clear, the hard work will feel easier.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to long for someone, then the Gujarati for an opening, then say dhyey again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to long for someone, then the Gujarati for an opening, then say *dhyey* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ધ્યેય (dhyey) mean? (\"A goal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C382-sankalp",
+      "sequence": 21210,
+      "title": "સંકલ્પ (sankalp) — a resolution",
+      "headword": "સંકલ્પ",
+      "romanization": "sankalp",
+      "gloss": "a resolution",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de68b11b99a06c63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an opening, then the Gujarati for a goal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સંકલ્પ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંકલ્પ — sankalp — \"a resolution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમારો સંકલ્પ મજબૂત હશે તો તમે જૂની ટેવ છોડી શકશો. jo tamāro sankalp majbūt haśe to tame jūnī ṭev choḍī śakśo. If your resolve is strong, you will be able to give up an old habit."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંકલ્પ (sankalp) is a tatsama, borrowed from Sanskrit saṃkalpa, \"a conception of the mind, a resolve\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sankalp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sankalp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sankalp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sankalp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tamāro sankalp majbūt haśe to tame jūnī ṭev choḍī śakśo. — If your resolve is strong, you will be able to give up an old habit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tamāro sankalp majbūt haśe to tame jūnī ṭev choḍī śakśo.* — If your resolve is strong, you will be able to give up an old habit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an opening, then the Gujarati for a goal, then say sankalp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an opening, then the Gujarati for a goal, then say *sankalp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સંકલ્પ (sankalp) mean? (\"A resolution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C382-siddhi",
+      "sequence": 21220,
+      "title": "સિદ્ધિ (siddhi) — an achievement",
+      "headword": "સિદ્ધિ",
+      "romanization": "siddhi",
+      "gloss": "an achievement",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35129899ff5bae49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a goal, then the Gujarati for a resolution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સિદ્ધિ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સિદ્ધિ — siddhi — \"an achievement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તે આ હરીફાઈ જીતશે તો તે તેની સૌથી મોટી સિદ્ધિ હશે. jo te ā harīphāī jītśe to te tenī sauthī moṭī siddhi haśe. If she wins this contest, it will be her greatest achievement."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સિદ્ધિ (siddhi) is a tatsama, borrowed from Sanskrit siddhi, \"accomplishment, success\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo te ā harīphāī jītśe to te tenī sauthī moṭī siddhi haśe. — If she wins this contest, it will be her greatest achievement.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo te ā harīphāī jītśe to te tenī sauthī moṭī siddhi haśe.* — If she wins this contest, it will be her greatest achievement.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a goal, then the Gujarati for a resolution, then say siddhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a goal, then the Gujarati for a resolution, then say *siddhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સિદ્ધિ (siddhi) mean? (\"An achievement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C382-ayojan",
+      "sequence": 21230,
+      "title": "આયોજન (āyojan) — planning",
+      "headword": "આયોજન",
+      "romanization": "āyojan",
+      "gloss": "planning",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4710bbd968a386a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a resolution, then the Gujarati for an achievement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: આયોજન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આયોજન — āyojan — \"planning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આયોજન સારું હશે તો કાર્યક્રમ સમયસર પતશે. jo āyojan sārũ haśe to kāryakram samaysar patśe. If the planning is good, the programme will finish on time."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આયોજન (āyojan) is a tatsama, borrowed from Sanskrit āyojana, \"junction, combination\" (Monier-Williams); \"planning\", putting the parts together, is the Gujarati sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyojan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyojan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyojan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyojan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo āyojan sārũ haśe to kāryakram samaysar patśe. — If the planning is good, the programme will finish on time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo āyojan sārũ haśe to kāryakram samaysar patśe.* — If the planning is good, the programme will finish on time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a resolution, then the Gujarati for an achievement, then say āyojan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a resolution, then the Gujarati for an achievement, then say *āyojan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does આયોજન (āyojan) mean? (\"Planning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C382-mathvu",
+      "sequence": 21240,
+      "title": "મથવું (mathvũ) — to strive",
+      "headword": "મથવું",
+      "romanization": "mathvũ",
+      "gloss": "to strive",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:129e1b9ddf0d850e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an achievement, then the Gujarati for planning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મથવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મથવું — mathvũ — \"to strive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે સતત મથશો તો ધ્યેય સુધી પહોંચશો. jo tame satat mathśo to dhyey sudhī pahõcśo. If you keep striving, you will reach your goal."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે આખું વરસ મથ્યો, te ākhũ varas mathyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મથવું (mathvũ) is inherited from Sanskrit mathnāti, \"whirls, churns\"; CDIAL lists the Gujarati verb, \"to churn\" (CDIAL 9771). \"To strive\", to toil at a thing like churning milk, is a sense CDIAL does not give."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mathvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mathvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mathvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mathvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame satat mathśo to dhyey sudhī pahõcśo. — If you keep striving, you will reach your goal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame satat mathśo to dhyey sudhī pahõcśo.* — If you keep striving, you will reach your goal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an achievement, then the Gujarati for planning, then say mathvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an achievement, then the Gujarati for planning, then say *mathvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મથવું (mathvũ) mean? (\"To strive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C413-taraph",
+    "language": "gujarati",
+    "chapter": 413,
+    "sequence": 23020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eb2ae4f0a43524d"
+  },
+  "findings": []
+}

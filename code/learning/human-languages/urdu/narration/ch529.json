@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 529,
+  "title": "A Tangle of Troubles",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dbbc0a540d846124",
+  "lessons": [
+    {
+      "id": "UR-C529-jhamela",
+      "sequence": 30790,
+      "title": "جھمیلا (jhamelā) — a tiresome muddle; a hassle",
+      "headword": "جھمیلا",
+      "romanization": "jhamelā",
+      "gloss": "a tiresome muddle; a hassle",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de0ca55c1ee34759",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an offering, then the Urdu for to bestow favour on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جھمیلا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھمیلا — jhamelā — \"a tiresome muddle; a hassle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر ٹکٹ کھو گیا تو بڑا جھمیلا ہو گا۔ agar ṭikaṭ kho gayā to baṛā jhamelā ho gā. If the ticket gets lost, it will be a real hassle."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھمیلا (jhamelā) is inherited: CDIAL lists the Hindi cousin jhamelā, \"wrangling\", under jhamm, \"entanglement\", a form it reconstructs (CDIAL 5340)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhamelā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhamelā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhamelā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhamelā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar ṭikaṭ kho gayā to baṛā jhamelā ho gā. — If the ticket gets lost, it will be a real hassle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar ṭikaṭ kho gayā to baṛā jhamelā ho gā.* — If the ticket gets lost, it will be a real hassle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an offering, then the Urdu for to bestow favour on, then say jhamelā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an offering, then the Urdu for to bestow favour on, then say *jhamelā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جھمیلا (jhamelā) mean? (\"A tiresome muddle; a hassle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C529-makhmasa",
+      "sequence": 30800,
+      "title": "مخمصہ (makhmasā) — a quandary; a fix",
+      "headword": "مخمصہ",
+      "romanization": "makhmasā",
+      "gloss": "a quandary; a fix",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8888a419c7736f1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to bestow favour on, then the Urdu for a tiresome muddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مخمصہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخمصہ — makhmasā — \"a quandary; a fix\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر دونوں دوست کل آئے تو مخمصہ ہو گا۔ agar donoṅ dost kal āe to makhmasā ho gā. If both friends come tomorrow, I'll be in a fix."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخمصہ (makhmasā) is usually traced, through Persian, to Arabic makhmaṣa, \"hunger, a hard plight\"; the sense \"a quandary\" came later, and the sources we use do not show how it arose."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makhmasā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makhmasā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makhmasā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makhmasā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar donoṅ dost kal āe to makhmasā ho gā. — If both friends come tomorrow, I'll be in a fix.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar donoṅ dost kal āe to makhmasā ho gā.* — If both friends come tomorrow, I'll be in a fix.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to bestow favour on, then the Urdu for a tiresome muddle, then say makhmasā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to bestow favour on, then the Urdu for a tiresome muddle, then say *makhmasā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مخمصہ (makhmasā) mean? (\"A quandary; a fix\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C529-kashmakash",
+      "sequence": 30810,
+      "title": "کشمکش (kashmakash) — an inner struggle; a tug-of-war",
+      "headword": "کشمکش",
+      "romanization": "kashmakash",
+      "gloss": "an inner struggle; a tug-of-war",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a6dbc72b1e2a559",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a tiresome muddle, then the Urdu for a quandary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کشمکش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کشمکش — kashmakash — \"an inner struggle; a tug-of-war\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر وہ گھر چھوڑتا تو دل میں کشمکش ہوتی۔ agar voh ghar chhoṛtā to dil meṅ kashmakash hotī. If he were leaving home, he would be torn inside."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کشمکش (kashmakash) is usually traced to Persian kashmakash, \"pulling to and fro\", built on kash-, \"to pull\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kashmakash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kashmakash*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kashmakash, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kashmakash*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar voh ghar chhoṛtā to dil meṅ kashmakash hotī. — If he were leaving home, he would be torn inside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar voh ghar chhoṛtā to dil meṅ kashmakash hotī.* — If he were leaving home, he would be torn inside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a tiresome muddle, then the Urdu for a quandary, then say kashmakash again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a tiresome muddle, then the Urdu for a quandary, then say *kashmakash* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کشمکش (kashmakash) mean? (\"An inner struggle; a tug-of-war\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C529-pechida",
+      "sequence": 30820,
+      "title": "پیچیدہ (pechīdā) — complicated",
+      "headword": "پیچیدہ",
+      "romanization": "pechīdā",
+      "gloss": "complicated",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cdc0fcc31c9e80f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a quandary, then the Urdu for an inner struggle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پیچیدہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیچیدہ — pechīdā — \"complicated\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر سوال پیچیدہ ہے تو استاد سے پوچھیے۔ agar savāl pechīdā hai to ustād se pūchhiye. If the question is complicated, ask the teacher."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیچیدہ (pechīdā) is usually traced to Persian pēchīda, \"twisted\", built on pēch, \"a twist, a coil\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pechīdā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pechīdā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pechīdā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pechīdā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar savāl pechīdā hai to ustād se pūchhiye. — If the question is complicated, ask the teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar savāl pechīdā hai to ustād se pūchhiye.* — If the question is complicated, ask the teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a quandary, then the Urdu for an inner struggle, then say pechīdā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a quandary, then the Urdu for an inner struggle, then say *pechīdā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پیچیدہ (pechīdā) mean? (\"Complicated\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C529-uljhana",
+      "sequence": 30830,
+      "title": "الجھانا (uljhānā) — to tangle; to confuse",
+      "headword": "الجھانا",
+      "romanization": "uljhānā",
+      "gloss": "to tangle; to confuse",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1eb1ab72a69069f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an inner struggle, then the Urdu for complicated."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: الجھانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "الجھانا — uljhānā — \"to tangle; to confuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر بلی نے اون الجھائی تو مشکل ہو گی۔ agar billī ne ūn uljhāī to mushkil ho gī. If the cat tangles the wool, there will be trouble."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے دھاگا الجھایا, us ne dhāgā uljhāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "الجھانا (uljhānā) is the causative of ulajhnā, \"to get tangled\", which CDIAL lists under Sanskrit uparundhati, \"obstructs\" (CDIAL 2221)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uljhānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uljhānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uljhānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uljhānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar billī ne ūn uljhāī to mushkil ho gī. — If the cat tangles the wool, there will be trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar billī ne ūn uljhāī to mushkil ho gī.* — If the cat tangles the wool, there will be trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an inner struggle, then the Urdu for complicated, then say uljhānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an inner struggle, then the Urdu for complicated, then say *uljhānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does الجھانا (uljhānā) mean? (\"To tangle; to confuse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

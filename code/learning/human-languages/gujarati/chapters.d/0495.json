@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "A Baby on the Way",
+  "label": "ch:gu-a-baby-on-the-way",
+  "canDo": "I can talk about a pregnancy and a birth.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C495-janvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can talk about a pregnancy and a birth.",
+    "assesses": [
+      "GU-LEX-C495-SAGARBHA495-03",
+      "GU-LEX-C495-SAGARBHA495-04",
+      "GU-LEX-C495-SAGARBHA495-05"
+    ]
+  }
+}

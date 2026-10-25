@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-534-JUGAR534",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GU-EXT-534-JUGAR534"
+  ],
+  "after": []
+}

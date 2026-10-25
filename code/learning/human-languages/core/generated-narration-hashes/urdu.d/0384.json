@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:f6ea1d9eab116c8e",
+  "lessonIds": [
+    "UR-C384-tarbiyat",
+    "UR-C384-farakh-dil",
+    "UR-C384-adab",
+    "UR-C384-lad",
+    "UR-C384-ratna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch384.txt",
+  "json": "urdu/narration/ch384.json",
+  "textHash": "fnv1a64:3c4ae1d3a16dbd6e",
+  "jsonHash": "fnv1a64:a227757ce951dc58",
+  "findings": []
+}

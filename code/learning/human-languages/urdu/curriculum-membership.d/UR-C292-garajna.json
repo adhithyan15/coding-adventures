@@ -1,0 +1,11 @@
+{
+  "id": "UR-C292-garajna",
+  "pathSegment": "UR-PATH-292-TUFAN292",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-292-TUFAN292",
+      "order": 1
+    }
+  ]
+}

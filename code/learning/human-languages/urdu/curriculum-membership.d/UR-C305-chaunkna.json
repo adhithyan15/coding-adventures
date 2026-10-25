@@ -1,0 +1,11 @@
+{
+  "id": "UR-C305-chaunkna",
+  "pathSegment": "UR-PATH-305-MUAMMA305",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-305-MUAMMA305",
+      "order": 3
+    }
+  ]
+}

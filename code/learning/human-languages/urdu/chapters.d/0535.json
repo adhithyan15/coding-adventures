@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Omens and Stars",
+  "label": "ch:ur-omens-and-stars",
+  "canDo": "I can talk about omens and fortune-telling.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C535-zaicha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can talk about omens and fortune-telling.",
+    "assesses": [
+      "UR-LEX-C535-SHAGUN535-03",
+      "UR-LEX-C535-SHAGUN535-04",
+      "UR-LEX-C535-SHAGUN535-05"
+    ]
+  }
+}

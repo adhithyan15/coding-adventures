@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER entity name forms vertical slice",
+  "fixtures": [
+    {
+      "name": "bare-and-quoted-entity-names",
+      "source": "erDiagram\nDUCK-BILLED_PLATYPUS ||--|| \"Blo@rf?\" : maps\n_foo"
+    },
+    {
+      "name": "quoted-special-character-matrix",
+      "source": "erDiagram\n\"a~`!@#$^&*()-=+[]{}|/;:'.?¡⁄™€£‹¢›∞\""
+    }
+  ]
+}

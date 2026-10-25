@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C311-mathalu",
+    "language": "gujarati",
+    "chapter": 311,
+    "sequence": 17350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14fe6b85833f625e"
+  },
+  "findings": []
+}

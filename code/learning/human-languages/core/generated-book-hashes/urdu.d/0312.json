@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:bf79a1a06bd33fb8",
+  "lessonIds": [
+    "UR-C312-riaya",
+    "UR-C312-hukm",
+    "UR-C312-ghulam",
+    "UR-C312-baghavat",
+    "UR-C312-lalkarna"
+  ],
+  "tex": "urdu/book/chapters/ch312-rebellion.tex"
+}

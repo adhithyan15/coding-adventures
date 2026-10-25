@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C512-badhti",
+    "language": "gujarati",
+    "chapter": 512,
+    "sequence": 28600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:504be5d284e8c0ae"
+  },
+  "findings": []
+}

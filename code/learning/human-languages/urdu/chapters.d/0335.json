@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Taking Sides",
+  "label": "ch:ur-taking-sides",
+  "canDo": "I can say who is for an idea and who is against it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C335-fariq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can say who is for an idea and who is against it.",
+    "assesses": [
+      "UR-LEX-C335-HIMAYAT335-03",
+      "UR-LEX-C335-HIMAYAT335-04",
+      "UR-LEX-C335-HIMAYAT335-05"
+    ]
+  }
+}

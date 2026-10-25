@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Deadlines",
+  "label": "ch:gu-deadlines",
+  "canDo": "I can talk about deadlines, urgent work and extra time.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C530-akhre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can talk about deadlines, urgent work and extra time.",
+    "assesses": [
+      "GU-LEX-C530-TAKID530-03",
+      "GU-LEX-C530-TAKID530-04",
+      "GU-LEX-C530-TAKID530-05"
+    ]
+  }
+}

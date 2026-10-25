@@ -1,0 +1,3 @@
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+evidence: tok_get lexes 0x or 0X and hex digits as one NUMBER (an L may follow); PyOS_strtoul and PyLong_FromString with base 0 read the 0x prefix as base 16; 0x7fffffffffffffff is LONG_MAX on LP64, so it stays an int
+result: the subset prints exactly what CPython 2.2, 2.4, 2.6 and 2.7.18 print

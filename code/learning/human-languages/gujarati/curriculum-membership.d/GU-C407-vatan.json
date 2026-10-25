@@ -1,0 +1,11 @@
+{
+  "id": "GU-C407-vatan",
+  "pathSegment": "GU-PATH-407-ABROAD407",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-407-ABROAD407",
+      "order": 1
+    }
+  ]
+}

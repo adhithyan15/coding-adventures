@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:daeb3a556b2f5b5d",
+  "lessonIds": [
+    "GU-C291-apaharan",
+    "GU-C291-gum",
+    "GU-C291-ghervu",
+    "GU-C291-kedi",
+    "GU-C291-chodavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch291.txt",
+  "json": "gujarati/narration/ch291.json",
+  "textHash": "fnv1a64:c3522c47db453a91",
+  "jsonHash": "fnv1a64:a1bcd52030a5951e",
+  "findings": []
+}

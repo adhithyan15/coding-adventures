@@ -1,0 +1,11 @@
+{
+  "id": "GU-C428-sahukar",
+  "pathSegment": "GU-PATH-428-DEBT428",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-428-DEBT428",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C362-yaqin",
+  "pathSegment": "UR-PATH-362-QIYAS362",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-362-QIYAS362",
+      "order": 1
+    }
+  ]
+}

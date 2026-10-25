@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:1c7842fb6bb1f1d6",
+  "lessonIds": [
+    "UR-C352-mazmun",
+    "UR-C352-maqala",
+    "UR-C352-danishvar",
+    "UR-C352-ilm",
+    "UR-C352-chhantna"
+  ],
+  "tex": "urdu/book/chapters/ch352-ask-an-expert.tex"
+}

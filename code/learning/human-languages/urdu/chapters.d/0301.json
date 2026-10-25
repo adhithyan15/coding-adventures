@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Reporters",
+  "label": "ch:ur-reporters",
+  "canDo": "I can say who reported a story and from where.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C301-likhvana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can say who reported a story and from where.",
+    "assesses": [
+      "UR-LEX-C301-SAHAFI301-03",
+      "UR-LEX-C301-SAHAFI301-04",
+      "UR-LEX-C301-SAHAFI301-05"
+    ]
+  }
+}

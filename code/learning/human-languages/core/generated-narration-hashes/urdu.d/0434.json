@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:af90b97189f4c8dd",
+  "lessonIds": [
+    "UR-C434-mauj",
+    "UR-C434-daldal",
+    "UR-C434-ghat",
+    "UR-C434-uchhaalna",
+    "UR-C434-dubona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch434.txt",
+  "json": "urdu/narration/ch434.json",
+  "textHash": "fnv1a64:18726320f062bafc",
+  "jsonHash": "fnv1a64:617f458906479031",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C439-khadak",
+    "language": "gujarati",
+    "chapter": 439,
+    "sequence": 24370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:940601c5654cab3b"
+  },
+  "findings": []
+}

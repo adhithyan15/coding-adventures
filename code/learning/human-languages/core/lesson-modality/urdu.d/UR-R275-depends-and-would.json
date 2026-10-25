@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R275-depends-and-would",
+    "language": "urdu",
+    "chapter": 275,
+    "sequence": 16690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60ddc81298a3a6f8"
+  },
+  "findings": []
+}

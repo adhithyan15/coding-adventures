@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:a94ae0effa0c32cb",
+  "lessonIds": [
+    "GU-C502-karvat",
+    "GU-C502-korvu",
+    "GU-C502-hathodi",
+    "GU-C502-mekh",
+    "GU-C502-thokvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch502.txt",
+  "json": "gujarati/narration/ch502.json",
+  "textHash": "fnv1a64:02fde897e40170df",
+  "jsonHash": "fnv1a64:f11ae41509587fa2",
+  "findings": []
+}

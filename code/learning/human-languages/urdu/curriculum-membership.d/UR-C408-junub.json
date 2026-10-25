@@ -1,0 +1,11 @@
+{
+  "id": "UR-C408-junub",
+  "pathSegment": "UR-PATH-408-SIMT408",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-408-SIMT408",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:12f94dfbf608a67d",
+  "lessonIds": [
+    "UR-C527-masruf",
+    "UR-C527-farigh",
+    "UR-C527-dastyab",
+    "UR-C527-bahana",
+    "UR-C527-ubna"
+  ],
+  "tex": "urdu/book/chapters/ch527-busy-or-free.tex"
+}

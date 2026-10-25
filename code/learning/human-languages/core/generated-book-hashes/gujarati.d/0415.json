@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:bde6137673d1c010",
+  "lessonIds": [
+    "GU-C415-cokdi",
+    "GU-C415-khaco",
+    "GU-C415-nisani",
+    "GU-C415-tavar",
+    "GU-C415-gotvu"
+  ],
+  "tex": "gujarati/book/chapters/ch415-landmarks.tex"
+}

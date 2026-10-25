@@ -136,6 +136,31 @@ fn edit_first_token(node: &mut GrammarASTNode, edit: &mut dyn FnMut(&mut Token) 
     false
 }
 
+/// A tree is only lowered under the profile whose grammar can produce its
+/// `print` shape: `print x` (a `print_stmt`) is a Python 2 statement, and
+/// `print(x)` is a Python 3 call. Swapping them would print the wrong thing
+/// (Python 2 prints `print ()` as `()`), so each is refused under the other.
+#[test]
+fn a_tree_from_the_other_profiles_grammar_is_refused() {
+    let budgets = FrontendBudgets::default();
+    let py3_tree = coding_adventures_python_parser::parse_python_at("print()\nprint(1)\n", Some("3.13.16"), &budgets)
+        .unwrap()
+        .ast;
+    let py2_tree = coding_adventures_python_parser::parse_python_at("print\nprint 1\n", Some("2.7.18"), &budgets)
+        .unwrap()
+        .ast;
+    assert!(compile_cst(&py3_tree, Some("3.13.16"), "t").is_ok());
+    assert!(compile_cst(&py2_tree, Some("2.7.18"), "t").is_ok());
+
+    let error = compile_cst(&py3_tree, Some("2.7.18"), "t").unwrap_err();
+    assert_eq!(error.category(), "Unsupported", "{error}");
+    assert!(error.to_string().contains("call-form"), "{error}");
+
+    let error = compile_cst(&py2_tree, Some("3.13.16"), "t").unwrap_err();
+    assert_eq!(error.category(), "Unsupported", "{error}");
+    assert!(error.to_string().contains("`print` statement is not in py-int-print"), "{error}");
+}
+
 #[test]
 fn forged_trees_are_refused() {
     assert!(compile_cst(&tree("print(1)\n"), None, "t").is_ok());
@@ -147,6 +172,24 @@ fn forged_trees_are_refused() {
             (t.value == from).then(|| t.value = to.into()).is_some()
         }));
         let error = compile_cst(&ast, None, "t").unwrap_err();
+        assert!(error.to_string().contains(needle), "{to:?}: {error}");
+    }
+    // The same checks under the py2 decoder (phase 7c slice 2): every
+    // Python 2 spelling is re-checked, and Python 3's `_` is not one.
+    let budgets = FrontendBudgets::default();
+    for (to, needle) in [
+        ("1_0", "not a Python 2 integer literal"),
+        ("0x", "not a Python 2 integer literal"),
+        ("08", "not a Python 2 integer literal"),
+        ("1LL", "not a Python 2 integer literal"),
+        ("L", "not a Python 2 integer literal"),
+        ("0b1000000000000000000000000000000000000000000000000000000000000000", "outside i64"),
+        ("01000000000000000000000L", "outside i64"),
+    ] {
+        let mut ast = coding_adventures_python_parser::parse_python_at("print 1\n", Some("2.6"), &budgets).unwrap().ast;
+        assert!(edit_first_token(&mut ast, &mut |t| (t.value == "1").then(|| t.value = to.into()).is_some()));
+        let error = compile_cst(&ast, Some("2.6"), "t").unwrap_err();
+        assert_eq!(error.category(), "Unsupported", "{to:?}: {error}");
         assert!(error.to_string().contains(needle), "{to:?}: {error}");
     }
     let mut ast = tree("print(1)\n");
@@ -201,7 +244,12 @@ fn the_module_records_the_release_that_produced_it() {
     for &release in python_iir_compiler::supported_releases() {
         let module = compile_source_at("print(1)\n", Some(release), "t", &budgets).unwrap();
         assert_eq!(module.release.as_deref(), Some(release));
-        let from_tree = compile_cst(&tree("print(1)\n"), Some(release), "t").unwrap();
+        // The tree comes from the release's own grammar: `print(1)` is a
+        // call under py3 and the statement `print (1)` under py2.
+        let own_tree = coding_adventures_python_parser::parse_python_at("print(1)\n", Some(release), &budgets)
+            .unwrap()
+            .ast;
+        let from_tree = compile_cst(&own_tree, Some(release), "t").unwrap();
         assert_eq!(from_tree.release.as_deref(), Some(release));
     }
     let default = compile_source_at("print(1)\n", None, "t", &budgets).unwrap();

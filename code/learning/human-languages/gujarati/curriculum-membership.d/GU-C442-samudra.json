@@ -1,0 +1,11 @@
+{
+  "id": "GU-C442-samudra",
+  "pathSegment": "GU-PATH-442-SEA442",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-442-SEA442",
+      "order": 0
+    }
+  ]
+}

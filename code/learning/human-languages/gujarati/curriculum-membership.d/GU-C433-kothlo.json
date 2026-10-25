@@ -1,0 +1,11 @@
+{
+  "id": "GU-C433-kothlo",
+  "pathSegment": "GU-PATH-433-OUTFIT433",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-433-OUTFIT433",
+      "order": 2
+    }
+  ]
+}

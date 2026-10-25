@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C313-jaddojahd",
+    "language": "urdu",
+    "chapter": 313,
+    "sequence": 18910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da03457da2e572b4"
+  },
+  "findings": []
+}

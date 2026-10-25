@@ -56,7 +56,8 @@ it("pins Gujarati lesson-content budgets", () =>
     // 808 -> 856: the A2 grammar core, chapters 145-152: 23 grammar, 11 word, 6 practice, 3 letter, 2 reading and 3 review lessons. No idiom, sense or culture claim.
     // 856 -> 1480: the A2 vocabulary, chapters 153-272: 600 word lessons (234 verbs) and 24 reviews. No idiom, sense or culture claim.
     // 1480 -> 1537: the B1 core, chapters 273-284: 22 grammar, 16 word, 5 letter, 1 reading, 1 writing and 12 review lessons. No idiom, sense or culture claim.
-    lessons: 1537,
+    // 1537 -> 2927: the B1 vocabulary, chapters 285-554: 1,350 word lessons (351 verbs) and 40 reviews. No idiom, sense or culture claim.
+    lessons: 2927,
     idioms: 12,
     senses: 6,
     cultureClaims: 16,

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:c44ba246de76ea8a",
+  "lessonIds": [
+    "GU-C295-valak",
+    "GU-C295-brek",
+    "GU-C295-bedarkar",
+    "GU-C295-dand",
+    "GU-C295-kacadvu"
+  ],
+  "tex": "gujarati/book/chapters/ch295-too-fast-on-the-bend.tex"
+}

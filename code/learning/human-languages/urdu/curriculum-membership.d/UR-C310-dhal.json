@@ -1,0 +1,11 @@
+{
+  "id": "UR-C310-dhal",
+  "pathSegment": "UR-PATH-310-DHAL310",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-310-DHAL310",
+      "order": 1
+    }
+  ]
+}

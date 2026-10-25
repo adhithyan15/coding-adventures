@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C419-mahollo",
+    "language": "gujarati",
+    "chapter": 419,
+    "sequence": 23350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a25c605b5c2262be"
+  },
+  "findings": []
+}

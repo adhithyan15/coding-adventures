@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Values Passed On",
+  "label": "ch:ur-values-passed-on",
+  "canDo": "I can say what children will become if they are brought up well.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C384-ratna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can say what children will become if they are brought up well.",
+    "assesses": [
+      "UR-LEX-C384-TARBIYAT384-03",
+      "UR-LEX-C384-TARBIYAT384-04",
+      "UR-LEX-C384-TARBIYAT384-05"
+    ]
+  }
+}

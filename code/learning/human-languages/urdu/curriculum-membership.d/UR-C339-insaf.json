@@ -1,0 +1,11 @@
+{
+  "id": "UR-C339-insaf",
+  "pathSegment": "UR-PATH-339-IKHTIYAR339",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-339-IKHTIYAR339",
+      "order": 1
+    }
+  ]
+}

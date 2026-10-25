@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:7b0f6d542df9134e",
+  "lessonIds": [
+    "GU-C441-sarovar",
+    "GU-C441-dem",
+    "GU-C441-vav",
+    "GU-C441-katho",
+    "GU-C441-khupvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch441.txt",
+  "json": "gujarati/narration/ch441.json",
+  "textHash": "fnv1a64:096e50f06ff96e86",
+  "jsonHash": "fnv1a64:062161865bf16861",
+  "findings": []
+}

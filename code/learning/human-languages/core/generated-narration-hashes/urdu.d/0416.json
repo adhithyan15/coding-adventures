@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:0013f594df2b8899",
+  "lessonIds": [
+    "UR-C416-kura",
+    "UR-C416-nali",
+    "UR-C416-gatar",
+    "UR-C416-badbu",
+    "UR-C416-phailana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch416.txt",
+  "json": "urdu/narration/ch416.json",
+  "textHash": "fnv1a64:202993911df4c67d",
+  "jsonHash": "fnv1a64:0a34fb79b3b5acf0",
+  "findings": []
+}

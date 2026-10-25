@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:a5c78a8ff9ec3072",
+  "lessonIds": [
+    "UR-C533-jua",
+    "UR-C533-pansa",
+    "UR-C533-bari",
+    "UR-C533-chal",
+    "UR-C533-paltana",
+    "UR-R533-review-526-533"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch533.txt",
+  "json": "urdu/narration/ch533.json",
+  "textHash": "fnv1a64:a0a0a92036ed4eea",
+  "jsonHash": "fnv1a64:581a6f8743392021",
+  "findings": []
+}

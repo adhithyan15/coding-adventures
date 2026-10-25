@@ -1,0 +1,20 @@
+{
+  "chapter": 264,
+  "title": "Where I Went, and Where I Was",
+  "label": "ch:ur-where-i-went-and-where-i-was",
+  "canDo": "I can say where someone went and where someone was (voh gayā, voh gaī, maiṅ ghar par thā), and what I used to do (jātā thā).",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "UR-R264-where-i-went",
+    "kind": "production",
+    "summary": "Complete UR-R264-where-i-went: say where someone went, where someone was, and what you used to do.",
+    "assesses": [
+      "UR-GRAMMAR-C264-PAST-01",
+      "UR-GRAMMAR-C264-WAS-01",
+      "UR-GRAMMAR-C264-PAST-02",
+      "UR-GRAMMAR-C264-WAS-02"
+    ]
+  }
+}

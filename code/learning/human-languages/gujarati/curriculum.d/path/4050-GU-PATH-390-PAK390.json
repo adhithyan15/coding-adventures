@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-390-PAK390",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GU-EXT-390-PAK390"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:8eaec7bf7e698c71",
+  "lessonIds": [
+    "GU-C351-hakikat",
+    "GU-C351-bhram",
+    "GU-C351-gersamaj",
+    "GU-C351-yatharth",
+    "GU-C351-chetravu"
+  ],
+  "tex": "gujarati/book/chapters/ch351-facts-and-mix-ups.tex"
+}

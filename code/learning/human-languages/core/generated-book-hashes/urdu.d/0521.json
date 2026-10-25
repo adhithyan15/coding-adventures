@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:62fc6dba79025c3c",
+  "lessonIds": [
+    "UR-C521-maich",
+    "UR-C521-turnament",
+    "UR-C521-kaptan",
+    "UR-C521-fatih",
+    "UR-C521-shikast"
+  ],
+  "tex": "urdu/book/chapters/ch521-the-big-match.tex"
+}

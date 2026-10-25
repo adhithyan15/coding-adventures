@@ -1,0 +1,14 @@
+[package]
+name = "pdp8-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DEC PDP-8/E educational gate-level simulator"
+license = "MIT"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+pdp8-simulator = { path = "../pdp8-simulator" }
+
+[dev-dependencies]
+pdp8-simulator = { path = "../pdp8-simulator" }

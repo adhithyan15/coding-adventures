@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C517-khosvu",
+    "language": "gujarati",
+    "chapter": 517,
+    "sequence": 28860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a0a9177c0181d7f"
+  },
+  "findings": []
+}

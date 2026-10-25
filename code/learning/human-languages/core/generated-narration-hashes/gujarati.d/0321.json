@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:be997413d8a35690",
+  "lessonIds": [
+    "GU-C321-talvar",
+    "GU-C321-dhal",
+    "GU-C321-hathiyar",
+    "GU-C321-top",
+    "GU-C321-vidhvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch321.txt",
+  "json": "gujarati/narration/ch321.json",
+  "textHash": "fnv1a64:abceae8259fc0192",
+  "jsonHash": "fnv1a64:284d61dfaae491e5",
+  "findings": []
+}

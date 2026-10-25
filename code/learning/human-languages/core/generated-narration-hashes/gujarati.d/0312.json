@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:f8c2002d328fd3c1",
+  "lessonIds": [
+    "GU-C312-patrakar",
+    "GU-C312-ghatna",
+    "GU-C312-kisso",
+    "GU-C312-aheval",
+    "GU-C312-varnavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch312.txt",
+  "json": "gujarati/narration/ch312.json",
+  "textHash": "fnv1a64:051dba8a4619a0b1",
+  "jsonHash": "fnv1a64:3a04d452d2483939",
+  "findings": []
+}

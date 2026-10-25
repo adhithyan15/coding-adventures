@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "In the Wrestling Pit",
+  "label": "ch:ur-in-the-wrestling-pit",
+  "canDo": "I can talk about wrestlers and how they train.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C520-langot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about wrestlers and how they train.",
+    "assesses": [
+      "UR-LEX-C520-AKHARA520-03",
+      "UR-LEX-C520-AKHARA520-04",
+      "UR-LEX-C520-AKHARA520-05"
+    ]
+  }
+}

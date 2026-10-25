@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.32.0] - 2026-10-24
+
+### Fixed — a nested function no longer captures a caller's binding after inlining (#18134)
+
+```js
+var y=1;
+function t(){return function(){return y}}
+function g(){var y=2;return t()()}
+console.log(g())        // 1
+```
+
+ADVANCED spliced `t` into `g`, so the returned function read `g`'s `y` and
+the program printed `2`. The capture guards' walk (`collect_binding_idents_expr`)
+recorded a nested `function` expression's name and parameters but never its
+body, so its free names were invisible. Class method bodies had the same
+gap.
+
+`collect_nested_function_body` now walks those bodies, and
+`collect_used_idents_decl` now walks the parameter defaults of nested
+function and class-method declarations (`function h(a=y){}`). It keeps every name
+they use, and drops only the nested function's own `this`, `super`,
+`new.target` and `arguments`. The nested body's own locals are
+over-collected too, which can only cost an inline. A helper whose nested
+function reads nothing from outside (`function t(){return function(){return 7}}`)
+is still inlined.
+
+Two unit tests. closurec gains `tests/regression_inline_nested_capture.rs`.
+
 ## [0.31.0] - 2026-10-24
 
 ### Fixed — never inline a function that reads `this`, `super` or `new.target` (#18115)

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C372-ubalna-boil-up",
+  "pathSegment": "UR-PATH-372-JAMNA372",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-372-JAMNA372",
+      "order": 1
+    }
+  ]
+}

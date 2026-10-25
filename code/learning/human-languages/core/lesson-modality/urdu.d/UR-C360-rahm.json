@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C360-rahm",
+    "language": "urdu",
+    "chapter": 360,
+    "sequence": 21480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2eaf03eda8f49c72"
+  },
+  "findings": []
+}

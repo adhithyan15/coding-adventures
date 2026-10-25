@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "A Long Night's Sleep",
+  "label": "ch:gu-a-long-night-s-sleep",
+  "canDo": "I can talk about how well I slept.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C476-anidra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can talk about how well I slept.",
+    "assesses": [
+      "GU-LEX-C476-NINDAR476-03",
+      "GU-LEX-C476-NINDAR476-04",
+      "GU-LEX-C476-NINDAR476-05"
+    ]
+  }
+}

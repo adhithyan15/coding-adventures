@@ -253,3 +253,5 @@ flushes stdout before reporting the kind on stderr and aborting. LANG83 PR4 adds
 on the overflow bit to `@__iir_trap(Trap.Overflow)`.
 
 LANG83 PR6a adds `write_f64_py` / `write_f64_js` → `call @__iir_write_f64(double, i32 layout)`. That module-local `linkonce_odr` IR carries a Burger–Dybvig shortest-round-trip digit core over stack big integers, and prints Python's `repr` or JavaScript's `toString` layout with libc `putchar` (see `src/lang83_f64.rs`).
+
+LANG83 PR6c adds the non-trapping IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div` → `fadd`/`fsub`/`fmul`/`fdiv double` (no fast-math flags), `f64_neg` → `fneg double`, and `f64_signbit` → `bitcast double to i64` + `lshr 63`.

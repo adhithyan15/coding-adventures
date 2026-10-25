@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 372,
+  "title": "Heat and Cold",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3d0d45c301062110",
+  "lessons": [
+    {
+      "id": "UR-C372-jamna",
+      "sequence": 22100,
+      "title": "جمنا (jamnā) — to freeze; to set",
+      "headword": "جمنا",
+      "romanization": "jamnā",
+      "gloss": "to freeze; to set",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8803425dce3fb3f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to seep, then the Urdu for to split open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جمنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جمنا — jamnā — \"to freeze; to set\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر رات کو سردی ہوئی تو پانی جم جائے گا۔ agar rāt ko sardī huī to pānī jam jāe gā. If it is cold tonight, the water will freeze."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ دودھ جم گیا, voh dūdh jam gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جمنا (jamnā) is inherited: CDIAL lists the Hindi cousin jamnā, \"to coagulate, to freeze\", under Sanskrit yamyátē, \"is held fast\" (CDIAL 10428)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar rāt ko sardī huī to pānī jam jāe gā. — If it is cold tonight, the water will freeze.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar rāt ko sardī huī to pānī jam jāe gā.* — If it is cold tonight, the water will freeze.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to seep, then the Urdu for to split open, then say jamnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to seep, then the Urdu for to split open, then say *jamnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جمنا (jamnā) mean? (\"To freeze; to set\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C372-ubalna-boil-up",
+      "sequence": 22110,
+      "title": "ابلنا (ubalnā) — to come to the boil",
+      "headword": "ابلنا",
+      "romanization": "ubalnā",
+      "gloss": "to come to the boil",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:840e9edd902886a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to split open, then the Urdu for to freeze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ابلنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ابلنا — ubalnā — \"to come to the boil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر دودھ ابلا تو وہ گر جائے گا۔ agar dūdh ublā to voh gir jāe gā. If the milk boils, it will spill over."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ پانی ابل گیا, voh pānī ubal gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ابلنا (ubalnā) is inherited: CDIAL lists the Hindi cousin ubalnā, \"to boil over\", under ubbal, a form it reconstructs (CDIAL 2339); ابالنا, \"to boil (something)\", is its partner."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ubalnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ubalnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ubalnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ubalnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar dūdh ublā to voh gir jāe gā. — If the milk boils, it will spill over.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar dūdh ublā to voh gir jāe gā.* — If the milk boils, it will spill over.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to split open, then the Urdu for to freeze, then say ubalnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to split open, then the Urdu for to freeze, then say *ubalnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ابلنا (ubalnā) mean? (\"To come to the boil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C372-galna",
+      "sequence": 22120,
+      "title": "گلنا (galnā) — to soften in cooking; to melt away",
+      "headword": "گلنا",
+      "romanization": "galnā",
+      "gloss": "to soften in cooking; to melt away",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3444f093b6a66e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to freeze, then the Urdu for to come to the boil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گلنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گلنا — galnā — \"to soften in cooking; to melt away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر دال نہیں گلی تو اور پکائیے۔ agar dāl nahīṅ galī to aur pakāiye. If the lentils have not softened, cook them longer."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ دال گل گئی, voh dāl gal gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گلنا (galnā) is inherited: CDIAL lists the Hindi cousin galnā, \"to melt, to trickle\", under Sanskrit galati, \"drips, oozes\" (CDIAL 4074)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar dāl nahīṅ galī to aur pakāiye. — If the lentils have not softened, cook them longer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar dāl nahīṅ galī to aur pakāiye.* — If the lentils have not softened, cook them longer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to freeze, then the Urdu for to come to the boil, then say galnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to freeze, then the Urdu for to come to the boil, then say *galnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گلنا (galnā) mean? (\"To soften in cooking; to melt away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C372-tarakna",
+      "sequence": 22130,
+      "title": "تڑکنا (taṛaknā) — to crack (with a sharp sound)",
+      "headword": "تڑکنا",
+      "romanization": "taṛaknā",
+      "gloss": "to crack (with a sharp sound)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccebed99691e93a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to come to the boil, then the Urdu for to soften in cooking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تڑکنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تڑکنا — taṛaknā — \"to crack (with a sharp sound)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر گلاس زیادہ گرم ہوا تو وہ تڑک جائے گا۔ agar glās zyādā garm huā to voh taṛak jāe gā. If the glass gets too hot, it will crack."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ شیشہ تڑک گیا, voh shīshā taṛak gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تڑکنا (taṛaknā) is inherited: CDIAL lists the Hindi cousin taṛaknā, \"to be cracked\", under Sanskrit traṭ, a crackling sound (CDIAL 5988)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṛaknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṛaknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṛaknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṛaknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar glās zyādā garm huā to voh taṛak jāe gā. — If the glass gets too hot, it will crack.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar glās zyādā garm huā to voh taṛak jāe gā.* — If the glass gets too hot, it will crack.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to come to the boil, then the Urdu for to soften in cooking, then say taṛaknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to come to the boil, then the Urdu for to soften in cooking, then say *taṛaknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تڑکنا (taṛaknā) mean? (\"To crack (with a sharp sound)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C372-darmiyana",
+      "sequence": 22140,
+      "title": "درمیانہ (darmiyānā) — medium; moderate",
+      "headword": "درمیانہ",
+      "romanization": "darmiyānā",
+      "gloss": "medium; moderate",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e669c1ba5b3b8c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to soften in cooking, then the Urdu for to crack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: درمیانہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "درمیانہ — darmiyānā — \"medium; moderate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آگ درمیانی رکھیں گے تو کھانا مزیدار بنے گا۔ agar āg darmiyānī rakheṅ ge to khānā mazedār bane gā. If you keep the heat medium, the food will turn out tasty."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "درمیانہ (darmiyānā) is usually traced to Persian darmiyāna, \"middle\", built on darmiyān, \"between\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darmiyānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darmiyānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darmiyānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darmiyānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āg darmiyānī rakheṅ ge to khānā mazedār bane gā. — If you keep the heat medium, the food will turn out tasty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āg darmiyānī rakheṅ ge to khānā mazedār bane gā.* — If you keep the heat medium, the food will turn out tasty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to soften in cooking, then the Urdu for to crack, then say darmiyānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to soften in cooking, then the Urdu for to crack, then say *darmiyānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does درمیانہ (darmiyānā) mean? (\"Medium; moderate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

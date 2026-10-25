@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:f8246b579650a106",
+  "lessonIds": [
+    "UR-C430-para",
+    "UR-C430-digri",
+    "UR-C430-tapna",
+    "UR-C430-habs",
+    "UR-C430-jhalna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch430.txt",
+  "json": "urdu/narration/ch430.json",
+  "textHash": "fnv1a64:72344ebad029b976",
+  "jsonHash": "fnv1a64:4af9f1cf02a1972d",
+  "findings": []
+}

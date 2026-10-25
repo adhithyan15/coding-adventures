@@ -1,0 +1,11 @@
+{
+  "id": "GU-C437-jhakal",
+  "pathSegment": "GU-PATH-437-COLD437",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-437-COLD437",
+      "order": 1
+    }
+  ]
+}

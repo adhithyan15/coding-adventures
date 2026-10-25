@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Engines and Carriages",
+  "label": "ch:ur-engines-and-carriages",
+  "canDo": "I can talk about the engine, the carriages and the whistle of a train.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C386-bajna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can talk about the engine, the carriages and the whistle of a train.",
+    "assesses": [
+      "UR-LEX-C386-DABBA386-03",
+      "UR-LEX-C386-DABBA386-04",
+      "UR-LEX-C386-DABBA386-05"
+    ]
+  }
+}

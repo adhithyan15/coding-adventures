@@ -1,0 +1,11 @@
+{
+  "id": "GU-C499-besnu",
+  "pathSegment": "GU-PATH-499-MARAN499",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-499-MARAN499",
+      "order": 3
+    }
+  ]
+}

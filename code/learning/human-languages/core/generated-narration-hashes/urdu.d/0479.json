@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:64874aa8831be5d3",
+  "lessonIds": [
+    "UR-C479-dakhil-karna",
+    "UR-C479-vard",
+    "UR-C479-apreshan",
+    "UR-C479-sarjan",
+    "UR-C479-istrechar",
+    "UR-R479-review-472-479"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch479.txt",
+  "json": "urdu/narration/ch479.json",
+  "textHash": "fnv1a64:dc95d8d1254e14ec",
+  "jsonHash": "fnv1a64:7b9ec7e2609f6ec4",
+  "findings": []
+}

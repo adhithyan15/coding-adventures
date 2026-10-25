@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 470,
+  "title": "Face and Hair",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:0cf9d6521e62da81",
+  "lessons": [
+    {
+      "id": "GU-C470-cahero",
+      "sequence": 26170,
+      "title": "ચહેરો (cahero) — a face",
+      "headword": "ચહેરો",
+      "romanization": "cahero",
+      "gloss": "a face",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9450d619d36ddfbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for sluggish, then the Gujarati for steady effort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચહેરો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચહેરો — cahero — \"a face\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરાનો ચહેરો ખુશીથી ચમકતો હતો. Mīrāno cahero khuśīthī camakto hato. Mira's face was shining with happiness."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચહેરો (cahero) is usually traced to Persian čihra, \"face, appearance\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cahero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cahero*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cahero, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cahero*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrāno cahero khuśīthī camakto hato. — Mira's face was shining with happiness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrāno cahero khuśīthī camakto hato.* — Mira's face was shining with happiness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for sluggish, then the Gujarati for steady effort, then say cahero again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for sluggish, then the Gujarati for steady effort, then say *cahero* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચહેરો (cahero) mean? (\"A face\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C470-papan",
+      "sequence": 26180,
+      "title": "પાંપણ (pā̃paṇ) — an eyelash",
+      "headword": "પાંપણ",
+      "romanization": "pā̃paṇ",
+      "gloss": "an eyelash",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dd5c9a163226e3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for steady effort, then the Gujarati for a face."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પાંપણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાંપણ — pā̃paṇ — \"an eyelash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "બાળકની પાંપણ લાંબી છે. bāḷaknī pā̃paṇ lā̃bī che. The baby has long eyelashes."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાંપણ (pā̃paṇ) is inherited from Sanskrit pakṣman, \"eyelash\"; CDIAL lists the Gujarati word (CDIAL 7638)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pā̃paṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pā̃paṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pā̃paṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pā̃paṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāḷaknī pā̃paṇ lā̃bī che. — The baby has long eyelashes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāḷaknī pā̃paṇ lā̃bī che.* — The baby has long eyelashes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for steady effort, then the Gujarati for a face, then say pā̃paṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for steady effort, then the Gujarati for a face, then say *pā̃paṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પાંપણ (pā̃paṇ) mean? (\"An eyelash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C470-cotlo",
+      "sequence": 26190,
+      "title": "ચોટલો (coṭlo) — a plait of hair",
+      "headword": "ચોટલો",
+      "romanization": "coṭlo",
+      "gloss": "a plait of hair",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec1ed7354c8a90c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a face, then the Gujarati for an eyelash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચોટલો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચોટલો — coṭlo — \"a plait of hair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદી રોજ સવારે મીરાનો ચોટલો ગૂંથે છે. dādī roj savāre Mīrāno coṭlo gū̃the che. Every morning my grandmother plaits Mira's hair."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચોટલો (coṭlo) is inherited: CDIAL lists the Gujarati word, \"hair of head\", under Sanskrit cūḍā, \"topknot on the head\" (CDIAL 4883)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coṭlo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coṭlo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coṭlo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coṭlo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī roj savāre Mīrāno coṭlo gū̃the che. — Every morning my grandmother plaits Mira's hair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī roj savāre Mīrāno coṭlo gū̃the che.* — Every morning my grandmother plaits Mira's hair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a face, then the Gujarati for an eyelash, then say coṭlo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a face, then the Gujarati for an eyelash, then say *coṭlo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચોટલો (coṭlo) mean? (\"A plait of hair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C470-lat",
+      "sequence": 26200,
+      "title": "લટ (laṭ) — a lock of hair",
+      "headword": "લટ",
+      "romanization": "laṭ",
+      "gloss": "a lock of hair",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0175042980d55dd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an eyelash, then the Gujarati for a plait."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: લટ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લટ — laṭ — \"a lock of hair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પવનથી તેના કપાળ પર એક લટ આવી ગઈ. pavanthī tenā kapāḷ par ek laṭ āvī gaī. The wind blew a lock of hair onto her forehead."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લટ (laṭ) probably goes back to a reconstructed laṭṭa-, \"hanging, tangled\", under which CDIAL lists the Gujarati laṭiyā̃, \"matted locks\" (CDIAL 10918)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pavanthī tenā kapāḷ par ek laṭ āvī gaī. — The wind blew a lock of hair onto her forehead.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pavanthī tenā kapāḷ par ek laṭ āvī gaī.* — The wind blew a lock of hair onto her forehead.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an eyelash, then the Gujarati for a plait, then say laṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an eyelash, then the Gujarati for a plait, then say *laṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does લટ (laṭ) mean? (\"A lock of hair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C470-pathi",
+      "sequence": 26210,
+      "title": "પાંથી (pā̃thī) — the parting of the hair",
+      "headword": "પાંથી",
+      "romanization": "pā̃thī",
+      "gloss": "the parting of the hair",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74a461dae7c3d540",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a plait, then the Gujarati for a lock of hair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પાંથી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાંથી — pā̃thī — \"the parting of the hair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરાની પાંથી વચ્ચે છે. Mīrānī pā̃thī vacce che. Mira parts her hair in the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાંથી (pā̃thī) is inherited from Sanskrit pánthā, \"path\"; CDIAL lists the Gujarati word, \"parting of the hair\" (CDIAL 7785): a little path through the hair."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pā̃thī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pā̃thī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pā̃thī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pā̃thī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrānī pā̃thī vacce che. — Mira parts her hair in the middle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrānī pā̃thī vacce che.* — Mira parts her hair in the middle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a plait, then the Gujarati for a lock of hair, then say pā̃thī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a plait, then the Gujarati for a lock of hair, then say *pā̃thī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પાંથી (pā̃thī) mean? (\"The parting of the hair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R470-review-463-470",
+      "sequence": 26220,
+      "title": "Looking back: from Chatty and Quiet to Face and Hair",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Chatty and Quiet to Face and Hair",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b8e61f6995d5b76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for straightforward and of few words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "straightforward, of few words, talkative, to babble, cheerful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: straightforward, of few words, talkative, to babble, cheerful]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "discreet, good sense, well-behaved, composed, to heed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: discreet, good sense, well-behaved, composed, to heed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strict, fussy, insolent, egotism, to get used to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: strict, fussy, insolent, egotism, to get used to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cowardly, fearless, valour, grit, to wobble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cowardly, fearless, valour, grit, to wobble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "behaviour, respectful manners, airs, moral character, to be ashamed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: behaviour, respectful manners, airs, moral character, to be ashamed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "untruthful, a tall tale, hypocrisy, boasting, to beguile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: untruthful, a tall tale, hypocrisy, boasting, to beguile]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "odd, whimsical, obsession, sluggish, steady effort",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: odd, whimsical, obsession, sluggish, steady effort]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a face, an eyelash, a plait, a lock of hair, the parting of the hair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a face, an eyelash, a plait, a lock of hair, the parting of the hair]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Straightforward? (સરળ, saraḷ.) Of few words? (ઓછાબોલું, ochābolũ.) Talkative? (વાચાળ, vācāḷ.) To babble? (બકવું, bakvũ.) Cheerful? (હસમુખું, hasmukhũ.) Discreet? (શાણું, śāṇũ.) Good sense? (વિવેક, vivek.) Well-behaved? (ડાહ્યું, ḍāhyũ.) Composed? (ઠાવકું, ṭhāvkũ.) To heed? (ગાંઠવું, gā̃ṭhvũ.) Strict? (સખત, sakhat.) Fussy? (ચીકણું, cīkṇũ.) Insolent? (ઉદ્ધત, uddhat.) Egotism? (અહંકાર, ahankār.) To get used to? (ટેવાવું, ṭevāvũ.) Cowardly? (કાયર, kāyar.) Fearless? (નીડર, nīḍar.) Valour? (શૌર્ય, śaurya.) Grit? (ખમીર, khamīr.) To wobble? (ડગમગવું, ḍagmagvũ.) Behaviour? (વર્તન, vartan.) Respectful manners? (અદબ, adab.) Airs? (નખરાં, nakhrā̃.) Moral character? (ચારિત્ર્ય, cāritrya.) To be ashamed? (લાજવું, lājvũ.) Untruthful? (જૂઠું, jūṭhũ.) A tall tale? (ગપ્પું, gappũ.) Hypocrisy? (દંભ, dambh.) Boasting? (શેખી, śekhī.) To beguile? (ભોળવવું, bhoḷavvũ.) Odd? (વિચિત્ર, vicitra.) Whimsical? (તરંગી, tarangī.) Obsession? (ઝનૂન, jhanūn.) Sluggish? (સુસ્ત, sust.) Steady effort? (ઉદ્યમ, udyam.) A face? (ચહેરો, cahero.) An eyelash? (પાંપણ, pā̃paṇ.) A plait? (ચોટલો, coṭlo.) A lock of hair? (લટ, laṭ.) The parting of the hair? (પાંથી, pā̃thī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

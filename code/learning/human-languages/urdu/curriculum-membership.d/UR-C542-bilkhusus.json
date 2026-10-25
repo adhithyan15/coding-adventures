@@ -1,0 +1,11 @@
+{
+  "id": "UR-C542-bilkhusus",
+  "pathSegment": "UR-PATH-542-KHAIR542",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-542-KHAIR542",
+      "order": 2
+    }
+  ]
+}

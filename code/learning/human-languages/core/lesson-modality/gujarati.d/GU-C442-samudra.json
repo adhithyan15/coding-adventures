@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C442-samudra",
+    "language": "gujarati",
+    "chapter": 442,
+    "sequence": 24510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7316c3ffe4d97b12"
+  },
+  "findings": []
+}

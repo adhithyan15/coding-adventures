@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C387-kathalvu",
+    "language": "gujarati",
+    "chapter": 387,
+    "sequence": 21500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f44fe91fd6e2b6d3"
+  },
+  "findings": []
+}

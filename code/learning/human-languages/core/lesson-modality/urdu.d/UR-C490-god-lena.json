@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C490-god-lena",
+    "language": "urdu",
+    "chapter": 490,
+    "sequence": 28600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e867e7f201e6cb3"
+  },
+  "findings": []
+}

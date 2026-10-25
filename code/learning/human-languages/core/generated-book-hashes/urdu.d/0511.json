@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:8f93b16a389ae784",
+  "lessonIds": [
+    "UR-C511-tarkib",
+    "UR-C511-dastarkhvan",
+    "UR-C511-pakvana",
+    "UR-C511-phunkna",
+    "UR-C511-chakhana"
+  ],
+  "tex": "urdu/book/chapters/ch511-laying-the-cloth.tex"
+}

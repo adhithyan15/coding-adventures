@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Cracks and Leaks",
+  "label": "ch:gu-cracks-and-leaks",
+  "canDo": "I can describe damp, flaking walls and leaking pipes at home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C515-plambar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can describe damp, flaking walls and leaking pipes at home.",
+    "assesses": [
+      "GU-LEX-C515-POPDO515-03",
+      "GU-LEX-C515-POPDO515-04",
+      "GU-LEX-C515-POPDO515-05"
+    ]
+  }
+}

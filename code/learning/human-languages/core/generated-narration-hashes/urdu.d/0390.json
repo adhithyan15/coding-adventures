@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:641f74431005d765",
+  "lessonIds": [
+    "UR-C390-amad",
+    "UR-C390-ravana",
+    "UR-C390-takhir",
+    "UR-C390-mansukh",
+    "UR-C390-utaarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch390.txt",
+  "json": "urdu/narration/ch390.json",
+  "textHash": "fnv1a64:1eb797df758165ef",
+  "jsonHash": "fnv1a64:791ec4f1e72f629c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:76ee4cdf1f3c5079",
+  "lessonIds": [
+    "UR-C458-sabr-karna",
+    "UR-C458-tahammul",
+    "UR-C458-bardasht-karna",
+    "UR-C458-jhirakna",
+    "UR-C458-sahna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch458.txt",
+  "json": "urdu/narration/ch458.json",
+  "textHash": "fnv1a64:cfe5ada72c06987d",
+  "jsonHash": "fnv1a64:3f95f4230fb1a862",
+  "findings": []
+}

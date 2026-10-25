@@ -1,0 +1,11 @@
+{
+  "id": "GU-C291-kedi",
+  "pathSegment": "GU-PATH-291-GHERVU291",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-291-GHERVU291",
+      "order": 3
+    }
+  ]
+}

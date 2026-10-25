@@ -1,0 +1,18 @@
+{
+  "glyph": "ذ",
+  "sound": "z",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ذ",
+    "initial": "ذ",
+    "medial": "ـذ",
+    "final": "ـذ"
+  },
+  "components": [
+    "folded shoulder",
+    "leftward baseline",
+    "one dot above"
+  ],
+  "strokeOrder": [],
+  "notes": "Zāl is dāl with one dot above, one of Urdu's four spellings of z, kept in words of Arabic origin; it does not join to the following letter. Recognition only: its stroke order is deliberately left empty, because no Urdu-scoped stroke-order source has been verified for it yet (a Persian or Arabic row's order is not borrowed)."
+}

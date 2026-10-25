@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C440-mizaj",
+    "language": "urdu",
+    "chapter": 440,
+    "sequence": 26040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8aebfbb61a94e09"
+  },
+  "findings": []
+}

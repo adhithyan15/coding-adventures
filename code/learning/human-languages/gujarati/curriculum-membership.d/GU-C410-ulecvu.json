@@ -1,0 +1,11 @@
+{
+  "id": "GU-C410-ulecvu",
+  "pathSegment": "GU-PATH-410-BATH410",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-410-BATH410",
+      "order": 3
+    }
+  ]
+}

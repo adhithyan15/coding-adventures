@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-276-CHORI276",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "UR-EXT-276-CHORI276"
+  ],
+  "after": []
+}

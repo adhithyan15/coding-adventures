@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "A Blast",
+  "label": "ch:ur-a-blast",
+  "canDo": "I can describe a sudden loud event.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C306-sadma",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can describe a sudden loud event.",
+    "assesses": [
+      "UR-LEX-C306-DHAMAKA306-03",
+      "UR-LEX-C306-DHAMAKA306-04",
+      "UR-LEX-C306-DHAMAKA306-05"
+    ]
+  }
+}

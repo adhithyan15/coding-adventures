@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:f3ee63ff7d99e4c4",
+  "lessonIds": [
+    "UR-C547-tasavvur",
+    "UR-C547-niyyat",
+    "UR-C547-muhim",
+    "UR-C547-peshkash",
+    "UR-C547-sanvarna-intr",
+    "UR-R547-review-541-547",
+    "UR-R547-review-final-547"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch547.txt",
+  "json": "urdu/narration/ch547.json",
+  "textHash": "fnv1a64:9d9aad6829a90fdd",
+  "jsonHash": "fnv1a64:b541a37fa3a392b7",
+  "findings": []
+}

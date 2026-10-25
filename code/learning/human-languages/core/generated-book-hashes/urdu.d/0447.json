@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:efa79bfc17b04261",
+  "lessonIds": [
+    "UR-C447-itminan",
+    "UR-C447-asuda",
+    "UR-C447-qarar",
+    "UR-C447-dilasa",
+    "UR-C447-khushgavar",
+    "UR-R447-review-440-447"
+  ],
+  "tex": "urdu/book/chapters/ch447-calm-again.tex"
+}

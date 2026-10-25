@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C542-nukta",
+    "language": "urdu",
+    "chapter": 542,
+    "sequence": 31490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79db527e0447998c"
+  },
+  "findings": []
+}

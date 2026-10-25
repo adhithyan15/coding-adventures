@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 533,
+  "title": "A Game of Chance",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a5c78a8ff9ec3072",
+  "lessons": [
+    {
+      "id": "UR-C533-jua",
+      "sequence": 30990,
+      "title": "جوا (juā) — gambling",
+      "headword": "جوا",
+      "romanization": "juā",
+      "gloss": "gambling",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dc44aae15ab5477",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a draw (of lots), then the Urdu for a toss (of a coin)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جوا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جوا — juā — \"gambling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر تم نے جوا کھیلا تو سب ہار جاؤ گے۔ agar tum ne juā khelā to sab hār jāo ge. If you gamble, you will lose everything."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جوا (juā) is inherited from Sanskrit dyūta, \"gambling\" (CDIAL 6608)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum ne juā khelā to sab hār jāo ge. — If you gamble, you will lose everything.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum ne juā khelā to sab hār jāo ge.* — If you gamble, you will lose everything.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a draw (of lots), then the Urdu for a toss (of a coin), then say juā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a draw (of lots), then the Urdu for a toss (of a coin), then say *juā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جوا (juā) mean? (\"Gambling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C533-pansa",
+      "sequence": 31000,
+      "title": "پانسہ (pāṅsā) — a die (for a game)",
+      "headword": "پانسہ",
+      "romanization": "pāṅsā",
+      "gloss": "a die (for a game)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52706440c8135464",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a toss (of a coin), then the Urdu for gambling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پانسہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پانسہ — pāṅsā — \"a die (for a game)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر پانسے پر چھ آیا تو میں جیتوں گا۔ agar pāṅse par chhe āyā to maiṅ jītūṅ gā. If the die shows a six, I'll win."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پانسہ (pāṅsā) is inherited: CDIAL lists the Hindi cousin pāsā, \"a die\", under Sanskrit pāśa, \"a die, dice\" (CDIAL 8132)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṅsā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṅsā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṅsā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṅsā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar pāṅse par chhe āyā to maiṅ jītūṅ gā. — If the die shows a six, I'll win.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar pāṅse par chhe āyā to maiṅ jītūṅ gā.* — If the die shows a six, I'll win.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a toss (of a coin), then the Urdu for gambling, then say pāṅsā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a toss (of a coin), then the Urdu for gambling, then say *pāṅsā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پانسہ (pāṅsā) mean? (\"A die (for a game)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C533-bari",
+      "sequence": 31010,
+      "title": "باری (bārī) — a turn (in a game); one's turn",
+      "headword": "باری",
+      "romanization": "bārī",
+      "gloss": "a turn (in a game); one's turn",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b35808d47e7b7974",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for gambling, then the Urdu for a die."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: باری",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "باری — bārī — \"a turn (in a game); one's turn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ کی باری ہے تو پانسہ پھینکیے۔ agar āp kī bārī hai to pāṅsā pheṅkiye. If it's your turn, throw the die."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "باری (bārī) is inherited: CDIAL lists the Hindi cousin bārī, \"a turn, a time\", under Sanskrit vāra (CDIAL 11547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp kī bārī hai to pāṅsā pheṅkiye. — If it's your turn, throw the die.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp kī bārī hai to pāṅsā pheṅkiye.* — If it's your turn, throw the die.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for gambling, then the Urdu for a die, then say bārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for gambling, then the Urdu for a die, then say *bārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does باری (bārī) mean? (\"A turn (in a game); one's turn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C533-chal",
+      "sequence": 31020,
+      "title": "چال (chāl) — a move (in a game)",
+      "headword": "چال",
+      "romanization": "chāl",
+      "gloss": "a move (in a game)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1591c8dd5920de7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a die, then the Urdu for a turn (in a game)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چال",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چال — chāl — \"a move (in a game)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر وہ یہ چال سمجھ گیا تو جیت جائے گا۔ agar voh yih chāl samajh gayā to jīt jāe gā. If he sees through this move, he will win."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چال (chāl) is inherited: CDIAL lists the Hindi cousin cāl, \"behaviour\", under calyā, \"gait, conduct\" (CDIAL 4722); the sense \"a move in a game\" is a later one that CDIAL does not record."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar voh yih chāl samajh gayā to jīt jāe gā. — If he sees through this move, he will win.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar voh yih chāl samajh gayā to jīt jāe gā.* — If he sees through this move, he will win.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a die, then the Urdu for a turn (in a game), then say chāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a die, then the Urdu for a turn (in a game), then say *chāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چال (chāl) mean? (\"A move (in a game)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C533-paltana",
+      "sequence": 31030,
+      "title": "پلٹانا (palṭānā) — to turn over (something)",
+      "headword": "پلٹانا",
+      "romanization": "palṭānā",
+      "gloss": "to turn over (something)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b24dadfbb9caeb3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a turn (in a game), then the Urdu for a move (in a game)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پلٹانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پلٹانا — palṭānā — \"to turn over (something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ نے پتا پلٹایا تو کھیل بدل جائے گا۔ agar āp ne pattā palṭāyā to khel badal jāe gā. If you turn the card over, the game will change."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے پتا پلٹایا, us ne pattā palṭāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پلٹانا (palṭānā) is inherited: CDIAL lists the Hindi cousin palṭānā, \"to turn\", under pallaṭṭ, a form it reconstructs (CDIAL 7968)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palṭānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palṭānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palṭānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palṭānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp ne pattā palṭāyā to khel badal jāe gā. — If you turn the card over, the game will change.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp ne pattā palṭāyā to khel badal jāe gā.* — If you turn the card over, the game will change.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a turn (in a game), then the Urdu for a move (in a game), then say palṭānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a turn (in a game), then the Urdu for a move (in a game), then say *palṭānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پلٹانا (palṭānā) mean? (\"To turn over (something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R533-review-526-533",
+      "sequence": 31040,
+      "title": "Looking back: from Before the Deadline to A Game of Chance",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Before the Deadline to A Game of Chance",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f88f220cf470b254",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for a time limit and fixed in advance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a time limit, fixed in advance, urgent, a break in work, complete",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a time limit, fixed in advance, urgent, a break in work, complete]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "busy, not busy, available, an excuse, to get bored",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: busy, not busy, available, an excuse, to get bored]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a blessing, spiritual merit, an amulet, an offering, to bestow favour on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a blessing, spiritual merit, an amulet, an offering, to bestow favour on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tiresome muddle, a quandary, an inner struggle, complicated, to tangle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tiresome muddle, a quandary, an inner struggle, complicated, to tangle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one's own choice, willing, a disagreement, turned down, to turn back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one's own choice, willing, a disagreement, turned down, to turn back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "something left in one's keeping, one's given word, honouring a rule, a good name, to be kept up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: something left in one's keeping, one's given word, honouring a rule, a good name, to be kept up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luck, destiny, a lottery, a draw (of lots), a toss (of a coin)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: luck, destiny, a lottery, a draw (of lots), a toss (of a coin)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gambling, a die, a turn (in a game), a move (in a game), to turn over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gambling, a die, a turn (in a game), a move (in a game), to turn over]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A time limit? (میعاد, mīād.) Fixed in advance? (مقررہ, muqarrarā.) Urgent? (فوری, faurī.) A break in work? (وقفہ, vaqfā.) Complete? (مکمل, mukammal.) Busy? (مصروف, masrūf.) Not busy? (فارغ, fārigh.) Available? (دستیاب, dastyāb.) An excuse? (بہانہ, bahānā.) To get bored? (اوبنا, ūbnā.) A blessing? (برکت, barkat.) Spiritual merit? (ثواب, savāb.) An amulet? (تعویذ, tāvīz.) An offering? (نذرانہ, nazrānā.) To bestow favour on? (نوازنا, navāznā.) A tiresome muddle? (جھمیلا, jhamelā.) A quandary? (مخمصہ, makhmasā.) An inner struggle? (کشمکش, kashmakash.) Complicated? (پیچیدہ, pechīdā.) To tangle? (الجھانا, uljhānā.) One's own choice? (مرضی, marzī.) Willing? (راضی, rāzī.) A disagreement? (اختلاف, ikhtilāf.) Turned down? (مسترد, mustarad.) To turn back? (پلٹنا, palaṭnā.) Something left in one's keeping? (امانت, amānat.) One's given word? (قول, qaul.) Honouring a rule? (پاسداری, pāsdārī.) A good name? (ساکھ, sākh.) To be kept up? (نبھنا, nibhnā.) Luck? (قسمت, qismat.) Destiny? (تقدیر, taqdīr.) A lottery? (لاٹری, lāṭrī.) A draw (of lots)? (قرعہ, qurā.) A toss (of a coin)? (ٹاس, ṭās.) Gambling? (جوا, juā.) A die? (پانسہ, pāṅsā.) A turn (in a game)? (باری, bārī.) A move (in a game)? (چال, chāl.) To turn over? (پلٹانا, palṭānā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C320-chhirakna",
+    "language": "urdu",
+    "chapter": 320,
+    "sequence": 19270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c90c60b25cf443e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C553-ranakvu",
+  "pathSegment": "GU-PATH-553-NAGARU553",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-553-NAGARU553",
+      "order": 3
+    }
+  ]
+}

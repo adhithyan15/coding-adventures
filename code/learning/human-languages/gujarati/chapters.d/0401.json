@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "A Flat Tyre",
+  "label": "ch:gu-a-flat-tyre",
+  "canDo": "I can say what went wrong with a car or a truck.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C401-uthalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can say what went wrong with a car or a truck.",
+    "assesses": [
+      "GU-LEX-C401-TYRE401-03",
+      "GU-LEX-C401-TYRE401-04",
+      "GU-LEX-C401-TYRE401-05"
+    ]
+  }
+}

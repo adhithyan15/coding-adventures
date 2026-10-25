@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:31dc2484e07744e2",
+  "lessonIds": [
+    "UR-C297-kaimp",
+    "UR-C297-rahat",
+    "UR-C297-khaima",
+    "UR-C297-panah",
+    "UR-C297-mutasir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch297.txt",
+  "json": "urdu/narration/ch297.json",
+  "textHash": "fnv1a64:48e31e9bd1b0ac25",
+  "jsonHash": "fnv1a64:ef5dc506413a495a",
+  "findings": []
+}

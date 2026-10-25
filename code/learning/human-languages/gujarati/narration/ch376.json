@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 376,
+  "title": "Mistakes and Slips",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7ca1ce369a9a2e66",
+  "lessons": [
+    {
+      "id": "GU-C376-bhul",
+      "sequence": 20890,
+      "title": "ભૂલ (bhūl) — a mistake",
+      "headword": "ભૂલ",
+      "romanization": "bhūl",
+      "gloss": "a mistake",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f8b109e4cdaa176",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to get done, then the Gujarati for to provide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભૂલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભૂલ — bhūl — \"a mistake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો હિસાબમાં એક પણ ભૂલ હશે તો આખું પરિણામ ખોટું આવશે. jo hisābmā̃ ek paṇ bhūl haśe to ākhũ pariṇām khoṭũ āvśe. If there is even one mistake in the accounts, the whole result will come out wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભૂલ (bhūl) shares its source with ભૂલવું (bhūlvũ), \"to forget\": CDIAL lists both under a reconstructed bhull, \"err, forget\" (CDIAL 9538)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo hisābmā̃ ek paṇ bhūl haśe to ākhũ pariṇām khoṭũ āvśe. — If there is even one mistake in the accounts, the whole result will come out wrong.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo hisābmā̃ ek paṇ bhūl haśe to ākhũ pariṇām khoṭũ āvśe.* — If there is even one mistake in the accounts, the whole result will come out wrong.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to get done, then the Gujarati for to provide, then say bhūl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to get done, then the Gujarati for to provide, then say *bhūl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભૂલ (bhūl) mean? (\"A mistake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C376-gaphlat",
+      "sequence": 20900,
+      "title": "ગફલત (gaphlat) — negligence",
+      "headword": "ગફલત",
+      "romanization": "gaphlat",
+      "gloss": "negligence",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ac186916c0658a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to provide, then the Gujarati for a mistake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગફલત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગફલત — gaphlat — \"negligence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો ડ્રાઈવર ગફલત કરશે તો ગાડી ખાડામાં પડશે. jo ḍrāīvar gaphlat karśe to gāḍī khāḍāmā̃ paḍśe. If the driver is careless, the car will end up in a ditch."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગફલત (gaphlat) is usually traced to Arabic ghaflat, \"heedlessness\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaphlat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaphlat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaphlat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaphlat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo ḍrāīvar gaphlat karśe to gāḍī khāḍāmā̃ paḍśe. — If the driver is careless, the car will end up in a ditch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo ḍrāīvar gaphlat karśe to gāḍī khāḍāmā̃ paḍśe.* — If the driver is careless, the car will end up in a ditch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to provide, then the Gujarati for a mistake, then say gaphlat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to provide, then the Gujarati for a mistake, then say *gaphlat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગફલત (gaphlat) mean? (\"Negligence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C376-khami",
+      "sequence": 20910,
+      "title": "ખામી (khāmī) — a defect",
+      "headword": "ખામી",
+      "romanization": "khāmī",
+      "gloss": "a defect",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f18cee670784eaac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a mistake, then the Gujarati for negligence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ખામી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખામી — khāmī — \"a defect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો નવા ફોનમાં કોઈ ખામી હશે તો દુકાનદાર તે બદલી આપશે. jo navā phonmā̃ koī khāmī haśe to dukāndār te badlī āpśe. If there is a defect in the new phone, the shopkeeper will replace it."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખામી (khāmī) is usually traced to Persian khāmī, \"rawness, a shortcoming\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāmī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāmī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāmī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāmī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo navā phonmā̃ koī khāmī haśe to dukāndār te badlī āpśe. — If there is a defect in the new phone, the shopkeeper will replace it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo navā phonmā̃ koī khāmī haśe to dukāndār te badlī āpśe.* — If there is a defect in the new phone, the shopkeeper will replace it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a mistake, then the Gujarati for negligence, then say khāmī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a mistake, then the Gujarati for negligence, then say *khāmī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ખામી (khāmī) mean? (\"A defect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C376-dhil",
+      "sequence": 20920,
+      "title": "ઢીલ (ḍhīl) — slackness; a delay",
+      "headword": "ઢીલ",
+      "romanization": "ḍhīl",
+      "gloss": "slackness; a delay",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ea87f7f2cd34568",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for negligence, then the Gujarati for a defect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઢીલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઢીલ — ḍhīl — \"slackness; a delay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે ઢીલ કરશો તો ટ્રેન છૂટી જશે. jo tame ḍhīl karśo to ṭren chūṭī jaśe. If you dawdle, you will miss the train."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઢીલ (ḍhīl) CDIAL lists Gujarati ḍhīl, \"loose, slack\", under a reconstructed ḍhila (CDIAL 5590); \"a delay\", slack in doing a thing, is the noun's sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhīl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhīl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhīl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhīl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame ḍhīl karśo to ṭren chūṭī jaśe. — If you dawdle, you will miss the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame ḍhīl karśo to ṭren chūṭī jaśe.* — If you dawdle, you will miss the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for negligence, then the Gujarati for a defect, then say ḍhīl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for negligence, then the Gujarati for a defect, then say *ḍhīl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઢીલ (ḍhīl) mean? (\"Slackness; a delay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C376-sudharvu-improve",
+      "sequence": 20930,
+      "title": "સુધરવું (sudharvũ) — to get better",
+      "headword": "સુધરવું",
+      "romanization": "sudharvũ",
+      "gloss": "to get better",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c978e3e4fdf78927",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a defect, then the Gujarati for slackness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સુધરવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સુધરવું — sudharvũ — \"to get better\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે રોજ અભ્યાસ કરશો તો તમારા ગુણ સુધરશે. jo tame roj abhyās karśo to tamārā guṇ sudharśe. If you study every day, your marks will improve."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે છોકરો ઘણો સુધર્યો, te chokro ghaṇo sudharyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સુધરવું (sudharvũ) is the intransitive partner of સુધારવું (sudhārvũ), \"to mend\"; CDIAL lists both under a reconstructed śuddhakāra, \"making clean\" (CDIAL 12521)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sudharvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sudharvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sudharvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sudharvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame roj abhyās karśo to tamārā guṇ sudharśe. — If you study every day, your marks will improve.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame roj abhyās karśo to tamārā guṇ sudharśe.* — If you study every day, your marks will improve.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a defect, then the Gujarati for slackness, then say sudharvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a defect, then the Gujarati for slackness, then say *sudharvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સુધરવું (sudharvũ) mean? (\"To get better\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

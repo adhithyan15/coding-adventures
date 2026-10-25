@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 345,
+  "output": "urdu/book/chapters/ch345-what-we-value.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

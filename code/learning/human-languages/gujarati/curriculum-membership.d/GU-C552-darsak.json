@@ -1,0 +1,11 @@
+{
+  "id": "GU-C552-darsak",
+  "pathSegment": "GU-PATH-552-MANCH552",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-552-MANCH552",
+      "order": 2
+    }
+  ]
+}

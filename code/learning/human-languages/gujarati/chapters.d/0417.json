@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "The Pol",
+  "label": "ch:gu-the-pol",
+  "canDo": "I can describe an old-city pol and its gateway.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C417-vasvu-shut",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can describe an old-city pol and its gateway.",
+    "assesses": [
+      "GU-LEX-C417-POL417-03",
+      "GU-LEX-C417-POL417-04",
+      "GU-LEX-C417-POL417-05"
+    ]
+  }
+}

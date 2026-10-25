@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "The Hidden Treasure",
+  "label": "ch:gu-the-hidden-treasure",
+  "canDo": "I can tell what greed did to a man who wanted treasure.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C334-bhatakvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can tell what greed did to a man who wanted treasure.",
+    "assesses": [
+      "GU-LEX-C334-KHAJANO334-03",
+      "GU-LEX-C334-KHAJANO334-04",
+      "GU-LEX-C334-KHAJANO334-05"
+    ]
+  }
+}

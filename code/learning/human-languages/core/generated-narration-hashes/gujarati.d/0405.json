@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:932527abd865cb04",
+  "lessonIds": [
+    "GU-C405-udan",
+    "GU-C405-paylat",
+    "GU-C405-get",
+    "GU-C405-sutkes",
+    "GU-C405-cakravo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch405.txt",
+  "json": "gujarati/narration/ch405.json",
+  "textHash": "fnv1a64:22965d94a1d78892",
+  "jsonHash": "fnv1a64:5208345e51ca0583",
+  "findings": []
+}

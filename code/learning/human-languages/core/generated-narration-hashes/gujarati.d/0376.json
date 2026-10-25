@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:7ca1ce369a9a2e66",
+  "lessonIds": [
+    "GU-C376-bhul",
+    "GU-C376-gaphlat",
+    "GU-C376-khami",
+    "GU-C376-dhil",
+    "GU-C376-sudharvu-improve"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch376.txt",
+  "json": "gujarati/narration/ch376.json",
+  "textHash": "fnv1a64:d70de5cec5826e0b",
+  "jsonHash": "fnv1a64:0b2666350c77331d",
+  "findings": []
+}

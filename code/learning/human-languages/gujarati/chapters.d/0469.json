@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Habits and Quirks",
+  "label": "ch:gu-habits-and-quirks",
+  "canDo": "I can describe odd habits and hard work.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C469-udyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can describe odd habits and hard work.",
+    "assesses": [
+      "GU-LEX-C469-TARANGI469-03",
+      "GU-LEX-C469-TARANGI469-04",
+      "GU-LEX-C469-TARANGI469-05"
+    ]
+  }
+}

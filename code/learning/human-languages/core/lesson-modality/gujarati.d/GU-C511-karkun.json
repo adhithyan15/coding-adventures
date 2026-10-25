@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C511-karkun",
+    "language": "gujarati",
+    "chapter": 511,
+    "sequence": 28550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccc1979684400469"
+  },
+  "findings": []
+}

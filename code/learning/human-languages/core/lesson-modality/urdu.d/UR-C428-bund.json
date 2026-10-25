@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C428-bund",
+    "language": "urdu",
+    "chapter": 428,
+    "sequence": 25150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7fecb50a206d6e8"
+  },
+  "findings": []
+}

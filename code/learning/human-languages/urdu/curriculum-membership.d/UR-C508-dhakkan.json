@@ -1,0 +1,11 @@
+{
+  "id": "UR-C508-dhakkan",
+  "pathSegment": "UR-PATH-508-DHAKKAN508",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-508-DHAKKAN508",
+      "order": 2
+    }
+  ]
+}

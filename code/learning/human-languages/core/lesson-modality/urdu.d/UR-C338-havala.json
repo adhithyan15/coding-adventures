@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C338-havala",
+    "language": "urdu",
+    "chapter": 338,
+    "sequence": 20390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a467f0a3a13374ce"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:19ae41547c10a3ac",
+  "lessonIds": [
+    "GU-C442-samudra",
+    "GU-C442-laher",
+    "GU-C442-nav",
+    "GU-C442-jal",
+    "GU-C442-dolvu"
+  ],
+  "tex": "gujarati/book/chapters/ch442-waves-and-nets.tex"
+}

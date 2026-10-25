@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:73c35a249e6395cb",
+  "lessonIds": [
+    "GU-C445-malo",
+    "GU-C445-agiyo",
+    "GU-C445-tamru",
+    "GU-C445-tahukvu",
+    "GU-C445-cahekvu"
+  ],
+  "tex": "gujarati/book/chapters/ch445-nests-and-night-sounds.tex"
+}

@@ -1,0 +1,854 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 471,
+  "title": "Health",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:0eae6517f13d6949",
+  "lessons": [
+    {
+      "id": "UR-C471-daktar",
+      "sequence": 27580,
+      "title": "ڈاکٹر (ḍākṭar) — a doctor",
+      "headword": "ڈاکٹر",
+      "romanization": "ḍākṭar",
+      "gloss": "a doctor",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52dbc8bab505da12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a faint, then the Urdu for frailty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ڈاکٹر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ڈاکٹر — ḍākṭar — \"a doctor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ڈاکٹر نے مجھے دوا دی۔ ḍākṭar ne mujhe davā dī. The doctor gave me some medicine."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ڈاکٹر (ḍākṭar) is borrowed from English doctor."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākṭar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākṭar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākṭar ne mujhe davā dī. — The doctor gave me some medicine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākṭar ne mujhe davā dī.* — The doctor gave me some medicine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a faint, then the Urdu for frailty, then say ḍākṭar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a faint, then the Urdu for frailty, then say *ḍākṭar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ڈاکٹر (ḍākṭar) mean? (\"A doctor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C471-sehat",
+      "sequence": 27590,
+      "title": "صحت (sehat) — health",
+      "headword": "صحت",
+      "romanization": "sehat",
+      "gloss": "health",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c42fb4a9db1e1c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for frailty, then the Urdu for a doctor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صحت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صحت — sehat — \"health\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ورزش صحت کے لیے اچھی ہے۔ varzish sehat ke liye achchhī hai. Exercise is good for your health."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صحت (sehat) is usually traced, through Persian, to Arabic ṣiḥḥa, \"health, soundness\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sehat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sehat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sehat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sehat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varzish sehat ke liye achchhī hai. — Exercise is good for your health.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varzish sehat ke liye achchhī hai.* — Exercise is good for your health.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for frailty, then the Urdu for a doctor, then say sehat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for frailty, then the Urdu for a doctor, then say *sehat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صحت (sehat) mean? (\"Health\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C471-marz",
+      "sequence": 27600,
+      "title": "مرض (marz) — an ailment; a disease",
+      "headword": "مرض",
+      "romanization": "marz",
+      "gloss": "an ailment; a disease",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55900d8837fcbd83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a doctor, then the Urdu for health."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مرض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرض — marz — \"an ailment; a disease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ پرانا مرض ہے۔ yih purānā marz hai. This is a long-standing ailment."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرض (marz) is usually traced, through Persian, to Arabic maraḍ, \"illness\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih purānā marz hai. — This is a long-standing ailment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih purānā marz hai.* — This is a long-standing ailment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a doctor, then the Urdu for health, then say marz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a doctor, then the Urdu for health, then say *marz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مرض (marz) mean? (\"An ailment; a disease\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C471-shifa",
+      "sequence": 27610,
+      "title": "شفا (shifā) — healing; a cure",
+      "headword": "شفا",
+      "romanization": "shifā",
+      "gloss": "healing; a cure",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61fca693c70f27d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for health, then the Urdu for an ailment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شفا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شفا — shifā — \"healing; a cure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس دوا سے مریض کو شفا ملی۔ is davā se marīz ko shifā milī. This medicine cured the patient."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شفا (shifā) is usually traced, through Persian, to Arabic shifāʾ, \"healing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shifā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shifā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shifā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shifā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is davā se marīz ko shifā milī. — This medicine cured the patient.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *is davā se marīz ko shifā milī.* — This medicine cured the patient.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for health, then the Urdu for an ailment, then say shifā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for health, then the Urdu for an ailment, then say *shifā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شفا (shifā) mean? (\"Healing; a cure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C471-tibbi",
+      "sequence": 27620,
+      "title": "طبی (tibbī) — medical",
+      "headword": "طبی",
+      "romanization": "tibbī",
+      "gloss": "medical",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd744c432442ac69",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an ailment, then the Urdu for healing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: طبی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "طبی — tibbī — \"medical\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ڈاکٹر نے طبی مشورہ دیا۔ ḍākṭar ne tibbī mashvarā diyā. The doctor gave medical advice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "طبی (tibbī) is usually traced, through Persian, to Arabic ṭibbī, \"medical\", built on ṭibb, \"medicine\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tibbī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tibbī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tibbī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tibbī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākṭar ne tibbī mashvarā diyā. — The doctor gave medical advice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākṭar ne tibbī mashvarā diyā.* — The doctor gave medical advice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an ailment, then the Urdu for healing, then say tibbī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an ailment, then the Urdu for healing, then say *tibbī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does طبی (tibbī) mean? (\"Medical\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R471-review-464-471",
+      "sequence": 27630,
+      "title": "Looking back: from Inside the Body to Health",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Inside the Body to Health",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d317e309f059afd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for the brain and a kidney."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the brain, a kidney, the stomach as an organ, an intestine, a vein",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the brain, a kidney, the stomach as an organ, an intestine, a vein]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bone, a rib, a skull, the backbone, a jaw",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bone, a rib, a skull, the backbone, a jaw]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an arm, a thigh, the calf of the leg, the sole of the foot, a paw",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an arm, a thigh, the calf of the leg, the sole of the foot, a paw]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the palate, a gum, to lick, to suck, to spit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the palate, a gum, to lick, to suck, to spit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scent, perfume, the sense of touch, to scratch an itch, a rash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scent, perfume, the sense of touch, to scratch an itch, a rash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a burp, a hiccup, to clear one's throat, phlegm, catarrh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a burp, a hiccup, to clear one's throat, phlegm, catarrh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to swell up, stamina, to break into a sweat, a faint, frailty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to swell up, stamina, to break into a sweat, a faint, frailty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a doctor, health, an ailment, healing, medical",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a doctor, health, an ailment, healing, medical]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The brain? (دماغ, dimāgh.) A kidney? (گردہ, gurdā.) The stomach as an organ? (معدہ, medā.) An intestine? (آنت, āṅt.) A vein? (رگ, rag.) A bone? (ہڈی, haḍḍī.) A rib? (پسلی, paslī.) A skull? (کھوپڑی, khopṛī.) The backbone? (ریڑھ, rīṛh.) A jaw? (جبڑا, jabṛā.) An arm? (بازو, bāzū.) A thigh? (ران, rān.) The calf of the leg? (پنڈلی, pinḍlī.) The sole of the foot? (تلوا, talvā.) A paw? (پنجہ, panjā.) The palate? (تالو, tālū.) A gum? (مسوڑھا, masūṛhā.) To lick? (چاٹنا, chāṭnā.) To suck? (چوسنا, chūsnā.) To spit? (تھوکنا, thūknā.) A scent? (مہک, mahak.) Perfume? (عطر, itr.) The sense of touch? (لمس, lams.) To scratch an itch? (کھجانا, khujānā.) A rash? (خارش, khārish.) A burp? (ڈکار, ḍakār.) A hiccup? (ہچکی, hichkī.) To clear one's throat? (کھنکارنا, khaṅkārnā.) Phlegm? (بلغم, balgham.) Catarrh? (نزلہ, nazlā.) To swell up? (پھولنا, phūlnā.) Stamina? (دم, dam.) To break into a sweat? (پسیجنا, pasījnā.) A faint? (غش, ghash.) Frailty? (نقاہت, naqāhat.) A doctor? (ڈاکٹر, ḍākṭar.) Health? (صحت, sehat.) An ailment? (مرض, marz.) Healing? (شفا, shifā.) Medical? (طبی, tibbī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

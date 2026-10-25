@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:83d20f53eb9fd4ac",
+  "lessonIds": [
+    "UR-C514-un",
+    "UR-C514-pirona",
+    "UR-C514-karhna",
+    "UR-C514-angushtana",
+    "UR-C514-jhalar"
+  ],
+  "tex": "urdu/book/chapters/ch514-needle-and-pattern.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C467-thukna",
+  "pathSegment": "UR-PATH-467-MOUTH467",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-467-MOUTH467",
+      "order": 4
+    }
+  ]
+}

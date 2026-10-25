@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-390-RAVANA390",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when a train leaves, when it arrives, and whether it is late or cancelled.",
+  "prerequisites": []
+}

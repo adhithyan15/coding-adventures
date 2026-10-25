@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "Same or Different",
+  "label": "ch:gu-same-or-different",
+  "canDo": "I can compare two things and say how they differ.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C544-barabar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can compare two things and say how they differ.",
+    "assesses": [
+      "GU-LEX-C544-TAPHAVAT544-03",
+      "GU-LEX-C544-TAPHAVAT544-04",
+      "GU-LEX-C544-TAPHAVAT544-05"
+    ]
+  }
+}

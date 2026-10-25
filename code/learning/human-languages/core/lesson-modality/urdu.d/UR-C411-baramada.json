@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C411-baramada",
+    "language": "urdu",
+    "chapter": 411,
+    "sequence": 24300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:181d22c9c2099701"
+  },
+  "findings": []
+}

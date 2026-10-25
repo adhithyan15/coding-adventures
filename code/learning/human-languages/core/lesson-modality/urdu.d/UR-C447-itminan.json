@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C447-itminan",
+    "language": "urdu",
+    "chapter": 447,
+    "sequence": 26350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2570df8cfe72df9"
+  },
+  "findings": []
+}

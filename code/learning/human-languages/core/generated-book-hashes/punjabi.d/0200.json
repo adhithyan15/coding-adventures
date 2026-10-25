@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:4e27078ecad569f0",
+  "lessonIds": [
+    "PA-C200-vegetable-return",
+    "PA-C200-sabzi",
+    "PA-C200-sabzi-review",
+    "PA-C200-vegetable-label",
+    "PA-C200-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch200-this-is-a-vegetable.tex"
+}

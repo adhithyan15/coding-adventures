@@ -1,0 +1,11 @@
+{
+  "id": "GU-C442-nav",
+  "pathSegment": "GU-PATH-442-SEA442",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-442-SEA442",
+      "order": 2
+    }
+  ]
+}

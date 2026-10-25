@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C309-qila",
+    "language": "urdu",
+    "chapter": 309,
+    "sequence": 18700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eef73b8a148be55c"
+  },
+  "findings": []
+}

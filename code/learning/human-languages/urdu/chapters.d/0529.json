@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "A Tangle of Troubles",
+  "label": "ch:ur-a-tangle-of-troubles",
+  "canDo": "I can talk about awkward choices and muddles.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C529-uljhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can talk about awkward choices and muddles.",
+    "assesses": [
+      "UR-LEX-C529-JHAMELA529-03",
+      "UR-LEX-C529-JHAMELA529-04",
+      "UR-LEX-C529-JHAMELA529-05"
+    ]
+  }
+}

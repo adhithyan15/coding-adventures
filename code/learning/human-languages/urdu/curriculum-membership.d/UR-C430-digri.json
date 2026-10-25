@@ -1,0 +1,11 @@
+{
+  "id": "UR-C430-digri",
+  "pathSegment": "UR-PATH-430-PARA430",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-430-PARA430",
+      "order": 1
+    }
+  ]
+}

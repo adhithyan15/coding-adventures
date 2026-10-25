@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Accounts and Instalments",
+  "label": "ch:ur-accounts-and-instalments",
+  "canDo": "I can talk about keeping accounts, paying interest and paying in instalments.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C418-ghatana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can talk about keeping accounts, paying interest and paying in instalments.",
+    "assesses": [
+      "UR-LEX-C418-HISAB418-03",
+      "UR-LEX-C418-HISAB418-04",
+      "UR-LEX-C418-HISAB418-05"
+    ]
+  }
+}

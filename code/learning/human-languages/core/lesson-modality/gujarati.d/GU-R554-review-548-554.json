@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R554-review-548-554",
+    "language": "gujarati",
+    "chapter": 554,
+    "sequence": 30760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e65b1346474e890f"
+  },
+  "findings": []
+}

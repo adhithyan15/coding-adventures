@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:f98a322c5c84ebbb",
+  "lessonIds": [
+    "UR-C374-sahara",
+    "UR-C374-zid",
+    "UR-C374-ahl",
+    "UR-C374-inhisar",
+    "UR-C374-israr-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch374.txt",
+  "json": "urdu/narration/ch374.json",
+  "textHash": "fnv1a64:ccbae4bff1119cc2",
+  "jsonHash": "fnv1a64:0c856a7ab33e0232",
+  "findings": []
+}

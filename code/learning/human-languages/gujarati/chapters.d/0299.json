@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Shouts in the Street",
+  "label": "ch:gu-shouts-in-the-street",
+  "canDo": "I can say who shouted, who stopped whom, and that everyone was safe.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C299-salamat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can say who shouted, who stopped whom, and that everyone was safe.",
+    "assesses": [
+      "GU-LEX-C299-BUM299-03",
+      "GU-LEX-C299-BUM299-04",
+      "GU-LEX-C299-BUM299-05"
+    ]
+  }
+}

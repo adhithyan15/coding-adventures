@@ -1,0 +1,11 @@
+{
+  "id": "GU-C486-svasth",
+  "pathSegment": "GU-PATH-486-AAROGYA486",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-486-AAROGYA486",
+      "order": 1
+    }
+  ]
+}

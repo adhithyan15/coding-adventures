@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Danger and Damage",
+  "label": "ch:ur-danger-and-damage",
+  "canDo": "I can say what harm will follow if nothing is done.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C371-phatna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can say what harm will follow if nothing is done.",
+    "assesses": [
+      "UR-LEX-C371-BUHRAN371-03",
+      "UR-LEX-C371-BUHRAN371-04",
+      "UR-LEX-C371-BUHRAN371-05"
+    ]
+  }
+}

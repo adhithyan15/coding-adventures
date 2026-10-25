@@ -1,0 +1,676 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 265,
+  "title": "Who Did It, and What Will Happen",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:31bee306598a6e03",
+  "lessons": [
+    {
+      "id": "UR-C265-us-ne-khaya",
+      "sequence": 16130,
+      "title": "اس نے کھایا (us ne khāyā) — who did it",
+      "headword": "اس نے کھایا",
+      "romanization": "us ne khāyā",
+      "gloss": "he ate — ne after the doer of a past with an object, and the verb follows the thing",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c19d72bf8e6e594a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"he went home\". (voh ghar gayā.) Going has no object. Eating has one: \"he ate bread\". That past is built another way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نے after the doer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "میں نے کھایا۔ maiṅ ne khāyā. — \"I ate.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With a verb that has an object, the doer takes نے (ne), and the verb follows the THING, not the doer:"
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے روٹی کھائی۔ us ne roṭī khāī. — \"He ate bread.\""
+            },
+            {
+              "kind": "speech",
+              "text": "روٹی (roṭī) is feminine, so کھائی (khāī), even for a man. وہ (voh) becomes اس (us) before نے:"
+            },
+            {
+              "kind": "speech",
+              "text": "سارا نے خط لکھا۔ Sārā ne khat likhā. — \"Sara wrote a letter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "سارا نے کتاب پڑھی۔ Sārā ne kitāb paṛhī. — \"Sara read a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "خط (khat) is masculine: لکھا. کتاب (kitāb) is feminine: پڑھی."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the doer",
+                "with نے"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "the doer: میں. with نے: میں نے (maiṅ ne).",
+                "the doer: ہم, آپ, تم. with نے: ہم نے, آپ نے, تم نے.",
+                "the doer: وہ, one. with نے: اس نے (us ne).",
+                "the doer: وہ, several. with نے: انہوں نے (unhoṅ ne)."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: کیا, دیا, لیا, کہا, and مجھے",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four common pasts: کیا (kiyā), \"did\", from کرنا; دیا (diyā), \"gave\"; لیا (liyā), \"took\"; کہا (kahā), \"said\". کیا kiyā is spelled like کیا kyā, \"what\": the romanization tells them apart."
+            },
+            {
+              "kind": "speech",
+              "text": "میں نے کام کیا۔ maiṅ ne kām kiyā. — \"I did the work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When the thing is a person with کو (ko), the verb stays masculine singular:"
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے سارا کو دیکھا۔ us ne Sārā ko dekhā. — \"He saw Sara.\""
+            },
+            {
+              "kind": "speech",
+              "text": "مجھے (mujhe) is میں with کو inside it, \"me, to me\"; so too اسے (use), ہمیں (hameṅ), تمہیں (tumheṅ), انہیں (unheṅ):"
+            },
+            {
+              "kind": "speech",
+              "text": "سارا نے مجھے دیکھا۔ Sārā ne mujhe dekhā. — \"Sara saw me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے مجھے پانی دیا۔ us ne mujhe pānī diyā. — \"He gave me water.\""
+            },
+            {
+              "kind": "speech",
+              "text": "One verb with an object goes the other way: لانا (lānā), \"to bring\", takes no نے, like آنا (ānā):"
+            },
+            {
+              "kind": "speech",
+              "text": "وہ پانی لایا۔ voh pānī lāyā. — \"He brought water.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I drank tea\" — maiṅ ne chāy pī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I drank tea\" — *maiṅ ne chāy pī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Sara drank tea\" — Sārā ne chāy pī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Sara drank tea\" — *Sārā ne chāy pī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Sara drank water\" — Sārā ne pānī piyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Sara drank water\" — *Sārā ne pānī piyā*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "UR-C265-us-ne-khaya-r1",
+              "prompt": "Say that Sara wrote a letter, then that she gave you water.",
+              "assesses": [
+                "UR-GRAMMAR-C265-ERGATIVE-01",
+                "UR-GRAMMAR-C265-ERGATIVE-02"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "sārā ne khat likhā; us ne mujhe pānī diyā",
+                "سارا نے خط لکھا۔ اس نے مجھے پانی دیا۔",
+                "sārā ne khat likhā, us ne mujhe pānī diyā"
+              ],
+              "feedback": {
+                "correct": "ne on the doer; likhā for the letter, diyā for the water.",
+                "incorrect": "Put ne after the doer and let the thing choose the ending: khat and pānī are masculine."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"He ate bread\"? (اس نے روٹی کھائی.) Why کھائی? (روٹی is feminine.) \"She saw me\"? (اس نے مجھے دیکھا.) And وہ گیا: does it take نے? (No: going has no object.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C265-main-jaun-ga",
+      "sequence": 16140,
+      "title": "میں جاؤں گا (maiṅ jāūṅ gā) — what will happen",
+      "headword": "میں جاؤں گا",
+      "romanization": "maiṅ jāūṅ gā",
+      "gloss": "I will go — the future for every person, with gā, gī or ge written apart",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42cb33c9c0e71687",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You met one future long ago: میں پڑھوں گا (maiṅ paṛhūṅ gā), \"I will read\". Say it, then a woman's پڑھوں گی (paṛhūṅ gī). This lesson gives every person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the future, person by person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "میں جاؤں گا۔ maiṅ jāūṅ gā. — \"I will go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "وہ جائے گی۔ voh jāe gī. — \"She will go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A short ending follows the person, and گا (gā), گی (gī) or گے (ge) follows the man, the woman or the group. The book writes it apart, as it wrote پڑھوں گا:"
+            },
+            {
+              "kind": "speech",
+              "text": "ہم کل جائیں گے۔ ham kal jāeṅ ge. — \"We will go tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "میں کام کروں گی۔ maiṅ kām karūṅ gī. — \"I will do the work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "تم کب آؤ گے؟ tum kab āo ge? — \"When will you come?\""
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who",
+                "کرنا",
+                "جانا"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "who: میں. کرنا: کروں گا (karūṅ gā). جانا: جاؤں گا (jāūṅ gā).",
+                "who: تم. کرنا: کرو گے (karo ge). جانا: جاؤ گے (jāo ge).",
+                "who: وہ, one. کرنا: کرے گا (kare gā). جانا: جائے گا (jāe gā).",
+                "who: ہم, آپ, وہ. کرنا: کریں گے (kareṅ ge). جانا: جائیں گے (jāeṅ ge)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "\"Won't\" puts نہیں before it: میں نہیں جاؤں گا (maiṅ nahīṅ jāūṅ gā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: ہو گا, \"will be\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کل بارش ہو گی۔ kal bārish ho gī. — \"It will rain tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "بارش (bārish) is feminine: ہو گی. For a man, ہو گا; for a group, ہوں گے (hoṅ ge):"
+            },
+            {
+              "kind": "speech",
+              "text": "وہ شاید گھر پر ہو گا۔ voh shāyad ghar par ho gā. — \"He will probably be at home.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I will come tomorrow\" — maiṅ kal āūṅ gā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I will come tomorrow\" — *maiṅ kal āūṅ gā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She will come tomorrow\" — voh kal āe gī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She will come tomorrow\" — *voh kal āe gī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"They will come tomorrow\" — voh kal āeṅ ge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"They will come tomorrow\" — *voh kal āeṅ ge*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "UR-C265-main-jaun-ga-r1",
+              "prompt": "Say that we will go to the market tomorrow, then that it will rain.",
+              "assesses": [
+                "UR-GRAMMAR-C265-FUTURE-01",
+                "UR-GRAMMAR-C265-FUTURE-02"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "ham kal bāzār jāeṅ ge; bārish ho gī",
+                "ہم کل بازار جائیں گے۔ بارش ہو گی۔",
+                "ham kal bāzār jāeṅ ge, bārish ho gī"
+              ],
+              "feedback": {
+                "correct": "jāeṅ ge for us; ho gī for the rain.",
+                "incorrect": "We: jāeṅ ge. Rain is feminine: ho gī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I will do it\"? (میں کروں گا, or کروں گی.) \"You will go\", to a friend? (تم جاؤ گے.) \"He will be at home\"? (وہ گھر پر ہو گا.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W265-waw-hamza",
+      "sequence": 16150,
+      "title": "ؤ (vāʾo hamza) — vāʾo wearing the hamza, inside جاؤں",
+      "headword": "ؤ",
+      "romanization": "vāʾo hamza",
+      "gloss": "vāʾo hamza — vāʾo wearing the hamza, the letter inside جاؤں",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:ce4b9878048e45f4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ؤ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ؤ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write و and ئ once each, and name them. (vāʾo, hamza.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say میں جاؤں گا (maiṅ jāūṅ gā), \"I will go\". You have read جاؤں (jāūṅ) in every person's future. This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ؤ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ؤ — vāʾo hamza."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inside جاؤں (jāūṅ) and آؤ (āo). Say jā-ūṅ: two vowels side by side. ؤ (vāʾo hamza) is و wearing the same small hamza you wrote on ئ: there it sat on a tooth, here it sits on و. It marks the place where one vowel ends and the next begins. Like و, it does not join the letter after it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ؤ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ؤ (vāʾo hamza) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at جاؤں and point at ؤ (vāʾo hamza) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **جاؤں** and point at ؤ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ؤ (vāʾo hamza) three times, saying jā-ūṅ as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ؤ three times, saying *jā-ūṅ* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "جاؤں once, joined, with ؤ (vāʾo hamza) in its place",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **جاؤں** once, joined, with ؤ in its place]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "جاؤں aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **جاؤں** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ؤ? (vāʾo hamza, jā-ūṅ.) Which word did it come from? (جاؤں, jāūṅ, in میں جاؤں گا (maiṅ jāūṅ gā).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R265-who-did-it",
+      "sequence": 16160,
+      "title": "Review — who did it, and what will happen",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "who did it, and what will happen",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bcea1abbf53776d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"she went home\" and \"I used to go to school\". (voh ghar gaī, maiṅ iskūl jātā thā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "He ate bread. Sara wrote a letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: He ate bread. Sara wrote a letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I did the work, and she gave me tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I did the work, and she gave me tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sara saw me at the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Sara saw me at the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tomorrow I will go home. We will go too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Tomorrow I will go home. We will go too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It will rain. He will probably be at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It will rain. He will probably be at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "جاؤں and آؤ, then read them aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **جاؤں** and **آؤ**, then read them aloud]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In سارا نے خط لکھا, which word sets لکھا? (خط.) Put کتاب in place of خط: does the verb change? (Yes: سارا نے کتاب لکھی.) Now the other way round, the future: \"she will go\"? (وہ جائے گی.) \"We will go\"? (ہم جائیں گے.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

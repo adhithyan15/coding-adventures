@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "Getting Started",
+  "label": "ch:gu-getting-started",
+  "canDo": "I can say what we will begin and what it will take.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C388-adarvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can say what we will begin and what it will take.",
+    "assesses": [
+      "GU-LEX-C388-UPAKRAM388-03",
+      "GU-LEX-C388-UPAKRAM388-04",
+      "GU-LEX-C388-UPAKRAM388-05"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 330,
+  "output": "urdu/book/chapters/ch330-turning-the-pages.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

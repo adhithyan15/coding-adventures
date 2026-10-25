@@ -1,0 +1,11 @@
+{
+  "id": "GU-C398-jhatko",
+  "pathSegment": "GU-PATH-398-DOZE398",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-398-DOZE398",
+      "order": 3
+    }
+  ]
+}

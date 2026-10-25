@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:06287d7e55422399",
+  "lessonIds": [
+    "GU-C487-cakri",
+    "GU-C487-dilaso",
+    "GU-C487-malis",
+    "GU-C487-dabvu",
+    "GU-C487-odhadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch487.txt",
+  "json": "gujarati/narration/ch487.json",
+  "textHash": "fnv1a64:5cf46596a887cfa9",
+  "jsonHash": "fnv1a64:5792b8100214ba8c",
+  "findings": []
+}

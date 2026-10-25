@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:1bc591319849bc7b",
+  "lessonIds": [
+    "GU-C392-sajj",
+    "GU-C392-jagrat",
+    "GU-C392-upakaran",
+    "GU-C392-atmavisvas",
+    "GU-C392-gothvavu",
+    "GU-R392-review-386-392",
+    "GU-R392-review-final-392"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch392.txt",
+  "json": "gujarati/narration/ch392.json",
+  "textHash": "fnv1a64:771faca87910a4c6",
+  "jsonHash": "fnv1a64:f03fea696d5080cb",
+  "findings": []
+}

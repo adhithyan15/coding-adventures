@@ -1,6 +1,9 @@
 # ECMAScript 2021 (ES12) — Lexical Grammar
 # @version 1
 # @ecmascript_edition 2021
+# source_ref: https://github.com/tc39/ecma262/tree/es2021
+# source_sha: fc85c50181b2b8d7d75f034800528d87fda6b654
+# PARTIAL: the IIR path claims es-number-log only (LANG84 phase 6d; see releases.csv); this lexical pair predates LANG84 and is not yet audited clause by clause against the tagged spec text.
 #
 # ECMA-262, 12th Edition — June 2021
 #
@@ -64,19 +67,25 @@ NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
 #   - No adjacent to decimal point: `3._14` or `3_.14` is invalid
 #   - No adjacent to exponent: `1e_10` or `1_e10` is invalid
 #   - No double underscore: `1__000` is invalid
+#   - No separator after a leading `0`: `0_1`, `01_7`, `0_8` are invalid
+#     (`0` alone is a DecimalIntegerLiteral; legacy octal `017` and
+#     NonOctalDecimal `08` admit no separators at all)
+#   - A legacy octal takes no fraction or exponent: `017.5`, `017e1` are
+#     invalid, while `08.5` and `08e1` are NonOctalDecimal and valid
+#   - `5.` and `5.e1` are valid: the fraction digits are optional
 
-BIGINT_HEX = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?n/ -> BIGINT
-BIGINT_BINARY = /0[bB][01]([01_]*[01])?n/ -> BIGINT
-BIGINT_OCTAL = /0[oO][0-7]([0-7_]*[0-7])?n/ -> BIGINT
-BIGINT_DECIMAL = /[0-9]([0-9_]*[0-9])?n/ -> BIGINT
+BIGINT_HEX = /0[xX][0-9a-fA-F](_?[0-9a-fA-F])*n/ -> BIGINT
+BIGINT_BINARY = /0[bB][01](_?[01])*n/ -> BIGINT
+BIGINT_OCTAL = /0[oO][0-7](_?[0-7])*n/ -> BIGINT
+BIGINT_DECIMAL = /(0|[1-9](_?[0-9])*)n/ -> BIGINT
 
-BINARY_NUMBER = /0[bB][01]([01_]*[01])?/ -> NUMBER
-OCTAL_NUMBER = /0[oO][0-7]([0-7_]*[0-7])?/ -> NUMBER
-HEX_NUMBER = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?/ -> NUMBER
-FLOAT_NUMBER = /[0-9]([0-9_]*[0-9])?\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
-LEADING_DOT_FLOAT = /\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
-SCI_NUMBER = /[0-9]([0-9_]*[0-9])?[eE][+-]?[0-9]([0-9_]*[0-9])?/ -> NUMBER
-INT_NUMBER = /[0-9]([0-9_]*[0-9])?/ -> NUMBER
+BINARY_NUMBER = /0[bB][01](_?[01])*/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7](_?[0-7])*/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F](_?[0-9a-fA-F])*/ -> NUMBER
+FLOAT_NUMBER = /(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?/ -> NUMBER
+SCI_NUMBER = /(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)/ -> NUMBER
+INT_NUMBER = /(0[0-9]*|[1-9](_?[0-9])*)/ -> NUMBER
 
 # --- Strings (unchanged from ES2019) ---
 

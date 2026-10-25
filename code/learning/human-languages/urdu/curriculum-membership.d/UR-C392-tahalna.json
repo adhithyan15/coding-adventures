@@ -1,0 +1,11 @@
+{
+  "id": "UR-C392-tahalna",
+  "pathSegment": "UR-PATH-392-STAND392",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-392-STAND392",
+      "order": 3
+    }
+  ]
+}

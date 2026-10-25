@@ -57,6 +57,9 @@ Stage contributions use a closed `KindRef` string: a bare kernel/extension
 kind such as `ContentNode`, or a single `Stream<ContentNode>` wrapper. Nested
 streams and malformed angle-bracket forms fail validation, so the plugin host
 can construct the complete runtime descriptor before launching untrusted code.
+Kernel names come directly from `forme-types`' canonical `KINDS` roster. This
+keeps manifest validation aligned with every shipped descriptor, including
+`TerminalBuffer`, without maintaining a second handwritten inventory.
 
 ### Why a hand-rolled TOML parser
 

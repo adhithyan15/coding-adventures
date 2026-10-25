@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "At the Tailor's",
+  "label": "ch:ur-at-the-tailor-s",
+  "canDo": "I can talk about having clothes made and mended.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C500-udharna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about having clothes made and mended.",
+    "assesses": [
+      "UR-LEX-C500-SILAI500-03",
+      "UR-LEX-C500-SILAI500-04",
+      "UR-LEX-C500-SILAI500-05"
+    ]
+  }
+}

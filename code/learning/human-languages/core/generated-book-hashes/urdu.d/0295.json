@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:f2b769ec51f9ba5d",
+  "lessonIds": [
+    "UR-C295-phansna",
+    "UR-C295-pukarna",
+    "UR-C295-sannata",
+    "UR-C295-nikaalna",
+    "UR-C295-be-hal"
+  ],
+  "tex": "urdu/book/chapters/ch295-trapped.tex"
+}

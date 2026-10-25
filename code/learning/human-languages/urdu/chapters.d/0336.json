@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Proof",
+  "label": "ch:ur-proof",
+  "canDo": "I can ask for proof and give it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C336-khara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can ask for proof and give it.",
+    "assesses": [
+      "UR-LEX-C336-SABIT336-03",
+      "UR-LEX-C336-SABIT336-04",
+      "UR-LEX-C336-SABIT336-05"
+    ]
+  }
+}

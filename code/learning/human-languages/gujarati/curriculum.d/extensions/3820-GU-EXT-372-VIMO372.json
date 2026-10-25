@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-372-VIMO372",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is covered if something goes wrong.",
+  "prerequisites": []
+}

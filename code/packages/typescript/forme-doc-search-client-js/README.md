@@ -208,9 +208,9 @@ search-index-builder          ┌─►  manifest.json  ──►   SearchClient
                                                results UI (consumer)
 ```
 
-Final DOC00 v0 package: `forme-doc-site-emitter` (writes shards
-to disk and wires the SearchClient into the page-shell's
-search input).
+The complete DOC00 v0 cluster now ships. The site emitter bundles
+the manifest, shards, and optional caller-built client script;
+the product caller owns browser UI wiring and the injected fetcher.
 
 ## v0 simplifications (documented)
 

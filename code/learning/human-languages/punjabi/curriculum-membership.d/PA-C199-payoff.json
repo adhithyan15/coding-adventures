@@ -1,0 +1,11 @@
+{
+  "id": "PA-C199-payoff",
+  "pathSegment": "PA-PATH-199-A2-SUCHNA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-199-A2-SUCHNA",
+      "order": 4
+    }
+  ]
+}

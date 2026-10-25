@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:c90f8ccc3a79de37",
+  "lessonIds": [
+    "UR-C284-raftar",
+    "UR-C284-takrana",
+    "UR-C284-pahiya",
+    "UR-C284-ulatna",
+    "UR-C284-savari"
+  ],
+  "tex": "urdu/book/chapters/ch284-a-crash-on-the-road.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:b008e8be3b166ec2",
+  "lessonIds": [
+    "GU-C294-lapasvu",
+    "GU-C294-ujhardo",
+    "GU-C294-gabadvu",
+    "GU-C294-dhal",
+    "GU-C294-bhan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch294.txt",
+  "json": "gujarati/narration/ch294.json",
+  "textHash": "fnv1a64:0f8d7782103fd19c",
+  "jsonHash": "fnv1a64:965a439a5b0388d6",
+  "findings": []
+}

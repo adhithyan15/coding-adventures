@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 509,
+  "title": "Milk and Curd",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:edb102b4d35faef1",
+  "lessons": [
+    {
+      "id": "UR-C509-chhachh",
+      "sequence": 29760,
+      "title": "چھاچھ (chhāchh) — buttermilk",
+      "headword": "چھاچھ",
+      "romanization": "chhāchh",
+      "gloss": "buttermilk",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82e050c306281268",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to cover, then the Urdu for a skimmer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چھاچھ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چھاچھ — chhāchh — \"buttermilk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "گرمیوں میں چھاچھ اچھی لگتی ہے۔ garmiyoṅ meṅ chhāchh achchhī lagtī hai. Buttermilk is lovely in the summer."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چھاچھ (chhāchh) is inherited from chācchī, \"buttermilk\", a form CDIAL reconstructs from its descendants (CDIAL 5012)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhāchh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhāchh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhāchh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhāchh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garmiyoṅ meṅ chhāchh achchhī lagtī hai. — Buttermilk is lovely in the summer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garmiyoṅ meṅ chhāchh achchhī lagtī hai.* — Buttermilk is lovely in the summer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to cover, then the Urdu for a skimmer, then say chhāchh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to cover, then the Urdu for a skimmer, then say *chhāchh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چھاچھ (chhāchh) mean? (\"Buttermilk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C509-bilona",
+      "sequence": 29770,
+      "title": "بلونا (bilonā) — to churn",
+      "headword": "بلونا",
+      "romanization": "bilonā",
+      "gloss": "to churn",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f5d0eaabcd97fb3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a skimmer, then the Urdu for buttermilk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بلونا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بلونا — bilonā — \"to churn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دادی نے مٹکے میں دہی بلویا۔ dādī ne maṭke meṅ dahī biloyā. Grandmother churned the yoghurt in a clay pot."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے دودھ بلویا, us ne dūdh biloyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بلونا (bilonā) is inherited: CDIAL lists the Hindi cousin bilonā, \"to churn\", under virapati, a form it reconstructs (CDIAL 11844)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bilonā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bilonā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bilonā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bilonā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī ne maṭke meṅ dahī biloyā. — Grandmother churned the yoghurt in a clay pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī ne maṭke meṅ dahī biloyā.* — Grandmother churned the yoghurt in a clay pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a skimmer, then the Urdu for buttermilk, then say bilonā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a skimmer, then the Urdu for buttermilk, then say *bilonā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بلونا (bilonā) mean? (\"To churn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C509-jamana",
+      "sequence": 29780,
+      "title": "جمانا (jamānā) — to set (curd)",
+      "headword": "جمانا",
+      "romanization": "jamānā",
+      "gloss": "to set (curd)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a6d74049eb0edd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for buttermilk, then the Urdu for to churn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جمانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جمانا — jamānā — \"to set (curd)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "امی رات کو دہی جماتی ہیں۔ ammī rāt ko dahī jamātī haiṅ. Mum sets the yoghurt at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے دہی جمایا, us ne dahī jamāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جمانا (jamānā) is inherited: CDIAL lists Hindi jamānā and jāman, \"a piece of curd for curdling milk\", under Sanskrit yamyatē, \"is held\" (CDIAL 10428)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammī rāt ko dahī jamātī haiṅ. — Mum sets the yoghurt at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammī rāt ko dahī jamātī haiṅ.* — Mum sets the yoghurt at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for buttermilk, then the Urdu for to churn, then say jamānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for buttermilk, then the Urdu for to churn, then say *jamānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جمانا (jamānā) mean? (\"To set (curd)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C509-handi",
+      "sequence": 29790,
+      "title": "ہانڈی (hāṅḍī) — an earthen cooking pot",
+      "headword": "ہانڈی",
+      "romanization": "hāṅḍī",
+      "gloss": "an earthen cooking pot",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20bf1098e92c0cfc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to churn, then the Urdu for to set (curd)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ہانڈی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ہانڈی — hāṅḍī — \"an earthen cooking pot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دادی مٹی کی ہانڈی میں دال پکاتی تھیں۔ dādī miṭṭī kī hāṅḍī meṅ dāl pakātī thīṅ. Grandmother used to cook lentils in a clay pot."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ہانڈی (hāṅḍī) is inherited: CDIAL lists the Hindi cousin hā̃ḍī, \"an earthen cooking pot\", under hāṇḍa, a form it reconstructs (CDIAL 14050)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāṅḍī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāṅḍī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāṅḍī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāṅḍī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī miṭṭī kī hāṅḍī meṅ dāl pakātī thīṅ. — Grandmother used to cook lentils in a clay pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī miṭṭī kī hāṅḍī meṅ dāl pakātī thīṅ.* — Grandmother used to cook lentils in a clay pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to churn, then the Urdu for to set (curd), then say hāṅḍī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to churn, then the Urdu for to set (curd), then say *hāṅḍī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ہانڈی (hāṅḍī) mean? (\"An earthen cooking pot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C509-chhalkana",
+      "sequence": 29800,
+      "title": "چھلکانا (chhalkānā) — to spill (a liquid)",
+      "headword": "چھلکانا",
+      "romanization": "chhalkānā",
+      "gloss": "to spill (a liquid)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5a90afe3449e940",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to set (curd), then the Urdu for an earthen cooking pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چھلکانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چھلکانا — chhalkānā — \"to spill (a liquid)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بچے نے میز پر دودھ چھلکایا۔ bachche ne mez par dūdh chhalkāyā. The child spilt milk on the table."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے پانی چھلکایا, us ne pānī chhalkāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چھلکانا (chhalkānā) is the causative of chhalaknā, \"to be spilt\", which CDIAL lists under chala, a form it reconstructs (CDIAL 5002)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhalkānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhalkānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhalkānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhalkānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bachche ne mez par dūdh chhalkāyā. — The child spilt milk on the table.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bachche ne mez par dūdh chhalkāyā.* — The child spilt milk on the table.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to set (curd), then the Urdu for an earthen cooking pot, then say chhalkānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to set (curd), then the Urdu for an earthen cooking pot, then say *chhalkānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چھلکانا (chhalkānā) mean? (\"To spill (a liquid)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R509-review-502-509",
+      "sequence": 29810,
+      "title": "Looking back: from Rattles and Rust to Milk and Curd",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Rattles and Rust to Milk and Curd",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5b7fcb2fcbd2827",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for to rattle and a hinge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to rattle, a hinge, a nut (for a bolt), rust, a metal spring",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to rattle, a hinge, a nut (for a bolt), rust, a metal spring]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "damp (in a wall), a brick, plaster (on a wall), to have (something) painted, to smear (with mud)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: damp (in a wall), a brick, plaster (on a wall), to have (something) painted, to smear (with mud)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a switch, a plug (on a cable), electric current, a peg (on a wall), a socket (for a plug)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a switch, a plug (on a cable), electric current, a peg (on a wall), a socket (for a plug)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waste paper, a cobweb, a loft, to tear (something), to have (something) put away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: waste paper, a cobweb, a loft, to tear (something), to have (something) put away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cleaning, to scour (pots), to stick (something) on, to be washed, to rinse out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cleaning, to scour (pots), to stick (something) on, to be washed, to rinse out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a board for rolling dough, to knead, to roll out (dough), to pat (into shape), the heat of a flame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a board for rolling dough, to knead, to roll out (dough), to pat (into shape), the heat of a flame]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to temper (with hot spiced oil), to roast in a pan, a lid, to cover, a skimmer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to temper (with hot spiced oil), to roast in a pan, a lid, to cover, a skimmer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buttermilk, to churn, to set (curd), an earthen cooking pot, to spill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: buttermilk, to churn, to set (curd), an earthen cooking pot, to spill]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To rattle? (کھڑکھڑانا, khaṛkhaṛānā.) A hinge? (قبضہ, qabzā.) A nut (for a bolt)? (نٹ, naṭ.) Rust? (زنگ, zang.) A metal spring? (اسپرنگ, ispring.) Damp (in a wall)? (سیلن, sīlan.) A brick? (اینٹ, īṅṭ.) Plaster (on a wall)? (پلستر, palastar.) To have (something) painted? (رنگوانا, rangvānā.) To smear (with mud)? (لیپنا, līpnā.) A switch? (سوئچ, svich.) A plug (on a cable)? (پلگ, plag.) Electric current? (کرنٹ, karanṭ.) A peg (on a wall)? (کھونٹی, khūṅṭī.) A socket (for a plug)? (ساکٹ, sākeṭ.) Waste paper? (ردی, raddī.) A cobweb? (جالا, jālā.) A loft? (اٹاری, aṭārī.) To tear (something)? (پھاڑنا, phāṛnā.) To have (something) put away? (رکھوانا, rakhvānā.) Cleaning? (صفائی, safāī.) To scour (pots)? (مانجھنا, māṅjhnā.) To stick (something) on? (چپکانا, chipkānā.) To be washed? (دھلنا, dhulnā.) To rinse out? (کھنگالنا, khaṅgālnā.) A board for rolling dough? (چکلا, chaklā.) To knead? (گوندھنا, gūṅdhnā.) To roll out (dough)? (بیلنا, belnā.) To pat (into shape)? (تھاپنا, thāpnā.) The heat of a flame? (آنچ, āṅch.) To temper (with hot spiced oil)? (بگھارنا, baghārnā.) To roast in a pan? (بھوننا, bhūnnā.) A lid? (ڈھکن, ḍhakkan.) To cover? (ڈھانپنا, ḍhāṅpnā.) A skimmer? (کفگیر, kafgīr.) Buttermilk? (چھاچھ, chhāchh.) To churn? (بلونا, bilonā.) To set (curd)? (جمانا, jamānā.) An earthen cooking pot? (ہانڈی, hāṅḍī.) To spill? (چھلکانا, chhalkānā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

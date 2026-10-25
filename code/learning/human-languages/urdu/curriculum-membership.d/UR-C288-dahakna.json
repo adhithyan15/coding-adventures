@@ -1,0 +1,11 @@
+{
+  "id": "UR-C288-dahakna",
+  "pathSegment": "UR-PATH-288-CHIRAGH288",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-288-CHIRAGH288",
+      "order": 2
+    }
+  ]
+}

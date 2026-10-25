@@ -242,6 +242,12 @@ cd host/web && npm install && npm run dev       # http://localhost:5173
 
 ## Incremental releases
 
+The next prepared checkpoint is `task-app-v0.5.10` (#18112), containing the
+Qt repeated board-column width floor repair merged in #18031. Preparation is
+not publication: all existing payload CI must pass before publishing from main
+after this preparation merges, followed by an immutable asset audit. Artifact
+coverage and unsigned native limitations remain unchanged.
+
 The published `task-app-v0.5.9` patch preserves Qt calendar/timeline text widths
 (#17913), reducing measured Qt style drops from 81 to 78. It also includes Web
 Component per-keystroke input/focus acceptance and stylesheet-derived web host

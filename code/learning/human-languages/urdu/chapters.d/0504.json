@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Wires and Switches",
+  "label": "ch:ur-wires-and-switches",
+  "canDo": "I can talk about lights, plugs and sockets at home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C504-saket",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about lights, plugs and sockets at home.",
+    "assesses": [
+      "UR-LEX-C504-SVICH504-03",
+      "UR-LEX-C504-SVICH504-04",
+      "UR-LEX-C504-SVICH504-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:4097c439a18be24e",
+  "lessonIds": [
+    "UR-C487-mangni",
+    "UR-C487-nikah",
+    "UR-C487-barat",
+    "UR-C487-sehra",
+    "UR-C487-rukhsat-karna"
+  ],
+  "tex": "urdu/book/chapters/ch487-a-wedding.tex"
+}

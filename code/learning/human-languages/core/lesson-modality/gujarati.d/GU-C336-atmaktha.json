@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C336-atmaktha",
+    "language": "gujarati",
+    "chapter": 336,
+    "sequence": 18640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55c842841bf5864c"
+  },
+  "findings": []
+}

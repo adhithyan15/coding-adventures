@@ -1,0 +1,4 @@
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+host-python2: rejects
+result: py2-int-print refuses it with a Lex error naming the release
+why: a decimal digit after a leading 0: tok_get returns ERRORTOKEN (found_decimal) at every Python 2 tag, and the pairs refuse it as a lexer error

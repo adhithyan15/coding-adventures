@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Two Homes",
+  "label": "ch:gu-two-homes",
+  "canDo": "I can talk about a married woman's two homes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C492-pitrai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can talk about a married woman's two homes.",
+    "assesses": [
+      "GU-LEX-C492-PIYAR492-03",
+      "GU-LEX-C492-PIYAR492-04",
+      "GU-LEX-C492-PIYAR492-05"
+    ]
+  }
+}

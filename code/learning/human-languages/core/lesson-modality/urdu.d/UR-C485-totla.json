@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C485-totla",
+    "language": "urdu",
+    "chapter": 485,
+    "sequence": 28320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12c61d9197eb2924"
+  },
+  "findings": []
+}

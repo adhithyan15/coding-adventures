@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Objecting and Persuading",
+  "label": "ch:ur-objecting-and-persuading",
+  "canDo": "I can object, criticise, threaten or coax.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C348-phuslana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can object, criticise, threaten or coax.",
+    "assesses": [
+      "UR-LEX-C348-ETIRAZ348-03",
+      "UR-LEX-C348-ETIRAZ348-04",
+      "UR-LEX-C348-ETIRAZ348-05"
+    ]
+  }
+}

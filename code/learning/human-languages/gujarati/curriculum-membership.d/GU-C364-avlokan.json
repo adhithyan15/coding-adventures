@@ -1,0 +1,11 @@
+{
+  "id": "GU-C364-avlokan",
+  "pathSegment": "GU-PATH-364-SHODH364",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-364-SHODH364",
+      "order": 1
+    }
+  ]
+}

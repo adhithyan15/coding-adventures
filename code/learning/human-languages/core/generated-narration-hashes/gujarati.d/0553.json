@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:6430f175073d077c",
+  "lessonIds": [
+    "GU-C553-nagaru",
+    "GU-C553-sarnai",
+    "GU-C553-lalkarvu",
+    "GU-C553-ranakvu",
+    "GU-C553-thanganvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch553.txt",
+  "json": "gujarati/narration/ch553.json",
+  "textHash": "fnv1a64:7dfc8bdf54701303",
+  "jsonHash": "fnv1a64:6ef80c5a92880eda",
+  "findings": []
+}

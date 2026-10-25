@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Porters and Loads",
+  "label": "ch:ur-porters-and-loads",
+  "canDo": "I can talk about porters, trunks and the loads people carry.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C387-bithana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can talk about porters, trunks and the loads people carry.",
+    "assesses": [
+      "UR-LEX-C387-QULI387-03",
+      "UR-LEX-C387-QULI387-04",
+      "UR-LEX-C387-QULI387-05"
+    ]
+  }
+}

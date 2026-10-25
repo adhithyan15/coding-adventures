@@ -1,0 +1,11 @@
+{
+  "id": "GU-C285-nasvu",
+  "pathSegment": "GU-PATH-285-CHOR285",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-285-CHOR285",
+      "order": 2
+    }
+  ]
+}

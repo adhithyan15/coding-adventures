@@ -133,6 +133,86 @@ const ER_QUOTED_ENTITY_VALIDATION_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-quoted-entity-validation-11.16.1-visual-corpus.json"
 ));
+const ER_ENTITY_NAMES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-entity-names-11.16.1-corpus.json"
+));
+const ER_ENTITY_NAMES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-entity-names-11.16.1-visual-corpus.json"
+));
+const ER_DUPLICATE_ENTITIES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-duplicate-entities-11.16.1-corpus.json"
+));
+const ER_DUPLICATE_ENTITIES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-duplicate-entities-11.16.1-visual-corpus.json"
+));
+const ER_RELATIONSHIP_LABELS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-relationship-labels-11.16.1-corpus.json"
+));
+const ER_RELATIONSHIP_LABELS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-relationship-labels-11.16.1-visual-corpus.json"
+));
+const ER_CYCLES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-cycles-11.16.1-corpus.json"
+));
+const ER_CYCLES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-cycles-11.16.1-visual-corpus.json"
+));
+const ER_COMPLEX_TOPOLOGY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-complex-topology-11.16.1-corpus.json"
+));
+const ER_COMPLEX_TOPOLOGY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-complex-topology-11.16.1-visual-corpus.json"
+));
+const ER_FRONTMATTER_TITLE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-frontmatter-title-11.16.1-corpus.json"
+));
+const ER_FRONTMATTER_TITLE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-frontmatter-title-11.16.1-visual-corpus.json"
+));
+const ER_VARIABLE_NODE_WIDTHS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-variable-node-widths-11.16.1-corpus.json"
+));
+const ER_VARIABLE_NODE_WIDTHS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-variable-node-widths-11.16.1-visual-corpus.json"
+));
+const ER_MIXED_SPECIAL_TOPOLOGY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-mixed-special-topology-11.16.1-corpus.json"
+));
+const ER_MIXED_SPECIAL_TOPOLOGY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-mixed-special-topology-11.16.1-visual-corpus.json"
+));
+const ER_KEYWORD_SUBSTRINGS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-keyword-substrings-11.16.1-corpus.json"
+));
+const ER_KEYWORD_SUBSTRINGS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-keyword-substrings-11.16.1-visual-corpus.json"
+));
+const ER_DISCONNECTED_TOPOLOGY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-disconnected-topology-11.16.1-corpus.json"
+));
+const ER_DISCONNECTED_TOPOLOGY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-disconnected-topology-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2146,6 +2226,40 @@ fn pinned_er_style_corpus_reaches_semantic_ir() {
     assert_eq!(order.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
     assert_eq!(order.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#b45309"));
     assert_eq!(order.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+
+    let composed = parse_er_diagram(fixtures[2]["source"].as_str().expect("multi-class source"))
+        .expect("composed ER classes must parse");
+    let customer = composed.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER");
+    let order = composed.nodes.iter().find(|node| node.id == "ORDER").expect("ORDER");
+    let product = composed.nodes.iter().find(|node| node.id == "PRODUCT").expect("PRODUCT");
+    assert_eq!(customer.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#b45309"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.text_color.as_deref()), Some("#14532d"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+    assert_eq!(order.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#dbeafe"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#1d4ed8"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.text_color.as_deref()), Some("#14532d"));
+    assert_eq!(product.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
+
+    let relationship =
+        parse_er_diagram(fixtures[3]["source"].as_str().expect("relationship class source"))
+            .expect("relationship endpoint classes must parse");
+    assert_eq!(relationship.relationships.len(), 1);
+    assert!(relationship.nodes.iter().all(|node| {
+        node.style.as_ref().and_then(|style| style.fill.as_deref()) == Some("#fee2e2")
+    }));
+
+    let direct = parse_er_diagram(fixtures[4]["source"].as_str().expect("direct style source"))
+        .expect("composed direct ER styles must parse");
+    let customer = direct.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER");
+    let order = direct.nodes.iter().find(|node| node.id == "ORDER").expect("ORDER");
+    assert_eq!(customer.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#1d4ed8"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.text_color.as_deref()), Some("#14532d"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+    assert_eq!(order.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#dbeafe"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#1d4ed8"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.text_color.as_deref()), None);
 }
 
 #[test]
@@ -2460,6 +2574,277 @@ fn pinned_er_quoted_entity_constraints_preserve_general_quoted_text() {
             fixture["name"]
         );
     }
+}
+
+#[test]
+fn pinned_er_entity_name_forms_reach_semantic_ir() {
+    let syntax: Value =
+        serde_json::from_str(ER_ENTITY_NAMES_CORPUS).expect("ER entity names corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ENTITY_NAMES_VISUAL_CORPUS)
+        .expect("ER entity names visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER entity names source"),
+    )
+    .expect("bare and quoted ER entity names must parse");
+    assert_eq!(diagram.nodes.len(), 3);
+    for expected in ["DUCK-BILLED_PLATYPUS", "Blo@rf?", "_foo"] {
+        assert!(diagram.nodes.iter().any(|node| node.id == expected && node.label == expected));
+    }
+    assert_eq!(diagram.relationships[0].from, "DUCK-BILLED_PLATYPUS");
+    assert_eq!(diagram.relationships[0].to, "Blo@rf?");
+
+    let special = parse_er_diagram(
+        syntax["fixtures"][1]["source"].as_str().expect("ER special name source"),
+    )
+    .expect("quoted ER special character matrix must parse");
+    assert_eq!(special.nodes.len(), 1);
+    assert_eq!(special.nodes[0].id, "a~`!@#$^&*()-=+[]{}|/;:'.?¡⁄™€£‹¢›∞");
+}
+
+#[test]
+fn pinned_er_duplicate_entities_coalesce_in_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_DUPLICATE_ENTITIES_CORPUS)
+        .expect("ER duplicate entities corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_DUPLICATE_ENTITIES_VISUAL_CORPUS)
+        .expect("ER duplicate entities visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER duplicate entities source"),
+    )
+    .expect("duplicate ER entity declarations must parse");
+    assert_eq!(diagram.nodes.len(), 2);
+    assert_eq!(diagram.nodes[0].id, "CUSTOMER");
+    assert_eq!(diagram.nodes[1].id, "ORDER");
+    assert_eq!(diagram.relationships.len(), 1);
+    assert_eq!(diagram.relationships[0].from, "CUSTOMER");
+    assert_eq!(diagram.relationships[0].to, "ORDER");
+}
+
+#[test]
+fn pinned_er_relationship_label_forms_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_RELATIONSHIP_LABELS_CORPUS)
+        .expect("ER relationship labels corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_RELATIONSHIP_LABELS_VISUAL_CORPUS)
+        .expect("ER relationship labels visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER relationship labels source"),
+    )
+    .expect("ER relationship label forms must parse");
+    assert_eq!(diagram.nodes.len(), 4);
+    assert_eq!(diagram.relationships.len(), 3);
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some(""));
+    assert_eq!(diagram.relationships[1].label.as_deref(), Some("contains"));
+    assert_eq!(diagram.relationships[2].label.as_deref(), Some("assigned"));
+    assert_eq!(diagram.relationships[0].from_mult.as_deref(), Some("1"));
+    assert_eq!(diagram.relationships[0].to_mult.as_deref(), Some("1"));
+    assert_eq!(diagram.relationships[1].to_mult.as_deref(), Some("0..*"));
+    assert_eq!(diagram.relationships[2].from_mult.as_deref(), Some("0..*"));
+    assert_eq!(diagram.relationships[2].to_mult.as_deref(), Some("1"));
+}
+
+#[test]
+fn pinned_er_cycle_reaches_semantic_ir() {
+    let syntax: Value =
+        serde_json::from_str(ER_CYCLES_CORPUS).expect("ER cycles corpus must be JSON");
+    let visual: Value =
+        serde_json::from_str(ER_CYCLES_VISUAL_CORPUS).expect("ER cycles visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER cycle source"),
+    )
+    .expect("cyclical ER relationships must parse");
+    assert_eq!(diagram.nodes.len(), 3);
+    assert_eq!(diagram.relationships.len(), 3);
+    let endpoints: Vec<(&str, &str)> = diagram
+        .relationships
+        .iter()
+        .map(|relationship| (relationship.from.as_str(), relationship.to.as_str()))
+        .collect();
+    assert_eq!(endpoints, [("A", "B"), ("B", "C"), ("C", "A")]);
+    assert!(diagram.relationships.iter().all(|relationship| {
+        relationship.label.as_deref() == Some("likes")
+            && relationship.from_mult.as_deref() == Some("1")
+            && relationship.to_mult.as_deref() == Some("1..*")
+    }));
+}
+
+#[test]
+fn pinned_er_complex_topology_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_COMPLEX_TOPOLOGY_CORPUS)
+        .expect("ER complex topology corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_COMPLEX_TOPOLOGY_VISUAL_CORPUS)
+        .expect("ER complex topology visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER complex topology source"),
+    )
+    .expect("complex ER topology must parse");
+    assert_eq!(diagram.nodes.len(), 7);
+    assert_eq!(diagram.relationships.len(), 8);
+    for expected in [
+        "CUSTOMER",
+        "DELIVERY-ADDRESS",
+        "ORDER",
+        "INVOICE",
+        "ORDER-ITEM",
+        "PRODUCT-CATEGORY",
+        "PRODUCT",
+    ] {
+        assert!(diagram.nodes.iter().any(|node| node.id == expected));
+    }
+    let labels: Vec<&str> = diagram
+        .relationships
+        .iter()
+        .filter_map(|relationship| relationship.label.as_deref())
+        .collect();
+    assert_eq!(
+        labels,
+        ["has", "places", "liable for", "receives", "covers", "includes", "contains", "ordered in"]
+    );
+}
+
+#[test]
+fn pinned_er_frontmatter_title_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_FRONTMATTER_TITLE_CORPUS)
+        .expect("ER front-matter title corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_FRONTMATTER_TITLE_VISUAL_CORPUS)
+        .expect("ER front-matter title visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let source = syntax["fixtures"][0]["source"]
+        .as_str()
+        .expect("ER front-matter title source");
+    assert_eq!(
+        detect_mermaid_type(source).expect("front-matter ER family detection"),
+        mermaid_parser::MermaidDiagramType::Er
+    );
+    let diagram = parse_er_diagram(source).expect("front-matter ER fixture must parse");
+
+    assert_eq!(diagram.title.as_deref(), Some("simple ER diagram"));
+    assert_eq!(diagram.nodes.len(), 3);
+    assert_eq!(diagram.relationships.len(), 2);
+}
+
+#[test]
+fn pinned_er_variable_node_widths_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_VARIABLE_NODE_WIDTHS_CORPUS)
+        .expect("ER variable node widths corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_VARIABLE_NODE_WIDTHS_VISUAL_CORPUS)
+        .expect("ER variable node widths visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER variable node widths source"),
+    )
+    .expect("ER variable node widths fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 2);
+    assert_eq!(diagram.relationships.len(), 1);
+    assert_eq!(diagram.nodes[0].id, "PRIVATE_FINANCIAL_INSTITUTION");
+    assert_eq!(diagram.nodes[0].compartments[0].entries, ["name: string", "turnover: int"]);
+    assert_eq!(diagram.nodes[1].id, "EMPLOYEE");
+    assert_eq!(diagram.nodes[1].compartments[0].entries, ["officer_of_firm: bool"]);
+}
+
+#[test]
+fn pinned_er_mixed_special_topology_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_MIXED_SPECIAL_TOPOLOGY_CORPUS)
+        .expect("ER mixed special topology corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_MIXED_SPECIAL_TOPOLOGY_VISUAL_CORPUS)
+        .expect("ER mixed special topology visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER mixed special topology source"),
+    )
+    .expect("ER mixed special topology fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 5);
+    assert_eq!(diagram.relationships.len(), 3);
+    for expected in ["CUSTOMER", "1", "u", "1.5", "2.5"] {
+        assert!(diagram.nodes.iter().any(|node| node.id == expected));
+    }
+    let decimal = diagram.nodes.iter().find(|node| node.id == "2.5").expect("2.5");
+    assert_eq!(decimal.compartments[0].entries, ["id: string", "value: float"]);
+    let letter = diagram.nodes.iter().find(|node| node.id == "u").expect("u");
+    assert_eq!(letter.compartments[0].entries, ["name: varchar(50)", "count: int"]);
+    let labels = diagram
+        .relationships
+        .iter()
+        .filter_map(|relationship| relationship.label.as_deref())
+        .collect::<Vec<_>>();
+    assert_eq!(labels, ["places", "contains", "processes"]);
+}
+
+#[test]
+fn pinned_er_keyword_substrings_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_KEYWORD_SUBSTRINGS_CORPUS)
+        .expect("ER keyword substring corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_KEYWORD_SUBSTRINGS_VISUAL_CORPUS)
+        .expect("ER keyword substring visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER keyword substring source"),
+    )
+    .expect("ER keyword substring fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 1);
+    assert_eq!(diagram.nodes[0].id, "p");
+    assert_eq!(diagram.nodes[0].label, "Photograph");
+    assert_eq!(
+        diagram.nodes[0].compartments[0].entries,
+        ["jobId: varchar(12)", "dateCreated: date"]
+    );
+}
+
+#[test]
+fn pinned_er_disconnected_topology_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_DISCONNECTED_TOPOLOGY_CORPUS)
+        .expect("ER disconnected topology corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_DISCONNECTED_TOPOLOGY_VISUAL_CORPUS)
+        .expect("ER disconnected topology visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER disconnected topology source"),
+    )
+    .expect("ER disconnected topology fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 4);
+    assert_eq!(diagram.relationships.len(), 2);
+    for expected in ["DEAD_PARROT", "HERMIT", "RECLUSE", "SOCIALITE"] {
+        assert!(diagram.nodes.iter().any(|node| node.id == expected));
+    }
+    assert!(diagram.relationships.iter().any(|relationship| {
+        relationship.from == "SOCIALITE"
+            && relationship.to == "SOCIALITE"
+            && relationship.label.as_deref() == Some("interacts with")
+    }));
 }
 
 #[test]

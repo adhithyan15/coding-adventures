@@ -1,0 +1,11 @@
+{
+  "id": "GU-C500-vidhva",
+  "pathSegment": "GU-PATH-500-VARSO500",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-500-VARSO500",
+      "order": 1
+    }
+  ]
+}

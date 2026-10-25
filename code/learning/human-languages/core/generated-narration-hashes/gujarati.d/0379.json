@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:20c9e674870cc51f",
+  "lessonIds": [
+    "GU-C379-atyant",
+    "GU-C379-sav",
+    "GU-C379-sampurn",
+    "GU-C379-bilkul",
+    "GU-C379-keval"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch379.txt",
+  "json": "gujarati/narration/ch379.json",
+  "textHash": "fnv1a64:5db388afe9e71e3b",
+  "jsonHash": "fnv1a64:29af175db8b29479",
+  "findings": []
+}

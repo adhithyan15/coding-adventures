@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C435-langar",
+    "language": "urdu",
+    "chapter": 435,
+    "sequence": 25520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df057cdc0be16c2c"
+  },
+  "findings": []
+}

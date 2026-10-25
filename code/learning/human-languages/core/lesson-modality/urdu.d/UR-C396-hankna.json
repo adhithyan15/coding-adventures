@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C396-hankna",
+    "language": "urdu",
+    "chapter": 396,
+    "sequence": 23550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8d20160caab5caa"
+  },
+  "findings": []
+}

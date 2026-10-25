@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:a4a9bbb475cdce93",
+  "lessonIds": [
+    "GU-C375-avasyak",
+    "GU-C375-anivarya",
+    "GU-C375-pharjiyat",
+    "GU-C375-patvu",
+    "GU-C375-puru-padvu"
+  ],
+  "tex": "gujarati/book/chapters/ch375-what-must-come-first.tex"
+}

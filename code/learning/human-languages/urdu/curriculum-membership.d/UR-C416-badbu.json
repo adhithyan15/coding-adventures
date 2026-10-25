@@ -1,0 +1,11 @@
+{
+  "id": "UR-C416-badbu",
+  "pathSegment": "UR-PATH-416-KURA416",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-416-KURA416",
+      "order": 3
+    }
+  ]
+}

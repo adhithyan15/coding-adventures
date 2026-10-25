@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C512-khad",
+    "language": "urdu",
+    "chapter": 512,
+    "sequence": 29940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a18ac987fbe9882"
+  },
+  "findings": []
+}

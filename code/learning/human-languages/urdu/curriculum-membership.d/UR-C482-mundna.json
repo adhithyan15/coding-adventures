@@ -1,0 +1,11 @@
+{
+  "id": "UR-C482-mundna",
+  "pathSegment": "UR-PATH-482-GROOM482",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-482-GROOM482",
+      "order": 1
+    }
+  ]
+}

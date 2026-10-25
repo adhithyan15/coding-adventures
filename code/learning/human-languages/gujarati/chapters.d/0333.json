@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Fairies and Magic",
+  "label": "ch:gu-fairies-and-magic",
+  "canDo": "I can tell what magic happened in a story.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C333-dekhavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can tell what magic happened in a story.",
+    "assesses": [
+      "GU-LEX-C333-PARI333-03",
+      "GU-LEX-C333-PARI333-04",
+      "GU-LEX-C333-PARI333-05"
+    ]
+  }
+}

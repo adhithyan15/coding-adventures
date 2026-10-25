@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 401,
+  "output": "urdu/book/chapters/ch401-meeting-the-plane.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

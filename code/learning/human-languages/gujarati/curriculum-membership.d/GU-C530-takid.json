@@ -1,0 +1,11 @@
+{
+  "id": "GU-C530-takid",
+  "pathSegment": "GU-PATH-530-TAKID530",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-530-TAKID530",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C509-handi",
+  "pathSegment": "UR-PATH-509-CHHACHH509",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-509-CHHACHH509",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:3679b83ae7725be9",
+  "lessonIds": [
+    "UR-C273-se-bara",
+    "UR-C273-behtar",
+    "UR-C273-subah",
+    "UR-W273-suad",
+    "UR-C273-do-sal-se",
+    "UR-R273-comparing-and-time"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "urdu/narration/ch273.txt",
+  "json": "urdu/narration/ch273.json",
+  "textHash": "fnv1a64:333ae750fac861e2",
+  "jsonHash": "fnv1a64:be687b2b8a408a82",
+  "findings": []
+}

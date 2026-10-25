@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:aef619dc972123be",
+  "lessonIds": [
+    "GU-C509-dhaman",
+    "GU-C509-phukvu",
+    "GU-C509-tipvu",
+    "GU-C509-kat",
+    "GU-C509-katavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch509.txt",
+  "json": "gujarati/narration/ch509.json",
+  "textHash": "fnv1a64:af759366f14c13be",
+  "jsonHash": "fnv1a64:5d541117150d28cd",
+  "findings": []
+}

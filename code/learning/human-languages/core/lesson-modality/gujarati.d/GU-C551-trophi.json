@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C551-trophi",
+    "language": "gujarati",
+    "chapter": 551,
+    "sequence": 30600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09d33068ebfb6780"
+  },
+  "findings": []
+}

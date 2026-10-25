@@ -1,0 +1,11 @@
+{
+  "id": "UR-C505-rakhvana",
+  "pathSegment": "UR-PATH-505-ATARI505",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-505-ATARI505",
+      "order": 4
+    }
+  ]
+}

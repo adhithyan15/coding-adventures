@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-384-TARBIYAT384",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "UR-EXT-384-TARBIYAT384"
+  ],
+  "after": []
+}

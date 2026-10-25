@@ -1,0 +1,11 @@
+{
+  "id": "UR-C486-guzarna-pass",
+  "pathSegment": "UR-PATH-486-GROWUP486",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-486-GROWUP486",
+      "order": 3
+    }
+  ]
+}

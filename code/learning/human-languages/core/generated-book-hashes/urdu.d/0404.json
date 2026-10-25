@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:05048060e91136b3",
+  "lessonIds": [
+    "UR-C404-ghusl-khana",
+    "UR-C404-sabun",
+    "UR-C404-gizar",
+    "UR-C404-tapakna",
+    "UR-C404-sahulat"
+  ],
+  "tex": "urdu/book/chapters/ch404-washrooms.tex"
+}

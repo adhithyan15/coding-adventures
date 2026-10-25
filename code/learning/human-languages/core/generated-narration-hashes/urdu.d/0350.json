@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:9c2564a75944f9ff",
+  "lessonIds": [
+    "UR-C350-ausat",
+    "UR-C350-adad",
+    "UR-C350-tajziya",
+    "UR-C350-sharah",
+    "UR-C350-ubharna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch350.txt",
+  "json": "urdu/narration/ch350.json",
+  "textHash": "fnv1a64:4bad88d09d09f8b1",
+  "jsonHash": "fnv1a64:c7dcd2e04bb0409c",
+  "findings": []
+}

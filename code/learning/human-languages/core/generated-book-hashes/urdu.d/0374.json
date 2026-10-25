@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:fd5811dff71c54ca",
+  "lessonIds": [
+    "UR-C374-sahara",
+    "UR-C374-zid",
+    "UR-C374-ahl",
+    "UR-C374-inhisar",
+    "UR-C374-israr-karna"
+  ],
+  "tex": "urdu/book/chapters/ch374-leaning-on-others.tex"
+}

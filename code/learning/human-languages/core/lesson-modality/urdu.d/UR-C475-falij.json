@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C475-falij",
+    "language": "urdu",
+    "chapter": 475,
+    "sequence": 27810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e0bd974840f8f11"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:a7a5f0eb22bbf5f1",
+  "lessonIds": [
+    "GU-C289-adalat",
+    "GU-C289-vakil",
+    "GU-C289-nyay",
+    "GU-C289-saja",
+    "GU-C289-bhogavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch289.txt",
+  "json": "gujarati/narration/ch289.json",
+  "textHash": "fnv1a64:97d7bf5ebe633522",
+  "jsonHash": "fnv1a64:e70495f90c728b7e",
+  "findings": []
+}

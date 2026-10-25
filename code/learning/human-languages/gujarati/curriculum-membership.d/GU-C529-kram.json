@@ -1,0 +1,11 @@
+{
+  "id": "GU-C529-kram",
+  "pathSegment": "GU-PATH-529-TABAKKO529",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-529-TABAKKO529",
+      "order": 1
+    }
+  ]
+}

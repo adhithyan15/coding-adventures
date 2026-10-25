@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "A Warning",
+  "label": "ch:ur-a-warning",
+  "canDo": "I can pass on a warning that was announced.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C290-ehtiyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can pass on a warning that was announced.",
+    "assesses": [
+      "UR-LEX-C290-AILAN290-03",
+      "UR-LEX-C290-AILAN290-04",
+      "UR-LEX-C290-AILAN290-05"
+    ]
+  }
+}

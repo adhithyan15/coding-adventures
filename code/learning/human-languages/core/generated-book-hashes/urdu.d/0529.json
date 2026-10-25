@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:ec443b9c758bf288",
+  "lessonIds": [
+    "UR-C529-jhamela",
+    "UR-C529-makhmasa",
+    "UR-C529-kashmakash",
+    "UR-C529-pechida",
+    "UR-C529-uljhana"
+  ],
+  "tex": "urdu/book/chapters/ch529-a-tangle-of-troubles.tex"
+}

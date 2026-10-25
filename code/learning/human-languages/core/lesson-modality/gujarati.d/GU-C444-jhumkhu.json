@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C444-jhumkhu",
+    "language": "gujarati",
+    "chapter": 444,
+    "sequence": 24640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8040ab0873ba2780"
+  },
+  "findings": []
+}
