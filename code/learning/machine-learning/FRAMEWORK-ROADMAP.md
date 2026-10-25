@@ -10,6 +10,64 @@ shared numerical fixture, boundary tests, and honest coverage documentation.
 Track native code and Rust-core bindings separately. Keep one focused PR active.
 The first contract is [NN37](../../specs/NN37-portable-neural-framework.md).
 
+## Delivery loop and prioritization
+
+The delivery loop is authorized to implement, publish, repair, and auto-merge
+one item at a time. Before choosing each new item, fetch current main, inspect
+the actual open PR and its current-head CI logs, and revisit this ordering:
+
+1. **P0 — Finish the active delivery.** Resolve real CI failures or merge
+   conflicts on [PR #18201](https://github.com/adhithyan15/coding-adventures/pull/18201).
+   The standalone matrix bootstrap repair is included; confirm its current
+   checks rather than treating the earlier framework-only green run as final.
+2. **P1 — Native Rust dense framework.** Implement NN37 training and checkpoint
+   interchange independently over the Rust matrix foundation. The optional C
+   ABI is a separate later item, so native correctness is established first.
+3. **P1 — Grow executable conformance with the port roster.** Add a shared
+   invalid-input corpus and explicit native/binding evidence as additional
+   lanes appear. Integrate checkpoint interchange into the required repository
+   gate; the first version runs it in a separate workflow.
+4. **P2 — Extend native reach.** Deliver Go and Ruby, then C/C++, managed and
+   functional language ports in the order their existing foundations permit.
+   Reassess the smallest complete port after every merge.
+5. **P2 — Optional Rust dense C ABI.** Specify ownership, shapes, errors,
+   versioning, and resumable state before exposing binding consumers. Keep
+   those consumers distinct from the native implementations.
+6. **P3 — Composable architectures and measured scale.** Use the queues below;
+   shared tensor/autograd operations precede general CNN/RNN/transformer
+   training. Add real numerical and runtime evidence before marking support.
+
+Record new work immediately as an unchecked item, with its observed cause and
+prerequisites, then rerun prioritization after the current PR merges. Reliability
+defects blocking training or validation outrank new ports. A queued runner is a
+wait state, not a reason to invent a source change. Report a runner delay beyond
+the normal ten-minute window and resume monitoring on the next loop run.
+
+Each iteration uses a fresh `codex/` branch in a sparse isolated worktree.
+Commit the specification before implementation. Run direct numerical tests,
+the package's real build/coverage gates, shared-fixture and checkpoint-resume
+checks, link validation, `git diff --check`, and the required independent
+security review before pushing. Inspect failed job logs before making repairs.
+After every push, verify that GitHub's PR head is the expected commit.
+
+Mark the PR ready and enable squash auto-merge only after applicable checks
+pass. Empty required-check results do not establish success: confirm the
+expected CI, CodeQL, and framework-conformance workflows. Confirm the actual
+merge and retained head before checking off the delivered work, cleaning its
+worktree, and selecting the next item. Never open a second framework PR while
+the first is open, or modify the unrelated dirty primary checkout.
+
+## Discovered reliability work
+
+- [ ] Integrate framework checkpoint interchange into the required repository
+  CI gate, so merge eligibility cannot omit the separate conformance workflow.
+- [ ] Add a language-neutral invalid-checkpoint corpus as ports expand;
+  cross-language receipts currently prove valid training/resume, while each
+  library owns separate negative tests.
+- [ ] Check available disk before Rust workspace builds. The initial full
+  checkout exhausted disk; sparse checkout recovered the task, but compilation
+  needs a measured output budget. Preserve other tasks and their artifacts.
+
 ## Dense frameworks
 
 Completion means seeded construction, full-network backpropagation, exact-count
@@ -17,7 +75,8 @@ SGD training, inspection, and portable save/reload/resume.
 
 - [x] Python and TypeScript reference frameworks and checkpoint interchange
   ([lesson and runnable examples](./portable-dense-framework.md)).
-- [ ] Rust native framework and optional C ABI.
+- [ ] Rust native framework and checkpoint interchange.
+- [ ] Optional Rust dense C ABI and binding consumers.
 - [ ] Go native framework.
 - [ ] Ruby native framework.
 - [ ] C native framework.
