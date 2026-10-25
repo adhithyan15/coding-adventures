@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Retained the checked extension-value OCTET STRING element so semantic
+  extension decoders can preserve the enclosing DER depth budget.
+
 ## 0.1.0 — 2026-09-20
 
 - Added allocation-free generic RFC 5280 `Extension` decoding.

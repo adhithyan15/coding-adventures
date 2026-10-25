@@ -102,6 +102,7 @@ impl Error for X509ExtensionError {}
 pub struct X509Extension<'a> {
     extension_id: ObjectIdentifier<'a>,
     critical: bool,
+    extension_value_element: Asn1Element<'a>,
     extension_value: &'a [u8],
 }
 
@@ -116,6 +117,11 @@ impl<'a> X509Extension<'a> {
 
     pub const fn extension_value(self) -> &'a [u8] {
         self.extension_value
+    }
+
+    /// Return the checked OCTET STRING container for depth-preserving nested decoding.
+    pub const fn extension_value_element(self) -> Asn1Element<'a> {
+        self.extension_value_element
     }
 }
 
@@ -199,6 +205,7 @@ pub fn decode_x509_extension<'a>(
     Ok(X509Extension {
         extension_id,
         critical,
+        extension_value_element,
         extension_value,
     })
 }
