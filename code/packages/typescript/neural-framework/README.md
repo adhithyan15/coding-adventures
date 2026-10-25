@@ -56,8 +56,8 @@ Tests check the shared [NN37 fixture](../../../specs/fixtures/neural-framework-v
 every coordinate by finite differences, seeded XOR training, checkpoint resume,
 and invalid inputs. The coverage floor is 95% statements/lines/functions and
 85% branches. Run `python code/scripts/validate_neural_framework_interchange.py`
-from repository root (with Cargo and Go installed) to execute all four native
-lanes and twelve directed checkpoint exchanges through step 3002 (NN42).
+from repository root (with Cargo, Go and Ruby installed) to execute all five native
+lanes and twenty directed checkpoint exchanges through step 3002 (NN46).
 
 This release supplies dense MLP training. Other architectures, graph-wide
 autograd, batching, optimizers, and acceleration remain in the

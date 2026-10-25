@@ -63,7 +63,12 @@ The native example trains XOR for 3000 steps, emits JSON, and accepts only
 fresh training and two real resumes through step 3002. Command execution uses
 fixed argv/cwd and never takes executable paths from checkpoints.
 
-This is NN45 native Ruby training only. Five-native interchange remains a
-separate delivery; existing four-native conformance does not include Ruby yet.
+NN45 supplies native Ruby training. NN46 separately integrates Ruby into the
+required five-native conformance runner: from repository root, run
+`python code/scripts/validate_neural_framework_interchange.py` with Ruby, Go,
+Cargo and the TypeScript peer's dependencies available. It executes twenty
+directed pairs with full return-trip comparisons through step 3002. A native
+save/reload receipt alone does not establish five-native conformance; actual
+selected CI must pass. The native-only validator retains its NN45 scope.
 See [NN45](../../../specs/NN45-native-ruby-dense-framework.md) and the
 [lesson](../../../learning/machine-learning/native-ruby-dense-framework.md).
