@@ -209,6 +209,14 @@ class FormeSpecMapTests(unittest.TestCase):
             SPECS / "DOC00-docs-vision.md": (
                 "**Status:** v0 vision document.  Per-package specs and\n> implementations follow.",
                 "Two remaining decisions to confirm during implementation:",
+                "**AOT (build-time) syntax highlighter.**  Themes are baked",
+                "positions}]`.",
+                "**Bloom filter per shard**",
+                "**Forward index** for snippet generation",
+                "Trigram side-index for fuzzy",
+                "Score matching documents with BM25.",
+                "Expandable/collapsible groups.",
+                "Code block decoration + AOT syntax highlighting.",
             ),
             SPECS / "FM01-forme-kernel.md": (
                 "**Status:** Code-ready specification.",
@@ -308,6 +316,21 @@ class FormeSpecMapTests(unittest.TestCase):
             for path in TYPESCRIPT_PACKAGES.glob("forme-doc-*/package.json")
         }
         self.assertEqual(actual, DOC00_PACKAGE_NAMES)
+
+        vision = (SPECS / "DOC00-docs-vision.md").read_text(encoding="utf-8")
+        for shipped_boundary in (
+            "single deterministic `plain` span",
+            "frequency with a configurable title-hit boost",
+            "caller-injected shard fetcher",
+            "CSS and browser UI wiring are caller-owned",
+        ):
+            self.assertIn(shipped_boundary, vision)
+
+        for readme in TYPESCRIPT_PACKAGES.glob("forme-doc-*/README.md"):
+            text = readme.read_text(encoding="utf-8")
+            with self.subTest(readme=readme.relative_to(REPO_ROOT)):
+                self.assertNotIn("Next DOC00 v0 packages:", text)
+                self.assertNotIn("Final DOC00 v0 package:", text)
 
     def test_roadmap_links_every_canonical_numbered_spec(self) -> None:
         roadmap = (SPECS / "FM00-forme-completion-roadmap.md").read_text(
