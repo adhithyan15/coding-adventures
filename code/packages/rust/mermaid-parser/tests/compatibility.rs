@@ -141,6 +141,14 @@ const ER_ENTITY_NAMES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-entity-names-11.16.1-visual-corpus.json"
 ));
+const ER_DUPLICATE_ENTITIES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-duplicate-entities-11.16.1-corpus.json"
+));
+const ER_DUPLICATE_ENTITIES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-duplicate-entities-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2530,6 +2538,27 @@ fn pinned_er_entity_name_forms_reach_semantic_ir() {
     .expect("quoted ER special character matrix must parse");
     assert_eq!(special.nodes.len(), 1);
     assert_eq!(special.nodes[0].id, "a~`!@#$^&*()-=+[]{}|/;:'.?¡⁄™€£‹¢›∞");
+}
+
+#[test]
+fn pinned_er_duplicate_entities_coalesce_in_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_DUPLICATE_ENTITIES_CORPUS)
+        .expect("ER duplicate entities corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_DUPLICATE_ENTITIES_VISUAL_CORPUS)
+        .expect("ER duplicate entities visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER duplicate entities source"),
+    )
+    .expect("duplicate ER entity declarations must parse");
+    assert_eq!(diagram.nodes.len(), 2);
+    assert_eq!(diagram.nodes[0].id, "CUSTOMER");
+    assert_eq!(diagram.nodes[1].id, "ORDER");
+    assert_eq!(diagram.relationships.len(), 1);
+    assert_eq!(diagram.relationships[0].from, "CUSTOMER");
+    assert_eq!(diagram.relationships[0].to, "ORDER");
 }
 
 #[test]
