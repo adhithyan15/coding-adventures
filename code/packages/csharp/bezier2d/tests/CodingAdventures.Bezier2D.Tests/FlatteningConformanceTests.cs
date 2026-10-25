@@ -106,6 +106,17 @@ public sealed class FlatteningConformanceTests
     }
 
     [Fact]
+    public void SubnormalGeometryCannotUnderflowIntoAChord()
+    {
+        var curve = new QuadraticBezier(
+            new Point(0, 0),
+            new Point(0, 1e-200),
+            new Point(1e-200, 0));
+
+        Assert.Throws<InvalidOperationException>(() => curve.ToPolyline(double.Epsilon));
+    }
+
+    [Fact]
     public void BoundingBoxesIncludeInteriorXExtrema()
     {
         var quadratic = new QuadraticBezier(new Point(0, 0), new Point(10, 0), new Point(0, 1));

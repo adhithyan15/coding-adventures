@@ -158,6 +158,13 @@ module FlatteningConformanceTests =
         Assert.Throws<InvalidOperationException>(fun () -> cubic.ToPolyline Double.Epsilon |> ignore) |> ignore
 
     [<Fact>]
+    let ``subnormal geometry cannot underflow into a chord`` () =
+        let curve =
+            QuadraticBezier.New(Point.New(0.0, 0.0), Point.New(0.0, 1e-200), Point.New(1e-200, 0.0))
+
+        Assert.Throws<InvalidOperationException>(fun () -> curve.ToPolyline Double.Epsilon |> ignore) |> ignore
+
+    [<Fact>]
     let ``bounding boxes include interior x extrema`` () =
         let quadratic = QuadraticBezier.New(Point.New(0.0, 0.0), Point.New(10.0, 0.0), Point.New(0.0, 1.0))
         let quadraticBounds = quadratic.BoundingBox()
