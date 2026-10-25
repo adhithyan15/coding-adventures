@@ -157,6 +157,14 @@ const ER_RELATIONSHIP_LABELS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-relationship-labels-11.16.1-visual-corpus.json"
 ));
+const ER_CYCLES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-cycles-11.16.1-corpus.json"
+));
+const ER_CYCLES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-cycles-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2594,6 +2602,34 @@ fn pinned_er_relationship_label_forms_reach_semantic_ir() {
     assert_eq!(diagram.relationships[1].to_mult.as_deref(), Some("0..*"));
     assert_eq!(diagram.relationships[2].from_mult.as_deref(), Some("0..*"));
     assert_eq!(diagram.relationships[2].to_mult.as_deref(), Some("1"));
+}
+
+#[test]
+fn pinned_er_cycle_reaches_semantic_ir() {
+    let syntax: Value =
+        serde_json::from_str(ER_CYCLES_CORPUS).expect("ER cycles corpus must be JSON");
+    let visual: Value =
+        serde_json::from_str(ER_CYCLES_VISUAL_CORPUS).expect("ER cycles visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER cycle source"),
+    )
+    .expect("cyclical ER relationships must parse");
+    assert_eq!(diagram.nodes.len(), 3);
+    assert_eq!(diagram.relationships.len(), 3);
+    let endpoints: Vec<(&str, &str)> = diagram
+        .relationships
+        .iter()
+        .map(|relationship| (relationship.from.as_str(), relationship.to.as_str()))
+        .collect();
+    assert_eq!(endpoints, [("A", "B"), ("B", "C"), ("C", "A")]);
+    assert!(diagram.relationships.iter().all(|relationship| {
+        relationship.label.as_deref() == Some("likes")
+            && relationship.from_mult.as_deref() == Some("1")
+            && relationship.to_mult.as_deref() == Some("1..*")
+    }));
 }
 
 #[test]

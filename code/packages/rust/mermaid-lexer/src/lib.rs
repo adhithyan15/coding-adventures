@@ -1640,6 +1640,25 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_cyclical_relationships() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nA ||--|{ B : likes\nB ||--|{ C : likes\nC ||--|{ A : likes\n",
+        );
+        let identifying = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFYING"))
+            .count();
+        let one_or_more = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ONE_OR_MORE"))
+            .count();
+
+        assert_eq!(identifying, 3);
+        assert_eq!(one_or_more, 3);
+        assert_eq!(tokens.iter().filter(|token| token.value == "likes").count(), 3);
+    }
+
+    #[test]
     fn tokenizes_er_attribute_type_forms() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
