@@ -1301,6 +1301,7 @@ members = [
   "pdp8-simulator",
   "pdp8-gatelevel",
   "edsac-simulator",
+  "edsac-gatelevel",
   "openrisc1000-simulator",
   "x509-rsa-public-key",
   "rsa-pkcs1-v1-5-sha256",
