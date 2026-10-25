@@ -1732,6 +1732,25 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_disconnected_recursive_topology() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nDEAD_PARROT\nHERMIT\nRECLUSE\nSOCIALITE }o--o{ SOCIALITE : \"interacts with\"\nRECLUSE }o--o{ SOCIALITE : avoids\n",
+        );
+
+        for expected in ["DEAD_PARROT", "HERMIT", "RECLUSE", "SOCIALITE", "interacts with"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+        assert_eq!(tokens.iter().filter(|token| token.value == "SOCIALITE").count(), 3);
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_name.as_deref() == Some("IDENTIFYING"))
+                .count(),
+            2
+        );
+    }
+
+    #[test]
     fn tokenizes_er_attribute_type_forms() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
