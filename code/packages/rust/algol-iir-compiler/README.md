@@ -251,8 +251,10 @@ through magnitude `2^53`, including composition with exact additive terms, as
 long as every intermediate magnitude stays in that exact binary64 range.
 Independently bounded dynamic sign-rooted transforms may multiply under the
 same checked magnitude limit because every factor remains an exact integer.
-Fractional factors, oversized products, non-multiplying multiple roots, and
-variable factors remain conservative. Exact whole-number division is also
+They may also add or subtract under a checked complete-sum magnitude limit,
+including independently scaled and offset transforms. Fractional factors,
+oversized products or sums, other non-multiplying roots, and variable factors
+remain conservative. Exact whole-number division is also
 permitted when the bounded result is the numerator and every possible
 transformed integer is divisible by the static nonzero divisor. Inexact or
 variable divisors and a bounded denominator remain conservative. Static
@@ -299,9 +301,8 @@ Those normalizers may also consume finite fractional static-real inputs when
 their result is an exact integer, including nested call-free conditionals whose
 normalized branches agree. Nonintegral, path-dependent, dynamic, and oversized
 results remain conservative.
-An exact `sign` result is classified as a static factor rather than a second
-runtime sign root, so it may compose directly with the one dynamic root. Two
-dynamic roots, path-dependent signs, and effectful selectors remain
+An exact `sign` result is classified as a static factor rather than another
+runtime sign root. Path-dependent signs and effectful selectors remain
 conservative.
 Checked exact-integer normalizers may also provide a nonnegative exponent for
 the sign-rooted transform when the right-associative exponent chain stays
