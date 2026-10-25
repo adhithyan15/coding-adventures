@@ -229,7 +229,9 @@ def validate_changelog(changelog: Path, release_version: str | None = None) -> N
             )
 
 
-def changelog_change_headings(changelog: Path, release_version: str) -> list[str]:
+def changelog_change_headings(
+    changelog: Path, release_version: str, *, preserve_details: bool = False
+) -> list[str]:
     """Return the reviewed change headings for one exact release section."""
 
     validate_changelog(changelog, release_version)
@@ -249,7 +251,9 @@ def changelog_change_headings(changelog: Path, release_version: str) -> list[str
         raise ValueError(
             f"changelog release {release_version!r} has no change headings"
         )
-    return headings
+    # Publication needs the authored details, not just category labels. Keep
+    # the heading-only API for callers that explicitly summarize categories.
+    return [section.group("body").strip()] if preserve_details else headings
 
 
 def artifact_names(version: str) -> list[str]:
@@ -993,6 +997,8 @@ def render_notes(
     history: list[dict[str, Any]],
     since: str | None,
     changes: list[str],
+    *,
+    changes_markdown: bool = False,
 ) -> str:
     """Render honest, product-scoped notes from changelog and PR history."""
 
@@ -1009,7 +1015,11 @@ def render_notes(
         not isinstance(change, str) or not change.strip() for change in changes
     ):
         raise ValueError("release notes require at least one changelog change heading")
-    changes_section = "\n".join(f"- {change.strip()}" for change in changes)
+    changes_section = (
+        "\n\n".join(change.strip() for change in changes)
+        if changes_markdown
+        else "\n".join(f"- {change.strip()}" for change in changes)
+    )
     issue_root = f"https://github.com/{repository}/issues"
     return f"""# TaskApp v{version}
 
@@ -1223,7 +1233,9 @@ def main(argv: list[str] | None = None) -> int:
             history = json.loads(args.history.read_text(encoding="utf-8"))
             if not isinstance(history, list):
                 raise ValueError("GitHub history must be a JSON list")
-            changes = changelog_change_headings(args.changelog, args.version)
+            changes = changelog_change_headings(
+                args.changelog, args.version, preserve_details=True
+            )
             notes = render_notes(
                 args.version,
                 args.tag,
@@ -1232,6 +1244,7 @@ def main(argv: list[str] | None = None) -> int:
                 history,
                 args.since,
                 changes,
+                changes_markdown=True,
             )
             args.output.write_text(notes, encoding="utf-8")
     except (OSError, TypeError, ValueError, json.JSONDecodeError) as error:
