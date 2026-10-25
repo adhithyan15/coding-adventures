@@ -58,6 +58,10 @@ fail closed.
 An exact `sign` result is classified as a static factor around the one dynamic
 sign root. Two dynamic roots, path-dependent signs, and effectful selectors
 fail closed.
+Checked exact-integer normalizers may provide the sign-rooted transform's
+nonnegative exponent when the right-associative chain stays within the power
+unroll cap. Zero, negative, dynamic, path-dependent, effectful, and oversized
+exponents fail closed.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
