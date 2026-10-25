@@ -133,6 +133,14 @@ const ER_QUOTED_ENTITY_VALIDATION_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-quoted-entity-validation-11.16.1-visual-corpus.json"
 ));
+const ER_ENTITY_NAMES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-entity-names-11.16.1-corpus.json"
+));
+const ER_ENTITY_NAMES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-entity-names-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2494,6 +2502,34 @@ fn pinned_er_quoted_entity_constraints_preserve_general_quoted_text() {
             fixture["name"]
         );
     }
+}
+
+#[test]
+fn pinned_er_entity_name_forms_reach_semantic_ir() {
+    let syntax: Value =
+        serde_json::from_str(ER_ENTITY_NAMES_CORPUS).expect("ER entity names corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ENTITY_NAMES_VISUAL_CORPUS)
+        .expect("ER entity names visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER entity names source"),
+    )
+    .expect("bare and quoted ER entity names must parse");
+    assert_eq!(diagram.nodes.len(), 3);
+    for expected in ["DUCK-BILLED_PLATYPUS", "Blo@rf?", "_foo"] {
+        assert!(diagram.nodes.iter().any(|node| node.id == expected && node.label == expected));
+    }
+    assert_eq!(diagram.relationships[0].from, "DUCK-BILLED_PLATYPUS");
+    assert_eq!(diagram.relationships[0].to, "Blo@rf?");
+
+    let special = parse_er_diagram(
+        syntax["fixtures"][1]["source"].as_str().expect("ER special name source"),
+    )
+    .expect("quoted ER special character matrix must parse");
+    assert_eq!(special.nodes.len(), 1);
+    assert_eq!(special.nodes[0].id, "a~`!@#$^&*()-=+[]{}|/;:'.?¡⁄™€£‹¢›∞");
 }
 
 #[test]

@@ -1586,6 +1586,27 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_bare_and_quoted_entity_name_forms() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nDUCK-BILLED_PLATYPUS ||--|| \"Blo@rf?\" : maps\n_foo\n\"a~`!@#$^&*()-=+[]{}|/;:'.?¡⁄™€£‹¢›∞\"\n",
+        );
+        let identifiers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFIER"))
+            .map(|token| token.value.as_str())
+            .collect();
+        let quoted: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ENTITY_STRING"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert!(identifiers.contains(&"DUCK-BILLED_PLATYPUS"));
+        assert!(identifiers.contains(&"_foo"));
+        assert_eq!(quoted, ["Blo@rf?", "a~`!@#$^&*()-=+[]{}|/;:'.?¡⁄™€£‹¢›∞"]);
+    }
+
+    #[test]
     fn tokenizes_er_attribute_type_forms() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
