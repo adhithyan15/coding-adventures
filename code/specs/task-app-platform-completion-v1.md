@@ -370,6 +370,16 @@ Preparation is not publication. Artifact coverage and unsigned native limits
 remain unchanged; HTML, Web Components and Paint remain CI-only, and #13977
 remains the signing tracker.
 
+### Selected fidelity slice — Qt fixed rail floor (#18250)
+
+Ordinary Qt styled containers must preserve a static fixed width as their
+minimum when paired with exact `flex-shrink: 0`, including TaskApp's 236-pixel
+navigation rail. Reuse the conservative delegate-floor checks: finite,
+nonnegative pixel width only, no conflicting min/max/flex constraints or state
+geometry overrides. Threaded table widths remain authoritative. Keep authored
+styles and unsupported flex-shrink diagnostics unchanged; this is not general
+flexbox lowering. Test emitter eligibility and both TaskApp themes.
+
 ### Completed fidelity slice — board column width floor (#18030)
 
 Both themes must retain a 260-pixel minimum board-column width when the
