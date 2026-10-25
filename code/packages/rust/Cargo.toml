@@ -1326,4 +1326,5 @@ members = [
   "x509-ocsp-authenticated-responder",
   "x509-ocsp-issuer-bound-responder",
   "x509-ocsp-authenticated-target-revocation",
+  "x509-ocsp-reviewed-server-revocation-binding",
 ]
