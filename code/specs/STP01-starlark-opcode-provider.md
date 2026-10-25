@@ -209,10 +209,12 @@ directory or skipped Windows front is not native qualification.
 
 Keep the native test dependency plan compatible with the coverage-enabled
 GHC 9.4.8 / Cabal 3.10.3.0 CI front. A solver failure before compilation is
-not a provider failure or a successful test run. A package-local compatibility
-constraint may narrow test dependencies while preserving the public API and
-the existing coverage command. Reproduce the original failure and validate
-the repaired plan with that toolchain; a newer local Cabal alone is insufficient.
+not a provider failure or a successful test run. Enable coverage in the named
+`package starlark-compiler` project stanza for both the library and its tests;
+the BUILD front runs `cabal test all` without the conflicting global coverage
+flag. Preserve the public API and dependency ranges. Reproduce the original
+global-flag failure and validate the repaired coverage plan with that toolchain;
+a newer local Cabal alone is insufficient.
 Independent rejection witnesses must isolate byte range/type, row ordering
 and the depth-eight boundary rather than relying on a different malformed
 property of the same candidate.
