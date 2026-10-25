@@ -1659,6 +1659,27 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_complex_topology() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER }|..|{ DELIVERY-ADDRESS : has\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER ||--o{ INVOICE : \"liable for\"\nDELIVERY-ADDRESS ||--o{ ORDER : receives\nINVOICE ||--|{ ORDER : covers\nORDER ||--|{ ORDER-ITEM : includes\nPRODUCT-CATEGORY ||--|{ PRODUCT : contains\nPRODUCT ||--o{ ORDER-ITEM : \"ordered in\"\n",
+        );
+        let relationships = tokens
+            .iter()
+            .filter(|token| {
+                matches!(
+                    token.type_name.as_deref(),
+                    Some("IDENTIFYING" | "NON_IDENTIFYING")
+                )
+            })
+            .count();
+
+        assert_eq!(relationships, 8);
+        for expected in ["DELIVERY-ADDRESS", "ORDER-ITEM", "PRODUCT-CATEGORY"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+    }
+
+    #[test]
     fn tokenizes_er_attribute_type_forms() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
