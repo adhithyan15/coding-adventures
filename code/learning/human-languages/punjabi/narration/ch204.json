@@ -1,0 +1,512 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 204,
+  "title": "With Children",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:7ca1ac64c6733a8c",
+  "lessons": [
+    {
+      "id": "PA-C204-child-return",
+      "sequence": 11070,
+      "title": "Return to the familiar child noun",
+      "headword": "ਬੱਚਾ",
+      "romanization": "bachchaa",
+      "gloss": "retrieve the familiar noun for a child",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:625e4c29a5693d24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "bachchā; YOU SAY: ਬੱਚਾ (bachchaa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *bachchā*; YOU SAY: **ਬੱਚਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep this familiar singular noun ready. The next lesson will own one new form; this opener does not reveal it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "a child; YOU SAY: ਬੱਚਾ (bachchaa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *a child*; YOU SAY: **ਬੱਚਾ**]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the familiar noun once, then stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the familiar noun from meaning. This opener owns no new form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C204-bachchian",
+      "sequence": 11080,
+      "title": "One whole form for children before a postposition",
+      "headword": "ਬੱਚਿਆਂ",
+      "romanization": "bachchiaan",
+      "gloss": "children before a postposition",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92dcf0dad8647d20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the familiar singular noun for a child, then stop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੱਚਿਆਂ (bachchiaan) — bachchiā̃ — children, before a postposition."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear and say the whole form before reading it. Keep ਬੱਚਿਆਂ (bachchiaan) whole. Use this form for “children” before the familiar ਨਾਲ. The next lesson retrieves the new form alone before that old postposition returns."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — a small, well-marked trail",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Punjabi University Patiala's noun grammar explains the form pattern used here. Its lexical statistics identifies this exact word as the plural-oblique form of the familiar child noun, and University Lesson 12 independently presents the same pattern. Sources: Punjabi University noun grammar, Punjabi University lexical statistics, and Punjabi University Lesson 12."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 55 records that the origin of ਬੱਚਾ (bachchaa) remains unsettled. This lesson makes no new historical claim and keeps the new form whole."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "bachchiā̃; YOU SAY: ਬੱਚਿਆਂ (bachchiaan)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *bachchiā̃*; YOU SAY: **ਬੱਚਿਆਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਬੱਚਿਆਂ (bachchiaan)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਬੱਚਿਆਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਬੱਚਿਆਂ (bachchiaan) once, checking the whole form",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਬੱਚਿਆਂ** once, checking the whole form]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the form for “children” used before a postposition."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C204-bachchian-review",
+      "sequence": 11090,
+      "title": "Retrieve the new children form on its own",
+      "headword": "ਬੱਚਿਆਂ",
+      "romanization": "bachchiaan",
+      "gloss": "retrieve the children form by sound, meaning, and script",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:38decb8f5be5d956",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "bachchiā̃; YOU SAY: ਬੱਚਿਆਂ (bachchiaan)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *bachchiā̃*; YOU SAY: **ਬੱਚਿਆਂ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "children, before a postposition; YOU SAY: ਬੱਚਿਆਂ (bachchiaan)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *children, before a postposition*; YOU SAY: **ਬੱਚਿਆਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਬੱਚਿਆਂ (bachchiaan)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਬੱਚਿਆਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਬੱਚਿਆਂ (bachchiaan)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਬੱਚਿਆਂ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep one whole form and one job here. The familiar postposition returns only after this separate retrieval."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say and then write the form once from memory."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C204-with-children",
+      "sequence": 11100,
+      "title": "Put the new form before one familiar postposition",
+      "headword": "ਬੱਚਿਆਂ ਨਾਲ",
+      "romanization": "bachchiaan naal",
+      "gloss": "with children",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13a253efad8e2523",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the new children form, then the familiar word for “with.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੱਚਿਆਂ ਨਾਲ (bachchiaan naal) — bachchiā̃ nāl — with children."
+            },
+            {
+              "kind": "speech",
+              "text": "For this one frame, place the whole children form before ਨਾਲ. The noun form comes first; the familiar postposition follows it. Nothing else is added."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "bachchiā̃ nāl; YOU SAY: ਬੱਚਿਆਂ ਨਾਲ (bachchiaan naal)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *bachchiā̃ nāl*; YOU SAY: **ਬੱਚਿਆਂ ਨਾਲ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਬੱਚਿਆਂ ਨਾਲ (bachchiaan naal)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਬੱਚਿਆਂ ਨਾਲ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਬੱਚਿਆਂ ਨਾਲ (bachchiaan naal)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਬੱਚਿਆਂ ਨਾਲ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the complete “with children” frame."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C204-payoff",
+      "sequence": 11110,
+      "title": "A bounded with-children payoff",
+      "headword": "ਬੱਚਿਆਂ ਨਾਲ",
+      "romanization": "bachchiaan naal",
+      "gloss": "recognise and produce one with-children frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d67547c08314684",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the new children form alone before rebuilding its familiar postposition frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "bachchiā̃ nāl; YOU SAY: ਬੱਚਿਆਂ ਨਾਲ (bachchiaan naal)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *bachchiā̃ nāl*; YOU SAY: **ਬੱਚਿਆਂ ਨਾਲ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਬੱਚਿਆਂ ਨਾਲ (bachchiaan naal)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਬੱਚਿਆਂ ਨਾਲ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਬੱਚਿਆਂ ਨਾਲ (bachchiaan naal)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਬੱਚਿਆਂ ਨਾਲ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the new form, then produce the complete familiar-postposition frame."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the twenty-seventh prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

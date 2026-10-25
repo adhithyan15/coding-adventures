@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:7ca1ac64c6733a8c",
+  "lessonIds": [
+    "PA-C204-child-return",
+    "PA-C204-bachchian",
+    "PA-C204-bachchian-review",
+    "PA-C204-with-children",
+    "PA-C204-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch204.txt",
+  "json": "punjabi/narration/ch204.json",
+  "textHash": "fnv1a64:35dc008185e76245",
+  "jsonHash": "fnv1a64:f284891308345f46",
+  "findings": []
+}
