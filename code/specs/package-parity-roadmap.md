@@ -17967,3 +17967,22 @@ with production-only MSBuild instrumentation, run tests from that graph, and
 enforce the 95% library line target on Unix and Windows. Package APIs, AST
 nodes, parser behavior, renderer behavior, and the wider .NET fleet remain out
 of scope.
+
+## October 25, 2026: scripting Bezier flattening selection
+
+The occupied three-PR publication ceiling does not block independent local
+preparation. The next dependency-ready tranche is
+`geometry-bezier2d-flattening-python-ruby-perl`: its sole prerequisite is the
+merged G2D02 termination contract, and its native package sources do not
+overlap the active Haskell, C# document-AST, or .NET Wasm PRs or the prepared
+C#/F# Bezier tranche.
+
+All three scripting implementations still use midpoint-only flatness and
+unbounded recursion. Adopt the nine-case neutral fixture through each public
+polyline API, reject nonpositive or nonfinite tolerance and nonfinite control
+points, use the finite-segment control-point bound, and fail atomically when
+the shared depth or split budget is exhausted. Preserve public return shapes
+and endpoint ordering, and run each same-language Arc2D regression suite.
+Shared Go build-tool selector changes remain with the earlier C#/F# tranche;
+this branch consumes the fixture natively and avoids conflicting selector
+edits until that dependency-independent publication lands.

@@ -20709,13 +20709,14 @@
     {
       "id": "geometry-bezier2d-flattening-python-ruby-perl",
       "title": "Consume safe Bezier flattening contract in Python, Ruby, and Perl",
-      "status": "pending",
+      "status": "in_progress",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
-      "branch": null,
+      "branch": "codex/parity-bezier-scripting-flattening-20261025",
       "pr_number": null,
-      "notes": "Exception-based scripting API slice. All three use midpoint flatness and unbounded recursion without explicit flattening-input validation. Consume nine neutral cases; test NaN/infinity and nonfinite controls natively, atomic budget failure, and same-language Arc2D regressions."
+      "notes": "Exception-based scripting API slice. All three use midpoint flatness and unbounded recursion without explicit flattening-input validation. Consume nine neutral cases; test NaN/infinity and nonfinite controls natively, atomic budget failure, and same-language Arc2D regressions.",
+      "selection_notes": "Selected as the next independent implementation tranche while the three-PR publication ceiling is occupied. Its sole dependency, the G2D02 termination contract and nine-case neutral corpus, is merged. Python, Ruby, and Perl share the same exception-based API shape but have disjoint native sources and test fronts, so this removes three stale midpoint-recursive lanes without depending on the prepared C#/F# implementation. Keep shared build-tool selector work out of this branch until the C#/F# selector change lands, avoiding a conflict while preserving exact native fixture consumption and Arc2D regression coverage."
     },
     {
       "id": "geometry-bezier2d-flattening-go-rust",
