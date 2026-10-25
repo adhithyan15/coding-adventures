@@ -18052,3 +18052,27 @@ of scope.
 ## October 25: serial Haskell opcode-provider recovery
 
 PR #18174 actually merged as `bd533925647b7fbac74eba35e611a8ba3930757f`; PR #18147 previously merged its frozen16 adoption. The unpublished67 draft remains separate. Earlier three-slot and draft-publication statements above are historical. Existing PR #18183 is now the sole active implementation. Its original `231de32b` head is preserved locally while its net change is carefully rebased onto `9000beddee61a136cf5c0c6c5787f81d3d717834`. Actual CI fails before compilation in Cabal3.10.3.0 coverage planning for vector0.13.2; preserve coverage and inert metadata APIs while validating a package-local repair. Local native13tests/all359records, productionHPC100percent expressions/alternatives, Go15packages/84.6percentcoverage, vet/build, realplanner14-packageclosure and metadata/parity checks pass. Runtime source80a01 passed independent review; final documentation delta and fresh hosted CI remain required. See [the exact recovery evidence](../packages/haskell/starlark-compiler/VALIDATION.md).
+
+## October 25, 2026: bounded .NET Bezier flattening preparation
+
+With two independent .NET build-quality repairs prepared behind the occupied
+publication ceiling, the next ready two-language tranche is
+`geometry-bezier2d-flattening-csharp-fsharp`. Its sole dependency, the G2D02
+safe-flattening contract and nine-case neutral corpus, merged in PR #17097.
+
+Both existing .NET implementations use midpoint-only flatness and unbounded
+recursive list concatenation. That accepts the symmetric S curve whose
+midpoint lies on its chord, collapses collinear overshoot against an infinite
+line, permits zero tolerance, and has no deterministic work failure. Preserve
+the public `ToPolyline` return signatures while adopting the reviewed
+finite-segment control-point bound and a per-call maximum depth of 32 plus
+65,535 total splits. Invalid tolerance, nonfinite controls, nonfinite derived
+geometry, or an exhausted budget must throw before any partial polyline can be
+returned.
+
+The native tests must load all nine JSON cases dynamically and independently
+verify chord/subdivision disposition, endpoint ordering, finite output, and
+the proved budget-error case. Both package fronts must enforce at least 95%
+production line coverage, and both dependent Arc2D suites must stay green.
+Evaluation, derivatives, splitting, bounding boxes, Arc2D behavior, and other
+language lanes remain outside this implementation repair.
