@@ -232,6 +232,7 @@ members = [
     "opensparc-t1-simulator",
     "alpha-axp-simulator",
     "vax11-780-simulator",
+    "vax11-780-gatelevel",
     "alpha-axp-gatelevel",
     "powerpc601-simulator",
     "powerpc601-gatelevel",
