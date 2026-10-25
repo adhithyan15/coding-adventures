@@ -26296,7 +26296,7 @@
     {
       "id": "csharp-document-ast-windows-build-repeatability",
       "title": "Make the existing C# document AST Windows build execute on repeated runs",
-      "status": "pending",
+      "status": "in_progress",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
