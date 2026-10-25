@@ -1,6 +1,6 @@
-"""Execute native Python/TypeScript/Rust training and exchange NN37 checkpoints.
+"""Execute native Python/TypeScript/Rust/Go training and exchange NN37 checkpoints.
 
-This is runtime evidence, not a registry count: all three languages must actually
+This is runtime evidence, not a registry count: all four languages must actually
 train, read the other one's parameters, and produce the same resumed result.
 Run after installing the TypeScript neural-framework package's dependencies.
 """
@@ -20,7 +20,8 @@ ROOT = Path(__file__).resolve().parents[2]
 PYTHON = ROOT / "code/packages/python/neural-framework"
 TYPESCRIPT = ROOT / "code/packages/typescript/neural-framework"
 TOLERANCE = 1e-9
-LANES = ("python", "typescript", "rust")
+LANES = ("python", "typescript", "rust", "go")
+GO = ROOT / "code/packages/go/neural-framework"
 RUST_MANIFEST = ROOT / "code/packages/rust/Cargo.toml"
 
 
@@ -49,6 +50,7 @@ def execute(
     language: str, checkpoint: dict | None = None, *, manifest: Path = RUST_MANIFEST
 ) -> dict:
     env = os.environ.copy()
+    cwd = ROOT
     env["PYTHONPATH"] = os.pathsep.join(
         [
             str(PYTHON / "src"),
@@ -83,6 +85,15 @@ def execute(
         ]
         if checkpoint is not None:
             command.append("--")  # Cargo options end before example arguments.
+    elif language == "go":
+        go = shutil.which("go")
+        if go is None:
+            raise ValueError("Go is required for the native Go lane")
+        # Module resolution belongs to this trusted source directory, not the
+        # caller's cwd or any checkpoint field. Go passes following arguments
+        # directly to the example; unlike Cargo it needs no extra separator.
+        command = [go, "run", "./cmd/xor"]
+        cwd = GO
     else:
         raise ValueError("unknown native framework lane")
     if checkpoint is not None:
@@ -94,7 +105,7 @@ def execute(
         capture_output=True,
         timeout=120,
         check=True,
-        cwd=ROOT,
+        cwd=cwd,
         env=env,
         encoding="utf-8",
     )
@@ -136,7 +147,7 @@ def execute(
 
 
 def validate(manifest: Path = RUST_MANIFEST) -> dict:
-    """Run all three independent models, then six actual directed exchanges."""
+    """Run four independent models, then twelve actual directed exchanges."""
     starts = {lane: execute(lane, manifest=manifest) for lane in LANES}
     reference = starts["python"]
     baselines = {}
@@ -163,12 +174,12 @@ def validate(manifest: Path = RUST_MANIFEST) -> dict:
             equivalent(returned, baselines[source][1])
             exchanges.append(f"{source}->{destination}")
     return {
-        "contract": "NN39",
+        "contract": "NN42",
         "native_lanes": list(LANES),
         "binding_lanes": [],
         "xor_loss": reference["final_loss"],
         "resumed_step": 3002,
-        "checkpoint_exchange": "passed-all-six-directions",
+        "checkpoint_exchange": "passed-all-twelve-directions",
         "exchanges": exchanges,
     }
 

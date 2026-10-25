@@ -120,6 +120,9 @@ SGD training, inspection, and portable save/reload/resume.
   `020d21876294` merged in PR #18226. Four-language conformance is separate.
 - [ ] Go conformance: required CI and all directed exchanges with existing
   Python/TypeScript/Rust native lanes, after the native Go library is delivered.
+  NN42 locally executes all twelve directed pairs and full model baselines at
+  3000/3001/3002 (four native lanes, zero bindings); exact-head selected required
+  conformance and confirmed merge still gate completion.
 - [ ] Expand the shared invalid-checkpoint corpus with literal null numeric
   cells. Go's decoder defaults null float cells to zero; NN41 guards/tests this
   explicitly, while the shared corpus currently covers other null/shape cases.

@@ -40,8 +40,11 @@ python ../../../scripts/validate_neural_framework_go.py
 `go run ./cmd/xor --resume` accepts only a checkpoint JSON document on stdin
 and advances exactly one step. The receipt contains `checkpoint`,
 `predictions`, `initial_loss`, and `final_loss`. This proves native training
-and native portable reload/resume; required four-language exchange follows in
-a separate tranche. Existing three-language exchange remains independent.
+and native portable reload/resume. NN42's separate conformance runner
+`python code/scripts/validate_neural_framework_interchange.py` (repository root,
+with Node/TypeScript dependencies, Cargo and Go installed) executes all twelve
+directed exchanges among Go, Python, TypeScript and Rust through step 3002.
+Selected required CI must pass before recording conformance delivery.
 
 Tests consume the shared paper/seed/XOR fixture and all 49 NN40 checkpoint
 cases, central finite differences for every parameter/activation, ownership,

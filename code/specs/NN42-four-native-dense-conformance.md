@@ -1,6 +1,7 @@
 # NN42: Four Native Dense Framework Conformance
 
-Status: specified before implementation; execution and exact-head CI pending.
+Status: local four-runtime execution implemented and passed; selected required
+exact-head repository CI and confirmed merge remain pending.
 
 ## Prioritized scope
 
@@ -43,3 +44,12 @@ an explicit trusted manifest override; real repository workspace CI is mandatory
 Update lesson, curriculum, gate contract, package changelogs and roadmap; obtain
 independent security review before every push. One ready PR, exact-head CI and
 confirmed merge are required before recording delivery or choosing another item.
+
+Local evidence: all twelve actual directed exchanges passed with XOR loss
+0.0002330712337828204 and return step 3002. Python 117 tests and TypeScript 114
+tests pass at 100% library coverage; Go passes numerical/race suites (96.9%
+library, 84% command coverage), vet/build; Rust passes 10 integration tests,
+README doctest, fmt/Clippy and release example in the exact-copy minimal workspace.
+TypeScript production build and coverage commands used the explicit installed
+Node executable after npm's child-shell PATH lookup failed on this Windows host.
+This is not full local repository-workspace validation; CI must supply that proof.

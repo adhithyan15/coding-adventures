@@ -4,7 +4,7 @@
   "gates": {
     "neural-framework-conformance": {
       "scope": "job",
-      "description": "NN39 three-native-language training and six directed checkpoint exchanges.",
+      "description": "NN42 four-native-language training and twelve directed checkpoint exchanges.",
       "packages": [
         "python/neural-framework",
         "typescript/neural-framework",
@@ -12,7 +12,9 @@
         "typescript/matrix",
         "rust/neural-framework",
         "rust/matrix",
-        "rust/bounded-json"
+        "rust/bounded-json",
+        "go/neural-framework",
+        "go/matrix"
       ],
       "paths": [
         "code/packages/python/neural-framework/**",
@@ -24,6 +26,10 @@
         "code/packages/rust/matrix/**",
         "code/packages/rust/bounded-json/**",
         "code/packages/rust/Cargo.toml",
+        "code/packages/go/neural-framework/**",
+        "code/packages/go/matrix/**",
+        "code/scripts/validate_neural_framework_go.py",
+        "code/scripts/tests/test_neural_framework_go.py",
         "code/scripts/validate_neural_framework_rust.py",
         "code/scripts/tests/test_neural_framework_rust.py",
         "code/scripts/tests/test_neural_framework_interchange.py",

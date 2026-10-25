@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Join NN42's required four-native conformance with all twelve directed
+  checkpoint exchanges, native baselines and full return receipts through 3002.
+- Select the reusable gate for Go framework/matrix and validator inputs; test,
+  vet and build the actual native dependency and framework before interchange.
+
 ## 0.1.0 — 2026-10-25
 
 - Add independent native Go dense networks above the matrix foundation, with
