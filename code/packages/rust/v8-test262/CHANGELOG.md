@@ -2,6 +2,16 @@
 
 ## 0.1.0 — unreleased
 
+- **208 more tests parse (numeric literals, es2025 lexer).** The 6d security
+  review brought es2021–es2025's number patterns in line with ECMA-262's
+  NumericLiteralSeparator grammar: `5.`, `5.e1` and `1.e3` lex as one NUMBER
+  again, and invalid spellings (`1__0`, `0_1`, `017.5`) are no longer
+  accepted. New passes: `built-ins/Number/prototype` 76,
+  `language/literals/bigint` 48, `language/literals/numeric` 44,
+  `language/statements/for-of` 14, `language/expressions/assignment` 14,
+  `language/types/reference` 4, `staging/sm` 4. Full run at the pinned
+  revision: 102,955 results, 69,417 pass, 0 regressions.
+
 - **2 more tests parse: `language/expressions/division/bigint-arithmetic.js`
   (sloppy and strict).** LANG84 phase 6a adds `BIGINT` to es2025's
   regex/division mode table as a value-producing token, so the `/` in

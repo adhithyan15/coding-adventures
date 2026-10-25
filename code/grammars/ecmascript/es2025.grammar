@@ -1,6 +1,9 @@
 # ECMAScript 2025 (ES16) — Parser Grammar
 # @version 1
 # @ecmascript_edition 2025
+# source_ref: https://github.com/tc39/ecma262/tree/es2025
+# source_sha: 84b38ad852ff426795fa29cebc06949027336c64
+# PARTIAL: the IIR path claims es-number-log only (LANG84 phase 6d; see releases.csv); this syntactic pair predates LANG84 and is not yet audited clause by clause against the tagged spec text.
 #
 # ECMA-262, 16th Edition — June 2025
 #

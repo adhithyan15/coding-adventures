@@ -68,7 +68,7 @@ es2015–es2025. These rows stay `pending`, stage `none`:
 - No `release_probes` test runs them.
 
 Under the LANG84 status stages they have therefore not reached stage G. The
-LANG84 phase 6 rewrite moves them to their measured stages. es2, es5.1, es2026
+LANG84 phase 6 rewrite moves them to their measured stages (phase 6d: es2016–es2025 at P). es2, es5.1, es2026
 and every `js1.x` release have no pair.
 
 `python3 code/scripts/release_inventory.py check --matrix` validates this
@@ -79,5 +79,15 @@ file and `subsets.csv`.
 `subsets.csv` (LANG84 phase 2b) declares the subsets that `grammar_subset`,
 `iir_status` and `backend_status` may name. It has one entry, `es-number-log`:
 LANG78's numeric `console.log` subset (phases 6d and 6e), defined in LANG78.
-Its corpus goes in `corpus/es-number-log/` when a release first claims stage
-I. No row names it yet.
+Since LANG84 phase 6d, es2016–es2025 claim it at stages P and I (their pair
+headers cite `source_ref`/`source_sha`, stage G). Its corpus is
+`corpus/es-number-log/`: twelve positive cases (`<case>.js` + `.expect` +
+`.cite`, with host `node` as the oracle) and six negatives (`.reject` naming
+the LANG84 C6 category). `numeric_separators.reject@es2016` … `@es2020` mark
+the one case those editions refuse: numeric separators are ES2021.
+
+`release_classes.csv` is written by `javascript-iir-compiler`'s
+`release_sweep` test: two IIR-identity classes, represented by es2016 and
+es2021. es2015 cannot claim yet because its `source_sha` is pending (the Ecma
+PDF was unreachable), and es1/es3/es5 because es3/es5 lack the F10
+regex/division table (LANG84 6d).

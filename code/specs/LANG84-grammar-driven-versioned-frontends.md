@@ -1010,7 +1010,7 @@ noted.
 | MacroOct, MacroNib | GL + Oct/Nib GP | GP | CST | — | Base parse compliant; directive layer is a preprocessor | See [Preprocessor dialects](#preprocessor-dialects) |
 | McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
 | Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
-| JavaScript | GL with the F10 regex/division table (es2015–es2025; es3/es5 pending) | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_bounded`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). The runtime `REGEX` deletion is gone since 6a (`javascript-lexer` 0.10.0). Still non-compliant under C2: `asi.rs`, which is longer than a small hook, remains until 6b replaces it | Phases 6c and 6a done; 6b, 6d, 6e remain (6d must first add the table to es3/es5) |
+| JavaScript | GL with the F10 regex/division table (es2015–es2025; es3/es5 pending) | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_bounded`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; `releases.csv` 29 rows, es2016–es2025 at stage P; `compile_source_at` selects any claiming edition (default es2020) | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). The runtime `REGEX` deletion is gone since 6a (`javascript-lexer` 0.10.0). Still non-compliant under C2: `asi.rs`, which is longer than a small hook, remains until 6b replaces it | Phases 6a, 6c and 6d done (6d: es2016–es2025 claim `es-number-log` at stages P and I); 6b (needs `@asi`) and 6e remain; es3/es5 need F10 in Swift grammar-tools before they can claim |
 | Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends, `--lang ruby@<release>` since 5b slice 1; release sweep and B for 3.3.5 and 3.3.7 in 5b slice 2. The hand-written lexer remains only for non-IIR consumers | R1–R7 (phase 3) |
 
 ### Ruby: port the lexer to `ruby<release>.tokens`
@@ -1358,6 +1358,109 @@ Divergences from this spec in 5b/7b slice 2:
    as unsupported.
 4. **6d.** Add the `ecmascript/releases.csv` rows and make `EsVersion`
    selection real (`compile_source_at`). Remove the hard-coded `Es2020`.
+
+   **6d plan (2026-10-24).**
+   - *Releases.* The ECMAScript inventory names one row per published
+     edition (`es1` … `es2026`) plus the Netscape/Mozilla `js1.x` versions.
+     A release ID is the row's `release` cell exactly; it is also the
+     `EsVersion::as_str()` spelling of the edition whose pair it selects
+     (`es2017` → `es2017.tokens`/`es2017.grammar`). `js1.x`, `es2`, `es5.1`
+     and `es2026` have no pair and stay `grammar_stage none`.
+   - *Claiming rows.* `es2015` … `es2025` claim `es-number-log`: grammar
+     status `partial`, stage `P`, `iir_status` `es-number-log`, profile
+     `ecmascript`. These eleven editions have the F10 regex/division table
+     (phase 6a), so the subset's `8 / 2 / 2` lexes as division in each.
+     `backend_status` stays `-`: the nine backends are phase 6e.
+   - *Not selectable yet.* `es1`, `es3` and `es5` keep `grammar_stage none`.
+     es1 needs no table (it has no regex literal), but its grammar lacks
+     `let`/`const` and the subset's corpus is written against them; es3
+     and es5 still lack the F10 table (6a's divergence). Their `.tokens` are
+     embedded in the Swift `ecmascript-es{3,5}-lexer` packages, which
+     `swift/grammar-tools/regen-embedded-grammars.sh --check` pins in CI,
+     and Swift `grammar-tools` has no `start_mode`/`transitions` support, so
+     the table cannot be added without first porting F10 to Swift. A
+     request for any of these rows is `ReleaseNotAvailable`, never a
+     fallback to a neighbouring edition (C4).
+   - *Default.* `DEFAULT_RELEASE` is `es2020`, the edition the IIR path has
+     always parsed, so `compile_source` keeps its exact behaviour. It is an
+     inventory ID that claims `es-number-log` (C4.4).
+   - *Profile.* One profile, `ecmascript`: the subset has no edition-varying
+     semantics (Numbers are IEEE doubles and `console.log` formats them the
+     same way in every edition). Editions differ only in what they *lex*:
+     numeric separators (`1_000`) are ES2021, so that case carries
+     `.reject@<release>` overrides for es2015–es2020 and the sweep finds
+     two IIR-identity classes.
+   - *API* (`javascript-iir-compiler`): `compile_source_at(source,
+     Option<&str>, module_name)` returning a typed `FrontendError`
+     (`UnknownRelease`, `ReleaseNotAvailable`, `Budget`, `Lex`, `Parse`,
+     `Unsupported`); `run_source_at`; `supported_releases()`;
+     `DEFAULT_RELEASE`; `SUBSET`. The module records `IIRModule.release`.
+     `compile_source`/`run_source` keep their `String` errors and messages
+     and select `DEFAULT_RELEASE` through the same path.
+   - *Proof.* `javascript-parser` `release_probes` (stage P: positive,
+     negative and hostile probes through each claiming edition's compiled
+     tables), `javascript-iir-compiler` `release_subsets` (stage I: every
+     corpus case under every claiming release, outcomes checked against
+     host `node` where it is installed) and `release_sweep`
+     (`release_classes.csv`).
+
+   **6d result (2026-10-24).** Landed as planned, with two divergences:
+   - *es2016–es2025 claim, not es2015–es2025.* Stage G needs each pair's
+     header to cite its row's `source_ref` and `source_sha`. The es2016+
+     rows cite a tc39/ecma262 tag commit; es2015's evidence is the Ecma PDF
+     whose SHA-256 is still `-` (the archive was unreachable from the
+     authoring environment again), so it stays `grammar_stage none` and is
+     `ReleaseNotAvailable` until its evidence is recorded.
+   - *Header lines moved line numbers.* Adding the three citation lines
+     (`source_ref`, `source_sha`, `PARTIAL`) to the twenty es2016–es2025
+     pair files shifts every `line_number` in the compiled tables. The Rust
+     lexer and parser `_grammar.rs` and the Ruby lane were regenerated with
+     the repository tools; only `line_number` fields change. The 65k-line
+     "generator drift" 6a reported for the parser `_grammar.rs` is only
+     formatting: the committed file is the generator's output run through
+     `rustfmt`, and regenerating then formatting reproduces it exactly.
+
+   Results: `javascript-parser` `release_probes` (stage G headers, positive,
+   negative, hostile and division-chain probes on all ten editions);
+   `javascript-iir-compiler` `release_subsets` (18 corpus cases × 10
+   editions, every `.expect` re-checked against host `node` v22) and
+   `release_sweep` (two classes: es2016 for es2016–es2020, es2021 for
+   es2021–es2025). The default stays es2020, so `compile_source` returns the
+   same modules and messages, now with `release: Some("es2020")`. es3/es5
+   still lack the F10 table: Swift `grammar-tools` cannot express
+   `start_mode`/`transitions`, and its embedded es3/es5 grammars are pinned
+   by `regen-embedded-grammars.sh --check`, so that work needs F10 in Swift
+   first.
+
+   **6d review fixes (2026-10-24).** Claiming es2021–es2025 put their number
+   patterns on the compile path for the first time, and the security review
+   found they were wrong in both directions:
+   - *Invalid separators were given values.* `[0-9]([0-9_]*[0-9])?` accepted
+     `1__0` (printed 10), `0_17` (15, as legacy octal) and `0_8` (8). The
+     es2021+ patterns now follow ECMA-262's NumericLiteralSeparator grammar:
+     one `_` between two digits; none after a lone leading `0`, none in a
+     legacy octal (`017`) or NonOctalDecimal (`08`); none beside `.`, the
+     exponent marker or a radix prefix. A legacy octal takes no fraction or
+     exponent (`017.5` and `017e1` are SyntaxErrors in node), while the
+     NonOctalDecimal forms `08.5` and `08e1` stay valid.
+   - *Valid literals were refused.* `FLOAT_NUMBER` required a digit after the
+     `.`, so `5.`, `5.e1` and `1.e3` were refused (the last as a member
+     access). The fraction digits are now optional, as in es2020.
+   - *Defence in depth.* The compiler reports any numeric spelling with a
+     misplaced `_`, or a legacy octal with a fraction or exponent, as
+     `SyntaxError: Invalid numeric literal` (category Parse), whatever the
+     edition. es2016–es2020's patterns still lex `017.5` as one NUMBER (other
+     consumers keep that leniency), and the compiler refuses it.
+   - *Error categories follow producer text only.* They were found by
+     substring, so `console.log(1 "spine limit")` came back as Budget. Each
+     test now anchors on a fixed message or prefix, and the depth phrase is
+     only honoured inside the parser's expected-list, before `, got`.
+   - *Release echoes are bounded after escaping*, so 100 ESC bytes no longer
+     echo as 416 bytes.
+
+   The corpus gains 2 positive cases (`trailing_dot_and_legacy`,
+   `numeric_separators_radix`) and 10 rejects, every one checked against
+   node v22.
 5. **6e.** Add `Language::JavaScript` to lang-aot, with matrix rows. JS numbers
    are `f64`, so B(S) for a printing subset depends on LANG83's `f64`
    formatting ops (`f64_to_str_js` / `write_f64_js`, LANG83 PR6). Until then,

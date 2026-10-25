@@ -1,6 +1,9 @@
 # ECMAScript 2023 (ES14) — Parser Grammar
 # @version 1
 # @ecmascript_edition 2023
+# source_ref: https://github.com/tc39/ecma262/tree/es2023
+# source_sha: d048f32e861c2ed4a26f59a50d392918f26da3ba
+# PARTIAL: the IIR path claims es-number-log only (LANG84 phase 6d; see releases.csv); this syntactic pair predates LANG84 and is not yet audited clause by clause against the tagged spec text.
 #
 # ECMA-262, 14th Edition — June 2023
 #
