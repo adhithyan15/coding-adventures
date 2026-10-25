@@ -419,3 +419,13 @@ Phase 10+ deferrals in `BACKLOG.md` (Gantt dependency arrows, calendar week/day
 views, notes attachment picker, label colors, recurring tasks, automation
 rules). Those are feature reach on platforms that already work. This spec is
 about finishing the platforms.
+# Release-note detail preservation (#18197)
+
+The next product-scoped release must preserve the selected dated changelog
+section's substantive Markdown, including subsection headings and multiline
+bullets, instead of listing only category names. Extraction must exclude both
+Unreleased and older release sections. Regression tests must exercise the CLI
+notes path and reject heading-only output for a detailed changelog. Existing
+artifact coverage and unsigned-platform limitations remain unchanged. Never
+rewrite the immutable v0.5.10 release to repair this presentation defect.
+
