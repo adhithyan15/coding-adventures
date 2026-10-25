@@ -654,6 +654,14 @@ struct StructuralBounds {
     height: f64,
 }
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum AutomaticSide {
+    Left,
+    Right,
+    Top,
+    Bottom,
+}
+
 impl StructuralBounds {
     fn expanded(self, amount: f64) -> Self {
         Self {
@@ -711,6 +719,45 @@ fn closest_sides(a: StructuralBounds, b: StructuralBounds) -> (Point, Point) {
                 },
             )
         }
+    }
+}
+
+fn automatic_side(bounds: StructuralBounds, point: &Point) -> AutomaticSide {
+    if point.x == bounds.x {
+        AutomaticSide::Left
+    } else if point.x == bounds.x + bounds.width {
+        AutomaticSide::Right
+    } else if point.y == bounds.y {
+        AutomaticSide::Top
+    } else {
+        AutomaticSide::Bottom
+    }
+}
+
+fn fan_out_point(
+    bounds: StructuralBounds,
+    side: AutomaticSide,
+    slot: usize,
+    slot_count: usize,
+) -> Point {
+    let fraction = (slot + 1) as f64 / (slot_count + 1) as f64;
+    match side {
+        AutomaticSide::Left => Point {
+            x: bounds.x,
+            y: bounds.y + bounds.height * fraction,
+        },
+        AutomaticSide::Right => Point {
+            x: bounds.x + bounds.width,
+            y: bounds.y + bounds.height * fraction,
+        },
+        AutomaticSide::Top => Point {
+            x: bounds.x + bounds.width * fraction,
+            y: bounds.y,
+        },
+        AutomaticSide::Bottom => Point {
+            x: bounds.x + bounds.width * fraction,
+            y: bounds.y + bounds.height,
+        },
     }
 }
 
@@ -1177,6 +1224,65 @@ fn relationship_obstacles(
         .collect()
 }
 
+fn automatic_endpoint_side(
+    relationship: &diagram_ir::StructuralRelationship,
+    endpoint_id: &str,
+    diagram: &StructuralDiagram,
+    nodes: &[LayoutedStructuralNode],
+    groups: &[LayoutedStructuralGroup],
+) -> Option<AutomaticSide> {
+    if relationship.from == relationship.to {
+        return None;
+    }
+    let from = find_node(nodes, &relationship.from)?;
+    let to = find_node(nodes, &relationship.to)?;
+    let from_bounds = relationship_endpoint_bounds(
+        from,
+        relationship.from_group,
+        diagram,
+        groups,
+    );
+    let to_bounds = relationship_endpoint_bounds(to, relationship.to_group, diagram, groups);
+    let (from_point, to_point) = closest_sides(from_bounds, to_bounds);
+    if endpoint_id == relationship.from && relationship.from_port.is_none() {
+        Some(automatic_side(from_bounds, &from_point))
+    } else if endpoint_id == relationship.to && relationship.to_port.is_none() {
+        Some(automatic_side(to_bounds, &to_point))
+    } else {
+        None
+    }
+}
+
+fn fanned_automatic_endpoint(
+    diagram: &StructuralDiagram,
+    relationship_index: usize,
+    endpoint_id: &str,
+    bounds: StructuralBounds,
+    point: Point,
+    nodes: &[LayoutedStructuralNode],
+    groups: &[LayoutedStructuralGroup],
+) -> Point {
+    let side = automatic_side(bounds, &point);
+    let matching = diagram
+        .relationships
+        .iter()
+        .enumerate()
+        .filter_map(|(index, relationship)| {
+            (automatic_endpoint_side(relationship, endpoint_id, diagram, nodes, groups)
+                == Some(side))
+            .then_some(index)
+        })
+        .collect::<Vec<_>>();
+    if matching.len() < 3 {
+        return point;
+    }
+    let slot = matching
+        .iter()
+        .position(|index| *index == relationship_index)
+        .expect("current relationship must be in its endpoint fan-out group");
+    fan_out_point(bounds, side, slot, matching.len())
+}
+
 fn layout_relationships(
     diagram: &StructuralDiagram,
     nodes: &[LayoutedStructuralNode],
@@ -1192,22 +1298,61 @@ fn layout_relationships(
             let a_bounds = relationship_endpoint_bounds(a, rel.from_group, diagram, groups);
             let b_bounds = relationship_endpoint_bounds(b, rel.to_group, diagram, groups);
             let (default_p0, default_p1) = closest_sides(a_bounds, b_bounds);
-            let p0 = rel.from_port.map_or(default_p0, |port| point_on_port(a_bounds, port));
-            let p1 = rel.to_port.map_or(default_p1, |port| point_on_port(b_bounds, port));
+            let route_p0 = rel
+                .from_port
+                .map_or(default_p0.clone(), |port| point_on_port(a_bounds, port));
+            let route_p1 = rel
+                .to_port
+                .map_or(default_p1.clone(), |port| point_on_port(b_bounds, port));
+            let p0 = rel.from_port.map_or_else(
+                || {
+                    fanned_automatic_endpoint(
+                        diagram,
+                        relationship_index,
+                        &rel.from,
+                        a_bounds,
+                        default_p0,
+                        nodes,
+                        groups,
+                    )
+                },
+                |port| point_on_port(a_bounds, port),
+            );
+            let p1 = rel.to_port.map_or_else(
+                || {
+                    fanned_automatic_endpoint(
+                        diagram,
+                        relationship_index,
+                        &rel.to,
+                        b_bounds,
+                        default_p1,
+                        nodes,
+                        groups,
+                    )
+                },
+                |port| point_on_port(b_bounds, port),
+            );
             let obstacles =
                 relationship_obstacles(diagram, &rel.from, &rel.to, nodes, groups);
             let points = if rel.from == rel.to && !rel.from_group && !rel.to_group {
                 self_relationship_path(a_bounds)
             } else {
+                let mut points = relationship_path(
+                    route_p0,
+                    route_p1,
+                    rel.routing,
+                    rel.from_port,
+                    rel.to_port,
+                    &obstacles,
+                );
+                if let Some(first) = points.first_mut() {
+                    *first = p0;
+                }
+                if let Some(last) = points.last_mut() {
+                    *last = p1;
+                }
                 offset_parallel_relationship(
-                    relationship_path(
-                        p0,
-                        p1,
-                        rel.routing,
-                        rel.from_port,
-                        rel.to_port,
-                        &obstacles,
-                    ),
+                    points,
                     parallel_relationship_lane(diagram, relationship_index),
                 )
             };
@@ -1437,6 +1582,29 @@ mod tests {
 
         assert!(back.points.len() >= 5);
         assert!(back.points.iter().any(|point| point.y > middle.y + middle.height));
+    }
+
+    #[test]
+    fn automatic_relationships_fan_out_across_a_shared_node_side() {
+        let mut diagram = two_class_diagram();
+        diagram.relationships.push(diagram.relationships[0].clone());
+        diagram.relationships.push(diagram.relationships[0].clone());
+
+        let layout = layout_structural_diagram(&diagram);
+        let endpoints = layout
+            .relationships
+            .iter()
+            .map(|relationship| {
+                relationship
+                    .points
+                    .last()
+                    .expect("relationship endpoint")
+                    .y
+            })
+            .collect::<Vec<_>>();
+
+        assert_ne!(endpoints[0], endpoints[1]);
+        assert_ne!(endpoints[1], endpoints[2]);
     }
 
     #[test]
