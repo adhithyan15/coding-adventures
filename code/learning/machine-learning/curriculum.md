@@ -37,6 +37,11 @@ tracked separately from that native implementation. NN39's required conformance
 executes six directed checkpoint exchanges across Rust, Python, and TypeScript,
 comparing full resumed models rather than counting registered runtimes.
 
+NN41 adds [independent native Go dense training](./native-go-dense-framework.md),
+with the same paper oracle and shared rejection corpus. Native save/reload/resume
+is evidence for that library, not yet required four-language interchange; that
+following conformance tranche remains separately tracked.
+
 Every model family below starts with the smallest example that needs its new
 idea.
 

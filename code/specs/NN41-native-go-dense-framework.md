@@ -1,6 +1,7 @@
 # NN41: Native Go Dense Framework
 
-Status: specified before implementation.
+Status: native implementation and local numerical/resume evidence complete;
+exact-head repository CI and confirmed merge remain required for delivery.
 
 ## Smallest next native port
 
@@ -64,3 +65,10 @@ package tests/builds. Test full dependency installation, fixture paths, Markdown
 links, lesson shards, and diff checks; independent security review precedes
 every code push. Publish one ready PR and verify actual current-head CI/CodeQL
 and conflict-free merge before selecting four-native-language conformance.
+
+Local evidence: Go library tests exceed 95% statement coverage; standalone
+example tests exceed 80%. Direct native XOR reaches loss approximately
+0.00023307123378282042 at step 3000 and reload/resume reaches step 3002.
+Race checks, vet, production builds, the paper/finite-difference/NN40 fixtures
+and atomicity tests pass. The shell-free native validator names Go only and
+explicitly leaves four-language conformance pending.

@@ -109,8 +109,13 @@ SGD training, inspection, and portable save/reload/resume.
   lanes, zero binding lanes; full models match through step 3002.
 - [ ] Optional Rust dense C ABI and binding consumers.
 - [ ] Go native framework.
+  NN41's native library, paper/gradient/boundary/corpus tests and direct XOR
+  save/reload/resume pass locally; actual repository CI/merge still pending.
 - [ ] Go conformance: required CI and all directed exchanges with existing
   Python/TypeScript/Rust native lanes, after the native Go library is delivered.
+- [ ] Expand the shared invalid-checkpoint corpus with literal null numeric
+  cells. Go's decoder defaults null float cells to zero; NN41 guards/tests this
+  explicitly, while the shared corpus currently covers other null/shape cases.
 - [ ] Ruby native framework.
 - [ ] C native framework.
 - [ ] C++ native framework.
