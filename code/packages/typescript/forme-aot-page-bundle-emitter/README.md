@@ -177,9 +177,9 @@ The **deploy-stage** companion to `forme-aot-html-doc-emitter`
 
 - `forme-aot-html-doc-emitter` — produces the per-page HTML strings.
 
-Downstream (planned):
+Downstream:
 
-- `forme-aot-deploy-manifest-emitter` — combines this page
+- `forme-aot-deploy-manifest-emitter` — the shipped stage that combines this page
   bundle with sitemap + robots + RSS into a single deploy
   manifest.
 

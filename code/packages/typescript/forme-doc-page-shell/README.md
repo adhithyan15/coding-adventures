@@ -208,9 +208,9 @@ sidebar-builder ─────────────────────�
                                                      `<!DOCTYPE html>…</html>`
 ```
 
-Remaining DOC00 v0 packages: `forme-doc-search-tokenizer`,
-`forme-doc-search-index-builder`, `forme-doc-search-client-js`,
-`forme-doc-site-emitter`.
+The complete DOC00 v0 cluster now ships. The search tokenizer,
+index builder, browser client, and site emitter consume this
+shell as part of the finished documentation-site pipeline.
 
 ## v0 simplifications (documented)
 

@@ -187,8 +187,9 @@ page bodies + titles
                       forme-doc-search-client-js (runtime)
 ```
 
-Remaining DOC00 v0 packages: `forme-doc-search-client-js`,
-`forme-doc-site-emitter`.
+The complete DOC00 v0 cluster now ships. The browser search
+client consumes these shards, and the site emitter packages
+them into the finished documentation-site bundle.
 
 ## v0 simplifications (documented)
 
