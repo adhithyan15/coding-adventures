@@ -17967,3 +17967,20 @@ with production-only MSBuild instrumentation, run tests from that graph, and
 enforce the 95% library line target on Unix and Windows. Package APIs, AST
 nodes, parser behavior, renderer behavior, and the wider .NET fleet remain out
 of scope.
+
+## October 25, 2026: dynamic-runtime Bezier flattening selection
+
+With the three publication slots still occupied and the C#/F# plus
+Python/Ruby/Perl tranches prepared locally, the next independent owner is
+`geometry-bezier2d-flattening-typescript-elixir-lua`. Its sole dependency is
+the merged G2D02 termination contract, and its three native package trees do
+not overlap active or prepared work. Three non-Rust lanes provide more parity
+leverage than either remaining two-lane successor.
+
+Consume all nine neutral cases dynamically through the public polyline APIs,
+replace midpoint recursion with the finite-segment control bound and bounded
+left-first traversal, and reject nonpositive/nonfinite tolerance, nonfinite
+controls, nonfinite derived arithmetic, and exhausted work without returning
+partial output. Carry the independent subnormal-distance regression into all
+three runtimes and run each same-language Arc2D suite. Shared Go selector
+changes remain owned by the prepared C#/F# tranche to avoid branch conflicts.
