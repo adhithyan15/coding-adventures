@@ -922,8 +922,12 @@ are ever read as an integer, and no integer is ever read as float bits.
 **An integer register must hold an integer.** The class rules above cover
 values the function computes. Values that enter from outside are checked when
 they arrive:
-- An argument for a non-`f64` parameter must be `Int` or `Bool`. Anything
-  else fails the call before any instruction runs.
+- Every parameter has a checked prologue entry: `PARAM_I64 <reg>` for a
+  non-`f64` parameter, `PARAM_F64 <reg>` for an `f64` one.
+  - A `PARAM_I64` argument must be `Int` or `Bool`. Anything else fails the
+    call before the body runs. A missing argument leaves the register 0.
+  - Arguments beyond the declared parameters are ignored, as the VM ignores
+    them.
 - A `call_builtin` result stored in a register must be `Int`, `Bool`, or a
   void `Null` (stored as 0).
 

@@ -30,11 +30,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   or a builtin returning a `Float`, silently read as 0, and with
   `int_to_real` now lowered, `int_to_real` of such a value returned 0.0
   where the interpreter raises. Now:
-  - an argument that is not `Int` or `Bool` errors before any instruction
-    runs, unless its register belongs to an `f64` parameter. Those are found
-    from the leading `PARAM_F64` prologue, which checks them itself;
-  - a builtin result other than `Int`, `Bool` or a void `Null` (still 0)
-    errors too.
+  - every parameter now has a checked prologue entry. The new `PARAM_I64`
+    entry is the integer twin of `PARAM_F64`. An argument that is not `Int`
+    or `Bool` fails the call. A missing argument leaves the register 0, as
+    before. An argument beyond the declared parameters is ignored, as in the
+    interpreter's `handle_call`; it used to be written into a body temporary;
+  - a builtin result other than `Int`, `Bool` or a void `Null` errors too.
+    A void `Null` stored into a destination is still 0. That is the one
+    deliberate leftover, because the CIR does not yet mark a void builtin's
+    destination.
 
   Tests: `f64_parameter_is_loaded_by_a_checked_prologue` now pins the error
   instead of the old 0. New: `int_to_real_of_a_float_argument_fails_closed`

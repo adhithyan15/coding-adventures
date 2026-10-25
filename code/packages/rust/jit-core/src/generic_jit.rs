@@ -179,6 +179,14 @@ pub(crate) mod opcode {
     /// `F64_TO_I64_FLOOR <dst> <a>` — LANG83 `real_to_int_floor`: like
     /// `F64_TO_I64_TRUNC`, rounding toward −∞ (ALGOL `entier`).
     pub const F64_TO_I64_FLOOR: u8 = 0x5B;
+    /// `PARAM_I64 <reg>` — the prologue entry for a parameter that is NOT
+    /// typed `f64`, the integer twin of `PARAM_F64`: argument `reg`, if
+    /// present, must be `Int` or `Bool` (as 0/1) and is stored in
+    /// `regs[reg]`; any other value fails the call closed. A missing argument
+    /// leaves the register 0, as it always has. Arguments beyond the declared
+    /// parameters are ignored, as the interpreter's `handle_call` ignores
+    /// them.
+    pub const PARAM_I64: u8 = 0x5C;
     pub const RET_I64:      u8 = 0x60;
     pub const RET_VOID:     u8 = 0x61;
     pub const RET_BOOL:     u8 = 0x62;
@@ -517,46 +525,24 @@ impl Backend for GenericCirJit {
         // Per-call state.
         let mut regs: [i64; 256] = [0i64; 256];
 
-        // Seed the parameter registers from the incoming call arguments.
-        // `compile_function` pre-binds parameters to registers
-        // `0..params.len()` in declaration order, and `compile_fn` passes the
-        // arguments in that same order, so argument `i` lands in register `i`.
-        // The register file is i64-only, so an argument must be an integer
-        // (`Int`, or `Bool` as 0/1), unless its register belongs to an
-        // `f64` parameter: those are seeded by their `PARAM_F64` prologue
-        // instructions (LANG83 PR6a), which lead the code and check for
-        // `Value::Float` themselves. Any other value fails closed. It used to
-        // collapse to 0, so a parameter that received `Float(2.5)` computed
-        // with 0 where the interpreter computes with 2.5, and `int_to_real`
-        // returned 0.0 where the interpreter raises.
+        // The parameter registers are seeded by the prologue: one
+        // `PARAM_I64` or `PARAM_F64` per declared parameter, in declaration
+        // order, before any other instruction (`compile_to_bytecode`). Each
+        // checks its argument's type and fails the call closed on a mismatch.
+        // Nothing else reads `args`, so an argument beyond the declared
+        // parameters never lands in a body temporary, and no value is ever
+        // coerced. A non-integer used to collapse to 0 here: a parameter that
+        // received `Float(2.5)` computed with 0 where the interpreter computes
+        // with 2.5, and `int_to_real` of it returned 0.0 where the interpreter
+        // raises.
         //
-        // | argument          | f64 parameter?  | outcome                   |
-        // |-------------------|-----------------|---------------------------|
-        // | `Int` / `Bool`    | no              | seeded as the integer     |
-        // | anything else     | no              | error, nothing runs       |
-        // | anything          | yes             | `PARAM_F64` checks/seeds  |
-        //
-        // `.take(256)` keeps a long argument list from walking off the
-        // fixed-size file, a defensive bound never reached in practice (a
-        // function cannot declare more than 256 registers).
-        let mut f64_param = [false; 256];
-        let mut prologue = 0;
-        while prologue + 1 < code.len() && code[prologue] == opcode::PARAM_F64 {
-            f64_param[code[prologue + 1] as usize] = true;
-            prologue += 2;
-        }
-        for (i, a) in args.iter().enumerate().take(regs.len()) {
-            match a.as_i64() {
-                Some(n) => regs[i] = n,
-                None if f64_param[i] => {}
-                None => {
-                    self.set_error(format!(
-                        "GenericCirJit: integer parameter {i} received {a:?}, not an integer"
-                    ));
-                    return Value::Null;
-                }
-            }
-        }
+        // | parameter type | argument          | outcome                    |
+        // |----------------|-------------------|----------------------------|
+        // | not `f64`      | `Int` / `Bool`    | stored as the integer      |
+        // | not `f64`      | anything else     | error, nothing else runs   |
+        // | not `f64`      | missing           | register stays 0           |
+        // | `f64`          | `Float`           | stored as its bits         |
+        // | `f64`          | anything / none   | error, nothing else runs   |
 
         let mut tape: Vec<u8> = if self.tape_size > 0 {
             vec![0u8; self.tape_size]
@@ -927,6 +913,26 @@ impl Backend for GenericCirJit {
                         regs[dst as usize] = n;
                     }
                 }
+                opcode::PARAM_I64 => {
+                    if pc + 1 > code.len() {
+                        self.set_error("malformed bytecode: truncated PARAM_I64");
+                        return Value::Null;
+                    }
+                    let reg = code[pc] as usize;
+                    pc += 1;
+                    match args.get(reg) {
+                        None => {}
+                        Some(a) => match a.as_i64() {
+                            Some(n) => regs[reg] = n,
+                            None => {
+                                self.set_error(format!(
+                                    "GenericCirJit: integer parameter {reg} received {a:?}, not an integer"
+                                ));
+                                return Value::Null;
+                            }
+                        },
+                    }
+                }
                 opcode::PARAM_F64 => {
                     if pc + 1 > code.len() {
                         self.set_error("malformed bytecode: truncated PARAM_F64");
@@ -1129,12 +1135,12 @@ fn compile_to_bytecode(
             return None;
         }
         let reg = lookup_or_alloc_var(name, &mut reg_map, &mut next_reg)?;
-        // LANG83 PR6a: an `f64` parameter is loaded as its bits by a checked
-        // prologue instruction, never by the generic integer seeding.
-        if ty == "f64" {
-            code.push(opcode::PARAM_F64);
-            code.push(reg);
-        }
+        // LANG83 PR6a: an `f64` parameter is loaded as its bits by
+        // `PARAM_F64`; every other parameter as an integer by `PARAM_I64`.
+        // Every parameter gets a checked prologue entry, so `run` never
+        // reads an argument any other way (see `opcode::PARAM_I64`).
+        code.push(if ty == "f64" { opcode::PARAM_F64 } else { opcode::PARAM_I64 });
+        code.push(reg);
     }
 
     // Track which builtin names this function actually uses; we'll emit
@@ -1176,7 +1182,7 @@ fn compile_to_bytecode(
         .collect();
 
     // A parameter that is NOT typed `f64` is seeded by the generic integer
-    // prologue (`as_i64`), so its register holds an integer, not float bits.
+    // prologue (`PARAM_I64`), so its register holds an integer, not float bits.
     // If a float op or `const_f64` also writes it, `f64_vars` would claim the
     // register holds float bits from the first instruction on, and a read
     // before that write (`f64_add x <- x, 1.0`) would reinterpret the
@@ -2218,6 +2224,14 @@ mod tests {
         assert_eq!(j.run(&bin, &[Value::Int(7)]), Value::Int(7));
         assert_eq!(j.run(&bin, &[Value::Bool(true)]), Value::Int(1));
         assert!(j.take_error().is_none());
+        // Arguments beyond the declared parameters are ignored, as the
+        // interpreter ignores them; a missing one leaves the register 0.
+        assert_eq!(j.run(&bin, &[Value::Int(7), Value::Float(2.5), Value::Str("x".into())]), Value::Int(7));
+        assert_eq!(j.run(&bin, &[]), Value::Int(0));
+        assert!(j.take_error().is_none());
+        // A truncated PARAM_I64 in a hostile binary fails closed.
+        j.run(&[0, 0, opcode::PARAM_I64], &[]);
+        assert!(format!("{:?}", j.take_error()).contains("truncated PARAM_I64"));
     }
 
     /// A builtin result stored in a register must have an integer view:
