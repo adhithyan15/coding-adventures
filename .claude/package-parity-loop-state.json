@@ -26304,7 +26304,9 @@
       "package_paths": [
         "code/packages/csharp/document-ast"
       ],
-      "notes": "Native validation of rendererPR18143 reproduced the existing document-ast BUILD_windows returning success with no output when .dotnet/.artifacts already exist, using a verified short PATH with dotnet9available. Its ungrouped if-not-exist setup captures the following command chain. Repair this existing package front separately and require real native tests/coverage on consecutive invocations. Four dependency tests passed directly; no repeat-front or measured dependency-coverage credit. New renderer BUILD_windows is repaired in18143; do not absorb unrelated package source here."
+      "notes": "Native validation of rendererPR18143 reproduced the existing document-ast BUILD_windows returning success with no output when .dotnet/.artifacts already exist, using a verified short PATH with dotnet9available. Its ungrouped if-not-exist setup captures the following command chain. Repair this existing package front separately and require real native tests/coverage on consecutive invocations. Four dependency tests passed directly; no repeat-front or measured dependency-coverage credit. New renderer BUILD_windows is repaired in18143; do not absorb unrelated package source here.",
+      "branch": "codex/parity-csharp-document-ast-windows-20261025",
+      "selection_notes": "Selected after the independent dotnet WasmOpcodes coverage tranche completed local validation but remained behind the three-PR publication ceiling. This package is a C# Markdown prerequisite and has no implementation overlap with the active TypeScript GFM, CommonMark fixture, Haskell Starlark-provider, or prepared WasmOpcodes coverage branches. Fresh inspection also confirms that the test project has no Coverlet provider, so both existing CollectCoverage/Threshold properties are inert. The same bounded owner must group the Windows setup conditionals, wire production-only MSBuild coverage, enforce the 95% library line target, and prove clean plus warm execution without changing AST behavior."
     }
   ],
   "postmerge_refresh": {
