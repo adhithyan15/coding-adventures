@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C454-becen",
+    "language": "gujarati",
+    "chapter": 454,
+    "sequence": 25370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e886e18e7f5ceb10"
+  },
+  "findings": []
+}

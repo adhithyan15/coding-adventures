@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C340-mulzim",
+    "language": "urdu",
+    "chapter": 340,
+    "sequence": 20480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bf46a5781d68237"
+  },
+  "findings": []
+}

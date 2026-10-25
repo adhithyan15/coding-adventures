@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:0a04834dbc5c5980",
+  "lessonIds": [
+    "UR-C418-hisab",
+    "UR-C418-sud",
+    "UR-C418-qist",
+    "UR-C418-adaigi",
+    "UR-C418-ghatana"
+  ],
+  "tex": "urdu/book/chapters/ch418-accounts-and-instalments.tex"
+}

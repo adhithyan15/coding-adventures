@@ -1,0 +1,11 @@
+{
+  "id": "GU-C363-gantari",
+  "pathSegment": "GU-PATH-363-ANKDO363",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-363-ANKDO363",
+      "order": 1
+    }
+  ]
+}

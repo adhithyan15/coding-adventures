@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:e09d86913e18e401",
+  "lessonIds": [
+    "GU-C412-dero",
+    "GU-C412-padav",
+    "GU-C412-ratvaso",
+    "GU-C412-khodvu-peg",
+    "GU-C412-galvu-spend"
+  ],
+  "tex": "gujarati/book/chapters/ch412-tents-and-camps.tex"
+}

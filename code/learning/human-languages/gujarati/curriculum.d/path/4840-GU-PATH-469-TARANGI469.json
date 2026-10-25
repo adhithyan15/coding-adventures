@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-469-TARANGI469",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-469-TARANGI469"
+  ],
+  "after": []
+}

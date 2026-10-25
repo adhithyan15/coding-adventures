@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C503-silan",
+    "language": "urdu",
+    "chapter": 503,
+    "sequence": 29460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2eff6095784548c"
+  },
+  "findings": []
+}

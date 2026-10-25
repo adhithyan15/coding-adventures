@@ -1,0 +1,11 @@
+{
+  "id": "GU-C292-kaubhad",
+  "pathSegment": "GU-PATH-292-KAUBHAND292",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-292-KAUBHAND292",
+      "order": 1
+    }
+  ]
+}

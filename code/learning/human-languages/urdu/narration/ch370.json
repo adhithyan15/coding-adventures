@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 370,
+  "title": "Haste and Care",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:40b4b98b1a3e262e",
+  "lessons": [
+    {
+      "id": "UR-C370-jald-bazi",
+      "sequence": 21990,
+      "title": "جلد بازی (jald-bāzī) — haste; rushing",
+      "headword": "جلد بازی",
+      "romanization": "jald-bāzī",
+      "gloss": "haste; rushing",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:059281bbe0b1eb84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to pester, then the Urdu for to throw away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جلد بازی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جلد بازی — jald-bāzī — \"haste; rushing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر تم نے جلد بازی کی تو حادثہ ہو گا۔ agar tum ne jald-bāzī kī to hādsā ho gā. If you rush, there will be an accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جلد بازی (jald-bāzī) is usually traced to Persian jaldbāzī, \"haste\": jald, \"quick\", and bāzī, \"play\". Playing at speed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jald-bāzī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jald-bāzī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jald-bāzī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jald-bāzī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum ne jald-bāzī kī to hādsā ho gā. — If you rush, there will be an accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum ne jald-bāzī kī to hādsā ho gā.* — If you rush, there will be an accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to pester, then the Urdu for to throw away, then say jald-bāzī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to pester, then the Urdu for to throw away, then say *jald-bāzī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جلد بازی (jald-bāzī) mean? (\"Haste; rushing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C370-dhyan",
+      "sequence": 22000,
+      "title": "دھیان (dhyān) — attention; care",
+      "headword": "دھیان",
+      "romanization": "dhyān",
+      "gloss": "attention; care",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5db23b4925fab214",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to throw away, then the Urdu for haste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دھیان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دھیان — dhyān — \"attention; care\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دھیان سے چلیے، ورنہ آپ گر جائیں گے۔ dhyān se chaliye, varnā āp gir jāeṅ ge. Walk carefully, or you will fall."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دھیان (dhyān) is borrowed from Sanskrit dhyāna, \"meditation, thought\" (CDIAL 6889); in Urdu, the mind kept on what you are doing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhyān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhyān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhyān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhyān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhyān se chaliye, varnā āp gir jāeṅ ge. — Walk carefully, or you will fall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhyān se chaliye, varnā āp gir jāeṅ ge.* — Walk carefully, or you will fall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to throw away, then the Urdu for haste, then say dhyān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to throw away, then the Urdu for haste, then say *dhyān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دھیان (dhyān) mean? (\"Attention; care\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C370-sabr",
+      "sequence": 22010,
+      "title": "صبر (sabr) — patience",
+      "headword": "صبر",
+      "romanization": "sabr",
+      "gloss": "patience",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d2a515c57ea3b7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for haste, then the Urdu for attention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صبر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صبر — sabr — \"patience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ صبر کریں گے تو سب ٹھیک ہو گا۔ agar āp sabr kareṅ ge to sab ṭhīk ho gā. If you are patient, all will be well."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صبر (sabr) is usually traced, through Persian, to Arabic ṣabr, \"patience, endurance\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp sabr kareṅ ge to sab ṭhīk ho gā. — If you are patient, all will be well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp sabr kareṅ ge to sab ṭhīk ho gā.* — If you are patient, all will be well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for haste, then the Urdu for attention, then say sabr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for haste, then the Urdu for attention, then say *sabr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صبر (sabr) mean? (\"Patience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C370-phorna",
+      "sequence": 22020,
+      "title": "پھوڑنا (phoṛnā) — to smash; to break (something brittle)",
+      "headword": "پھوڑنا",
+      "romanization": "phoṛnā",
+      "gloss": "to smash; to break (something brittle)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ec05f5ab0b90cf9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for attention, then the Urdu for patience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پھوڑنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھوڑنا — phoṛnā — \"to smash; to break (something brittle)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر تم نے جلدی کی تو برتن پھوڑ دو گے۔ agar tum ne jaldī kī to bartan phoṛ do ge. If you hurry, you will smash the dishes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے برتن پھوڑا, us ne bartan phoṛā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھوڑنا (phoṛnā) is inherited: CDIAL lists the Hindi cousin phoṛnā, \"to break\", under Sanskrit sphōṭayati, \"bursts\" (CDIAL 13857)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phoṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phoṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phoṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phoṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum ne jaldī kī to bartan phoṛ do ge. — If you hurry, you will smash the dishes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum ne jaldī kī to bartan phoṛ do ge.* — If you hurry, you will smash the dishes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for attention, then the Urdu for patience, then say phoṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for attention, then the Urdu for patience, then say *phoṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پھوڑنا (phoṛnā) mean? (\"To smash; to break (something brittle)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C370-masalna",
+      "sequence": 22030,
+      "title": "مسلنا (masalnā) — to crush; to squash",
+      "headword": "مسلنا",
+      "romanization": "masalnā",
+      "gloss": "to crush; to squash",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c3e8e569783a8ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for patience, then the Urdu for to smash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مسلنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسلنا — masalnā — \"to crush; to squash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ نے کیڑا مسلا تو وہ مر جائے گا۔ agar āp ne kīṛā maslā to voh mar jāe gā. If you squash the insect, it will die."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے پھول مسلا, us ne phūl maslā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسلنا (masalnā) is inherited: CDIAL lists the Hindi cousin masalnā, \"to rub to pieces\", under Sanskrit maṣati (CDIAL 9919)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masalnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masalnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masalnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masalnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp ne kīṛā maslā to voh mar jāe gā. — If you squash the insect, it will die.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp ne kīṛā maslā to voh mar jāe gā.* — If you squash the insect, it will die.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for patience, then the Urdu for to smash, then say masalnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for patience, then the Urdu for to smash, then say *masalnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مسلنا (masalnā) mean? (\"To crush; to squash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R370-review-363-370",
+      "sequence": 22040,
+      "title": "Looking back: from Hopes and Fears to Haste and Care",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Hopes and Fears to Haste and Care",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0fcf02d070dd840",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for an apprehension and a hint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an apprehension, a hint, a symptom, a nagging fear, confidence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an apprehension, a hint, a symptom, a nagging fear, confidence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evident, compulsory, really, prominent, to emerge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: evident, compulsory, really, prominent, to emerge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a state, a situation, a hardship, a change, to land in trouble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a state, a situation, a hardship, a change, to land in trouble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "only, except, permission, on no account, to forbid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: only, except, permission, on no account, to forbid]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mere, a regulation, a breach, a clause, to come into force",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mere, a regulation, a breach, a clause, to come into force]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hassle, an obstacle, a solution, to get stuck, to deal with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hassle, an obstacle, a solution, to get stuck, to deal with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "if only, a longing, a wistful regret, to pester, to throw away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: if only, a longing, a wistful regret, to pester, to throw away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haste, attention, patience, to smash, to squash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: haste, attention, patience, to smash, to squash]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An apprehension? (اندیشہ, andeshā.) A hint? (اشارہ, ishārā.) A symptom? (علامت, alāmat.) A nagging fear? (خدشہ, khadshā.) Confidence? (اعتماد, etimād.) Evident? (ظاہر, zāhir.) Compulsory? (لازمی, lāzmī.) Really? (واقعی, vāqaī.) Prominent? (نمایاں, numāyāṅ.) To emerge? (ابھرنا, ubharnā.) A state? (حالت, hālat.) A situation? (صورت حال, sūrat-e-hāl.) A hardship? (مصیبت, musībat.) A change? (تبدیلی, tabdīlī.) To land in trouble? (پھنسانا, phansānā.) Only? (صرف, sirf.) Except? (سوائے, sivāe.) Permission? (اجازت, ijāzat.) On no account? (ہرگز, hargiz.) To forbid? (منع کرنا, manā karnā.) Mere? (محض, mahz.) A regulation? (قاعدہ, qāidā.) A breach? (خلاف ورزی, khilāf-varzī.) A clause? (شق, shiq.) To come into force? (نافذ ہونا, nāfiz honā.) A hassle? (دقت, diqqat.) An obstacle? (رکاوٹ, rukāvaṭ.) A solution? (حل, hal.) To get stuck? (اٹکنا, aṭaknā.) To deal with? (نبٹانا, nibṭānā.) If only? (کاش, kāsh.) A longing? (ارمان, armān.) A wistful regret? (حسرت, hasrat.) To pester? (ستانا, satānā.) To throw away? (گنوانا, ganvānā.) Haste? (جلد بازی, jald-bāzī.) Attention? (دھیان, dhyān.) Patience? (صبر, sabr.) To smash? (پھوڑنا, phoṛnā.) To squash? (مسلنا, masalnā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

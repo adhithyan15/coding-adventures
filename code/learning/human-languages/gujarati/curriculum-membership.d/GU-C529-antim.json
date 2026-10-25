@@ -1,0 +1,11 @@
+{
+  "id": "GU-C529-antim",
+  "pathSegment": "GU-PATH-529-TABAKKO529",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-529-TABAKKO529",
+      "order": 4
+    }
+  ]
+}

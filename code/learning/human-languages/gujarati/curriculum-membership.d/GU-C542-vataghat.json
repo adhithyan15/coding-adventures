@@ -1,0 +1,11 @@
+{
+  "id": "GU-C542-vataghat",
+  "pathSegment": "GU-PATH-542-SAMADHAN542",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-542-SAMADHAN542",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C413-chhappar",
+    "language": "urdu",
+    "chapter": 413,
+    "sequence": 24410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f924f06b57980b67"
+  },
+  "findings": []
+}

@@ -2,6 +2,35 @@
 
 ## 0.1.0 — unreleased
 
+- **ExpressionStatement lookahead (F12 phase 0): 94 tests now pass, 74 are
+  removed.** The 94 are negative tests that are now correctly rejected, such
+  as `if (x) class C {}` and declarations in loop bodies. The owner approved
+  removing the 74:
+  - 72 are Annex B sloppy-mode forms: `if (x) function f(){}` and
+    `l: function f(){}`, across `annexB/` (69) and
+    `staging/sm/lexical-environment/` (3). Closure refuses them, and the
+    parser had only accepted them by reading the declaration as a function
+    expression.
+  - 2 are `language/statementList/block-with-statment-regexp-literal-flags.js`
+    (sloppy and strict), a block followed by a regex. F12 phase 3 brings them
+    back.
+
+- **208 more tests parse (numeric literals, es2025 lexer).** The 6d security
+  review brought es2021–es2025's number patterns in line with ECMA-262's
+  NumericLiteralSeparator grammar: `5.`, `5.e1` and `1.e3` lex as one NUMBER
+  again, and invalid spellings (`1__0`, `0_1`, `017.5`) are no longer
+  accepted. New passes: `built-ins/Number/prototype` 76,
+  `language/literals/bigint` 48, `language/literals/numeric` 44,
+  `language/statements/for-of` 14, `language/expressions/assignment` 14,
+  `language/types/reference` 4, `staging/sm` 4. Full run at the pinned
+  revision: 102,955 results, 69,417 pass, 0 regressions.
+
+- **2 more tests parse: `language/expressions/division/bigint-arithmetic.js`
+  (sloppy and strict).** LANG84 phase 6a adds `BIGINT` to es2025's
+  regex/division mode table as a value-producing token, so the `/` in
+  `1n / 2n` is division instead of the start of a regex. The full run at
+  7ab7faf: 102,955 results, 69,209 pass, 0 regressions.
+
 - **165 more tests parse: #17840's 38, plus block-level declarations and
   their redeclaration early errors (#17877).** Blocks and case clauses now
   hold function and class declarations, and javascript-parser enforces

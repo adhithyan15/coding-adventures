@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "Nights Outdoors",
+  "label": "ch:ur-nights-outdoors",
+  "canDo": "I can talk about a night in the open: firewood, blankets and shelter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C406-basera",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can talk about a night in the open: firewood, blankets and shelter.",
+    "assesses": [
+      "UR-LEX-C406-BASERA406-03",
+      "UR-LEX-C406-BASERA406-04",
+      "UR-LEX-C406-BASERA406-05"
+    ]
+  }
+}

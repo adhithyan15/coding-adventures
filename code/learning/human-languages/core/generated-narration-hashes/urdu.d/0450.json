@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:cc87992aaa961c10",
+  "lessonIds": [
+    "UR-C450-tanha",
+    "UR-C450-akela",
+    "UR-C450-judai",
+    "UR-C450-bisurna",
+    "UR-C450-ojhal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch450.txt",
+  "json": "urdu/narration/ch450.json",
+  "textHash": "fnv1a64:8fde741126107de4",
+  "jsonHash": "fnv1a64:ae03eb3bae12b4bc",
+  "findings": []
+}

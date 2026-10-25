@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:b63f6594ee7ef97a",
+  "lessonIds": [
+    "GU-C329-rangoli",
+    "GU-C329-sangarvu",
+    "GU-C329-jhagmagvu",
+    "GU-C329-mala",
+    "GU-C329-sobhayatra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch329.txt",
+  "json": "gujarati/narration/ch329.json",
+  "textHash": "fnv1a64:0f3876ef41bcc1cf",
+  "jsonHash": "fnv1a64:412f8d543ecb8615",
+  "findings": []
+}

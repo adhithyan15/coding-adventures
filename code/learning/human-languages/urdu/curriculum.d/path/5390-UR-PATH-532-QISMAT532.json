@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-532-QISMAT532",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "UR-EXT-532-QISMAT532"
+  ],
+  "after": []
+}

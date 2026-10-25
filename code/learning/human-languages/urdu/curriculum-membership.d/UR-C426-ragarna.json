@@ -1,0 +1,11 @@
+{
+  "id": "UR-C426-ragarna",
+  "pathSegment": "UR-PATH-426-KHALIS426",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-426-KHALIS426",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Rubbish and Drains",
+  "label": "ch:ur-rubbish-and-drains",
+  "canDo": "I can complain about rubbish, a blocked drain and the smell.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C416-phailana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can complain about rubbish, a blocked drain and the smell.",
+    "assesses": [
+      "UR-LEX-C416-KURA416-03",
+      "UR-LEX-C416-KURA416-04",
+      "UR-LEX-C416-KURA416-05"
+    ]
+  }
+}

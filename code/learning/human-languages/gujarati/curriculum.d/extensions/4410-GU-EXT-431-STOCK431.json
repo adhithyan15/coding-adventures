@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-431-STOCK431",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about supplies running short.",
+  "prerequisites": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-325-AZADI325",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-325-AZADI325"
+  ],
+  "after": []
+}

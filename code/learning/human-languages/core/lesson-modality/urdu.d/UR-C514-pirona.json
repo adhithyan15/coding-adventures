@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C514-pirona",
+    "language": "urdu",
+    "chapter": 514,
+    "sequence": 30030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a82f685da732a6b"
+  },
+  "findings": []
+}

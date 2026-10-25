@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C517-balb",
+    "language": "gujarati",
+    "chapter": 517,
+    "sequence": 28850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82aa5843d74e5440"
+  },
+  "findings": []
+}

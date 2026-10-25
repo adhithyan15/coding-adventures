@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C486-baligh",
+    "language": "urdu",
+    "chapter": 486,
+    "sequence": 28360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ec8e4dbe83a9eeb"
+  },
+  "findings": []
+}

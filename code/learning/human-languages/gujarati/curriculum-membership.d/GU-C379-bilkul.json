@@ -1,0 +1,11 @@
+{
+  "id": "GU-C379-bilkul",
+  "pathSegment": "GU-PATH-379-ATYANT379",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-379-ATYANT379",
+      "order": 3
+    }
+  ]
+}

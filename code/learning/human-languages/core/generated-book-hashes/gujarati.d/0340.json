@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:26444d8a9937a964",
+  "lessonIds": [
+    "GU-C340-uddes",
+    "GU-C340-hetu",
+    "GU-C340-irado",
+    "GU-C340-bahanu",
+    "GU-C340-sadhvu"
+  ],
+  "tex": "gujarati/book/chapters/ch340-what-it-is-for.tex"
+}

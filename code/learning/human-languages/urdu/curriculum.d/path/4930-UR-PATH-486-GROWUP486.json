@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-486-GROWUP486",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-486-GROWUP486"
+  ],
+  "after": []
+}

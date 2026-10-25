@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:b3c507ab657078c2",
+  "lessonIds": [
+    "GU-C390-pak",
+    "GU-C390-paripakva",
+    "GU-C390-ujjad",
+    "GU-C390-ugadvu",
+    "GU-C390-upajvu"
+  ],
+  "tex": "gujarati/book/chapters/ch390-making-it-grow.tex"
+}

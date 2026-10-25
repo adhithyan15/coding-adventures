@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C463-barbarana",
+    "language": "urdu",
+    "chapter": 463,
+    "sequence": 27170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:491ff61a8da197e3"
+  },
+  "findings": []
+}

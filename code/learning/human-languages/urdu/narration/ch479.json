@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 479,
+  "title": "In Hospital",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:64874aa8831be5d3",
+  "lessons": [
+    {
+      "id": "UR-C479-dakhil-karna",
+      "sequence": 27990,
+      "title": "داخل کرنا (dākhil karnā) — to admit to hospital",
+      "headword": "داخل کرنا",
+      "romanization": "dākhil karnā",
+      "gloss": "to admit to hospital",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:077af3d2f875f035",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for pus, then the Urdu for to pick at."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: داخل کرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "داخل کرنا — dākhil karnā — \"to admit to hospital\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ڈاکٹروں نے دادا کو ہسپتال میں داخل کیا۔ ḍākṭaroṅ ne dādā ko haspatāl meṅ dākhil kiyā. The doctors admitted my grandfather to hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے مریض کو داخل کیا, us ne marīz ko dākhil kiyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "داخل کرنا (dākhil karnā) is built from داخل, usually traced, through Persian, to Arabic dākhil, \"entering\", and کرنا, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dākhil karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dākhil karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dākhil karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dākhil karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākṭaroṅ ne dādā ko haspatāl meṅ dākhil kiyā. — The doctors admitted my grandfather to hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākṭaroṅ ne dādā ko haspatāl meṅ dākhil kiyā.* — The doctors admitted my grandfather to hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for pus, then the Urdu for to pick at, then say dākhil karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for pus, then the Urdu for to pick at, then say *dākhil karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does داخل کرنا (dākhil karnā) mean? (\"To admit to hospital\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C479-vard",
+      "sequence": 28000,
+      "title": "وارڈ (vārḍ) — a hospital ward",
+      "headword": "وارڈ",
+      "romanization": "vārḍ",
+      "gloss": "a hospital ward",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21436dfb53cae46e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to pick at, then the Urdu for to admit to hospital."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وارڈ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وارڈ — vārḍ — \"a hospital ward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مریض اوپر والے وارڈ میں ہے۔ marīz ūpar vāle vārḍ meṅ hai. The patient is in the ward upstairs."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وارڈ (vārḍ) is borrowed from English ward."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marīz ūpar vāle vārḍ meṅ hai. — The patient is in the ward upstairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marīz ūpar vāle vārḍ meṅ hai.* — The patient is in the ward upstairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to pick at, then the Urdu for to admit to hospital, then say vārḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to pick at, then the Urdu for to admit to hospital, then say *vārḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وارڈ (vārḍ) mean? (\"A hospital ward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C479-apreshan",
+      "sequence": 28010,
+      "title": "آپریشن (āpreshan) — an operation (surgery)",
+      "headword": "آپریشن",
+      "romanization": "āpreshan",
+      "gloss": "an operation (surgery)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:116bfa9d7cf580a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to admit to hospital, then the Urdu for a hospital ward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آپریشن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آپریشن — āpreshan — \"an operation (surgery)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کل صبح دادی کا آپریشن ہو گا۔ kal subah dādī kā āpreshan ho gā. My grandmother is having an operation tomorrow morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آپریشن (āpreshan) is borrowed from English operation."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpreshan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpreshan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpreshan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpreshan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kal subah dādī kā āpreshan ho gā. — My grandmother is having an operation tomorrow morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kal subah dādī kā āpreshan ho gā.* — My grandmother is having an operation tomorrow morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to admit to hospital, then the Urdu for a hospital ward, then say āpreshan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to admit to hospital, then the Urdu for a hospital ward, then say *āpreshan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آپریشن (āpreshan) mean? (\"An operation (surgery)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C479-sarjan",
+      "sequence": 28020,
+      "title": "سرجن (sarjan) — a surgeon",
+      "headword": "سرجن",
+      "romanization": "sarjan",
+      "gloss": "a surgeon",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e07044567dc852bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a hospital ward, then the Urdu for an operation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سرجن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرجن — sarjan — \"a surgeon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سرجن نے دو گھنٹے آپریشن کیا۔ sarjan ne do ghanṭe āpreshan kiyā. The surgeon operated for two hours."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرجن (sarjan) is borrowed from English surgeon."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarjan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarjan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarjan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarjan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarjan ne do ghanṭe āpreshan kiyā. — The surgeon operated for two hours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarjan ne do ghanṭe āpreshan kiyā.* — The surgeon operated for two hours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a hospital ward, then the Urdu for an operation, then say sarjan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a hospital ward, then the Urdu for an operation, then say *sarjan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سرجن (sarjan) mean? (\"A surgeon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C479-istrechar",
+      "sequence": 28030,
+      "title": "اسٹریچر (isṭrechar) — a stretcher",
+      "headword": "اسٹریچر",
+      "romanization": "isṭrechar",
+      "gloss": "a stretcher",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83d8dabea223643c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an operation, then the Urdu for a surgeon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اسٹریچر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسٹریچر — isṭrechar — \"a stretcher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دو آدمی اسٹریچر اٹھا کر لائے۔ do ādmī isṭrechar uṭhā kar lāe. Two men carried in the stretcher."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسٹریچر (isṭrechar) is borrowed from English stretcher."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isṭrechar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isṭrechar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isṭrechar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isṭrechar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "do ādmī isṭrechar uṭhā kar lāe. — Two men carried in the stretcher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *do ādmī isṭrechar uṭhā kar lāe.* — Two men carried in the stretcher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an operation, then the Urdu for a surgeon, then say isṭrechar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an operation, then the Urdu for a surgeon, then say *isṭrechar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اسٹریچر (isṭrechar) mean? (\"A stretcher\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R479-review-472-479",
+      "sequence": 28040,
+      "title": "Looking back: from An Upset Stomach to In Hospital",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from An Upset Stomach to In Hospital",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ec2c0a29151ec17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for to digest and digestion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to digest, digestion, indigestion, retching, nourishment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to digest, digestion, indigestion, retching, nourishment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to ache dully, a cramp, to grip tight, to limp, an inflammation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to ache dully, a cramp, to grip tight, to limp, an inflammation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "germs, contagious, an infection, measles, smallpox",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: germs, contagious, an infection, measles, smallpox]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chronic, asthma, paralysis, cancer, afflicted",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: chronic, asthma, paralysis, cancer, afflicted]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to examine, a medical test, a diagnosis, a traditional physician, to have (someone) sent for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to examine, a medical test, a diagnosis, a traditional physician, to have (someone) sent for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a droplet, to dissolve, a capsule, a paper packet, to toss into the mouth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a droplet, to dissolve, a capsule, a paper packet, to toss into the mouth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to prick, an incision, a stitch, pus, to pick at",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to prick, an incision, a stitch, pus, to pick at]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to admit to hospital, a hospital ward, an operation, a surgeon, a stretcher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to admit to hospital, a hospital ward, an operation, a surgeon, a stretcher]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To digest? (ہضم کرنا, hazm karnā.) Digestion? (ہاضمہ, hāzmā.) Indigestion? (بدہضمی, badhazmī.) Retching? (ابکائی, ubkāī.) Nourishment? (غذا, ghizā.) To ache dully? (کسکنا, kasaknā.) A cramp? (اینٹھن, aiṅṭhan.) To grip tight? (جکڑنا, jakaṛnā.) To limp? (لنگڑانا, laṅgṛānā.) An inflammation? (سوزش, sozish.) Germs? (جراثیم, jarāsīm.) Contagious? (متعدی, mutāddī.) An infection? (انفیکشن, infekshan.) Measles? (خسرہ, khasrā.) Smallpox? (چیچک, chechak.) Chronic? (دائمی, dāimī.) Asthma? (دمہ, damā.) Paralysis? (فالج, fālij.) Cancer? (کینسر, kainsar.) Afflicted? (مبتلا, mubtalā.) To examine? (معائنہ کرنا, muāinā karnā.) A medical test? (ٹیسٹ, ṭesṭ.) A diagnosis? (تشخیص, tashkhīs.) A traditional physician? (حکیم, hakīm.) To have (someone) sent for? (بلوانا, bulvānā.) A droplet? (قطرہ, qatrā.) To dissolve? (گھولنا, gholnā.) A capsule? (کیپسول, kaipsūl.) A paper packet? (پڑیا, puṛiyā.) To toss into the mouth? (پھانکنا, phāṅknā.) To prick? (چبھنا, chubhnā.) An incision? (چیرا, chīrā.) A stitch? (ٹانکا, ṭāṅkā.) Pus? (پیپ, pīp.) To pick at? (کریدنا, kurednā.) To admit to hospital? (داخل کرنا, dākhil karnā.) A hospital ward? (وارڈ, vārḍ.) An operation? (آپریشن, āpreshan.) A surgeon? (سرجن, sarjan.) A stretcher? (اسٹریچر, isṭrechar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

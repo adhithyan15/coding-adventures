@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C311-janavvu",
+    "language": "gujarati",
+    "chapter": 311,
+    "sequence": 17370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1c71498c2f83a64"
+  },
+  "findings": []
+}

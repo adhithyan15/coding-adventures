@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "UR-W272-ddal",
+    "language": "urdu",
+    "chapter": 272,
+    "sequence": 16490,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f8978d2a339920dd",
+    "detachableSegments": [
+      "Script you'll notice: ڈ",
+      "Writing: ڈ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:9ebedef08c3b7b23",
+  "lessonIds": [
+    "UR-C462-aql",
+    "UR-C462-dana",
+    "UR-C462-nadan",
+    "UR-C462-masum",
+    "UR-C462-bahakna"
+  ],
+  "tex": "urdu/book/chapters/ch462-sense-and-innocence.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C278-darj-karna",
+  "pathSegment": "UR-PATH-278-THANA278",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-278-THANA278",
+      "order": 2
+    }
+  ]
+}

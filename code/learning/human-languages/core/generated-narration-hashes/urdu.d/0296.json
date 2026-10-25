@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:def7846ea472cd82",
+  "lessonIds": [
+    "UR-C296-najat",
+    "UR-C296-heli-kaptar",
+    "UR-C296-chhurana",
+    "UR-C296-lapakna",
+    "UR-C296-salamat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch296.txt",
+  "json": "urdu/narration/ch296.json",
+  "textHash": "fnv1a64:869de36669a62c85",
+  "jsonHash": "fnv1a64:8af83357fdda9fd3",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C451-pyar",
+  "pathSegment": "GU-PATH-451-VALAG451",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-451-VALAG451",
+      "order": 3
+    }
+  ]
+}

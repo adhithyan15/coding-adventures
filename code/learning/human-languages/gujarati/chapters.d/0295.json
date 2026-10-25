@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Too Fast on the Bend",
+  "label": "ch:gu-too-fast-on-the-bend",
+  "canDo": "I can say why a driver lost control and what it cost him.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C295-kacadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can say why a driver lost control and what it cost him.",
+    "assesses": [
+      "GU-LEX-C295-VALANK295-03",
+      "GU-LEX-C295-VALANK295-04",
+      "GU-LEX-C295-VALANK295-05"
+    ]
+  }
+}

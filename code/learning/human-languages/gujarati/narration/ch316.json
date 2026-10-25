@@ -1,0 +1,842 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 316,
+  "title": "According to the Report",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1898659b57483449",
+  "lessons": [
+    {
+      "id": "GU-C316-darmiyan",
+      "sequence": 17580,
+      "title": "દરમિયાન (darmiyān) — during",
+      "headword": "દરમિયાન",
+      "romanization": "darmiyān",
+      "gloss": "during",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c7bd9ce6caf0427",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a mention, then the Gujarati for to behold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: દરમિયાન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દરમિયાન — darmiyān — \"during\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વરસાદ દરમિયાન વીજળી ગઈ. varsād darmiyān vījḷī gaī. The power went off during the rain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દરમિયાન (darmiyān) is usually traced to Persian darmiyān, \"in the middle, between\". It follows its noun: વરસાદ દરમિયાન, during the rain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darmiyān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darmiyān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darmiyān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darmiyān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varsād darmiyān vījḷī gaī. — The power went off during the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varsād darmiyān vījḷī gaī.* — The power went off during the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a mention, then the Gujarati for to behold, then say darmiyān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a mention, then the Gujarati for to behold, then say *darmiyān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does દરમિયાન (darmiyān) mean? (\"During\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C316-hal",
+      "sequence": 17590,
+      "title": "હાલ (hāl) — at present",
+      "headword": "હાલ",
+      "romanization": "hāl",
+      "gloss": "at present",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9154d17e359d38f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to behold, then the Gujarati for during."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: હાલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હાલ — hāl — \"at present\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હાલ તે દવાખાનામાં છે. hāl te davākhānāmā̃ che. At present he is in hospital."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હાલ (hāl) is usually traced, through Persian, to Arabic ḥāl, \"a state, the present\", the word behind હાલત. It is the news word for \"now\": હાલ તે સલામત છે."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāl te davākhānāmā̃ che. — At present he is in hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāl te davākhānāmā̃ che.* — At present he is in hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to behold, then the Gujarati for during, then say hāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to behold, then the Gujarati for during, then say *hāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does હાલ (hāl) mean? (\"At present\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C316-mujab",
+      "sequence": 17600,
+      "title": "મુજબ (mujab) — according to",
+      "headword": "મુજબ",
+      "romanization": "mujab",
+      "gloss": "according to",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e2bcad989e73d52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for during, then the Gujarati for at present."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મુજબ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મુજબ — mujab — \"according to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "છાપાના અહેવાલ મુજબ ચાર લોકો ઘાયલ થયા. chāpānā ahevāl mujab cār loko ghāyal thayā. According to the newspaper report, four people were hurt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મુજબ (mujab) is usually traced, through Persian, to Arabic mūjib, \"a cause, a ground\". It follows its noun: અહેવાલ મુજબ, according to the report."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mujab",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mujab*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mujab, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mujab*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāpānā ahevāl mujab cār loko ghāyal thayā. — According to the newspaper report, four people were hurt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāpānā ahevāl mujab cār loko ghāyal thayā.* — According to the newspaper report, four people were hurt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for during, then the Gujarati for at present, then say mujab again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for during, then the Gujarati for at present, then say *mujab* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મુજબ (mujab) mean? (\"According to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C316-gupt",
+      "sequence": 17610,
+      "title": "ગુપ્ત (gupt) — secret",
+      "headword": "ગુપ્ત",
+      "romanization": "gupt",
+      "gloss": "secret",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6bbca82cf18e05c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for at present, then the Gujarati for according to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગુપ્ત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગુપ્ત — gupt — \"secret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પોલીસે આ માહિતી ગુપ્ત રાખી. polīse ā māhitī gupt rākhī. The police kept this information secret."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગુપ્ત (gupt) is a tatsama, Sanskrit gupta, \"protected, guarded\", and so \"hidden\" (Monier-Williams). A thing is kept secret with રાખવું: ગુપ્ત રાખી."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gupt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gupt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gupt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gupt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīse ā māhitī gupt rākhī. — The police kept this information secret.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīse ā māhitī gupt rākhī.* — The police kept this information secret.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for at present, then the Gujarati for according to, then say gupt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for at present, then the Gujarati for according to, then say *gupt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગુપ્ત (gupt) mean? (\"Secret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C316-takvu",
+      "sequence": 17620,
+      "title": "ટકવું (ṭakvũ) — to last; to hold out",
+      "headword": "ટકવું",
+      "romanization": "ṭakvũ",
+      "gloss": "to last; to hold out",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0d9157834623958",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for according to, then the Gujarati for secret."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટકવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટકવું — ṭakvũ — \"to last; to hold out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હડતાળ ત્રણ દિવસ ટકી. haḍtāḷ traṇ divas ṭakī. The strike lasted three days."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે મકાન ટક્યું, te makān ṭakyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટકવું (ṭakvũ) comes from ṭakk, a form CDIAL reconstructs, where it lists Gujarati ṭakvũ, \"to stop\" (CDIAL 5420); today it is to stay standing, to last: ત્રણ દિવસ ટકી."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭakvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭakvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭakvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭakvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḍtāḷ traṇ divas ṭakī. — The strike lasted three days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḍtāḷ traṇ divas ṭakī.* — The strike lasted three days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for according to, then the Gujarati for secret, then say ṭakvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for according to, then the Gujarati for secret, then say *ṭakvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટકવું (ṭakvũ) mean? (\"To last; to hold out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R316-review-309-316",
+      "sequence": 17630,
+      "title": "Looking back: from An Award for Courage to According to the Report",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from An Award for Courage to According to the Report",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:121bb7dbafc02f07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for an assembly and an honour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an assembly, an honour, a prize, to applaud, pride",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an assembly, an honour, a prize, to applaud, pride]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a squad, deadly, assistance, to be at a loss, to disperse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a squad, deadly, assistance, to be at a loss, to disperse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the news, a newspaper, a headline, a radio, to inform",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the news, a newspaper, a headline, a radio, to inform]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a journalist, an incident, a case (to tell), a report, to describe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a journalist, an incident, a case (to tell), a report, to describe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rumour, to spread (something), the truth, information, word (of something)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rumour, to spread (something), the truth, information, word (of something)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a strike, a protest march, a slogan, a speech, to resound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a strike, a protest march, a slogan, a speech, to resound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an inauguration, an occasion, a site, a mention, to behold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an inauguration, an occasion, a site, a mention, to behold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "during, at present, according to, secret, to last",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: during, at present, according to, secret, to last]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An assembly? (સભા, sabhā.) An honour? (સન્માન, sanmān.) A prize? (ઇનામ, inām.) To applaud? (બિરદાવવું, birdāvvũ.) Pride? (ગર્વ, garva.) A squad? (ટુકડી, ṭukḍī.) Deadly? (જીવલેણ, jīvleṇ.) Assistance? (સહાય, sahāy.) To be at a loss? (મૂંઝાવું, mū̃jhāvũ.) To disperse? (વિખેરાવું, vikherāvũ.) The news? (સમાચાર, samācār.) A newspaper? (છાપું, chāpũ.) A headline? (મથાળું, mathāḷũ.) A radio? (રેડિયો, reḍiyo.) To inform? (જણાવવું, jaṇāvvũ.) A journalist? (પત્રકાર, patrakār.) An incident? (ઘટના, ghaṭnā.) A case (to tell)? (કિસ્સો, kisso.) A report? (અહેવાલ, ahevāl.) To describe? (વર્ણવવું, varṇavvũ.) A rumour? (અફવા, aphvā.) To spread (something)? (ફેલાવવું, phelāvvũ.) The truth? (સત્ય, satya.) Information? (માહિતી, māhitī.) Word (of something)? (ખબર, khabar.) A strike? (હડતાળ, haḍtāḷ.) A protest march? (મોરચો, morco.) A slogan? (સૂત્ર, sūtra.) A speech? (પ્રવચન, pravacan.) To resound? (ગુંજવું, gunjvũ.) An inauguration? (ઉદ્ઘાટન, udghāṭan.) An occasion? (પ્રસંગ, prasang.) A site? (સ્થળ, sthaḷ.) A mention? (ઉલ્લેખ, ullekh.) To behold? (નિહાળવું, nihāḷvũ.) During? (દરમિયાન, darmiyān.) At present? (હાલ, hāl.) According to? (મુજબ, mujab.) Secret? (ગુપ્ત, gupt.) To last? (ટકવું, ṭakvũ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

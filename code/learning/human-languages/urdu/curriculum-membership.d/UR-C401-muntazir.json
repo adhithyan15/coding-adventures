@@ -1,0 +1,11 @@
+{
+  "id": "UR-C401-muntazir",
+  "pathSegment": "UR-PATH-401-ISTIQBAL401",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-401-ISTIQBAL401",
+      "order": 1
+    }
+  ]
+}

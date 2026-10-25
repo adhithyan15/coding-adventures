@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C447-racvu-delight",
+    "language": "gujarati",
+    "chapter": 447,
+    "sequence": 25040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1085ac35c67a7050"
+  },
+  "findings": []
+}

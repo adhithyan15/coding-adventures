@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:7d6205df82afea03",
+  "lessonIds": [
+    "UR-C305-muamma",
+    "UR-C305-mukhbir",
+    "UR-C305-andaza",
+    "UR-C305-chaunkna",
+    "UR-C305-inkishaf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch305.txt",
+  "json": "urdu/narration/ch305.json",
+  "textHash": "fnv1a64:aec702a0cca3b5ee",
+  "jsonHash": "fnv1a64:8434ccf3be878a3c",
+  "findings": []
+}

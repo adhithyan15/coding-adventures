@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C309-garva",
+    "language": "gujarati",
+    "chapter": 309,
+    "sequence": 17270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62af053c02a6353b"
+  },
+  "findings": []
+}

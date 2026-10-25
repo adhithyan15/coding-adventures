@@ -1,0 +1,11 @@
+{
+  "id": "GU-C350-mukt",
+  "pathSegment": "GU-PATH-350-KARAR350",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-350-KARAR350",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:d5a1334c3e2e9b8b",
+  "lessonIds": [
+    "GU-C316-darmiyan",
+    "GU-C316-hal",
+    "GU-C316-mujab",
+    "GU-C316-gupt",
+    "GU-C316-takvu",
+    "GU-R316-review-309-316"
+  ],
+  "tex": "gujarati/book/chapters/ch316-according-to-the-report.tex"
+}

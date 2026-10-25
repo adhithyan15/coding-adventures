@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C444-chirna",
+    "language": "urdu",
+    "chapter": 444,
+    "sequence": 26210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32e00d330fd80f05"
+  },
+  "findings": []
+}

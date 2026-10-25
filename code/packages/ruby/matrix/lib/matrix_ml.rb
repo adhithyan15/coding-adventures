@@ -10,8 +10,9 @@
 #
 # Design principles
 # -----------------
-# 1. **Immutable by default.**  Every method returns a *new* Matrix; the
-#    original is never mutated.
+# 1. **Non-mutating arithmetic.** Operations return a new Matrix. However,
+#    nested constructor arrays and the public data reader are not defensive
+#    copies; consumers needing an owned boundary must validate/copy them.
 # 2. **No external dependencies.**  Only Ruby's built-in Math module.
 # 3. **Consistent error handling.**  Out-of-bounds indices, shape
 #    mismatches, and invalid reshape dimensions all raise descriptive
@@ -28,17 +29,17 @@ class Matrix
   #   - An array of arrays -> full 2D matrix
 
   def initialize(data)
-    if data.is_a?(Numeric)
-      @data = [[data.to_f]]
+    @data = if data.is_a?(Numeric)
+      [[data.to_f]]
     elsif data.is_a?(Array) && data.length > 0 && data[0].is_a?(Numeric)
-      @data = [data.map(&:to_f)]
+      [data.map(&:to_f)]
     elsif data.is_a?(Array)
-      @data = data
+      data
     else
-      @data = []
+      []
     end
     @rows = @data.length
-    @cols = @rows > 0 ? @data[0].length : 0
+    @cols = (@rows > 0) ? @data[0].length : 0
   end
 
   # Create an rows x cols matrix filled with zeros.
@@ -56,7 +57,7 @@ class Matrix
   # multiplying any matrix by the identity leaves it unchanged.
   # It has 1s on the main diagonal and 0s everywhere else.
   def self.identity(n)
-    data = Array.new(n) { |i| Array.new(n) { |j| i == j ? 1.0 : 0.0 } }
+    data = Array.new(n) { |i| Array.new(n) { |j| (i == j) ? 1.0 : 0.0 } }
     Matrix.new(data)
   end
 
@@ -66,7 +67,7 @@ class Matrix
   # This is useful for creating scaling transforms.
   def self.from_diagonal(values)
     n = values.length
-    data = Array.new(n) { |i| Array.new(n) { |j| i == j ? values[i].to_f : 0.0 } }
+    data = Array.new(n) { |i| Array.new(n) { |j| (i == j) ? values[i].to_f : 0.0 } }
     Matrix.new(data)
   end
 
@@ -96,8 +97,8 @@ class Matrix
     end
   end
 
-  def *(scalar)
-    Matrix.new(@data.map { |r| r.map { |v| v * scalar } })
+  def *(other)
+    Matrix.new(@data.map { |r| r.map { |v| v * other } })
   end
 
   def transpose

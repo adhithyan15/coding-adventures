@@ -1,0 +1,18 @@
+{
+  "language": "gujarati",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:16cbd008512ce9c5",
+  "lessonIds": [
+    "GU-C283-jo-to",
+    "GU-C283-jo-varsad-padshe",
+    "GU-C283-nahintar",
+    "GU-R283-if-and-otherwise"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "gujarati/narration/ch283.txt",
+  "json": "gujarati/narration/ch283.json",
+  "textHash": "fnv1a64:a6d754da0af77086",
+  "jsonHash": "fnv1a64:4b62b31115a8522a",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C505-katvu",
+  "pathSegment": "GU-PATH-505-RENTIYO505",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-505-RENTIYO505",
+      "order": 3
+    }
+  ]
+}

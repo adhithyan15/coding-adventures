@@ -1,0 +1,11 @@
+{
+  "id": "UR-C345-aqida",
+  "pathSegment": "UR-PATH-345-QADR345",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-345-QADR345",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C201-class",
+    "language": "punjabi",
+    "chapter": 201,
+    "sequence": 10930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d3fc3dc8fd80683"
+  },
+  "findings": []
+}

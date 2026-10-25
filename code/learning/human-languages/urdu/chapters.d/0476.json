@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "At the Doctor's",
+  "label": "ch:ur-at-the-doctor-s",
+  "canDo": "I can talk about a visit to the doctor.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C476-bulvana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can talk about a visit to the doctor.",
+    "assesses": [
+      "UR-LEX-C476-DOCTOR476-03",
+      "UR-LEX-C476-DOCTOR476-04",
+      "UR-LEX-C476-DOCTOR476-05"
+    ]
+  }
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 501,
+  "title": "Metal and Jewellery",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a5f496dbf981e821",
+  "lessons": [
+    {
+      "id": "UR-C501-loha",
+      "sequence": 29350,
+      "title": "لوہا (lohā) — iron",
+      "headword": "لوہا",
+      "romanization": "lohā",
+      "gloss": "iron",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab4cf73792d101eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to darn, then the Urdu for to come unstitched."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لوہا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لوہا — lohā — \"iron\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لوہار لوہے سے اوزار بناتا ہے۔ lohār lohe se auzār banātā hai. The blacksmith makes tools out of iron."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لوہا (lohā) is inherited from Sanskrit lōha, \"red, copper-coloured\", later \"copper\" and \"iron\" (CDIAL 11158)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lohā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lohā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lohā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lohā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lohār lohe se auzār banātā hai. — The blacksmith makes tools out of iron.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lohār lohe se auzār banātā hai.* — The blacksmith makes tools out of iron.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to darn, then the Urdu for to come unstitched, then say lohā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to darn, then the Urdu for to come unstitched, then say *lohā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لوہا (lohā) mean? (\"Iron\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C501-pital",
+      "sequence": 29360,
+      "title": "پیتل (pītal) — brass",
+      "headword": "پیتل",
+      "romanization": "pītal",
+      "gloss": "brass",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00963332f2f00b41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to come unstitched, then the Urdu for iron."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پیتل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیتل — pītal — \"brass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ پرانا برتن پیتل کا ہے۔ yih purānā bartan pītal kā hai. This old pot is made of brass."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیتل (pītal) is inherited from Sanskrit pittala, \"brass\" (CDIAL 8184)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pītal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pītal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pītal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pītal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih purānā bartan pītal kā hai. — This old pot is made of brass.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih purānā bartan pītal kā hai.* — This old pot is made of brass.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to come unstitched, then the Urdu for iron, then say pītal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to come unstitched, then the Urdu for iron, then say *pītal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پیتل (pītal) mean? (\"Brass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C501-zevar",
+      "sequence": 29370,
+      "title": "زیور (zevar) — a piece of jewellery",
+      "headword": "زیور",
+      "romanization": "zevar",
+      "gloss": "a piece of jewellery",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b21e21481d657a58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for iron, then the Urdu for brass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: زیور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زیور — zevar — \"a piece of jewellery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سنار نے دلہن کے لیے زیور بنائے۔ sunār ne dulhan ke liye zevar banāe. The goldsmith made jewellery for the bride."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زیور (zevar) is usually traced to Persian zēvar, \"an ornament, jewellery\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zevar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zevar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zevar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zevar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sunār ne dulhan ke liye zevar banāe. — The goldsmith made jewellery for the bride.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sunār ne dulhan ke liye zevar banāe.* — The goldsmith made jewellery for the bride.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for iron, then the Urdu for brass, then say zevar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for iron, then the Urdu for brass, then say *zevar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does زیور (zevar) mean? (\"A piece of jewellery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C501-pighlana",
+      "sequence": 29380,
+      "title": "پگھلانا (pighlānā) — to melt (something)",
+      "headword": "پگھلانا",
+      "romanization": "pighlānā",
+      "gloss": "to melt (something)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2914991357aaba6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for brass, then the Urdu for jewellery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پگھلانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پگھلانا — pighlānā — \"to melt (something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لوہار نے آگ میں لوہا پگھلایا۔ lohār ne āg meṅ lohā pighlāyā. The blacksmith melted the iron in the fire."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے پیتل پگھلایا, us ne pītal pighlāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پگھلانا (pighlānā) is the causative of pighalnā, \"to melt\", which CDIAL lists under praghirati, a form it reconstructs (CDIAL 8486)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pighlānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pighlānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pighlānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pighlānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lohār ne āg meṅ lohā pighlāyā. — The blacksmith melted the iron in the fire.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lohār ne āg meṅ lohā pighlāyā.* — The blacksmith melted the iron in the fire.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for brass, then the Urdu for jewellery, then say pighlānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for brass, then the Urdu for jewellery, then say *pighlānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پگھلانا (pighlānā) mean? (\"To melt (something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C501-marhna",
+      "sequence": 29390,
+      "title": "مڑھنا (maṛhnā) — to plate (with metal); to encase",
+      "headword": "مڑھنا",
+      "romanization": "maṛhnā",
+      "gloss": "to plate (with metal); to encase",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e2f20466f6f7d44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for jewellery, then the Urdu for to melt (something)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مڑھنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مڑھنا — maṛhnā — \"to plate (with metal); to encase\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کاریگر نے تختے پر پیتل مڑھا۔ kārīgar ne takhte par pītal maṛhā. The craftsman plated the board with brass."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے دروازے پر لوہا مڑھا, us ne darvāze par lohā maṛhā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مڑھنا (maṛhnā) is inherited: CDIAL lists the Hindi cousin maṛhnā, \"to cover, to overspread, to encrust\", under maḍh, a form it reconstructs (CDIAL 9729)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṛhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṛhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṛhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṛhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārīgar ne takhte par pītal maṛhā. — The craftsman plated the board with brass.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārīgar ne takhte par pītal maṛhā.* — The craftsman plated the board with brass.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for jewellery, then the Urdu for to melt (something), then say maṛhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for jewellery, then the Urdu for to melt (something), then say *maṛhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مڑھنا (maṛhnā) mean? (\"To plate (with metal); to encase\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R501-review-494-501",
+      "sequence": 29400,
+      "title": "Looking back: from Looking for Work to Metal and Jewellery",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Looking for Work to Metal and Jewellery",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0414e5fb8a8321a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for an interview (for a job) and employment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an interview (for a job), employment, a vacancy, dismissed from a job, to recruit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an interview (for a job), employment, a vacancy, dismissed from a job, to recruit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wages, a strike, expertise, a contractor, to use up (time or effort)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wages, a strike, expertise, a contractor, to use up (time or effort)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a workshop, a clamp, a hole, to bore (a hole), sandpaper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a workshop, a clamp, a hole, to bore (a hole), sandpaper]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plank, sawdust, a carpenter's plane, to knock in, to file (metal or wood)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plank, sawdust, a carpenter's plane, to knock in, to file (metal or wood)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a potter's wheel, a mould, a potter's kiln, a large clay pot, to heat in a fire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a potter's wheel, a mould, a potter's kiln, a large clay pot, to heat in a fire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cotton (the plant), to card (cotton), a spinning wheel, to spin (thread), a knot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cotton (the plant), to card (cotton), a spinning wheel, to spin (thread), a knot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sleeve, to have (clothes) sewn, to unpick (stitches), to darn, to come unstitched",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sleeve, to have (clothes) sewn, to unpick (stitches), to darn, to come unstitched]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iron, brass, jewellery, to melt (something), to plate (with metal)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: iron, brass, jewellery, to melt (something), to plate (with metal)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An interview (for a job)? (انٹرویو, inṭarvyū.) Employment? (روزگار, rozgār.) A vacancy? (اسامی, asāmī.) Dismissed from a job? (برطرف, bartaraf.) To recruit? (بھرتی کرنا, bhartī karnā.) Wages? (اجرت, ujrat.) A strike? (ہڑتال, haṛtāl.) Expertise? (مہارت, mahārat.) A contractor? (ٹھیکیدار, ṭhekedār.) To use up (time or effort)? (کھپانا, khapānā.) A workshop? (ورکشاپ, varkshāp.) A clamp? (شکنجہ, shikanjā.) A hole? (سوراخ, surākh.) To bore (a hole)? (چھیدنا, chhednā.) Sandpaper? (ریگمال, regmāl.) A plank? (تختہ, takhtā.) Sawdust? (برادہ, burādā.) A carpenter's plane? (رندا, randā.) To knock in? (ٹھونکنا, ṭhoṅknā.) To file (metal or wood)? (ریتنا, retnā.) A potter's wheel? (چاک, chāk.) A mould? (سانچا, sāṅchā.) A potter's kiln? (آوا, āvā.) A large clay pot? (مٹکا, maṭkā.) To heat in a fire? (تپانا, tapānā.) Cotton (the plant)? (کپاس, kapās.) To card (cotton)? (دھننا, dhunnā.) A spinning wheel? (چرخہ, charkhā.) To spin (thread)? (کاتنا, kātnā.) A knot? (گانٹھ, gāṅṭh.) A sleeve? (آستین, āstīn.) To have (clothes) sewn? (سلوانا, silvānā.) To unpick (stitches)? (ادھیڑنا, udheṛnā.) To darn? (رفو کرنا, rafū karnā.) To come unstitched? (ادھڑنا, udhaṛnā.) Iron? (لوہا, lohā.) Brass? (پیتل, pītal.) Jewellery? (زیور, zevar.) To melt (something)? (پگھلانا, pighlānā.) To plate (with metal)? (مڑھنا, maṛhnā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

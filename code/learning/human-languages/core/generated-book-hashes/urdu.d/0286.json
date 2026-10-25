@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:0df546092e6d4cd0",
+  "lessonIds": [
+    "UR-C286-be-hosh",
+    "UR-C286-lahuluhan",
+    "UR-C286-ilaj",
+    "UR-C286-kuchalna",
+    "UR-C286-sambhalna-oneself"
+  ],
+  "tex": "urdu/book/chapters/ch286-the-injured.tex"
+}

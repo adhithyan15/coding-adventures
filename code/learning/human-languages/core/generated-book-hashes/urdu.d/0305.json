@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:0e3ef0f2e57dd0a4",
+  "lessonIds": [
+    "UR-C305-muamma",
+    "UR-C305-mukhbir",
+    "UR-C305-andaza",
+    "UR-C305-chaunkna",
+    "UR-C305-inkishaf"
+  ],
+  "tex": "urdu/book/chapters/ch305-the-truth-comes-out.tex"
+}

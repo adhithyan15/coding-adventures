@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:10ea24110e5fa6af",
+  "lessonIds": [
+    "UR-C508-bagharna",
+    "UR-C508-bhunna",
+    "UR-C508-dhakkan",
+    "UR-C508-dhanpna",
+    "UR-C508-kafgir"
+  ],
+  "tex": "urdu/book/chapters/ch508-heat-in-the-pan.tex"
+}

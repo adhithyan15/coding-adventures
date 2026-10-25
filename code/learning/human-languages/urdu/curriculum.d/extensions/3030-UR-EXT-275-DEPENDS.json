@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-275-DEPENDS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what something depends on (yih mausam par munhasir hai), say what would be or would have been (agar vaqt hotā, to maiṅ ātā), and tell a short story in six written lines.",
+  "prerequisites": []
+}

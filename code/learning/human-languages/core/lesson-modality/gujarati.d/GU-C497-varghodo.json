@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C497-varghodo",
+    "language": "gujarati",
+    "chapter": 497,
+    "sequence": 27590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31ab3e5c962b2e30"
+  },
+  "findings": []
+}

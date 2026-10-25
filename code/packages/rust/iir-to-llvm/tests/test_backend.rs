@@ -3768,3 +3768,98 @@ fn a_module_function_in_the_reserved_iir_namespace_is_refused_when_floats_are_pr
     m.functions.push(IIRFunction::new("__iir_f64_digits", vec![], "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]));
     assert!(lower_iir_to_llvm(&m, &IIRLlvmConfig::default()).is_err());
 }
+
+// ===========================================================================
+// LANG83 PR6c — non-trapping IEEE f64 arithmetic and f64_signbit
+// ===========================================================================
+
+/// `main` runs each `(op, operands)` on float constants, writes the result
+/// with `write_f64_js`, then writes its `f64_signbit` with `write_i64`, a
+/// space after each.
+fn ieee_program(cases: &[(&str, &[f64])]) -> IIRModule {
+    let mut m = float_program("write_f64_js", &[]);
+    let ret = m.functions[0].instructions.split_off(1);
+    let body = &mut m.functions[0].instructions;
+    for (i, (op, xs)) in cases.iter().enumerate() {
+        let mut srcs = vec![];
+        for (k, x) in xs.iter().enumerate() {
+            let name = format!("c{i}_{k}");
+            body.push(IIRInstr::new("const", Some(name.clone()), vec![Operand::Float(*x)], "f64"));
+            srcs.push(v(&name));
+        }
+        let (r, s) = (format!("r{i}"), format!("s{i}"));
+        body.push(IIRInstr::new(*op, Some(r.clone()), srcs, "f64"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("write_f64_js"), v(&r)], "void"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
+        body.push(IIRInstr::new("f64_signbit", Some(s.clone()), vec![v(&r)], "i64"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&s)], "void"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
+    }
+    body.extend(ret);
+    m
+}
+
+#[test]
+fn ieee_ops_lower_to_plain_llvm_float_instructions() {
+    let ll = lower(&ieee_program(&[
+        ("f64_add", &[1.0, 2.0]),
+        ("f64_sub", &[1.0, 2.0]),
+        ("f64_mul", &[1.0, 2.0]),
+        ("f64_div", &[1.0, 0.0]),
+        ("f64_neg", &[0.0]),
+    ]));
+    // Float constants are inlined as exact hexadecimal doubles.
+    for line in [
+        "%r0 = fadd double 0x3FF0000000000000, 0x4000000000000000",
+        "%r1 = fsub double",
+        "%r2 = fmul double",
+        "%r3 = fdiv double 0x3FF0000000000000, 0x0000000000000000",
+        "%r4 = fneg double 0x0000000000000000",
+    ] {
+        assert!(ll.contains(line), "missing `{line}`:\n{ll}");
+    }
+    // The sign bit: reinterpret, then a LOGICAL shift (0 or 1, never -1).
+    assert!(ll.contains("bitcast double %r0 to i64"), "{ll}");
+    assert!(ll.contains("%s0 = lshr i64 %__sgnbits"), "{ll}");
+    // Nothing traps: no trap call, no fast-math flags.
+    assert!(!ll.contains("@__iir_trap(") && !ll.contains("@llvm.trap"), "{ll}");
+    for flag in [" nnan ", " ninf ", " nsz ", " fast "] {
+        assert!(!ll.contains(flag), "fast-math flag {flag:?} would break the IEEE contract");
+    }
+    assert!(validate_for_llvm(&ieee_program(&[("f64_neg", &[1.0])])).is_empty());
+}
+
+#[test]
+fn ieee_ops_follow_the_edge_table_on_real_clang() {
+    let inf = f64::INFINITY;
+    let program = ieee_program(&[
+        ("f64_div", &[1.0, 0.0]),
+        ("f64_div", &[-1.0, 0.0]),
+        ("f64_div", &[0.0, 0.0]),
+        ("f64_mul", &[-1.0, 0.0]),
+        ("f64_mul", &[1e308, 10.0]),
+        ("f64_add", &[0.1, 0.2]),
+        ("f64_sub", &[-0.0, 0.0]),
+        ("f64_sub", &[inf, inf]),
+        ("f64_neg", &[0.0]),
+        ("f64_neg", &[-inf]),
+    ]);
+    let Some(out) = run_on_clang(&program, "ieee") else { return };
+    assert!(out.status.success(), "nothing traps: {}", String::from_utf8_lossy(&out.stderr));
+    // A NaN's sign bit is unspecified, so its signbit (after each "NaN") is
+    // checked only for being 0 or 1.
+    let text = String::from_utf8_lossy(&out.stdout).into_owned();
+    let words: Vec<&str> = text.split_whitespace().collect();
+    let want = [
+        "Infinity", "0", "-Infinity", "1", "NaN", "?", "0", "1", "Infinity", "0",
+        "0.30000000000000004", "0", "0", "1", "NaN", "?", "0", "1", "Infinity", "0",
+    ];
+    assert_eq!(words.len(), want.len(), "{text}");
+    for (got, want) in words.iter().zip(want) {
+        if want == "?" {
+            assert!(*got == "0" || *got == "1", "{text}");
+        } else {
+            assert_eq!(*got, want, "{text}");
+        }
+    }
+}

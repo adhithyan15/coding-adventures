@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C518-phug",
+    "language": "gujarati",
+    "chapter": 518,
+    "sequence": 28900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08cc9a5eb3b87be3"
+  },
+  "findings": []
+}

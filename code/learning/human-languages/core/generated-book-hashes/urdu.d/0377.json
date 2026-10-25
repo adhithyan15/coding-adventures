@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:715a1fd60813c675",
+  "lessonIds": [
+    "UR-C377-badtar",
+    "UR-C377-umda",
+    "UR-C377-am",
+    "UR-C377-bigarna-worsen",
+    "UR-C377-sudharna-improve"
+  ],
+  "tex": "urdu/book/chapters/ch377-better-and-worse.tex"
+}

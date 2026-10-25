@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R274-if-and-otherwise",
+    "language": "urdu",
+    "chapter": 274,
+    "sequence": 16640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d01bb966543cee2c"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:438e8fa29e61282c",
+  "lessonIds": [
+    "GU-C417-pol",
+    "GU-C417-deli",
+    "GU-C417-otlo",
+    "GU-C417-khadki",
+    "GU-C417-vasvu-shut"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch417.txt",
+  "json": "gujarati/narration/ch417.json",
+  "textHash": "fnv1a64:2e7c1aacbf8f8a02",
+  "jsonHash": "fnv1a64:d04ba345b5b2a0e9",
+  "findings": []
+}

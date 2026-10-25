@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:9596f604ce985892",
+  "lessonIds": [
+    "GU-C484-ilaj",
+    "GU-C484-upcar",
+    "GU-C484-nidan",
+    "GU-C484-matadvu",
+    "GU-C484-injeksan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch484.txt",
+  "json": "gujarati/narration/ch484.json",
+  "textHash": "fnv1a64:e8ddf411fb9e14f8",
+  "jsonHash": "fnv1a64:c8bbc02b59013d3c",
+  "findings": []
+}

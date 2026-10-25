@@ -1,0 +1,11 @@
+{
+  "id": "UR-C385-dakhila",
+  "pathSegment": "UR-PATH-385-DAKHILA385",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-385-DAKHILA385",
+      "order": 3
+    }
+  ]
+}

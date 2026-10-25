@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C469-nazla",
+    "language": "urdu",
+    "chapter": 469,
+    "sequence": 27520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9ef8898a67aac11"
+  },
+  "findings": []
+}

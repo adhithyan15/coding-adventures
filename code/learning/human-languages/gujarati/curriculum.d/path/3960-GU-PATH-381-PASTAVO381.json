@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-381-PASTAVO381",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GU-EXT-381-PASTAVO381"
+  ],
+  "after": []
+}

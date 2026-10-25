@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:b8b01202589dcce6",
+  "lessonIds": [
+    "UR-C344-barabar",
+    "UR-C344-imtiyaz",
+    "UR-C344-janibdari",
+    "UR-C344-zulm",
+    "UR-C344-uksana"
+  ],
+  "tex": "urdu/book/chapters/ch344-fair-and-unfair.tex"
+}

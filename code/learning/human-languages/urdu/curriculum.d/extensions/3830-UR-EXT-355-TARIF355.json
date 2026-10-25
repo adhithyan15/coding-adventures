@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-355-TARIF355",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who was praised and who was blamed.",
+  "prerequisites": []
+}

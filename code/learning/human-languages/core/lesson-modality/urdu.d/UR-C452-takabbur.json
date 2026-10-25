@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C452-takabbur",
+    "language": "urdu",
+    "chapter": 452,
+    "sequence": 26650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57d50b37f0580ce7"
+  },
+  "findings": []
+}

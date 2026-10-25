@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:c3c5968f1d5d6efe",
+  "lessonIds": [
+    "UR-C503-silan",
+    "UR-C503-int",
+    "UR-C503-palastar",
+    "UR-C503-rangvana",
+    "UR-C503-lipna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch503.txt",
+  "json": "urdu/narration/ch503.json",
+  "textHash": "fnv1a64:ffd3c02fd424a799",
+  "jsonHash": "fnv1a64:f4efd3c5044e04e5",
+  "findings": []
+}

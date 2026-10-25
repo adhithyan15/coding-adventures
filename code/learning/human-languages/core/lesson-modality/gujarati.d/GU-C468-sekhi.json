@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C468-sekhi",
+    "language": "gujarati",
+    "chapter": 468,
+    "sequence": 26100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ac79383d529dd09"
+  },
+  "findings": []
+}

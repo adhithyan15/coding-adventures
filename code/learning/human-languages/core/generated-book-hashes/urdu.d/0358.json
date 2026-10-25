@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:fa3d22b81ad53f39",
+  "lessonIds": [
+    "UR-C358-jalsa",
+    "UR-C358-sarbarah",
+    "UR-C358-zila",
+    "UR-C358-aksariyat",
+    "UR-C358-thukrana"
+  ],
+  "tex": "urdu/book/chapters/ch358-the-public-meeting.tex"
+}

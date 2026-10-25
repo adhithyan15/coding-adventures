@@ -198,6 +198,47 @@ without discharging the obligation.
 > non-top-level case (obligation 4). This is intended behaviour change, not a
 > regression — call it out explicitly in the Slice A commit message.
 
+## Addendum (#18115): call-bound keywords and arrow bodies
+
+The `this` / `arguments` rejection above was weaker than this spec says.
+Both candidate gates build their name set with `collect_binding_idents_expr`
+(directly, or through `collect_used_idents_stmt`). That walk:
+
+- had no entry for `this`, `super` or `new.target`. They are their own AST
+  nodes, not identifiers, so the expression gate's "every name is a
+  parameter" check and the statement gate's `this` check never fired;
+- recorded an arrow's parameters but not its body, although an arrow reads
+  its enclosing function's `this`, `arguments` and free names;
+- skipped template substitutions (`` `${x}` ``) and tagged-template
+  operands entirely;
+- skipped class methods' computed keys (`class{[this.k](){}}`), which run
+  in the enclosing scope.
+
+So ADVANCED spliced `function t(){return this}` into
+`var o={m:function(){return t()}}`, and `o.m()===o` turned from false to
+true.
+
+The walk now records `this`, `super` and `new.target` under their keyword
+spellings, walks arrow bodies, template and tagged-template operands, and
+class methods' computed keys. A reserved word can never be a parameter, local or declaration
+name, so the expression gate rejects any body that reads one. The statement
+gate rejects `this`, `arguments`, `super` and `new.target` by name.
+
+A `function` or `class` expression nested in the body keeps its own
+`this`. Since #18134 its body is walked too (`collect_nested_function_body`,
+also used for class method bodies). Its free names are collected, and its
+own `this`/`super`/`new.target`/`arguments` are dropped. Before that, a
+nested function could close over a caller's shadowing binding after a
+splice:
+
+```js
+var y=1; function t(){return function(){return y}}
+function g(){var y=2; return t()()}   // 1; after the splice, 2
+```
+
+The nested body's own locals are over-collected as well. That can cost an
+inline, never soundness.
+
 ## Test plan
 
 Extend `closure-pass-inline` unit tests (the harness already has

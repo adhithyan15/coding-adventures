@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:66fbeb6b2ccd2ab2",
+  "lessonIds": [
+    "UR-C436-qudrat",
+    "UR-C436-khushbu",
+    "UR-C436-konpal",
+    "UR-C436-pankhuri",
+    "UR-C436-murjhana"
+  ],
+  "tex": "urdu/book/chapters/ch436-nature.tex"
+}

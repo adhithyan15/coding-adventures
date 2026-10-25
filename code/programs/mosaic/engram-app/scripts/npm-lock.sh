@@ -68,7 +68,19 @@ install_from_lock() {
 # anything (--package-lock-only) or running any package's install scripts, from
 # versions published at least a week ago, then copies it over the committed one.
 update_lock() {
-  local app="$1" lock="$2" before
+  local app="$1" lock="$2" before npm_major
+  # npm 10's arborist crashes resolving vitest 4's peer graph from scratch
+  # ("Cannot read properties of null (reading 'edgesOut')"); npm 11 resolves it
+  # and writes the same lockfileVersion 3 that npm 10's `npm ci` reads. Fail
+  # with that explanation instead of the bare arborist error.
+  npm_major="$(npm --version)"
+  npm_major="${npm_major%%.*}"
+  if [[ "$npm_major" -lt 11 ]]; then
+    echo "error: --update-lock needs npm 11 or newer (found $(npm --version))" >&2
+    echo "       npm 10 crashes resolving the vitest 4 peer graph; see" >&2
+    echo "       lessons.d/npm-10-9-7-audit-fix-crashes-on-this-repo-s-vitest.md" >&2
+    return 1
+  fi
   before="$(node -e 'console.log(new Date(Date.now() - 7 * 864e5).toISOString())')"
   rm -f "$app/package-lock.json"
   ( cd "$app" && npm install --package-lock-only --ignore-scripts --before="$before" --no-audit --no-fund )

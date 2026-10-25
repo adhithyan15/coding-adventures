@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C276-ek-ravivar",
+    "language": "gujarati",
+    "chapter": 276,
+    "sequence": 14920,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:39bb2de90f98d154"
+  },
+  "findings": []
+}

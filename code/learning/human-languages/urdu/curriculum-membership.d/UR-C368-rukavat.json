@@ -1,0 +1,11 @@
+{
+  "id": "UR-C368-rukavat",
+  "pathSegment": "UR-PATH-368-HAL368",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-368-HAL368",
+      "order": 1
+    }
+  ]
+}

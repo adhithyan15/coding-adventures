@@ -1,0 +1,11 @@
+{
+  "id": "GU-C294-dhal",
+  "pathSegment": "GU-PATH-294-LAPAS294",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-294-LAPAS294",
+      "order": 3
+    }
+  ]
+}

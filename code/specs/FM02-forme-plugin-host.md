@@ -391,9 +391,15 @@ A `plugin.toml` is valid when:
    the optional `configSchema` parses as JSON Schema draft-07. A kind
    reference is either a bare kind name or `Stream<KindName>`; nested
    stream wrappers are rejected. This keeps streaming visible to DAG
-   typechecking before any untrusted process launches.
+   typechecking before any untrusted process launches. The accepted kernel
+   names are derived from FM01's exported `KINDS` roster rather than repeated
+   in the manifest package; consequently every shipped descriptor, including
+   `TerminalBuffer`, is accepted immediately and a removed or renamed kernel
+   kind cannot remain silently recognised by stale manifest code.
 10. Every `contributes.kinds` entry has a name beginning with
-    `ext:`; kernel kind names are reserved.
+    `ext:`; the same complete FM01 `KINDS` roster is reserved. A manifest contributes at most
+    1,024 kinds, and one resolved host snapshot retains at most 4,096
+    contributed kinds across all precedence-selected plugins.
 11. `resources.*` values are positive integers within the host's
     hard ceiling (host configurable, e.g. memory ≤ 16 GiB).
 12. If a `[signature]` section is present, the signature verifies
@@ -477,6 +483,11 @@ discovery root is outside the FM-B014 boundary. The FM-B049 installer core and
 FM-B056 CLI MUST stage atomically and enforce immutable, host-owned install
 roots before making them discoverable; FM-B015 closes their product
 integration milestone.
+
+The 128 MiB aggregate discovery snapshot budget charges each selected
+manifest's exact source byte length as well as its runtime entry and unique
+external schemas. The exported registry builder independently enforces the
+4,096-kind ceiling so direct callers cannot bypass discovery limits.
 
 Third-party plugin config schemas use the host's bounded draft-07 subset.
 `pattern` is rejected until a guaranteed-linear regex engine is available;

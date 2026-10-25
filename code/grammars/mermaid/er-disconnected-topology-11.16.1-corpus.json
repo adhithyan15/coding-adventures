@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 disconnected and recursive ER topology vertical slice",
+  "fixtures": [
+    {
+      "name": "upstream-entities-without-relationships",
+      "source": "erDiagram\nDEAD_PARROT\nHERMIT\nRECLUSE\nSOCIALITE }o--o{ SOCIALITE : \"interacts with\"\nRECLUSE }o--o{ SOCIALITE : avoids"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C328-fareb",
+  "pathSegment": "UR-PATH-328-SHAHZADA328",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-328-SHAHZADA328",
+      "order": 3
+    }
+  ]
+}

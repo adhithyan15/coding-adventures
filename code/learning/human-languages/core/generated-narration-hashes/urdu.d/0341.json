@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:4c568f4fa5d20d94",
+  "lessonIds": [
+    "UR-C341-hukmran",
+    "UR-C341-palisi",
+    "UR-C341-tajviz",
+    "UR-C341-iqtidar",
+    "UR-C341-thahrana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch341.txt",
+  "json": "urdu/narration/ch341.json",
+  "textHash": "fnv1a64:c7b20e67e2555d57",
+  "jsonHash": "fnv1a64:bcd1a776020a0dd7",
+  "findings": []
+}

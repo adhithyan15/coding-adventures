@@ -1,0 +1,8 @@
+[package]
+name = "motorola6800-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked functional simulator for the original Motorola MC6800"
+license = "MIT"
+
+[dependencies]

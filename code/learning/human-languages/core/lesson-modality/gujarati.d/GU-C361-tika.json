@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C361-tika",
+    "language": "gujarati",
+    "chapter": 361,
+    "sequence": 20130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ea9e57118a52705"
+  },
+  "findings": []
+}

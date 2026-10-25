@@ -1,0 +1,11 @@
+{
+  "id": "GU-C431-puravtho",
+  "pathSegment": "GU-PATH-431-STOCK431",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-431-STOCK431",
+      "order": 1
+    }
+  ]
+}

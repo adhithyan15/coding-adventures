@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C467-caritrya",
+    "language": "gujarati",
+    "chapter": 467,
+    "sequence": 26050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f110cacd7d7257d"
+  },
+  "findings": []
+}

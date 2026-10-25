@@ -1,4 +1,5 @@
-//! LANG83 PR6a on the JVM backend: `write_f64_py` / `write_f64_js`.
+//! LANG83 PR6a on the JVM backend: `write_f64_py` / `write_f64_js` — and,
+//! at the end, the PR6c IEEE ops whose results they print.
 //!
 //! Both lower to `dload x; iconst_<layout>; invokestatic __iir_write_f64(DI)V`,
 //! the class's own synthetic method, which searches `BigDecimal` roundings of
@@ -292,4 +293,98 @@ fn javascript_layout_on_a_real_jvm_matches_host_node() {
     let Some(out) = run_on_java(lower(&writes("write_f64_js", &values)), "js") else { return };
     let want: String = FLOAT_TABLE.iter().map(|(_, _, js)| format!("{js}\n")).collect();
     assert_eq!(out, want);
+}
+
+// ── LANG83 PR6c: IEEE arithmetic and the sign bit ──────────────────────────
+
+/// For each `(op, operands)`: compute on float constants, `write_f64_js` the
+/// result, then `write_i64` its `f64_signbit`, one pair per line.
+fn ieee(cases: &[(&str, &[f64])]) -> IIRModule {
+    let mut body = vec![
+        IIRInstr::new("str_const", Some("nl".into()), vec![Operand::Str("\n".into())], "str"),
+        IIRInstr::new("str_const", Some("sp".into()), vec![Operand::Str(" ".into())], "str"),
+    ];
+    for (i, (op, xs)) in cases.iter().enumerate() {
+        let mut srcs = vec![];
+        for (k, x) in xs.iter().enumerate() {
+            let name = format!("c{i}_{k}");
+            body.push(IIRInstr::new("const", Some(name.clone()), vec![Operand::Float(*x)], "f64"));
+            srcs.push(v(&name));
+        }
+        let (r, s) = (format!("r{i}"), format!("s{i}"));
+        body.push(IIRInstr::new(*op, Some(r.clone()), srcs, "f64"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("write_f64_js"), v(&r)], "void"));
+        body.push(IIRInstr::new("print_str", None, vec![v("sp")], "void"));
+        body.push(IIRInstr::new("f64_signbit", Some(s.clone()), vec![v(&r)], "i64"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&s)], "void"));
+        body.push(IIRInstr::new("print_str", None, vec![v("nl")], "void"));
+    }
+    body.push(IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"));
+    body.push(IIRInstr::new("ret", None, vec![v("z")], "i64"));
+    IIRModule { functions: vec![IIRFunction::new("main", vec![], "i64", body)], ..writes("write_f64_js", &[]) }
+}
+
+/// The emitted shape: `dadd`/`dsub`/`dmul`/`ddiv`/`dneg`, and the sign bit as
+/// `Double.doubleToRawLongBits` then a LOGICAL shift (`bipush 63; lushr`).
+#[test]
+fn pr6c_ieee_ops_lower_to_double_bytecode() {
+    let class = lower(&ieee(&[
+        ("f64_add", &[1.0, 2.0]),
+        ("f64_sub", &[1.0, 2.0]),
+        ("f64_mul", &[1.0, 2.0]),
+        ("f64_div", &[1.0, 0.0]),
+        ("f64_neg", &[0.0]),
+    ]));
+    let main = class.methods.iter().find(|m| m.name == "main").unwrap();
+    let JvmMethodAttribute::Code(code) = &main.attributes[0] else { panic!("no Code") };
+    for (op, byte) in [("dadd", 0x63u8), ("dsub", 0x67), ("dmul", 0x6B), ("ddiv", 0x6F), ("dneg", 0x77)] {
+        assert!(code.code.contains(&byte), "{op} missing");
+    }
+    assert!(code.code.windows(3).any(|w| w == [0x10, 63, 0x7D]), "bipush 63; lushr");
+    assert!(methodrefs(&class).iter().any(|r| r == "java/lang/Double.doubleToRawLongBits:(D)J"));
+}
+
+/// A non-double operand is a compile error, not a class the verifier rejects.
+#[test]
+fn pr6c_an_integer_operand_is_rejected() {
+    for op in ["f64_add", "f64_neg", "f64_signbit"] {
+        let srcs = if op == "f64_add" { vec![v("n"), v("n")] } else { vec![v("n")] };
+        let ty = if op == "f64_signbit" { "i64" } else { "f64" };
+        let m = IIRModule {
+            functions: vec![IIRFunction::new("main", vec![], "i64", vec![
+                IIRInstr::new("const", Some("n".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new(op, Some("r".into()), srcs, ty),
+                IIRInstr::new("ret", None, vec![v("n")], "i64"),
+            ])],
+            ..writes("write_f64_js", &[])
+        };
+        assert!(lower_iir_to_jvm(&m, &IIRJvmConfig::new("Main")).is_err(), "{op}");
+    }
+}
+
+/// The PR6c edge table on a real JVM, verifier on: nothing throws.
+#[test]
+fn pr6c_ieee_ops_follow_the_edge_table_on_java() {
+    let inf = f64::INFINITY;
+    let class = lower(&ieee(&[
+        ("f64_div", &[1.0, 0.0]),
+        ("f64_div", &[-1.0, 0.0]),
+        ("f64_div", &[0.0, 0.0]),
+        ("f64_mul", &[-1.0, 0.0]),
+        ("f64_mul", &[1e308, 10.0]),
+        ("f64_add", &[0.1, 0.2]),
+        ("f64_sub", &[-0.0, 0.0]),
+        ("f64_neg", &[0.0]),
+        ("f64_neg", &[-inf]),
+    ]));
+    let Some(out) = run_on_java(class, "pr6c") else { return };
+    let lines: Vec<&str> = out.lines().collect();
+    assert_eq!(lines.len(), 9, "{out}");
+    assert!(lines[2] == "NaN 0" || lines[2] == "NaN 1", "{out}");
+    let rest: Vec<&str> = lines.iter().enumerate().filter(|(i, _)| *i != 2).map(|(_, l)| *l).collect();
+    assert_eq!(
+        rest,
+        ["Infinity 0", "-Infinity 1", "0 1", "Infinity 0", "0.30000000000000004 0", "0 1", "0 1", "Infinity 0"],
+        "{out}"
+    );
 }

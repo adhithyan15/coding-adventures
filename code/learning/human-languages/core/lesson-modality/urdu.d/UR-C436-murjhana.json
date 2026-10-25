@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C436-murjhana",
+    "language": "urdu",
+    "chapter": 436,
+    "sequence": 25600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:848901ac081b2b4e"
+  },
+  "findings": []
+}

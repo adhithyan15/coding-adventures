@@ -1,0 +1,11 @@
+{
+  "id": "GU-C402-tempo",
+  "pathSegment": "GU-PATH-402-CART402",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-402-CART402",
+      "order": 1
+    }
+  ]
+}

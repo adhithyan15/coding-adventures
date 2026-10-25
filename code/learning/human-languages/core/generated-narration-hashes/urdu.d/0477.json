@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:c8de349de30995ca",
+  "lessonIds": [
+    "UR-C477-qatra",
+    "UR-C477-gholna",
+    "UR-C477-kaipsul",
+    "UR-C477-puriya",
+    "UR-C477-phankna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch477.txt",
+  "json": "urdu/narration/ch477.json",
+  "textHash": "fnv1a64:7743ff419e6d8b08",
+  "jsonHash": "fnv1a64:a0a9d721413db570",
+  "findings": []
+}

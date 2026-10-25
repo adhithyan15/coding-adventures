@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Laughter and Tears",
+  "label": "ch:ur-laughter-and-tears",
+  "canDo": "I can say what made someone laugh or cry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C453-mazaq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can say what made someone laugh or cry.",
+    "assesses": [
+      "UR-LEX-C453-LAUGH453-03",
+      "UR-LEX-C453-LAUGH453-04",
+      "UR-LEX-C453-LAUGH453-05"
+    ]
+  }
+}

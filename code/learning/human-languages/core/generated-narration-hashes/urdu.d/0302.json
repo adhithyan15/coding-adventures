@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:eae71b9b3d85089e",
+  "lessonIds": [
+    "UR-C302-afvah",
+    "UR-C302-charcha",
+    "UR-C302-dahshat",
+    "UR-C302-bharkana",
+    "UR-C302-avam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch302.txt",
+  "json": "urdu/narration/ch302.json",
+  "textHash": "fnv1a64:250b6d7896a0ef73",
+  "jsonHash": "fnv1a64:b0fcf6f0a0acb828",
+  "findings": []
+}

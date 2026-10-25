@@ -1,0 +1,11 @@
+{
+  "id": "GU-C314-gunjvu",
+  "pathSegment": "GU-PATH-314-HADTAL314",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-314-HADTAL314",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C418-sud",
+  "pathSegment": "UR-PATH-418-HISAB418",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-418-HISAB418",
+      "order": 1
+    }
+  ]
+}

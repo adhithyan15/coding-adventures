@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:e636b1187e7684ad",
+  "lessonIds": [
+    "UR-C440-jazba",
+    "UR-C440-ehsas",
+    "UR-C440-mahsus-karna",
+    "UR-C440-kaifiyat",
+    "UR-C440-mizaj"
+  ],
+  "tex": "urdu/book/chapters/ch440-naming-a-feeling.tex"
+}

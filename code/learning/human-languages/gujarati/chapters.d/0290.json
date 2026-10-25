@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "Bandits on the Road",
+  "label": "ch:gu-bandits-on-the-road",
+  "canDo": "I can tell how bandits stopped a bus and what they took.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C290-chinavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can tell how bandits stopped a bus and what they took.",
+    "assesses": [
+      "GU-LEX-C290-DAKU290-03",
+      "GU-LEX-C290-DAKU290-04",
+      "GU-LEX-C290-DAKU290-05"
+    ]
+  }
+}

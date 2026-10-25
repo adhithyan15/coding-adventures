@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C296-pato",
+    "language": "gujarati",
+    "chapter": 296,
+    "sequence": 16580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22a1502c4e411e85"
+  },
+  "findings": []
+}

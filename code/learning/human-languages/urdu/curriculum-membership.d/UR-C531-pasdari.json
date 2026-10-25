@@ -1,0 +1,11 @@
+{
+  "id": "UR-C531-pasdari",
+  "pathSegment": "UR-PATH-531-QAUL531",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-531-QAUL531",
+      "order": 2
+    }
+  ]
+}

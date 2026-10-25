@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
+
 ### Fixed — 1 stale style-drop pin removed (X-7)
 
 The emitters now lower this, so the gate's inverse ratchet

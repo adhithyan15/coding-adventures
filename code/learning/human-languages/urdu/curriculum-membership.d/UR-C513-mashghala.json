@@ -1,0 +1,11 @@
+{
+  "id": "UR-C513-mashghala",
+  "pathSegment": "UR-PATH-513-FURSAT513",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-513-FURSAT513",
+      "order": 1
+    }
+  ]
+}

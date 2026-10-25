@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "Two Ways to Go",
+  "label": "ch:ur-two-ways-to-go",
+  "canDo": "I can talk about alternatives and what to choose instead.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C537-muntakhab-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can talk about alternatives and what to choose instead.",
+    "assesses": [
+      "UR-LEX-C537-MUTABADIL537-03",
+      "UR-LEX-C537-MUTABADIL537-04",
+      "UR-LEX-C537-MUTABADIL537-05"
+    ]
+  }
+}

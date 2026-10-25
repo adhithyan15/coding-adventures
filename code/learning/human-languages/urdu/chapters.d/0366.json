@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "What Must Happen First",
+  "label": "ch:ur-what-must-happen-first",
+  "canDo": "I can say what is required before something can happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C366-mana-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can say what is required before something can happen.",
+    "assesses": [
+      "UR-LEX-C366-IJAZAT366-03",
+      "UR-LEX-C366-IJAZAT366-04",
+      "UR-LEX-C366-IJAZAT366-05"
+    ]
+  }
+}

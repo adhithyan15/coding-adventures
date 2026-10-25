@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "UR-W265-waw-hamza",
+    "language": "urdu",
+    "chapter": 265,
+    "sequence": 16150,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ce4b9878048e45f4",
+    "detachableSegments": [
+      "Script you'll notice: ؤ",
+      "Writing: ؤ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

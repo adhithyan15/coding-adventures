@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:85e715405e705189",
+  "lessonIds": [
+    "UR-C400-vatan",
+    "UR-C400-pardes",
+    "UR-C400-ajnabi",
+    "UR-C400-guzarna",
+    "UR-C400-vapasi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch400.txt",
+  "json": "urdu/narration/ch400.json",
+  "textHash": "fnv1a64:d0cf03eac2108290",
+  "jsonHash": "fnv1a64:f376ac2a5e83dddb",
+  "findings": []
+}

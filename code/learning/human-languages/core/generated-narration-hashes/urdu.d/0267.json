@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:8d2f1a48b1534b73",
+  "lessonIds": [
+    "UR-C267-bad",
+    "UR-W267-ain",
+    "UR-C267-kha-kar",
+    "UR-C267-pehle-phir",
+    "UR-C267-sara-ka-safar",
+    "UR-R267-a-story-in-order"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "urdu/narration/ch267.txt",
+  "json": "urdu/narration/ch267.json",
+  "textHash": "fnv1a64:23927e19ba6737ea",
+  "jsonHash": "fnv1a64:efef69bad33e06ee",
+  "findings": []
+}

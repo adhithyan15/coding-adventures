@@ -1,0 +1,11 @@
+{
+  "id": "UR-C323-manna",
+  "pathSegment": "UR-PATH-323-RIVAJ323",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-323-RIVAJ323",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C381-fakhr",
+  "pathSegment": "UR-PATH-381-KAMYAB381",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-381-KAMYAB381",
+      "order": 2
+    }
+  ]
+}

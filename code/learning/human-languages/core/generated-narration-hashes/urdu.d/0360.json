@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:508f45a569a4bb1b",
+  "lessonIds": [
+    "UR-C360-rahm",
+    "UR-C360-hamdardi",
+    "UR-C360-vafadar",
+    "UR-C360-gunah",
+    "UR-C360-thamna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch360.txt",
+  "json": "urdu/narration/ch360.json",
+  "textHash": "fnv1a64:4a3b400b4b029707",
+  "jsonHash": "fnv1a64:44f5051ea363c955",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C435-dubki",
+    "language": "urdu",
+    "chapter": 435,
+    "sequence": 25550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b0d27e46eaa1cc8"
+  },
+  "findings": []
+}

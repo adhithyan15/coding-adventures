@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:f61e908ae85513d5",
+  "lessonIds": [
+    "GU-C341-dalil",
+    "GU-C341-carca",
+    "GU-C341-muddo",
+    "GU-C341-sandarbh",
+    "GU-C341-uthavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch341-making-a-point.tex"
+}

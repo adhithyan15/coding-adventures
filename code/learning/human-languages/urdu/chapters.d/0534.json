@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "On the Board",
+  "label": "ch:ur-on-the-board",
+  "canDo": "I can talk about board games and their pieces.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C534-ludo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can talk about board games and their pieces.",
+    "assesses": [
+      "UR-LEX-C534-BISAT534-03",
+      "UR-LEX-C534-BISAT534-04",
+      "UR-LEX-C534-BISAT534-05"
+    ]
+  }
+}

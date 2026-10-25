@@ -1,5 +1,101 @@
 # Changelog
 
+## Unreleased — LANG84 phase 7c, slice 2: Python 2 literals; 2.4, 2.6, 3.5.10, 3.6.0
+
+### Added
+- **Python 2 integer literals.** A new `ReleaseProfile` field,
+  `int_literals` (`IntLiterals::Decimal` for `py3`, `IntLiterals::Python2`
+  for `py2`), picks the decoder. The `py2` decoder reads every spelling the
+  tags' `tok_get` lexes and `parsenumber` reads: decimal, octal `0[0-7]*`
+  (`010` is 8), hex `0x`, PEP 3127 `0o`/`0b`, and an `l`/`L` long suffix,
+  which changes no value (`str()` of a long has no `L`; a long that fits
+  `i64` does the same arithmetic as an int). The lexer decides which
+  prefixes a release has: `0o17` never reaches the decoder from a 2.2 or
+  2.4 tree. A literal above `i64::MAX` is refused as `Unsupported`, which
+  also avoids the one spelling two Python 2 releases read differently (a hex
+  or octal literal between `LONG_MAX` and `ULONG_MAX` is negative at 2.2
+  and a positive long from 2.4, PEP 237). The decoders are free functions
+  (`decode_decimal`, `decode_python2`, `digits_value`), so a forged token is
+  re-checked by the same code.
+- **Four more profiled releases:** 2.4 and 2.6 (`py2`), 3.5.10 and 3.6.0
+  (`py3`). `profile_for` lists them.
+- **Corpus.** `py2-int-print` grows to 49 cases (24 positive):
+  `octal_literals` and `long_suffix` (formerly `reject_octal` and
+  `reject_long_suffix`), `hex_literals`, `pep3127_literals`
+  (`.reject@2.2`, `.reject@2.4`) and `overflow_long_literal`, plus eight
+  refusals (`08`, `0o8`, `0b2`, `0x`, `1LL`, and hex, octal and long
+  literals above `i64`). `py-int-print`'s `int_underscores` gains
+  `.reject@3.5.10`.
+- **Tests.** `python_2_integer_literals_follow_each_release` (prefixes per
+  release, refusals, and eight spellings of 8 that lower to identical IIR);
+  `the_translation_keeps_every_literal_value`; py2 forged-token checks in
+  `forged_trees_are_refused`. The translate-to-Python-3 oracle now rewrites
+  `0NNN` to `0oNNN` and drops the `L` suffix; it agrees on all 24 positive
+  cases.
+
+### Changed
+- **Release sweep.** `release_classes.csv` now has four classes. Python 3:
+  {3.0a1, 3.5.10} (no PEP 515 `_`), represented by 3.0a1, and {3.6.0,
+  3.12.3, 3.13.16, 3.11.17, 3.16.0a1}, now represented by 3.6.0 (it
+  replaces 3.12.3 as the earliest member). Python 2: {2.2, 2.4} and {2.6,
+  2.7.18}, split by `pep3127_literals`; represented by 2.2 and 2.6.
+- The release lists and counts in `release_subsets`, `release_sweep` and
+  `cst_contract` (11 profiled releases).
+- The decimal decoder's leading-zero message now says "a SyntaxError in
+  Python 3 (Python 2 read them as octal)", since one subset now has octal.
+
+## Unreleased — LANG84 phase 7c, slice 1: Python 2 (`py2-int-print`)
+
+### Added
+- **The `py2` profile** (`profiles::PY2`, `Slash::Classic`) for releases 2.2
+  and 2.7.18, and a `subset` field on `ReleaseProfile` (`py-int-print` for
+  `py3`, `py2-int-print` for `py2`). The profile's doc comment cites the
+  tags' `Objects/intobject.c` (classic `/` floors through `i_divmod`; a zero
+  divisor raises `ZeroDivisionError`; a result past the C `long` is promoted
+  to `long`), `Python/ceval.c` (`PRINT_ITEM`/`PRINT_NEWLINE`) and
+  `Python/pythonrun.c` (`Py_FlushLine`). Blob IDs are in
+  `pair-evidence.csv`.
+- **Python 2's `print` statement.** `int_lower` dispatches on the shape of
+  the tree: a `small_stmt` whose child is a `print_stmt` node is the Python 2
+  statement, never a release ID. `print <expr>` lowers to `print_i64` and a
+  bare `print` to `putchar 10`. `print a, b` and `print a,` are refused
+  (`Unsupported`): CPython 2 flushes a pending softspace as `\n` before an
+  uncaught exception, so `print 1, 1/0` writes `1\n`, and only a trap
+  handler could reproduce that.
+- **Classic `/`** lowers exactly like `//`, including the `-1` divisor fold.
+  Before this it was refused as "no release pair yet".
+- `SUBSETS` (both subsets) and `profiles::PROFILE_RULES` (rules a profile's
+  grammars add). `cst_contract` checks that `print_stmt` exists in exactly
+  the `py2` releases.
+- **Tests.** The corpus, identity-class and sweep tests run once per subset;
+  `tests/common` takes the subset by name.
+  - `py2_int_print_corpus_holds_on_every_claiming_release`: 38 cases × 2
+    releases.
+  - `python_2_and_python_3_disagree_where_the_languages_do`.
+  - `py2_corpus_agrees_with_host_python3_after_translation`: there is no
+    host `python2`, so each accepted case is translated (`print X` →
+    `print(X)`, `/` → `//`) and run on host `python3`. The translation is
+    exact on ints, because both languages floor and neither overflows.
+  - `release_classes.csv` gains the `py2-int-print` rows: one class,
+    {2.2, 2.7.18}, represented by 2.2.
+
+### Security
+
+- `compile_cst` refuses a tree whose `print` shape belongs to the other
+  profile's grammar. A `print_stmt` lowers only under `py2`, and a call-form
+  `print(…)` only under `py3`. Before this, a Python 3 tree compiled under a
+  Python 2 release lowered `print()` as a newline, but Python 2 prints `()`.
+  Source paths always parse with the release's own grammar, so only direct
+  `compile_cst` callers could reach this. The security review found it, and
+  the test is `a_tree_from_the_other_profiles_grammar_is_refused`.
+
+### Changed
+- Error messages name the release's subset (`py-int-print` or
+  `py2-int-print`) instead of always `py-int-print`. A release with no
+  profile is refused with `no IIR profile for any of py-int-print,
+  py2-int-print`. The leading-zero message covers both Python 2 (octal) and
+  Python 3 (SyntaxError).
+
 ## Unreleased — grammar-tools adjacency predicates (E6)
 
 ### Changed

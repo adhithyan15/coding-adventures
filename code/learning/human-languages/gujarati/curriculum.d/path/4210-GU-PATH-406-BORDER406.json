@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-406-BORDER406",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GU-EXT-406-BORDER406"
+  ],
+  "after": []
+}

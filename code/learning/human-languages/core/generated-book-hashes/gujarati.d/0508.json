@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:e761b2d31574c64f",
+  "lessonIds": [
+    "GU-C508-lokhand",
+    "GU-C508-luhar",
+    "GU-C508-bhaththi",
+    "GU-C508-tapavvu",
+    "GU-C508-eran",
+    "GU-R508-review-501-508"
+  ],
+  "tex": "gujarati/book/chapters/ch508-the-blacksmith-s-fire.tex"
+}

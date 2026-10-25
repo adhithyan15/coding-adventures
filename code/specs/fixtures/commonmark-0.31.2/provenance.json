@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "profile": "commonmark-0.31.2",
+  "source_url": "https://spec.commonmark.org/0.31.2/spec.json",
+  "specification_url": "https://spec.commonmark.org/0.31.2/",
+  "version": "0.31.2",
+  "published": "2024-01-28",
+  "author": "John MacFarlane",
+  "license": {
+    "spdx": "CC-BY-SA-4.0",
+    "url": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "artifact": {
+    "path": "spec.json",
+    "bytes": 140487,
+    "sha256": "d431b29d97b6f73e69d547109cf5081578fac931e72afe95639ebe766c1b2a20",
+    "examples": 652
+  }
+}

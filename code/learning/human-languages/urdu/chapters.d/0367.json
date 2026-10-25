@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Formal Conditions",
+  "label": "ch:ur-formal-conditions",
+  "canDo": "I can understand conditions in a formal notice.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C367-nafiz-hona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can understand conditions in a formal notice.",
+    "assesses": [
+      "UR-LEX-C367-QAIDA367-03",
+      "UR-LEX-C367-QAIDA367-04",
+      "UR-LEX-C367-QAIDA367-05"
+    ]
+  }
+}

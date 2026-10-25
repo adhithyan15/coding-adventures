@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C475-baheru",
+    "language": "gujarati",
+    "chapter": 475,
+    "sequence": 26440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a440c8a16821695f"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-409-LODGE409",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GU-EXT-409-LODGE409"
+  ],
+  "after": []
+}

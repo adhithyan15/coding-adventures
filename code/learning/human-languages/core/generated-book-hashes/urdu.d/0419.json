@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:5a2ca95349161cac",
+  "lessonIds": [
+    "UR-C419-munafa",
+    "UR-C419-khasara",
+    "UR-C419-sarmaya",
+    "UR-C419-asasa",
+    "UR-C419-sametna"
+  ],
+  "tex": "urdu/book/chapters/ch419-profit-and-loss.tex"
+}

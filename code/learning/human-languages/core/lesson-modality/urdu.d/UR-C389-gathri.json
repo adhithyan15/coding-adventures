@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C389-gathri",
+    "language": "urdu",
+    "chapter": 389,
+    "sequence": 23160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e6d3bb47d3342d7"
+  },
+  "findings": []
+}

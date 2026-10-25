@@ -1,0 +1,11 @@
+{
+  "id": "UR-C421-kard",
+  "pathSegment": "UR-PATH-421-KAGHAZ421",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-421-KAGHAZ421",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:217b180bc9ba4bdc",
+  "lessonIds": [
+    "GU-C497-kankotri",
+    "GU-C497-pithi",
+    "GU-C497-jan",
+    "GU-C497-varghodo",
+    "GU-C497-parnavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch497-wedding-plans.tex"
+}

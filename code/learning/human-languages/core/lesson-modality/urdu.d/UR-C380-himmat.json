@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C380-himmat",
+    "language": "urdu",
+    "chapter": 380,
+    "sequence": 22530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:481229c92522ec57"
+  },
+  "findings": []
+}

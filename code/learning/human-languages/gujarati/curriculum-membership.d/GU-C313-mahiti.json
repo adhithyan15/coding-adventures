@@ -1,0 +1,11 @@
+{
+  "id": "GU-C313-mahiti",
+  "pathSegment": "GU-PATH-313-AFVA313",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-313-AFVA313",
+      "order": 3
+    }
+  ]
+}

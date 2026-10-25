@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C396-mahsul",
+    "language": "urdu",
+    "chapter": 396,
+    "sequence": 23520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8ea2b56a85c8fbe"
+  },
+  "findings": []
+}

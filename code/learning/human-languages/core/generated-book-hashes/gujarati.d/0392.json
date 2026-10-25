@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:df65fd120147fbcb",
+  "lessonIds": [
+    "GU-C392-sajj",
+    "GU-C392-jagrat",
+    "GU-C392-upakaran",
+    "GU-C392-atmavisvas",
+    "GU-C392-gothvavu",
+    "GU-R392-review-386-392",
+    "GU-R392-review-final-392"
+  ],
+  "tex": "gujarati/book/chapters/ch392-ready-for-anything.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C330-bikna",
+  "pathSegment": "UR-PATH-330-SAFHA330",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-330-SAFHA330",
+      "order": 3
+    }
+  ]
+}

@@ -467,3 +467,40 @@ fn root_rejects_trailing_data_and_zero_depth_budget() {
         Asn1ErrorKind::DepthLimitExceeded
     );
 }
+
+#[test]
+fn embedded_document_inherits_the_container_depth_and_element_budget() {
+    let encoded = [0x30, 0x04, 0x04, 0x02, 0x05, 0x00];
+    let limits = Asn1Limits {
+        max_depth: 2,
+        ..Asn1Limits::default()
+    };
+    let mut decoder = Asn1Decoder::new(limits);
+    let root = decoder.decode_exact(&encoded).unwrap();
+    let mut fields = decoder.sequence(root).unwrap();
+    let container = fields.read(&mut decoder).unwrap().unwrap();
+    let context = container.container_context().unwrap();
+    let contents = decode_octet_string(container).unwrap();
+
+    assert_eq!(decoder.elements_read(), 2);
+    assert_eq!(
+        decoder
+            .decode_exact_embedded(container, contents)
+            .unwrap_err()
+            .kind(),
+        Asn1ErrorKind::DepthLimitExceeded
+    );
+    assert_eq!(decoder.elements_read(), 2);
+
+    assert_eq!(
+        decoder
+            .decode_exact_embedded_context(context, contents)
+            .unwrap_err()
+            .kind(),
+        Asn1ErrorKind::DepthLimitExceeded
+    );
+    assert_eq!(decoder.elements_read(), 2);
+
+    let mut independent = Asn1Decoder::new(limits);
+    assert!(independent.decode_exact(contents).is_ok());
+}

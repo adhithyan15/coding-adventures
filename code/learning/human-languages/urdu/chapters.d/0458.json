@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Patience and Temper",
+  "label": "ch:ur-patience-and-temper",
+  "canDo": "I can say whether someone keeps their patience.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C458-sahna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can say whether someone keeps their patience.",
+    "assesses": [
+      "UR-LEX-C458-PATIENCE458-03",
+      "UR-LEX-C458-PATIENCE458-04",
+      "UR-LEX-C458-PATIENCE458-05"
+    ]
+  }
+}

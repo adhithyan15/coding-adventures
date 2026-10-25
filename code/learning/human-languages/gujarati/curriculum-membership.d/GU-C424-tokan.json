@@ -1,0 +1,11 @@
+{
+  "id": "GU-C424-tokan",
+  "pathSegment": "GU-PATH-424-COUNTER424",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-424-COUNTER424",
+      "order": 3
+    }
+  ]
+}

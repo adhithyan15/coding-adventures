@@ -1,0 +1,11 @@
+{
+  "id": "UR-C383-qati",
+  "pathSegment": "UR-PATH-383-MANZURI383",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-383-MANZURI383",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Getting Ready",
+  "label": "ch:ur-getting-ready",
+  "canDo": "I can say what to try if the first plan fails.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C380-jutna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can say what to try if the first plan fails.",
+    "assesses": [
+      "UR-LEX-C380-MASHQ380-03",
+      "UR-LEX-C380-MASHQ380-04",
+      "UR-LEX-C380-MASHQ380-05"
+    ]
+  }
+}

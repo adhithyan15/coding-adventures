@@ -1,0 +1,20 @@
+{
+  "chapter": 274,
+  "title": "What won't happen, and what was going to",
+  "label": "ch:gu-what-won-t-happen-and-what-was-going-to",
+  "canDo": "I can say what will not happen (hũ nahī̃ āvũ, te nahī̃ jāy), and what was going to happen but did not (hũ javāno hato, paṇ …).",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-R274-plans-that-changed",
+    "kind": "production",
+    "summary": "Complete GU-R274-plans-that-changed: say what will not happen, and what was going to happen.",
+    "assesses": [
+      "GU-GRAMMAR-C274-NEGATIVE-FUTURE-01",
+      "GU-GRAMMAR-C274-NEGATIVE-SHORT-VERBS-01",
+      "GU-GRAMMAR-C274-WAS-GOING-01",
+      "GU-GRAMMAR-C274-WAS-GOING-BUT-01"
+    ]
+  }
+}

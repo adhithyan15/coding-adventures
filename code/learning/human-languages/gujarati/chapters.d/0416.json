@@ -1,0 +1,21 @@
+{
+  "chapter": 416,
+  "title": "Areas and Places",
+  "label": "ch:gu-areas-and-places",
+  "canDo": "I can talk about the parts of a town and its edges.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-R416-review-409-416",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can talk about the parts of a town and its edges.",
+    "assesses": [
+      "GU-LEX-C416-AREA416-01",
+      "GU-LEX-C416-AREA416-02",
+      "GU-LEX-C416-AREA416-03",
+      "GU-LEX-C416-AREA416-04",
+      "GU-LEX-C416-AREA416-05"
+    ]
+  }
+}

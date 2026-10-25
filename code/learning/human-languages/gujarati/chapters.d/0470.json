@@ -1,0 +1,21 @@
+{
+  "chapter": 470,
+  "title": "Face and Hair",
+  "label": "ch:gu-face-and-hair",
+  "canDo": "I can describe a face and a hairstyle.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R470-review-463-470",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can describe a face and a hairstyle.",
+    "assesses": [
+      "GU-LEX-C470-CAHERO470-01",
+      "GU-LEX-C470-CAHERO470-02",
+      "GU-LEX-C470-CAHERO470-03",
+      "GU-LEX-C470-CAHERO470-04",
+      "GU-LEX-C470-CAHERO470-05"
+    ]
+  }
+}

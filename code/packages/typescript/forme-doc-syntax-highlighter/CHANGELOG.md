@@ -3,6 +3,8 @@
 ## Unreleased
 
 - Highlights both code variants without losing fenced name/info or prior decoration. `HighlightedFencedBlockNode` complements the unchanged legacy interface; v0 still emits plain spans and executes no language plugins.
+- Reconcile the downstream pipeline documentation with the complete
+  shipped DOC00 v0 cluster while retaining grammar colouring as v1 work.
 
 ## 1.0.0 — 2026-10-05
 

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 429,
+  "title": "Damp and Cold",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:778aa65a817bbde2",
+  "lessons": [
+    {
+      "id": "UR-C429-nami",
+      "sequence": 25200,
+      "title": "نمی (namī) — moisture; damp",
+      "headword": "نمی",
+      "romanization": "namī",
+      "gloss": "moisture; damp",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5d23d8118d8a50c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for steam, then the Urdu for to gather (of clouds)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نمی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نمی — namī — \"moisture; damp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بارش کے بعد دیوار میں نمی ہے۔ bārish ke bād dīvār meṅ namī hai. After the rain the wall is damp."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نمی (namī) is built on nam, \"damp, moist\", usually traced to Persian nam, with the ending -ī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārish ke bād dīvār meṅ namī hai. — After the rain the wall is damp.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārish ke bād dīvār meṅ namī hai.* — After the rain the wall is damp.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for steam, then the Urdu for to gather (of clouds), then say namī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for steam, then the Urdu for to gather (of clouds), then say *namī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نمی (namī) mean? (\"Moisture; damp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C429-thand",
+      "sequence": 25210,
+      "title": "ٹھنڈ (ṭhanḍ) — a chill; the cold",
+      "headword": "ٹھنڈ",
+      "romanization": "ṭhanḍ",
+      "gloss": "a chill; the cold",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c6969514fa9e3df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to gather (of clouds), then the Urdu for moisture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ٹھنڈ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹھنڈ — ṭhanḍ — \"a chill; the cold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "صبح کی ٹھنڈ میں ہم نے چائے پی۔ subah kī ṭhanḍ meṅ ham ne chāe pī. We drank tea in the morning chill."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹھنڈ (ṭhanḍ) is inherited: it belongs with Hindi ṭhaṇḍā, \"cold\", which CDIAL lists under Sanskrit stabdha, \"stiff, numb\" (CDIAL 13676)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhanḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhanḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhanḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhanḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subah kī ṭhanḍ meṅ ham ne chāe pī. — We drank tea in the morning chill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subah kī ṭhanḍ meṅ ham ne chāe pī.* — We drank tea in the morning chill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to gather (of clouds), then the Urdu for moisture, then say ṭhanḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to gather (of clouds), then the Urdu for moisture, then say *ṭhanḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ٹھنڈ (ṭhanḍ) mean? (\"A chill; the cold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C429-jara",
+      "sequence": 25220,
+      "title": "جاڑا (jāṛā) — winter; the cold season",
+      "headword": "جاڑا",
+      "romanization": "jāṛā",
+      "gloss": "winter; the cold season",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:287b2059cd6e64b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for moisture, then the Urdu for a chill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جاڑا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جاڑا — jāṛā — \"winter; the cold season\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جاڑے میں پہاڑوں پر برف گرتی ہے۔ jāṛe meṅ pahāṛoṅ par barf girtī hai. In the cold season snow falls on the mountains."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جاڑا (jāṛā) is inherited: CDIAL lists the Hindi cousin jāṛā, \"coldness, winter\", under Sanskrit jāḍya, \"chilliness\" (CDIAL 5180)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāṛā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāṛā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāṛe meṅ pahāṛoṅ par barf girtī hai. — In the cold season snow falls on the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāṛe meṅ pahāṛoṅ par barf girtī hai.* — In the cold season snow falls on the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for moisture, then the Urdu for a chill, then say jāṛā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for moisture, then the Urdu for a chill, then say *jāṛā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جاڑا (jāṛā) mean? (\"Winter; the cold season\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C429-sikurna",
+      "sequence": 25230,
+      "title": "سکڑنا (sikuṛnā) — to shrink; to huddle up",
+      "headword": "سکڑنا",
+      "romanization": "sikuṛnā",
+      "gloss": "to shrink; to huddle up",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32cf9248e790fe9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a chill, then the Urdu for the cold season."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سکڑنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سکڑنا — sikuṛnā — \"to shrink; to huddle up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سردی میں بچے کمبل میں سکڑ گئے۔ sardī meṅ bachche kambal meṅ sikuṛ gae. In the cold the children huddled up under the blanket."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ کرتا سکڑ گیا, voh kurtā sikuṛ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سکڑنا (sikuṛnā) is inherited: CDIAL lists the Hindi cousins sãkaṛnā and sikaṛnā, \"to be contracted\", under Sanskrit saṃkuṭati, \"bends oneself together\" (CDIAL 12825)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sikuṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sikuṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sikuṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sikuṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sardī meṅ bachche kambal meṅ sikuṛ gae. — In the cold the children huddled up under the blanket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sardī meṅ bachche kambal meṅ sikuṛ gae.* — In the cold the children huddled up under the blanket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a chill, then the Urdu for the cold season, then say sikuṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a chill, then the Urdu for the cold season, then say *sikuṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سکڑنا (sikuṛnā) mean? (\"To shrink; to huddle up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C429-akarna",
+      "sequence": 25240,
+      "title": "اکڑنا (akaṛnā) — to go stiff; to go numb",
+      "headword": "اکڑنا",
+      "romanization": "akaṛnā",
+      "gloss": "to go stiff; to go numb",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:270db3e43007a137",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for the cold season, then the Urdu for to shrink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اکڑنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اکڑنا — akaṛnā — \"to go stiff; to go numb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ٹھنڈ سے میری انگلیاں اکڑ گئیں۔ ṭhanḍ se merī ungliyāṅ akaṛ gaīṅ. My fingers went stiff with the cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): وہ اکڑ گیا, voh akaṛ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اکڑنا (akaṛnā) is inherited: CDIAL lists the Hindi cousin akaṛnā, \"to be numbed\", under ākkaḍa, \"cramped, stiff\", a form it reconstructs (CDIAL 1013)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akaṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akaṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akaṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akaṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhanḍ se merī ungliyāṅ akaṛ gaīṅ. — My fingers went stiff with the cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhanḍ se merī ungliyāṅ akaṛ gaīṅ.* — My fingers went stiff with the cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for the cold season, then the Urdu for to shrink, then say akaṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for the cold season, then the Urdu for to shrink, then say *akaṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اکڑنا (akaṛnā) mean? (\"To go stiff; to go numb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

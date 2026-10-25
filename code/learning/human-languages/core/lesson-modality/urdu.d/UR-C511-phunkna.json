@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C511-phunkna",
+    "language": "urdu",
+    "chapter": 511,
+    "sequence": 29900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7723dc8e504f14c6"
+  },
+  "findings": []
+}

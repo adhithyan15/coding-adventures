@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:a8feff604dc96cc5",
+  "lessonIds": [
+    "GU-C451-valagvu",
+    "GU-C451-cumvu",
+    "GU-C451-bajhvu",
+    "GU-C451-pyar",
+    "GU-C451-capvu"
+  ],
+  "tex": "gujarati/book/chapters/ch451-holding-close.tex"
+}

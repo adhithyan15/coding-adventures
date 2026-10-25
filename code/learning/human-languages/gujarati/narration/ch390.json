@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 390,
+  "title": "Making It Grow",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:953d1c63f73bfe6c",
+  "lessons": [
+    {
+      "id": "GU-C390-pak",
+      "sequence": 21610,
+      "title": "પાક (pāk) — a crop",
+      "headword": "પાક",
+      "romanization": "pāk",
+      "gloss": "a crop",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1e8ced13cb55e2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to hesitate, then the Gujarati for to waver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પાક",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાક — pāk — \"a crop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો સમયસર વરસાદ પડશે તો આ વરસે પાક સારો થશે. jo samaysar varsād paḍśe to ā varse pāk sāro thaśe. If the rain comes on time, the crop will be good this year."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાક (pāk) shares its source with પાકવું (pākvũ), \"to ripen\": CDIAL traces both to Sanskrit pakvá, \"cooked, ripe\", which in the Atharvaveda already meant \"ripe corn\" (CDIAL 7621). CDIAL glosses the Gujarati noun only as \"sugar boiled for conserves\", so \"a crop\" is a sense it does not give."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo samaysar varsād paḍśe to ā varse pāk sāro thaśe. — If the rain comes on time, the crop will be good this year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo samaysar varsād paḍśe to ā varse pāk sāro thaśe.* — If the rain comes on time, the crop will be good this year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to hesitate, then the Gujarati for to waver, then say pāk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to hesitate, then the Gujarati for to waver, then say *pāk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પાક (pāk) mean? (\"A crop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C390-paripakva",
+      "sequence": 21620,
+      "title": "પરિપક્વ (paripakva) — mature",
+      "headword": "પરિપક્વ",
+      "romanization": "paripakva",
+      "gloss": "mature",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99fc3f3504f0d66f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to waver, then the Gujarati for a crop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પરિપક્વ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પરિપક્વ — paripakva — \"mature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તે થોડો વધારે પરિપક્વ હોત તો આવી ભૂલ ન કરત. jo te thoḍo vadhāre paripakva hot to āvī bhūl na karat. If he were a little more mature, he would not make such a mistake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પરિપક્વ (paripakva) is a tatsama, borrowed from Sanskrit paripakva, \"completely cooked, fully ripe\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paripakva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paripakva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paripakva, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paripakva*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo te thoḍo vadhāre paripakva hot to āvī bhūl na karat. — If he were a little more mature, he would not make such a mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo te thoḍo vadhāre paripakva hot to āvī bhūl na karat.* — If he were a little more mature, he would not make such a mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to waver, then the Gujarati for a crop, then say paripakva again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to waver, then the Gujarati for a crop, then say *paripakva* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પરિપક્વ (paripakva) mean? (\"Mature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C390-ujjad",
+      "sequence": 21630,
+      "title": "ઉજ્જડ (ujjaḍ) — barren",
+      "headword": "ઉજ્જડ",
+      "romanization": "ujjaḍ",
+      "gloss": "barren",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ffd2ec98863a042",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a crop, then the Gujarati for mature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉજ્જડ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉજ્જડ — ujjaḍ — \"barren\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આપણે જંગલ કાપીશું તો આ ધરતી ઉજ્જડ થઈ જશે. jo āpaṇe jaṅgal kāpīśũ to ā dhartī ujjaḍ thaī jaśe. If we cut down the forest, this land will turn barren."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉજ્જડ (ujjaḍ) CDIAL lists the Gujarati word, \"waterless, barren\", under a reconstructed ujjaṭa-, \"uprooted, laid waste\" (CDIAL 1660b)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujjaḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujjaḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujjaḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujjaḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo āpaṇe jaṅgal kāpīśũ to ā dhartī ujjaḍ thaī jaśe. — If we cut down the forest, this land will turn barren.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo āpaṇe jaṅgal kāpīśũ to ā dhartī ujjaḍ thaī jaśe.* — If we cut down the forest, this land will turn barren.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a crop, then the Gujarati for mature, then say ujjaḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a crop, then the Gujarati for mature, then say *ujjaḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઉજ્જડ (ujjaḍ) mean? (\"Barren\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C390-ugadvu",
+      "sequence": 21640,
+      "title": "ઉગાડવું (ugāḍvũ) — to grow plants",
+      "headword": "ઉગાડવું",
+      "romanization": "ugāḍvũ",
+      "gloss": "to grow plants",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:796cd49818508d93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for mature, then the Gujarati for barren."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉગાડવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉગાડવું — ugāḍvũ — \"to grow plants\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે આંગણામાં ટામેટાં ઉગાડશો તો બજારમાંથી ખરીદવાં નહીં પડે. jo tame ā̃gṇāmā̃ ṭāmeṭā̃ ugāḍśo to bajārmā̃thī kharīdvā̃ nahī̃ paḍe. If you grow tomatoes in the courtyard, you will not have to buy them at the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે બગીચામાં ફૂલ ઉગાડ્યાં, teṇe bagīcāmā̃ phūl ugāḍyā̃."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉગાડવું (ugāḍvũ) is the causative of ઊગવું (ūgvũ), \"to rise, to sprout\", from a reconstructed udgāti, \"rises, comes forth\" (CDIAL 1954)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ugāḍvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ugāḍvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ugāḍvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ugāḍvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame ā̃gṇāmā̃ ṭāmeṭā̃ ugāḍśo to bajārmā̃thī kharīdvā̃ nahī̃ paḍe. — If you grow tomatoes in the courtyard, you will not have to buy them at the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame ā̃gṇāmā̃ ṭāmeṭā̃ ugāḍśo to bajārmā̃thī kharīdvā̃ nahī̃ paḍe.* — If you grow tomatoes in the courtyard, you will not have to buy them at the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for mature, then the Gujarati for barren, then say ugāḍvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for mature, then the Gujarati for barren, then say *ugāḍvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઉગાડવું (ugāḍvũ) mean? (\"To grow plants\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C390-upajvu",
+      "sequence": 21650,
+      "title": "ઊપજવું (ūpajvũ) — to be produced (as a crop)",
+      "headword": "ઊપજવું",
+      "romanization": "ūpajvũ",
+      "gloss": "to be produced (as a crop)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae38f7a5253d8189",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for barren, then the Gujarati for to grow plants."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઊપજવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊપજવું — ūpajvũ — \"to be produced (as a crop)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો ખેતરમાં પૂરતું પાણી હશે તો ઘણા ઘઉં ઊપજશે. jo khetarmā̃ pūrtũ pāṇī haśe to ghaṇā ghaũ ūpajśe. If the field has enough water, it will yield a lot of wheat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે ખેતરમાં બાજરી ઊપજી, te khetarmā̃ bājrī ūpjī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊપજવું (ūpajvũ) is inherited from Sanskrit útpadyatē, \"arises, originates\"; CDIAL lists the Gujarati verb, \"is produced\" (CDIAL 1814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūpajvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūpajvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūpajvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūpajvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo khetarmā̃ pūrtũ pāṇī haśe to ghaṇā ghaũ ūpajśe. — If the field has enough water, it will yield a lot of wheat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo khetarmā̃ pūrtũ pāṇī haśe to ghaṇā ghaũ ūpajśe.* — If the field has enough water, it will yield a lot of wheat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for barren, then the Gujarati for to grow plants, then say ūpajvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for barren, then the Gujarati for to grow plants, then say *ūpajvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઊપજવું (ūpajvũ) mean? (\"To be produced (as a crop)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

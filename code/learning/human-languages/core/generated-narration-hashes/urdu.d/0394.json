@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:ee5619db27f95985",
+  "lessonIds": [
+    "UR-C394-garha",
+    "UR-C394-draivar",
+    "UR-C394-dhakka",
+    "UR-C394-uchhalna",
+    "UR-C394-viran"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "urdu/narration/ch394.txt",
+  "json": "urdu/narration/ch394.json",
+  "textHash": "fnv1a64:2091ae1f32de504b",
+  "jsonHash": "fnv1a64:218765c5c611f387",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C425-thamana",
+  "pathSegment": "UR-PATH-425-TARAZU425",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-425-TARAZU425",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,841 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 280,
+  "title": "Tickets, and when things go wrong",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f7cfcceef322c593",
+  "lessons": [
+    {
+      "id": "GU-C280-jhadpi",
+      "sequence": 15060,
+      "title": "ઝડપી (jhaḍpī) — fast; quick",
+      "headword": "ઝડપી",
+      "romanization": "jhaḍpī",
+      "gloss": "fast; quick",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:102cefa93a0e465a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ask how to get to the station. (sṭeśan kevī rīte javũ?) Then say \"a train\" and \"expensive\". (ટ્રેન, મોંઘું.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝડપી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝડપી — jhaḍpī — \"fast; quick\". It ends in -ી whatever it describes: ઝડપી ટ્રેન, ઝડપી બસ, ઝડપી વિમાન."
+            },
+            {
+              "kind": "speech",
+              "text": "ઝડપી ટ્રેન ક્યારે છે? jhaḍpī ṭren kyāre che? — \"When is the fast train?\""
+            },
+            {
+              "kind": "speech",
+              "text": "તે ઝડપી છે, પણ મોંઘી છે. te jhaḍpī che, paṇ moṅghī che. — \"It's fast, but it's expensive.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Said of the train, મોંઘી follows ટ્રેન; ઝડપી (jhaḍpī) stays as it is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝડપી (jhaḍpī) is built from ઝડપ, \"speed\", and the -ી that makes a describing word of it. CDIAL lists Gujarati jhaṛap under a reconstructed root jhaṭ, \"sudden movement\" (CDIAL 5327). It glosses that form \"scuffling\", so the sense of speed is probably the later one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaḍpī, then jhaḍpī ṭren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaḍpī*, then *jhaḍpī ṭren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When is the fast train?\" — jhaḍpī ṭren kyāre che?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When is the fast train?\" — *jhaḍpī ṭren kyāre che?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It's fast, but it's expensive\" — te jhaḍpī che, paṇ moṅghī che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It's fast, but it's expensive\" — *te jhaḍpī che, paṇ moṅghī che*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝડપી (jhaḍpī) mean? (\"Fast; quick\".) \"A fast bus\"? (ઝડપી (jhaḍpī) બસ.) Does ઝડપી (jhaḍpī) change for a bus? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W49-jha",
+      "sequence": 15070,
+      "title": "ઝ — the consonant jha",
+      "headword": "ઝ",
+      "romanization": "jha",
+      "gloss": "the consonant jha, the letter that opens ઝડપી",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:dbf2f675dce1199c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Script — meet one form",
+          "Writing — recall after hiding",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — meet one form, Writing — recall after hiding and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say fast — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *fast* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say જ, as in જવું, and છ, as in છે",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **જ**, as in **જવું**, and **છ**, as in **છે**]"
+            },
+            {
+              "kind": "speech",
+              "text": "ઝડપી (jhaḍpī) opens on a sound you have not written yet: jh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: જ with a breath",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "plain",
+                "with a breath"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "c. plain: ચ. with a breath: છ.",
+                "j. plain: જ. with a breath: ?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The missing letter is ઝ, jha: say જ and let a breath follow. Its print has three parts: a rounded left body, a separate right loop flowing into a lower tail, and a separate short upper stem."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script — meet one form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝ — jha."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep ઝ (jha) visible. Follow the numbered strip: it shows where each part starts."
+            },
+            {
+              "kind": "speech",
+              "text": "begin at the upper left and circle the rounded left body to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "lift once and circle the right loop into its lower tail."
+            },
+            {
+              "kind": "speech",
+              "text": "lift again and descend the short upper stem."
+            },
+            {
+              "kind": "speech",
+              "text": "Three strokes, two pen lifts: a verified three-stroke teaching-app variant fitted to the bundled printed outline (t30apps.com, ‘Gujarati Alphabet Writing Practice’, version 1.0, ઝ (jha) animation, first through third SVG paths)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Finger-trace ઝ (jha) once, then air-trace it once. Notice the two lifts: after the left body, and after the loop."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy visible ઝ (jha) once. Compare only two things: are there three parts, and does the short stem come last? Repair one landmark if needed."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the model and write jha once. Uncover ઝ, compare, and stop after one repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "GU-W49-jha-recall",
+              "prompt": "Hide the model and write the letter jha from memory.",
+              "assesses": [
+                "GU-SCRIPT-C280-JHA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ઝ"
+              ],
+              "feedback": {
+                "correct": "ઝ — the left body, the right loop and tail, then the short stem.",
+                "incorrect": "Look once at ઝ, hide it, and repair only the part that differs."
+              }
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read જ ઝ (jha) ઝડપી (jhaḍpī) aloud. Which part of ઝ (jha) is written last? (The short upper stem.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C280-ek-tikit",
+      "sequence": 15080,
+      "title": "એક ટિકિટ આપો (ek ṭikiṭ āpo) — at the ticket window",
+      "headword": "એક ટિકિટ આપો",
+      "romanization": "ek ṭikiṭ āpo",
+      "gloss": "one ticket, please — buying a ticket, and asking about the fare, the next train and the platform",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e061b16df05508a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the fast train\". (jhaḍpī ṭren.) Then \"a ticket\" and \"to give\". (ટિકિટ, આપવું.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: asking for a ticket",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બે ટિકિટ આપો. be ṭikiṭ āpo. — \"Two tickets, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "આપો is આપવું in the -ઓ form of જાઓ and વળો: said with respect at a window, it is polite enough. Then the price: ભાડું કેટલું છે? (bhāḍũ keṭlũ che?), \"how much is the fare?\" ઝડપી ટ્રેનની ટિકિટ મોંઘી છે (jhaḍpī ṭrennī ṭikiṭ moṅghī che): the fast train's ticket costs more."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the next train",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આવતી ટ્રેન ક્યારે છે? āvtī ṭren kyāre che? — \"When is the next train?\""
+            },
+            {
+              "kind": "speech",
+              "text": "આવતું, \"coming, next\", follows ટ્રેન: આવતી. Then the platform: ટ્રેન કયા પ્લેટફોર્મથી ઊપડશે? (ṭren kayā pleṭphormthī ūpaḍśe?), \"which platform does the train leave from?\" The answer: પ્લેટફોર્મ બેથી (pleṭphorm bethī), \"from platform two\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How much is the fare?\" — bhāḍũ keṭlũ che?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How much is the fare?\" — *bhāḍũ keṭlũ che?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When is the next bus?\" — āvtī bas kyāre che?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When is the next bus?\" — *āvtī bas kyāre che?*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C280-ek-tikit-r1",
+              "prompt": "Ask for two tickets, then ask when the next train is.",
+              "assesses": [
+                "GU-GRAMMAR-C280-TICKET-ASK-01",
+                "GU-GRAMMAR-C280-NEXT-TRAIN-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "be ṭikiṭ āpo; āvtī ṭren kyāre che?",
+                "બે ટિકિટ આપો. આવતી ટ્રેન ક્યારે છે?",
+                "be ṭikiṭ āpo. āvtī ṭren kyāre che?"
+              ],
+              "feedback": {
+                "correct": "āpo for the request, āvtī for the next train.",
+                "incorrect": "Ask with āpo: be ṭikiṭ āpo. The next train is āvtī ṭren."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"One ticket, please\"? (એક ટિકિટ આપો (ek ṭikiṭ āpo).) \"The next train\"? (આવતી ટ્રેન.) \"From which platform?\" (કયા પ્લેટફોર્મથી?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C280-phariyad",
+      "sequence": 15090,
+      "title": "ફરિયાદ (phariyād) — a complaint",
+      "headword": "ફરિયાદ",
+      "romanization": "phariyād",
+      "gloss": "a complaint",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee31d9d462e66431",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ask when the next train is. (āvtī ṭren kyāre che?) Then say \"the police\". (પોલીસ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ફરિયાદ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફરિયાદ — phariyād — \"a complaint\". It is feminine, so a past of કરવું follows it with કરી:"
+            },
+            {
+              "kind": "speech",
+              "text": "મેં પોલીસમાં ફરિયાદ કરી. mẽ polīsmā̃ phariyād karī. — \"I made a complaint to the police.\""
+            },
+            {
+              "kind": "speech",
+              "text": "પોલીસમાં (polīsmā̃) is \"with the police\", word for word \"in the police\". A complaint can be about anything:"
+            },
+            {
+              "kind": "speech",
+              "text": "તમારી ફરિયાદ શું છે? tamārī phariyād śũ che? — \"What is your complaint?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફરિયાદ (phariyād) is a loan, usually traced to Persian faryād, \"an outcry; a call for help\", and from there \"a complaint\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phariyād",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phariyād*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I made a complaint to the police\" — mẽ polīsmā̃ phariyād karī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I made a complaint to the police\" — *mẽ polīsmā̃ phariyād karī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What is your complaint?\" — tamārī phariyād śũ che?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What is your complaint?\" — *tamārī phariyād śũ che?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ફરિયાદ (phariyād) mean? (\"A complaint\".) Why કરી in મેં ફરિયાદ (phariyād) કરી? (ફરિયાદ (phariyād) is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C280-khovai-gai",
+      "sequence": 15100,
+      "title": "મારી થેલી ખોવાઈ ગઈ (mārī thelī khovāī gaī) — when things go wrong",
+      "headword": "મારી થેલી ખોવાઈ ગઈ",
+      "romanization": "mārī thelī khovāī gaī",
+      "gloss": "my bag is lost — reporting a lost thing or a missed train, and asking for help",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42f3f80e09c53c70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a complaint\". (phariyād.) Then \"to get lost\" and \"a bag\". (ખોવાવું, થેલી.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the lost thing is the subject",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મારી થેલી ખોવાઈ ગઈ. mārī thelī khovāī gaī. — \"My bag is lost.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The bag is what got lost, so ગઈ follows it, and there is no -એ. Change the thing and the ending changes: મારું પાકીટ ખોવાઈ ગયું (mārũ pākīṭ khovāī gayũ), neuter; મારો ફોન ખોવાઈ ગયો (māro phon khovāī gayo), masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: a missed train, and help",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મારી ટ્રેન છૂટી ગઈ. mārī ṭren chūṭī gaī. — \"I missed my train.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"my train got away\": the train is the subject again. Then ask for help: મને મદદ કરશો? (mane madad karśo?), \"will you help me?\" And the next step: મારે પોલીસમાં ફરિયાદ કરવી પડશે (māre polīsmā̃ phariyād karvī paḍśe), \"I'll have to make a complaint to the police\". કરવી follows ફરિયાદ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My key is lost\" — mārī cāvī khovāī gaī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My key is lost\" — *mārī cāvī khovāī gaī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I missed my train, so I'll have to take the bus\" — mārī ṭren chūṭī gaī, eṭle māre basmā̃ javũ paḍśe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I missed my train, so I'll have to take the bus\" — *mārī ṭren chūṭī gaī, eṭle māre basmā̃ javũ paḍśe*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C280-khovai-gai-r1",
+              "prompt": "Say that your wallet is lost, then ask someone to help you.",
+              "assesses": [
+                "GU-GRAMMAR-C280-LOST-01",
+                "GU-GRAMMAR-C280-MISSED-HELP-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "mārũ pākīṭ khovāī gayũ; mane madad karśo?",
+                "મારું પાકીટ ખોવાઈ ગયું. મને મદદ કરશો?",
+                "mārũ pākīṭ khovāī gayũ. mane madad karśo?"
+              ],
+              "feedback": {
+                "correct": "pākīṭ is neuter: mārũ … gayũ. Then the polite karśo?",
+                "incorrect": "The wallet is the subject and neuter: mārũ pākīṭ khovāī gayũ."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"My bag is lost\"? (મારી થેલી ખોવાઈ ગઈ (mārī thelī khovāī gaī).) \"My phone is lost\"? (મારો ફોન ખોવાઈ ગયો.) \"I missed my train\"? (મારી ટ્રેન છૂટી ગઈ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R280-at-the-station",
+      "sequence": 15110,
+      "title": "Review — at the station",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a ticket, the next train, and a problem reported",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bc56f0b3c4e1d97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask \"how do I get to the station?\" (sṭeśan kevī rīte javũ?) Then \"turn left\". (ḍābī bāju vaḷo.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ઝ (jha), then ઝડપી (jhaḍpī), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ઝ**, then **ઝડપી**, from memory]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Two tickets, please. How much is the fare?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Two tickets, please. How much is the fare?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "When is the next train? Which platform does it leave from?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: When is the next train? Which platform does it leave from?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The fast train is quick, but it's expensive.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The fast train is quick, but it's expensive.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My bag is lost. My wallet is lost too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My bag is lost. My wallet is lost too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I missed my train. Will you help me? I'll have to make a complaint to the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I missed my train. Will you help me? I'll have to make a complaint to the police.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"The next train\"? (આવતી ટ્રેન.) \"My phone is lost\": ગયો or ગઈ? (ગયો: ફોન is masculine.) Which letter opens ઝડપી (jhaḍpī)? (ઝ, jha.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

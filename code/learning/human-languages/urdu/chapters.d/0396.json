@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "On the Highway",
+  "label": "ch:ur-on-the-highway",
+  "canDo": "I can talk about the highway: tolls, checkpoints and convoys of lorries.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C396-hankna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can talk about the highway: tolls, checkpoints and convoys of lorries.",
+    "assesses": [
+      "UR-LEX-C396-SHAHRAH396-03",
+      "UR-LEX-C396-SHAHRAH396-04",
+      "UR-LEX-C396-SHAHRAH396-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C388-jankshan",
+  "pathSegment": "UR-PATH-388-SIGNAL388",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-388-SIGNAL388",
+      "order": 1
+    }
+  ]
+}

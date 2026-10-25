@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C308-takht",
+    "language": "urdu",
+    "chapter": 308,
+    "sequence": 18650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61579a5dd88c3150"
+  },
+  "findings": []
+}

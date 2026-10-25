@@ -55,6 +55,15 @@ Finite fractional static-real inputs may feed those normalizers when the result
 is an exact integer, including nested call-free conditionals whose normalized
 branches agree. Nonintegral, path-dependent, dynamic, and oversized results
 fail closed.
+An exact static `sign` result is classified as an ordinary factor around a
+dynamic sign root. Independently bounded dynamic sign-rooted transforms may
+also multiply when checked magnitude composition keeps the complete product
+within `2^53`; non-multiplying multiple roots, path-dependent signs, and
+effectful selectors fail closed.
+Checked exact-integer normalizers may provide the sign-rooted transform's
+nonnegative exponent when the right-associative chain stays within the power
+unroll cap. A zero result proves the complete power is exactly one; negative,
+dynamic, path-dependent, effectful, and oversized exponents fail closed.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
@@ -1504,8 +1513,16 @@ backend immediately) come before the enabler-dependent items.
   Exact whole-number multiplication may scale that sign-rooted integer
   transform through magnitude `2^53`, including composition with exact
   additive terms, when every intermediate result remains in the exact binary64
-  integer range. Fractional factors, denominator roots, repeated roots, and
-  oversized products remain conservative.
+  integer range. Independently bounded dynamic sign-rooted transforms may
+  multiply under that same checked complete-product limit. Fractional factors,
+  denominator roots, and oversized products remain conservative. Independently
+  bounded transforms may also add or subtract under a checked complete-sum
+  magnitude limit. Fractional or dynamic terms, other non-multiplying roots,
+  and oversized sums remain conservative. A multiple-root product may continue
+  through trailing static `div` or `mod`, or exact whole-number `/` when its
+  conservative common divisor proves every quotient integral. Reductions
+  between roots, zero or dynamic divisors, and rooted divisors remain
+  conservative.
   Static nonzero whole-number division may reduce that transform when a
   conservative common-divisor proof shows that every possible path value is
   exactly divisible; inexact and dynamic divisors remain conservative.
@@ -1528,10 +1545,11 @@ backend immediately) come before the enabler-dependent items.
   variable-free integer reductions before they become a static offset, factor,
   or exponent. User-declared procedures with those names, dynamic inputs, zero
   divisors, and results beyond `2^53` remain conservative.
-  Positive variable-free whole-number powers may raise that exact sign-rooted
-  integer transform within the existing exponent-unroll cap when checked
-  exponentiation keeps its worst-case magnitude within `2^53`; zero, negative,
-  dynamic, deeper, and oversized powers remain conservative.
+  Nonnegative variable-free whole-number powers may raise that exact
+  sign-rooted integer transform within the existing exponent-unroll cap when
+  checked exponentiation keeps its worst-case magnitude within `2^53`; zero
+  produces exact one, while negative, dynamic, deeper, and oversized powers
+  remain conservative.
   Integer `div` by a variable-free nonzero whole number may reduce the exact
   sign-rooted transform with a truncation-toward-zero bound, including
   composition through later powers, remainders, and exact real division; zero,

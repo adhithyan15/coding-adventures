@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C475-mugu",
+    "language": "gujarati",
+    "chapter": 475,
+    "sequence": 26450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfb3aa2fe272af54"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C422-gallo",
+    "language": "gujarati",
+    "chapter": 422,
+    "sequence": 23500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05c873e2be43d3b1"
+  },
+  "findings": []
+}

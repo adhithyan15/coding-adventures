@@ -1,0 +1,11 @@
+{
+  "id": "UR-C305-mukhbir",
+  "pathSegment": "UR-PATH-305-MUAMMA305",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-305-MUAMMA305",
+      "order": 1
+    }
+  ]
+}

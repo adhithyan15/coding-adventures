@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Taking Sides",
+  "label": "ch:gu-taking-sides",
+  "canDo": "I can say who is for an idea and who is against it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C343-dhalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can say who is for an idea and who is against it.",
+    "assesses": [
+      "GU-LEX-C343-TEKO343-03",
+      "GU-LEX-C343-TEKO343-04",
+      "GU-LEX-C343-TEKO343-05"
+    ]
+  }
+}

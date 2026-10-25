@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C525-atkana",
+    "language": "urdu",
+    "chapter": 525,
+    "sequence": 30620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa3994e1e07f4720"
+  },
+  "findings": []
+}

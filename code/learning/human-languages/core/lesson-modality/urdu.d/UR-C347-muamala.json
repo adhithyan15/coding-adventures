@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C347-muamala",
+    "language": "urdu",
+    "chapter": 347,
+    "sequence": 20820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5082895104534a49"
+  },
+  "findings": []
+}

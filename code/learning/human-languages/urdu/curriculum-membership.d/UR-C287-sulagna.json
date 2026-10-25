@@ -1,0 +1,11 @@
+{
+  "id": "UR-C287-sulagna",
+  "pathSegment": "UR-PATH-287-AAG287",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-287-AAG287",
+      "order": 1
+    }
+  ]
+}

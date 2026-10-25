@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Stock and Shortages",
+  "label": "ch:gu-stock-and-shortages",
+  "canDo": "I can talk about supplies running short.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C431-sangharvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can talk about supplies running short.",
+    "assesses": [
+      "GU-LEX-C431-STOCK431-03",
+      "GU-LEX-C431-STOCK431-04",
+      "GU-LEX-C431-STOCK431-05"
+    ]
+  }
+}

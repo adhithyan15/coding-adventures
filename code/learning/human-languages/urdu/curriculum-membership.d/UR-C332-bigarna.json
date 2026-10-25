@@ -1,0 +1,11 @@
+{
+  "id": "UR-C332-bigarna",
+  "pathSegment": "UR-PATH-332-NUQSAN332",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-332-NUQSAN332",
+      "order": 3
+    }
+  ]
+}

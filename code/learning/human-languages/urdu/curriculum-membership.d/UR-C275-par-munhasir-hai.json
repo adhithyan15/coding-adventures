@@ -1,0 +1,11 @@
+{
+  "id": "UR-C275-par-munhasir-hai",
+  "pathSegment": "UR-PATH-275-DEPENDS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-275-DEPENDS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C522-lachakna",
+    "language": "urdu",
+    "chapter": 522,
+    "sequence": 30440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c30cd9e3e9f9cfd8"
+  },
+  "findings": []
+}

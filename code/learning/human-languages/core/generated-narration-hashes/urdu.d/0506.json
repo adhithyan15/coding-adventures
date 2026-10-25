@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:5e29119239fad448",
+  "lessonIds": [
+    "UR-C506-safai",
+    "UR-C506-manjhna",
+    "UR-C506-chipkana",
+    "UR-C506-dhulna",
+    "UR-C506-khangalna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch506.txt",
+  "json": "urdu/narration/ch506.json",
+  "textHash": "fnv1a64:5e0249f99c4a111d",
+  "jsonHash": "fnv1a64:52be9732f5319699",
+  "findings": []
+}

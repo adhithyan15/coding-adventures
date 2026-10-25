@@ -164,6 +164,21 @@ On its own it turns the silent-miscompile class into fail-closed refusals at
 SIMPLE and ADVANCED. Several fix-B review findings had this as their
 amplifier.
 
+> **Phase 0 status (implemented):** every `es*.grammar` now writes
+> `expression_statement = !( … ) expression SEMICOLON`. The lookahead set is
+> `{ LBRACE, "function" }` for ES1–ES5, adds `"class"` and `"let" LBRACKET`
+> from ES2015, and adds `"async" "function"` from ES2017. There are two
+> divergences from the spec, and both fail closed:
+>
+> - The `async function` arm has no `[no LineTerminator here]` check. The Ruby
+>   grammar port has no adjacency predicates (F11), so `async⏎function f(){}`
+>   is refused.
+> - ES5's Block holds only statements, so `{ function f(){} }` in ES5 is now
+>   refused. Before, it was read as a function expression that binds nothing.
+>
+> The explanation sits at the end of each grammar file rather than above the
+> rule, so the compiled grammars' line numbers for later rules do not shift.
+
 ### 6. Token consumers outside the parser
 
 closurec tokenizes directly in `whitespace_only.rs`, `refusals.rs`,

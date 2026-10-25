@@ -1,0 +1,21 @@
+{
+  "chapter": 525,
+  "title": "Putting Things Off",
+  "label": "ch:ur-putting-things-off",
+  "canDo": "I can say what happens if something is put off.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-R525-review-518-525",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can say what happens if something is put off.",
+    "assesses": [
+      "UR-LEX-C525-MOHLAT525-01",
+      "UR-LEX-C525-MOHLAT525-02",
+      "UR-LEX-C525-MOHLAT525-03",
+      "UR-LEX-C525-MOHLAT525-04",
+      "UR-LEX-C525-MOHLAT525-05"
+    ]
+  }
+}

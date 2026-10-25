@@ -1,5 +1,15 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`
+
+- **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /
+  `f64_signbit`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6c): `dadd`/`dsub`/`dmul`/`ddiv`/`dneg`, and
+  `Double.doubleToRawLongBits(D)J; bipush 63; lushr` (new `LUSHR`, modelled
+  by `compute_max_stack`). A non-`double` operand or a mistyped dest is a
+  compile error, never a class the verifier rejects.
+- `op_support`: all six `Lowered`. Tests pin the bytecode and run the edge
+  table on a real JVM (verifier on).
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)

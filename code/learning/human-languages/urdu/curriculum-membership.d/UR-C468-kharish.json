@@ -1,0 +1,11 @@
+{
+  "id": "UR-C468-kharish",
+  "pathSegment": "UR-PATH-468-SMELL468",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-468-SMELL468",
+      "order": 4
+    }
+  ]
+}

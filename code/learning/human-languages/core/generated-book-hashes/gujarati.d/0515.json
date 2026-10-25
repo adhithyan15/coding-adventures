@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:9020715404912777",
+  "lessonIds": [
+    "GU-C515-popdo",
+    "GU-C515-ukhadvu",
+    "GU-C515-kanu",
+    "GU-C515-paip",
+    "GU-C515-plambar"
+  ],
+  "tex": "gujarati/book/chapters/ch515-cracks-and-leaks.tex"
+}

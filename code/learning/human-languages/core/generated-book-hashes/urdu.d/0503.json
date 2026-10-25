@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:40645ec73e848662",
+  "lessonIds": [
+    "UR-C503-silan",
+    "UR-C503-int",
+    "UR-C503-palastar",
+    "UR-C503-rangvana",
+    "UR-C503-lipna"
+  ],
+  "tex": "urdu/book/chapters/ch503-damp-and-cracks.tex"
+}

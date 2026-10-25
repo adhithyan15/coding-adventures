@@ -1,0 +1,23 @@
+{
+  "chapter": 271,
+  "title": "At the Station, and When Things Go Wrong",
+  "label": "ch:ur-at-the-station-and-when-things-go-wrong",
+  "canDo": "I can buy a ticket and ask when the next train leaves (ek ṭikaṭ dījiye, aglī gāṛī kab hai?), and say what went wrong (merā thailā kho gayā, merī gāṛī chhūṭ gaī).",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-R271-at-the-station",
+    "kind": "production",
+    "summary": "Complete UR-R271-at-the-station: buy a ticket, ask when, and say what went wrong.",
+    "assesses": [
+      "UR-GRAMMAR-C271-TICKET-01",
+      "UR-GRAMMAR-C271-TICKET-02",
+      "UR-LEX-C271-CHHUTNA-01",
+      "UR-LEX-C271-HADSA-01",
+      "UR-SCRIPT-C271-SE-01",
+      "UR-GRAMMAR-C271-PROBLEM-01",
+      "UR-GRAMMAR-C271-PROBLEM-02"
+    ]
+  }
+}

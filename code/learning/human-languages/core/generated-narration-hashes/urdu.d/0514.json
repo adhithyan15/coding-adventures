@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:6944f5b20e4cc12c",
+  "lessonIds": [
+    "UR-C514-un",
+    "UR-C514-pirona",
+    "UR-C514-karhna",
+    "UR-C514-angushtana",
+    "UR-C514-jhalar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch514.txt",
+  "json": "urdu/narration/ch514.json",
+  "textHash": "fnv1a64:f9b3a7d2ed50536f",
+  "jsonHash": "fnv1a64:f7d0277f79608e72",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "Signals and Crossings",
+  "label": "ch:ur-signals-and-crossings",
+  "canDo": "I can say what the signal shows and why the crossing is shut.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C388-takna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can say what the signal shows and why the crossing is shut.",
+    "assesses": [
+      "UR-LEX-C388-SIGNAL388-03",
+      "UR-LEX-C388-SIGNAL388-04",
+      "UR-LEX-C388-SIGNAL388-05"
+    ]
+  }
+}

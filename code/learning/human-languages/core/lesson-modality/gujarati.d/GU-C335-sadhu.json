@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C335-sadhu",
+    "language": "gujarati",
+    "chapter": 335,
+    "sequence": 18560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8f51c69dbf3ffa3"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C443-kurhna",
+  "pathSegment": "UR-PATH-443-SAD443",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-443-SAD443",
+      "order": 3
+    }
+  ]
+}

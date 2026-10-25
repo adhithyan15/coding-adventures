@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:c621fc113734e46e",
+  "lessonIds": [
+    "GU-C496-dhavvu",
+    "GU-C496-hicolvu",
+    "GU-C496-namkaran",
+    "GU-C496-vadhavvu",
+    "GU-C496-balotiyu"
+  ],
+  "tex": "gujarati/book/chapters/ch496-a-new-baby.tex"
+}

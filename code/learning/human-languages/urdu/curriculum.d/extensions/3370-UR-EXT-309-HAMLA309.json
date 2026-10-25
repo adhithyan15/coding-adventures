@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-309-HAMLA309",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell how an army attacked a fort.",
+  "prerequisites": []
+}

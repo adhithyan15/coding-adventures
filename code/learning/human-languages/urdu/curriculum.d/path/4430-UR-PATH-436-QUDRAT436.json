@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-436-QUDRAT436",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "UR-EXT-436-QUDRAT436"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Fire and Steam",
+  "label": "ch:gu-fire-and-steam",
+  "canDo": "I can talk about heat, flame and steam in the kitchen.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C519-thaarvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about heat, flame and steam in the kitchen.",
+    "assesses": [
+      "GU-LEX-C519-SAGDI519-03",
+      "GU-LEX-C519-SAGDI519-04",
+      "GU-LEX-C519-SAGDI519-05"
+    ]
+  }
+}

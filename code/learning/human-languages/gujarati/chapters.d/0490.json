@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "My Husband's Family",
+  "label": "ch:gu-my-husband-s-family",
+  "canDo": "I can name my husband's relatives.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C490-gharsansar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can name my husband's relatives.",
+    "assesses": [
+      "GU-LEX-C490-SASRA490-03",
+      "GU-LEX-C490-SASRA490-04",
+      "GU-LEX-C490-SASRA490-05"
+    ]
+  }
+}

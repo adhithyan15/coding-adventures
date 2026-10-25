@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R362-review-355-362",
+    "language": "urdu",
+    "chapter": 362,
+    "sequence": 21630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:807a5e9b19431530"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C510-soni",
+    "language": "gujarati",
+    "chapter": 510,
+    "sequence": 28460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6104dd0b04138315"
+  },
+  "findings": []
+}

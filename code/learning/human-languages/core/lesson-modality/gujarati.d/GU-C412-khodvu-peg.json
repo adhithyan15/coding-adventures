@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C412-khodvu-peg",
+    "language": "gujarati",
+    "chapter": 412,
+    "sequence": 23000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:373ed640e74b69fa"
+  },
+  "findings": []
+}

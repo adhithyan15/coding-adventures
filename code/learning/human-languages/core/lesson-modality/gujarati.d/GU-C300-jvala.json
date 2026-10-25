@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C300-jvala",
+    "language": "gujarati",
+    "chapter": 300,
+    "sequence": 16780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84cf7b8f9f27894a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Debts and Moneylenders",
+  "label": "ch:gu-debts-and-moneylenders",
+  "canDo": "I can talk about owing and lending money.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C428-thagvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can talk about owing and lending money.",
+    "assesses": [
+      "GU-LEX-C428-DEBT428-03",
+      "GU-LEX-C428-DEBT428-04",
+      "GU-LEX-C428-DEBT428-05"
+    ]
+  }
+}

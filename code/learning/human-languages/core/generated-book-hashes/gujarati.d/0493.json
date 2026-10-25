@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:48011d4733f622c1",
+  "lessonIds": [
+    "GU-C493-pedhi",
+    "GU-C493-purvaj",
+    "GU-C493-bujhurg",
+    "GU-C493-parivar",
+    "GU-C493-santan",
+    "GU-R493-review-487-493"
+  ],
+  "tex": "gujarati/book/chapters/ch493-many-generations.tex"
+}

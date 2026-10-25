@@ -1,0 +1,11 @@
+{
+  "id": "UR-C280-banduq",
+  "pathSegment": "UR-PATH-280-DAKU280",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-280-DAKU280",
+      "order": 2
+    }
+  ]
+}

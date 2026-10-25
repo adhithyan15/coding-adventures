@@ -1,0 +1,11 @@
+{
+  "id": "UR-C295-sannata",
+  "pathSegment": "UR-PATH-295-PHANSA295",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-295-PHANSA295",
+      "order": 2
+    }
+  ]
+}

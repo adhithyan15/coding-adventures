@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Scrubbing and Rinsing",
+  "label": "ch:ur-scrubbing-and-rinsing",
+  "canDo": "I can talk about cleaning the house and the dishes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C506-khangalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about cleaning the house and the dishes.",
+    "assesses": [
+      "UR-LEX-C506-SAFAI506-03",
+      "UR-LEX-C506-SAFAI506-04",
+      "UR-LEX-C506-SAFAI506-05"
+    ]
+  }
+}

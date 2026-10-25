@@ -1,0 +1,11 @@
+{
+  "id": "GU-C312-ghatna",
+  "pathSegment": "GU-PATH-312-PATRAKAR312",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-312-PATRAKAR312",
+      "order": 1
+    }
+  ]
+}

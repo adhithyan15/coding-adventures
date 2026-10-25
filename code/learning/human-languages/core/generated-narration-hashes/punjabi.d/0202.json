@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:f53ad520ea5cddd9",
+  "lessonIds": [
+    "PA-C202-identity-return",
+    "PA-C202-yatri",
+    "PA-C202-yatri-review",
+    "PA-C202-traveller-label",
+    "PA-C202-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch202.txt",
+  "json": "punjabi/narration/ch202.json",
+  "textHash": "fnv1a64:6e3976dcc490cfed",
+  "jsonHash": "fnv1a64:1f5408eb199b4ccb",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C545-ajmayas",
+  "pathSegment": "GU-PATH-545-AASAN545",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-545-AASAN545",
+      "order": 3
+    }
+  ]
+}

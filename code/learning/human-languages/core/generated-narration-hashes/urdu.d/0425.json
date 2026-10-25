@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:98f793fe89261dea",
+  "lessonIds": [
+    "UR-C425-tarazu",
+    "UR-C425-muft",
+    "UR-C425-baqaya",
+    "UR-C425-rezgari",
+    "UR-C425-thamana",
+    "UR-R425-review-418-425"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch425.txt",
+  "json": "urdu/narration/ch425.json",
+  "textHash": "fnv1a64:b95ea6bbfb5f4cda",
+  "jsonHash": "fnv1a64:264f362e9f89943b",
+  "findings": []
+}

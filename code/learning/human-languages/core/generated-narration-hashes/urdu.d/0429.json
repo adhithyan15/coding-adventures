@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:778aa65a817bbde2",
+  "lessonIds": [
+    "UR-C429-nami",
+    "UR-C429-thand",
+    "UR-C429-jara",
+    "UR-C429-sikurna",
+    "UR-C429-akarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch429.txt",
+  "json": "urdu/narration/ch429.json",
+  "textHash": "fnv1a64:6971d2f7b3b297da",
+  "jsonHash": "fnv1a64:be3ff736554d4b95",
+  "findings": []
+}

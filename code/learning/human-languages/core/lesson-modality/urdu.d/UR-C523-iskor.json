@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C523-iskor",
+    "language": "urdu",
+    "chapter": 523,
+    "sequence": 30500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdd17f54b395f10a"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-391-GADBAD391",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GU-EXT-391-GADBAD391"
+  ],
+  "after": []
+}

@@ -173,6 +173,7 @@ pub fn whitespace_only_minify(
 ) -> Result<String, MinifyError> {
     let tokens = tokenize_javascript_typed(source, version)
         .map_err(MinifyError::LexError)?;
+    check_hashbangs(&tokens)?;
 
     // Filter out trivia tokens (comments, whitespace, newlines)
     // and the EOF sentinel. The lexer marks trivia via the
@@ -219,6 +220,17 @@ pub fn whitespace_only_minify(
         let mut s = t.clone();
         s.value = ";".to_string();
         s.type_ = lexer::token::TokenType::Semicolon;
+        s.type_name = None;
+        s
+    });
+
+    // The line break the parse-failure fallback keeps at restricted-production
+    // points (see `asi_points` below). Printed verbatim; it is never trivia to
+    // the emit loop, which only sees `kept`.
+    let synth_asi_newline: Option<lexer::token::Token> = tokens.first().map(|t| {
+        let mut s = t.clone();
+        s.value = "\n".to_string();
+        s.type_ = lexer::token::TokenType::Newline;
         s.type_name = None;
         s
     });
@@ -275,23 +287,39 @@ pub fn whitespace_only_minify(
     // rule, `}`/end of input, and restricted productions such as
     // `return⏎x`. We splice `synth_asi_semi` in at each of those points.
     // The token vector itself is left alone, because the CV map below is keyed
-    // on pointers into it. A program the grammar can't parse at all keeps the
-    // old behaviour: no insertions, and the same output as before.
-    let asi_points: Vec<usize> = match synth_asi_semi.as_ref() {
-        Some(_) => coding_adventures_javascript_parser::asi::asi_insertion_points(
-            tokens.clone(),
-            version,
-        )
-        .unwrap_or_default(),
-        None => Vec::new(),
-    };
+    // on pointers into it.
+    //
+    // A program the grammar can't parse gets no ASI points from the parser.
+    // Dropping every newline would then glue `return⏎42` into `return 42`, a
+    // different program (F12 phase 0 security review). So the fallback keeps
+    // the source's line break at each restricted-production point, which
+    // needs no parse. It is a line break and not a `;` because without a
+    // parse we can't tell generator `yield⏎7` (needs the `;`) from sloppy
+    // `var yield; yield⏎(9)` (must not get one); the source's own newline is
+    // right for both.
+    let (asi_points, asi_splice): (Vec<usize>, Option<&lexer::token::Token>) =
+        match synth_asi_semi.as_ref() {
+            Some(semi) => match coding_adventures_javascript_parser::asi::asi_insertion_points(
+                tokens.clone(),
+                version,
+            ) {
+                Ok(points) => (points, Some(semi)),
+                Err(_) => (
+                    coding_adventures_javascript_parser::asi::restricted_insertion_points(
+                        tokens.clone(),
+                    ),
+                    synth_asi_newline.as_ref(),
+                ),
+            },
+            None => (Vec::new(), None),
+        };
     let mut kept: Vec<&lexer::token::Token> = Vec::with_capacity(tokens.len() + asi_points.len());
     {
         let mut points = asi_points.iter().peekable();
         for (i, t) in tokens.iter().enumerate() {
             while points.peek() == Some(&&i) {
-                if let Some(semi) = synth_asi_semi.as_ref() {
-                    kept.push(semi);
+                if let Some(splice) = asi_splice {
+                    kept.push(splice);
                 }
                 points.next();
             }
@@ -301,8 +329,8 @@ pub fn whitespace_only_minify(
         }
         // A point at `tokens.len()` (after everything) is the end of input.
         for _ in points {
-            if let Some(semi) = synth_asi_semi.as_ref() {
-                kept.push(semi);
+            if let Some(splice) = asi_splice {
+                kept.push(splice);
             }
         }
     }
@@ -445,7 +473,15 @@ pub fn whitespace_only_minify(
                     || is_structural_punct(kept[i - 1], "{")
                     || is_structural_punct(kept[i - 1], ";");
                 let in_for_header = matches!(stack.last(), Some(true));
-                if droppable_pos && !in_for_header {
+                // #17907: an empty statement ends a directive prologue. In
+                // `;"use strict";` the string is NOT a directive; drop the
+                // `;` and it becomes one, making sloppy code strict. Keep a
+                // `;` that stands in front of a `use strict` string (at most
+                // one survives: in `;;"use strict"` the first still goes).
+                let shields_use_strict = kept
+                    .get(i + 1)
+                    .is_some_and(|n| is_string_literal(n) && decode_js_string(&n.value) == "use strict");
+                if droppable_pos && !in_for_header && !shields_use_strict {
                     drops.push(i);
                 }
             } else if is_structural_punct(t, "(") {
@@ -2610,6 +2646,9 @@ pub fn whitespace_only_minify(
     // literal `"{"`/`")"` can never be mistaken for a delimiter.
     {
         let mut drops: Vec<usize> = Vec::new();
+        // #18123: a keyword directly in a class body or object literal is a
+        // method name, not a statement head (`x={while(a){c=a;}}`).
+        let in_member_list = member_list_positions(&kept);
         let mut i = 0;
         while i + 1 < kept.len() {
             // gap-076: `with` joins the anchor set. A `with(o){…}`
@@ -2623,9 +2662,10 @@ pub fn whitespace_only_minify(
             let is_property = i >= 1
                 && (is_structural_punct(kept[i - 1], ".")
                     || is_structural_punct(kept[i - 1], "?."));
-            if !(is_loop_kw
-                && !is_property
-                && is_structural_punct(kept[i + 1], "("))
+            if !is_loop_kw
+                || is_property
+                || in_member_list[i]
+                || !is_structural_punct(kept[i + 1], "(")
             {
                 i += 1;
                 continue;
@@ -2728,6 +2768,7 @@ pub fn whitespace_only_minify(
                 if non_empty
                     && !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, body_open + 1)
                     && (top_semis == 0 || terminated_single)
                 {
                     if let Some(semi) = synth_semi.as_ref() {
@@ -2847,6 +2888,7 @@ pub fn whitespace_only_minify(
                 if non_empty
                     && !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, body_open + 1)
                     && top_semis == 0
                 {
                     if let Some(semi) = synth_semi.as_ref() {
@@ -2965,6 +3007,7 @@ pub fn whitespace_only_minify(
                 if non_empty
                     && !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, body_open + 1)
                     && top_semis == 0
                 {
                     if let Some(semi) = synth_semi.as_ref() {
@@ -3130,6 +3173,9 @@ pub fn whitespace_only_minify(
     let mut brace_is_member_body: Vec<bool> = Vec::new();
     // `)` index in `kept` → its `(` index, computed once (the emit loop never
     // mutates `kept`), so the member-body test is O(1) per brace.
+    // #18123: which tokens sit directly in a class body or object literal.
+    // There a keyword can only be a member name (`class C{if(){}}`).
+    let in_member_list = member_list_positions(&kept);
     let kept_open_paren: Vec<usize> = {
         let mut table = vec![usize::MAX; kept.len()];
         let mut stack = Vec::new();
@@ -3539,6 +3585,7 @@ pub fn whitespace_only_minify(
                 };
                 let eligible = !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, idx + 1)
                     && semi_count == 1
                     && last_before_close == ";";
                 if eligible {
@@ -3622,7 +3669,12 @@ pub fn whitespace_only_minify(
         // Rule A: drop `;` directly before `}`, UNLESS the
         // `;` is a body slot (body_position_next), or it ends a `throw`:
         // upstream forces that one (CCR-084, `function f(){throw 1;}`).
-        if val == ";" && !body_position_next && !throw_terminator[idx] {
+        if val == ";"
+            && !body_position_next
+            && !throw_terminator[idx]
+            && !is_label_body(&kept, idx)
+            && !is_with_body(&kept, &kept_open_paren, idx)
+        {
             if let Some(next) = kept.get(idx + 1) {
                 if next.value == "}" {
                     // Skip this `;`. We are still at a stmt
@@ -4082,7 +4134,10 @@ pub fn whitespace_only_minify(
                 next_block_is_try_chain = true;
             }
             at_stmt_boundary = false;
-        } else if matches!(val, "if" | "while" | "for") {
+        } else if matches!(val, "if" | "while" | "for")
+            && !in_member_list[idx]
+            && opens_control_flow_head(&kept, idx, prev_before_this_emit)
+        {
             // The next `(` is a control-flow head.
             next_paren_is_control_flow_head = true;
             at_stmt_boundary = false;
@@ -5026,6 +5081,28 @@ pub(crate) fn emit_quoted_string(out: &mut String, raw_content: &str) {
     // Step 1: decode.
     let decoded = decode_js_string(raw_content);
 
+    // #17907: a source spelling of `use strict` that contains an escape
+    // (`"use\x20strict"`, `"\u0075se strict"`) is a directive but NOT a
+    // Use Strict Directive (ECMA-262 §11.2.1 requires the exact code points
+    // with no escape). Re-encoded canonically it would print as
+    // `"use strict"` and silently make a sloppy script or function strict.
+    // Keep one escape so it stays inert.
+    //
+    //   source                 canonical form    printed
+    //   ---------------------  ----------------  ------------------
+    //   "use strict"           "use strict"      "use strict"
+    //   'use strict'           "use strict"      "use strict"
+    //   "use\x20strict"        "use strict"      "use\x20strict"
+    //   "\u0075se strict"      "use strict"      "use\x20strict"
+    //
+    // The token pass cannot tell a directive position from any other, so
+    // this applies to every such string. Elsewhere the two spellings are
+    // the same value, so nothing observable changes there.
+    if decoded == "use strict" && raw_content != "use strict" {
+        out.push_str("\"use\\x20strict\"");
+        return;
+    }
+
     // Step 2: choose delimiter.
     let dq = decoded.chars().filter(|c| *c == '"').count();
     let sq = decoded.chars().filter(|c| *c == '\'').count();
@@ -5061,6 +5138,14 @@ pub(crate) fn is_trivia(tok: &lexer::token::Token) -> bool {
             upper.as_str(),
             "COMMENT"
                 | "LINE_COMMENT"
+                // #18137: a `#!` hashbang line is a comment too. Kept as a
+                // token, it lost the line break after it (WHITESPACE_ONLY
+                // drops newlines), so `#!/usr/bin/env node⏎f()` printed as
+                // `#!/usr/bin/env nodef();`: the whole program became part
+                // of the comment and nothing ran. Upstream v20260915 drops
+                // the hashbang at every level, and so does closurec's
+                // SIMPLE/ADVANCED path; WHITESPACE_ONLY now does the same.
+                | "HASHBANG"
                 | "BLOCK_COMMENT"
                 | "WHITESPACE"
                 | "WS"
@@ -5075,6 +5160,45 @@ pub(crate) fn is_trivia(tok: &lexer::token::Token) -> bool {
             | lexer::token::TokenType::Indent
             | lexer::token::TokenType::Dedent
     )
+}
+
+/// #18137: `is_trivia` drops a HASHBANG, so first make sure every HASHBANG
+/// token really is one. Two lexer shapes would otherwise turn into silent
+/// miscompiles:
+///
+/// | Input                         | Why it must be refused                 |
+/// |-------------------------------|----------------------------------------|
+/// | `#!/x⟨U+2028⟩console.log(1)`  | U+2028/U+2029 end the hashbang, but the |
+/// |                               | lexer's `[^\n\r]*` runs past them, so  |
+/// |                               | the token holds real code (#17887)     |
+/// | `f();⏎#!x⏎g()` or ` #!x`      | `#!` is only a hashbang at offset 0;   |
+/// |                               | anywhere else it is a SyntaxError      |
+///
+/// Dropping either token would delete code, or turn an invalid program into
+/// a valid one. Refusing keeps the failure loud until the lexer stops at
+/// every line terminator.
+fn check_hashbangs(tokens: &[lexer::token::Token]) -> Result<(), MinifyError> {
+    for (i, t) in tokens.iter().enumerate() {
+        if !t.type_name.as_deref().is_some_and(|n| n.eq_ignore_ascii_case("HASHBANG")) {
+            continue;
+        }
+        // Offset 0: the first token, on line 1 at column 1 (columns are
+        // 1-based), so not even whitespace precedes it.
+        if i != 0 || t.line != 1 || t.column != 1 {
+            return Err(MinifyError::LexError(format!(
+                "line {}: `#!` is only allowed at the very start of a file",
+                t.line
+            )));
+        }
+        if t.value.contains(['\u{2028}', '\u{2029}']) {
+            return Err(MinifyError::LexError(
+                "line 1: a U+2028/U+2029 line terminator inside the `#!` line is not supported \
+                 (#17887)"
+                    .to_string(),
+            ));
+        }
+    }
+    Ok(())
 }
 
 /// True iff this is the EOF sentinel emitted by the lexer.
@@ -6165,6 +6289,320 @@ fn is_plain_identifier(tok: &lexer::token::Token) -> bool {
         );
     }
     matches!(tok.type_, lexer::token::TokenType::Name)
+}
+
+/// #18124: does the statement starting at `kept[at]` declare a lexical
+/// binding (`let`, `const`, `using`)?
+///
+/// A body slot (`if(…) S`, `while(…) S`, `else S`, `do S while…`, `with(…) S`)
+/// takes a *Statement*, and a lexical declaration is not one. So the body
+/// flatten passes must keep the braces around a lone declaration:
+///
+/// | Source                 | Upstream v20260915        | Flattened (invalid) |
+/// |------------------------|---------------------------|---------------------|
+/// | `if(a){let x=1;}`      | `if(a){let x=1};`         | `if(a)let x=1;`     |
+/// | `while(o){const x=1;}` | `while(o){const x=1};`    | `while(o)const x=1;`|
+///
+/// `class` and `function` are already caught by each pass's blocking-keyword
+/// scan. `const` is reserved, so it always declares. `let` and `using` are
+/// also identifiers in sloppy code (`let = 1`, `using(x)`), so they declare
+/// only when a binding follows: an identifier, or `[`/`{` for `let`
+/// destructuring. A wrong "yes" just keeps a block's braces, which is valid.
+fn starts_lexical_declaration(kept: &[&lexer::token::Token], at: usize) -> bool {
+    let Some(first) = kept.get(at) else {
+        return false;
+    };
+    if is_string_literal(first) || !is_word_like(first) {
+        return false;
+    }
+    let next = kept.get(at + 1);
+    let binding_follows = next.is_some_and(|n| is_plain_identifier(n) || n.value == "yield" || n.value == "await");
+    match first.value.as_str() {
+        "const" => true,
+        "let" => {
+            binding_follows
+                || next.is_some_and(|n| is_structural_punct(n, "[") || is_structural_punct(n, "{"))
+        }
+        "using" => binding_follows,
+        // `await using x = …`
+        "await" => next.is_some_and(|n| !is_string_literal(n) && n.value == "using"),
+        _ => false,
+    }
+}
+
+/// #17883: is the `;` at `idx` the empty-statement body of `with(…)`?
+///
+/// `function f(){with(a);}` used to print as the invalid
+/// `function f(){with(a)}`: Rule A dropped the `;` because nothing marked
+/// it as a body slot. We recognise the slot from the tokens right before
+/// the `;`: a `)` whose `(` follows the keyword `with`, not after `.` or
+/// `?.`.
+///
+/// Why not arm `with` like `while` (`body_position_next`) and let every
+/// body-slot rule apply, as upstream's `with(o){}` → `with(o);` would
+/// suggest? Because that flag can't tell a `with` statement from a method
+/// named `with`, which is common (`Array.prototype.with`, Temporal):
+/// `class C{with(){}}` would print as the invalid `class C{with();}`. A
+/// method's `)` is always followed by `{`, never by `;`, so this narrower
+/// test can't fire on one. The cost is that `with(o){}` keeps its braces,
+/// one byte more than upstream, as before.
+fn is_with_body(kept: &[&lexer::token::Token], kept_open_paren: &[usize], idx: usize) -> bool {
+    let Some(close) = idx.checked_sub(1) else {
+        return false;
+    };
+    if !is_structural_punct(kept[close], ")") || kept_open_paren[close] == usize::MAX {
+        return false;
+    }
+    let open = kept_open_paren[close];
+    let Some(keyword) = open.checked_sub(1).map(|k| kept[k]) else {
+        return false;
+    };
+    if is_string_literal(keyword) || keyword.value != "with" {
+        return false;
+    }
+    let after_member_dot = open
+        .checked_sub(2)
+        .is_some_and(|k| matches!(kept[k].value.as_str(), "." | "?."));
+    !after_member_dot
+}
+
+/// #17883: does the keyword at `idx` (`if`/`while`/`for`) really open a
+/// control-flow head?
+///
+/// The flag it arms stays set until the next `(`. So a keyword that is only
+/// a property name used to arm the parameter list of the next function, and
+/// its body then went through the body-slot rules:
+///
+/// | Source                        | before               | now                    |
+/// |-------------------------------|----------------------|------------------------|
+/// | `x={if:1};function g(){}`     | `…function g();`     | `…function g(){};`     |
+/// | `x={while:1};function g(){a}` | `…function g()a;`    | `…function g(){a};`    |
+///
+/// A real head is the keyword followed by `(`, or `for await (`. A keyword
+/// after `.` or `?.` (`o.with(a)`) is a member name, and a string token
+/// (`{"if":1}`) is never a keyword.
+fn opens_control_flow_head(
+    kept: &[&lexer::token::Token],
+    idx: usize,
+    prev: Option<&lexer::token::Token>,
+) -> bool {
+    let tok = kept[idx];
+    if is_string_literal(tok) || prev.is_some_and(|p| matches!(p.value.as_str(), "." | "?.")) {
+        return false;
+    }
+    let paren_at = |k: usize| kept.get(k).is_some_and(|t| is_structural_punct(t, "("));
+    paren_at(idx + 1)
+        || (tok.value == "for"
+            && kept.get(idx + 1).is_some_and(|t| !is_string_literal(t) && t.value == "await")
+            && paren_at(idx + 2))
+}
+
+/// #17883: is the `;` at `idx` the empty-statement body of a label (`l:;`)?
+///
+/// Rule A drops a `;` before `}`, but a label must have a body, so `{l:;}`
+/// would become the invalid `{l:}`. A `case`/`default` clause takes no body,
+/// and upstream does drop the `;` there:
+///
+/// | Source                    | Upstream WHITESPACE_ONLY   |
+/// |---------------------------|----------------------------|
+/// | `{l2:;}`                  | `{l2:;};`                  |
+/// | `function f(){a:b:;}`     | `function f(){a:b:;};`     |
+/// | `switch(x){case 1:;}`     | `switch(x){case 1:};`      |
+/// | `switch(x){case a.b:;}`   | `switch(x){case a.b:};`    |
+/// | `switch(x){default:;}`    | `switch(x){default:};`     |
+///
+/// A `:` right before `;` ends either a label or a clause head. No other
+/// `:` can be followed by `;` in valid code: an object value and a ternary
+/// branch both need an expression there. The colon is a label's when the
+/// token before it is an identifier that starts a statement, which means
+/// the token before *that* is a statement boundary:
+///
+/// | before the word        | example         | label? |
+/// |------------------------|-----------------|--------|
+/// | nothing (start)        | `l:;`           | yes    |
+/// | `;` `{` `}`            | `{l:;}`         | yes    |
+/// | `)` `else` `do`        | `if(x)l:;`      | yes    |
+/// | `:` (stacked label)    | `a:b:;`         | yes    |
+/// | `case`                 | `case b:;`      | no     |
+/// | `.` or an operator     | `case a.b:;`    | no     |
+///
+/// A wrong "yes" only keeps a `;` that upstream drops, which is still
+/// valid. A wrong "no" is the bug, so the boundary set errs wide.
+fn is_label_body(kept: &[&lexer::token::Token], idx: usize) -> bool {
+    let Some(colon_at) = idx.checked_sub(1) else {
+        return false;
+    };
+    if !is_structural_punct(kept[colon_at], ":") {
+        return false;
+    }
+    let Some(word) = colon_at.checked_sub(1).map(|k| kept[k]) else {
+        return false;
+    };
+    if !is_word_like(word) || is_string_literal(word) || word.value == "default" {
+        return false;
+    }
+    match colon_at.checked_sub(2).map(|k| kept[k]) {
+        None => true,
+        Some(before) => {
+            [";", "{", "}", ")", ":"]
+                .iter()
+                .any(|p| is_structural_punct(before, p))
+                || (!is_string_literal(before) && matches!(before.value.as_str(), "else" | "do"))
+        }
+    }
+}
+
+/// #18123: for each token of `kept`, is its innermost open bracket a class
+/// body or an object literal (a *member list*)?
+///
+/// A member list holds only member definitions, so a keyword there is a
+/// member name: `class C{if(){}}`, `x={while(a){c=a}}`. The body-slot rules
+/// used to fire on such a method and broke it:
+///
+/// | Source                        | Before (invalid)           | Now (= upstream)            |
+/// |-------------------------------|----------------------------|-----------------------------|
+/// | `class C{with(a){return a}}`  | `class C{with(a)return a};`| `class C{with(a){return a}};`|
+/// | `class C{if(){}}`             | `class C{if();};`          | `class C{if(){}};`          |
+/// | `x={while(a){c=a;}}`          | `x={while(a)c=a};`         | `x={while(a){c=a}};`        |
+///
+/// One stack pass classifies each `{`:
+///
+/// - **Class body:** the first `{` at the same bracket depth after a class
+///   head (`class {`, `class extends`, `class Name {`, `class Name
+///   extends`), past any `extends` expression. A `function` keyword at that
+///   depth (a function expression in `extends`) cancels the wait, since its
+///   own body `{` would come first.
+/// - **Object literal:** a `{` whose previous token puts it in expression
+///   position. That is an operator or punctuator other than `)` `]` `}` `;`
+///   `{` `:` `=>` `++` `--`, or one of `return typeof void delete in of
+///   instanceof new throw case yield await default extends`. A `{` after
+///   `:` counts only when that `:` sits directly in an object literal (a
+///   property value) or inside parens or brackets (a ternary in an
+///   expression). A label (`l:{`) and a `case x:{` stay blocks.
+/// - **Everything else is a block.**
+///
+/// Misclassifying a block as a member list would disarm a real `if`, so
+/// every rule above errs towards "block": a missed member list only keeps
+/// the old behaviour for that method.
+fn member_list_positions(kept: &[&lexer::token::Token]) -> Vec<bool> {
+    #[derive(Clone, Copy, PartialEq)]
+    enum Open {
+        Paren,
+        Bracket,
+        Brace { member_list: bool },
+    }
+    let mut out = vec![false; kept.len()];
+    let mut stack: Vec<Open> = Vec::new();
+    let mut pending_class: Option<usize> = None;
+    let after_dot = |k: usize| {
+        k.checked_sub(1)
+            .is_some_and(|p| matches!(kept[p].value.as_str(), "." | "?."))
+    };
+    for (k, t) in kept.iter().enumerate() {
+        out[k] = matches!(stack.last(), Some(Open::Brace { member_list: true }));
+        if is_word_like(t) && t.value == "class" && !after_dot(k) {
+            // A class head is `class {`, `class extends`, `class Name {` or
+            // `class Name extends`. Anything else (a field or key named
+            // `class`) arms nothing.
+            let opens_head = |n: Option<&&lexer::token::Token>| {
+                n.is_some_and(|n| is_structural_punct(n, "{") || (is_word_like(n) && n.value == "extends"))
+            };
+            let next = kept.get(k + 1);
+            let named = next.is_some_and(|n| is_plain_identifier(n)) && opens_head(kept.get(k + 2));
+            // Directly in a class body or object literal, a class expression
+            // can only follow `=` (a field initialiser) or `:` (a property
+            // value). Otherwise `class` is a member name, and
+            // `class C{class⏎extends(){…}}` must not arm.
+            let in_members = matches!(stack.last(), Some(Open::Brace { member_list: true }));
+            let value_position = k
+                .checked_sub(1)
+                .is_some_and(|p| is_structural_punct(kept[p], "=") || is_structural_punct(kept[p], ":"));
+            if (opens_head(next) || named) && (!in_members || value_position) {
+                pending_class = Some(stack.len());
+            }
+        }
+        // A `function` expression in an `extends` clause has its own body
+        // `{` at the class's depth (`class A extends function(){…}{…}`).
+        // Stop waiting rather than take that body for the class's: a missed
+        // class body only costs a member list.
+        if is_word_like(t)
+            && t.value == "function"
+            && !after_dot(k)
+            && pending_class == Some(stack.len())
+        {
+            pending_class = None;
+        }
+        if is_structural_punct(t, "{") {
+            let class_body = pending_class == Some(stack.len());
+            if class_body {
+                pending_class = None;
+            }
+            let member_list = class_body || opens_object_literal(kept, k, stack.last().map(|o| match o {
+                Open::Brace { member_list } => Some(*member_list),
+                _ => None,
+            }));
+            stack.push(Open::Brace { member_list });
+        } else if is_structural_punct(t, "(") {
+            stack.push(Open::Paren);
+        } else if is_structural_punct(t, "[") {
+            stack.push(Open::Bracket);
+        } else if is_structural_punct(t, "}")
+            || is_structural_punct(t, ")")
+            || is_structural_punct(t, "]")
+        {
+            stack.pop();
+            if pending_class.is_some_and(|d| stack.len() < d) {
+                pending_class = None;
+            }
+        }
+    }
+    out
+}
+
+/// Is the `{` at `k` an object literal, judged by the token before it?
+/// `enclosing` describes the innermost open bracket: `None` at top level,
+/// `Some(None)` for a paren or bracket, and `Some(Some(member_list))` for a
+/// brace. See [`member_list_positions`] for the rules.
+fn opens_object_literal(
+    kept: &[&lexer::token::Token],
+    k: usize,
+    enclosing: Option<Option<bool>>,
+) -> bool {
+    let Some(prev) = k.checked_sub(1).map(|p| kept[p]) else {
+        return false;
+    };
+    if is_string_literal(prev) {
+        return false;
+    }
+    if is_word_like(prev) {
+        let member_name = k >= 2 && matches!(kept[k - 2].value.as_str(), "." | "?.");
+        return !member_name
+            && matches!(
+                prev.value.as_str(),
+                "return"
+                    | "typeof"
+                    | "void"
+                    | "delete"
+                    | "in"
+                    | "of"
+                    | "instanceof"
+                    | "new"
+                    | "throw"
+                    | "case"
+                    | "yield"
+                    | "await"
+                    | "default"
+                    | "extends"
+            );
+    }
+    match prev.value.as_str() {
+        ")" | "]" | "}" | ";" | "{" | "=>" | "++" | "--" => false,
+        // A property value inside an object literal, or a ternary branch
+        // inside parens/brackets. At statement level a `:` is a label or a
+        // `case`, and a block follows.
+        ":" => matches!(enclosing, Some(Some(true)) | Some(None)),
+        _ => true,
+    }
 }
 
 /// What gap-067/CCR-087 needs to know about one `{ … }` block.
@@ -9099,6 +9537,22 @@ mod tests {
     /// keeps it. A genuine `for` loop is distinguished from a `.for(`
     /// property call (`a.for(b)` is untouched and never mistaken for a
     /// for-header).
+    /// #17907: gap-088 keeps the one `;` in front of a `use strict`
+    /// string. That empty statement is what makes the string a plain
+    /// expression rather than a directive.
+    #[test]
+    fn gap088_keeps_the_semi_before_use_strict() {
+        assert_eq!(minify(";\"use strict\";f();"), ";\"use strict\";f();");
+        assert_eq!(minify(";;\"use strict\";f();"), ";\"use strict\";f();");
+        assert_eq!(minify("\"a\";;\"use strict\";f();"), "\"a\";;\"use strict\";f();");
+        assert_eq!(
+            minify("function g(){;'use strict';f()}"),
+            "function g(){;\"use strict\";f()};"
+        );
+        // Any other string still loses the empty statement.
+        assert_eq!(minify(";\"a\";f();"), "\"a\";f();");
+    }
+
     #[test]
     fn gap088_for_header_separators_kept() {
         assert_eq!(minify("for(;;)x();"), "for(;;)x();");
@@ -10770,5 +11224,177 @@ mod tests {
             minify("var{a}=tag`hi`;"),
             "var {a}=tag`hi`;"
         );
+    }
+
+    // ---- #18137: a hashbang is dropped, like a comment -----------------
+
+    #[test]
+    fn issue18137_hashbang_is_dropped() {
+        assert_eq!(minify("#!/usr/bin/env node\nconsole.log(1)"), "console.log(1);");
+        assert_eq!(minify("#!/x\r\nvar a=1;\nf(a)"), "var a=1;f(a);");
+        // A `#!` line followed only by a comment and blank lines.
+        assert_eq!(minify("#!/x\n\n// c\nvar x = 1;"), "var x=1;");
+    }
+
+    #[test]
+    fn issue18137_hashbangs_that_would_lose_code_are_refused() {
+        let refused = |src: &str| {
+            matches!(
+                whitespace_only_minify(src, EsVersion::Es2025, None),
+                Err(MinifyError::LexError(_))
+            )
+        };
+        // U+2028/U+2029 end the hashbang, but the lexer runs past them.
+        assert!(refused("#!/x\u{2028}console.log(1)"));
+        assert!(refused("#!/x\u{2029}console.log(1)\nf()"));
+        // `#!` is only a hashbang at the very start of the file.
+        assert!(refused("console.log(1);\n#!foo\nconsole.log(2);"));
+        assert!(refused(" #!/x\nconsole.log(1)"));
+        assert!(!refused("#!/x\nconsole.log(1)"));
+    }
+
+    // ---- #18124: a lone lexical declaration keeps its block ------------
+
+    #[test]
+    fn issue18124_lexical_declaration_body_keeps_its_braces() {
+        // Upstream v20260915 bytes.
+        assert_eq!(minify("if(a){let x=1;}"), "if(a){let x=1};");
+        assert_eq!(minify("while(o){let x=1;}"), "while(o){let x=1};");
+        assert_eq!(minify("with(o){const x=1;}"), "with(o){const x=1};");
+        assert_eq!(minify("if(a){}else{let x=1;}"), "if(a);else{let x=1};");
+        assert_eq!(minify("do{let x=1;}while(a)"), "do{let x=1}while(a);");
+        assert_eq!(minify("if(a){let [x]=b;}"), "if(a){let [x]=b};");
+    }
+
+    #[test]
+    fn issue18124_other_single_statements_still_flatten() {
+        assert_eq!(minify("if(a){b()}"), "if(a)b();");
+        assert_eq!(minify("if(a){using(b);}"), "if(a)using(b);");
+        assert_eq!(minify("while(o){x++}"), "while(o)x++;");
+    }
+
+    // ---- #17883: an empty-statement body keeps its `;` before `}` ---
+    // Every expectation is upstream v20260915's WHITESPACE_ONLY output.
+
+    #[test]
+    fn issue17883_with_keeps_its_empty_body() {
+        assert_eq!(minify("function f(){with(a);}"), "function f(){with(a);};");
+        assert_eq!(minify("function f(){l:{with(a);}}"), "function f(){l:with(a);};");
+        assert_eq!(minify("switch(x){case 1:with(a);}"), "switch(x){case 1:with(a);};");
+    }
+
+    #[test]
+    fn issue17883_an_empty_with_block_keeps_its_braces() {
+        // Upstream prints `with(o);`. We don't arm `with` as a body slot
+        // (see `is_with_body`), so the empty block stays, as before.
+        assert_eq!(minify("with(o){}"), "with(o){};");
+        assert_eq!(minify("function f(){with(a){}}"), "function f(){with(a){}};");
+    }
+
+    #[test]
+    fn issue17883_a_method_named_with_keeps_its_body() {
+        // A method's `)` is followed by `{`, never `;`, so `is_with_body`
+        // can't fire on one.
+        assert_eq!(minify("class C{with(){}}"), "class C{with(){}};");
+        assert_eq!(minify("x={with(){}};"), "x={with(){}};");
+        assert_eq!(minify("class C{static with(){}}"), "class C{static with(){}};");
+        assert_eq!(minify("x={get with(){}};"), "x={get with(){}};");
+    }
+
+    #[test]
+    fn issue17883_a_member_named_with_is_not_a_head() {
+        assert_eq!(minify("o.with(a);if(c){d;}"), "o.with(a);if(c)d;");
+    }
+
+    #[test]
+    fn issue17883_label_keeps_its_empty_body() {
+        assert_eq!(minify("{l2:;}"), "{l2:;};");
+        assert_eq!(minify("function f(){l:;}"), "function f(){l:;};");
+        assert_eq!(minify("function f(){a:b:;}"), "function f(){a:b:;};");
+        assert_eq!(minify("switch(x){case 1:l:;}"), "switch(x){case 1:l:;};");
+        assert_eq!(minify("function f(){if(a)l:;}"), "function f(){if(a)l:;};");
+    }
+
+    #[test]
+    fn issue17883_case_and_default_still_drop_the_semi() {
+        assert_eq!(minify("switch(x){case 1:;}"), "switch(x){case 1:};");
+        assert_eq!(minify("switch(x){case a.b:;}"), "switch(x){case a.b:};");
+        assert_eq!(minify("switch(x){case f():;}"), "switch(x){case f():};");
+        assert_eq!(minify("switch(x){default:;}"), "switch(x){default:};");
+    }
+
+    #[test]
+    fn issue17883_a_keyword_property_name_arms_nothing() {
+        // `{if:1}` used to arm the next `(`, here a function's parameter
+        // list, so its body was treated as a body slot.
+        assert_eq!(minify("x={if:1};function g(){}"), "x={if:1};function g(){};");
+        assert_eq!(minify("x={with:1};function g(){}"), "x={with:1};function g(){};");
+        assert_eq!(
+            minify("x={while:1};function g(){a;}"),
+            "x={while:1};function g(){a};"
+        );
+        assert_eq!(
+            minify("var o={with:1},p=function(){};"),
+            "var o={with:1},p=function(){};"
+        );
+    }
+
+    #[test]
+    fn issue17883_for_await_is_still_a_head() {
+        assert_eq!(
+            minify("async function f(){for await(x of y){}}"),
+            "async function f(){for await(x of y);};"
+        );
+    }
+
+    // ---- #18123: a keyword method name is not a statement head ---------
+
+    #[test]
+    fn issue18123_keyword_methods_keep_their_bodies() {
+        // Upstream v20260915 bytes.
+        assert_eq!(minify("class C{with(a){return a}}"), "class C{with(a){return a}};");
+        assert_eq!(minify("class C{if(){}}"), "class C{if(){}};");
+        assert_eq!(minify("x={while(a){c=a;}}"), "x={while(a){c=a}};");
+        assert_eq!(minify("x={a:{if(b){c()}}}"), "x={a:{if(b){c()}}};");
+        assert_eq!(minify("class A extends f({}){if(){}}"), "class A extends f({}){if(){}};");
+    }
+
+    #[test]
+    fn issue18123_real_statements_still_flatten() {
+        assert_eq!(minify("{if(a){b()}}"), "{if(a)b()};");
+        assert_eq!(minify("x={m(){if(a){b()}}}"), "x={m(){if(a)b()}};");
+        assert_eq!(minify("switch(x){case 1:{if(a){b()}}}"), "switch(x){case 1:{if(a)b()}};");
+        assert_eq!(minify("x={m(){if(a);}}"), "x={m(){if(a);}};");
+    }
+
+    #[test]
+    fn issue18123_member_list_classification() {
+        let toks = |src: &str| {
+            tokenize_javascript_typed(src, EsVersion::Es2025).expect("lex")
+        };
+        // Which `if` tokens are member names.
+        let marks = |src: &str| {
+            let t = toks(src);
+            let kept: Vec<&lexer::token::Token> =
+                t.iter().filter(|t| !is_trivia(t) && !is_eof(t)).collect();
+            let m = member_list_positions(&kept);
+            kept.iter()
+                .zip(m)
+                .filter(|(t, _)| t.value == "if")
+                .map(|(_, m)| m)
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(marks("class C{if(){}}"), vec![true]);
+        assert_eq!(marks("x={if(){}}"), vec![true]);
+        assert_eq!(marks("x=a?{if(){}}:0"), vec![true]);
+        assert_eq!(marks("{if(a){}}"), vec![false]);
+        assert_eq!(marks("l:{if(a){}}"), vec![false]);
+        assert_eq!(marks("x=()=>{if(a){}}"), vec![false]);
+        assert_eq!(marks("x={m(){if(a){}}}"), vec![false]);
+        assert_eq!(marks("class C{m(){if(a){}}}"), vec![false]);
+        // A field named `class`, then a method named `extends`: no class head.
+        assert_eq!(marks("class C{class;extends(){if(a){}}}"), vec![false]);
+        // A class expression as a field initialiser still has a member list.
+        assert_eq!(marks("class C{x=class{if(){}}}"), vec![true]);
     }
 }

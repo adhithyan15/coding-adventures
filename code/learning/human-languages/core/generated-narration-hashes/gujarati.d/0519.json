@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:5b36a6f3a1cb80bd",
+  "lessonIds": [
+    "GU-C519-sagdi",
+    "GU-C519-jhal",
+    "GU-C519-ac",
+    "GU-C519-varal",
+    "GU-C519-thaarvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch519.txt",
+  "json": "gujarati/narration/ch519.json",
+  "textHash": "fnv1a64:052f927afb296293",
+  "jsonHash": "fnv1a64:86c10fdc88300071",
+  "findings": []
+}

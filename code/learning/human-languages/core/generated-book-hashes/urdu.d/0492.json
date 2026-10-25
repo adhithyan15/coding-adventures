@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:98326618694ad103",
+  "lessonIds": [
+    "UR-C492-burhapa",
+    "UR-C492-yaddasht",
+    "UR-C492-chhari",
+    "UR-C492-vasiyat",
+    "UR-C492-virasat"
+  ],
+  "tex": "urdu/book/chapters/ch492-growing-old.tex"
+}

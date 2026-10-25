@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C286-ilaj",
+    "language": "urdu",
+    "chapter": 286,
+    "sequence": 17530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bc95c4a48539fff"
+  },
+  "findings": []
+}

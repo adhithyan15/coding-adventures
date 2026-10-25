@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:ef77b0990c49b598",
+  "lessonIds": [
+    "GU-C440-jharnu",
+    "GU-C440-pravah",
+    "GU-C440-sangam",
+    "GU-C440-naher",
+    "GU-C440-vahavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch440-streams-and-canals.tex"
+}

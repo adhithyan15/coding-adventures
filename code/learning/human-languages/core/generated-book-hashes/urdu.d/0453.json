@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:eafc2c00018cc7ae",
+  "lessonIds": [
+    "UR-C453-hasana",
+    "UR-C453-rulana",
+    "UR-C453-qahqaha",
+    "UR-C453-sisakna",
+    "UR-C453-mazaq"
+  ],
+  "tex": "urdu/book/chapters/ch453-laughter-and-tears.tex"
+}
