@@ -132,7 +132,8 @@ pub(crate) fn multiply40(left: u64, right: u64) -> (u64, u64) {
     let multiplier = bits::<40>(u128::from(right_magnitude));
     let mut product = 0_u128;
     for (bit, selected) in multiplier.into_iter().enumerate() {
-        let partial = (u128::from(left_magnitude) << bit) * u128::from(selected);
+        let shifted = u128::from(left_magnitude) << bit;
+        let partial = from_bits(&bits::<80>(shifted).map(|input| and_gate(input, selected)));
         product = add_width::<80>(product, partial, 0).0;
     }
     if xor_gate(left_negative.into(), right_negative.into()) != 0 {
@@ -161,10 +162,10 @@ pub(crate) fn divide40(dividend: u64, divisor: u64) -> Result<(u64, u64), IasErr
     let mut quotient = 0_u64;
     let mut remainder = 0_u64;
     for bit in (0..40).rev() {
-        remainder = shift_left40(remainder) | ((numerator >> bit) & 1);
+        remainder = add40(shift_left40(remainder), (numerator >> bit) & 1);
         if !unsigned_less40(remainder, denominator) {
             remainder = add40(remainder, negate40(denominator));
-            quotient |= 1_u64 << bit;
+            quotient = add40(quotient, 1_u64 << bit);
         }
     }
     let result_negative = xor_gate(dividend_negative.into(), divisor_negative.into()) != 0;
@@ -203,6 +204,9 @@ mod tests {
         assert_eq!(replace_address(WORD_MASK, 0x123, true) >> 20 & 0xfff, 0x123);
         assert_eq!(replace_address(0, 0x456, false) & 0xfff, 0x456);
         assert_eq!(multiply40(3, negate40(2)), (WORD_MASK, negate40(6)));
+        assert_eq!(multiply40(WORD_MASK, WORD_MASK), (0, 1));
+        assert_eq!(multiply40(1 << 39, 1), (WORD_MASK, 1 << 39));
+        assert_eq!(multiply40((1 << 39) - 1, 2), (0, WORD_MASK - 1));
         assert_eq!(divide40(17, 5), Ok((2, 3)));
         assert_eq!(divide40(1, 0), Err(IasError::DivideByZero));
         assert_eq!(

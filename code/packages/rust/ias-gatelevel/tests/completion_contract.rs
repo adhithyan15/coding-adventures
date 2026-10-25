@@ -165,6 +165,20 @@ fn transport_restore_direct_access_and_run_are_transactional() {
         Err(IasError::TransportAlignment { bytes: 4 })
     );
     assert_eq!(
+        gate.load(&[0; 5], MEMORY_WORDS as u16),
+        Err(IasError::OriginOutOfRange {
+            origin: MEMORY_WORDS as u16
+        })
+    );
+    let oversized_transport = vec![0; (MEMORY_WORDS + 1) * 5];
+    assert_eq!(
+        gate.load(&oversized_transport, 0),
+        Err(IasError::ProgramOutOfRange {
+            origin: 0,
+            words: MEMORY_WORDS + 1
+        })
+    );
+    assert_eq!(
         gate.load_words(&[0], MEMORY_WORDS as u16),
         Err(IasError::OriginOutOfRange {
             origin: MEMORY_WORDS as u16

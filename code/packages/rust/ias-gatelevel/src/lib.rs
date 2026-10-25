@@ -161,7 +161,18 @@ impl IasGateLevel {
         if !bytes.len().is_multiple_of(5) {
             return Err(IasError::TransportAlignment { bytes: bytes.len() });
         }
-        let mut words = Vec::with_capacity(bytes.len() / 5);
+        let word_count = bytes.len() / 5;
+        let start = usize::from(origin);
+        if start >= MEMORY_WORDS {
+            return Err(IasError::OriginOutOfRange { origin });
+        }
+        if word_count > MEMORY_WORDS - start {
+            return Err(IasError::ProgramOutOfRange {
+                origin,
+                words: word_count,
+            });
+        }
+        let mut words = Vec::with_capacity(word_count);
         for chunk in bytes.chunks_exact(5) {
             words.push(
                 (u64::from(chunk[0]) << 32)
