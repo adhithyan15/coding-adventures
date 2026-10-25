@@ -225,6 +225,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-key-prefix-attributes-11.16.1-visual-corpus.json"
     ));
+    const ER_ATTRIBUTE_NAME_VALIDATION_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-attribute-name-validation-11.16.1-corpus.json"
+    ));
+    const ER_ATTRIBUTE_NAME_VALIDATION_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-attribute-name-validation-11.16.1-visual-corpus.json"
+    ));
     const ER_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-accessibility-11.16.1-corpus.json"
@@ -2940,6 +2948,44 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_er_key_prefix_attributes_e2e.png")
             .expect("ER key-prefix attributes PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_attribute_name_validation_to_png() {
+        let syntax: Value = serde_json::from_str(ER_ATTRIBUTE_NAME_VALIDATION_CORPUS)
+            .expect("ER attribute-name validation corpus JSON");
+        let visual: Value = serde_json::from_str(ER_ATTRIBUTE_NAME_VALIDATION_VISUAL_CORPUS)
+            .expect("ER attribute-name validation visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["valid"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["valid"][0]["source"]
+                .as_str()
+                .expect("valid ER attribute-name source"),
+        )
+        .expect("valid ER attribute-name fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 2);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(!scene.instructions.is_empty());
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_attribute_name_validation_e2e.png")
+            .expect("ER attribute-name validation PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 

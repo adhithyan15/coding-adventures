@@ -54,23 +54,24 @@ History includes both the initial loss and the loss at the final model state.
 
 A checkpoint records each layer's activation, weights, and biases, plus the
 number of completed SGD steps. It is ordinary JSON data, so Python can write
-it and TypeScript, Rust or Go can load it, or vice versa. No implementation executes
+it and TypeScript, Rust, Go or Ruby can load it, or vice versa. No implementation executes
 code from the document. Run
 `python code/scripts/validate_neural_framework_interchange.py` at repository
-root after installing the TypeScript package dependencies, Cargo and Go to prove
-training and all twelve directed checkpoint exchanges. The JSON receipt identifies
-four native lanes and zero binding lanes, not four wrappers over one runtime.
+root after installing the TypeScript package dependencies, Cargo, Go and Ruby to prove
+training and all twenty directed checkpoint exchanges. The JSON receipt identifies
+five native lanes and zero binding lanes, not five wrappers over one runtime.
 
-NN42 extends NN39: first train each model to step 3000, then compute native 3001/3002
+NN46 extends NN42 and NN39: first train each model to step 3000, then compute native 3001/3002
 baseline. The trace for Python to Rust is `Python(3000) -> Rust(3001) ->
 Python(3002)`: each arrow transports the actual owned JSON parameters on stdin.
 Every parameter, prediction, loss, and exact step is compared with the baseline;
 the same trace repeats for each ordered pair. The paper calculation above and
 its shared fixture stay unchanged. The Go trace is `Go(3000) -> Rust(3001) ->
-Go(3002)`, using Go's independent gradient engine on both Go steps. Four fresh
-models, eight native baseline resumes and twenty-four exchange steps produce
-36 actual child executions. A registry entry alone cannot produce this evidence.
-See [NN42](../../specs/NN42-four-native-dense-conformance.md).
+Go(3002)`, using Go's independent gradient engine on both Go steps. Ruby's trace
+is `Ruby(3000) -> Go(3001) -> Ruby(3002)`, with native Ruby backpropagation on
+both Ruby steps. Five fresh models, ten native baseline resumes and forty
+exchange steps produce 55 actual child executions. A registry entry alone
+cannot produce this evidence. See [NN46](../../specs/NN46-five-native-dense-conformance.md).
 
 On a sparse local checkout, `--rust-manifest-path` may name a disposable
 workspace containing exact Rust/matrix/bounded-JSON/fixture copies. That proves

@@ -246,10 +246,13 @@ pub fn tokenize_mermaid_gitgraph(source: &str) -> Vec<Token> {
 }
 
 pub fn tokenize_mermaid_er(source: &str) -> Vec<Token> {
-    let mut lexer = create_mermaid_er_lexer(source);
-    lexer
-        .tokenize()
+    try_tokenize_mermaid_er(source)
         .unwrap_or_else(|e| panic!("Mermaid ER tokenization failed: {e}"))
+}
+
+pub fn try_tokenize_mermaid_er(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_er_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
 }
 
 pub fn tokenize_mermaid_c4(source: &str) -> Vec<Token> {
@@ -1954,6 +1957,23 @@ mod tests {
 
         assert!(values.contains(&"*title"));
         assert!(values.contains(&"*the_Primary_Key"));
+    }
+
+    #[test]
+    fn tokenizes_er_attribute_name_boundaries() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nENTITY {\n  string name1\n  int value2\n}\n",
+        );
+        let identifiers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFIER"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert!(identifiers.contains(&"name1"));
+        assert!(identifiers.contains(&"value2"));
+        assert!(try_tokenize_mermaid_er("erDiagram\nBOOK {\n  string (author\n}\n").is_err());
+        assert!(try_tokenize_mermaid_er("erDiagram\nBOOK {\n  string )author\n}\n").is_err());
     }
 
     #[test]

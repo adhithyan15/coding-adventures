@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:ae07c88a79233221",
+  "lessonIds": [
+    "PA-C203-book-return",
+    "PA-C203-baare",
+    "PA-C203-baare-review",
+    "PA-C203-about-the-book",
+    "PA-C203-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch203.txt",
+  "json": "punjabi/narration/ch203.json",
+  "textHash": "fnv1a64:b5bc97168da520cb",
+  "jsonHash": "fnv1a64:e1cec3b3d5b4a828",
+  "findings": []
+}

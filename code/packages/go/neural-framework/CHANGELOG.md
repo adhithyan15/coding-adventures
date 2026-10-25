@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- NN46 extends required interchange to native Ruby: twenty directed pairs,
+  five actual native lanes, zero bindings, full baselines/returns through 3002.
+
 - Extend the shared corpus to 55 cases (3 accept, 52 reject); pin and execute
   NN43's six null weight/bias cases in single, mixed and later-layer positions.
 

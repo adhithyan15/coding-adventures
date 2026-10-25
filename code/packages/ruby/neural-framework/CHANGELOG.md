@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- NN46 separately integrates native Ruby into required five-native interchange,
+  with twenty directed pairs and full baseline/return comparisons through 3002.
+- Ruby dependency/framework/validator inputs select the reusable fail-closed
+  gate, which validates the actual matrix-first build before exchange.
+
 ## 0.1.0 — 2026-10-25
 
 - NN45: independent native Ruby configurable dense training above matrix 0.2.x.

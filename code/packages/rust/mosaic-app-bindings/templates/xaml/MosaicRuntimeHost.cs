@@ -20,11 +20,18 @@ public static class MosaicRuntimeHost
     // Profiling is opt-in and bounded. Keep disk I/O off the interaction path
     // and never include application data in diagnostic labels or records.
     private static readonly string? ProfilePath = Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH");
+    private static readonly bool ProfileInteractionsOnly =
+        Environment.GetEnvironmentVariable("MOSAIC_PROFILE_INTERACTIONS_ONLY") == "1";
     private static readonly System.Collections.Concurrent.ConcurrentQueue<string> ProfileSamples = new();
     private static int ProfileSampleCount;
     public static IDisposable? BeginProfile(string phase, object? component = null)
     {
         if (string.IsNullOrWhiteSpace(ProfilePath)) return null;
+        // Detailed conversion/setter phases can exhaust the shared budget before
+        // a percentile workload finishes. Filter before reserving a slot or
+        // reading diagnostics; keep the same bound even for pending frames.
+        if (ProfileInteractionsOnly && phase != "interaction-handler"
+            && phase != "interaction-next-render") return null;
         // Reserve before registering frame callbacks: a minimized window may
         // receive events without rendering, so pending scopes must be bounded.
         while (true)

@@ -23,7 +23,7 @@ use diagram_ir::{
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
-    tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
+    tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_gitgraph,
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state, try_tokenize_mermaid_gantt, try_tokenize_mermaid_journey,
     try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
@@ -36,6 +36,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_railroad_ebnf, try_tokenize_mermaid_railroad_abnf,
     try_tokenize_mermaid_railroad_peg,
     try_tokenize_mermaid_info,
+    try_tokenize_mermaid_er,
     try_tokenize_mermaid_zenuml,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
@@ -289,7 +290,11 @@ pub fn parse_mermaid_gitgraph_ast(source: &str) -> Result<GrammarASTNode, ParseE
 }
 
 pub fn parse_mermaid_er_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
-    let tokens = tokenize_mermaid_er(source);
+    let tokens = try_tokenize_mermaid_er(source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
     let grammar = parse_parser_grammar(ER_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|e| panic!("Failed to parse er.grammar: {e}"));
     let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
@@ -13505,7 +13510,12 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let preprocessed = preprocess_mermaid_source(source)?;
     parse_mermaid_er_ast(&preprocessed.source)?;
 
-    let mut cursor = TokenCursor::new(tokenize_mermaid_er(&preprocessed.source));
+    let tokens = try_tokenize_mermaid_er(&preprocessed.source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let mut cursor = TokenCursor::new(tokens);
     cursor.skip_terminators();
     cursor
         .consume_if("HEADER")
@@ -13788,6 +13798,23 @@ fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
 }
 
 fn parse_er_attribute_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    if !matches!(
+        token_name(cursor.current()),
+        "IDENTIFIER"
+            | "MD_PARENT"
+            | "TITLE_KW"
+            | "DIRECTION_KW"
+            | "CLASSDEF_KW"
+            | "CLASS_KW"
+            | "STYLE_KW"
+            | "ESCAPED_ATTRIBUTE"
+            | "COMMA_ATTRIBUTE_TYPE"
+    ) {
+        return Err(token_error(
+            cursor.current(),
+            "expected ER attribute name",
+        ));
+    }
     let mut name = parse_er_name(cursor)?;
     while cursor.consume_if("LBRACKET").is_some() {
         name.push('[');

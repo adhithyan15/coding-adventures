@@ -56,6 +56,8 @@ class NeuralFrameworkCIGateTests(unittest.TestCase):
                 "rust/bounded-json",
                 "go/neural-framework",
                 "go/matrix",
+                "ruby/neural-framework",
+                "ruby/matrix",
             },
         )
         paths = set(self.gate["paths"])
@@ -73,6 +75,8 @@ class NeuralFrameworkCIGateTests(unittest.TestCase):
             "code/scripts/tests/test_neural_framework_interchange.py",
             "code/scripts/validate_neural_framework_go.py",
             "code/scripts/tests/test_neural_framework_go.py",
+            "code/scripts/validate_neural_framework_ruby.py",
+            "code/scripts/tests/test_neural_framework_ruby.py",
         ):
             self.assertIn(pattern, paths)
         for package in self.gate["packages"]:
@@ -119,6 +123,9 @@ class NeuralFrameworkCIGateTests(unittest.TestCase):
             "go build ./...",
             "python ../../../scripts/validate_neural_framework_go.py",
             "test_neural_framework_go.py",
+            "ruby scripts/build.rb",
+            "python ../../../scripts/validate_neural_framework_ruby.py",
+            "test_neural_framework_ruby.py",
         ):
             self.assertIn(command, self.reusable)
         self.assertIn("working-directory: code/packages/go/matrix", self.reusable)
@@ -126,6 +133,12 @@ class NeuralFrameworkCIGateTests(unittest.TestCase):
             "working-directory: code/packages/go/neural-framework", self.reusable
         )
         self.assertIn("actions/setup-go@", self.reusable)
+        self.assertIn(
+            "ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a", self.reusable
+        )
+        self.assertIn(
+            "working-directory: code/packages/ruby/neural-framework", self.reusable
+        )
         self.assertIn("persist-credentials: false", self.reusable)
         self.assertNotIn("sparse-checkout:", self.reusable)
         self.assertNotIn("secrets: inherit", self.ci)

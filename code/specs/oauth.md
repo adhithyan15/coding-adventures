@@ -1542,6 +1542,28 @@ revocation, validate a path, establish trust, perform TLS or HTTP, authorize
 OAuth transport, open a socket, or access a credential. Concrete HTTPS remains
 unavailable.
 
+An allocation-free `tls13-record` prerequisite now owns only the outer RFC
+8446 record framing needed by a future repository-owned TLS client. It decodes
+and encodes strict five-byte TLS record headers plus borrowed fragments,
+retains but does not interpret the deprecated plaintext legacy record version,
+and provides separate plaintext and ciphertext entry points. Plaintext callers
+supply an explicit non-empty content-type allowlist and a fragment ceiling no
+larger than `2^14`; ciphertext requires the TLS 1.3 legacy version `0x0303`, is
+fixed to outer `application_data`, rejects an empty fragment, and is bounded by
+`2^14 + 256`. Control-plane plaintext records cannot be empty, while
+zero-length application data remains a distinct standards-permitted case for
+later sequencing policy. Exact decoders reject trailing bytes and prefix
+decoders return the unconsumed stream tail. Encoders emit `0x0303` and validate
+the complete record and output capacity before mutating caller-owned storage.
+Stable failures retain no record contents.
+
+This slice does not parse handshake messages or `TLSInnerPlaintext`, implement
+record sequencing, negotiate versions or cipher suites, derive keys, encrypt,
+decrypt, authenticate, read entropy or a clock, validate certificates, select
+trust roots, check revocation, perform I/O, open a socket, authorize HTTP or
+OAuth transport, or replace `tls-platform`. Concrete HTTPS remains
+unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
