@@ -1310,6 +1310,24 @@ to a certificate or constructed path, decide freshness or revocation, fetch or
 cache data, read a clock, or grant TLS, HTTP, OAuth transport, or network
 authority. Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-cert-id-binding` prerequisite now binds one exact
+structurally decoded `SingleResponse` to one exact target certificate and one
+exact candidate issuer certificate. It first requires the target certificate's
+canonical serial number to equal the `CertID` serial, then invokes one
+caller-owned, data-driven hash policy with the exact `CertID` algorithm and the
+checked target certificate's canonical issuer Name DER followed by the
+candidate issuer certificate's `subjectPublicKey` BIT STRING contents. The
+caller selects and implements the hash algorithm; the binding requires one
+public non-zero fixed digest length for both fields and compares each complete
+digest with the repository-owned constant-time primitive. Success returns
+non-copyable evidence retaining the exact response, target, and issuer so none
+can be substituted after binding.
+This composition does not authorize the selected hash, prove that the issuer
+signed the target, verify or authorize the OCSP responder, bind the response to
+a constructed path, interpret extensions or status, decide freshness or
+revocation, fetch or cache data, read a clock, or grant TLS, HTTP, OAuth
+transport, or network authority. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
