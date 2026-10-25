@@ -30,16 +30,26 @@ additional validation. It preserves responder and intermediate validity at the
 OCSP observation time together with the complete signed response,
 target-revocation, server-path, path-length, and reviewed-root evidence.
 
+`validate_x509_ocsp_reviewed_responder_anchor_dns_policy` then consumes that
+exact responder-path proof and derives both inputs internally: the authenticated
+responder certificate and the selected reviewed root's exact optional
+out-of-band name-constraint bytes. Entries without constraints succeed without
+reading the responder SAN. Constrained entries decode the supported permitted
+DNS subset and the responder's exact Subject Alternative Name under separate
+caller-owned limits, require every responder dNSName to comply, and retain only
+count evidence. Failures expose stable payload-free categories.
+
 ## Boundary
 
-This crate performs evidence composition and exact-time validity checks only.
+This crate performs evidence composition, exact-time validity checks, and the
+bounded selected-anchor responder DNS policy described above only.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
-RFC 5280 policy, apply anchor or intermediate name constraints to the responder
-certificate, check responder-certificate or intermediate revocation, interpret
-unsupported OCSP extensions, acquire or cache OCSP data, read a clock,
-implement TLS or HTTP, authorize OAuth transport, open a network connection, or
-access a credential. The reviewed Mozilla root snapshot excludes OS,
+RFC 5280 policy, apply intermediate, excluded, or non-DNS name constraints to
+the responder certificate, check responder-certificate or intermediate
+revocation, interpret unsupported OCSP extensions, acquire or cache OCSP data,
+read a clock, implement TLS or HTTP, authorize OAuth transport, open a network
+connection, or access a credential. The reviewed Mozilla root snapshot excludes OS,
 enterprise, user-installed, and local roots. `webpki-roots` remains reviewed
 public data only, not a TLS or validation implementation. Concrete OAuth HTTPS
 remains unavailable.

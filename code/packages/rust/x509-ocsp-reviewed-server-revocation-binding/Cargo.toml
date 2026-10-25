@@ -5,17 +5,19 @@ edition = "2021"
 description = "Exact OCSP revocation binding for one constructed reviewed server path"
 
 [dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }
 x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-name-constraints = { path = "../x509-name-constraints" }
 x509-ocsp-authenticated-target-revocation = { path = "../x509-ocsp-authenticated-target-revocation" }
 x509-rsa-sha256-reviewed-server-link = { path = "../x509-rsa-sha256-reviewed-server-link" }
+x509-subject-alt-name = { path = "../x509-subject-alt-name" }
 
 [dev-dependencies]
-der-asn1 = { path = "../der-asn1" }
 rsa-public-operation = { path = "../rsa-public-operation" }
 sha1 = { package = "coding_adventures_sha1", path = "../sha1" }
 sha256 = { package = "coding_adventures_sha256", path = "../sha256" }
 tls-server-identity = { path = "../tls-server-identity" }
-x509-certificate = { path = "../x509-certificate" }
 x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }
 x509-certificate-path-length-policy = { path = "../x509-certificate-path-length-policy" }
 x509-certificate-policy = { path = "../x509-certificate-policy" }
