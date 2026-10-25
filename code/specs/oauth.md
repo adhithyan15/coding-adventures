@@ -1522,6 +1522,26 @@ cache data, bind a locator to authenticated revocation evidence, read a clock,
 check revocation, perform TLS or HTTP, authorize OAuth transport, or grant
 network authority. Concrete HTTPS remains unavailable.
 
+An effect-free `x509-ocsp-aia-locator-policy` slice now consumes that decoded
+collection and validates every exact `id-ad-ocsp` locator before uniquely
+selecting one. The caller supplies the allowed lowercase URI schemes, each
+scheme's implicit port and exact explicit-port set, plus URI, DNS-host, and
+path/query length ceilings. The accepted profile is deliberately narrower than
+general RFC 3986: it requires an absolute hierarchical URI with a DNS-style
+host; rejects userinfo, IP literals, fragments, invalid DNS labels, malformed
+or disallowed ports, legacy numeric IPv4 resolver spellings, unsafe path/query
+characters, and incomplete percent
+escapes; and fails closed on multiple OCSP descriptions. Other AIA methods do
+not become OCSP candidates. Policy is checked before discovery data, success
+borrows the exact AIA description, and stable failures expose no URI, host,
+certificate, provider, or response payload. This proves syntax, caller policy,
+and unique selection only: it does not authorize DNS or a destination, verify
+hostname identity, resolve an address, build an HTTP request, follow redirects,
+fetch or cache OCSP data, authenticate a response, read a clock, decide
+revocation, validate a path, establish trust, perform TLS or HTTP, authorize
+OAuth transport, open a socket, or access a credential. Concrete HTTPS remains
+unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
