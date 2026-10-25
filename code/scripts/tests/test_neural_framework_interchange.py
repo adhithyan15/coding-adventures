@@ -1,4 +1,4 @@
-"""NN39 orchestration regressions; real runtime evidence is a separate command."""
+"""NN42 orchestration regressions; real runtime evidence is a separate command."""
 
 import copy
 import importlib.util
@@ -31,7 +31,7 @@ def receipt(step=3000):
 
 
 class InterchangeTests(unittest.TestCase):
-    def test_all_six_directed_pairs_and_native_baselines_execute(self):
+    def test_all_twelve_directed_pairs_and_native_baselines_execute(self):
         calls = []
 
         def execute(lane, checkpoint=None, **kwargs):
@@ -40,9 +40,13 @@ class InterchangeTests(unittest.TestCase):
 
         with patch.object(MODULE, "execute", side_effect=execute):
             result = MODULE.validate()
-        self.assertEqual(len(calls), 21)  # 3 train + 6 native + 12 cross-runtime.
+        self.assertEqual(len(calls), 36)  # 4 train + 8 native + 24 cross-runtime.
+        self.assertEqual(result["contract"], "NN42")
+        self.assertEqual(result["checkpoint_exchange"], "passed-all-twelve-directions")
         self.assertEqual(result["binding_lanes"], [])
-        self.assertEqual(result["native_lanes"], ["python", "typescript", "rust"])
+        self.assertEqual(result["native_lanes"], ["python", "typescript", "rust", "go"])
+        self.assertEqual(len(result["exchanges"]), 12)
+        self.assertEqual([step for lane, step in calls[:4]], [None] * 4)
         self.assertEqual(
             set(result["exchanges"]),
             {f"{a}->{b}" for a in MODULE.LANES for b in MODULE.LANES if a != b},
@@ -75,6 +79,9 @@ class InterchangeTests(unittest.TestCase):
                     self.assertEqual(options["timeout"], 120)
                     self.assertEqual(options["encoding"], "utf-8")
                     self.assertEqual(
+                        options["cwd"], MODULE.GO if lane == "go" else MODULE.ROOT
+                    )
+                    self.assertEqual(
                         options["input"], json.dumps(checkpoint) if resume else None
                     )
                     if lane == "rust":
@@ -83,11 +90,17 @@ class InterchangeTests(unittest.TestCase):
                             argv[-2:] if resume else argv[-1:],
                             ["--", "--resume"] if resume else ["xor"],
                         )
+                    if lane == "go":
+                        self.assertEqual(
+                            argv,
+                            ["trusted tool", "run", "./cmd/xor"]
+                            + (["--resume"] if resume else []),
+                        )
 
     def test_unknown_lane_missing_tools_and_process_errors_fail(self):
         with self.assertRaises(ValueError):
             MODULE.execute("binding")
-        for lane in ("rust", "typescript"):
+        for lane in ("rust", "typescript", "go"):
             with (
                 patch.object(MODULE.shutil, "which", return_value=None),
                 self.assertRaises(ValueError),
@@ -97,11 +110,13 @@ class InterchangeTests(unittest.TestCase):
             subprocess.TimeoutExpired("tool", 120),
             subprocess.CalledProcessError(1, "tool"),
         ):
-            with (
-                patch.object(MODULE.subprocess, "run", side_effect=error),
-                self.assertRaises(type(error)),
-            ):
-                MODULE.execute("python")
+            for lane in MODULE.LANES:
+                with (
+                    patch.object(MODULE.shutil, "which", return_value="trusted tool"),
+                    patch.object(MODULE.subprocess, "run", side_effect=error),
+                    self.assertRaises(type(error)),
+                ):
+                    MODULE.execute(lane)
 
     def test_malformed_nonfinite_boolean_shapes_and_counts_fail(self):
         bad = [[], {}, {**receipt(), "extra": 1}]
@@ -175,3 +190,24 @@ class InterchangeTests(unittest.TestCase):
         ):
             with self.assertRaises(ValueError):
                 MODULE.equivalent(left, right)
+
+    def test_go_fresh_baseline_destination_and_return_drift_fail(self):
+        # Call positions pin each boundary independently of the lane registry:
+        # Go fresh=4; Go native resumes=11/12; Python->Go=17; Go->Python=18.
+        for damaged in (4, 11, 12, 17, 18):
+            calls = 0
+
+            def execute(lane, checkpoint=None, damaged=damaged, **kwargs):
+                nonlocal calls
+                calls += 1
+                value = receipt(3000 if checkpoint is None else checkpoint["step"] + 1)
+                if calls == damaged:
+                    value["checkpoint"]["layers"][0]["biases"][0] += 0.01
+                return value
+
+            with (
+                self.subTest(damaged=damaged),
+                patch.object(MODULE, "execute", side_effect=execute),
+                self.assertRaises(ValueError),
+            ):
+                MODULE.validate()

@@ -54,26 +54,30 @@ History includes both the initial loss and the loss at the final model state.
 
 A checkpoint records each layer's activation, weights, and biases, plus the
 number of completed SGD steps. It is ordinary JSON data, so Python can write
-it and TypeScript or Rust can load it, or vice versa. No implementation executes
+it and TypeScript, Rust or Go can load it, or vice versa. No implementation executes
 code from the document. Run
 `python code/scripts/validate_neural_framework_interchange.py` at repository
-root after installing the TypeScript package dependencies and Cargo to prove
-training and all six directed checkpoint exchanges. The JSON receipt identifies
-three native lanes and zero binding lanes, not three wrappers over one runtime.
+root after installing the TypeScript package dependencies, Cargo and Go to prove
+training and all twelve directed checkpoint exchanges. The JSON receipt identifies
+four native lanes and zero binding lanes, not four wrappers over one runtime.
 
-NN39 first trains each model to step 3000, then computes its native 3001/3002
+NN42 extends NN39: first train each model to step 3000, then compute native 3001/3002
 baseline. The trace for Python to Rust is `Python(3000) -> Rust(3001) ->
 Python(3002)`: each arrow transports the actual owned JSON parameters on stdin.
 Every parameter, prediction, loss, and exact step is compared with the baseline;
 the same trace repeats for each ordered pair. The paper calculation above and
-its shared fixture stay unchanged. See [NN39](../../specs/NN39-three-native-dense-conformance.md).
+its shared fixture stay unchanged. The Go trace is `Go(3000) -> Rust(3001) ->
+Go(3002)`, using Go's independent gradient engine on both Go steps. Four fresh
+models, eight native baseline resumes and twenty-four exchange steps produce
+36 actual child executions. A registry entry alone cannot produce this evidence.
+See [NN42](../../specs/NN42-four-native-dense-conformance.md).
 
 On a sparse local checkout, `--rust-manifest-path` may name a disposable
 workspace containing exact Rust/matrix/bounded-JSON/fixture copies. That proves
 native numerical interchange locally, not full repository-workspace resolution;
 the required CI job separately builds/tests that real workspace.
 
-Automatic changes to either native lane, its matrix foundation, shared fixture,
+Automatic changes to any native lane, its matrix foundation, shared fixture,
 or validator now select a reusable conformance job inside repository CI. The
 required `CI gate` rejects a selected job that fails, is cancelled, or skips;
 manual dispatch remains available. See the

@@ -39,8 +39,9 @@ comparing full resumed models rather than counting registered runtimes.
 
 NN41 adds [independent native Go dense training](./native-go-dense-framework.md),
 with the same paper oracle and shared rejection corpus. Native save/reload/resume
-is evidence for that library, not yet required four-language interchange; that
-following conformance tranche remains separately tracked.
+is evidence for that library, separate from NN42's four-language interchange.
+NN42 extends the required reusable gate to all twelve directed native pairs,
+comparing full states at steps 3000/3001/3002 with zero binding lanes.
 
 Every model family below starts with the smallest example that needs its new
 idea.

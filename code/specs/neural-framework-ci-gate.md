@@ -6,7 +6,7 @@ required repository `CI gate`, not merely an independent optional workflow.
 ## Scheduling contract
 
 Register `neural-framework-conformance` as a job-scoped gate. Both affected
-Python/TypeScript/Rust framework or matrix packages and direct changes to their
+Python/TypeScript/Rust/Go framework or matrix packages and direct changes to their
 sources, the shared fixture, interchange validator, gate tests, registry, or
 either workflow select it. Unrelated documentation does not select it. Forced
 main builds select it through the existing registry evaluator.
@@ -15,6 +15,13 @@ NN39 adds Rust bounded-JSON, the Rust workspace manifest, native Rust evidence
 runner/tests, and interchange regression tests. The reusable workflow uses a
 full CI checkout to resolve the real Rust workspace; local sparse validation
 may instead identify an exact-copy minimal manifest explicitly.
+
+NN42 adds Go framework/matrix, the Go evidence runner and its unit tests as
+selecting inputs. The reusable workflow validates the Go dependency first,
+then tests/vets/builds the framework and runs its native resume validator.
+It executes all twelve directed pairs among four independent native lanes,
+including Go, with full native baseline and return-trip comparisons. Existing
+selection and fail-closed roll-up semantics are unchanged.
 
 Use one reusable workflow for native package validation and checkpoint exchange.
 Keep manual dispatch, but let repository CI own automatic PR/main scheduling so

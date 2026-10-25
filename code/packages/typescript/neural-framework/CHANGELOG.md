@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extend required native checkpoint exchange to Go: all twelve directed pairs,
+  full model receipts at steps 3000/3001/3002, four native lanes and no bindings.
+
 - Execute NN40's shared 49-case checkpoint acceptance/rejection corpus through
   the public native loader, including valid controls and save/reload checks.
 
