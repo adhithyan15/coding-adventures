@@ -319,6 +319,21 @@ fn more_than_one_insertion_per_input_token_is_refused() {
 // Hand-built token streams
 // ---------------------------------------------------------------------------
 
+/// A hook may hand the parser a stream with no tokens at all, not even EOF.
+/// The insertion at its end exceeds the budget (1 synthetic for 0 input
+/// tokens), and reporting that must not index past the empty stream.
+#[test]
+fn an_empty_stream_reports_the_budget_instead_of_panicking() {
+    let grammar = parse_parser_grammar("prog = @asi(SEMI) ;").unwrap();
+    let err = GrammarParser::new(vec![], grammar).parse().unwrap_err();
+    assert!(
+        err.message.contains("1 synthetic tokens for 0 input tokens"),
+        "{}",
+        err.message
+    );
+    assert_eq!(err.token.type_, TokenType::Eof);
+}
+
 fn tok(type_: TokenType, type_name: Option<&str>, value: &str, column: usize, flags: Option<u32>) -> Token {
     Token {
         cv: None,

@@ -707,15 +707,16 @@ fn scan_asi_arguments(
 /// Check the names of an `@asi` list and build the element. The scanner has
 /// already checked the spelling; these are the rules about *which* tokens:
 ///
-/// - the inserted token is not `NEWLINE` or `EOF`, the structural tokens
-///   whose insertion would change what the stream around them means;
+/// - the inserted token is not `NEWLINE`, `EOF`, `INDENT` or `DEDENT`, the
+///   structural tokens whose insertion would change what the stream around
+///   them means (the four implicit tokens `validate_parser_grammar` knows);
 /// - no closer repeats, and none is the inserted token (a written `T` would
 ///   otherwise set off an insertion in front of itself).
 fn auto_insert_element(names: &str, line_number: usize) -> Result<GrammarElement, ParserGrammarError> {
     let error = |message: String| ParserGrammarError { message, line_number };
     let mut names = names.split(',').map(str::to_string);
     let token = names.next().unwrap_or_default();
-    if token == "NEWLINE" || token == "EOF" {
+    if matches!(token.as_str(), "NEWLINE" | "EOF" | "INDENT" | "DEDENT") {
         return Err(error(format!(
             "'@asi' cannot insert {token}: it is a structural token, not a separator"
         )));
@@ -2139,6 +2140,8 @@ primary          = NUMBER ;
             ("r = @asi(SEMI,", "missing its closing ')'"),
             ("r = @asi(NEWLINE) ;", "cannot insert NEWLINE"),
             ("r = @asi(EOF, RBRACE) ;", "cannot insert EOF"),
+            ("r = @asi(INDENT) ;", "cannot insert INDENT"),
+            ("r = @asi(DEDENT, RBRACE) ;", "cannot insert DEDENT"),
             ("r = @asi(SEMI, SEMI) ;", "lists SEMI as a closer"),
             ("r = @asi(SEMI, RBRACE, RBRACE) ;", "closer RBRACE twice"),
         ] {

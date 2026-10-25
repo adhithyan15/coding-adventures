@@ -247,6 +247,11 @@ pub struct GrammarParser {
     /// Whether newlines are significant in this grammar.
     newlines_significant: bool,
 
+    /// Whether any rule contains `@asi`. Only such a grammar can produce
+    /// synthetic tokens, so only it pays for the insertion-budget walk
+    /// after a successful parse.
+    uses_auto_insert: bool,
+
     /// Packrat memoization cache: `(rule_idx, pos)` -> `MemoEntry`.
     ///
     /// Keyed by a plain `(usize, usize)` tuple, not a `format!`-allocated
@@ -451,6 +456,7 @@ impl GrammarParser {
         }
 
         let newlines_significant = grammar_references_newline(&grammar);
+        let uses_auto_insert = grammar_uses_auto_insert(&grammar);
 
         GrammarParser {
             tokens,
@@ -458,6 +464,7 @@ impl GrammarParser {
             pos: 0,
             rules,
             newlines_significant,
+            uses_auto_insert,
             memo: HashMap::new(),
             furthest_pos: 0,
             furthest_expected: Vec::new(),
@@ -1254,6 +1261,9 @@ impl GrammarParser {
     /// (a memoized zero-width node can appear more than once), so the check
     /// itself is linear in the number of distinct nodes.
     fn check_insertion_budget(&self, root: &Rc<BuiltNode>) -> Result<(), GrammarParseError> {
+        if !self.uses_auto_insert {
+            return Ok(());
+        }
         let synthetic = count_synthetic(root);
         if synthetic > self.tokens.len() {
             return Err(GrammarParseError {
@@ -1262,7 +1272,18 @@ impl GrammarParser {
                     synthetic,
                     self.tokens.len()
                 ),
-                token: self.current().clone(),
+                // Not `self.current()`: a hook may hand the parser an empty
+                // stream (no EOF), and an insertion at its end must still
+                // report an error rather than index past the end.
+                token: self.tokens.last().cloned().unwrap_or_else(|| Token {
+                    cv: None,
+                    type_: TokenType::Eof,
+                    value: String::new(),
+                    line: 1,
+                    column: 1,
+                    type_name: None,
+                    flags: None,
+                }),
             });
         }
         Ok(())
@@ -1818,6 +1839,33 @@ pub fn collect_tokens(node: &GrammarASTNode, type_filter: Option<&str>) -> Vec<T
 /// Check if any rule in the grammar references the NEWLINE token.
 fn grammar_references_newline(grammar: &ParserGrammar) -> bool {
     grammar.rules.iter().any(|rule| element_references_newline(&rule.body))
+}
+
+/// Whether any rule of the grammar contains an `@asi` element.
+fn grammar_uses_auto_insert(grammar: &ParserGrammar) -> bool {
+    grammar.rules.iter().any(|rule| element_uses_auto_insert(&rule.body))
+}
+
+/// Recursively check if a grammar element is, or contains, `@asi`.
+fn element_uses_auto_insert(element: &GrammarElement) -> bool {
+    match element {
+        GrammarElement::AutoInsert { .. } => true,
+        GrammarElement::Sequence { elements } => elements.iter().any(element_uses_auto_insert),
+        GrammarElement::Alternation { choices } => choices.iter().any(element_uses_auto_insert),
+        GrammarElement::Repetition { element: inner }
+        | GrammarElement::Optional { element: inner }
+        | GrammarElement::Group { element: inner }
+        | GrammarElement::PositiveLookahead { element: inner }
+        | GrammarElement::NegativeLookahead { element: inner }
+        | GrammarElement::OneOrMore { element: inner } => element_uses_auto_insert(inner),
+        GrammarElement::SeparatedRepetition { element, separator, .. } => {
+            element_uses_auto_insert(element) || element_uses_auto_insert(separator)
+        }
+        GrammarElement::TokenReference { .. }
+        | GrammarElement::RuleReference { .. }
+        | GrammarElement::Literal { .. }
+        | GrammarElement::AdjacencyPredicate { .. } => false,
+    }
 }
 
 /// Recursively check if a grammar element references NEWLINE.

@@ -292,8 +292,9 @@ for_header       = "for" LPAREN [ init ] SEMICOLON [ test ] SEMICOLON [ update ]
   names: UPPERCASE identifiers, spelled as a token reference is spelled.
   Literals (`"}"`) are not accepted. Spaces may appear around the
   parentheses and the commas, but the whole element must sit on one line.
-- `T` must not be `NEWLINE` or `EOF`. Those are structural tokens, and
-  inserting one would change the meaning of the token stream around it.
+- `T` must not be `NEWLINE`, `EOF`, `INDENT` or `DEDENT`, the four implicit
+  tokens. They are structural, and inserting one would change the meaning of
+  the token stream around it.
 - A closer must not repeat, and must not be `T` itself. With `T` as a closer,
   a written `T` would trigger an insertion in front of itself.
 - The closer list may be empty: `@asi(SEMICOLON)` inserts only before a line

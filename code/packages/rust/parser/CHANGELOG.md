@@ -27,12 +27,16 @@ condition comes from PEG ordering, so `a ⏎ (b)` stays a call.
   token, and a node holding only synthetic tokens has no span.
 - **Budget.** A finished tree may hold at most one synthetic token per input
   token, EOF included. More fails with "automatic insertion budget
-  exceeded". The count walks each distinct shared node once.
-- **Tests.** `tests/auto_insert.rs` has 16 tests: the truth table, a written
+  exceeded". The count walks each distinct shared node once. It runs only
+  for grammars that contain `@asi`, so every other grammar pays nothing.
+  The budget error does not read `current()`, so a stream with no tokens
+  at all (one that a hook supplies) reports the error instead of
+  panicking. Both points came from the security review.
+- **Tests.** `tests/auto_insert.rs` has 17 tests: the truth table, a written
   `;` winning, the error left unchanged, the token's fields, a custom `T`,
   spans, `a ⏎ (b)`, restricted `return` and postfix `++`, a
   newline-significant grammar, lookahead, repetition, the budget,
-  hand-built streams, and a compiled-grammar fixture round trip.
+  hand-built streams, an empty stream, and a compiled-grammar fixture round trip.
 
 ### Fixed — repetitions with a body that matches nothing no longer hang
 
