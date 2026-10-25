@@ -60,6 +60,10 @@ dynamic sign root. Independently bounded dynamic sign-rooted transforms may
 also multiply when checked magnitude composition keeps the complete product
 within `2^53`; non-multiplying multiple roots, path-dependent signs, and
 effectful selectors fail closed.
+Multiple-root products may fold a variable-free integer prefix left-to-right
+through checked `*`, exact `/`, `div`, and `mod` when multiplication connects
+that prefix to the first root. Zero, inexact, dynamic, rooted, and inter-root
+reductions fail closed.
 Checked exact-integer normalizers may provide the sign-rooted transform's
 nonnegative exponent when the right-associative chain stays within the power
 unroll cap. A zero result proves the complete power is exactly one; negative,
