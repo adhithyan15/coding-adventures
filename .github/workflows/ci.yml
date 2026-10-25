@@ -4127,9 +4127,8 @@ jobs:
         if: needs.detect.outputs.needs_dotnet == 'true' || ((needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true') && runner.os == 'Windows')
         uses: actions/setup-dotnet@v6
         with:
-          # .NET 9 is the current LTS release. No platform exclusions needed —
-          # actions/setup-dotnet@v6 works identically on Ubuntu, macOS, and Windows.
-          dotnet-version: '9.0.x'
+          # An exact released SDK bypasses the failing aka.ms channel redirect.
+          dotnet-version: "9.0.319"
 
       - name: Install ILAsm (real-CoreCLR assembler for the CLR-real conformance column)
         # The W16 conformance suite's `CLR-real` backend assembles textual `.il`

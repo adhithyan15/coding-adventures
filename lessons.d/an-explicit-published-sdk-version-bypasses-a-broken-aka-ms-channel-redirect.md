@@ -18,3 +18,9 @@ Microsoft's release metadata and run the actual installer in dry-run mode.
 The action's separate floating LTS-runtime probe may still warn; its SDK
 installation is the required step and includes the matching runtime. Keep
 CI pending until the native compile and test steps actually finish.
+
+The main Windows matrix later reached the same floating SDK installer and
+failed identically. Enumerate all setup-dotnet invocations in the active
+workflows before publishing the fix, including toolchain setup gated by
+affected-package detection. The shared CI setup now carries the same pin;
+its existing conditions and native checks remain unchanged.
