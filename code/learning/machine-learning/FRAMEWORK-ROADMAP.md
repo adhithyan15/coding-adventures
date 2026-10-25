@@ -81,8 +81,10 @@ SGD training, inspection, and portable save/reload/resume.
 
 - [x] Python and TypeScript reference frameworks and checkpoint interchange
   ([lesson and runnable examples](./portable-dense-framework.md)).
-- [ ] Rust native framework: public API, numerical/boundary tests, native XOR
-  example, portable save/reload/resume, package metadata, and real build evidence.
+- [x] Rust native framework implementation: public API, numerical/boundary tests,
+  native XOR example, portable save/reload/resume, package metadata, and local
+  minimal-workspace evidence. Actual repository-workspace CI/merge still gates
+  delivery; no three-language interchange is claimed by this checkbox.
 - [ ] Rust conformance: required CI and actual two-way checkpoint exchange with
   Python and TypeScript. Depends on the native library; not a binding lane.
 - [ ] Optional Rust dense C ABI and binding consumers.

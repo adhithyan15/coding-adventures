@@ -1,7 +1,8 @@
 # NN38: Native Rust Dense Framework
 
-Status: specified; no native Rust framework training is claimed until the
-implementation and execution evidence land.
+Status: native library and local native training/resume implemented; real
+repository-workspace CI is required before delivery. Three-language checkpoint
+interchange remains a separate pending tranche.
 
 ## Scope and ownership
 
@@ -32,6 +33,12 @@ and traces may be inspected or copied without granting mutation of model state.
 - `to_checkpoint` and `from_checkpoint` round-trip owned V1 data. JSON entry
   points reject unknown fields, malformed numeric/activation metadata, and
   incompatible shapes. Export only the interoperable NN37 field set.
+
+The optional JSON-text reader uses the bounded-JSON foundation's 128-level
+nesting limit and a 4 MiB byte envelope. The owned checkpoint record API remains
+available for larger already-allocated records. Rust's typed `usize` and `u32`
+construction parameters replace dynamic-language count/seed type checks; reject
+unrepresentable element/byte capacities before allocation.
 
 Step counts must remain within JavaScript's nonnegative safe-integer range,
 including overflow checking before an update. Inputs/targets must be nonempty,
