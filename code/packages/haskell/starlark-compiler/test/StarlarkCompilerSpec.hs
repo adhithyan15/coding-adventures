@@ -56,12 +56,22 @@ spec = do
             map unaryOpcode ["+", "not"] `shouldBe` replicate 2 Nothing
 
         it "keeps persistent maps independent after edits" $ do
-            let exercise original = do
+            let exercise (original, directLookup) = do
+                    let (retainedKey, retainedValue) = Map.findMin original
                     let changed = Map.insert "new" Halt (Map.deleteMin original)
+                    let replaced = Map.insert retainedKey Halt original
                     Map.member "new" original `shouldBe` False
                     Map.member "new" changed `shouldBe` True
                     Map.size original `shouldBe` Map.size changed
-            mapM_ exercise [binaryOpMap, compareOpMap, augmentedAssignMap, unaryOpMap]
+                    Map.lookup retainedKey changed `shouldBe` Nothing
+                    Map.lookup retainedKey replaced `shouldBe` Just Halt
+                    Map.lookup retainedKey original `shouldBe` Just retainedValue
+                    directLookup retainedKey `shouldBe` Just retainedValue
+                    directLookup "new" `shouldBe` Nothing
+            mapM_ exercise
+                [ (binaryOpMap, binaryOpcode), (compareOpMap, compareOpcode)
+                , (augmentedAssignMap, augmentedAssignOpcode), (unaryOpMap, unaryOpcode)
+                ]
 
 assigned :: [(Word8, Op)]
 assigned = [(opByte op, op) | op <- allOps]

@@ -4,11 +4,12 @@ module STP01ConformanceSpec (spec) where
 
 import Control.Exception (evaluate)
 import Control.Monad (unless)
-import Data.Aeson (Value (..), eitherDecodeStrict')
+import Data.Aeson (Value (..), eitherDecodeStrict', encode)
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as C8
+import qualified Data.ByteString.Lazy as LBS
 import Data.Char (isDigit)
 import Data.List (sortOn)
 import qualified Data.Map.Strict as Map
@@ -92,6 +93,10 @@ spec = describe "STP01 shared corpus" $ do
                 , ("extra", replaceOnce "\"schema_version\": 1" "\"schema_version\": 1,\"extra\":0" raw)
                 , ("wrong type", replaceOnce "\"profile\": \"standalone-provider-v1\"" "\"profile\": true" raw)
                 , ("lone surrogate", replaceOnce "LoadConst" "\\ud800" raw)
+                , ("lone low surrogate", replaceOnce "LoadConst" "\\udc00" raw)
+                , ("invalid surrogate pair", replaceOnce "LoadConst" "\\ud800\\u0041" raw)
+                , ("exponent", replaceOnce "\"byte\": 1" "\"byte\": 1e0" raw)
+                , ("BOM", BS.pack [0xEF, 0xBB, 0xBF] <> raw)
                 , ("invalid UTF-8", BS.cons 0xFF raw)
                 , ("too deep", "[[[[[[[[[]]]]]]]]]")
                 , ("trailing", raw <> " {}")
@@ -100,6 +105,39 @@ spec = describe "STP01 shared corpus" $ do
         mapM_ (\(name, candidate) ->
             unless (isLeft (decodeCorpus candidate))
                 (expectationFailure ("accepted malformed transport: " <> name))) malformed
+
+    it "isolates byte range and type rejection before narrowing" $ do
+        raw <- readFixture
+        mapM_ (\replacement ->
+            decodeCorpus (replaceOnce "\"byte\": 1" replacement raw)
+                `shouldBe` Left "integer out of range")
+            ["\"byte\": -1", "\"byte\": 256"]
+        decodeCorpus (replaceOnce "\"byte\": 1" "\"byte\": true" raw)
+            `shouldBe` Left "integer required"
+
+    it "rejects independent row and nullable-pair corruption" $ do
+        raw <- readFixture
+        value <- either fail pure (eitherDecodeStrict' raw)
+        -- Change the independently supplied corpus, never the provider tables.
+        -- Each witness retains every other schema property it can preserve.
+        let reject change reason =
+                decodeCorpus (LBS.toStrict (encode (change value))) `shouldBe` Left reason
+        reject (alterField "opcodes" (alterRows reverse)) "ascending unique opcode bytes"
+        reject (alterField "opcodes" (alterRows (\rows -> head rows : head rows : drop 2 rows)))
+            "ascending unique opcode bytes"
+        reject (alterField "opcodes" (alterRows tail)) "exact array length required"
+        reject (alterField "decode" (alterRows reverse)) "complete decode order"
+        reject (alterField "unknown_lookups" (alterRows reverse)) "unknown lookup roster"
+        reject (alterField "operators" (alterField "binary" (alterRows reverse)))
+            "operator roster or order"
+        reject (alterField "decode" (alterRows (\rows ->
+            alterField "symbol" (const (String "LoadConst")) (head rows) : tail rows)))
+            "decode null pair"
+
+    it "isolates the depth-eight transport boundary" $ do
+        let nested depth = BS.replicate depth 0x5B <> BS.replicate depth 0x5D
+        preflight (nested 8) `shouldBe` Right ()
+        preflight (nested 9) `shouldBe` Left "container depth exceeds eight"
 
     it "rejects coordinated semantic corruption instead of learning it" $ do
         raw <- readFixture
@@ -111,6 +149,19 @@ spec = describe "STP01 shared corpus" $ do
         raw <- readFixture
         BS.length raw `shouldSatisfy` (<= maxBytes)
         evaluate (BS.length raw) `shouldReturn` BS.length raw
+
+-- These test-only transformations fail loudly if the canonical fixture stops
+-- having the expected shape, so a missing mutation cannot masquerade as a pass.
+alterField :: Key.Key -> (Value -> Value) -> Value -> Value
+alterField key change (Object fields) =
+    case KeyMap.lookup key fields of
+        Just value -> Object (KeyMap.insert key (change value) fields)
+        Nothing -> error "test mutation field absent"
+alterField _ _ _ = error "test mutation expected object"
+
+alterRows :: ([Value] -> [Value]) -> Value -> Value
+alterRows change (Array rows) = Array (Vector.fromList (change (Vector.toList rows)))
+alterRows _ _ = error "test mutation expected array"
 
 readFixture :: IO BS.ByteString
 readFixture = withBinaryFile fixturePath ReadMode $ \handle -> do
