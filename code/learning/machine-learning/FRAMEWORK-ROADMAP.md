@@ -66,9 +66,12 @@ the actual open PR and its current-head CI logs, and revisit this ordering:
    BUILD, metadata and Ruby CodeQL successful. Reprioritize reliability,
    prerequisites, portability and smallest complete delivery:
    [NN45 native Ruby dense framework](../../specs/NN45-native-ruby-dense-framework.md)
-   is implemented locally with full numerical, owned-checkpoint and native
-   resume evidence; publication/exact-head CI are pending. Five-native
-   conformance remains a separate following tranche.
+   merged in [PR #18249](https://github.com/adhithyan15/coding-adventures/pull/18249)
+   at exact head `539db944794` (squash `9f4c55a0e7e`), with actual Linux native
+   package BUILD, contracts, required CI and Ruby CodeQL successful.
+   Reprioritize reliability, prerequisites, portability and smallest complete
+   delivery: [NN46 five-native conformance](../../specs/NN46-five-native-dense-conformance.md)
+   connects Ruby to actual required exchanges before another native port.
 5. **P2 — Optional Rust dense C ABI.** Specify ownership, shapes, errors,
    versioning, and resumable state before exposing binding consumers. Keep
    those consumers distinct from the native implementations.
@@ -151,7 +154,7 @@ SGD training, inspection, and portable save/reload/resume.
   NN44 passes 55 tests/125 assertions at 100% library line coverage locally,
   Standard lint and an actual isolated installed-gem dot-product oracle; actual
   repository discovery/build CI and exact-head merge completed in PR #18243.
-- [ ] Ruby native framework (NN45 implemented locally; exact-head CI/merge pending).
+- [x] Ruby native framework (NN45 merged exact head `539db944794` in #18249).
   Native Ruby passes the paper oracle, all-parameter finite differences and
   shared 55-case corpus. Library and executable line coverage are 100%; native
   XOR loss is 0.00023307123378282036 with full model resumes through 3002.
