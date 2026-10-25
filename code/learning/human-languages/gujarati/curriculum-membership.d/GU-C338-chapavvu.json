@@ -1,0 +1,11 @@
+{
+  "id": "GU-C338-chapavvu",
+  "pathSegment": "GU-PATH-338-CHAPAV338",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-338-CHAPAV338",
+      "order": 2
+    }
+  ]
+}

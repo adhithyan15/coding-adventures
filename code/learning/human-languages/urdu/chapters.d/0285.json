@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "A Slip and a Fall",
+  "label": "ch:ur-a-slip-and-a-fall",
+  "canDo": "I can say how someone slipped and got hurt.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C285-kharash",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can say how someone slipped and got hurt.",
+    "assesses": [
+      "UR-LEX-C285-PHISAL285-03",
+      "UR-LEX-C285-PHISAL285-04",
+      "UR-LEX-C285-PHISAL285-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:1d2b41a1e74f22bb",
+  "lessonIds": [
+    "UR-C451-hichkichana",
+    "UR-C451-lajana",
+    "UR-C451-nadamat",
+    "UR-C451-pasheman",
+    "UR-C451-khijalat"
+  ],
+  "tex": "urdu/book/chapters/ch451-hesitation-and-regret.tex"
+}

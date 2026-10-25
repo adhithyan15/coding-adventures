@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "A Crash on the Road",
+  "label": "ch:ur-a-crash-on-the-road",
+  "canDo": "I can say how an accident on the road happened.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C284-savari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can say how an accident on the road happened.",
+    "assesses": [
+      "UR-LEX-C284-TAKKAR284-03",
+      "UR-LEX-C284-TAKKAR284-04",
+      "UR-LEX-C284-TAKKAR284-05"
+    ]
+  }
+}

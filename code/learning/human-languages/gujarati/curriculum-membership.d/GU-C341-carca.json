@@ -1,0 +1,11 @@
+{
+  "id": "GU-C341-carca",
+  "pathSegment": "GU-PATH-341-DALIL341",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-341-DALIL341",
+      "order": 1
+    }
+  ]
+}

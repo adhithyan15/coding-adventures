@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:3ca7d67053074c98",
+  "lessonIds": [
+    "UR-C339-ikhtiyar",
+    "UR-C339-insaf",
+    "UR-C339-munasib",
+    "UR-C339-amal-karna",
+    "UR-C339-ada-karna"
+  ],
+  "tex": "urdu/book/chapters/ch339-rights-and-duties.tex"
+}

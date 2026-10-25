@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:b26de80e2a0c05aa",
+  "lessonIds": [
+    "GU-C486-arogya",
+    "GU-C486-svasth",
+    "GU-C486-sphurti",
+    "GU-C486-khorak",
+    "GU-C486-sukavu",
+    "GU-R486-review-479-486"
+  ],
+  "tex": "gujarati/book/chapters/ch486-staying-well.tex"
+}

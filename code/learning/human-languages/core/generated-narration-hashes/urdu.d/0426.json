@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:d70d2306919ab801",
+  "lessonIds": [
+    "UR-C426-khalis",
+    "UR-C426-asli",
+    "UR-C426-milavat",
+    "UR-C426-ragarna",
+    "UR-C426-chamkana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch426.txt",
+  "json": "urdu/narration/ch426.json",
+  "textHash": "fnv1a64:01400daa421c3e8b",
+  "jsonHash": "fnv1a64:0ed0c51a3018d0df",
+  "findings": []
+}

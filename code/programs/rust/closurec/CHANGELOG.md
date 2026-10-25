@@ -4,6 +4,52 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - a statement that starts with `{` or `function` is never an expression (F12 phase 0)
+
+`{ a }⏎/foo/g.exec(s)` compiled at SIMPLE to `({a})/foo/g.exec(s)`, a
+different program. `if (x) function f(){}` compiled to `x&&function f(){}`,
+which Closure refuses. The ES grammars now enforce ECMA-262's
+ExpressionStatement lookahead, so both are refused. The fix is in the
+grammars and `javascript-parser`. `tests/regression_expression_statement_lookahead.rs`
+checks 4 refusals and 7 programs that must still compile and, under `node`,
+print what the source prints.
+
+WHITESPACE_ONLY drops every newline. When the parser can't read a program,
+it used to get no ASI points at all, so `function f(){ return⏎42 }` came out
+as `return 42`, a different program. The new refusals sent more programs down
+that path: any file containing `if (x) function f(){}`, for example. It now
+falls back to `asi::restricted_insertion_points`, which needs no parse, and
+keeps the source's line break at each of those points. It keeps a line break
+rather than inserting `;`, because without a parse generator `yield⏎7` (needs
+`;`) and sloppy `var yield; yield⏎(9)` (must not get one) look the same.
+`whitespace_only_keeps_restricted_semicolons_when_the_parse_fails` covers
+`return`, `break`, `yield` (both kinds) and a method named `return`.
+
+### Fixed - a non-directive no longer becomes `"use strict"` (#17907)
+
+`("use strict");x=1;console.log(x)` prints `1` in node. closurec compiled it
+at SIMPLE and ADVANCED to `"use strict";x=1;…`, which throws
+`ReferenceError`. The same happened for `"use\x20strict"`, for
+`` `use strict` `` and for `"use strict",1`, in programs and in function
+bodies. WHITESPACE_ONLY turned `"use\x20strict"` into `"use strict"` too.
+
+- SIMPLE and ADVANCED now drop every `"use strict"` statement in a body's
+  directive prologue (`closure-emitter` 0.63.0). Upstream strips the
+  leading ones too, so real directives no longer reach the output.
+  `--emit_use_strict` still adds one at the top. After `"a";`, upstream
+  keeps a `"use strict"`, and SIMPLE's flattening can then make one out of
+  `"a";{"use strict"}`. closurec drops it there too.
+- WHITESPACE_ONLY prints an escaped spelling as `"use\x20strict"`, which
+  stays inert. It also keeps the `;` in `;"use strict";…`: that empty
+  statement ends the prologue, and dropping it (gap-088) made the string a
+  live directive. It still keeps real directives, which CCR-085 (#15920) will
+  strip.
+
+`tests/regression_use_strict_prologue.rs` pins WHITESPACE_ONLY and SIMPLE
+bytes for seven shapes and SIMPLE bytes for seven more. It asserts that no
+level opens its output with `"use strict"` and, with `node`, that every
+output prints what its source prints.
+
 ### Fixed - ADVANCED no longer inlines a function that reads `this` (#18115)
 
 `function t(){return this}var o={m:function(){return t()}};console.log(o.m()===o)`
@@ -74,6 +120,23 @@ ADVANCED. When `node` is installed, it checks that each output prints what
 the source prints. Sloppy-mode Annex B hoisting, where upstream itself
 changes behaviour, stays open in CLOC12-gaps.
 
+### Fixed - WHITESPACE_ONLY no longer comments out the program after a `#!` line (#18137)
+
+`#!/usr/bin/env node⏎console.log(1)` printed as
+`#!/usr/bin/env nodeconsole.log(1);`. The hashbang was kept as a token
+while its line break was dropped, so the whole program became part of the
+comment and nothing ran. The hashbang is now dropped like any comment, as
+upstream does at every level (closurec's SIMPLE/ADVANCED already did).
+
+Two shapes are refused instead, because dropping the token would delete
+code or accept an invalid program:
+- a `#!` line ended by U+2028/U+2029, which the lexer runs past (#17887);
+- a `#!` anywhere but the very start of the file, which is a SyntaxError.
+
+`tests/regression_ws_hashbang.rs` pins two shapes to the jar's bytes,
+checks with `node` that each output prints what its source prints, and
+checks that four inputs are refused. Two unit tests cover the rules.
+
 ### Fixed - templates, comments and regexes end where JavaScript ends them (#17886, #17888, #17887)
 
 `` var x = `$` // `; console.log('PWN') `` compiled at SIMPLE to
@@ -90,6 +153,18 @@ The fix is in the ECMAScript `.tokens` files and javascript-lexer.
 ADVANCED and, when `node` is installed, checks that each prints what the
 source prints.
 
+### Fixed - WHITESPACE_ONLY keeps the block around a lone `let`/`const` (#18124)
+
+`if(a){let x=1;}` printed as `if(a)let x=1;` and `while(o){let x=1;}` as
+`while(o)let x=1;`. A body slot takes a statement, and a lexical declaration
+isn't one, so neither output parsed. The body flatten passes (gap-032,
+gap-074/076/079, gap-080 and the `do` body) now keep the braces when the
+body starts with `const`, `let` + binding, `using` + binding or
+`await using`, as upstream does.
+
+`tests/regression_ws_lexical_body.rs` pins 15 shapes to the jar's bytes and
+checks with `node` that each output parses. Two unit tests cover the rule.
+
 ### Fixed - switch cases keep shared `var`/`function`/`class` declarations (#17879)
 
 `closure-pass-dce` truncated a case's dead tail, and collapsed a constant
@@ -99,6 +174,17 @@ where the source prints `"undefined"`), and a dropped `function g` became a
 `ReferenceError`. `tests/regression_switch_declarations.rs` compiles five
 shapes at SIMPLE and ADVANCED and, when `node` is installed, checks that each
 output prints what the source prints.
+
+### Fixed - ADVANCED inlining no longer lets a nested function capture a caller's binding (#18134)
+
+`var y=1;function t(){return function(){return y}}function g(){var y=2;return t()()}console.log(g())`
+prints `1`. ADVANCED spliced `t` into `g`, so the returned function read
+`g`'s `y`, and the output printed `2`. The fix is in `closure-pass-inline`
+0.32.0: its capture guards now see the free names of nested `function` and
+method bodies.
+
+`tests/regression_inline_nested_capture.rs` checks with `node` that seven
+programs print the same after SIMPLE and ADVANCED as before.
 
 ### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
 
@@ -125,6 +211,31 @@ with SIGABRT (exit 134) and gave no diagnostic. Two changes fix this:
 - For six chain shapes, the deepest chain the bound admits compiles at SIMPLE
   and ADVANCED, and one link deeper fails cleanly.
 
+### Changed - refuse `return` and `new.target` outside a function, as upstream does (CCR-075 slice 2, #15860)
+
+closurec used to compile `if(a){return}` and `f(new.target)` at top level.
+The pinned upstream rejects both with `JSC_PARSE_ERROR` ("return must be
+inside function", "new.target must be inside a function"). closurec now
+rejects them identically: the same diagnostic, location and exit status at
+every level, and no output.
+
+Upstream's rule is Closure's own:
+- An arrow counts as a function, so a top-level `()=>new.target` compiles.
+- A class `static {}` block clears the context for `return` only;
+  `new.target` there, or in a field initialiser, follows the enclosing
+  context. So `class A{x=new.target}` is refused at top level, and compiles
+  inside a function.
+- A method's computed key is outside the method, so
+  `class A{[new.target](){}}` is refused at top level.
+
+The check parses only files that contain a `return` or `new` keyword token,
+and walks the tree iteratively. Every refusal is reported in source order,
+interleaved with the slice-1 private-element errors.
+
+The `simple-newtarget` and `simple-try-catch` fixtures now pin the jar's
+refusal. Six unit tests cover the rule. closurec gains a direct path
+dependency on `parser` (already a transitive one) for the parse-tree types.
+
 ### Fixed - outer binding shadowed by a `for`-head `let`/`const` survives (#16008)
 
 `var x = 1; for (let x of [7]) console.log(x); console.log(x);` compiled at
@@ -134,6 +245,22 @@ loop scope. `tests/regression_for_head_shadow.rs` compiles the issue's matrix at
 SIMPLE and ADVANCED, checks that the outer declaration survives and pins the
 output bytes, and, when `node` is installed, checks that the output prints
 what the source prints.
+### Fixed - WHITESPACE_ONLY leaves methods named `if`/`while`/`for`/`with` alone (#18123)
+
+`class C{if(){}}` printed as `class C{if();}`, `class C{with(a){return a}}`
+as `class C{with(a)return a}` and `x={while(a){c=a;}}` as
+`x={while(a)c=a}`. None parses. The header-body flatten and the
+control-flow-head arming treated the method name as a statement keyword.
+
+`member_list_positions` marks every token whose innermost open bracket is a
+class body or object literal. A keyword there is a member name, so neither
+rule fires. The classification errs towards "block", so a real `if`
+statement is never disarmed.
+
+`tests/regression_ws_keyword_methods.rs` pins 26 shapes to the jar's bytes,
+real statements included, and checks with `node` that each output parses.
+Three unit tests cover the rule and the classification.
+
 ### Added - actual bounded provenance chronology (CV03)
 
 Traced compilation starts a fresh checked chronology log before input graph

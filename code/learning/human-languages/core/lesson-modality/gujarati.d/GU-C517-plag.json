@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C517-plag",
+    "language": "gujarati",
+    "chapter": 517,
+    "sequence": 28830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a9531c1f49bede3"
+  },
+  "findings": []
+}

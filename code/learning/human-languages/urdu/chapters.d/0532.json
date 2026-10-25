@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "A Stroke of Luck",
+  "label": "ch:ur-a-stroke-of-luck",
+  "canDo": "I can talk about luck and what it might bring.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C532-tas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about luck and what it might bring.",
+    "assesses": [
+      "UR-LEX-C532-QISMAT532-03",
+      "UR-LEX-C532-QISMAT532-04",
+      "UR-LEX-C532-QISMAT532-05"
+    ]
+  }
+}

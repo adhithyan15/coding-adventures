@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "Lights and Colours",
+  "label": "ch:gu-lights-and-colours",
+  "canDo": "I can say how a town is made ready for a festival.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C329-sobhayatra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can say how a town is made ready for a festival.",
+    "assesses": [
+      "GU-LEX-C329-RANGOLI329-03",
+      "GU-LEX-C329-RANGOLI329-04",
+      "GU-LEX-C329-RANGOLI329-05"
+    ]
+  }
+}

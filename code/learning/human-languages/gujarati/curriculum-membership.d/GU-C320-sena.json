@@ -1,0 +1,11 @@
+{
+  "id": "GU-C320-sena",
+  "pathSegment": "GU-PATH-320-YUDDH320",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-320-YUDDH320",
+      "order": 1
+    }
+  ]
+}

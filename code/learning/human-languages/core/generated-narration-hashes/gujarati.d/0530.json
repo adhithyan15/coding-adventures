@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:3a37a2c0dabcb6e7",
+  "lessonIds": [
+    "GU-C530-avdhi",
+    "GU-C530-takid",
+    "GU-C530-mahetal",
+    "GU-C530-thelvu",
+    "GU-C530-akhre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch530.txt",
+  "json": "gujarati/narration/ch530.json",
+  "textHash": "fnv1a64:0856de8d4664a2b1",
+  "jsonHash": "fnv1a64:553d20baf8e7e1e8",
+  "findings": []
+}

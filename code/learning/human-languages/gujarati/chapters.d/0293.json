@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "An Accident near the Bridge",
+  "label": "ch:gu-an-accident-near-the-bridge",
+  "canDo": "I can say where an accident happened and who was hurt.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C293-gabhravu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can say where an accident happened and who was hurt.",
+    "assesses": [
+      "GU-LEX-C293-AKASMAT293-03",
+      "GU-LEX-C293-AKASMAT293-04",
+      "GU-LEX-C293-AKASMAT293-05"
+    ]
+  }
+}

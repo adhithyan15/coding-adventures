@@ -1,0 +1,21 @@
+{
+  "chapter": 547,
+  "title": "Looking Ahead",
+  "label": "ch:ur-looking-ahead",
+  "canDo": "I can say what might happen in the future if things go well.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-R547-review-final-547",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 547: I can say what might happen in the future if things go well.",
+    "assesses": [
+      "UR-LEX-C547-TASAVVUR547-01",
+      "UR-LEX-C547-TASAVVUR547-02",
+      "UR-LEX-C547-TASAVVUR547-03",
+      "UR-LEX-C547-TASAVVUR547-04",
+      "UR-LEX-C547-TASAVVUR547-05"
+    ]
+  }
+}

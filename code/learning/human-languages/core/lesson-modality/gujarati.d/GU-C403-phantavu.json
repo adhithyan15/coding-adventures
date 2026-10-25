@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C403-phantavu",
+    "language": "gujarati",
+    "chapter": 403,
+    "sequence": 22540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e696263e8f839c32"
+  },
+  "findings": []
+}

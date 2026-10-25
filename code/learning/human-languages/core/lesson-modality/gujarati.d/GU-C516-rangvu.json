@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C516-rangvu",
+    "language": "gujarati",
+    "chapter": 516,
+    "sequence": 28790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a67256149f165127"
+  },
+  "findings": []
+}

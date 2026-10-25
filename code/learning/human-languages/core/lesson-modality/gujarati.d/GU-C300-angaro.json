@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C300-angaro",
+    "language": "gujarati",
+    "chapter": 300,
+    "sequence": 16760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee9f75116e17c9a8"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Sadness",
+  "label": "ch:ur-sadness",
+  "canDo": "I can say that someone was sad or let down.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C443-afsurda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can say that someone was sad or let down.",
+    "assesses": [
+      "UR-LEX-C443-SAD443-03",
+      "UR-LEX-C443-SAD443-04",
+      "UR-LEX-C443-SAD443-05"
+    ]
+  }
+}

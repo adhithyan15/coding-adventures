@@ -1,0 +1,11 @@
+{
+  "id": "UR-C380-jutna",
+  "pathSegment": "UR-PATH-380-MASHQ380",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-380-MASHQ380",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C294-bhan",
+    "language": "gujarati",
+    "chapter": 294,
+    "sequence": 16500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:490666cb94a0badc"
+  },
+  "findings": []
+}

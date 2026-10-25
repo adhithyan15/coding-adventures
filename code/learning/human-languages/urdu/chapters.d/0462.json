@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Sense and Innocence",
+  "label": "ch:ur-sense-and-innocence",
+  "canDo": "I can say whether someone acted wisely or naively.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C462-bahakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can say whether someone acted wisely or naively.",
+    "assesses": [
+      "UR-LEX-C462-SENSE462-03",
+      "UR-LEX-C462-SENSE462-04",
+      "UR-LEX-C462-SENSE462-05"
+    ]
+  }
+}

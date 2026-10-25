@@ -1457,6 +1457,40 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_multi_class_composition() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nclassDef warm,cool fill:#fef3c7\nclass CUSTOMER,ORDER warm,cool\nPRODUCT:::warm,cool\nCUSTOMER:::warm ||--o{ ORDER:::cool : allows\n",
+        );
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+        let separators: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("STYLE_SEPARATOR"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        for value in ["warm", "cool", "CUSTOMER", "ORDER", "PRODUCT"] {
+            assert!(values.contains(&value));
+        }
+        assert_eq!(separators, [":::", ":::", ":::"]);
+    }
+
+    #[test]
+    fn tokenizes_er_direct_style_composition() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER\nORDER\nstyle CUSTOMER,ORDER fill:#dbeafe,stroke:#1d4ed8\nstyle CUSTOMER color:#14532d\n",
+        );
+        let names: Vec<&str> = tokens.iter().filter_map(|token| token.type_name.as_deref()).collect();
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert_eq!(names.iter().filter(|name| **name == "STYLE_KW").count(), 2);
+        assert!(values.contains(&"CUSTOMER"));
+        assert!(values.contains(&"ORDER"));
+        for color in ["#dbeafe", "#1d4ed8", "#14532d"] {
+            assert!(values.contains(&color));
+        }
+    }
+
+    #[test]
     fn tokenizes_er_bracketed_attribute_name_suffix() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nBOOK {\n  string author-ref[name](1)\n}\n",
@@ -1549,6 +1583,189 @@ mod tests {
                 ("STRING", "100% complete")
             ]
         );
+    }
+
+    #[test]
+    fn tokenizes_er_bare_and_quoted_entity_name_forms() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nDUCK-BILLED_PLATYPUS ||--|| \"Blo@rf?\" : maps\n_foo\n\"a~`!@#$^&*()-=+[]{}|/;:'.?¡⁄™€£‹¢›∞\"\n",
+        );
+        let identifiers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFIER"))
+            .map(|token| token.value.as_str())
+            .collect();
+        let quoted: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ENTITY_STRING"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert!(identifiers.contains(&"DUCK-BILLED_PLATYPUS"));
+        assert!(identifiers.contains(&"_foo"));
+        assert_eq!(quoted, ["Blo@rf?", "a~`!@#$^&*()-=+[]{}|/;:'.?¡⁄™€£‹¢›∞"]);
+    }
+
+    #[test]
+    fn tokenizes_er_duplicate_entity_declarations() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER\nORDER\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER\nORDER\n",
+        );
+        let identifiers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFIER"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(identifiers.iter().filter(|value| **value == "CUSTOMER").count(), 3);
+        assert_eq!(identifiers.iter().filter(|value| **value == "ORDER").count(), 3);
+    }
+
+    #[test]
+    fn tokenizes_er_relationship_label_forms() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nACCOUNT ||--|| PROFILE : \"\"\nPROFILE ||--o{ ORDER : \"contains\"\nORDER }o..|| PRODUCT : assigned\n",
+        );
+        let labels: Vec<&str> = tokens
+            .iter()
+            .filter(|token| {
+                token.type_ == TokenType::String
+                    || token.type_name.as_deref() == Some("ENTITY_STRING")
+            })
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(labels, ["", "contains"]);
+        assert!(tokens.iter().any(|token| token.value == "assigned"));
+    }
+
+    #[test]
+    fn tokenizes_er_cyclical_relationships() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nA ||--|{ B : likes\nB ||--|{ C : likes\nC ||--|{ A : likes\n",
+        );
+        let identifying = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFYING"))
+            .count();
+        let one_or_more = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ONE_OR_MORE"))
+            .count();
+
+        assert_eq!(identifying, 3);
+        assert_eq!(one_or_more, 3);
+        assert_eq!(tokens.iter().filter(|token| token.value == "likes").count(), 3);
+    }
+
+    #[test]
+    fn tokenizes_er_complex_topology() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER }|..|{ DELIVERY-ADDRESS : has\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER ||--o{ INVOICE : \"liable for\"\nDELIVERY-ADDRESS ||--o{ ORDER : receives\nINVOICE ||--|{ ORDER : covers\nORDER ||--|{ ORDER-ITEM : includes\nPRODUCT-CATEGORY ||--|{ PRODUCT : contains\nPRODUCT ||--o{ ORDER-ITEM : \"ordered in\"\n",
+        );
+        let relationships = tokens
+            .iter()
+            .filter(|token| {
+                matches!(
+                    token.type_name.as_deref(),
+                    Some("IDENTIFYING" | "NON_IDENTIFYING")
+                )
+            })
+            .count();
+
+        assert_eq!(relationships, 8);
+        for expected in ["DELIVERY-ADDRESS", "ORDER-ITEM", "PRODUCT-CATEGORY"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+    }
+
+    #[test]
+    fn tokenizes_er_variable_node_width_fixture() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nPRIVATE_FINANCIAL_INSTITUTION {\n  string name\n  int turnover\n}\nPRIVATE_FINANCIAL_INSTITUTION ||..|{ EMPLOYEE : employs\nEMPLOYEE { bool officer_of_firm }\n",
+        );
+
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.value == "PRIVATE_FINANCIAL_INSTITUTION")
+                .count(),
+            2
+        );
+        for expected in ["turnover", "EMPLOYEE", "officer_of_firm", "employs"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+    }
+
+    #[test]
+    fn tokenizes_er_mixed_special_entity_topology() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER ||--o{ 1 : places\n1 ||--|{ u : contains\n1.5\nu ||--|| 2.5 : processes\n2.5 {\n  string id\n  float value\n}\nu {\n  varchar(50) name\n  int count\n}\n",
+        );
+
+        for expected in ["CUSTOMER", "1", "u", "1.5", "2.5", "varchar(50)"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| matches!(
+                    token.type_name.as_deref(),
+                    Some("IDENTIFYING" | "NON_IDENTIFYING")
+                ))
+                .count(),
+            3
+        );
+    }
+
+    #[test]
+    fn tokenizes_er_keyword_substring_in_entity_alias() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\np[Photograph] {\n  varchar(12) jobId\n  date dateCreated\n}\n",
+        );
+
+        assert!(tokens.iter().any(|token| token.value == "Photograph"));
+        assert!(!tokens.iter().any(|token| token.value == "graph"));
+        for expected in ["p", "varchar(12)", "jobId", "dateCreated"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+    }
+
+    #[test]
+    fn tokenizes_er_disconnected_recursive_topology() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nDEAD_PARROT\nHERMIT\nRECLUSE\nSOCIALITE }o--o{ SOCIALITE : \"interacts with\"\nRECLUSE }o--o{ SOCIALITE : avoids\n",
+        );
+
+        for expected in ["DEAD_PARROT", "HERMIT", "RECLUSE", "SOCIALITE", "interacts with"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+        assert_eq!(tokens.iter().filter(|token| token.value == "SOCIALITE").count(), 3);
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_name.as_deref() == Some("IDENTIFYING"))
+                .count(),
+            2
+        );
+    }
+
+    #[test]
+    fn tokenizes_er_attribute_constraint_lists_and_comments() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER {\n  int customer_number PK, FK \"comment1\"\n  datetime customer_status_start_datetime PK,UK, FK\n  datetime customer_status_end_datetime PK , UK \"comment3\"\n  string customer_firstname\n  string customer_lastname \"comment5\"\n}\n",
+        );
+
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| matches!(token.value.as_str(), "PK" | "FK" | "UK"))
+                .count(),
+            7
+        );
+        for expected in ["comment1", "comment3", "comment5"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
     }
 
     #[test]
@@ -1740,6 +1957,29 @@ mod tests {
             .collect();
 
         assert_eq!(cardinalities, ["||", "|{", "|o", "o{", "}|", "||", "}o", "o|"]);
+    }
+
+    #[test]
+    fn tokenizes_er_cardinality_word_and_numeric_aliases() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nA one or zero to many B : a\nC many(0) to many(1) D : b\nE only one optionally to 1+ F : c\nG 0+ optionally to 1 H : d\n",
+        );
+        let cardinalities: Vec<&str> = tokens
+            .iter()
+            .filter(|token| {
+                token.type_ == TokenType::Number
+                    || matches!(
+                        token.type_name.as_deref(),
+                        Some("ZERO_OR_ONE" | "ZERO_OR_MORE" | "ONE_OR_MORE" | "ONLY_ONE")
+                    )
+            })
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(
+            cardinalities,
+            ["one or zero", "many", "many(0)", "many(1)", "only one", "1+", "0+", "1"]
+        );
     }
 
     #[test]

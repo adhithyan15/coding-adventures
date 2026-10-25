@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:1191d9be5c2ba313",
+  "lessonIds": [
+    "GU-C327-utsav",
+    "GU-C327-ujavvu",
+    "GU-C327-parampara",
+    "GU-C327-rivaj",
+    "GU-C327-parva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch327.txt",
+  "json": "gujarati/narration/ch327.json",
+  "textHash": "fnv1a64:f39025be45bc242c",
+  "jsonHash": "fnv1a64:c2128bb23060f2ac",
+  "findings": []
+}

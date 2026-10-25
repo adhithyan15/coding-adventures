@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C503-rangvana",
+    "language": "urdu",
+    "chapter": 503,
+    "sequence": 29490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6c6eb8d19fb2893"
+  },
+  "findings": []
+}

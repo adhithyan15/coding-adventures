@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:0b71dcd8389588bb",
+  "lessonIds": [
+    "GU-C512-pad",
+    "GU-C512-intaravyu",
+    "GU-C512-vetan",
+    "GU-C512-karkirdi",
+    "GU-C512-badhti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch512.txt",
+  "json": "gujarati/narration/ch512.json",
+  "textHash": "fnv1a64:a92dfb3826093cb3",
+  "jsonHash": "fnv1a64:1ef372c9a99abc78",
+  "findings": []
+}

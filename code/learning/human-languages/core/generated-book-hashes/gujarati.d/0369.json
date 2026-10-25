@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:62ef87aeda8f31ef",
+  "lessonIds": [
+    "GU-C369-bhay",
+    "GU-C369-dahesat",
+    "GU-C369-nirat",
+    "GU-C369-asanka",
+    "GU-C369-daravvu"
+  ],
+  "tex": "gujarati/book/chapters/ch369-fears.tex"
+}

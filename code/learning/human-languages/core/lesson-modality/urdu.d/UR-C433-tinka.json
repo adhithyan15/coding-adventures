@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C433-tinka",
+    "language": "urdu",
+    "chapter": 433,
+    "sequence": 25440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:889a5fe48e660b96"
+  },
+  "findings": []
+}

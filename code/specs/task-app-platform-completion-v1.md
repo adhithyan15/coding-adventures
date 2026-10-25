@@ -359,7 +359,18 @@ digests, and downloaded metadata hashes match. All six payload jobs and the
 publisher passed. #17999 reconciles these receipts in the README and backlog;
 it does not expand artifact coverage or prepare another release.
 
-### Next fidelity slice — board column width floor (#18030)
+### Release preparation — #18112: TaskApp v0.5.10
+
+The board-column floor repair merged in #18031. Prepare its compatible patch
+checkpoint as `task-app-v0.5.10`, dated 2026-10-24, before further fidelity
+work. Validate release helper tests and generated Markdown notes, then require
+all existing payload CI. Publish only from main after preparation merges and
+audit immutable provenance, manifest, thirteen assets and twelve checksums.
+Preparation is not publication. Artifact coverage and unsigned native limits
+remain unchanged; HTML, Web Components and Paint remain CI-only, and #13977
+remains the signing tracker.
+
+### Completed fidelity slice — board column width floor (#18030)
 
 Both themes must retain a 260-pixel minimum board-column width when the
 available row is narrower than its columns. Qt's single-container `For`
@@ -408,3 +419,13 @@ Phase 10+ deferrals in `BACKLOG.md` (Gantt dependency arrows, calendar week/day
 views, notes attachment picker, label colors, recurring tasks, automation
 rules). Those are feature reach on platforms that already work. This spec is
 about finishing the platforms.
+# Release-note detail preservation (#18197)
+
+The next product-scoped release must preserve the selected dated changelog
+section's substantive Markdown, including subsection headings and multiline
+bullets, instead of listing only category names. Extraction must exclude both
+Unreleased and older release sections. Regression tests must exercise the CLI
+notes path and reject heading-only output for a detailed changelog. Existing
+artifact coverage and unsigned-platform limitations remain unchanged. Never
+rewrite the immutable v0.5.10 release to repair this presentation defect.
+

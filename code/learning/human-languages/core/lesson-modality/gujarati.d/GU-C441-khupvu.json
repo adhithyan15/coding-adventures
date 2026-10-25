@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C441-khupvu",
+    "language": "gujarati",
+    "chapter": 441,
+    "sequence": 24500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e50ebcc96f0d7ba"
+  },
+  "findings": []
+}

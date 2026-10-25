@@ -1,0 +1,718 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 276,
+  "title": "A story in order",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:87e0a2781c895b7d",
+  "lessons": [
+    {
+      "id": "GU-C276-khaine",
+      "sequence": 14890,
+      "title": "ખાઈને, જમ્યા પછી (khāīne, jamyā pachī) — having done, after doing",
+      "headword": "ખાઈને · જમ્યા પછી",
+      "romanization": "khāīne · jamyā pachī",
+      "gloss": "having eaten, after eating — the -īne form and -yā pachī, two ways to join one action to the next",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6c66ee5702bb0f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"please\", the long way. (મહેરબાની કરીને.) Its કરીને is the form this lesson teaches. Then say \"I went home\". (hũ ghare gayo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the -ઈને form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હું ઘરે જઈને જમ્યો. hũ ghare jaīne jamyo. — \"I went home and ate.\""
+            },
+            {
+              "kind": "speech",
+              "text": "One doer, two actions in a row: the first takes -ઈને, \"having done it\", and the second ends the sentence. After a vowel the stem takes -ઈને: જઈને, ખાઈને, લઈને, જોઈને. After a consonant it takes -ીને: કરીને, લખીને, વાંચીને."
+            },
+            {
+              "kind": "speech",
+              "text": "The last verb decides the doer's form: હું ખાઈને આવ્યો (hũ khāīne āvyo), \"I ate and came\", but મેં ખાઈને ચા પીધી (mẽ khāīne cā pīdhī), \"I ate and then drank tea\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -્યા પછી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જમ્યા પછી અમે બજાર ગયા. jamyā pachī ame bajār gayā. — \"After eating, we went to the market.\""
+            },
+            {
+              "kind": "speech",
+              "text": "પછી after the past stem in -્યા says \"after doing it\": જમ્યા પછી, કામ કર્યા પછી (kām karyā pachī), ચા પીધા પછી (cā pīdhā pachī). That stem takes no -એ doer of its own: કામ કર્યા પછી હું ઘરે ગયો."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Mira wrote the letter and sent it\" — Mīrāe patra lakhīne mokalyo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Mira wrote the letter and sent it\" — *Mīrāe patra lakhīne mokalyo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After the work, I drank tea\" — kām karyā pachī mẽ cā pīdhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After the work, I drank tea\" — *kām karyā pachī mẽ cā pīdhī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C276-khaine-r1",
+              "prompt": "Say that you went home and ate, then that after eating you went to the market.",
+              "assesses": [
+                "GU-GRAMMAR-C276-INE-FORM-01",
+                "GU-GRAMMAR-C276-YA-PACHI-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "hũ ghare jaīne jamyo (jamī); jamyā pachī hũ bajār gayo (gaī)",
+                "હું ઘરે જઈને જમ્યો. જમ્યા પછી હું બજાર ગયો.",
+                "હું ઘરે જઈને જમી. જમ્યા પછી હું બજાર ગઈ.",
+                "hũ ghare jaīne jamī; jamyā pachī hũ bajār gaī"
+              ],
+              "feedback": {
+                "correct": "jaīne for the first action, then jamyā pachī: after eating.",
+                "incorrect": "First action with -īne: jaīne. 'After eating' is the past stem with pachī: jamyā pachī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Having gone\"? (જઈને.) \"Having done\"? (કરીને.) \"After eating\"? (જમ્યા પછી.) In મેં ખાઈને ચા પીધી, which verb chose મેં? (પીધી.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C276-chevte",
+      "sequence": 14900,
+      "title": "છેવટે (chevṭe) — finally; in the end",
+      "headword": "છેવટે",
+      "romanization": "chevṭe",
+      "gloss": "finally; in the end",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ea4b9680cd4098e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I went home and ate\". (hũ ghare jaīne jamyo.) Then the word for \"last\". (છેલ્લું, chellũ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: છેવટે",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છેવટે — chevṭe — \"finally; in the end\"."
+            },
+            {
+              "kind": "speech",
+              "text": "છેવટે ટ્રેન આવી. chevṭe ṭren āvī. — \"In the end the train came.\""
+            },
+            {
+              "kind": "speech",
+              "text": "છેવટે (chevṭe) comes after waiting, or after a long run of things: it closes them off."
+            },
+            {
+              "kind": "speech",
+              "text": "અમે આખો દિવસ ચાલ્યા, અને છેવટે ગામ પહોંચ્યા. ame ākho divas cālyā, ane chevṭe gām pahõcyā. — \"We walked all day, and finally reached the village.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છેવટે (chevṭe) is built from છેવટ, \"the end\", and the -ે of સવારે and ઘરે: \"at the end\". CDIAL lists Gujarati chevaṭ, \"end\", under Sanskrit cheda, \"a cut, a break\" (CDIAL 5064), the entry that also holds the che- of છેલ્લું, \"last\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chevṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chevṭe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In the end the train came\" — chevṭe ṭren āvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In the end the train came\" — *chevṭe ṭren āvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Finally we got home\" — chevṭe ame ghare pahõcyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Finally we got home\" — *chevṭe ame ghare pahõcyā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does છેવટે (chevṭe) mean? (\"Finally; in the end\".) Which word that you know shares its start? (છેલ્લું, \"last\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C276-pahela-pachi",
+      "sequence": 14910,
+      "title": "પહેલાં, પછી, ત્યાર પછી (pahelā̃, pachī, tyār pachī) — first, then, after that",
+      "headword": "પહેલાં · પછી · ત્યાર પછી",
+      "romanization": "pahelā̃ · pachī · tyār pachī",
+      "gloss": "first, then, after that — the words that keep a story in order, with chevṭe at its end",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3847163538cdf477",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"before\" and \"later\". (પહેલાં, પછી.) Then \"in the end the train came\". (chevṭe ṭren āvī.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: first, then",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પહેલાં અમે ચા પીધી, પછી અમે બજાર ગયા. pahelā̃ ame cā pīdhī, pachī ame bajār gayā. — \"First we drank tea, then we went to the market.\""
+            },
+            {
+              "kind": "speech",
+              "text": "At the head of a sentence, પહેલાં is \"first\" and પછી is \"then\". Each sentence keeps its own past: અમે ચા પીધી follows the tea, અમે બજાર ગયા follows the people who went."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: ત્યાર પછી and છેવટે",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ત્યાર પછી અમે ઘરે આવ્યા. tyār pachī ame ghare āvyā. — \"After that we came home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ત્યાર પછી (tyār pachī), \"after that\", is a fuller પછી: it opens a new step. A story runs પહેલાં … પછી … ત્યાર પછી … and ends on છેવટે (chevṭe):"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "step",
+                "word"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "step: the first thing. word: પહેલાં.",
+                "step: the next. word: પછી.",
+                "step: a new step. word: ત્યાર પછી.",
+                "step: the last. word: છેવટે (chevṭe)."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"First I wrote the letter, then I drank tea\" — pahelā̃ mẽ patra lakhyo, pachī mẽ cā pīdhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"First I wrote the letter, then I drank tea\" — *pahelā̃ mẽ patra lakhyo, pachī mẽ cā pīdhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In the end we came home in the evening\" — chevṭe ame sānje ghare āvyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In the end we came home in the evening\" — *chevṭe ame sānje ghare āvyā*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C276-pahela-pachi-r1",
+              "prompt": "Say: first we ate, then we went to the market; after that we came home.",
+              "assesses": [
+                "GU-GRAMMAR-C276-FIRST-THEN-01",
+                "GU-GRAMMAR-C276-TYAR-PACHI-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "pahelā̃ ame jamyā, pachī ame bajār gayā; tyār pachī ame ghare āvyā",
+                "પહેલાં અમે જમ્યા, પછી અમે બજાર ગયા. ત્યાર પછી અમે ઘરે આવ્યા.",
+                "pahelā̃ ame jamyā, pachī ame bajār gayā, tyār pachī ame ghare āvyā"
+              ],
+              "feedback": {
+                "correct": "pahelā̃, pachī, tyār pachī: three steps in order.",
+                "incorrect": "Open with pahelā̃, then pachī, and start the third step with tyār pachī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"First\"? (પહેલાં.) \"After that\"? (ત્યાર પછી.) Which word ends the story? (છેવટે (chevṭe).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C276-ek-ravivar",
+      "sequence": 14920,
+      "title": "(reading) (gaīkāle ravivār hato.) — a Sunday at the village",
+      "headword": "(reading)",
+      "romanization": "gaīkāle ravivār hato.",
+      "gloss": "a Sunday at the village, in ninety-seven words, told in order",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type"
+      ],
+      "sourceHash": "fnv1a64:39bb2de90f98d154",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Mira tells of a Sunday at her grandfather's village. Every word is one you have met. Listen for the order words: પહેલાં, ત્યાર પછી, છેવટે (chevṭe)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગઈકાલે રવિવાર હતો. સવારે અમે બસમાં ગામ ગયા. બસમાં ઘણી ભીડ હતી. પહેલાં અમે દાદાના ઘરે ગયા. દાદા ઓસરીમાં બેસીને ચા પીતા હતા. દાદાએ અમને પણ ચા આપી. ત્યાર પછી અમે ખેતરમાં ગયા. ત્યાં બળદ ચરતા હતા. અમે ખેતરમાં ચાલતા હતા ત્યારે અચાનક વરસાદ પડ્યો. અમે દોડીને ઘરે આવ્યા. શું બન્યું? અમારાં કપડાં ભીનાં થઈ ગયાં હતાં! જમ્યા પછી દાદાએ અમને એક જૂની વાર્તા કહી. સાંજે અમે બસમાં શહેર પાછા જવાના હતા, પણ બસ મોડી હતી. છેવટે (chevṭe) અમે રાતે ઘરે પહોંચ્યા. દિવસ લાંબો હતો, પણ મને મજા આવી. આવતા રવિવારે હું ગામ નહીં જાઉં. દાદા શહેર આવશે."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the story once, straight through, without translating",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the story once, straight through, without translating]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and sort the verbs: scene, event or plan",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and sort the verbs: scene, event or plan]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "New pieces: દાદાના ઘરે, \"at Grandfather's house\"; બેસીને (besīne), \"sitting\"; ભીનાં થઈ ગયાં હતાં, \"had got wet\", neuter plural for કપડાં."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The scenes take -તા હતા; the events take the plain past. દાદાએ has -એ because he gave and told something: ચા આપી, વાર્તા કહી. The bus was a plan that changed: જવાના હતા, પણ …. નહીં જાઉં is the short form of જવું after નહીં."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Grandfather was doing on the veranda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Grandfather was doing on the veranda]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why they got home late",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why they got home late]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C276-ek-ravivar-r1",
+              "prompt": "What were they doing when the rain came?",
+              "assesses": [
+                "GU-SKILL-C276-READ-STORY-01",
+                "GU-GRAMMAR-C275-SCENE-EVENT-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "they were walking in the field",
+                "અમે ખેતરમાં ચાલતા હતા",
+                "khetarmā̃ cāltā hatā",
+                "walking in the field",
+                "walking"
+              ],
+              "feedback": {
+                "correct": "cāltā hatā: the scene, and the rain broke in.",
+                "incorrect": "Find the sentence with acānak: the scene sits in the same sentence, before tyāre."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word turns the story? (અચાનક.) Why ભીનાં થઈ ગયાં હતાં, not ભીનું થઈ ગયું? (કપડાં is neuter plural.) Who is coming next Sunday? (Grandfather.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R276-a-story-in-order",
+      "sequence": 14930,
+      "title": "Review — a story in order",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a story told in order, with -īne and -yā pachī",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f12eb33679a4c44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was reading\". (hũ vā̃cto hato.) Then \"what happened?\", in a story. (śũ banyũ?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I went home and ate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I went home and ate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "After eating, we went to the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: After eating, we went to the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "First we drank tea, then we went to the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: First we drank tea, then we went to the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "After that we came home, and in the end we slept.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: After that we came home, and in the end we slept.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In Mira's Sunday, what happened in the field?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In Mira's Sunday, what happened in the field?]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Having eaten\"? (ખાઈને.) \"After the work\"? (કામ કર્યા પછી.) Put these in order: છેવટે (chevṭe), પહેલાં, ત્યાર પછી, પછી. (પહેલાં, પછી, ત્યાર પછી, છેવટે (chevṭe).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

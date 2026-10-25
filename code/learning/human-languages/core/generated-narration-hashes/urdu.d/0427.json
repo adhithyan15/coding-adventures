@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:ebb4171f79054b8e",
+  "lessonIds": [
+    "UR-C427-saiz",
+    "UR-C427-dhila",
+    "UR-C427-poshak",
+    "UR-C427-rumal",
+    "UR-C427-sajna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch427.txt",
+  "json": "urdu/narration/ch427.json",
+  "textHash": "fnv1a64:b2584edf7a4cae76",
+  "jsonHash": "fnv1a64:1cb2a6ec38e809a2",
+  "findings": []
+}

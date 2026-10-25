@@ -1,0 +1,11 @@
+{
+  "id": "GU-C300-jvala",
+  "pathSegment": "GU-PATH-300-AAG300",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-300-AAG300",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 complex ER topology vertical slice",
+  "fixtures": [
+    {
+      "name": "upstream-not-so-simple-diagram",
+      "source": "erDiagram\nCUSTOMER }|..|{ DELIVERY-ADDRESS : has\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER ||--o{ INVOICE : \"liable for\"\nDELIVERY-ADDRESS ||--o{ ORDER : receives\nINVOICE ||--|{ ORDER : covers\nORDER ||--|{ ORDER-ITEM : includes\nPRODUCT-CATEGORY ||--|{ PRODUCT : contains\nPRODUCT ||--o{ ORDER-ITEM : \"ordered in\""
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:d218989dd7cc1ee2",
+  "lessonIds": [
+    "UR-C468-mahak",
+    "UR-C468-itr",
+    "UR-C468-lams",
+    "UR-C468-khujana",
+    "UR-C468-kharish"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch468.txt",
+  "json": "urdu/narration/ch468.json",
+  "textHash": "fnv1a64:385dcb6cf96f0040",
+  "jsonHash": "fnv1a64:4dfe2ebf63521c59",
+  "findings": []
+}

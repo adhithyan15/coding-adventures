@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Dozing on the Train",
+  "label": "ch:gu-dozing-on-the-train",
+  "canDo": "I can say how I slept on a night journey.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C398-khakhadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can say how I slept on a night journey.",
+    "assesses": [
+      "GU-LEX-C398-DOZE398-03",
+      "GU-LEX-C398-DOZE398-04",
+      "GU-LEX-C398-DOZE398-05"
+    ]
+  }
+}

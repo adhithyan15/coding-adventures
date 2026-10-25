@@ -69,6 +69,14 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
+**Next: #18197 — preserve detailed changelog Markdown in release notes.**
+Prioritize this product-scoped SemVer repair under #13543 before further
+fidelity work. The immutable v0.5.10 checkpoint (#18112) is published and audited:
+13 assets, 12 checksum entries, and 11 manifest payloads from
+`1eee296461f07dd5a1657c7a4822799aa1552df9`. All release lanes passed in
+run 40168462613. Keep the existing artifact matrix and unsigned limitations
+unchanged; never rewrite that immutable release to repair its notes.
+
 **Published checkpoint: [#17950](https://github.com/adhithyan15/coding-adventures/issues/17950)
 — prepare, publish, and audit `task-app-v0.5.9`.** P0 lifecycle gates are
 complete. Qt Text widths shipped in #17915 with native payload CI passing;
@@ -83,7 +91,7 @@ Published and audited from `fa203bccd486279cbd651ccd492987c1b2b1004e`
 in run 39904677952: all six payload jobs and publisher passed; the immutable
 tag, manifest source, thirteen assets and twelve checksum entries were verified.
 Receipt reconciliation #17999 is complete in #18001. The current bounded
-#12022 fidelity slice is #18030: preserve the 260-pixel board-column minimum
+#12022 fidelity slice #18030 completed in #18031: preserve the 260-pixel board-column minimum
 from both themes' existing width/non-shrink intent on Qt's For delegate, without claiming general flex lowering
 or reducing the style-drop budget. Feature composition remains paused
 behind #14011 and signing remains credential-blocked in #13977.

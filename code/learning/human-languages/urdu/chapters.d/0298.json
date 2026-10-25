@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "Lost and Found",
+  "label": "ch:ur-lost-and-found",
+  "canDo": "I can tell how a family was separated and found again.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C298-milap",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can tell how a family was separated and found again.",
+    "assesses": [
+      "UR-LEX-C298-BICHHAR298-03",
+      "UR-LEX-C298-BICHHAR298-04",
+      "UR-LEX-C298-BICHHAR298-05"
+    ]
+  }
+}

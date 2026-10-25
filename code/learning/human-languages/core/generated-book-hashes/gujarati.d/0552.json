@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:4d1c742aa0255983",
+  "lessonIds": [
+    "GU-C552-manc",
+    "GU-C552-abhinay",
+    "GU-C552-darsak",
+    "GU-C552-gajavvu",
+    "GU-C552-jaamvu"
+  ],
+  "tex": "gujarati/book/chapters/ch552-if-the-show-goes-on.tex"
+}

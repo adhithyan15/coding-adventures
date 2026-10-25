@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 357,
+  "title": "What We Value",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3cc4f69fc1faa065",
+  "lessons": [
+    {
+      "id": "GU-C357-mulya",
+      "sequence": 19920,
+      "title": "મૂલ્ય (mūlya) — a moral value; worth",
+      "headword": "મૂલ્ય",
+      "romanization": "mūlya",
+      "gloss": "a moral value; worth",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee881f09e2d56ec0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for valid, then the Gujarati for to preserve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મૂલ્ય",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મૂલ્ય — mūlya — \"a moral value; worth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમારા કુટુંબમાં સાચું બોલવું એ મોટું મૂલ્ય છે. amārā kuṭumbmā̃ sācũ bolvũ e moṭũ mūlya che. In our family, telling the truth matters a great deal."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મૂલ્ય (mūlya) is a tatsama, borrowed from Sanskrit mūlya, \"price, worth\" (Monier-Williams); Gujarati also uses it for what people hold dear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūlya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūlya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūlya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūlya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amārā kuṭumbmā̃ sācũ bolvũ e moṭũ mūlya che. — In our family, telling the truth matters a great deal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amārā kuṭumbmā̃ sācũ bolvũ e moṭũ mūlya che.* — In our family, telling the truth matters a great deal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for valid, then the Gujarati for to preserve, then say mūlya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for valid, then the Gujarati for to preserve, then say *mūlya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મૂલ્ય (mūlya) mean? (\"A moral value; worth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C357-sanskar",
+      "sequence": 19930,
+      "title": "સંસ્કાર (sanskār) — upbringing; values instilled in a child",
+      "headword": "સંસ્કાર",
+      "romanization": "sanskār",
+      "gloss": "upbringing; values instilled in a child",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:357d3dca16588e98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to preserve, then the Gujarati for a moral value."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સંસ્કાર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંસ્કાર — sanskār — \"upbringing; values instilled in a child\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ બાળકમાં સારા સંસ્કાર છે. ā bāḷakmā̃ sārā sanskār che. This child has been well brought up."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંસ્કાર (sanskār) is a tatsama, borrowed from Sanskrit saṃskāra, \"putting together, forming well, perfecting\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanskār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanskār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanskār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanskār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā bāḷakmā̃ sārā sanskār che. — This child has been well brought up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā bāḷakmā̃ sārā sanskār che.* — This child has been well brought up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to preserve, then the Gujarati for a moral value, then say sanskār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to preserve, then the Gujarati for a moral value, then say *sanskār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સંસ્કાર (sanskār) mean? (\"Upbringing; values instilled in a child\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C357-niti",
+      "sequence": 19940,
+      "title": "નીતિ (nīti) — a policy",
+      "headword": "નીતિ",
+      "romanization": "nīti",
+      "gloss": "a policy",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b6cad4a12363a8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a moral value, then the Gujarati for upbringing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નીતિ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નીતિ — nīti — \"a policy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સરકારની નવી નીતિ નાના વેપારીઓ માટે સારી છે. sarkārnī navī nīti nānā vepārīo māṭe sārī che. The government's new policy is good for small traders."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નીતિ (nīti) is a tatsama, borrowed from Sanskrit nīti, \"leading, guidance, conduct\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkārnī navī nīti nānā vepārīo māṭe sārī che. — The government's new policy is good for small traders.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkārnī navī nīti nānā vepārīo māṭe sārī che.* — The government's new policy is good for small traders.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a moral value, then the Gujarati for upbringing, then say nīti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a moral value, then the Gujarati for upbringing, then say *nīti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નીતિ (nīti) mean? (\"A policy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C357-pratha",
+      "sequence": 19950,
+      "title": "પ્રથા (prathā) — a social practice; a custom",
+      "headword": "પ્રથા",
+      "romanization": "prathā",
+      "gloss": "a social practice; a custom",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24e31c71e8bc3cf9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for upbringing, then the Gujarati for a policy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પ્રથા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પ્રથા — prathā — \"a social practice; a custom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગામમાં આ જૂની પ્રથા હજી ચાલે છે. gāmmā̃ ā jūnī prathā hajī cāle che. This old practice still goes on in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પ્રથા (prathā) is borrowed from Sanskrit prathā, \"spreading out, extending\" (Monier-Williams); Gujarati uses it for a custom that has spread and stayed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prathā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prathā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prathā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prathā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāmmā̃ ā jūnī prathā hajī cāle che. — This old practice still goes on in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāmmā̃ ā jūnī prathā hajī cāle che.* — This old practice still goes on in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for upbringing, then the Gujarati for a policy, then say prathā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for upbringing, then the Gujarati for a policy, then say *prathā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પ્રથા (prathā) mean? (\"A social practice; a custom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C357-apnavvu",
+      "sequence": 19960,
+      "title": "અપનાવવું (apnāvvũ) — to adopt",
+      "headword": "અપનાવવું",
+      "romanization": "apnāvvũ",
+      "gloss": "to adopt",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6dc715cf9ca1d14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a policy, then the Gujarati for a social practice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અપનાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અપનાવવું — apnāvvũ — \"to adopt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આપણે સારી ટેવો અપનાવવી જોઈએ. āpaṇe sārī ṭevo apnāvvī joīe. We should take up good habits."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે નવી રીત અપનાવી, teṇe navī rīt apnāvī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અપનાવવું (apnāvvũ) is probably borrowed from Hindi apnānā, \"to make one's own\", built on Hindi apnā, \"own\", which CDIAL traces to a reconstructed ātmanaka, \"own\", under Sanskrit ātmán, \"self\" (CDIAL 1135). Gujarati આપણું (āpṇũ) comes from the same source. CDIAL lists no Gujarati form of the verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apnāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apnāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apnāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apnāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpaṇe sārī ṭevo apnāvvī joīe. — We should take up good habits.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpaṇe sārī ṭevo apnāvvī joīe.* — We should take up good habits.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a policy, then the Gujarati for a social practice, then say apnāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a policy, then the Gujarati for a social practice, then say *apnāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અપનાવવું (apnāvvũ) mean? (\"To adopt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

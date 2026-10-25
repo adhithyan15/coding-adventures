@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:a20581c5ca381d21",
+  "lessonIds": [
+    "UR-C534-bisat",
+    "UR-C534-mohra",
+    "UR-C534-piyada",
+    "UR-C534-mat",
+    "UR-C534-ludo"
+  ],
+  "tex": "urdu/book/chapters/ch534-on-the-board.tex"
+}

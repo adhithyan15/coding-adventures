@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 430,
+  "output": "urdu/book/chapters/ch430-heat.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

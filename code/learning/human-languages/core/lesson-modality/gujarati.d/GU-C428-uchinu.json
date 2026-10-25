@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C428-uchinu",
+    "language": "gujarati",
+    "chapter": 428,
+    "sequence": 23810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d29778b674552f7"
+  },
+  "findings": []
+}

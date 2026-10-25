@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:552f2840a63b3620",
+  "lessonIds": [
+    "UR-C446-fikr-karna",
+    "UR-C446-tashvish",
+    "UR-C446-bojh",
+    "UR-C446-tarapna",
+    "UR-C446-dharakna"
+  ],
+  "tex": "urdu/book/chapters/ch446-worry.tex"
+}

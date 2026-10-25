@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C439-gidar",
+    "language": "urdu",
+    "chapter": 439,
+    "sequence": 25710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31657fda84466e1c"
+  },
+  "findings": []
+}

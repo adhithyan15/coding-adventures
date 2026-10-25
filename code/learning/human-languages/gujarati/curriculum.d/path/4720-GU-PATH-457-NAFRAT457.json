@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-457-NAFRAT457",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-457-NAFRAT457"
+  ],
+  "after": []
+}

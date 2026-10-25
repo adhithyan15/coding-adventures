@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C490-khalu",
+    "language": "urdu",
+    "chapter": 490,
+    "sequence": 28570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b867ce78174582f7"
+  },
+  "findings": []
+}

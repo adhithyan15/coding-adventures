@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:0ddc333e6c879fc7",
+  "lessonIds": [
+    "GU-C411-rajai",
+    "GU-C411-osiku",
+    "GU-C411-macchardani",
+    "GU-C411-sankelvu",
+    "GU-C411-suvdavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch411.txt",
+  "json": "gujarati/narration/ch411.json",
+  "textHash": "fnv1a64:9059621d9328ac5b",
+  "jsonHash": "fnv1a64:1374658fc0f9ce7c",
+  "findings": []
+}

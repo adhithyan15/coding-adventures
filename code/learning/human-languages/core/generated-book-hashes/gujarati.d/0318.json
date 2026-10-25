@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:d76964d7812caba5",
+  "lessonIds": [
+    "GU-C318-raja",
+    "GU-C318-rani",
+    "GU-C318-mahel",
+    "GU-C318-darbar",
+    "GU-C318-gadi"
+  ],
+  "tex": "gujarati/book/chapters/ch318-the-king-and-the-queen.tex"
+}

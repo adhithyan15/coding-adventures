@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:ae4f228338443946",
+  "lessonIds": [
+    "UR-C376-tadad",
+    "UR-C376-miqdar",
+    "UR-C376-mamuli",
+    "UR-C376-lag-bhag",
+    "UR-C376-had"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch376.txt",
+  "json": "urdu/narration/ch376.json",
+  "textHash": "fnv1a64:6959159bd8d37694",
+  "jsonHash": "fnv1a64:f2c68ccb46173f36",
+  "findings": []
+}

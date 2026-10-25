@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Cause and Effect",
+  "label": "ch:gu-cause-and-effect",
+  "canDo": "I can say what caused something and what came of it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C339-sanjog",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can say what caused something and what came of it.",
+    "assesses": [
+      "GU-LEX-C339-ASAR339-03",
+      "GU-LEX-C339-ASAR339-04",
+      "GU-LEX-C339-ASAR339-05"
+    ]
+  }
+}

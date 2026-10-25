@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C322-iftari",
+    "language": "urdu",
+    "chapter": 322,
+    "sequence": 19370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a756017372adc01a"
+  },
+  "findings": []
+}

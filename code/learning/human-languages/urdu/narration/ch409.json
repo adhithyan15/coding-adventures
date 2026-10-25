@@ -1,0 +1,854 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 409,
+  "title": "Which Way?",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:169ebca614e4d0a2",
+  "lessons": [
+    {
+      "id": "UR-C409-janib",
+      "sequence": 24170,
+      "title": "جانب (jānib) — towards; a side (formal)",
+      "headword": "جانب",
+      "romanization": "jānib",
+      "gloss": "towards; a side (formal)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86ca14043e811f39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for the east, then the Urdu for the west."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جانب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جانب — jānib — \"towards; a side (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دریا کی جانب ایک راستہ جاتا ہے۔ daryā kī jānib ek rāstā jātā hai. A path leads towards the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جانب (jānib) is usually traced, through Persian, to Arabic jānib, \"a side\"; کی جانب means \"towards\", a more formal کی طرف."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jānib",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jānib*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jānib, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jānib*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daryā kī jānib ek rāstā jātā hai. — A path leads towards the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daryā kī jānib ek rāstā jātā hai.* — A path leads towards the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for the east, then the Urdu for the west, then say jānib again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for the east, then the Urdu for the west, then say *jānib* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جانب (jānib) mean? (\"Towards; a side (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C409-rukh",
+      "sequence": 24180,
+      "title": "رخ (rukh) — the way something faces; a direction",
+      "headword": "رخ",
+      "romanization": "rukh",
+      "gloss": "the way something faces; a direction",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59bf72435a682684",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for the west, then the Urdu for towards."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رخ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رخ — rukh — \"the way something faces; a direction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ہوا کا رخ شمال کی طرف ہے۔ hawā kā rukh shimāl kī taraf hai. The wind is blowing towards the north."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is usually traced to Persian rukh, \"the face, a cheek\": the way a thing faces is its رخ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rukh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rukh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rukh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rukh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hawā kā rukh shimāl kī taraf hai. — The wind is blowing towards the north.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hawā kā rukh shimāl kī taraf hai.* — The wind is blowing towards the north.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for the west, then the Urdu for towards, then say rukh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for the west, then the Urdu for towards, then say *rukh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رخ (rukh) mean? (\"The way something faces; a direction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C409-nazdik",
+      "sequence": 24190,
+      "title": "نزدیک (nazdīk) — close by; near",
+      "headword": "نزدیک",
+      "romanization": "nazdīk",
+      "gloss": "close by; near",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3b3544879eeff35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for towards, then the Urdu for the way something faces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نزدیک",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نزدیک — nazdīk — \"close by; near\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سرائے اسٹیشن کے نزدیک ہے۔ sarāe isṭeshan ke nazdīk hai. The inn is close to the station."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نزدیک (nazdīk) is usually traced to Persian nazdīk, \"near\"; قریب says the same."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazdīk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazdīk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazdīk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazdīk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarāe isṭeshan ke nazdīk hai. — The inn is close to the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarāe isṭeshan ke nazdīk hai.* — The inn is close to the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for towards, then the Urdu for the way something faces, then say nazdīk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for towards, then the Urdu for the way something faces, then say *nazdīk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نزدیک (nazdīk) mean? (\"Close by; near\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C409-gosha",
+      "sequence": 24200,
+      "title": "گوشہ (goshā) — a nook; a corner",
+      "headword": "گوشہ",
+      "romanization": "goshā",
+      "gloss": "a nook; a corner",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5033b4c838bcd530",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for the way something faces, then the Urdu for close by."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گوشہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گوشہ — goshā — \"a nook; a corner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کمرے کے ایک گوشے میں میز ہے۔ kamre ke ek goshe meṅ mez hai. There is a table in one corner of the room."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گوشہ (goshā) is usually traced to Persian gosha, \"a corner\"; it is a more literary word than کونا."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goshā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goshā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goshā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goshā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamre ke ek goshe meṅ mez hai. — There is a table in one corner of the room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamre ke ek goshe meṅ mez hai.* — There is a table in one corner of the room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for the way something faces, then the Urdu for close by, then say goshā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for the way something faces, then the Urdu for close by, then say *goshā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گوشہ (goshā) mean? (\"A nook; a corner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C409-jhankna",
+      "sequence": 24210,
+      "title": "جھانکنا (jhāṅknā) — to peep; to peer (in)",
+      "headword": "جھانکنا",
+      "romanization": "jhāṅknā",
+      "gloss": "to peep; to peer (in)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61ecb489475d8eb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for close by, then the Urdu for a nook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جھانکنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھانکنا — jhāṅknā — \"to peep; to peer (in)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سارا نے دروازے سے اندر جھانکا۔ sārā ne darvāze se andar jhāṅkā. Sara peeped in round the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے کھڑکی سے جھانکا, us ne khiṛkī se jhāṅkā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھانکنا (jhāṅknā) is inherited: CDIAL lists the Hindi cousin jhā̃khnā, \"to peep at\", under jhaṅkh, a form it reconstructs (CDIAL 5325)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāṅknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāṅknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāṅknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāṅknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārā ne darvāze se andar jhāṅkā. — Sara peeped in round the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārā ne darvāze se andar jhāṅkā.* — Sara peeped in round the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for close by, then the Urdu for a nook, then say jhāṅknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for close by, then the Urdu for a nook, then say *jhāṅknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جھانکنا (jhāṅknā) mean? (\"To peep; to peer (in)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R409-review-402-409",
+      "sequence": 24220,
+      "title": "Looking back: from Long Journeys to Which Way?",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Long Journeys to Which Way?",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:916b2e01aef07772",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for a distance travelled and a guide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a distance travelled, a guide, to tire (someone) out, to put (someone) to sleep, to wake (someone) up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a distance travelled, a guide, to tire (someone) out, to put (someone) to sleep, to wake (someone) up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an inn, a stay, a place to stay, to spread out (a sheet), a lift",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an inn, a stay, a place to stay, to spread out (a sheet), a lift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a washroom, soap, a water heater, to drip, a facility",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a washroom, soap, a water heater, to drip, a facility]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a register (book), identification, a doorman, to send for, a tip (for service)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a register (book), identification, a doorman, to send for, a tip (for service)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wood, to kindle (a fire), to wrap oneself in, a canopy, a night's shelter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wood, to kindle (a fire), to wrap oneself in, a canopy, a night's shelter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "out of order, to get broken, noise, a repair, to move (something) aside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: out of order, to get broken, noise, a repair, to move (something) aside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a direction, the north, the south, the east, the west",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a direction, the north, the south, the east, the west]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "towards, the way something faces, close by, a nook, to peep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: towards, the way something faces, close by, a nook, to peep]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A distance travelled? (مسافت, masāfat.) A guide? (رہنما, rahnumā.) To tire (someone) out? (تھکانا, thakānā.) To put (someone) to sleep? (سلانا, sulānā.) To wake (someone) up? (جگانا, jagānā.) An inn? (سرائے, sarāe.) A stay? (قیام, qiyām.) A place to stay? (ٹھکانا, ṭhikānā.) To spread out (a sheet)? (بچھانا, bichhānā.) A lift? (لفٹ, lifṭ.) A washroom? (غسل خانہ, ghusl khānā.) Soap? (صابن, sābun.) A water heater? (گیزر, gīzar.) To drip? (ٹپکنا, ṭapaknā.) A facility? (سہولت, sahūlat.) A register (book)? (رجسٹر, rajisṭar.) Identification? (شناخت, shanākht.) A doorman? (دربان, darbān.) To send for? (منگانا, mangānā.) A tip (for service)? (بخشش, bakhshish.) Wood? (لکڑی, lakṛī.) To kindle (a fire)? (سلگانا, sulgānā.) To wrap oneself in? (اوڑھنا, oṛhnā.) A canopy? (شامیانہ, shāmiyānā.) A night's shelter? (بسیرا, baserā.) Out of order? (خراب, kharāb.) To get broken? (ٹوٹنا, ṭūṭnā.) Noise? (شور, shor.) A repair? (مرمت, marammat.) To move (something) aside? (ہٹانا, haṭānā.) A direction? (سمت, simt.) The north? (شمال, shimāl.) The south? (جنوب, junūb.) The east? (مشرق, mashriq.) The west? (مغرب, maghrib.) Towards? (جانب, jānib.) The way something faces? (رخ, rukh.) Close by? (نزدیک, nazdīk.) A nook? (گوشہ, goshā.) To peep? (جھانکنا, jhāṅknā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

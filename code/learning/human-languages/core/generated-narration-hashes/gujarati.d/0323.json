@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:dd272f26acb52c69",
+  "lessonIds": [
+    "GU-C323-sahid",
+    "GU-C323-balidan",
+    "GU-C323-vijay",
+    "GU-C323-ver",
+    "GU-C323-padkarvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch323.txt",
+  "json": "gujarati/narration/ch323.json",
+  "textHash": "fnv1a64:3ad66a97893ba1d9",
+  "jsonHash": "fnv1a64:afdbb123e83a052a",
+  "findings": []
+}

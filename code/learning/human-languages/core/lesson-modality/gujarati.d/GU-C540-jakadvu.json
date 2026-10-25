@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C540-jakadvu",
+    "language": "gujarati",
+    "chapter": 540,
+    "sequence": 30020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b45fe6a2784fba7e"
+  },
+  "findings": []
+}

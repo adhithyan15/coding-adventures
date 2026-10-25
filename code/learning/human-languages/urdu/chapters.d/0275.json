@@ -1,0 +1,21 @@
+{
+  "chapter": 275,
+  "title": "It Depends, and What Would Have Been",
+  "label": "ch:ur-it-depends-and-what-would-have-been",
+  "canDo": "I can say what something depends on (yih mausam par munhasir hai), say what would be or would have been (agar vaqt hotā, to maiṅ ātā), and tell a short story in six written lines.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-R275-depends-and-would",
+    "kind": "production",
+    "summary": "Complete UR-R275-depends-and-would: say what something depends on, and what would have been.",
+    "assesses": [
+      "UR-LEX-C275-MUNHASIR-01",
+      "UR-GRAMMAR-C275-DEPENDS-01",
+      "UR-GRAMMAR-C275-DEPENDS-02",
+      "UR-GRAMMAR-C275-WOULD-01",
+      "UR-GRAMMAR-C275-WOULD-02"
+    ]
+  }
+}

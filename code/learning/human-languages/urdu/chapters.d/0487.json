@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "A Wedding",
+  "label": "ch:ur-a-wedding",
+  "canDo": "I can describe a wedding.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C487-rukhsat-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can describe a wedding.",
+    "assesses": [
+      "UR-LEX-C487-WEDDING487-03",
+      "UR-LEX-C487-WEDDING487-04",
+      "UR-LEX-C487-WEDDING487-05"
+    ]
+  }
+}

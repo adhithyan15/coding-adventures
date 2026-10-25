@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Bringing Up a Child",
+  "label": "ch:ur-bringing-up-a-child",
+  "canDo": "I can say how a child was brought up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C484-pilana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can say how a child was brought up.",
+    "assesses": [
+      "UR-LEX-C484-RAISE484-03",
+      "UR-LEX-C484-RAISE484-04",
+      "UR-LEX-C484-RAISE484-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "A Case in Court",
+  "label": "ch:gu-a-case-in-court",
+  "canDo": "I can follow what happens to a court case.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C348-phatkarvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can follow what happens to a court case.",
+    "assesses": [
+      "GU-LEX-C348-KES348-03",
+      "GU-LEX-C348-KES348-04",
+      "GU-LEX-C348-KES348-05"
+    ]
+  }
+}

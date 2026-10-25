@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C480-iyadat-karna",
+    "language": "urdu",
+    "chapter": 480,
+    "sequence": 28050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9551e8aba1d44ee4"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "The Attack",
+  "label": "ch:ur-the-attack",
+  "canDo": "I can tell how an army attacked a fort.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C309-bhirna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can tell how an army attacked a fort.",
+    "assesses": [
+      "UR-LEX-C309-HAMLA309-03",
+      "UR-LEX-C309-HAMLA309-04",
+      "UR-LEX-C309-HAMLA309-05"
+    ]
+  }
+}

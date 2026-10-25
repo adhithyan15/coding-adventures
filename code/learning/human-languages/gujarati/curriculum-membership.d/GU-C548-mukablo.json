@@ -1,0 +1,11 @@
+{
+  "id": "GU-C548-mukablo",
+  "pathSegment": "GU-PATH-548-TEAM548",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-548-TEAM548",
+      "order": 2
+    }
+  ]
+}

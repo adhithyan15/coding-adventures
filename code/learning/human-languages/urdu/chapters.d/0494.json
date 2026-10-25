@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Looking for Work",
+  "label": "ch:ur-looking-for-work",
+  "canDo": "I can talk about looking for a job and getting one.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C494-bharti-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about looking for a job and getting one.",
+    "assesses": [
+      "UR-LEX-C494-ROZGAR494-03",
+      "UR-LEX-C494-ROZGAR494-04",
+      "UR-LEX-C494-ROZGAR494-05"
+    ]
+  }
+}

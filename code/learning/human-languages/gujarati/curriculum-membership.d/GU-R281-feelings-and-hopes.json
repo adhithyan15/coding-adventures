@@ -1,0 +1,11 @@
+{
+  "id": "GU-R281-feelings-and-hopes",
+  "pathSegment": "GU-PATH-281-FEEL-HOPE",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "GU-EXT-281-FEEL-HOPE",
+      "order": 7
+    }
+  ]
+}

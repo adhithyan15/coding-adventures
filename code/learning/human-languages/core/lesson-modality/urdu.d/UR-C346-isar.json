@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C346-isar",
+    "language": "urdu",
+    "chapter": 346,
+    "sequence": 20770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01d29459e22b70f7"
+  },
+  "findings": []
+}

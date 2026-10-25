@@ -1,0 +1,11 @@
+{
+  "id": "GU-C430-padiku",
+  "pathSegment": "GU-PATH-430-SCALES430",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-430-SCALES430",
+      "order": 2
+    }
+  ]
+}

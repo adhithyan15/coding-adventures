@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:5b92f2c5fafd9d8e",
+  "lessonIds": [
+    "UR-C274-agar-to",
+    "UR-C274-agar-barish-hui",
+    "UR-C274-shart",
+    "UR-R274-if-and-otherwise"
+  ],
+  "tex": "urdu/book/chapters/ch274-if-then-or-else.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C452-nakhra",
+  "pathSegment": "UR-PATH-452-PRIDE452",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-452-PRIDE452",
+      "order": 3
+    }
+  ]
+}

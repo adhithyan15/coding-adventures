@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:b9a3cc7186ad16a3",
+  "lessonIds": [
+    "UR-C512-bagh",
+    "UR-C512-kyari",
+    "UR-C512-khad",
+    "UR-C512-sinchna",
+    "UR-C512-ukharna-uproot"
+  ],
+  "tex": "urdu/book/chapters/ch512-in-the-garden.tex"
+}

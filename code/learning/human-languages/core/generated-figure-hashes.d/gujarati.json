@@ -434,6 +434,41 @@
       "sourceHash": "fnv1a64:e4020b1a94968f79",
       "svgHash": "fnv1a64:5e7341ebeae71a6d",
       "svg": "gujarati/book/figures/GU-W48-uu-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-W49-jha",
+      "sourceHash": "fnv1a64:e4e939c741449c22",
+      "svgHash": "fnv1a64:bb28b2c7a41fd597",
+      "svg": "gujarati/book/figures/GU-W49-jha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-W50-visarga",
+      "sourceHash": "fnv1a64:02bd11a9f0d26fbb",
+      "svgHash": "fnv1a64:8b2508d8d2c7c9b1",
+      "svg": "gujarati/book/figures/GU-W50-visarga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-W51-short-i",
+      "sourceHash": "fnv1a64:a8c382431bd4d0a6",
+      "svgHash": "fnv1a64:32844bb8986cad12",
+      "svg": "gujarati/book/figures/GU-W51-short-i-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-W52-au-sign",
+      "sourceHash": "fnv1a64:e31c6f660664b1c3",
+      "svgHash": "fnv1a64:d049e1ce97f77652",
+      "svg": "gujarati/book/figures/GU-W52-au-sign-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-W53-vocalic-r-letter",
+      "sourceHash": "fnv1a64:8a5c6054691260eb",
+      "svgHash": "fnv1a64:06c9cefbcd9d71ed",
+      "svg": "gujarati/book/figures/GU-W53-vocalic-r-letter-filmstrip.svg"
     }
   ]
 }

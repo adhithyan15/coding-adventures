@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:c5e2385812af45cd",
+  "lessonIds": [
+    "UR-C376-tadad",
+    "UR-C376-miqdar",
+    "UR-C376-mamuli",
+    "UR-C376-lag-bhag",
+    "UR-C376-had"
+  ],
+  "tex": "urdu/book/chapters/ch376-more-and-less.tex"
+}

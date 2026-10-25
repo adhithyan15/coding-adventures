@@ -1,0 +1,11 @@
+{
+  "id": "UR-C393-sarakna",
+  "pathSegment": "UR-PATH-393-JAM393",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-393-JAM393",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Warnings Nobody Heeded",
+  "label": "ch:gu-warnings-nobody-heeded",
+  "canDo": "I can say who warned whom and what happened.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C297-dhakko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can say who warned whom and what happened.",
+    "assesses": [
+      "GU-LEX-C297-CHETAV297-03",
+      "GU-LEX-C297-CHETAV297-04",
+      "GU-LEX-C297-CHETAV297-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C330-bhajan",
+  "pathSegment": "GU-PATH-330-GARBO330",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-330-GARBO330",
+      "order": 3
+    }
+  ]
+}

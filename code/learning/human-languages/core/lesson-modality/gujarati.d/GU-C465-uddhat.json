@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C465-uddhat",
+    "language": "gujarati",
+    "chapter": 465,
+    "sequence": 25940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3137e401eba7bab"
+  },
+  "findings": []
+}

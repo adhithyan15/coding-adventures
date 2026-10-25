@@ -1,4 +1,32 @@
 # Changelog — `x86_64-backend`
+
+## Unreleased — f64 negation flips the sign bit
+
+### Fixed
+
+- `neg_f64` flips the sign bit (`movabs rcx, 1<<63; xor rax, rcx`) instead of `neg rax`. An f64 rides its stack slot as raw IEEE-754 bits, so the integer
+  two's-complement negate miscompiled every non-trivial real negation:
+  `LET X = 2.5: PRINT -X` printed `-1.75` (0x4004… → 0xBFFC…), and `-(+0.0)`
+  stayed `+0.0`. `aot-core`'s `specialise` turns IIR `neg` with an `f64` type
+  into `neg_f64`, which Dartmouth BASIC emits for every unary minus on a real.
+  The only matrix row that exercised it, `ABS(-42)`, negates twice, and a
+  two's-complement negate is its own inverse, so the bug round-tripped to
+  the right answer. A folded `Float` operand is now materialised from its own
+  bits. New unit tests pin the emitted sequence and the absence of the integer
+  negate, and a new lang-aot matrix row (`LET X = 2.5` / `PRINT -X` → `-2.5`)
+  runs it on every backend.
+
+## Unreleased — LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`
+
+- **`f64_add` / `f64_sub` / `f64_mul` / `f64_div`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6c): the existing
+  SSE2 `emit_fp_binop` (`addsd`/`subsd`/`mulsd`/`divsd`; masked FP
+  exceptions, so `1/0` is `+inf` and nothing traps).
+- **`f64_neg` / `f64_signbit`** on the raw bits: `mov rax,[a]`, then
+  `xor rax, 0x8000…` (exact IEEE negate) or `shr rax, 63` (0/1). A float
+  literal operand is loaded as its `to_bits()` immediate (new
+  `load_f64_bits`); an integer literal is refused.
+- `op_support`: all six `Lowered`. Tests pin the byte sequences.
+
 ## Unreleased — LANG83 PR6a — shortest round-trip float output
 
 - **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): two `V1_BUILTINS` rows,

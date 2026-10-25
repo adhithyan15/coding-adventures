@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C550-nisan",
+    "language": "gujarati",
+    "chapter": 550,
+    "sequence": 30520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b23e3a3e58f9fd06"
+  },
+  "findings": []
+}

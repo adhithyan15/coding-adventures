@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C485-matra",
+    "language": "gujarati",
+    "chapter": 485,
+    "sequence": 26970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cd64cf0ec4ef0c6"
+  },
+  "findings": []
+}

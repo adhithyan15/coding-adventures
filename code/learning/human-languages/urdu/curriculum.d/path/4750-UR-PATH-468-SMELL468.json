@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-468-SMELL468",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-468-SMELL468"
+  ],
+  "after": []
+}

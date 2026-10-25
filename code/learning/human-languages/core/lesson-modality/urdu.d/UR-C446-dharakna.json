@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C446-dharakna",
+    "language": "urdu",
+    "chapter": 446,
+    "sequence": 26340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adcc5b614fb18e5f"
+  },
+  "findings": []
+}

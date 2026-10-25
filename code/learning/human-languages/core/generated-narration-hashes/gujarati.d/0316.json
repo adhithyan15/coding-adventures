@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:1898659b57483449",
+  "lessonIds": [
+    "GU-C316-darmiyan",
+    "GU-C316-hal",
+    "GU-C316-mujab",
+    "GU-C316-gupt",
+    "GU-C316-takvu",
+    "GU-R316-review-309-316"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch316.txt",
+  "json": "gujarati/narration/ch316.json",
+  "textHash": "fnv1a64:e6fef20f941d0ce5",
+  "jsonHash": "fnv1a64:9a5d2944d4ec923f",
+  "findings": []
+}

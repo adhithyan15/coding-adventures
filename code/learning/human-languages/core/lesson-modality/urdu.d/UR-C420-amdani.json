@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C420-amdani",
+    "language": "urdu",
+    "chapter": 420,
+    "sequence": 24740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4875c3545ca67dad"
+  },
+  "findings": []
+}

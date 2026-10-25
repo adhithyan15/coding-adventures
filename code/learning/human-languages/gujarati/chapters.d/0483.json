@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Where It Hurts",
+  "label": "ch:gu-where-it-hurts",
+  "canDo": "I can describe different kinds of pain.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C483-dah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can describe different kinds of pain.",
+    "assesses": [
+      "GU-LEX-C483-VEDNA483-03",
+      "GU-LEX-C483-VEDNA483-04",
+      "GU-LEX-C483-VEDNA483-05"
+    ]
+  }
+}

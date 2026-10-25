@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Worry",
+  "label": "ch:ur-worry",
+  "canDo": "I can say what is worrying someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C446-dharakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can say what is worrying someone.",
+    "assesses": [
+      "UR-LEX-C446-WORRY446-03",
+      "UR-LEX-C446-WORRY446-04",
+      "UR-LEX-C446-WORRY446-05"
+    ]
+  }
+}

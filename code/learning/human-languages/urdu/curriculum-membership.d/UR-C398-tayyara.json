@@ -1,0 +1,11 @@
+{
+  "id": "UR-C398-tayyara",
+  "pathSegment": "UR-PATH-398-PARVAZ398",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-398-PARVAZ398",
+      "order": 1
+    }
+  ]
+}

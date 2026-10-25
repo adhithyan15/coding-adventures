@@ -1,0 +1,19 @@
+{
+  "chapter": 548,
+  "title": "If We Win the Match",
+  "label": "ch:gu-if-we-win-the-match",
+  "canDo": "I can talk about a team, its captain and the winner.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C548-jitadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 548: I can talk about a team, its captain and the winner.",
+    "assesses": [
+      "GU-LEX-C548-TEAM548-03",
+      "GU-LEX-C548-TEAM548-04",
+      "GU-LEX-C548-TEAM548-05"
+    ]
+  }
+}

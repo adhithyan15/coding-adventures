@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:5ffc96a142f280d2",
+  "lessonIds": [
+    "GU-C382-dhyey",
+    "GU-C382-sankalp",
+    "GU-C382-siddhi",
+    "GU-C382-ayojan",
+    "GU-C382-mathvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch382.txt",
+  "json": "gujarati/narration/ch382.json",
+  "textHash": "fnv1a64:c1d04a7f8f4b0ede",
+  "jsonHash": "fnv1a64:0cdb943b82ed0f07",
+  "findings": []
+}

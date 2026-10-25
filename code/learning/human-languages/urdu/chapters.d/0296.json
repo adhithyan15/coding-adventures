@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "The Rescue",
+  "label": "ch:ur-the-rescue",
+  "canDo": "I can tell how people were rescued.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C296-salamat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can tell how people were rescued.",
+    "assesses": [
+      "UR-LEX-C296-BACHAO296-03",
+      "UR-LEX-C296-BACHAO296-04",
+      "UR-LEX-C296-BACHAO296-05"
+    ]
+  }
+}

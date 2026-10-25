@@ -1,0 +1,11 @@
+{
+  "id": "UR-C373-mitna",
+  "pathSegment": "UR-PATH-373-BIKHARNA373",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-373-BIKHARNA373",
+      "order": 1
+    }
+  ]
+}

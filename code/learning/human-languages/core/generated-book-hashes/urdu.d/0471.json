@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:e156bd98a0e0dd71",
+  "lessonIds": [
+    "UR-C471-daktar",
+    "UR-C471-sehat",
+    "UR-C471-marz",
+    "UR-C471-shifa",
+    "UR-C471-tibbi",
+    "UR-R471-review-464-471"
+  ],
+  "tex": "urdu/book/chapters/ch471-health.tex"
+}

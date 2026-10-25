@@ -1,0 +1,25 @@
+{
+  "chapter": 282,
+  "title": "Comparing, and how long",
+  "label": "ch:gu-comparing-and-how-long",
+  "canDo": "I can compare two things (X Y kartā̃ moṭũ che), say what is most (sauthī), say how long and since when (be varasthī, savārthī sānj sudhī), name the seasons with ṛtu, and read and write ૌ and ઋ.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R282-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete GU-R282-comparing-and-time: compare things, and say how long and since when.",
+    "assesses": [
+      "GU-LEX-C282-SAUTHI-01",
+      "GU-SCRIPT-C282-AU-SIGN-01",
+      "GU-GRAMMAR-C282-KARTAN-01",
+      "GU-GRAMMAR-C282-SAUTHI-MOST-01",
+      "GU-LEX-C282-SUDHI-01",
+      "GU-GRAMMAR-C282-THI-SINCE-01",
+      "GU-GRAMMAR-C282-THI-SUDHI-01",
+      "GU-LEX-C282-RTU-01",
+      "GU-SCRIPT-C282-VOCALIC-R-01"
+    ]
+  }
+}

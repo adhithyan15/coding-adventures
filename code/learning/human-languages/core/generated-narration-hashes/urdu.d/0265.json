@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:31bee306598a6e03",
+  "lessonIds": [
+    "UR-C265-us-ne-khaya",
+    "UR-C265-main-jaun-ga",
+    "UR-W265-waw-hamza",
+    "UR-R265-who-did-it"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "urdu/narration/ch265.txt",
+  "json": "urdu/narration/ch265.json",
+  "textHash": "fnv1a64:c643338e5e146800",
+  "jsonHash": "fnv1a64:2efbcdcbfd7a0779",
+  "findings": []
+}

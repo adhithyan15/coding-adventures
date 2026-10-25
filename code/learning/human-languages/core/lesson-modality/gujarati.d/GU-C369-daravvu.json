@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C369-daravvu",
+    "language": "gujarati",
+    "chapter": 369,
+    "sequence": 20570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9dfeb690102ff07c"
+  },
+  "findings": []
+}

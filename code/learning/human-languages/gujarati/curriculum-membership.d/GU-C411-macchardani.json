@@ -1,0 +1,11 @@
+{
+  "id": "GU-C411-macchardani",
+  "pathSegment": "GU-PATH-411-QUILT411",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-411-QUILT411",
+      "order": 2
+    }
+  ]
+}

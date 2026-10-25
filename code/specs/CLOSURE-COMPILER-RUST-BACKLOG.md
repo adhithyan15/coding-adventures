@@ -154,16 +154,24 @@ Ranking:
 
 | # | ID | Item | Status |
 |---:|---|---|---|
-| 1 | F12 phase 0 | Add the ExpressionStatement lookahead to the ES grammars (ECMA-262 §14.5), so `{ a }⏎/foo/g.exec(s)` fails to parse instead of compiling to a different program. See [F12](F12-parser-driven-lexical-goals.md) §5. | In progress (closure-parity-loop-rest session; touches `javascript-parser`) |
-| 2 | #17907 | The emitter turns non-directives (`"use\x20strict"`, `` `use strict` ``, `("use strict")`) into a real `"use strict"` directive. | Ready |
+| 1 | F12 phase 0 | Add the ExpressionStatement lookahead to the ES grammars (ECMA-262 §14.5), so `{ a }⏎/foo/g.exec(s)` fails to parse instead of compiling to a different program. See [F12](F12-parser-driven-lexical-goals.md) §5. | PR #18150 open (closure-parity-loop-rest session) |
+| 2 | #17907 | The emitter turns non-directives (`"use\x20strict"`, `` `use strict` ``, `("use strict")`) into a real `"use strict"` directive. | PR #18133 open |
 | 3 | #17940 | A function declaration in a class `static {}` block parses as an expression (same family as #17877). | Blocked by F12 phase 0 (row 1): needs the ES grammars and `javascript-parser` (rule 8) |
 | 4 | #17939 | WHITESPACE_ONLY drops the restricted-production line break after `yield`. | Blocked by F12 phase 0 (row 1): in a generator the ASI module (`javascript-parser/src/asi.rs`) sees `yield` as an identifier, and only the parser knows the generator context (rule 8) |
-| 5 | #17887 | The emitter prints `a<!--b`, line comments swallow `\r`, and WHITESPACE_ONLY drops a line break after the identifier `yield`. One PR per bug. | Ready |
-| 6 | #17883 | WHITESPACE_ONLY drops the empty-statement `;` after `with(...)` or a label before `}`, so the output no longer parses. | Ready |
-| 7 | #17888 | The BLOCK_COMMENT pattern misses comments ending in `**/`, and REGEX admits line terminators. | Ready |
-| 8 | #17882 | ASI insertion takes tens of seconds on about 400 labeled blocks. Make it linear or bounded. | Ready |
-| 8a | #18114 | WHITESPACE_ONLY moves an argument IIFE's call outside the enclosing call: `f(function(){}())` → `f(function(){})()`. | Ready |
-| 8b | #18115 | ADVANCED inlines a function that reads `this` into a call site with a different `this` (`o.m` gains `o` as `this`). | Ready |
+| 5 | #17887 | The emitter prints `a<!--b`, line comments swallow `\r`, and WHITESPACE_ONLY drops a line break after the identifier `yield`. One PR per bug. | Ready for the `<!--` emitter bug. The `yield` bug is blocked by F12 phase 0 (same cause as #17939). The comment bug's `\r` half was fixed by #17901; its U+2028/U+2029 half is Decision (see *Decisions needed*). |
+| 6 | #17883 | WHITESPACE_ONLY drops the empty-statement `;` after `with(...)` or a label before `}`, so the output no longer parses. | Done (#18129) |
+| 7 | #17888 | The BLOCK_COMMENT pattern misses comments ending in `**/`, and REGEX admits line terminators. | Done (#17901; issue closed 2026-10-24) |
+| 8 | #17882 | ASI insertion takes tens of seconds on about 400 labeled blocks. Make it linear or bounded. | Blocked by F12 phase 0 (row 1): the cost is in `javascript-parser`'s ASI retry and the `parser` crate (rule 8) |
+| 8a | #18114 | WHITESPACE_ONLY moves an argument IIFE's call outside the enclosing call: `f(function(){}())` → `f(function(){})()`. | PR #18139 open |
+| 8b | #18115 | ADVANCED inlines a function that reads `this` into a call site with a different `this` (`o.m` gains `o` as `this`). | Done (#18148) |
+| 8c | #18137 | WHITESPACE_ONLY comments out the program after a `#!` line. | PR #18149 open |
+| 8d | #18124 | WHITESPACE_ONLY flattens a lone `let`/`const` into a body slot: `if(a){let x=1;}` → `if(a)let x=1;`. | PR #18151 open |
+| 8e | #18134 | ADVANCED inlining lets a nested function capture a caller's shadowing binding. | Ready |
+| 8f | #18144 | ADVANCED inline substitution: closure-deferred reads, a missing `return` arm, computed class keys. | Ready |
+| 8g | #18123 | WHITESPACE_ONLY applies body-slot rules to methods named `if`/`while`/`for`/`with`, so the output doesn't parse. | Ready |
+| 8h | #18152 | WHITESPACE_ONLY breaks `let`/`using`/`await` used as identifiers (ASI and paren elision). | Ready |
+| 8i | #18125 | WHITESPACE_ONLY loses the newline boundary after a keyword property name (`x=y.if⏎l:;`). | Ready |
+| 8j | #18122 | SIMPLE doubles backslashes in `import`/`export` module specifiers. | Ready |
 
 ### Q0.5 — valid JavaScript that closurec rejects
 
@@ -174,7 +182,7 @@ Ranking:
 | 11 | #17852 | Adjacent class members and reserved-word property names fail to parse. | Ready |
 | 12 | F12 phases 1–4 | Parser-driven lexical goals, so regex vs. division is decided by the parser. Phase 1 `lexer` (snapshot, mode override, deferred errors); phase 2 `parser`/`grammar-tools` (`relex:` section, token source, undo, memo); phase 3 `javascript-parser` (relex rules, byte-offset ASI, fix B's inputs as fixtures); phase 4 `closurec` (resolved token stream; WHITESPACE_ONLY parses). One PR per phase; phases 1–3 need `ci-full-build`. | Decision — phase 1 waits for the owner to confirm F12's *Decisions* section |
 | 13 | #17884 | Support Annex B HTML-like comments (`<!--` and line-leading `-->`) instead of refusing them. #17914 (the `-->` test262 regression fix) merged on 2026-10-24. | Ready |
-| 14 | CCR-075 #15860 | Refuse what Closure refuses. Slice 1 (private class elements) merged as #17876; find and ship the remaining upstream refusals. | Ready |
+| 14 | CCR-075 #15860 | Refuse what Closure refuses. Slice 1 (private class elements) merged as #17876. Slice 2 (`return`/`new.target` outside a function) is PR #18162. Next: `super`, `with`, `import.meta`, module paths. | Ready |
 
 ### Q1 — cheap ladder wins (emitter and DCE parity)
 
@@ -201,6 +209,7 @@ its blast radius across the 462 goldens.
 | 25 | CCR-008 #15626 | Enforce `language_in` syntax boundaries. | Ready |
 | 26 | CCR-079 #15866 | Derive the ladder's divergence ledger from captured oracle runs. | Ready |
 | 27 | CCR-089 #15935 | Recapture the upstream-refusal evidence on the pinned JVM. | Ready |
+| 27a | #18159 | CLOC44 refusal rendering: multi-file order, UTF-16 columns, tab carets, CRLF excerpts. | Ready |
 
 ### Q3 — ADVANCED semantics
 
@@ -238,6 +247,24 @@ four open questions using the spec's own recommendations. The owner had not
 answered them; the spec's *Decisions* section records this. Phase 1 waits until the
 owner confirms them. Phase 0 does not depend on them.
 
+#17887's U+2028/U+2029 half (added 2026-10-24). `LINE_COMMENT`,
+`HASHBANG` and `REGEX` in the ES `.tokens` files stop at `\n` and `\r` but
+not at U+2028/U+2029. So `// c⟨U+2028⟩code` loses `code` at SIMPLE and
+ADVANCED; WHITESPACE_ONLY refuses the hashbang form since #18149. #17901
+left these out on purpose, because every language's lexer reads the same
+`.tokens` files and their regex engines disagree on those escapes. The
+options:
+
+- (a) A cross-language `.tokens` change, with literal or escaped U+2028/U+2029
+  that every generator accepts. This needs a survey of all the generators.
+- (b) A Rust-only post-pass in `javascript-lexer` that splits a comment or
+  hashbang token at the first U+2028/U+2029 and re-lexes the rest.
+- (c) A closurec-only refusal of such tokens at every level. This fails
+  closed, but rejects valid JavaScript.
+
+The recommendation is (b): it fixes closurec without touching other
+languages. The question is open for the owner.
+
 ### Filler (only while waiting on CI)
 
 CCR-069 #15843 (remove serde), CCR-070 #15845 (in-repo regex), CCR-072 #15832
@@ -273,6 +300,10 @@ CCR-069 #15843 (remove serde), CCR-070 #15845 (in-repo regex), CCR-072 #15832
     - CCR-086 (#17874)
     - CCR-087 (#17916)
   - **Front end:** CCR-065 #16970 exact lexical source intervals (#17803).
+- **2026-10-24 (round 3):**
+  - #17883 WHITESPACE_ONLY `with(...)`/label body `;` (#18129)
+  - #18115 ADVANCED inlining across a `this` boundary (#18148)
+  - #17888 closed as fixed by #17901
 - **Parked:** fix B, a lexer-only regex-vs-division context stack on local
   branch `claude/closurec-regex-after-brace`. It was abandoned after three
   non-converging security-review rounds, and F12 replaces it.
@@ -288,3 +319,4 @@ Add one line per batch of merges or selections.
 | 2026-10-19 | Selected #16008 (PR #17829) and #16009 (bounded chains, CLOC42). |
 | 2026-10-22 | Recorded 20 Closure PRs merged since the reset. The loop had stopped after parking fix B, so rule 6 now parks the item, not the loop. Merges are recorded in a daily docs PR (rule 5), and near-root crate PRs use `ci-full-build` (rule 10). F12 phase 0 queued; Claude settled phases 1–4's open questions provisionally. New front-end findings ranked into Q0/Q0.5. Next: F12 phase 0. |
 | 2026-10-24 | Round 3 started on Q0 while closure-parity-loop-rest does F12 phase 0. #17914 merged, so #17884 is Ready. #17940 and #17939 wait for phase 0, which holds `javascript-parser`. Filed and ranked #18114 and #18115 (both miscompiles, found while testing #17907). Next: #17907, #17883. |
+| 2026-10-24 | Merged #18121 (bookkeeping), #18129 (#17883) and #18148 (#18115). Open: #18133, #18139, #18149, #18151, #18162 (CCR-075 slice 2). Filed and ranked #18122, #18123, #18125, #18134, #18144, #18152 and #18159, all found by security reviews. #17882 is blocked by phase 0. #17887's U+2028 half is Decision. |

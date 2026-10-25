@@ -1,0 +1,11 @@
+{
+  "id": "UR-C389-sarkana",
+  "pathSegment": "UR-PATH-389-UNGHNA389",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-389-UNGHNA389",
+      "order": 2
+    }
+  ]
+}

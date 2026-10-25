@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:4acded904837ea90",
+  "lessonIds": [
+    "GU-C400-skutar",
+    "GU-C400-helmet",
+    "GU-C400-horn",
+    "GU-C400-hendal",
+    "GU-C400-uchalvu-toss",
+    "GU-R400-review-393-400"
+  ],
+  "tex": "gujarati/book/chapters/ch400-scooters-and-helmets.tex"
+}

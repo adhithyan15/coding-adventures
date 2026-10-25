@@ -1,0 +1,11 @@
+{
+  "id": "UR-C270-kaise-jate-hain",
+  "pathSegment": "UR-PATH-270-WAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-270-WAY",
+      "order": 3
+    }
+  ]
+}

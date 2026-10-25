@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Hawkers and Stalls",
+  "label": "ch:gu-hawkers-and-stalls",
+  "canDo": "I can buy from a street cart or a stall.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C422-khapvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can buy from a street cart or a stall.",
+    "assesses": [
+      "GU-LEX-C422-STALL422-03",
+      "GU-LEX-C422-STALL422-04",
+      "GU-LEX-C422-STALL422-05"
+    ]
+  }
+}

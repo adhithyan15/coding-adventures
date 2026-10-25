@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:309438b88f79761a",
+  "lessonIds": [
+    "UR-C396-shahrah",
+    "UR-C396-mahsul",
+    "UR-C396-naka",
+    "UR-C396-qafila",
+    "UR-C396-hankna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch396.txt",
+  "json": "urdu/narration/ch396.json",
+  "textHash": "fnv1a64:c36f692426050555",
+  "jsonHash": "fnv1a64:1ecf2013ddf7335e",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-478-KAPH478",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-478-KAPH478"
+  ],
+  "after": []
+}

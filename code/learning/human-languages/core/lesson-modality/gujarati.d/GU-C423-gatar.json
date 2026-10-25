@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C423-gatar",
+    "language": "gujarati",
+    "chapter": 423,
+    "sequence": 23550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:812761ebbe5cf139"
+  },
+  "findings": []
+}

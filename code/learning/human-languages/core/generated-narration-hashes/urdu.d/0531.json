@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:e37111cb90565ffa",
+  "lessonIds": [
+    "UR-C531-amanat",
+    "UR-C531-qaul",
+    "UR-C531-pasdari",
+    "UR-C531-sakh",
+    "UR-C531-nibhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch531.txt",
+  "json": "urdu/narration/ch531.json",
+  "textHash": "fnv1a64:b8f687c336a1d2bf",
+  "jsonHash": "fnv1a64:cb8da9282dba9a8b",
+  "findings": []
+}

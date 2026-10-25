@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 379,
+  "title": "Very, Extremely",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:20c9e674870cc51f",
+  "lessons": [
+    {
+      "id": "GU-C379-atyant",
+      "sequence": 21050,
+      "title": "અત્યંત (atyant) — extremely",
+      "headword": "અત્યંત",
+      "romanization": "atyant",
+      "gloss": "extremely",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7099fca83f32e26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a proportion, then the Gujarati for to tolerate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અત્યંત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અત્યંત — atyant — \"extremely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે બપોરે ચાલશો તો તમને અત્યંત થાક લાગશે. jo tame bapore cālśo to tamne atyant thāk lāgśe. If you walk in the midday heat, you will be extremely tired."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અત્યંત (atyant) is a tatsama, borrowed from Sanskrit atyanta, \"beyond the proper end or limit\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atyant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atyant*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atyant, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atyant*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame bapore cālśo to tamne atyant thāk lāgśe. — If you walk in the midday heat, you will be extremely tired.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame bapore cālśo to tamne atyant thāk lāgśe.* — If you walk in the midday heat, you will be extremely tired.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a proportion, then the Gujarati for to tolerate, then say atyant again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a proportion, then the Gujarati for to tolerate, then say *atyant* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અત્યંત (atyant) mean? (\"Extremely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C379-sav",
+      "sequence": 21060,
+      "title": "સાવ (sāv) — utterly",
+      "headword": "સાવ",
+      "romanization": "sāv",
+      "gloss": "utterly",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a09a244102091226",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to tolerate, then the Gujarati for extremely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સાવ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાવ — sāv — \"utterly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે આ દવા લેશો તો દુખાવો સાવ મટી જશે. jo tame ā davā leśo to dukhāvo sāv maṭī jaśe. If you take this medicine, the pain will go away completely."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાવ (sāv) is inherited from Sanskrit sárva, \"all, whole\"; CDIAL lists Gujarati sāv, \"wholly\" (CDIAL 13276)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāv",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāv*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāv, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāv*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame ā davā leśo to dukhāvo sāv maṭī jaśe. — If you take this medicine, the pain will go away completely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame ā davā leśo to dukhāvo sāv maṭī jaśe.* — If you take this medicine, the pain will go away completely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to tolerate, then the Gujarati for extremely, then say sāv again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to tolerate, then the Gujarati for extremely, then say *sāv* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સાવ (sāv) mean? (\"Utterly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C379-sampurn",
+      "sequence": 21070,
+      "title": "સંપૂર્ણ (sampūrṇ) — complete",
+      "headword": "સંપૂર્ણ",
+      "romanization": "sampūrṇ",
+      "gloss": "complete",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:416e6f2bad81ae86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for extremely, then the Gujarati for utterly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સંપૂર્ણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંપૂર્ણ — sampūrṇ — \"complete\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો કામ સંપૂર્ણ થશે તો અમે પગાર ચૂકવીશું. jo kām sampūrṇ thaśe to ame pagār cūkvīśũ. If the work is completed, we will pay the wages."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંપૂર્ણ (sampūrṇ) is a tatsama, borrowed from Sanskrit sampūrṇa, \"completely filled, full\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampūrṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampūrṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampūrṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampūrṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo kām sampūrṇ thaśe to ame pagār cūkvīśũ. — If the work is completed, we will pay the wages.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo kām sampūrṇ thaśe to ame pagār cūkvīśũ.* — If the work is completed, we will pay the wages.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for extremely, then the Gujarati for utterly, then say sampūrṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for extremely, then the Gujarati for utterly, then say *sampūrṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સંપૂર્ણ (sampūrṇ) mean? (\"Complete\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C379-bilkul",
+      "sequence": 21080,
+      "title": "બિલકુલ (bilkul) — absolutely; at all (with a negative)",
+      "headword": "બિલકુલ",
+      "romanization": "bilkul",
+      "gloss": "absolutely; at all (with a negative)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03cd9d0262cf116c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for utterly, then the Gujarati for complete."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બિલકુલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બિલકુલ — bilkul — \"absolutely; at all (with a negative)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે ઝડપી ગાડી ચલાવશો તો હું બિલકુલ નહીં બેસું. jo tame jhaḍpī gāḍī calāvśo to hũ bilkul nahī̃ besũ. If you drive fast, I absolutely will not get in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બિલકુલ (bilkul) is usually traced to Arabic bil-kull, \"with the whole, entirely\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bilkul",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bilkul*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bilkul, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bilkul*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame jhaḍpī gāḍī calāvśo to hũ bilkul nahī̃ besũ. — If you drive fast, I absolutely will not get in.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame jhaḍpī gāḍī calāvśo to hũ bilkul nahī̃ besũ.* — If you drive fast, I absolutely will not get in.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for utterly, then the Gujarati for complete, then say bilkul again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for utterly, then the Gujarati for complete, then say *bilkul* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બિલકુલ (bilkul) mean? (\"Absolutely; at all (with a negative)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C379-keval",
+      "sequence": 21090,
+      "title": "કેવળ (kevaḷ) — solely",
+      "headword": "કેવળ",
+      "romanization": "kevaḷ",
+      "gloss": "solely",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffe6d7704f89eddc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for complete, then the Gujarati for absolutely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કેવળ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કેવળ — kevaḷ — \"solely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે કેવળ પૈસા માટે કામ કરશો તો ખુશ નહીં રહો. jo tame kevaḷ paisā māṭe kām karśo to khuś nahī̃ raho. If you work only for money, you will not be happy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કેવળ (kevaḷ) is a tatsama, borrowed from Sanskrit kevala, \"alone, exclusive, entire\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kevaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kevaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kevaḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kevaḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame kevaḷ paisā māṭe kām karśo to khuś nahī̃ raho. — If you work only for money, you will not be happy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame kevaḷ paisā māṭe kām karśo to khuś nahī̃ raho.* — If you work only for money, you will not be happy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for complete, then the Gujarati for absolutely, then say kevaḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for complete, then the Gujarati for absolutely, then say *kevaḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કેવળ (kevaḷ) mean? (\"Solely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:cefd91c083daf1a5",
+  "lessonIds": [
+    "GU-C365-siddhat",
+    "GU-C365-vyavhar",
+    "GU-C365-anuman",
+    "GU-C365-vastavik",
+    "GU-C365-sakalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch365.txt",
+  "json": "gujarati/narration/ch365.json",
+  "textHash": "fnv1a64:8224b21a7edf8580",
+  "jsonHash": "fnv1a64:329497bf1d2170b5",
+  "findings": []
+}

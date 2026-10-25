@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Fear",
+  "label": "ch:ur-fear",
+  "canDo": "I can say what frightened someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C445-simatna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can say what frightened someone.",
+    "assesses": [
+      "UR-LEX-C445-FEAR445-03",
+      "UR-LEX-C445-FEAR445-04",
+      "UR-LEX-C445-FEAR445-05"
+    ]
+  }
+}

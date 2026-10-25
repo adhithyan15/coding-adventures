@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Lakes, Dams and Stepwells",
+  "label": "ch:gu-lakes-dams-and-stepwells",
+  "canDo": "I can talk about where a town gets its water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C441-khupvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can talk about where a town gets its water.",
+    "assesses": [
+      "GU-LEX-C441-LAKE441-03",
+      "GU-LEX-C441-LAKE441-04",
+      "GU-LEX-C441-LAKE441-05"
+    ]
+  }
+}

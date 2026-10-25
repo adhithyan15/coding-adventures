@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:b70f02351970ba5b",
+  "lessonIds": [
+    "GU-C397-dhamal",
+    "GU-C397-umbro",
+    "GU-C397-patlo",
+    "GU-C397-hadselvu",
+    "GU-C397-bharavu"
+  ],
+  "tex": "gujarati/book/chapters/ch397-the-rush-at-the-door.tex"
+}

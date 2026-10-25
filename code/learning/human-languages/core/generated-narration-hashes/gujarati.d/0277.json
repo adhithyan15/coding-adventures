@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:c33499024ea5fa40",
+  "lessonIds": [
+    "GU-C277-mat",
+    "GU-C277-mane-lage-che",
+    "GU-C277-karan",
+    "GU-C277-karan-ke",
+    "GU-R277-opinion-and-reason"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch277.txt",
+  "json": "gujarati/narration/ch277.json",
+  "textHash": "fnv1a64:ebf374de94403c9a",
+  "jsonHash": "fnv1a64:e298e41a68b86b7b",
+  "findings": []
+}

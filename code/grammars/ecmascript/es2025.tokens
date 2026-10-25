@@ -1,6 +1,9 @@
 # ECMAScript 2025 (ES16) — Lexical Grammar
 # @version 1
 # @ecmascript_edition 2025
+# source_ref: https://github.com/tc39/ecma262/tree/es2025
+# source_sha: 84b38ad852ff426795fa29cebc06949027336c64
+# PARTIAL: the IIR path claims es-number-log only (LANG84 phase 6d; see releases.csv); this lexical pair predates LANG84 and is not yet audited clause by clause against the tagged spec text.
 #
 # ECMA-262, 16th Edition — June 2025
 #
@@ -84,18 +87,22 @@ PRIVATE_NAME = /#[a-zA-Z_$][a-zA-Z0-9_$]*/
 
 # --- Numbers (with ES2021 numeric separators) ---
 
-BIGINT_HEX = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?n/ -> BIGINT
-BIGINT_BINARY = /0[bB][01]([01_]*[01])?n/ -> BIGINT
-BIGINT_OCTAL = /0[oO][0-7]([0-7_]*[0-7])?n/ -> BIGINT
-BIGINT_DECIMAL = /[0-9]([0-9_]*[0-9])?n/ -> BIGINT
+# Number literals (ES2021 numeric separators; see es2021.tokens for the full
+# rule list): no separator after a leading `0`, none in legacy octal `017` or
+# NonOctalDecimal `08`; a legacy octal takes no fraction or exponent; `5.` and
+# `5.e1` are valid.
+BIGINT_HEX = /0[xX][0-9a-fA-F](_?[0-9a-fA-F])*n/ -> BIGINT
+BIGINT_BINARY = /0[bB][01](_?[01])*n/ -> BIGINT
+BIGINT_OCTAL = /0[oO][0-7](_?[0-7])*n/ -> BIGINT
+BIGINT_DECIMAL = /(0|[1-9](_?[0-9])*)n/ -> BIGINT
 
-BINARY_NUMBER = /0[bB][01]([01_]*[01])?/ -> NUMBER
-OCTAL_NUMBER = /0[oO][0-7]([0-7_]*[0-7])?/ -> NUMBER
-HEX_NUMBER = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?/ -> NUMBER
-FLOAT_NUMBER = /[0-9]([0-9_]*[0-9])?\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
-LEADING_DOT_FLOAT = /\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
-SCI_NUMBER = /[0-9]([0-9_]*[0-9])?[eE][+-]?[0-9]([0-9_]*[0-9])?/ -> NUMBER
-INT_NUMBER = /[0-9]([0-9_]*[0-9])?/ -> NUMBER
+BINARY_NUMBER = /0[bB][01](_?[01])*/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7](_?[0-7])*/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F](_?[0-9a-fA-F])*/ -> NUMBER
+FLOAT_NUMBER = /(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?/ -> NUMBER
+SCI_NUMBER = /(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)/ -> NUMBER
+INT_NUMBER = /(0[0-9]*|[1-9](_?[0-9])*)/ -> NUMBER
 
 # --- Strings ---
 #
@@ -379,7 +386,7 @@ transitions:
   # ── Regex-vs-division (gap-115, gap-119) ─────────────────────────────────
   # Value-producing tokens -> the next `/` is DIVISION. (One rule per line:
   # the transition parser reads each indented line as a complete rule.)
-  on (NAME | NUMBER | STRING | REGEX | TEMPLATE_NO_SUB | PRIVATE_NAME | RPAREN | RBRACKET) -> set-mode div
+  on (NAME | NUMBER | BIGINT | STRING | REGEX | TEMPLATE_NO_SUB | PRIVATE_NAME | RPAREN | RBRACKET) -> set-mode div
   on KEYWORD="this"  -> set-mode div
   on KEYWORD="super" -> set-mode div
   on KEYWORD="true"  -> set-mode div

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C523-pharsan",
+  "pathSegment": "GU-PATH-523-FARSAN523",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-523-FARSAN523",
+      "order": 0
+    }
+  ]
+}

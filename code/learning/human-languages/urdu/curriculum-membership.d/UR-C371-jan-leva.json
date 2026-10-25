@@ -1,0 +1,11 @@
+{
+  "id": "UR-C371-jan-leva",
+  "pathSegment": "UR-PATH-371-BUHRAN371",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-371-BUHRAN371",
+      "order": 2
+    }
+  ]
+}

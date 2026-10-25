@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-421-KAGHAZ421",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with papers, cards, tokens and fees at a bank.",
+  "prerequisites": []
+}

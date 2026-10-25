@@ -1,0 +1,21 @@
+{
+  "chapter": 354,
+  "title": "Offices and Officials",
+  "label": "ch:gu-offices-and-officials",
+  "canDo": "I can deal with an office and its officials.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-R354-review-347-354",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can deal with an office and its officials.",
+    "assesses": [
+      "GU-LEX-C354-ADHIKARI354-01",
+      "GU-LEX-C354-ADHIKARI354-02",
+      "GU-LEX-C354-ADHIKARI354-03",
+      "GU-LEX-C354-ADHIKARI354-04",
+      "GU-LEX-C354-ADHIKARI354-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C383-intizam",
+  "pathSegment": "UR-PATH-383-MANZURI383",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-383-MANZURI383",
+      "order": 1
+    }
+  ]
+}

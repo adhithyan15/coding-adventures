@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:3d36964f2382ce66",
+  "lessonIds": [
+    "UR-C426-khalis",
+    "UR-C426-asli",
+    "UR-C426-milavat",
+    "UR-C426-ragarna",
+    "UR-C426-chamkana"
+  ],
+  "tex": "urdu/book/chapters/ch426-pure-and-genuine.tex"
+}

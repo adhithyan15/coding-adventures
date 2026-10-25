@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "What the Figures Say",
+  "label": "ch:ur-what-the-figures-say",
+  "canDo": "I can say what a test showed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C350-ubharna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can say what a test showed.",
+    "assesses": [
+      "UR-LEX-C350-AUSAT350-03",
+      "UR-LEX-C350-AUSAT350-04",
+      "UR-LEX-C350-AUSAT350-05"
+    ]
+  }
+}

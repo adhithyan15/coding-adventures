@@ -1,0 +1,21 @@
+{
+  "chapter": 509,
+  "title": "Milk and Curd",
+  "label": "ch:ur-milk-and-curd",
+  "canDo": "I can talk about churning, setting curd and spills.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R509-review-502-509",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about churning, setting curd and spills.",
+    "assesses": [
+      "UR-LEX-C509-CHHACHH509-01",
+      "UR-LEX-C509-CHHACHH509-02",
+      "UR-LEX-C509-CHHACHH509-03",
+      "UR-LEX-C509-CHHACHH509-04",
+      "UR-LEX-C509-CHHACHH509-05"
+    ]
+  }
+}

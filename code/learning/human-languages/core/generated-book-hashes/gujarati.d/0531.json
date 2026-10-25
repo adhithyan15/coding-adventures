@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:aa4675ed673a67f4",
+  "lessonIds": [
+    "GU-C531-jhanjhat",
+    "GU-C531-andharyu",
+    "GU-C531-ocintu",
+    "GU-C531-pherphar",
+    "GU-C531-bandobast"
+  ],
+  "tex": "gujarati/book/chapters/ch531-when-plans-go-wrong.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:f7c95013442e0a8d",
+  "lessonIds": [
+    "GU-C340-uddes",
+    "GU-C340-hetu",
+    "GU-C340-irado",
+    "GU-C340-bahanu",
+    "GU-C340-sadhvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch340.txt",
+  "json": "gujarati/narration/ch340.json",
+  "textHash": "fnv1a64:ff2ad868f1aff2d4",
+  "jsonHash": "fnv1a64:3dd3177ca4103429",
+  "findings": []
+}

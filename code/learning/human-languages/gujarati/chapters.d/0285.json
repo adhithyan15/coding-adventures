@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "A Thief in the Night",
+  "label": "ch:gu-a-thief-in-the-night",
+  "canDo": "I can say that a thief came in the night and what happened next.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C285-loko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can say that a thief came in the night and what happened next.",
+    "assesses": [
+      "GU-LEX-C285-CHOR285-03",
+      "GU-LEX-C285-CHOR285-04",
+      "GU-LEX-C285-CHOR285-05"
+    ]
+  }
+}

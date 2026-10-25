@@ -1,0 +1,11 @@
+{
+  "id": "UR-C436-murjhana",
+  "pathSegment": "UR-PATH-436-QUDRAT436",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-436-QUDRAT436",
+      "order": 4
+    }
+  ]
+}

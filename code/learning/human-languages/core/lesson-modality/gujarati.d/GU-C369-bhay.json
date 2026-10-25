@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C369-bhay",
+    "language": "gujarati",
+    "chapter": 369,
+    "sequence": 20530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ed6732f4e6f9fc2"
+  },
+  "findings": []
+}

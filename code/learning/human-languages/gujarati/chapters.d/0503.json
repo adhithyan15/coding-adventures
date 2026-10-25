@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Smooth and Straight",
+  "label": "ch:gu-smooth-and-straight",
+  "canDo": "I can say how a carpenter smooths, glues and splits wood.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C503-cirvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can say how a carpenter smooths, glues and splits wood.",
+    "assesses": [
+      "GU-LEX-C503-RANDO503-03",
+      "GU-LEX-C503-RANDO503-04",
+      "GU-LEX-C503-RANDO503-05"
+    ]
+  }
+}

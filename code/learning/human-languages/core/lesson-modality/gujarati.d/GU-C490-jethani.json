@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C490-jethani",
+    "language": "gujarati",
+    "chapter": 490,
+    "sequence": 27230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3fa77ff431c01db"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:49c4512f7375b262",
+  "lessonIds": [
+    "UR-C522-phurti",
+    "UR-C522-lachakna",
+    "UR-C522-lurhkana",
+    "UR-C522-daurana",
+    "UR-C522-trafi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch522.txt",
+  "json": "urdu/narration/ch522.json",
+  "textHash": "fnv1a64:d113390e1fad59c2",
+  "jsonHash": "fnv1a64:771e4ced3989fac6",
+  "findings": []
+}

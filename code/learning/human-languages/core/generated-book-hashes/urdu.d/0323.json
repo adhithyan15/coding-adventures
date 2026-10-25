@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:d42ec3df05351f6d",
+  "lessonIds": [
+    "UR-C323-rivayat",
+    "UR-C323-rivaj",
+    "UR-C323-rasm",
+    "UR-C323-manna",
+    "UR-C323-nibhana",
+    "UR-R323-review-316-323"
+  ],
+  "tex": "urdu/book/chapters/ch323-old-customs.tex"
+}

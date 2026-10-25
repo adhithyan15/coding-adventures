@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "The Prince in Disguise",
+  "label": "ch:ur-the-prince-in-disguise",
+  "canDo": "I can tell how a prince tested his people.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C328-bahkana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can tell how a prince tested his people.",
+    "assesses": [
+      "UR-LEX-C328-SHAHZADA328-03",
+      "UR-LEX-C328-SHAHZADA328-04",
+      "UR-LEX-C328-SHAHZADA328-05"
+    ]
+  }
+}

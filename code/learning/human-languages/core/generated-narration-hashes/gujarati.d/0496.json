@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:a69080a033c8459e",
+  "lessonIds": [
+    "GU-C496-dhavvu",
+    "GU-C496-hicolvu",
+    "GU-C496-namkaran",
+    "GU-C496-vadhavvu",
+    "GU-C496-balotiyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch496.txt",
+  "json": "gujarati/narration/ch496.json",
+  "textHash": "fnv1a64:07cd62354606660e",
+  "jsonHash": "fnv1a64:0c1c685ed3b606ce",
+  "findings": []
+}

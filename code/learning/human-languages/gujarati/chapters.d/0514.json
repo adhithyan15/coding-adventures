@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Something Has Come Loose",
+  "label": "ch:gu-something-has-come-loose",
+  "canDo": "I can say what is loose and fix it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C514-latkavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can say what is loose and fix it.",
+    "assesses": [
+      "GU-LEX-C514-DHILU514-03",
+      "GU-LEX-C514-DHILU514-04",
+      "GU-LEX-C514-DHILU514-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Aches and Stiffness",
+  "label": "ch:ur-aches-and-stiffness",
+  "canDo": "I can say where it hurts and how.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C473-sozish",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can say where it hurts and how.",
+    "assesses": [
+      "UR-LEX-C473-ACHE473-03",
+      "UR-LEX-C473-ACHE473-04",
+      "UR-LEX-C473-ACHE473-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "The Night Before Eid",
+  "label": "ch:ur-the-night-before-eid",
+  "canDo": "I can describe the evening before a festival.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C317-raunaq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can describe the evening before a festival.",
+    "assesses": [
+      "UR-LEX-C317-EID317-03",
+      "UR-LEX-C317-EID317-04",
+      "UR-LEX-C317-EID317-05"
+    ]
+  }
+}

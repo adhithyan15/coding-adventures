@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C298-bichharna",
+    "language": "urdu",
+    "chapter": 298,
+    "sequence": 18120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4bbb18cbd2f1ae3"
+  },
+  "findings": []
+}

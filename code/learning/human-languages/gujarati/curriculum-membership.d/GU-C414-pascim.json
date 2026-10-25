@@ -1,0 +1,11 @@
+{
+  "id": "GU-C414-pascim",
+  "pathSegment": "GU-PATH-414-EAST414",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-414-EAST414",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-551-TALIM551",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GU-EXT-551-TALIM551"
+  ],
+  "after": []
+}

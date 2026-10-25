@@ -1,0 +1,11 @@
+{
+  "id": "UR-C489-devar",
+  "pathSegment": "UR-PATH-489-KIN489",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-489-KIN489",
+      "order": 0
+    }
+  ]
+}

@@ -1,7 +1,6 @@
 # DOC00 — Documentation Site Cluster Vision
 
-> **Status:** v0 vision document.  Per-package specs and
-> implementations follow.
+> **Status:** v0 cluster complete. All eleven DOC00 packages ship.
 > **Layer:** DOC00 (new top-level cluster, parallel to FM00).
 > **Depends on:** `commonmark-parser`, `gfm-parser`,
 > `document-ast`, `document-ast-to-html` (already shipped) +
@@ -9,20 +8,24 @@
 
 ## 1. Purpose
 
-Every package in this repo needs documentation.  Today there
-are ~hundreds of packages across a dozen languages; soon there
-will be more.  Each one should have a documentation site that's:
+Every package in this repo needs documentation. Today there are
+hundreds of packages across many languages, and the set keeps
+growing. DOC00 provides the capability-free transforms used to
+assemble documentation sites; it is not a turnkey site generator.
+Callers compose the stages and own source discovery, CSS, browser
+UI wiring, bundling, and I/O. The shipped pieces are:
 
-- **Trivial to build** — one config object + a directory of
-  markdown files → a complete deployable static site.
+- **Composable** — focused stages transform frontmatter, ASTs,
+  navigation, search data, rendered pages, and bundle entries.
 - **Trivial to host** — pure HTML, CSS, and JS.  Drop into S3,
   Cloudflare Pages, GitHub Pages, a fileserver.  No runtime
   server logic.  No external services.
-- **Searchable client-side** — type a query, see results, click
-  through.  No Algolia.  No Elasticsearch.  No "first-class
-  hosted search."  The search engine is part of the build.
-- **Fast** — under-100ms search latency, sub-second page loads
-  on commodity hardware, < 50KB total JS on the wire.
+- **Searchable client-side** — build deterministic index shards
+  and run exact-token queries without Algolia, Elasticsearch, or
+  another hosted search service. The caller owns the results UI.
+- **Small by construction** — no framework or search runtime is
+  bundled by the cluster. Product callers measure their final
+  browser bundle and page-load budgets after supplying UI assets.
 - **Composable with FM00** — the cluster's terminal package
   produces a `PageBundleConfig` for
   `forme-aot-page-bundle-emitter`, so docs sites flow through
@@ -70,15 +73,15 @@ existing tooling.
 But:
 - This repo's whole ethos is build-from-scratch with literate
   programming.  Search engines are exactly the canon-CS
-  territory worth implementing ourselves — inverted indexes,
-  BM25, bloom filters, base64-packed posting lists are
-  educational gold.
+  territory worth implementing ourselves — tokenization,
+  inverted indexes, deterministic sharding, bounded caches, and
+  ranking are educational gold.
 - Pagefind doesn't fit the FM00 contract (pure-transform
   packages with `[]` capabilities).  Wrapping it is awkward;
   re-implementing the same ideas in TypeScript fits.
-- Pagefind ships WASM.  We can do it in ~30KB of plain JS by
-  picking different tradeoffs (sharded index + bloom filters
-  + simpler tokenizer).
+- Pagefind ships WASM. DOC00 instead exposes capability-free
+  TypeScript search primitives and lets the product caller decide
+  how to bundle and load them.
 
 The **principle** is: every dependency we own is a dependency
 we understand.  Once docs sites are widespread, search bugs in
@@ -109,9 +112,9 @@ generator" package.
 ┌─ Search engine ─────────────────────────────────────────┐
 │  forme-doc-search-tokenizer                             │
 │  forme-doc-search-index-builder    ← build-time         │
-│  forme-doc-search-client-js        ← shipped to browser │
+│  forme-doc-search-client-js        ← browser-ready logic│
 └─────────────────────────────────────────────────────────┘
-            ↓ (search shards + ~30KB JS + UI HTML)
+            ↓ (manifest + shards + optional caller-bundled client JS)
 ┌─ Site assembly ─────────────────────────────────────────┐
 │  forme-doc-site-emitter                                 │
 └─────────────────────────────────────────────────────────┘
@@ -141,8 +144,8 @@ metadata (title, sidebar position, draft flag, etc.).
 #### `forme-doc-heading-anchors`
 Walk a `DocumentNode` AST; for every heading, generate a
 URL-safe slug ID and inject it as a heading attribute.
-Deterministic slug derivation (no random suffix); collisions
-within one document get `-2`, `-3`, etc. suffixes.
+Deterministic slug derivation (no random suffix); the first
+collision gets `-1`, the next `-2`, and so on.
 
 #### `forme-doc-toc-extractor`
 Walk a `DocumentNode` AST → table of contents tree (heading
@@ -150,26 +153,23 @@ text + slug + depth).  Output is a plain JSON-able structure
 the sidebar / in-page TOC widget can render.
 
 #### `forme-doc-code-block-decorator`
-AST transform that decorates fenced code blocks with:
-- A "copy" button hook (data attribute the JS shim attaches to).
+AST transform that decorates fenced code blocks with metadata for:
+- A copy-button hook.
 - A language label.
 - An optional filename badge (from `// file:foo.ts` style
   hints).
-- Line-number gutter markup if requested.
+- A line-number-gutter flag if requested.
 
 #### `forme-doc-syntax-highlighter`
-**AOT (build-time) syntax highlighter.**  Themes are baked
-into the output HTML at build time; zero JS shipped to the
-browser for syntax colouring.  v0 supports a handful of
-languages: TypeScript, JavaScript, Python, Ruby, Go, Rust,
-Bash, JSON, HTML, CSS, Markdown.  More languages added as
-needed.
+**Interface-first AOT highlighter transform.** v0 walks code
+blocks, preserves their metadata, and attaches a single deterministic `plain` span.
+That span covers the complete source. The exported span and token
+types are the stable downstream contract. An informational
+hint set names TypeScript, JavaScript, Python, Ruby, Go, Rust,
+Bash, JSON, HTML, CSS, and Markdown; v0 does not branch on it.
 
-The highlighter uses TextMate-style grammars (the same format
-VS Code uses) — these are well-documented, well-tested, and
-cover essentially every language anyone writes in practice.
-v0 grammar set is hand-curated; future versions can load
-arbitrary grammars at build time.
+Grammar-backed colouring and themes are v1 work. They can replace
+the plain-span implementation without changing the v0 signatures.
 
 ### Site structure
 
@@ -204,154 +204,103 @@ Node) and at query time (in browser).  Determinism between
 the two is critical.
 
 #### `forme-doc-search-index-builder`
-Build-time.  Takes a list of `{ docId, title, url, body }`
-entries; produces:
+Build-time. Takes `{ id, title?, body }` entries and returns an
+in-memory inverted index plus bootstrap manifest. Tokens are
+sharded by a deterministic prefix (two characters by default).
+Each posting contains `pageId`, frequency, and whether the token
+occurred in the title. The manifest records sorted page and shard
+keys plus the tokenization options needed by the client.
 
-1. **Inverted index**, sharded by term-prefix into ~50–100KB
-   compressed chunks.  Each shard maps `term → [{docId, freq,
-   positions}]`.
-2. **Bloom filter per shard** (~1KB each, 1% false-positive
-   rate).  Client can skip shards without fetching.
-3. **Forward index** for snippet generation: `docId →
-   {title, url, body-excerpt}`.  Also sharded.
-4. **Manifest** (~5KB): all bloom filters compactly serialised
-   + total doc count + total term count + shard URLs.
-
-Trigram side-index for fuzzy / typo-tolerant search (extra
-~10KB per 1000 documents).
-
-All outputs are JSON or binary blobs the deploy bundle can
-serve as ordinary static files.
+The builder caps pages, tokens per page, and postings per token.
+It performs no I/O or serialization; `forme-doc-site-emitter`
+turns the manifest and shards into JSON bundle entries.
 
 #### `forme-doc-search-client-js`
-Single TypeScript file compiled to a single ~30KB minified JS
-file.  Lazy-loaded on first user interaction (input focus),
-not on page load.
+Pure browser-ready search logic with no built-in I/O. A caller
+supplies the manifest and a shard-fetch callback, so network or
+filesystem authority stays outside the package. Queries use the
+same tokenizer settings as the index, fetch only known prefix
+shards, cache them with a bounded LRU, and deduplicate concurrent
+fetches.
 
-Runtime:
-1. Fetch manifest.
-2. User types query → tokenize (same code as build-time).
-3. For each query term, consult bloom filters → identify
-   candidate shards.
-4. Fetch only candidate shards (typically 1–3 per term).
-5. Score matching documents with BM25.
-6. Sort, dedupe, return top-K.
-7. Fetch snippet shards for matched docs; highlight matched
-   terms inline.
-
-No external dependencies.  Uses `fetch` + `URLSearchParams` +
-DOM APIs only.
+v0 ranks exact-token matches by frequency with a configurable
+title-hit boost, then applies a stable page-id tiebreak. It returns
+matched token data for a caller-owned results UI. Failed or malformed
+shards are skipped so partial search can continue.
 
 ### Site assembly
 
 #### `forme-doc-site-emitter`
 Top-level composer.  Takes:
-- Per-page rendered content (from the content pipeline).
-- Sidebar tree (from `forme-doc-sidebar-builder`).
-- Search-engine outputs (shards + client JS + UI HTML).
-- Site config (title, base URL, theme variables).
+- Complete rendered pages (typically page-shell chunks wrapped by
+  `forme-aot-html-doc-emitter`).
+- An optional sidebar tree.
+- Optional search manifest, shards, and caller-bundled client JS.
+- Optional extra string assets plus a base URL.
 
 Produces a `PageBundleConfig` for
-`forme-aot-page-bundle-emitter`.  Every doc page becomes a
-route; every search shard becomes an `extraFile`.
+`forme-aot-page-bundle-emitter`. Every doc page and auxiliary
+asset becomes a validated `PageEntry`; collisions and configured
+count limits fail before the deploy chain.
 
 This is the **glue package** that turns DOC00's per-stage
 outputs into something the FM00 deploy chain consumes.
 
-## 5. Search engine — detailed design
+## 5. Search engine — shipped v0 design
 
-The search engine is the most novel piece.  Design notes:
+### 5.1 Deterministic prefix shards
 
-### 5.1 Sharded inverted index
+The builder groups each token by `token.slice(0, shardPrefix)`,
+using a two-character prefix by default. Short tokens use their
+complete value. Sorted page and shard keys make repeated builds
+byte-stable after serialization. Callers may choose another
+positive prefix width for their corpus; v0 does not promise a
+compressed byte size because compression belongs to deployment.
 
-A monolithic inverted index for a 1000-page site is ~5MB
-uncompressed.  Shipping all of that to every visitor on every
-search is wasteful.
+### 5.2 Bounded postings and simple ranking
 
-Solution: shard by first 1–2 characters of the term.  Each
-shard:
-- Maps `term → posting list` for terms starting with that
-  prefix.
-- Compressed (gzip Content-Encoding from the host).
-- ~50–100KB per shard, ~26 shards for an ASCII corpus.
+Each posting records a page ID, term frequency, and title-hit flag.
+There are no positions, snippets, forward indexes, bloom filters,
+or fuzzy side indexes in v0. Explicit caps bound pages, unique
+tokens per page, and postings per token.
 
-Client fetches **only the shards needed** for the active
-query.  A 2-term query typically pulls 2–3 shards (~150KB
-total) on the first run; subsequent searches reuse cached
-shards.
+The client ranks by frequency with a configurable title-hit boost.
+It sorts by descending score and then ascending
+page ID, returning a bounded top-K result with matched tokens.
+There is no TF-IDF, BM25, phrase search, or fuzzy matching in v0.
 
-### 5.2 Bloom filters per shard
+### 5.3 Injected fetch and bounded cache
 
-Bloom filters answer "is this term possibly in this shard?"
-with no false negatives.  Stored in the manifest (which is
-small and fetched once).  Without bloom filters, the client
-has to fetch every shard that *might* contain a query term;
-with them, ~99% of irrelevant fetches are skipped.
+The client accepts a caller-injected shard fetcher. This keeps the
+package capability-free and lets browser, filesystem, and in-memory
+callers share the same search logic. Known shards load on demand,
+concurrent fetches deduplicate, and a bounded LRU cache prevents
+unbounded retention. A failed or malformed shard degrades to partial
+results rather than failing the complete query.
 
-Bloom filter parameters:
-- ~1KB per shard at 1% false-positive rate.
-- ~5KB manifest total for 26 shards.
-- One round-trip for the manifest, then surgical shard fetches.
+### 5.4 Deferred search features
 
-### 5.3 BM25 ranking
-
-Standard text-retrieval relevance function — well-understood,
-parameterisable.  Computed client-side in JS.  Inputs from
-the inverted-index posting lists (term frequency in doc,
-document length); doc count + average doc length from the
-manifest.
-
-### 5.4 Trigram fuzzy pre-filter
-
-For typo tolerance (`"foramt" → "format"`), naïve Levenshtein
-across all terms is too slow.  Trigram approach:
-
-1. Index each term's set of trigrams (every 3-char window).
-   `"format"` → `{for, orm, rma, mat}`.
-2. Query: tokenize, decompose into trigrams.
-3. Look up trigrams in a small index → candidate terms.
-4. Compute Levenshtein only on candidates.
-5. Substitute close-distance matches and re-run.
-
-Extra ~10KB per 1000 docs.  Sub-millisecond client-side.
-
-### 5.5 Why no WASM
-
-Could use SIMD-accelerated WASM for ranking — but JIT-warm
-V8 BM25 over a few hundred posting-list entries is already
-under 10ms.  WASM saves ~5ms at the cost of an extra ~30KB
-binary and a runtime initialisation step.  Not worth it.
-
-### 5.6 Why no service worker
-
-Could cache shards aggressively via service worker for offline
-search — and we might add that in v1+.  For v0: browser HTTP
-cache + the same `<link rel="prefetch">` hints we'd add to
-any static site cover 95% of the benefit with zero code.
+Positions and phrase queries, fuzzy matching, richer weighting,
+snippet generation, search-result highlighting, analytics, service
+worker caching, and any WASM acceleration remain explicit v1+
+possibilities rather than shipped v0 behavior.
 
 ## 6. Aesthetic: RTD-minimal
 
-User-confirmed choice.  Specifics:
+The page shell ships the semantic structure needed for an
+RTD-minimal presentation:
 
-- **Two columns**: sidebar (left, ~280px), content (centre,
-  ~720px max-width for readability).  Optional third column on
-  wide screens for in-page TOC.
-- **Header bar**: site title, version selector slot (deferred
-  for v0), GitHub link, search input.
-- **Sidebar**: scrollable nav tree.  Active page highlighted.
-  Expandable/collapsible groups.
-- **Footer**: copyright, "edit this page on GitHub", build
-  timestamp.
-- **Typography**: system font stack (no web fonts in v0).
-  Generous line-height, comfortable measure.
-- **Colours**: light theme only in v0.  Neutral greys.  One
-  accent colour configurable per site.
-- **Code blocks**: monospace.  Copy button top-right of each
-  block.  Language label top-left.  Subtle border + background.
-- **Inline code**: monospace, lightly tinted background.
-- **Tables**: zebra-striped.
-- **Callouts** (note / warning / tip blocks from GFM):
-  coloured left border + icon.
+- A header with site title, optional GitHub link, and optional
+  search input markup.
+- A layout containing a sidebar, main article, and optional
+  in-page TOC.
+- A footer with optional version, edit link, and copyright.
+- Stable class names, active-page `aria-current`, escaped text,
+  and an allowlisted URL boundary.
+
+CSS and browser UI wiring are caller-owned in v0. The package does
+not ship a theme, column widths, typography, colours, collapsible
+navigation, search-result rendering, or client-side interactions.
 
 **Explicitly NOT in v0**:
 - Dark mode toggle (deferred — would need a theme system).
@@ -369,10 +318,13 @@ without trying to be Mintlify."
   `commonmark-parser` + `gfm-parser`).
 - Heading anchors (deep-linking).
 - TOC extraction (sidebar + in-page).
-- Code block decoration + AOT syntax highlighting.
+- Code-block presentation metadata plus the stable AOT highlight
+  span contract; v0 emits one plain span per block.
 - Sidebar nav from directory layout.
 - RTD-minimal two-column shell.
-- **Client-side search** (the headline feature).
+- Exact-token client-side search core with injected shard loading
+  and deterministic frequency/title-hit ranking; the caller owns
+  the browser UI.
 - Site composer → FM00 page bundle.
 
 ### Deferred to v1+
@@ -390,6 +342,10 @@ without trying to be Mintlify."
   outside the DOC00 cluster.
 - **Dark mode toggle.**  Tiny but needs a CSS-variable theme
   system + JS for toggle persistence.  Deferred.
+- **Grammar-backed syntax colouring and themes.** v0 exposes the
+  stable span contract and language hints but emits plain spans.
+- **Advanced search.** Positions, phrases, BM25, fuzzy matching,
+  snippets, and result highlighting remain v1+ work.
 - **Search analytics** (track popular queries, no-result
   queries).  Privacy + capability concerns; punt for now.
 - **Versioned content snapshots** (link from "this page" to
@@ -418,10 +374,10 @@ documented separately in [FM08](FM08-forme-deploy-runner.md)).
 
 The terminal package, `forme-doc-site-emitter`, produces a
 `PageBundleConfig` (the same input shape
-`forme-aot-page-bundle-emitter` consumes).  Every doc page
-becomes a route; every search shard becomes an `extraFile` with
-its own content type (`application/json` or
-`application/octet-stream`).
+`forme-aot-page-bundle-emitter` consumes). Every doc page,
+sidebar JSON file, search manifest, search shard, optional client
+bundle, and caller-provided extra becomes a `PageEntry` with an
+explicit route and content type.
 
 The resulting page bundle JSON flows through the FM00 chain
 unchanged: `forme-aot-deploy-manifest-emitter` composes it
@@ -432,9 +388,9 @@ Net effect: **docs sites are FM00 deployments**.  Same trust
 boundaries, same atomicity guarantees, same content-addressed
 hashes, same diff-mode incremental deploys.
 
-## 10. Implementation order
+## 10. Completed implementation order
 
-Recommended PR sequence (each one independently testable):
+The cluster shipped in this independently testable sequence:
 
 1. `DOC00-docs-vision.md` (this document).  Spec-only PR.
 2. `forme-doc-frontmatter` — smallest, narrowest scope.
@@ -452,8 +408,8 @@ Recommended PR sequence (each one independently testable):
 12. `forme-doc-site-emitter` — depends on everything above +
     forme-aot-page-bundle-emitter.
 
-Twelve PRs in total (counting this vision doc as #1).  At the
-rate the FM00 v0 cluster shipped, that's ~12 babysit cycles.
+Twelve delivery steps in total (counting this vision doc as #1).
+All are complete.
 
 ## 11. Future work (v1+)
 
@@ -478,25 +434,20 @@ likely user demand:
 - **API reference auto-generation** — for TypeScript / Rust /
   Python packages, parse declarations into doc-page input.
 
-## 12. Open design decisions for v0
+## 12. Resolved design decisions for v0
 
-Before implementation starts, a few decisions need confirming
-(the user has answered most of these — repeating them here for
-the spec record):
+The implementation resolved every v0 decision as follows:
 
-| Decision | v0 choice | Confirmed? |
+| Decision | Shipped v0 choice | Status |
 |---|---|---|
-| Markdown engine | use existing `commonmark-parser` / `gfm-parser` | ✓ |
-| Advanced features | search engine ONLY (defer multi-version, i18n, MDX, dev server, dark mode) | ✓ |
-| Theme aesthetic | RTD-minimal (two-column, no-frills) | ✓ |
-| Timing | start after FM00 v0 finishes | ✓ |
+| Markdown engine | Existing `commonmark-parser` / `gfm-parser` | shipped |
+| Advanced features | Search engine only; multi-version, i18n, MDX, dev server, and dark mode remain explicit v1+ work | shipped |
+| Theme aesthetic | RTD-minimal semantic shell; CSS and browser UI wiring are caller-owned | shipped |
+| Timing | Implement after FM00 v0 | shipped |
+| Syntax highlighting | Expose the eleven-language hint inventory, preserve decorated block metadata, and emit deterministic plain spans; grammar-backed colouring remains v1 work | shipped |
+| Search sharding | Deterministic two-character term-prefix shards by default, configurable to other positive prefix widths; no compressed-byte target is imposed by the pure in-memory builder | shipped |
 
-Two remaining decisions to confirm during implementation:
-
-1. **Syntax highlighter grammar set for v0.** Proposed:
-   TypeScript, JavaScript, Python, Ruby, Go, Rust, Bash, JSON,
-   HTML, CSS, Markdown.  Add others on demand.
-2. **Search shard size budget.**  Proposed: 50–100KB
-   compressed per shard, ~26 shards by alphabet prefix.
-   Re-tune based on real-world corpus sizes once one site is
-   built.
+The last two choices deliberately narrowed the original proposal. v0 keeps the
+language contract without bundling TextMate grammars, and it makes shard
+partitioning deterministic without coupling a pure transform to deploy-time
+compression measurements.

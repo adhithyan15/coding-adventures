@@ -1,6 +1,4 @@
 {
-  "omits": [
-    "VERB-PAST"
-  ],
+  "omits": [],
   "relocates": {}
 }

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:3e513d5f2655f718",
+  "lessonIds": [
+    "UR-C281-thagna",
+    "UR-C281-dhoka",
+    "UR-C281-rishvat",
+    "UR-C281-badmash",
+    "UR-C281-jali"
+  ],
+  "tex": "urdu/book/chapters/ch281-cheats.tex"
+}

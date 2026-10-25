@@ -1,0 +1,11 @@
+{
+  "id": "UR-C290-khatra",
+  "pathSegment": "UR-PATH-290-AILAN290",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-290-AILAN290",
+      "order": 2
+    }
+  ]
+}

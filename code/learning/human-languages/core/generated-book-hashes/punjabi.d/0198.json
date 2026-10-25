@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:734f67e4b91f1104",
+  "lessonIds": [
+    "PA-C198-message-return",
+    "PA-C198-suneha",
+    "PA-C198-suneha-review",
+    "PA-C198-message-label",
+    "PA-C198-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch198-this-is-a-message.tex"
+}

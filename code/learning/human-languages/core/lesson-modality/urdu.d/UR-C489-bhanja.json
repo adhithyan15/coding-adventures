@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C489-bhanja",
+    "language": "urdu",
+    "chapter": 489,
+    "sequence": 28540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0d0a19d55ad2a41"
+  },
+  "findings": []
+}

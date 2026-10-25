@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C535-tona",
+    "language": "urdu",
+    "chapter": 535,
+    "sequence": 31120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:663a8811b3efbe03"
+  },
+  "findings": []
+}

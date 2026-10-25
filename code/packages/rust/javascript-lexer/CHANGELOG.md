@@ -2,6 +2,63 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## 0.10.1 — Unreleased — LANG84 phase 6d: pair headers cite their releases
+
+### Fixed
+
+- The legacy-octal-like part of es2021–es2025's `FLOAT_NUMBER` and
+  `SCI_NUMBER` is now `0[0-7]*[89][0-9]*` (was `0[0-9]*[89][0-9]*`). The two
+  match the same strings, but the old one was ambiguous: backtracking engines
+  (the Python and TypeScript lexers that read these `.tokens`) took quadratic
+  time on `0` followed by many `8`s (5 s for 20 KB). Rust's `regex` was
+  already linear. Found by the 6d security re-review (L3).
+- es2021–es2025 number patterns follow ECMA-262's NumericLiteralSeparator
+  grammar: one `_` between two digits; none after a lone leading `0` or in a
+  legacy octal / NonOctalDecimal literal; none beside `.`, an exponent or a
+  radix prefix. `5.`, `5.e1` and `1.e3` lex as one NUMBER again (the fraction
+  digits are optional, as in es2020), and a legacy octal no longer takes a
+  fraction or exponent (`017.5`), while `08.5` does. Tables regenerated.
+
+### Changed
+
+- `_grammar.rs` regenerated after the es2016–es2025 `.tokens` headers
+  gained `source_ref`/`source_sha`/`PARTIAL` lines (LANG84 stage G). Only
+  `line_number` fields change; no pattern, group or transition differs.
+
+## 0.10.0 — Unreleased — LANG84 phase 6a: the grammar tells a regex from a division
+
+### Removed (breaking)
+
+- `tokenize_javascript_division_only`. It deleted the `REGEX` and `BAD_REGEX`
+  rules from the compiled grammar before lexing so that `8 / 2 / 2` could not
+  become `8`, regex `/ 2 /`, `2`. LANG84 C2 forbids that kind of surgery on a
+  compiled grammar, and phase 6a makes it unnecessary: every edition from
+  es2015 to es2024 now carries the F10 regex/division mode table that es2025
+  already had, so `tokenize_javascript_typed` lexes a `/` after a value as
+  division and a `/` after an operator, opener or `return` as a regex. The
+  only caller was the IIR path (`javascript-parser`'s division-only entries,
+  removed in 0.65.0).
+
+### Changed
+
+- Regenerated `src/_grammar.rs` (`grammar-tools generate-rust-compiled-grammars
+  javascript`) from the updated `es2015`–`es2025` `.tokens` files.
+- `BIGINT` is a value-producing token in every moded edition, es2025
+  included: `10n / 2n / 1n` is two divisions. es2025's table listed `NUMBER`
+  but not `BIGINT`, so the first `/` after a bigint started a regex. That
+  makes test262's `language/expressions/division/bigint-arithmetic.js` parse
+  (sloppy and strict; 0 regressions over the full run).
+- es1 has no `REGEX` rule, so it needs no table. es3 and es5 still have
+  none; adding one also means regenerating the embedded Swift and Haskell
+  `ecmascript-es{3,5}-lexer` grammars, which is left for a follow-up.
+
+### Tests
+
+- The division-only tests became mode-table tests over every moded edition:
+  division chains after numbers, names, `)` and `]`; regexes after `=`, `(`,
+  `,` and `+`; bigint division; comments and newlines between operands
+  keeping positions; unterminated strings still failing.
+
 ## [Unreleased] — 2026-10-07 — CV04a exact lexical intervals
 
 - Add `tokenize_javascript_typed_with_ranges`, delegating to the same generated

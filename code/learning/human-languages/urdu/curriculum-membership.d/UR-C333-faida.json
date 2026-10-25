@@ -1,0 +1,11 @@
+{
+  "id": "UR-C333-faida",
+  "pathSegment": "UR-PATH-333-MAQSAD333",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-333-MAQSAD333",
+      "order": 3
+    }
+  ]
+}

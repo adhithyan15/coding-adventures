@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Engines and Lines",
+  "label": "ch:gu-engines-and-lines",
+  "canDo": "I can talk about the engine, the line and the junction.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C393-jodvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can talk about the engine, the line and the junction.",
+    "assesses": [
+      "GU-LEX-C393-ENGINE393-03",
+      "GU-LEX-C393-ENGINE393-04",
+      "GU-LEX-C393-ENGINE393-05"
+    ]
+  }
+}

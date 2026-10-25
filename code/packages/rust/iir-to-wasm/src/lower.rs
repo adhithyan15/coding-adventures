@@ -152,7 +152,7 @@ use crate::codegen::{
     F32_NE, F32_SUB, F64_ADD, F64_CONVERT_I64_S, F64_DIV, F64_EQ, F64_FLOOR, F64_GE, F64_GT,
     F64_LE, F64_LT, F64_MUL,
     F64_NEG, F64_NE, F64_SQRT, F64_SUB, I32_ADD, I32_AND, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S,
-    I64_TRUNC_F64_S,
+    I64_REINTERPRET_F64, I64_TRUNC_F64_S,
     I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE,
     I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_SUB, I32_XOR, I64_ADD,
     I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GE_U, I64_GT_S, I64_GT_U, I64_LE_S, I64_LT_S,
@@ -2649,6 +2649,46 @@ fn emit_instr(
             let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
             code.extend(encode_local_get(r)); // f64
             code.push(F64_SQRT); // f64.sqrt — hardware sqrt, no libm call
+            code.extend(encode_local_set(rd));
+        }
+        // LANG83 PR6c — IEEE-754 binary64 arithmetic that never traps, and
+        // the sign bit. WASM float arithmetic is IEEE by definition (no
+        // traps; `1/0 = +inf`, `0/0 = nan`, `f64.neg` flips only the sign
+        // bit), so each op is one MVP instruction:
+        //
+        //   f64_add d <- a, b   local.get a; local.get b; f64.add; local.set d
+        //   f64_sub / f64_mul / f64_div   … f64.sub / f64.mul / f64.div …
+        //   f64_neg d <- a      local.get a; f64.neg; local.set d
+        //   f64_signbit d <- a  local.get a; i64.reinterpret_f64;
+        //                       i64.const 63; i64.shr_u; local.set d
+        //
+        // Both operands are pushed before `local.set`, so `d == a` is safe.
+        // `f64_signbit`'s dest is an `i64` local (its type_hint), and the
+        // LOGICAL shift leaves exactly bit 63: 0 or 1.
+        "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg" | "f64_signbit" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("{} must have a dest", instr.op),
+            })?;
+            let rd = get_reg(dest)?;
+            code.extend(encode_local_get(get_src_reg(&instr.srcs, 0, reg_map, fn_name)?));
+            match instr.op.as_str() {
+                "f64_neg" => code.push(F64_NEG),
+                "f64_signbit" => {
+                    code.push(I64_REINTERPRET_F64);
+                    code.extend(encode_i64_const(63));
+                    code.push(I64_SHR_U);
+                }
+                binop => {
+                    code.extend(encode_local_get(get_src_reg(&instr.srcs, 1, reg_map, fn_name)?));
+                    code.push(match binop {
+                        "f64_add" => F64_ADD,
+                        "f64_sub" => F64_SUB,
+                        "f64_mul" => F64_MUL,
+                        _ => F64_DIV,
+                    });
+                }
+            }
             code.extend(encode_local_set(rd));
         }
         // `f64_sin` / `f64_cos` / `f64_ln` / `f64_exp` / `f64_atan` / `f64_tan`.

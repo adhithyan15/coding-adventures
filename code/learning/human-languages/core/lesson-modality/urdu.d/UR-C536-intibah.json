@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C536-intibah",
+    "language": "urdu",
+    "chapter": 536,
+    "sequence": 31170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87a5ec608837080b"
+  },
+  "findings": []
+}

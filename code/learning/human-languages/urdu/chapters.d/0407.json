@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Repairs and Complaints",
+  "label": "ch:ur-repairs-and-complaints",
+  "canDo": "I can say what is broken in a room and ask for a repair.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C407-hatana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can say what is broken in a room and ask for a repair.",
+    "assesses": [
+      "UR-LEX-C407-MARAMMAT407-03",
+      "UR-LEX-C407-MARAMMAT407-04",
+      "UR-LEX-C407-MARAMMAT407-05"
+    ]
+  }
+}

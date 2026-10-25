@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Getting the Go-Ahead",
+  "label": "ch:ur-getting-the-go-ahead",
+  "canDo": "I can say what will happen once approval comes.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C383-fel-hona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can say what will happen once approval comes.",
+    "assesses": [
+      "UR-LEX-C383-MANZURI383-03",
+      "UR-LEX-C383-MANZURI383-04",
+      "UR-LEX-C383-MANZURI383-05"
+    ]
+  }
+}

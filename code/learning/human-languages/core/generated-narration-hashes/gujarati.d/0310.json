@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:a27308eea3954d5b",
+  "lessonIds": [
+    "GU-C310-tukdi",
+    "GU-C310-jivlen",
+    "GU-C310-sahay",
+    "GU-C310-mujhavu",
+    "GU-C310-vikheravu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch310.txt",
+  "json": "gujarati/narration/ch310.json",
+  "textHash": "fnv1a64:57022da98367f1fe",
+  "jsonHash": "fnv1a64:186d04631a45210f",
+  "findings": []
+}

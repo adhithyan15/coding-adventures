@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 399,
+  "title": "Delays and Announcements",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f333b0ba5b82c052",
+  "lessons": [
+    {
+      "id": "GU-C399-vilamb",
+      "sequence": 22300,
+      "title": "વિલંબ (vilamb) — a delay (formal)",
+      "headword": "વિલંબ",
+      "romanization": "vilamb",
+      "gloss": "a delay (formal)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6eefdcb8df12f395",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a jolt, then the Gujarati for to rattle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વિલંબ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિલંબ — vilamb — \"a delay (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ધુમ્મસને લીધે ટ્રેનમાં બે કલાકનો વિલંબ છે. dhummasne līdhe ṭrenmā̃ be kalākno vilamb che. Because of the fog the train is two hours late."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિલંબ (vilamb) is a tatsama, Sanskrit vilamba, \"hanging down\", then \"slowness, delay\" (Monier-Williams); station announcements use it where speech says મોડું."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilamb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilamb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilamb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilamb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhummasne līdhe ṭrenmā̃ be kalākno vilamb che. — Because of the fog the train is two hours late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhummasne līdhe ṭrenmā̃ be kalākno vilamb che.* — Because of the fog the train is two hours late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a jolt, then the Gujarati for to rattle, then say vilamb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a jolt, then the Gujarati for to rattle, then say *vilamb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વિલંબ (vilamb) mean? (\"A delay (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C399-sambhlavu",
+      "sequence": 22310,
+      "title": "સંભળાવું (sambhḷāvũ) — to be heard; to be audible",
+      "headword": "સંભળાવું",
+      "romanization": "sambhḷāvũ",
+      "gloss": "to be heard; to be audible",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a0fc00543165b31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to rattle, then the Gujarati for a delay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સંભળાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંભળાવું — sambhḷāvũ — \"to be heard; to be audible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દૂરથી ટ્રેનની સીટી સંભળાય છે. dūrthī ṭrennī sīṭī sambhḷāy che. The train's whistle can be heard from far away."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે અવાજ સંભળાયો, te avāj sambhḷāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંભળાવું (sambhḷāvũ) is the intransitive partner of સાંભળવું, \"to listen, to hear\", which goes back to saṁbhalati, \"attends to\", a form CDIAL reconstructs (CDIAL 12962): what you hear, સાંભળવું; what can be heard, સંભળાવું."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhḷāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhḷāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhḷāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhḷāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūrthī ṭrennī sīṭī sambhḷāy che. — The train's whistle can be heard from far away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūrthī ṭrennī sīṭī sambhḷāy che.* — The train's whistle can be heard from far away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to rattle, then the Gujarati for a delay, then say sambhḷāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to rattle, then the Gujarati for a delay, then say *sambhḷāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સંભળાવું (sambhḷāvũ) mean? (\"To be heard; to be audible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C399-elan",
+      "sequence": 22320,
+      "title": "એલાન (elān) — a public announcement",
+      "headword": "એલાન",
+      "romanization": "elān",
+      "gloss": "a public announcement",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:358d97fcac3896a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a delay, then the Gujarati for to be heard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: એલાન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "એલાન — elān — \"a public announcement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સ્ટેશન પર એલાન સંભળાયું કે ટ્રેન મોડી છે. sṭeśan par elān sambhḷāyũ ke ṭren moḍī che. An announcement at the station said the train was late."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "એલાન (elān) is usually traced to Arabic iʿlān, \"a declaration, a making known\", which reached Gujarati through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sṭeśan par elān sambhḷāyũ ke ṭren moḍī che. — An announcement at the station said the train was late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sṭeśan par elān sambhḷāyũ ke ṭren moḍī che.* — An announcement at the station said the train was late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a delay, then the Gujarati for to be heard, then say elān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a delay, then the Gujarati for to be heard, then say *elān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does એલાન (elān) mean? (\"A public announcement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C399-talvu",
+      "sequence": 22330,
+      "title": "ટળવું (ṭaḷvũ) — to be averted; to be put off",
+      "headword": "ટળવું",
+      "romanization": "ṭaḷvũ",
+      "gloss": "to be averted; to be put off",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14a931545939ee53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to be heard, then the Gujarati for a public announcement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટળવું — ṭaḷvũ — \"to be averted; to be put off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પવનની દિશા ફરી ગઈ, એટલે મોટું તોફાન ટળી ગયું. pavannī diśā pharī gaī, eṭle moṭũ tophān ṭaḷī gayũ. The wind changed direction, so the big storm was averted."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે તોફાન ટળી ગયું, te tophān ṭaḷī gayũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટળવું (ṭaḷvũ) is a tadbhava of Sanskrit ṭálati, \"moves aside\" (CDIAL 5450); ટાળવું, to avoid, is its causative partner: what you put off, ટાળવું; what passes off by itself, ટળવું."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭaḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭaḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭaḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭaḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pavannī diśā pharī gaī, eṭle moṭũ tophān ṭaḷī gayũ. — The wind changed direction, so the big storm was averted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pavannī diśā pharī gaī, eṭle moṭũ tophān ṭaḷī gayũ.* — The wind changed direction, so the big storm was averted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to be heard, then the Gujarati for a public announcement, then say ṭaḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to be heard, then the Gujarati for a public announcement, then say *ṭaḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટળવું (ṭaḷvũ) mean? (\"To be averted; to be put off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C399-dokiyu",
+      "sequence": 22340,
+      "title": "ડોકિયું (ḍokiyũ) — a peep; a quick look",
+      "headword": "ડોકિયું",
+      "romanization": "ḍokiyũ",
+      "gloss": "a peep; a quick look",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2473d329c7d87999",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a public announcement, then the Gujarati for to be averted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ડોકિયું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડોકિયું — ḍokiyũ — \"a peep; a quick look\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મેં બારીમાંથી બહાર ડોકિયું કર્યું. mẽ bārīmā̃thī bahār ḍokiyũ karyũ. I took a peep out of the window."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડોકિયું (ḍokiyũ) is built on ડોક, the neck, which CDIAL lists under ḍōka, \"head\" (CDIAL 5566): you stretch your neck out to look."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍokiyũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍokiyũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍokiyũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍokiyũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mẽ bārīmā̃thī bahār ḍokiyũ karyũ. — I took a peep out of the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mẽ bārīmā̃thī bahār ḍokiyũ karyũ.* — I took a peep out of the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a public announcement, then the Gujarati for to be averted, then say ḍokiyũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a public announcement, then the Gujarati for to be averted, then say *ḍokiyũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ડોકિયું (ḍokiyũ) mean? (\"A peep; a quick look\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

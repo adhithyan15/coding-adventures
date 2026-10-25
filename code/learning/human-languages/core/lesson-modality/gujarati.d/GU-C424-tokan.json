@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C424-tokan",
+    "language": "gujarati",
+    "chapter": 424,
+    "sequence": 23610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a4331e23095ffad"
+  },
+  "findings": []
+}

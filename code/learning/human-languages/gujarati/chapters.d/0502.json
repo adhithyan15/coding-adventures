@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "In the Carpenter's Shop",
+  "label": "ch:gu-in-the-carpenter-s-shop",
+  "canDo": "I can say how a carpenter saws wood and hammers in nails.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C502-thokvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can say how a carpenter saws wood and hammers in nails.",
+    "assesses": [
+      "GU-LEX-C502-SUTHAR502-03",
+      "GU-LEX-C502-SUTHAR502-04",
+      "GU-LEX-C502-SUTHAR502-05"
+    ]
+  }
+}

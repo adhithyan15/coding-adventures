@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "What Caused It",
+  "label": "ch:ur-what-caused-it",
+  "canDo": "I can say what caused something and who was responsible.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C331-vabasta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can say what caused something and who was responsible.",
+    "assesses": [
+      "UR-LEX-C331-SABAB331-03",
+      "UR-LEX-C331-SABAB331-04",
+      "UR-LEX-C331-SABAB331-05"
+    ]
+  }
+}

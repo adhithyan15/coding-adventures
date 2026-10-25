@@ -1,0 +1,21 @@
+{
+  "chapter": 278,
+  "title": "Should, must, and so",
+  "label": "ch:gu-should-must-and-so",
+  "canDo": "I can say what someone should do and has to do (tamāre javũ joīe, māre javũ paḍśe), and join a reason to its result with eṭle or tethī.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-R278-advice-and-result",
+    "kind": "production",
+    "summary": "Complete GU-R278-advice-and-result: give advice, say what has to be done, and say what follows.",
+    "assesses": [
+      "GU-GRAMMAR-C278-VU-JOIE-01",
+      "GU-GRAMMAR-C278-VU-PADE-01",
+      "GU-LEX-C278-ETLE-01",
+      "GU-GRAMMAR-C278-SO-RESULT-01",
+      "GU-GRAMMAR-C278-REASON-TURN-01"
+    ]
+  }
+}

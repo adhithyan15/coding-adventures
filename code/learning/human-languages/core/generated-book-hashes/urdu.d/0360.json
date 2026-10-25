@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:80a468e539629493",
+  "lessonIds": [
+    "UR-C360-rahm",
+    "UR-C360-hamdardi",
+    "UR-C360-vafadar",
+    "UR-C360-gunah",
+    "UR-C360-thamna"
+  ],
+  "tex": "urdu/book/chapters/ch360-mercy-and-loyalty.tex"
+}

@@ -40,7 +40,7 @@ export async function buildPipeline(
       }
     : config;
   const resolved = validateConfig(withResolvedStages);
-  const dag = buildDag(resolved);
+  const dag = buildDag(resolved, pluginHost?.kindRegistry);
   return { config: resolved.config, dag };
 }
 

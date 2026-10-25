@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:dd01cdcf0b3ed376",
+  "lessonIds": [
+    "GU-C291-apaharan",
+    "GU-C291-gum",
+    "GU-C291-ghervu",
+    "GU-C291-kedi",
+    "GU-C291-chodavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch291-surrounded.tex"
+}

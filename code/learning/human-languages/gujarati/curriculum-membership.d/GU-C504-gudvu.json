@@ -1,0 +1,11 @@
+{
+  "id": "GU-C504-gudvu",
+  "pathSegment": "GU-PATH-504-KUMBHAR504",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-504-KUMBHAR504",
+      "order": 3
+    }
+  ]
+}

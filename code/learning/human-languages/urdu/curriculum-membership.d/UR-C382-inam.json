@@ -1,0 +1,11 @@
+{
+  "id": "UR-C382-inam",
+  "pathSegment": "UR-PATH-382-INAM382",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-382-INAM382",
+      "order": 0
+    }
+  ]
+}

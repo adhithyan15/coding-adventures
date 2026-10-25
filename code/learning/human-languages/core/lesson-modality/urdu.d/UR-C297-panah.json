@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C297-panah",
+    "language": "urdu",
+    "chapter": 297,
+    "sequence": 18100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe776d92b97c7054"
+  },
+  "findings": []
+}

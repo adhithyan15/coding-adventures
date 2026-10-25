@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:cd36959452379005",
+  "lessonIds": [
+    "UR-C499-kapas",
+    "UR-C499-dhunna",
+    "UR-C499-charkha",
+    "UR-C499-katna-spin",
+    "UR-C499-ganth"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch499.txt",
+  "json": "urdu/narration/ch499.json",
+  "textHash": "fnv1a64:0e945aee9601f7a6",
+  "jsonHash": "fnv1a64:3da4d2dbaffb9bc2",
+  "findings": []
+}

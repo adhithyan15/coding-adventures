@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C525-kotarvu",
+    "language": "gujarati",
+    "chapter": 525,
+    "sequence": 29240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afe8c3a4b95d7b7a"
+  },
+  "findings": []
+}

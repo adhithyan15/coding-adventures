@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C412-padav",
+    "language": "gujarati",
+    "chapter": 412,
+    "sequence": 22980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a3e0f9c80275442"
+  },
+  "findings": []
+}

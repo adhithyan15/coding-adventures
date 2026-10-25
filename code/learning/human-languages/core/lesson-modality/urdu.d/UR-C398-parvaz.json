@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C398-parvaz",
+    "language": "urdu",
+    "chapter": 398,
+    "sequence": 23610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5639b7141756553f"
+  },
+  "findings": []
+}

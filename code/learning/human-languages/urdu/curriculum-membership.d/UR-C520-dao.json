@@ -1,0 +1,11 @@
+{
+  "id": "UR-C520-dao",
+  "pathSegment": "UR-PATH-520-AKHARA520",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-520-AKHARA520",
+      "order": 2
+    }
+  ]
+}

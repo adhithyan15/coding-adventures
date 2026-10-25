@@ -22,11 +22,12 @@ import {
   KERNEL_API_VERSION,
   type JsonValue,
   type KindDescriptor,
+  type KindRegistry,
 } from "@coding-adventures/forme-types";
 import { mediateCapabilityRequest } from "./capability-mediator.js";
 import { discoverPlugins } from "./discovery.js";
 import { PluginHostError, RpcFault, RpcRemoteError } from "./errors.js";
-import { descriptorForKindReference } from "./kinds.js";
+import { buildKindRegistry, descriptorForKindReference } from "./kinds.js";
 import type {
   DiscoveredPlugin,
   LaunchedPluginProcess,
@@ -75,10 +76,12 @@ class PluginHostImpl implements PluginHost {
   private readonly sessions = new Set<PluginSession>();
   private readonly internalPlugins: ReadonlyMap<string, DiscoveredPlugin>;
   readonly plugins: ReadonlyMap<string, DiscoveredPlugin>;
+  readonly kindRegistry: KindRegistry;
   private disposed = false;
 
   constructor(
     plugins: ReadonlyMap<string, DiscoveredPlugin>,
+    kindRegistry: KindRegistry,
     private readonly options: ResolvedOptions,
   ) {
     // `createPluginHost` owns the freshly discovered map exclusively. Retain
@@ -86,6 +89,7 @@ class PluginHostImpl implements PluginHost {
     // copy, avoiding a third aggregate copy of all plugin entry bytes.
     this.internalPlugins = plugins;
     this.plugins = clonePluginMap(this.internalPlugins);
+    this.kindRegistry = kindRegistry;
   }
 
   async loadStage(
@@ -133,8 +137,16 @@ class PluginHostImpl implements PluginHost {
     }
     const configSchemaSnapshot = loadConfigSchema(plugin, contribution);
     const metadata = {
-      consumes: descriptorForKindReference(contribution.consumes, plugin.manifest),
-      produces: descriptorForKindReference(contribution.produces, plugin.manifest),
+      consumes: descriptorForKindReference(
+        contribution.consumes,
+        plugin.manifest,
+        this.kindRegistry,
+      ),
+      produces: descriptorForKindReference(
+        contribution.produces,
+        plugin.manifest,
+        this.kindRegistry,
+      ),
       configSchema: configSchemaSnapshot?.schema ?? null,
       configSchemaHash: configSchemaSnapshot?.hash ?? null,
     };
@@ -208,6 +220,7 @@ export async function createPluginHost(options: PluginHostOptions): Promise<Plug
   }
   const plugins = await discoverPlugins(options.roots, options.signal);
   options.signal?.throwIfAborted();
+  const kindRegistry = buildKindRegistry([...plugins.values()].map(plugin => plugin.manifest));
   const grants = options.loadPersistentGrants === true
     ? await loadInstalledGrants(plugins, options.signal)
     : options.grants ?? {};
@@ -232,7 +245,7 @@ export async function createPluginHost(options: PluginHostOptions): Promise<Plug
     maxLogEntries: positive(options.maxLogEntries, 1_024),
     maxLogBytes: positive(options.maxLogBytes, 256 * 1024),
   };
-  return new PluginHostImpl(plugins, resolved);
+  return new PluginHostImpl(plugins, kindRegistry, resolved);
 }
 
 async function loadInstalledGrants(

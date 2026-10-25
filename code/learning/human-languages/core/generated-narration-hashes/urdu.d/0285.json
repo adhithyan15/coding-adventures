@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:032ab4d25bf2a18f",
+  "lessonIds": [
+    "UR-C285-thokar",
+    "UR-C285-larkharana",
+    "UR-C285-paon",
+    "UR-C285-chhilna",
+    "UR-C285-kharash"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch285.txt",
+  "json": "urdu/narration/ch285.json",
+  "textHash": "fnv1a64:ee24f930a9753da1",
+  "jsonHash": "fnv1a64:f79e5e5d30bca6f7",
+  "findings": []
+}

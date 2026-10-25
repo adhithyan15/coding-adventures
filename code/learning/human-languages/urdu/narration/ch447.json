@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 447,
+  "title": "Calm Again",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:f1ab73439a103654",
+  "lessons": [
+    {
+      "id": "UR-C447-itminan",
+      "sequence": 26350,
+      "title": "اطمینان (itmīnān) — satisfaction; peace of mind",
+      "headword": "اطمینان",
+      "romanization": "itmīnān",
+      "gloss": "satisfaction; peace of mind",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2570df8cfe72df9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to writhe, then the Urdu for to throb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اطمینان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اطمینان — itmīnān — \"satisfaction; peace of mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کام ختم کر کے مجھے اطمینان ہوا۔ kām khatm kar ke mujhe itmīnān huā. I felt satisfied once the work was finished."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اطمینان (itmīnān) is usually traced, through Persian, to Arabic iṭmiʾnān, \"being at rest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itmīnān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itmīnān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itmīnān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itmīnān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kām khatm kar ke mujhe itmīnān huā. — I felt satisfied once the work was finished.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kām khatm kar ke mujhe itmīnān huā.* — I felt satisfied once the work was finished.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to writhe, then the Urdu for to throb, then say itmīnān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to writhe, then the Urdu for to throb, then say *itmīnān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اطمینان (itmīnān) mean? (\"Satisfaction; peace of mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C447-asuda",
+      "sequence": 26360,
+      "title": "آسودہ (āsūdā) — at ease; content",
+      "headword": "آسودہ",
+      "romanization": "āsūdā",
+      "gloss": "at ease; content",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99d3ff9bc785bc06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to throb, then the Urdu for satisfaction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آسودہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آسودہ — āsūdā — \"at ease; content\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اچھا کھانا کھا کر سب آسودہ تھے۔ achchhā khānā khā kar sab āsūdā the. After a good meal everyone was content."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آسودہ (āsūdā) is usually traced to Persian āsūda, \"rested, at ease\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsūdā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsūdā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsūdā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsūdā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "achchhā khānā khā kar sab āsūdā the. — After a good meal everyone was content.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *achchhā khānā khā kar sab āsūdā the.* — After a good meal everyone was content.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to throb, then the Urdu for satisfaction, then say āsūdā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to throb, then the Urdu for satisfaction, then say *āsūdā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آسودہ (āsūdā) mean? (\"At ease; content\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C447-qarar",
+      "sequence": 26370,
+      "title": "قرار (qarār) — composure; rest (of the mind)",
+      "headword": "قرار",
+      "romanization": "qarār",
+      "gloss": "composure; rest (of the mind)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f34c0099b25ce70a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for satisfaction, then the Urdu for at ease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قرار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قرار — qarār — \"composure; rest (of the mind)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بیٹے کی خبر سن کر ماں کو قرار آیا۔ beṭe kī khabar sun kar māṅ ko qarār āyā. Hearing news of her son, the mother was at peace."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قرار (qarār) is usually traced, through Persian, to Arabic qarār, \"settling, rest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qarār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qarār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qarār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qarār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṭe kī khabar sun kar māṅ ko qarār āyā. — Hearing news of her son, the mother was at peace.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṭe kī khabar sun kar māṅ ko qarār āyā.* — Hearing news of her son, the mother was at peace.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for satisfaction, then the Urdu for at ease, then say qarār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for satisfaction, then the Urdu for at ease, then say *qarār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قرار (qarār) mean? (\"Composure; rest (of the mind)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C447-dilasa",
+      "sequence": 26380,
+      "title": "دلاسا (dilāsā) — consolation; comforting words",
+      "headword": "دلاسا",
+      "romanization": "dilāsā",
+      "gloss": "consolation; comforting words",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9bb9236e4bdfdc3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for at ease, then the Urdu for composure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دلاسا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دلاسا — dilāsā — \"consolation; comforting words\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دوست نے مجھے دلاسا دیا۔ dost ne mujhe dilāsā diyā. My friend comforted me."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دلاسا (dilāsā) is usually traced to Persian dilāsā, \"comfort\", a word built on dil, \"heart\" (دل)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dilāsā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dilāsā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dilāsā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dilāsā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dost ne mujhe dilāsā diyā. — My friend comforted me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dost ne mujhe dilāsā diyā.* — My friend comforted me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for at ease, then the Urdu for composure, then say dilāsā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for at ease, then the Urdu for composure, then say *dilāsā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دلاسا (dilāsā) mean? (\"Consolation; comforting words\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C447-khushgavar",
+      "sequence": 26390,
+      "title": "خوشگوار (khushgavār) — pleasant",
+      "headword": "خوشگوار",
+      "romanization": "khushgavār",
+      "gloss": "pleasant",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71a470a513eb4990",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for composure, then the Urdu for consolation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خوشگوار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خوشگوار — khushgavār — \"pleasant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آج کا موسم بڑا خوشگوار ہے۔ āj kā mausam baṛā khushgavār hai. The weather is very pleasant today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خوشگوار (khushgavār) is usually traced to Persian khushgawār, \"agreeable\"; its first part is خوش, \"happy\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khushgavār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khushgavār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khushgavār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khushgavār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj kā mausam baṛā khushgavār hai. — The weather is very pleasant today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj kā mausam baṛā khushgavār hai.* — The weather is very pleasant today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for composure, then the Urdu for consolation, then say khushgavār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for composure, then the Urdu for consolation, then say *khushgavār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خوشگوار (khushgavār) mean? (\"Pleasant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R447-review-440-447",
+      "sequence": 26400,
+      "title": "Looking back: from Naming a Feeling to Calm Again",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Naming a Feeling to Calm Again",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49d5d9be5906cb31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for an emotion and a feeling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an emotion, a feeling, to sense, a state of mind, a mood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an emotion, a feeling, to sense, a state of mind, a mood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "delight, enjoyment, joyful, brimming over, a surge of eagerness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: delight, enjoyment, joyful, brimming over, a surge of eagerness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "astonishment, strange, dumbfounded, a wonder, an amazing thing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: astonishment, strange, dumbfounded, a wonder, an amazing thing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grief, sorrow, disappointed, to fret inwardly, dejected",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grief, sorrow, disappointed, to fret inwardly, dejected]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anger, to get irritated, incensed, displeased, a fit of rage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: anger, to get irritated, incensed, displeased, a fit of rage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dread, to frighten, to cower, to crouch out of sight, to huddle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dread, to frighten, to cower, to crouch out of sight, to huddle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to worry, anxiety, a burden, to writhe, to throb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to worry, anxiety, a burden, to writhe, to throb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satisfaction, at ease, composure, consolation, pleasant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: satisfaction, at ease, composure, consolation, pleasant]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An emotion? (جذبہ, jazbā.) A feeling? (احساس, ehsās.) To sense? (محسوس کرنا, mahsūs karnā.) A state of mind? (کیفیت, kaifiyat.) A mood? (مزاج, mizāj.) Delight? (مسرت, masarrat.) Enjoyment? (لطف, lutf.) Joyful? (شادمان, shādmān.) Brimming over? (سرشار, sarshār.) A surge of eagerness? (امنگ, umang.) Astonishment? (تعجب, tājjub.) Strange? (عجیب, ajīb.) Dumbfounded? (دنگ, dang.) A wonder? (عجوبہ, ajūbā.) An amazing thing? (اچنبھا, achambhā.) Grief? (غم, gham.) Sorrow? (دکھ, dukh.) Disappointed? (مایوس, māyūs.) To fret inwardly? (کڑھنا, kuṛhnā.) Dejected? (افسردہ, afsurdā.) Anger? (غصہ, ghussā.) To get irritated? (چڑنا, chiṛnā.) Incensed? (برہم, barham.) Displeased? (خفا, khafā.) A fit of rage? (طیش, taish.) Dread? (خوف, khauf.) To frighten? (ڈرانا, ḍarānā.) To cower? (سہمنا, sahamnā.) To crouch out of sight? (دبکنا, dubaknā.) To huddle? (سمٹنا, simaṭnā.) To worry? (فکر کرنا, fikr karnā.) Anxiety? (تشویش, tashvīsh.) A burden? (بوجھ, bojh.) To writhe? (تڑپنا, taṛapnā.) To throb? (دھڑکنا, dhaṛaknā.) Satisfaction? (اطمینان, itmīnān.) At ease? (آسودہ, āsūdā.) Composure? (قرار, qarār.) Consolation? (دلاسا, dilāsā.) Pleasant? (خوشگوار, khushgavār.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

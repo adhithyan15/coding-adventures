@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C433-tila",
+    "language": "urdu",
+    "chapter": 433,
+    "sequence": 25410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d3ec53987b53d5a"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-341-DALIL341",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GU-EXT-341-DALIL341"
+  ],
+  "after": []
+}

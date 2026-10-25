@@ -1,0 +1,11 @@
+{
+  "id": "GU-C495-simant",
+  "pathSegment": "GU-PATH-495-SAGARBHA495",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-495-SAGARBHA495",
+      "order": 2
+    }
+  ]
+}

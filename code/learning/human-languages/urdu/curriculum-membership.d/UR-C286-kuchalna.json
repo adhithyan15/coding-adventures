@@ -1,0 +1,11 @@
+{
+  "id": "UR-C286-kuchalna",
+  "pathSegment": "UR-PATH-286-ZAKHMI286",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-286-ZAKHMI286",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+evidence: tok_get (Parser/tokenizer.c) lexes a leading 0 and octal digits as one NUMBER; parsenumber (Python/compile.c at 2.2 and 2.4, Python/ast.c at 2.6 and 2.7.18) reads it with PyOS_strtoul base 0, which takes a leading 0 as base 8, so 010 is 8, 0777 is 511 and 00 is 0
+result: the subset prints exactly what CPython 2.2, 2.4, 2.6 and 2.7.18 print
+not Python 3: 010 is a SyntaxError there (PEP 3127); the translation oracle rewrites it to 0o10

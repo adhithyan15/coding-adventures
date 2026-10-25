@@ -1,0 +1,11 @@
+{
+  "id": "UR-C479-sarjan",
+  "pathSegment": "UR-PATH-479-WARD479",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-479-WARD479",
+      "order": 3
+    }
+  ]
+}

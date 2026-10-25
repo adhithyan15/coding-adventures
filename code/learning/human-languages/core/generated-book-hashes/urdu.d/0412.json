@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:362dca37e6615a40",
+  "lessonIds": [
+    "UR-C412-qasba",
+    "UR-C412-abadi",
+    "UR-C412-bashinda",
+    "UR-C412-dehat",
+    "UR-C412-paros"
+  ],
+  "tex": "urdu/book/chapters/ch412-towns-and-villages.tex"
+}

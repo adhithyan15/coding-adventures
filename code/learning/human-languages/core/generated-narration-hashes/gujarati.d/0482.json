@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:691a2a845f5f0141",
+  "lessonIds": [
+    "GU-C482-kakhghodi",
+    "GU-C482-dhimdu",
+    "GU-C482-phulvu",
+    "GU-C482-cattu",
+    "GU-C482-aphalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch482.txt",
+  "json": "gujarati/narration/ch482.json",
+  "textHash": "fnv1a64:8bc2f91ebbdd2dd5",
+  "jsonHash": "fnv1a64:79e7077c62ba0890",
+  "findings": []
+}

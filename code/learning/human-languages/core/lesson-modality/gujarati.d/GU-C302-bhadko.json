@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C302-bhadko",
+    "language": "gujarati",
+    "chapter": 302,
+    "sequence": 16910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8f0a1ba6528e3db"
+  },
+  "findings": []
+}

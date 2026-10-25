@@ -1,0 +1,11 @@
+{
+  "id": "UR-C483-paida-hona",
+  "pathSegment": "UR-PATH-483-BABY483",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-483-BABY483",
+      "order": 2
+    }
+  ]
+}

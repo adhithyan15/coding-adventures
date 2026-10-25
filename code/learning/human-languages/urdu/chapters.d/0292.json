@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "The Storm",
+  "label": "ch:ur-the-storm",
+  "canDo": "I can describe a storm as it came.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C292-asar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can describe a storm as it came.",
+    "assesses": [
+      "UR-LEX-C292-TUFAN292-03",
+      "UR-LEX-C292-TUFAN292-04",
+      "UR-LEX-C292-TUFAN292-05"
+    ]
+  }
+}

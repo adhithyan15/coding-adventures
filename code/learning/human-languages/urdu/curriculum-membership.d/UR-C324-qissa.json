@@ -1,0 +1,11 @@
+{
+  "id": "UR-C324-qissa",
+  "pathSegment": "UR-PATH-324-DASTAN324",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-324-DASTAN324",
+      "order": 2
+    }
+  ]
+}

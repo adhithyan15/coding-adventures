@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:6abcb9e4bf440e0c",
+  "lessonIds": [
+    "UR-C325-dev",
+    "UR-C325-pari",
+    "UR-C325-jadu",
+    "UR-C325-bhut",
+    "UR-C325-dain"
+  ],
+  "tex": "urdu/book/chapters/ch325-giants-and-fairies.tex"
+}

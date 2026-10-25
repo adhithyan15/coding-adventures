@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Honour and Shame",
+  "label": "ch:gu-honour-and-shame",
+  "canDo": "I can talk about honour, pride and shame.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C359-namvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can talk about honour, pride and shame.",
+    "assesses": [
+      "GU-LEX-C359-IJJAT359-03",
+      "GU-LEX-C359-IJJAT359-04",
+      "GU-LEX-C359-IJJAT359-05"
+    ]
+  }
+}

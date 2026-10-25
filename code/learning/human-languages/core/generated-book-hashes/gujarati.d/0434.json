@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:e40ecd855fe8f2f7",
+  "lessonIds": [
+    "GU-C434-jhaptu",
+    "GU-C434-jharmar",
+    "GU-C434-reinkot",
+    "GU-C434-gheravu",
+    "GU-C434-bhijavu"
+  ],
+  "tex": "gujarati/book/chapters/ch434-showers-and-drizzle.tex"
+}

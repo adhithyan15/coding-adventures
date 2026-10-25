@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:26223371e83c1978",
+  "lessonIds": [
+    "PA-C202-identity-return",
+    "PA-C202-yatri",
+    "PA-C202-yatri-review",
+    "PA-C202-traveller-label",
+    "PA-C202-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch202-this-person-is-a-traveller.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:a02525fdbc1a2699",
+  "lessonIds": [
+    "UR-C470-phulna",
+    "UR-C470-dam",
+    "UR-C470-pasijna",
+    "UR-C470-ghash",
+    "UR-C470-naqahat"
+  ],
+  "tex": "urdu/book/chapters/ch470-out-of-breath.tex"
+}

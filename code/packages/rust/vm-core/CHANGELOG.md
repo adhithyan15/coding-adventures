@@ -1,5 +1,16 @@
 # Changelog — vm-core
 
+## [0.31.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
+
+- **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /
+  `f64_signbit` handlers** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6c): Rust `f64` arithmetic on `Value::Float`
+  operands (IEEE, never an error: `1/0` is `inf`, `0/0` is NaN), `-x` for
+  negation, and `is_sign_negative()` as `Value::Int(0|1)` for the sign bit.
+  A non-float operand is a `TypeError`. `op_support` derives `Lowered` from
+  the dispatch table, so the VM column needs no table edit.
+- Tests: the spec's edge table (signed zeros, infinities, overflow, NaN) and
+  the sign bit of `±0`, `±2.5`, `±inf` and the smallest subnormals.
+
 ## [0.30.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
 
 - **New module `float_format`**: `python_repr`, `js_to_string`,

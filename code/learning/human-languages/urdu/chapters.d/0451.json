@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Hesitation and Regret",
+  "label": "ch:ur-hesitation-and-regret",
+  "canDo": "I can say that someone hesitated or felt sorry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C451-khijalat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can say that someone hesitated or felt sorry.",
+    "assesses": [
+      "UR-LEX-C451-REGRET451-03",
+      "UR-LEX-C451-REGRET451-04",
+      "UR-LEX-C451-REGRET451-05"
+    ]
+  }
+}

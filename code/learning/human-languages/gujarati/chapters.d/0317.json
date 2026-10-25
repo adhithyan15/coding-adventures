@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Pages of History",
+  "label": "ch:gu-pages-of-history",
+  "canDo": "I can say when and where something old began.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C317-janmavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can say when and where something old began.",
+    "assesses": [
+      "GU-LEX-C317-ITIHAS317-03",
+      "GU-LEX-C317-ITIHAS317-04",
+      "GU-LEX-C317-ITIHAS317-05"
+    ]
+  }
+}

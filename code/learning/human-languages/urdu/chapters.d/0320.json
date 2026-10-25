@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Fireworks",
+  "label": "ch:ur-fireworks",
+  "canDo": "I can describe a night of fireworks and colour.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C320-jhumna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can describe a night of fireworks and colour.",
+    "assesses": [
+      "UR-LEX-C320-ATISHBAZI320-03",
+      "UR-LEX-C320-ATISHBAZI320-04",
+      "UR-LEX-C320-ATISHBAZI320-05"
+    ]
+  }
+}

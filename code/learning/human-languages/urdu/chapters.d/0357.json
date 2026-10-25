@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "Corruption",
+  "label": "ch:ur-corruption",
+  "canDo": "I can talk about bribes, bans and honest institutions.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C357-shaffaf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can talk about bribes, bans and honest institutions.",
+    "assesses": [
+      "UR-LEX-C357-BADUNVANI357-03",
+      "UR-LEX-C357-BADUNVANI357-04",
+      "UR-LEX-C357-BADUNVANI357-05"
+    ]
+  }
+}

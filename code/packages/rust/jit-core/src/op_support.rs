@@ -26,7 +26,8 @@
 //! | `i64_div_floor`, `i64_mod_floor` | `DIV_FLOOR_I64`, `MOD_FLOOR_I64` (defined traps) | Lowered |
 //! | `trap` | `TRAP <kind id>` (error slot `trap: <kind>`) | Lowered |
 //! | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf` | `ADD_OVF_I64` … `NEG_OVF_I64` (`checked_*`; `Trap.Overflow`) | Lowered |
-//! | `mod`, strings, `f64` math, conversions, `print_str` | — | Refused (interpreter tier only) |
+//! | `f64_add` `f64_sub` `f64_mul` `f64_div` `f64_neg` `f64_signbit` (LANG83 PR6c) | `ADD_F64` … `SIGNBIT_F64` on float registers (the float's bits; IEEE, never a trap); `ret_f64` → `RET_F64` | Lowered |
+//! | `mod`, strings, `f64` math (`f64_sqrt` … `f64_pow`), conversions, `print_str` | — | Refused (interpreter tier only) |
 //!
 //! Like every backend's table, this one is name-granular: `add` is `Lowered`
 //! even though the JIT refuses `add` on `f64` operands (type-level refusals stay
@@ -89,6 +90,13 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_atan", Refused(INTERPRETER_TIER_ONLY)),
     ("f64_tan", Refused(INTERPRETER_TIER_ONLY)),
     ("f64_pow", Refused(INTERPRETER_TIER_ONLY)),
+    // LANG83 PR6c — IEEE-754 binary64 arithmetic that never traps.
+    ("f64_add", Lowered),
+    ("f64_sub", Lowered),
+    ("f64_mul", Lowered),
+    ("f64_div", Lowered),
+    ("f64_neg", Lowered),
+    ("f64_signbit", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
     ("int_to_real", Refused(INTERPRETER_TIER_ONLY)),
     ("real_to_int_trunc", Refused(INTERPRETER_TIER_ONLY)),
@@ -138,6 +146,8 @@ mod tests {
     fn result_type(spec: &OpSpec) -> &'static str {
         match (spec.family, spec.name) {
             (OpFamily::Comparison, _) => "bool",
+            // LANG83 PR6c: a Float-family op whose result is the integer 0/1.
+            (_, "f64_signbit") => "i64",
             (OpFamily::Float, _) | (_, "int_to_real") => "f64",
             (_, "str_const" | "str_concat" | "str_slice") => "str",
             _ => "i64",

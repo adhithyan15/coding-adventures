@@ -1,0 +1,11 @@
+{
+  "id": "UR-C395-pankchar",
+  "pathSegment": "UR-PATH-395-TAYAR395",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-395-TAYAR395",
+      "order": 1
+    }
+  ]
+}

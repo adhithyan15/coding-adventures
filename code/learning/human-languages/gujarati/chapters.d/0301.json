@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "A Building on Fire",
+  "label": "ch:gu-a-building-on-fire",
+  "canDo": "I can say what happened when a building caught fire.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C301-dhadako",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can say what happened when a building caught fire.",
+    "assesses": [
+      "GU-LEX-C301-IMARAT301-03",
+      "GU-LEX-C301-IMARAT301-04",
+      "GU-LEX-C301-IMARAT301-05"
+    ]
+  }
+}

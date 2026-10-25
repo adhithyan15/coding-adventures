@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:713b68b8a9013abd",
+  "lessonIds": [
+    "UR-C518-avaz",
+    "UR-C518-surila",
+    "UR-C518-rag",
+    "UR-C518-riyaz",
+    "UR-C518-gungunana"
+  ],
+  "tex": "urdu/book/chapters/ch518-learning-to-sing.tex"
+}
