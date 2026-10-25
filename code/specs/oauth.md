@@ -1473,6 +1473,21 @@ intermediate revocation, generalize path construction or validation, perform
 TLS or HTTP, authorize OAuth transport, or grant network authority. Concrete
 HTTPS remains unavailable.
 
+A subsequent bounded policy slice consumes that complete responder-anchor
+proof and applies the exact retained intermediate's supported critical DNS
+constraints to the exact authenticated responder certificate. Both
+certificates are derived through the retained proof, so callers cannot
+substitute a responder, SAN collection, intermediate, or path. An absent
+NameConstraints extension succeeds without reading responder SAN. A present
+extension must be critical and decode under caller-owned limits as the
+supported permitted-and-excluded-DNS subset; every responder `dNSName` must
+comply, and success retains only count evidence. Stable failures expose no
+certificate, name, constraint, response, key, signature, or status payload.
+This remains fixed-path DNS policy only: it does not implement excluded anchor
+constraints, non-DNS constraints, responder or intermediate revocation,
+generalized path construction or validation, TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

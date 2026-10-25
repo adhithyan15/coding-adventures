@@ -6,12 +6,12 @@
 //! both inputs. Byte-equal independent decodes are rejected.
 //!
 //! This is an evidence-composition, exact-time validity, and bounded responder
-//! anchor-DNS-policy boundary. It performs no new cryptography, path search,
+//! DNS-policy boundary. It performs no new cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
 //! that names the delegated responder's already-proven exact path through the
-//! policy-validated intermediate to the reviewed root; a subsequent policy
-//! consumes that path and derives both the responder SAN and reviewed anchor
+//! policy-validated intermediate to the reviewed root; subsequent policies
+//! derive the responder SAN plus reviewed-anchor and exact-intermediate
 //! constraints internally.
 
 #![deny(unsafe_code)]
@@ -23,8 +23,8 @@ use x509_certificate_policy::{
     X509CertificateValidityErrorKind,
 };
 use x509_name_constraints::{
-    decode_name_constraints_contents, evaluate_dns_names, ConstrainedDnsNames,
-    DnsConstraintErrorKind, NameConstraintsErrorKind,
+    decode_name_constraints, decode_name_constraints_contents, evaluate_dns_names,
+    ConstrainedDnsNames, DnsConstraintErrorKind, NameConstraintsErrorKind, NAME_CONSTRAINTS_OID,
 };
 use x509_ocsp_authenticated_target_revocation::AuthenticatedX509OcspRsaSha256TargetRevocation;
 use x509_rsa_sha256_reviewed_server_link::ValidatedX509RsaSha256ConstructedReviewedIntermediateServerNameConstraintsPolicy;
@@ -535,6 +535,53 @@ impl fmt::Display for X509OcspReviewedResponderAnchorDnsPolicyError {
 
 impl std::error::Error for X509OcspReviewedResponderAnchorDnsPolicyError {}
 
+/// Stable payload-free intermediate DNS-policy failure categories.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509OcspReviewedResponderIntermediateDnsPolicyErrorKind {
+    /// The exact intermediate carried NameConstraints without the RFC 5280
+    /// critical flag.
+    NonCriticalIntermediateNameConstraints,
+    /// The exact intermediate's NameConstraints extension was invalid or
+    /// outside the supported bounded subset.
+    InvalidIntermediateNameConstraints(NameConstraintsErrorKind),
+    /// The exact responder certificate did not contain Subject Alternative Name.
+    MissingResponderSubjectAlternativeName,
+    /// The exact responder certificate's Subject Alternative Name was invalid.
+    InvalidResponderSubjectAlternativeName(SubjectAltNameErrorKind),
+    /// At least one responder dNSName was invalid, excluded, or outside every
+    /// permitted intermediate subtree when a permitted set was present.
+    ResponderIntermediateDnsNameConstraints(DnsConstraintErrorKind),
+}
+
+/// A redacted intermediate DNS-policy failure for one reviewed responder path.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509OcspReviewedResponderIntermediateDnsPolicyError {
+    kind: X509OcspReviewedResponderIntermediateDnsPolicyErrorKind,
+}
+
+impl X509OcspReviewedResponderIntermediateDnsPolicyError {
+    const fn new(kind: X509OcspReviewedResponderIntermediateDnsPolicyErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    pub const fn kind(self) -> X509OcspReviewedResponderIntermediateDnsPolicyErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509OcspReviewedResponderIntermediateDnsPolicyError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 OCSP reviewed-responder intermediate DNS policy error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509OcspReviewedResponderIntermediateDnsPolicyError {}
+
 /// Non-copyable reviewed responder-path evidence after selected-anchor DNS policy.
 ///
 /// Success proves either that the exact reviewed terminal selected by the
@@ -563,6 +610,37 @@ impl<Proof> ValidatedX509OcspReviewedResponderAnchorDnsPolicy<Proof> {
 impl<Proof> fmt::Debug for ValidatedX509OcspReviewedResponderAnchorDnsPolicy<Proof> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("ValidatedX509OcspReviewedResponderAnchorDnsPolicy")
+    }
+}
+
+/// Non-copyable reviewed responder-path evidence after intermediate DNS policy.
+///
+/// Success retains the complete selected-anchor responder-policy proof and
+/// proves either that the exact retained intermediate has no NameConstraints
+/// extension or that its supported critical permitted-and-excluded-DNS subset
+/// was applied to every dNSName in the exact authenticated responder. It is not
+/// generalized path validation, revocation, TLS, HTTP, OAuth, or network
+/// authority.
+pub struct ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<Proof> {
+    anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy<Proof>,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
+}
+
+impl<Proof> ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<Proof> {
+    /// Return the consumed complete selected-anchor responder-policy proof.
+    pub const fn anchor_policy(&self) -> &ValidatedX509OcspReviewedResponderAnchorDnsPolicy<Proof> {
+        &self.anchor_policy
+    }
+
+    /// Return count-only DNS evidence when the exact intermediate constrained DNS.
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
+    }
+}
+
+impl<Proof> fmt::Debug for ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<Proof> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedX509OcspReviewedResponderIntermediateDnsPolicy")
     }
 }
 
@@ -613,6 +691,73 @@ fn evaluate_responder_anchor_dns_policy(
         .map_err(|error| {
             X509OcspReviewedResponderAnchorDnsPolicyError::new(
                 X509OcspReviewedResponderAnchorDnsPolicyErrorKind::ResponderDnsNameConstraints(
+                    error.kind(),
+                ),
+            )
+        })?;
+
+    Ok(Some(constrained_dns_names))
+}
+
+fn evaluate_responder_intermediate_dns_policy(
+    responder_certificate: &x509_certificate::X509Certificate<'_>,
+    intermediate_certificate: &x509_certificate::X509Certificate<'_>,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<Option<ConstrainedDnsNames>, X509OcspReviewedResponderIntermediateDnsPolicyError> {
+    let Some(extension) = intermediate_certificate
+        .tbs_certificate()
+        .extensions()
+        .and_then(|extensions| {
+            extensions
+                .iter()
+                .find(|extension| extension.extension_id().equals(NAME_CONSTRAINTS_OID))
+        })
+    else {
+        return Ok(None);
+    };
+    if !extension.critical() {
+        return Err(X509OcspReviewedResponderIntermediateDnsPolicyError::new(
+            X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::NonCriticalIntermediateNameConstraints,
+        ));
+    }
+
+    let mut constraint_decoder = Asn1Decoder::new(constraint_limits);
+    let constraints = decode_name_constraints(&mut constraint_decoder, extension.extension_value())
+        .map_err(|error| {
+            X509OcspReviewedResponderIntermediateDnsPolicyError::new(
+                X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::InvalidIntermediateNameConstraints(
+                    error.kind(),
+                ),
+            )
+        })?;
+    let subject_alt_name_extension = responder_certificate
+        .tbs_certificate()
+        .extensions()
+        .and_then(|extensions| {
+            extensions
+                .iter()
+                .find(|extension| extension.extension_id().equals(SUBJECT_ALT_NAME_OID))
+        })
+        .ok_or_else(|| {
+            X509OcspReviewedResponderIntermediateDnsPolicyError::new(
+                X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::MissingResponderSubjectAlternativeName,
+            )
+        })?;
+    let mut subject_alt_name_decoder = Asn1Decoder::new(subject_alt_name_limits);
+    let subject_alt_name =
+        decode_subject_alt_name(&mut subject_alt_name_decoder, subject_alt_name_extension)
+            .map_err(|error| {
+                X509OcspReviewedResponderIntermediateDnsPolicyError::new(
+                    X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::InvalidResponderSubjectAlternativeName(
+                        error.kind(),
+                    ),
+                )
+            })?;
+    let constrained_dns_names = evaluate_dns_names(&constraints, subject_alt_name.dns_names())
+        .map_err(|error| {
+            X509OcspReviewedResponderIntermediateDnsPolicyError::new(
+                X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::ResponderIntermediateDnsNameConstraints(
                     error.kind(),
                 ),
             )
@@ -721,6 +866,110 @@ pub fn validate_x509_ocsp_reviewed_responder_anchor_dns_policy<
     })
 }
 
+/// Apply the exact retained intermediate's supported critical DNS policy.
+///
+/// This consumes the complete selected-anchor responder-policy proof. The
+/// responder and intermediate are derived only through that retained path,
+/// preventing certificate, SAN, or path substitution. An absent extension
+/// succeeds without new evidence; a present extension must be critical and
+/// must decode as the supported permitted-and-excluded-DNS subset under
+/// caller-owned limits.
+#[allow(clippy::type_complexity)]
+pub fn validate_x509_ocsp_reviewed_responder_intermediate_dns_policy<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'target,
+    'target_encoded,
+    'issuer,
+    'issuer_encoded,
+    'path,
+    'server_certificate,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy<
+        BoundX509OcspReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<
+        BoundX509OcspReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    >,
+    X509OcspReviewedResponderIntermediateDnsPolicyError,
+> {
+    let reviewed_server_revocation = anchor_policy.responder_path().reviewed_server_revocation();
+    let responder_certificate = reviewed_server_revocation
+        .authenticated_revocation()
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    let intermediate_certificate = reviewed_server_revocation
+        .reviewed_server_path()
+        .anchor_policy()
+        .reviewed_intermediate_server_path()
+        .reviewed_intermediate_path()
+        .authenticated_path()
+        .authenticated_intermediate()
+        .intermediate_policy()
+        .certificate();
+    let constrained_dns_names = evaluate_responder_intermediate_dns_policy(
+        responder_certificate,
+        intermediate_certificate,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+        anchor_policy,
+        constrained_dns_names,
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -730,6 +979,7 @@ mod tests {
     const LEAF_HEX: &str = include_str!("../tests/fixtures/apple-www-leaf.der.hex");
     const SIGNATURE_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
     const KEY_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
+    const NAME_CONSTRAINTS_OID_DER: &[u8] = &[0x55, 0x1d, 0x1e];
     const SUBJECT_ALT_NAME_OID_DER: &[u8] = &[0x55, 0x1d, 0x11];
     const NULL_DER: &[u8] = &[0x05, 0x00];
 
@@ -787,6 +1037,13 @@ mod tests {
         der(0x30, &fields)
     }
 
+    fn critical_extension(oid: &[u8], value: &[u8]) -> Vec<u8> {
+        let mut fields = der(0x06, oid);
+        fields.extend([0x01, 0x01, 0xff]);
+        fields.extend(der(0x04, value));
+        der(0x30, &fields)
+    }
+
     fn subject_alt_name(names: &[Vec<u8>]) -> Vec<u8> {
         extension(SUBJECT_ALT_NAME_OID_DER, &der(0x30, &names.concat()))
     }
@@ -801,6 +1058,30 @@ mod tests {
             contents.extend(der(0x30, &der(0x82, subtree)));
         }
         der(0xa0, &contents)
+    }
+
+    fn excluded_dns_subtrees(subtrees: &[&[u8]]) -> Vec<u8> {
+        let mut contents = Vec::new();
+        for subtree in subtrees {
+            contents.extend(der(0x30, &der(0x82, subtree)));
+        }
+        der(0xa1, &contents)
+    }
+
+    fn name_constraints(permitted: &[&[u8]], excluded: &[&[u8]], critical: bool) -> Vec<u8> {
+        let mut fields = Vec::new();
+        if !permitted.is_empty() {
+            fields.extend(permitted_dns_subtrees(permitted));
+        }
+        if !excluded.is_empty() {
+            fields.extend(excluded_dns_subtrees(excluded));
+        }
+        let value = der(0x30, &fields);
+        if critical {
+            critical_extension(NAME_CONSTRAINTS_OID_DER, &value)
+        } else {
+            extension(NAME_CONSTRAINTS_OID_DER, &value)
+        }
     }
 
     fn certificate(extensions: &[Vec<u8>]) -> Vec<u8> {
@@ -835,6 +1116,22 @@ mod tests {
         evaluate_responder_anchor_dns_policy(
             &certificate,
             constraints,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+    }
+
+    fn evaluate_responder_intermediate(
+        responder_encoded: &[u8],
+        intermediate_encoded: &[u8],
+    ) -> Result<Option<ConstrainedDnsNames>, X509OcspReviewedResponderIntermediateDnsPolicyError>
+    {
+        let responder = decode_x509_certificate(responder_encoded, Asn1Limits::default()).unwrap();
+        let intermediate =
+            decode_x509_certificate(intermediate_encoded, Asn1Limits::default()).unwrap();
+        evaluate_responder_intermediate_dns_policy(
+            &responder,
+            &intermediate,
             Asn1Limits::default(),
             Asn1Limits::default(),
         )
@@ -965,5 +1262,121 @@ mod tests {
             error.kind(),
             X509OcspReviewedResponderAnchorDnsPolicyErrorKind::ResponderDnsNameConstraints(_)
         ));
+    }
+
+    #[test]
+    fn absent_intermediate_constraints_do_not_require_a_responder_san() {
+        let responder = certificate(&[]);
+        let intermediate = certificate(&[]);
+
+        assert_eq!(
+            evaluate_responder_intermediate(&responder, &intermediate).unwrap(),
+            None
+        );
+    }
+
+    #[test]
+    fn critical_intermediate_constraints_apply_to_every_responder_dns_name() {
+        let responder = certificate(&[subject_alt_name(&[
+            dns_name("ocsp.example.test"),
+            dns_name("backup.example.test"),
+        ])]);
+        let intermediate = certificate(&[name_constraints(&[b".example.test"], &[], true)]);
+
+        let constrained = evaluate_responder_intermediate(&responder, &intermediate)
+            .unwrap()
+            .unwrap();
+
+        assert_eq!(constrained.count(), 2);
+    }
+
+    #[test]
+    fn critical_intermediate_excluded_dns_constraints_are_enforced() {
+        let responder = certificate(&[subject_alt_name(&[dns_name("ocsp.private.example.test")])]);
+        let intermediate = certificate(&[name_constraints(
+            &[b"example.test"],
+            &[b"private.example.test"],
+            true,
+        )]);
+
+        let error = evaluate_responder_intermediate(&responder, &intermediate).unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::ResponderIntermediateDnsNameConstraints(
+                DnsConstraintErrorKind::PresentedDnsNameExcluded,
+            )
+        );
+    }
+
+    #[test]
+    fn noncritical_intermediate_constraints_fail_closed() {
+        let responder = certificate(&[]);
+        let intermediate = certificate(&[name_constraints(&[b".example.test"], &[], false)]);
+
+        let error = evaluate_responder_intermediate(&responder, &intermediate).unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::NonCriticalIntermediateNameConstraints
+        );
+        assert_eq!(
+            error.to_string(),
+            "X.509 OCSP reviewed-responder intermediate DNS policy error NonCriticalIntermediateNameConstraints"
+        );
+    }
+
+    #[test]
+    fn malformed_intermediate_constraints_are_redacted() {
+        let responder = certificate(&[]);
+        let intermediate =
+            certificate(&[critical_extension(NAME_CONSTRAINTS_OID_DER, &[0x05, 0x00])]);
+
+        let error = evaluate_responder_intermediate(&responder, &intermediate).unwrap_err();
+
+        assert!(matches!(
+            error.kind(),
+            X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::InvalidIntermediateNameConstraints(_)
+        ));
+    }
+
+    #[test]
+    fn constrained_intermediate_requires_responder_subject_alt_name() {
+        let responder = certificate(&[]);
+        let intermediate = certificate(&[name_constraints(&[b".example.test"], &[], true)]);
+
+        let error = evaluate_responder_intermediate(&responder, &intermediate).unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::MissingResponderSubjectAlternativeName
+        );
+    }
+
+    #[test]
+    fn malformed_responder_san_under_intermediate_policy_is_redacted() {
+        let responder = certificate(&[extension(SUBJECT_ALT_NAME_OID_DER, &[0x05, 0x00])]);
+        let intermediate = certificate(&[name_constraints(&[b".example.test"], &[], true)]);
+
+        let error = evaluate_responder_intermediate(&responder, &intermediate).unwrap_err();
+
+        assert!(matches!(
+            error.kind(),
+            X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::InvalidResponderSubjectAlternativeName(_)
+        ));
+    }
+
+    #[test]
+    fn responder_intermediate_dns_constraint_failure_is_redacted() {
+        let responder = certificate(&[subject_alt_name(&[dns_name("ocsp.other.test")])]);
+        let intermediate = certificate(&[name_constraints(&[b".example.test"], &[], true)]);
+
+        let error = evaluate_responder_intermediate(&responder, &intermediate).unwrap_err();
+
+        assert!(matches!(
+            error.kind(),
+            X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::ResponderIntermediateDnsNameConstraints(_)
+        ));
+        assert!(!format!("{error:?} {error}").contains("other.test"));
     }
 }

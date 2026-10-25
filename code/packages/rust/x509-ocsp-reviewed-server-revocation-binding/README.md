@@ -39,14 +39,25 @@ DNS subset and the responder's exact Subject Alternative Name under separate
 caller-owned limits, require every responder dNSName to comply, and retain only
 count evidence. Failures expose stable payload-free categories.
 
+`validate_x509_ocsp_reviewed_responder_intermediate_dns_policy` consumes that
+complete anchor-policy proof and derives the exact authenticated responder and
+the exact retained intermediate internally. An absent intermediate
+NameConstraints extension succeeds without reading the responder SAN. A
+present extension must be critical and decode as the supported permitted-and-
+excluded-DNS subset under caller-owned limits; every responder `dNSName` must
+comply. Success retains only count evidence alongside the complete prior proof,
+and failures expose stable payload-free categories.
+
 ## Boundary
 
 This crate performs evidence composition, exact-time validity checks, and the
-bounded selected-anchor responder DNS policy described above only.
+bounded selected-anchor and exact-intermediate responder DNS policies described
+above only.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
-RFC 5280 policy, apply intermediate, excluded, or non-DNS name constraints to
-the responder certificate, check responder-certificate or intermediate
+RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS
+intermediate constraints to the responder certificate, check
+responder-certificate or intermediate
 revocation, interpret unsupported OCSP extensions, acquire or cache OCSP data,
 read a clock, implement TLS or HTTP, authorize OAuth transport, open a network
 connection, or access a credential. The reviewed Mozilla root snapshot excludes OS,

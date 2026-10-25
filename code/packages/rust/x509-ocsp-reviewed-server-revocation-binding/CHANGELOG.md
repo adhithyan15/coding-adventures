@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Apply the exact retained intermediate's supported critical permitted-and-
+  excluded-DNS constraints to the authenticated responder certificate, without
+  allowing responder, SAN, intermediate, or path substitution.
+- Retain count-only intermediate DNS evidence with payload-free failures while
+  leaving excluded anchor constraints, non-DNS constraints,
+  responder/intermediate revocation, generalized path validation, and
+  transport unresolved.
 - Apply the selected reviewed root's supported out-of-band DNS constraints to
   the exact authenticated responder certificate retained by the reified path,
   under separate caller-owned parse limits and with payload-free failures.
