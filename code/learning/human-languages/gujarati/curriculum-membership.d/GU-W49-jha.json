@@ -1,0 +1,11 @@
+{
+  "id": "GU-W49-jha",
+  "pathSegment": "GU-PATH-280-TRAVEL-TICKET",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-280-TRAVEL-TICKET",
+      "order": 1
+    }
+  ]
+}

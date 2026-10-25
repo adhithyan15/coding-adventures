@@ -1,0 +1,1 @@
+| 1521-1528 | 282 | Comparing, and how long | `GU-C282-sauthi` -> `GU-W52-au-sign` -> `GU-C282-kartan` -> `GU-C282-sudhi` -> `GU-C282-be-varasthi` -> `GU-C282-rtu` -> `GU-W53-vocalic-r-letter` -> `GU-R282-comparing-and-time` |

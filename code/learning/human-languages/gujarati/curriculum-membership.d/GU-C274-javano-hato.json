@@ -1,0 +1,11 @@
+{
+  "id": "GU-C274-javano-hato",
+  "pathSegment": "GU-PATH-274-FUTURE-NOT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-274-FUTURE-NOT",
+      "order": 1
+    }
+  ]
+}

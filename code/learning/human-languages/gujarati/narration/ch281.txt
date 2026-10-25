@@ -1,0 +1,270 @@
+Gujarati, chapter 281: Feelings and hopes.
+8 lessons. You can do the first one in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 8.
+દુઃખ (duḥkh) — sorrow; distress.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say "contentment" and "happiness". (સુખ, ખુશી.) Then "it happened". (થયું.)
+
+You'll want to know: દુઃખ.
+દુઃખ — duḥkh — "sorrow; distress", the opposite of સુખ. It is neuter. In speech its ઃ (visarga) is light, close to dukh.
+મને દુઃખ થયું. mane duḥkh thayũ. — "I felt sad."
+Word for word, "to me sorrow happened": the one who feels it takes -ને.
+તેને કોઈ દુઃખ નથી. tene koī duḥkh nathī. — "He has no troubles."
+
+The word, taken apart.
+દુઃખ (duḥkh) is a tatsama: Sanskrit duḥkha, "difficulty, pain" (CDIAL 6375), written with the Sanskrit ઃ (visarga) kept. CDIAL also lists an inherited Gujarati dukh from the same word.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: duḥkh, then sukh]
+[pause 8 seconds for the answer]
+[your turn — say: "I felt sad" — mane duḥkh thayũ]
+[pause 8 seconds for the answer]
+[your turn — say: "He has no troubles" — tene koī duḥkh nathī]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does દુઃખ (duḥkh) mean? ("Sorrow; distress".) Its opposite? (સુખ.) "I felt sad"? (મને દુઃખ (duḥkh) થયું.)
+
+
+Lesson 2 of 8.
+ઃ (visarga) — the two dots in દુઃખ (duḥkh).
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ઃ, Writing — recall after hiding and Wrap-up Recall.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Warm-up.
+[pause 2 seconds]
+Before the new one: say દુઃખ (duḥkh), "sorrow". Then write ં, the one dot above a syllable.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: ઃ.
+ઃ — the visarga, ḥ: a pair of dots to the right of the syllable, marking a voiceless breath after the vowel.
+In દુઃખ (duḥkh) it stands after દુ and before ખ:
+[a table of 3 rows, read aloud]
+દુ, du.
+દુઃ, duḥ: the two dots after it.
+દુઃખ, duḥkh.
+It is written after its consonant and its vowel sign: the consonant first, then the visarga to its right, the upper dot, then the lower dot.
+
+Writing — notice and trace.
+Follow the numbered strip:
+start at the top of the upper dot and curve down its left side.
+without lifting, round its bottom and up its right side to close it.
+lift, then start at the top of the lower dot and curve down its left side.
+without lifting, round its bottom and up its right side to close it — and only now lift.
+Two strokes — four movements, one pen lift; cited to KanoAI's hand-made Gujarati barakhadi templates. Finger-trace ઃ (visarga) once.
+
+Writing — copy with the model.
+Copy દુઃ once: દુ first, then the two dots. Compare only two things: do the dots sit to the right, one above the other? Repair one if needed.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Writing — recall after hiding.
+Hide the model and write the visarga once. Uncover ઃ, compare, and stop after one repair.
+[once you have stopped driving — question: Hide the model and write the visarga from memory.]
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
+[pause 3 seconds]
+Read દુઃખ (duḥkh) aloud. Which dot comes first? (The upper one.) Is it written before or after દુ? (After.)
+Sources: KanoAI's Gujarati barakhadi stroke templates (Tejas Gajjar, KanoAI, Gujarati barakhadi centre-line stroke templates (interpolate-svg/svgs/barakhadi), commit 9d3e294, 1_k/11_kah.svg, groups g1 then g2 (strokes g1s0, g2s0): the visarga drawn after the consonant (GitHub, 2026)) and the Unicode Gujarati chart.
+
+
+Lesson 3 of 8.
+મને બીક લાગે છે (mane bīk lāge che) — how I feel.
+
+Warm-up.
+[pause 2 seconds]
+Say "I felt sad". (mane duḥkh thayũ.) Then "fear" and "worry". (બીક, ચિંતા.)
+
+Grammar Lens: a feeling that comes to me.
+મને બીક લાગે છે. mane bīk lāge che. — "I'm afraid."
+Many feelings are nouns that happen to the one who feels them, and that one takes -ને. Each noun has its own verb:
+[a table of 4 rows, read aloud]
+the feeling: fear, બીક. now: મને બીક લાગે છે (mane bīk lāge che). in the past: મને બીક લાગી.
+the feeling: worry, ચિંતા. now: મને ચિંતા થાય છે. in the past: મને ચિંતા થઈ.
+the feeling: sorrow, દુઃખ (duḥkh). now: મને દુઃખ (duḥkh) થાય છે. in the past: મને દુઃખ (duḥkh) થયું.
+the feeling: anger, ગુસ્સો. now: મને ગુસ્સો આવે છે. in the past: મને ગુસ્સો આવ્યો.
+The past follows the feeling: બીક is feminine, લાગી; ગુસ્સો is masculine, આવ્યો.
+
+You'll want to know: I am happy.
+આજે હું ખુશ છું. āje hũ khuś chũ. — "Today I'm happy."
+Other feelings are describing words, and the one who feels them is a plain subject: હું ખુશ છું, તે ઉદાસ હતી (te udās hatī), "she was sad". Tiredness is a past: હું થાકી ગયો છું (hũ thākī gayo chũ), "I'm tired", word for word "I have got tired".
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "I got angry" — mane gusso āvyo]
+[pause 8 seconds for the answer]
+[your turn — say: "My train was late, so I was worried" — mārī ṭren moḍī hatī, eṭle mane cintā thaī]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 22 seconds]
+Say that you are afraid, then that today you are happy.
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I'm afraid"? (મને બીક લાગે છે (mane bīk lāge che).) "I got angry"? (મને ગુસ્સો આવ્યો.) "She was sad": તે or તેને? (તે ઉદાસ હતી.)
+
+
+Lesson 4 of 8.
+ઇચ્છા (icchā) — a wish; a desire.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say "I'm afraid". (mane bīk lāge che.) Then "good wishes". (શુભેચ્છા, śubhecchā.) Its second half is this lesson's word.
+
+You'll want to know: ઇચ્છા.
+ઇચ્છા — icchā — "a wish; a desire". It is feminine: મારી ઇચ્છા, "my wish".
+મારી એક ઇચ્છા છે. mārī ek icchā che. — "I have a wish."
+તમારી ઇચ્છા શું છે? tamārī icchā śũ che? — "What is your wish?"
+શુભેચ્છા is śubh, "good, lucky", with ઇચ્છા (icchā): good wishes.
+
+The word, taken apart.
+ઇચ્છા (icchā) is a tatsama: Sanskrit icchā, "wish, desire" (Monier-Williams). CDIAL lists an inherited Gujarati verb ichvũ, "to wish", under Sanskrit icchati, "seeks, wishes" (CDIAL 1556).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: icchā, then mārī icchā]
+[pause 8 seconds for the answer]
+[your turn — say: "I have a wish" — mārī ek icchā che]
+[pause 8 seconds for the answer]
+[your turn — say: "What is your wish?" — tamārī icchā śũ che?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does ઇચ્છા (icchā) mean? ("A wish; a desire".) Why મારી? (ઇચ્છા (icchā) is feminine.)
+
+
+Lesson 5 of 8.
+ઇ — the standing vowel i.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — meet one form, Writing — recall after hiding and Wrap-up Recall.
+
+Warm-up.
+[your turn — recall: say a wish — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say ઈ, as in ઈજા, and the sign િ that gives a consonant a short i]
+[pause 8 seconds for the answer]
+ઇચ્છા (icchā) opens on a short i with no consonant to carry it.
+
+You'll want to know: ઈ without its curl.
+[a table of 2 rows, read aloud]
+short i. after a consonant: િ. standing alone: ?
+long ī. after a consonant: ી. standing alone: ઈ.
+The missing letter is ઇ (i). It has the same small upper-left loop, narrow middle crossing and broad lower loop as ઈ. Its hook rises on the upper right and stops there; ઈ carries it on, curling over the top.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — meet one form.
+ઇ — i.
+Keep ઇ (i) visible. Follow the numbered strip:
+begin in the upper-left and circle the small loop down to the middle crossing.
+continue through the crossing and sweep clockwise around the broad lower loop.
+rise along the right side and finish in the upper-right hook without lifting.
+One stroke, no lift: a verified one-stroke teaching-app variant fitted to the bundled printed outline (t30apps.com, ‘Gujarati Alphabet Writing Practice’, version 1.0, ઇ (i) animation, first SVG path).
+
+Writing — notice and trace.
+Finger-trace ઇ (i) once, then air-trace it once. Notice where the hook stops.
+
+Writing — copy with the model.
+Copy visible ઇ (i) once. Compare only two things: are both loops there, and does the hook stop on the upper right? Repair one landmark if needed.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Writing — recall after hiding.
+Hide the model and write the standing vowel i once. Uncover ઇ, compare, and stop after one repair.
+[once you have stopped driving — question: Hide the model and write the standing vowel short i from memory.]
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
+[pause 3 seconds]
+Read ઇ (i) ઈ ઇચ્છા (icchā) aloud. What turns ઇ (i) into ઈ? (The curl over the top.)
+Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
+
+
+Lesson 6 of 8.
+સપનું (sapnũ) — a dream; an ambition.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say "my wish". (mārī icchā.) Then "sleepiness". (ઊંઘ.)
+
+You'll want to know: સપનું.
+સપનું — sapnũ — "a dream; an ambition". It is neuter: મારું સપનું. In Gujarati a dream comes to the dreamer:
+મને રાતે એક સપનું આવ્યું. mane rāte ek sapnũ āvyũ. — "I had a dream last night."
+The second sense is a hope for the future:
+મારું સપનું છે કે એક દિવસ હું દાક્તર બનીશ. mārũ sapnũ che ke ek divas hũ dāktar banīś. — "My dream is that one day I'll become a doctor."
+
+The word, taken apart.
+સપનું (sapnũ) is usually traced to Sanskrit svapna, "sleep; a dream" (Monier-Williams), worn down in speech: the sv- became s-. CDIAL lists a related Gujarati samṇũ, "dream", under a reconstructed supna (CDIAL 13481).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: sapnũ, then mārũ sapnũ]
+[pause 8 seconds for the answer]
+[your turn — say: "I had a dream last night" — mane rāte ek sapnũ āvyũ]
+[pause 8 seconds for the answer]
+[your turn — say: "My dream is that one day I'll become a doctor" — mārũ sapnũ che ke ek divas hũ dāktar banīś]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does સપનું (sapnũ) mean? ("A dream; an ambition".) "I had a dream"? (મને સપનું (sapnũ) આવ્યું.)
+
+
+Lesson 7 of 8.
+મારે દાક્તર બનવું છે (māre dāktar banvũ che) — what I want, and hope for.
+
+Warm-up.
+[pause 2 seconds]
+Say "I should go". (māre javũ joīe.) Then "my dream" and "my wish". (mārũ sapnũ, mārī icchā.)
+
+Grammar Lens: મારે … -વું છે.
+મારે દાક્તર બનવું છે. māre dāktar banvũ che. — "I want to become a doctor."
+The મારે of મારે જવું જોઈએ, then the -વું form, then છે: "I want to". With an object, the -વું follows it, as with જોઈએ: મારે ચા પીવી છે (māre cā pīvī che), "I want to drink tea"; મારે નવું ઘર બનાવવું છે. "I don't want to go" is મારે નથી જવું (māre nathī javũ).
+
+You'll want to know: a wish, a dream.
+મારી ઇચ્છા ગામમાં રહેવાની છે. mārī icchā gāmmā̃ rahevānī che. — "My wish is to live in the village."
+રહેવાની is the -વાનો of હું જવાનો છું, here following ઇચ્છા (icchā), which is feminine. With સપનું, neuter, it is -વાનું: મારું સપનું દાક્તર બનવાનું છે (mārũ sapnũ dāktar banvānũ che). A dream can also take કે and a future: મારું સપનું છે કે હું દાક્તર બનીશ.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "I want to drink tea" — māre cā pīvī che]
+[pause 8 seconds for the answer]
+[your turn — say: "I don't want to go to the city" — māre śaher nathī javũ]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 25 seconds]
+Say that you want to become a doctor, then that your wish is to live in the village.
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I want to become a doctor"? (મારે દાક્તર બનવું છે (māre dāktar banvũ che).) Why પીવી in મારે ચા પીવી છે? (It follows ચા.) "My dream is to become a doctor"? (મારું સપનું (sapnũ) દાક્તર બનવાનું છે.)
+
+
+Lesson 8 of 8.
+Review — feelings and hopes.
+
+Warm-up.
+[pause 2 seconds]
+Say "my bag is lost". (mārī thelī khovāī gaī.) Then "I'll have to go". (māre javũ paḍśe.)
+[once you have stopped driving — write: ઃ (visarga) in દુઃખ (duḥkh), then ઇ (i) in ઇચ્છા (icchā), from memory]
+
+Guided Practice.
+[pause 2 seconds after each]
+[your turn — say: I'm afraid. I got angry. I felt sad.]
+[pause 8 seconds for the answer]
+[your turn — say: Today I'm happy. She was sad. I'm tired.]
+[pause 8 seconds for the answer]
+[your turn — say: I want to become a doctor. I don't want to go to the city.]
+[pause 8 seconds for the answer]
+[your turn — say: My wish is to live in the village.]
+[pause 8 seconds for the answer]
+[your turn — say: I had a dream last night. My dream is that one day I'll become a doctor.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I'm afraid": હું or મને? (મને બીક લાગે છે (mane bīk lāge che).) "I'm happy"? (હું ખુશ છું.) "I want to drink tea"? (મારે ચા પીવી છે.) Which two dots sit in દુઃખ (duḥkh)? (ઃ, the visarga.)

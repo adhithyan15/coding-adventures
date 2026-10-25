@@ -184,7 +184,15 @@ it("closes Gujarati doorway R4 at position 149", () => {
   //   +103  PRE-EXISTING (atom, window) slots on older atoms that did not exist
   //         until the track grew 856 -> 1480 and their late windows fell inside.
   //     -2  older misses the vocabulary's examples close.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(2884);
+  // 2884 -> 2993. The B1 core, chapters 273-284 (57 lessons), decomposed
+  // against the corpus measured without it:
+  //    +35  on the core's own 57 atoms: every one is revisited at least twice
+  //         (THIN 0), but not always inside its R2 or R3 window; the last
+  //         chapters' windows fall to the B1 vocabulary that follows.
+  //    +75  PRE-EXISTING (atom, window) slots, mostly R4 on the chapter 255-272
+  //         words, whose windows did not exist until the track grew 1480 -> 1537.
+  //     -1  closed outright: the chapter-255 vārtā reaches its R4 in the reading.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(2993);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-281-FEEL-HOPE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-281-FEEL-HOPE"
+  ],
+  "after": []
+}

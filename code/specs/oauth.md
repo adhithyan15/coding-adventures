@@ -1276,6 +1276,22 @@ extensions, decide freshness or revocation, fetch or cache data, read a clock,
 or grant path, trust, TLS, HTTP, OAuth transport, or network authority.
 Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-rsa-pkcs1-v1-5-sha256-signature` prerequisite verifies
+one structurally decoded `BasicOCSPResponse` with one separately
+policy-validated RSA public key. It accepts only the exact
+`sha256WithRSAEncryption` algorithm identifier with canonical present NULL
+parameters, requires a byte-aligned signature BIT STRING, hashes the preserved
+canonical `ResponseData` DER with the repository-owned SHA-256 implementation,
+applies the bounded repository-owned RSA public operation, and validates the
+complete PKCS #1 v1.5 SHA-256 encoded message. Success returns non-copyable
+evidence retaining the exact response and validated public key so neither can
+be substituted after verification. The verifier does not select that key,
+route algorithms, authorize or match a responder, bind a response or `CertID`
+to a certificate or constructed path, apply certificate role or extension
+policy, decide freshness or revocation, fetch or cache data, read a clock, or
+grant path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete
+HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

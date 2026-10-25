@@ -1,0 +1,16 @@
+{
+  "language": "gujarati",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:6055f95781e8581e",
+  "lessonIds": [
+    "GU-C281-dukh",
+    "GU-W50-visarga",
+    "GU-C281-mane-bik",
+    "GU-C281-iccha",
+    "GU-W51-short-i",
+    "GU-C281-sapnu",
+    "GU-C281-banvu-che",
+    "GU-R281-feelings-and-hopes"
+  ],
+  "tex": "gujarati/book/chapters/ch281-feelings-and-hopes.tex"
+}

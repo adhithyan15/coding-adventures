@@ -1,0 +1,5 @@
+tests/diff/simple-newtarget/input/a.js:1:2: ERROR - [JSC_PARSE_ERROR] Parse error. new.target must be inside a function
+  1| f(new.target, 1 + 2);
+       ^
+
+1 error(s), 0 warning(s)

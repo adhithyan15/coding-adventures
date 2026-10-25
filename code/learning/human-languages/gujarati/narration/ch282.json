@@ -1,0 +1,1159 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 282,
+  "title": "Comparing, and how long",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b08f85c73a4a4517",
+  "lessons": [
+    {
+      "id": "GU-C282-sauthi",
+      "sequence": 15200,
+      "title": "સૌથી (sauthī) — most; of all",
+      "headword": "સૌથી",
+      "romanization": "sauthī",
+      "gloss": "most; of all",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aaa352aa79f5cd93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I want to become a doctor\". (māre dāktar banvũ che.) Then \"small\", \"more\" and \"to like\". (નાનું, વધારે, ગમવું.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સૌથી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સૌથી — sauthī — \"most; of all\". Put it before a describing word and it becomes the most of all:"
+            },
+            {
+              "kind": "speech",
+              "text": "મીરા સૌથી નાની છે. Mīrā sauthī nānī che. — \"Mira is the youngest.\""
+            },
+            {
+              "kind": "speech",
+              "text": "નાની follows Mira; સૌથી (sauthī) stays as it is. With વધારે it is \"most of all\":"
+            },
+            {
+              "kind": "speech",
+              "text": "મને ચોમાસું સૌથી વધારે ગમે છે. mane comāsũ sauthī vadhāre game che. — \"I like the monsoon most of all.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સૌથી (sauthī) is built from sau, \"all, everyone\", and -થી, \"from\": \"from all\", so \"more than all\". CDIAL lists Gujarati sau, \"wholly\", under Sanskrit sarva, \"all, whole\" (CDIAL 13276)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sauthī, then sauthī nānũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sauthī*, then *sauthī nānũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Mira is the youngest\" — Mīrā sauthī nānī che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Mira is the youngest\" — *Mīrā sauthī nānī che*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like the monsoon most of all\" — mane comāsũ sauthī vadhāre game che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like the monsoon most of all\" — *mane comāsũ sauthī vadhāre game che*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સૌથી (sauthī) mean? (\"Most; of all\".) \"The biggest\", of a house? (સૌથી (sauthī) મોટું.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W52-au-sign",
+      "sequence": 15210,
+      "title": "ૌ (au sign) — the au sign in સૌથી (sauthī)",
+      "headword": "ૌ",
+      "romanization": "au sign",
+      "gloss": "au sign — the au sign in સૌથી",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:dda3de8001b26c97",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ૌ",
+          "Writing — recall after hiding",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ૌ, Writing — recall after hiding and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say સૌથી (sauthī), \"most of all\". Then write ૈ, the ai sign, and ો, the o sign, once each."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ૌ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ૌ — the au sign: the ા bar on the right plus two stacked strokes above. It sits on સ in સૌથી (sauthī)."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "one stroke above",
+                "two strokes above"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "one stroke above: ે e. two strokes above: ૈ ai, as in પૈસા.",
+                "one stroke above: ો o: ા with ે above. two strokes above: ૌ (au sign) au: ા with ૈ above."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "It is written after its consonant: સ first, then the bar to its right, then the lower flag, then the upper flag."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Follow the numbered strip:"
+            },
+            {
+              "kind": "speech",
+              "text": "start at the top of the bar and draw it straight down."
+            },
+            {
+              "kind": "speech",
+              "text": "without lifting, turn into the short foot to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, then start at the lower flag's upper-left tip and arc it to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "without lifting, curve it down to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, then start at the upper flag's upper-left tip and arc it to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "without lifting, curve it down to the right — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Three strokes — six movements, two pen lifts; cited to KanoAI's hand-made Gujarati barakhadi templates. Finger-trace ૌ (au sign) once."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy સૌથી (sauthī) once: સ, the bar, the two flags, then થી. Compare only two things: are there two flags, and does the lower one come first? Repair one if needed."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the model and write the au sign once. Uncover ૌ, compare, and stop after one repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "GU-W52-au-sign-recall",
+              "prompt": "Hide the model and write the au sign from memory.",
+              "assesses": [
+                "GU-SCRIPT-C282-AU-SIGN-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ૌ"
+              ],
+              "feedback": {
+                "correct": "ૌ — the bar, the lower flag, the upper flag.",
+                "incorrect": "Look once at ૌ, hide it, and repair only the part that differs."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read સો and સૌથી (sauthī) aloud. What turns ો into ૌ (au sign)? (A second flag above.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: KanoAI's Gujarati barakhadi stroke templates (Tejas Gajjar, KanoAI, Gujarati barakhadi centre-line stroke templates (interpolate-svg/svgs/barakhadi), commit 9d3e294, 1_k/9_kau.svg, groups g1, g2 then g3 (strokes g1s0, g2s0, g3s0): the au sign drawn after the consonant (GitHub, 2026)) and the Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C282-kartan",
+      "sequence": 15220,
+      "title": "… કરતાં મોટું (… kartā̃ moṭũ) — bigger than …",
+      "headword": "… કરતાં મોટું",
+      "romanization": "… kartā̃ moṭũ",
+      "gloss": "bigger than … — comparing two things with kartā̃, and the most of all with sauthī",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d739add42647d55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"Mira is the youngest\". (Mīrā sauthī nānī che.) Then \"big\" and \"a city\". (મોટું, શહેર.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: કરતાં, than",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શહેર ગામ કરતાં મોટું છે. śaher gām kartā̃ moṭũ che. — \"The city is bigger than the village.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The thing being described, then the one it is measured against with કરતાં (kartā̃), \"than\", then the describing word, which follows the first: મીરા અરુણ કરતાં નાની છે (Mīrā Aruṇ kartā̃ nānī che), \"Mira is younger than Arun\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A word with no ending of its own takes વધારે, \"more\", or ઓછું, \"less\": ટ્રેન બસ કરતાં વધારે ઝડપી છે (ṭren bas kartā̃ vadhāre jhaḍpī che)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the most of all",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝડપી ટ્રેન સૌથી મોંઘી છે. jhaḍpī ṭren sauthī moṅghī che. — \"The fast train is the most expensive.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two things take કરતાં; the top of a whole group takes સૌથી (sauthī):"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "say"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the bus is cheaper than the train. say: બસ ટ્રેન કરતાં સસ્તી છે.",
+                "the bus is the cheapest. say: બસ સૌથી (sauthī) સસ્તી છે."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Mira is younger than Arun\" — Mīrā Aruṇ kartā̃ nānī che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Mira is younger than Arun\" — *Mīrā Aruṇ kartā̃ nānī che*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The train is faster than the bus\" — ṭren bas kartā̃ vadhāre jhaḍpī che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The train is faster than the bus\" — *ṭren bas kartā̃ vadhāre jhaḍpī che*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C282-kartan-r1",
+              "prompt": "Say that the city is bigger than the village, then that the bus is the cheapest.",
+              "assesses": [
+                "GU-GRAMMAR-C282-KARTAN-01",
+                "GU-GRAMMAR-C282-SAUTHI-MOST-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "śaher gām kartā̃ moṭũ che; bas sauthī sastī che",
+                "શહેર ગામ કરતાં મોટું છે. બસ સૌથી સસ્તી છે.",
+                "śaher gām kartā̃ moṭũ che, bas sauthī sastī che"
+              ],
+              "feedback": {
+                "correct": "kartā̃ after the village; sauthī before sastī, which follows bas.",
+                "incorrect": "Measure against the village with kartā̃: gām kartā̃ moṭũ. For the top of all, sauthī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than\"? (કરતાં.) \"The city is bigger than the village\"? (શહેર ગામ કરતાં મોટું છે.) For the top of a whole group? (સૌથી (sauthī).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C282-sudhi",
+      "sequence": 15230,
+      "title": "સુધી (sudhī) — until; as far as",
+      "headword": "સુધી",
+      "romanization": "sudhī",
+      "gloss": "until; as far as",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c2a1b573f955250",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"the city is bigger than the village\". (śaher gām kartā̃ moṭũ che.) Then \"evening\" and \"a river\". (સાંજ, નદી.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સુધી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સુધી — sudhī — \"until; as far as\". It comes after its word, as કરતાં does: an end in time, or in space."
+            },
+            {
+              "kind": "speech",
+              "text": "હું સાંજ સુધી ઘરે છું. hũ sānj sudhī ghare chũ. — \"I'm at home until evening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "અમે નદી સુધી ચાલ્યા. ame nadī sudhī cālyā. — \"We walked as far as the river.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સુધી (sudhī) is a small word with no older form in any dictionary we use, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sudhī, then sānj sudhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sudhī*, then *sānj sudhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I'm at home until evening\" — hũ sānj sudhī ghare chũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I'm at home until evening\" — *hũ sānj sudhī ghare chũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We walked as far as the river\" — ame nadī sudhī cālyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We walked as far as the river\" — *ame nadī sudhī cālyā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સુધી (sudhī) mean? (\"Until; as far as\".) Before its word, or after? (After: સાંજ સુધી (sudhī).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C282-be-varasthi",
+      "sequence": 15240,
+      "title": "બે વરસથી (be varasthī) — for how long, since when",
+      "headword": "બે વરસથી",
+      "romanization": "be varasthī",
+      "gloss": "for two years — how long and since when with -thī, and from … until with sudhī",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:250a46ed8ab222a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"until evening\". (sānj sudhī.) Then \"a year\" and \"morning\". (વરસ, સવાર.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -થી and the present",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હું બે વરસથી અહીં રહું છું. hũ be varasthī ahī̃ rahũ chũ. — \"I have lived here for two years.\""
+            },
+            {
+              "kind": "speech",
+              "text": "-થી, \"from\", on a length of time or a starting point says how long something has gone on, and the verb stays in the present: it is still going on. English says \"have lived\"; Gujarati says \"I live, from two years\". સવારથી વરસાદ પડે છે (savārthī varsād paḍe che): \"it has been raining since morning\". To ask: તમે કેટલા વખતથી અહીં રહો છો? (tame keṭlā vakhatthī ahī̃ raho cho?), \"how long have you lived here?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: from … until, and all day",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દુકાન સવારથી સાંજ સુધી ખુલ્લી છે. dukān savārthī sānj sudhī khullī che. — \"The shop is open from morning until evening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "-થી marks the start and સુધી (sudhī) the end. A span with no start or end named takes આખું, \"whole\", and neither -થી nor સુધી (sudhī): મેં આખો દિવસ કામ કર્યું (mẽ ākho divas kām karyũ), \"I worked all day\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How long have you lived here?\" — tame keṭlā vakhatthī ahī̃ raho cho?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How long have you lived here?\" — *tame keṭlā vakhatthī ahī̃ raho cho?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I worked all day\" — mẽ ākho divas kām karyũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I worked all day\" — *mẽ ākho divas kām karyũ*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C282-be-varasthi-r1",
+              "prompt": "Say that you have lived here for two years, then that the shop is open from morning until evening.",
+              "assesses": [
+                "GU-GRAMMAR-C282-THI-SINCE-01",
+                "GU-GRAMMAR-C282-THI-SUDHI-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "hũ be varasthī ahī̃ rahũ chũ; dukān savārthī sānj sudhī khullī che",
+                "હું બે વરસથી અહીં રહું છું. દુકાન સવારથી સાંજ સુધી ખુલ્લી છે.",
+                "hũ be varasthī ahī̃ rahũ chũ, dukān savārthī sānj sudhī khullī che"
+              ],
+              "feedback": {
+                "correct": "-thī with the present for how long; -thī … sudhī for from … until.",
+                "incorrect": "How long: be varasthī, and keep rahũ chũ in the present. From … until: savārthī sānj sudhī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"For two years\"? (બે વરસથી (be varasthī).) Past or present after it? (Present: રહું છું.) \"From morning until evening\"? (સવારથી સાંજ સુધી (sudhī).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C282-rtu",
+      "sequence": 15250,
+      "title": "ઋતુ (ṛtu) — a season",
+      "headword": "ઋતુ",
+      "romanization": "ṛtu",
+      "gloss": "a season",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51c97c1b11f1b6e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"summer\", \"winter\" and \"the monsoon\". (ઉનાળો, શિયાળો, ચોમાસું.) Then મોસમ: \"a season; the weather\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઋતુ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઋતુ — ṛtu — \"a season\". It is feminine. મોસમ is also the weather; ઋતુ is one part of the year."
+            },
+            {
+              "kind": "speech",
+              "text": "અહીં ત્રણ ઋતુ છે: ઉનાળો, ચોમાસું અને શિયાળો. ahī̃ traṇ ṛtu che: unāḷo, comāsũ ane śiyāḷo. — \"There are three seasons here: summer, the monsoon and winter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "તમને કઈ ઋતુ સૌથી વધારે ગમે છે? tamne kaī ṛtu sauthī vadhāre game che? — \"Which season do you like most?\""
+            },
+            {
+              "kind": "speech",
+              "text": "કઈ is કયું, \"which\", following ઋતુ (ṛtu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઋતુ (ṛtu) is a tatsama: Sanskrit ṛtu, \"a fixed time; a season\" (Monier-Williams), taken into Gujarati as it was, with the vowel letter ઋ (ṛ) that the next lesson writes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṛtu, then traṇ ṛtu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṛtu*, then *traṇ ṛtu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Which season do you like most?\" — tamne kaī ṛtu sauthī vadhāre game che?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Which season do you like most?\" — *tamne kaī ṛtu sauthī vadhāre game che?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like winter most of all\" — mane śiyāḷo sauthī vadhāre game che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like winter most of all\" — *mane śiyāḷo sauthī vadhāre game che*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઋતુ (ṛtu) mean? (\"A season\".) \"Which season?\" (કઈ ઋતુ (ṛtu)?: ઋતુ (ṛtu) is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W53-vocalic-r-letter",
+      "sequence": 15260,
+      "title": "ઋ — the standing vowel ṛ",
+      "headword": "ઋ",
+      "romanization": "ṛ",
+      "gloss": "the standing vowel ṛ, the letter that opens ઋતુ",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:8f5e41235855b316",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Script — meet one form",
+          "Writing — recall after hiding",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — meet one form, Writing — recall after hiding and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say a season — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *a season* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say હૃદય, \"the heart\", and find the sign ૃ under its હ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **હૃદય**, \"the heart\", and find the sign **ૃ** under its **હ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "ઋતુ (ṛtu) opens on the same vowel ṛ, with no consonant to carry it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ૃ, standing alone",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "after a consonant",
+                "standing alone"
+              ],
+              "columns": 3,
+              "rowCount": 1,
+              "utterances": [
+                "ṛ. after a consonant: ૃ, as in હૃદય. standing alone: ?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The missing letter is ઋ (ṛ). Its print has three parts: a bent left body, a separate central stem with a foot, and a right loop flowing into a descending tail."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script — meet one form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઋ — ṛ."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep ઋ (ṛ) visible. Follow the numbered strip:"
+            },
+            {
+              "kind": "speech",
+              "text": "sweep right along the upper left body and turn back down-left."
+            },
+            {
+              "kind": "speech",
+              "text": "lift and descend the central stem into its foot."
+            },
+            {
+              "kind": "speech",
+              "text": "lift again, circle the right loop, and finish through the descending tail."
+            },
+            {
+              "kind": "speech",
+              "text": "Three strokes, two pen lifts: a verified three-stroke teaching-app variant fitted to the bundled printed outline (t30apps.com, ‘Gujarati Alphabet Writing Practice’, version 1.0, ઋ (ṛ) animation, first through third SVG paths)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Finger-trace ઋ (ṛ) once, then air-trace it once. Notice the two lifts: before the stem, and before the loop."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy visible ઋ (ṛ) once. Compare only two things: are there three parts, and does the loop come last? Repair one landmark if needed."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the model and write the standing vowel ṛ once. Uncover ઋ, compare, and stop after one repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "GU-W53-vocalic-r-letter-recall",
+              "prompt": "Hide the model and write the standing vowel r from memory.",
+              "assesses": [
+                "GU-SCRIPT-C282-VOCALIC-R-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ઋ"
+              ],
+              "feedback": {
+                "correct": "ઋ — the left body, the stem, then the loop and tail.",
+                "incorrect": "Look once at ઋ, hide it, and repair only the part that differs."
+              }
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ૃ ઋ (ṛ) ઋતુ (ṛtu) aloud. Which part of ઋ (ṛ) is written last? (The right loop and its tail.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R282-comparing-and-time",
+      "sequence": 15270,
+      "title": "Review — comparing, and how long",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "comparing things, and how long and since when",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:067d3e0532ff4800",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I'm afraid\". (mane bīk lāge che.) Then \"I want to become a doctor\". (māre dāktar banvũ che.) And \"my dream is to become a doctor\". (mārũ sapnũ dāktar banvānũ che.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ૌ (au sign) in સૌથી (sauthī), then ઋ (ṛ) in ઋતુ (ṛtu), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ૌ** in **સૌથી**, then **ઋ** in **ઋતુ**, from memory]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The city is bigger than the village. Mira is younger than Arun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The city is bigger than the village. Mira is younger than Arun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The bus is the cheapest. The fast train is the most expensive.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The bus is the cheapest. The fast train is the most expensive.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have lived here for two years. It has been raining since morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have lived here for two years. It has been raining since morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The shop is open from morning until evening. I worked all day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The shop is open from morning until evening. I worked all day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Which season do you like most? I like the monsoon most of all.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Which season do you like most? I like the monsoon most of all.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than\"? (કરતાં.) \"Most of all\"? (સૌથી (sauthī) વધારે.) \"For two years\": which tense follows? (The present.) Which sign is on સ in સૌથી (sauthī)? (ૌ (au sign).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

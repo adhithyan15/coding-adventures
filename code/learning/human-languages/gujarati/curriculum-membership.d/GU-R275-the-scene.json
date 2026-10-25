@@ -1,0 +1,11 @@
+{
+  "id": "GU-R275-the-scene",
+  "pathSegment": "GU-PATH-275-NARRATE-SCENE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-275-NARRATE-SCENE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "What was going on",
+  "label": "ch:gu-what-was-going-on",
+  "canDo": "I can say what was going on and what used to happen (hũ vā̃cto hato), set a scene against an event with jyāre … tyāre, and ask what happened with banvũ (śũ banyũ?).",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-R275-the-scene",
+    "kind": "production",
+    "summary": "Complete GU-R275-the-scene: set a scene, say what happened in it, and ask what happened.",
+    "assesses": [
+      "GU-GRAMMAR-C275-ONGOING-PAST-01",
+      "GU-GRAMMAR-C275-SCENE-EVENT-01",
+      "GU-LEX-C275-BANVU-01"
+    ]
+  }
+}
