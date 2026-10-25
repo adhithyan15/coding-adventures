@@ -17831,7 +17831,47 @@ large immutable list across many otherwise-empty tables. A failing repeated-
 alias regression now precedes a single-pass collector that charges at most
 100,000 alignment entries per render, including every alias visit. The updated
 21-test suite passes with 100% line, 99.17% branch and 100% method coverage; a
-new exact-head independent review remains the publication gate.
+new exact-head independent review remained the publication gate. PR #18154
+subsequently merged reviewed head
+`777f46db5bd428db886e576e518f24ef5f206b74` as
+`75dc311bc4ca9bb836e723ab8ea746a485b37147` at
+`2026-10-25T00:17:09Z` after all final-head checks reached terminal acceptable
+conclusions. That receipt closes only the bounded F# renderer owner.
+
+## TypeScript GFM neutral-conformance adoption
+
+PR #18118 merged `gfm-language-neutral-conformance-fixture` as
+`83f1871e3d61e8151b0e9313337f5dc2c842a3e6`, so
+`gfm-typescript-neutral-conformance-adoption` is the active independent owner.
+Its bounded scope is the public TypeScript `gfm-parser` `parse()` API followed
+by the public `document-ast-to-html` `toHtml()` API over all sixteen committed
+vectors. The reader enumerates the corpus dynamically, compares the complete
+AST and HTML, retains independent source/AST/HTML corruption witnesses,
+preserves package coverage, and routes an exact
+`gfm-extension-v1/cases.json` change to the native package and its ordinary
+dependent closure on all three platform plans.
+
+This owner qualifies no missing language and introduces no production input
+authority. Keep the successor order intact after it lands: reconcile the
+existing C#, F#, and Haskell packages first; add Swift after its CommonMark
+prerequisites; then add Java, Kotlin, and Dart after their parser and renderer
+prerequisites. Those successors remain separate work items even if the same
+fixture exposes implementation differences.
+
+Local adoption evidence exercises all sixteen rows dynamically through those
+two public APIs and passes focused assertions including independent source,
+AST, and HTML corruption witnesses plus bounded strict UTF-8 fixture loading.
+The actual package BUILD passes 764 tests at 89.21% statement and 87.37% branch
+coverage. Exact-path selection and language filtering pass for Linux, macOS,
+and Windows. Linux-focused tests additionally cover missing-reader atomicity,
+dependent propagation, and path lookalikes. The production Go selector builds
+and passes vet; its complete package suite passes apart from the pre-existing
+PowerShell-dependent registry-generator round trip on hosts without `pwsh`. A
+real unforced TypeScript dry run discovers 505 package roots, identifies only
+`typescript/gfm-parser` as directly changed, and retains its 60-package
+prerequisite/dependent closure. These results qualify the TypeScript adoption
+only; hosted CI and final-head security review remain publication gates.
+
 ## October 24, 2026: C# security follow-up and preserved audit owners
 
 Keep the operator-authorized ceiling of three dependency-safe parity PRs in

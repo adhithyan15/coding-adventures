@@ -646,6 +646,12 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_release_inventory.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
+          # The native GFM reader trusts only the corpus accepted by this
+          # duplicate-key/depth/digest-aware validator. Keep both halves on
+          # the always-run contract path so coordinated fixture edits cannot
+          # bypass the closed TE04 profile.
+          python3 code/scripts/gfm_extension_conformance.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_gfm_extension_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_human_language_hot_files.py'
           # Main's shard weights come from this parser; a report-format drift
           # it no longer recognizes must fail here, not unbalance main.
