@@ -930,8 +930,61 @@ fn relationship_path(
         (StructuralRouting::Orthogonal, Some(from_port), Some(to_port)) => {
             obstacle_avoiding_orthogonal_path(from, to, from_port, to_port, obstacles)
         }
+        (StructuralRouting::Direct, None, None)
+            if !obstacles.is_empty()
+                && (from.x == to.x || from.y == to.y)
+                && !path_is_clear(&[from.clone(), to.clone()], obstacles) =>
+        {
+            let (from_port, to_port) = if from.y == to.y {
+                if from.x < to.x {
+                    (StructuralPort::Right, StructuralPort::Left)
+                } else {
+                    (StructuralPort::Left, StructuralPort::Right)
+                }
+            } else if from.y < to.y {
+                (StructuralPort::Bottom, StructuralPort::Top)
+            } else {
+                (StructuralPort::Top, StructuralPort::Bottom)
+            };
+            obstacle_avoiding_direct_path(from, to, from_port, to_port, obstacles)
+        }
         _ => vec![from, to],
     }
+}
+
+fn obstacle_avoiding_direct_path(
+    from: Point,
+    to: Point,
+    from_port: StructuralPort,
+    to_port: StructuralPort,
+    obstacles: &[StructuralBounds],
+) -> Vec<Point> {
+    let from_lead = port_lead(&from, from_port);
+    let to_lead = port_lead(&to, to_port);
+    let mut points = vec![from, from_lead.clone()];
+    if port_is_horizontal(from_port) {
+        let lane = obstacles
+            .iter()
+            .map(|obstacle| obstacle.y + obstacle.height)
+            .fold(0.0, f64::max)
+            + ROUTE_CLEARANCE;
+        points.extend([
+            Point { x: from_lead.x, y: lane },
+            Point { x: to_lead.x, y: lane },
+        ]);
+    } else {
+        let lane = obstacles
+            .iter()
+            .map(|obstacle| obstacle.x + obstacle.width)
+            .fold(0.0, f64::max)
+            + ROUTE_CLEARANCE;
+        points.extend([
+            Point { x: lane, y: from_lead.y },
+            Point { x: lane, y: to_lead.y },
+        ]);
+    }
+    points.extend([to_lead, to]);
+    simplify_orthogonal_path(points)
 }
 
 fn self_relationship_path(bounds: StructuralBounds) -> Vec<Point> {
@@ -1349,6 +1402,41 @@ mod tests {
             layout.relationships[0].label.as_ref().map(|label| &label.0),
             layout.relationships[1].label.as_ref().map(|label| &label.0)
         );
+    }
+
+    #[test]
+    fn direct_cycle_relationship_routes_around_intervening_nodes() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes[0].id = "A".into();
+        diagram.nodes[0].label = "A".into();
+        diagram.nodes[1].id = "B".into();
+        diagram.nodes[1].label = "B".into();
+        let mut node_c = diagram.nodes[1].clone();
+        node_c.id = "C".into();
+        node_c.label = "C".into();
+        diagram.nodes.push(node_c);
+        let mut relationship = diagram.relationships[0].clone();
+        relationship.from = "A".into();
+        relationship.to = "B".into();
+        let mut second = relationship.clone();
+        second.from = "B".into();
+        second.to = "C".into();
+        let mut back = relationship.clone();
+        back.from = "C".into();
+        back.to = "A".into();
+        diagram.relationships = vec![relationship, second, back];
+
+        let layout = layout_structural_diagram(&diagram);
+        let middle = layout.nodes.iter().find(|node| node.id == "B").expect("B");
+        let back = layout
+            .relationships
+            .iter()
+            .find(|relationship| relationship.from_id == "C" && relationship.to_id == "A")
+            .expect("C to A relationship");
+
+        assert!(back.points.len() >= 5);
+        assert!(back.points.iter().any(|point| point.y > middle.y + middle.height));
     }
 
     #[test]
