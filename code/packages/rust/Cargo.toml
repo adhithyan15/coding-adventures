@@ -1323,4 +1323,5 @@ members = [
   "x509-ocsp-responder-id-binding",
   "x509-ocsp-responder-certificate-policy",
   "x509-ocsp-authenticated-responder",
+  "x509-ocsp-issuer-bound-responder",
 ]
