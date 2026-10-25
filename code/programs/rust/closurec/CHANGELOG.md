@@ -4,6 +4,31 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - a non-directive no longer becomes `"use strict"` (#17907)
+
+`("use strict");x=1;console.log(x)` prints `1` in node. closurec compiled it
+at SIMPLE and ADVANCED to `"use strict";x=1;…`, which throws
+`ReferenceError`. The same happened for `"use\x20strict"`, for
+`` `use strict` `` and for `"use strict",1`, in programs and in function
+bodies. WHITESPACE_ONLY turned `"use\x20strict"` into `"use strict"` too.
+
+- SIMPLE and ADVANCED now drop every `"use strict"` statement in a body's
+  directive prologue (`closure-emitter` 0.63.0). Upstream strips the
+  leading ones too, so real directives no longer reach the output.
+  `--emit_use_strict` still adds one at the top. After `"a";`, upstream
+  keeps a `"use strict"`, and SIMPLE's flattening can then make one out of
+  `"a";{"use strict"}`. closurec drops it there too.
+- WHITESPACE_ONLY prints an escaped spelling as `"use\x20strict"`, which
+  stays inert. It also keeps the `;` in `;"use strict";…`: that empty
+  statement ends the prologue, and dropping it (gap-088) made the string a
+  live directive. It still keeps real directives, which CCR-085 (#15920) will
+  strip.
+
+`tests/regression_use_strict_prologue.rs` pins WHITESPACE_ONLY and SIMPLE
+bytes for seven shapes and SIMPLE bytes for seven more. It asserts that no
+level opens its output with `"use strict"` and, with `node`, that every
+output prints what its source prints.
+
 ### Fixed - ADVANCED no longer inlines a function that reads `this` (#18115)
 
 `function t(){return this}var o={m:function(){return t()}};console.log(o.m()===o)`
@@ -128,6 +153,17 @@ where the source prints `"undefined"`), and a dropped `function g` became a
 `ReferenceError`. `tests/regression_switch_declarations.rs` compiles five
 shapes at SIMPLE and ADVANCED and, when `node` is installed, checks that each
 output prints what the source prints.
+
+### Fixed - ADVANCED inlining no longer lets a nested function capture a caller's binding (#18134)
+
+`var y=1;function t(){return function(){return y}}function g(){var y=2;return t()()}console.log(g())`
+prints `1`. ADVANCED spliced `t` into `g`, so the returned function read
+`g`'s `y`, and the output printed `2`. The fix is in `closure-pass-inline`
+0.32.0: its capture guards now see the free names of nested `function` and
+method bodies.
+
+`tests/regression_inline_nested_capture.rs` checks with `node` that seven
+programs print the same after SIMPLE and ADVANCED as before.
 
 ### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
 
