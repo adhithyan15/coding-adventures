@@ -11133,10 +11133,11 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Python, ext: "py", src: "print(-(-9223372036854775807 - 1))\n", expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.13.16"), case: Some("py-int-print/overflow_neg_min") },
     // `MIN // -1` is folded to `-MIN`, which traps `Trap.Overflow` (CPython: 2^63).
     Prog { lang: Language::Python, ext: "py", src: "print(0)\nprint((-9223372036854775807 - 1) // -1)\n", expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.13.16"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
-    // 3.0a1 — representative (and only member) of the IIR-identity class that
-    // refuses `int_underscores` (`int_underscores.reject@3.0a1`: PEP 515's `_`
-    // separators arrived in 3.6), so it has every other case (LANG84 phase 7b
-    // slice 2, `code/grammars/python/release_classes.csv`).
+    // 3.0a1 — representative of the IIR-identity class that refuses
+    // `int_underscores` (`int_underscores.reject@3.0a1` and `@3.5.10`: PEP 515's
+    // `_` separators arrived in 3.6), so it has every other case (LANG84 phase 7b
+    // slice 2, `code/grammars/python/release_classes.csv`); 3.5.10 is the class's
+    // other member since phase 7c slice 2.
     Prog { lang: Language::Python, ext: "py", src: python_case!("precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/precedence") },
     Prog { lang: Language::Python, ext: "py", src: python_case!("floor_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/floor_div_signs") },
     Prog { lang: Language::Python, ext: "py", src: python_case!("mod_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/mod_signs") },
@@ -11154,33 +11155,36 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/overflow_mul") },
     Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/overflow_neg_min") },
     Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_min_floordiv_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
-    // 3.12.3 — representative of the class of the four releases that accept the
-    // whole corpus (3.12.3, 3.13.16, 3.11.17, 3.16.0a1). It is the class's first
-    // release in `releases.csv` order (date order), so its rows, not the default's,
-    // stand for 3.11.17 and 3.16.0a1 in `release_inventory.py check --matrix`.
-    Prog { lang: Language::Python, ext: "py", src: python_case!("precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/precedence") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("floor_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/floor_div_signs") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/mod_signs") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("unary"), expect: Expect::Stdout("5\n7\n-24\n7\n-3"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/unary") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("int_underscores"), expect: Expect::Stdout("3000000\n0"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/int_underscores") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("print_forms"), expect: Expect::Stdout("1\n\n2\n3\n4"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/print_forms") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("layout"), expect: Expect::Stdout("3\n3\n-1"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/layout") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("i64_bounds"), expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n4611307862899360000\n-9223372036854775808"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/i64_bounds") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("minus_one_divisor"), expect: Expect::Stdout("-7\n0\n-9223372036854775807\n0"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/minus_one_divisor") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_after_output"), expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/div_zero_after_output") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_zero"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/mod_zero") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_computed"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/div_zero_computed") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("zero_divisor_inside_argument"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/zero_divisor_inside_argument") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_add"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_add") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_sub"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_sub") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_mul") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_neg_min") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_min_floordiv_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
-    // Python 2 — LANG84 phase 7c slice 1: the `py2-int-print` subset, the
-    // print *statement* and classic `/` (floor division on ints, lowered
-    // exactly like `//`). 2.2 and 2.7.18 are one IIR-identity class
-    // (`release_classes.csv`), and 2.2, its first release in `releases.csv`,
-    // represents it, so these rows prove stage B for both. Each source is a
+    // 3.6.0 — representative of the class of the five releases that accept the
+    // whole corpus (3.6.0, 3.12.3, 3.13.16, 3.11.17, 3.16.0a1). It is the class's
+    // first release in `releases.csv` order (date order), so its rows, not the
+    // default's, stand for 3.12.3, 3.11.17 and 3.16.0a1 in
+    // `release_inventory.py check --matrix`. (3.12.3 represented the class until
+    // phase 7c slice 2 added 3.6.0, the first release with PEP 515 separators;
+    // 3.5.10, the last without them, joined 3.0a1's class.)
+    Prog { lang: Language::Python, ext: "py", src: python_case!("precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/precedence") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("floor_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/floor_div_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/mod_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("unary"), expect: Expect::Stdout("5\n7\n-24\n7\n-3"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/unary") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("int_underscores"), expect: Expect::Stdout("3000000\n0"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/int_underscores") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("print_forms"), expect: Expect::Stdout("1\n\n2\n3\n4"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/print_forms") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("layout"), expect: Expect::Stdout("3\n3\n-1"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/layout") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("i64_bounds"), expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n4611307862899360000\n-9223372036854775808"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/i64_bounds") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("minus_one_divisor"), expect: Expect::Stdout("-7\n0\n-9223372036854775807\n0"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/minus_one_divisor") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_after_output"), expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/div_zero_after_output") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_zero"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/mod_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_computed"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/div_zero_computed") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("zero_divisor_inside_argument"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/zero_divisor_inside_argument") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_add"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/overflow_add") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_sub"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/overflow_sub") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/overflow_mul") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/overflow_neg_min") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_min_floordiv_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
+    // Python 2 — LANG84 phase 7c: the `py2-int-print` subset, the print
+    // *statement*, classic `/` (floor division on ints, lowered exactly like
+    // `//`) and, since slice 2, octal, hex and `L` literals. 2.2 and 2.4 are one
+    // IIR-identity class (`release_classes.csv`), and 2.2, its first release in
+    // `releases.csv`, represents it, so these rows prove stage B for both. Each source is a
     // case of `code/grammars/python/corpus/py2-int-print/` verbatim; the
     // expectations rest on the tags' pinned source (no host python2) and are
     // cross-checked by translating each case to Python 3 in
@@ -11204,6 +11208,39 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_mul") },
     Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_neg_min") },
     Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_min_classic_div_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_min_classic_div_minus_one") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("octal_literals"), expect: Expect::Stdout("8\n511\n0\n-15\n2"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/octal_literals") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("long_suffix"), expect: Expect::Stdout("1\n3\n-4\n0\n9223372036854775807\n7"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/long_suffix") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("hex_literals"), expect: Expect::Stdout("31\n256\n9223372036854775807\n128\n-3"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/hex_literals") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_long_literal"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_long_literal") },
+    // 2.6 — representative of the second Python 2 class (2.6, 2.7.18): PEP 3127's
+    // `0o`/`0b` literals (phase 7c slice 2) are lexed from 2.6 on, so
+    // `pep3127_literals` is `rejected` on 2.2 and 2.4 (`.reject@2.2`, `@2.4`) and the
+    // two pairs of releases have different outcome vectors. 2.6 runs the whole
+    // corpus; 2.2 above stands for 2.4.
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("print_forms"), expect: Expect::Stdout("1\n\n2\n3\n4"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/print_forms") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/precedence") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("classic_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/classic_div_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("classic_div_chain"), expect: Expect::Stdout("7\n33\n6"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/classic_div_chain") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("floor_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/floor_div_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("mod_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/mod_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("unary"), expect: Expect::Stdout("5\n7\n-24\n7\n-3"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/unary") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("layout"), expect: Expect::Stdout("3\n3\n-1"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/layout") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("i64_bounds"), expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n4611307862899360000\n-9223372036854775808"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/i64_bounds") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("minus_one_divisor"), expect: Expect::Stdout("-7\n0\n-9223372036854775807\n0\n-7"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/minus_one_divisor") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("div_zero_after_output"), expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/div_zero_after_output") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("mod_zero"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/mod_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("floor_div_zero_computed"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/floor_div_zero_computed") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("zero_divisor_inside_item"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/zero_divisor_inside_item") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_add"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_add") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_sub"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_sub") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_mul") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_neg_min") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_min_classic_div_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_min_classic_div_minus_one") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("octal_literals"), expect: Expect::Stdout("8\n511\n0\n-15\n2"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/octal_literals") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("long_suffix"), expect: Expect::Stdout("1\n3\n-4\n0\n9223372036854775807\n7"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/long_suffix") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("hex_literals"), expect: Expect::Stdout("31\n256\n9223372036854775807\n128\n-3"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/hex_literals") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("pep3127_literals"), expect: Expect::Stdout("15\n20\n24\n0"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/pep3127_literals") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_long_literal"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_long_literal") },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -14407,10 +14444,12 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // Python: LANG84 phase 7a's eighteen py-int-print rows on the default
         // 3.13.16 (nine of them StdoutThenTrap: four Trap.DivZero, five
         // Trap.Overflow), plus 7b slice 2's rows on the two IIR-identity class
-        // representatives: 17 on 3.0a1 (no int_underscores) and 18 on 3.12.3,
-        // all eight columns. Phase 7c slice 1 adds the py2-int-print corpus
-        // (19 cases, nine StdoutThenTrap) on its one class representative, 2.2.
-        (Language::Python, 72, 576),
+        // representatives: 17 on 3.0a1 (no int_underscores) and 18 on 3.6.0
+        // (3.12.3 until 7c slice 2), all eight columns. Phase 7c adds the
+        // py2-int-print corpus on its two class representatives: 23 cases on
+        // 2.2 (all but pep3127_literals) and all 24 on 2.6 (ten StdoutThenTrap
+        // each).
+        (Language::Python, 100, 800),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -28640,11 +28679,12 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
 
 /// LANG84 7b slice 2: the Python rows are the `py-int-print` corpus on the
 /// default release (3.13.16) and on each IIR-identity class representative
-/// (3.0a1, which refuses `int_underscores`, and 3.12.3), exactly as
-/// `python-iir-compiler`'s release sweep records them. Phase 7c slice 1: the
-/// `py2-int-print` rows are that corpus on its one class representative,
-/// 2.2 (Python 2 has no default release; 2.2 is passed as the default so
-/// only the representative's rows are expected).
+/// (3.0a1, which refuses `int_underscores`, and 3.6.0), exactly as
+/// `python-iir-compiler`'s release sweep records them. Phase 7c: the
+/// `py2-int-print` rows are that corpus on its two class representatives,
+/// 2.2 and 2.6 (Python 2 has no default release; 2.2 is passed as the
+/// default, and it is a representative anyway, so only the representatives'
+/// rows are expected).
 #[test]
 fn python_rows_run_their_corpus_case() {
     lang84_rows_run_their_corpus_case(&python_rows_of("py-int-print"), "python", "py-int-print", "py", "3.13.16");

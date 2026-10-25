@@ -1,0 +1,4 @@
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+host-python2: rejects
+result: py2-int-print refuses it with a Lex error naming the release
+why: 2.6 and 2.7.18 tok_get requires an octal digit after 0o (ERRORTOKEN); 2.2 and 2.4 read 0 then the name o8, a SyntaxError

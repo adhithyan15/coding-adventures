@@ -35,7 +35,7 @@
 //! | Ruby | `ruby-iir-compiler` (LANG84 phases 5a/5b; any profiled release, default `3.3.6`) |
 //! | Macsyma | `macsyma-iir-compiler` |
 //! | Perl | `perl-iir-compiler` (LANG84; any checked release, default `5.38.0`) |
-//! | Python | `python-iir-compiler` (LANG84 phases 7a/7b `py-int-print`, 7c `py2-int-print` on 2.2 and 2.7.18; any profiled release, default `3.13.16`) |
+//! | Python | `python-iir-compiler` (LANG84 phases 7a/7b `py-int-print`, 7c `py2-int-print` on 2.2, 2.4, 2.6 and 2.7.18; any profiled release, default `3.13.16`) |
 //!
 //! ## Release selection (LANG84)
 //!
@@ -162,11 +162,13 @@ pub enum Language {
     /// Python — the `py-int-print` subset (`print` of `+ - * // %` integer
     /// arithmetic) via `python-iir-compiler`'s release path, compiled against
     /// one profiled release of `code/grammars/python/releases.csv` (LANG84):
-    /// `3.13.16` by default, or `3.0a1`, `3.11.17`, `3.12.3`, `3.16.0a1`
-    /// through [`compile_source_to_iir_at`] / `--lang python@<release>`
-    /// (phase 7b). `--lang python@2.2` and `python@2.7.18` select the
-    /// Python 2 subset `py2-int-print` (phase 7c slice 1): the `print`
-    /// statement, and classic `/`, which floors on ints and lowers like `//`. The compiler walks the tree that the generic
+    /// `3.13.16` by default, or `3.0a1`, `3.5.10`, `3.6.0`, `3.11.17`,
+    /// `3.12.3`, `3.16.0a1` through [`compile_source_to_iir_at`] /
+    /// `--lang python@<release>` (phase 7b; 3.5.10 and 3.6.0 since 7c slice
+    /// 2). `--lang python@2.2`, `@2.4`, `@2.6` and `@2.7.18` select the
+    /// Python 2 subset `py2-int-print` (phase 7c): the `print` statement,
+    /// classic `/`, which floors on ints and lowers like `//`, and octal,
+    /// hex and `L` literals (`0o`/`0b` from 2.6). The compiler walks the tree that the generic
     /// `GrammarLexer`/`GrammarParser` build from that release's
     /// `python<release>.tokens`/`.grammar` and emits only LANG83
     /// registry ops: `+ - *` and unary `-` are the PR4 checked ops (a result
@@ -3559,9 +3561,12 @@ mod tests {
         // Errors after resolution name the release they ran against.
         let parse = compile_source_to_iir_at(Language::Python, Some("3.0a1"), "print(\n", "p").unwrap_err();
         assert!(parse.to_string().contains("Python 3.0a1"), "{parse}");
-        // Phase 7c slice 1: the Python 2 releases speak Python 2. The same
-        // product as a print statement lowers to the same instructions.
-        for release in ["2.2", "2.7.18"] {
+        // Phase 7c: the Python 2 releases speak Python 2. The same product
+        // as a print statement lowers to the same instructions, in any
+        // Python 2 spelling of its operands (slice 2: octal, hex, long).
+        for release in ["2.2", "2.4", "2.6", "2.7.18"] {
+            let spelled = compile_source_to_iir_at(Language::Python, Some(release), "print 06 * 0x7L\n", "p").unwrap();
+            assert_eq!(format!("{:?}", spelled.functions), format!("{:?}", default.functions), "{release}");
             let request = LanguageRequest::parse(&format!("python@{release}")).unwrap();
             let module = compile_request_to_iir(request, "print 6 * 7\n", "p").unwrap();
             assert_eq!(module.release.as_deref(), Some(release));
