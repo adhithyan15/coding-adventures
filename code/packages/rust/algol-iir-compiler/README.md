@@ -303,12 +303,13 @@ dynamic roots, path-dependent signs, and effectful selectors remain
 conservative.
 Checked exact-integer normalizers may also provide a nonnegative exponent for
 the sign-rooted transform when the right-associative exponent chain stays
-within the existing unroll cap. Zero, negative, dynamic, path-dependent,
-effectful, and oversized exponents remain conservative.
-Positive variable-free whole-number powers may raise the exact sign-rooted
+within the existing unroll cap. A zero result classifies the whole power as
+exactly one; negative, dynamic, path-dependent, effectful, and oversized
+exponents remain conservative.
+Nonnegative variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
-exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and
-oversized powers remain conservative.
+exponentiation remains within `2^53`; zero produces exact one, while negative,
+dynamic, deeper, and oversized powers remain conservative.
 Integer `div` by a variable-free nonzero whole number may reduce the exact
 sign-rooted transform, including composition through later powers, remainders,
 and exact real division. The quotient bound uses truncation toward zero; zero,
