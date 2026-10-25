@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Apply the selected reviewed root's supported out-of-band DNS constraints to
+  the exact authenticated responder certificate retained by the reified path,
+  under separate caller-owned parse limits and with payload-free failures.
+- Retain count-only DNS evidence while leaving intermediate, excluded, and
+  non-DNS responder constraints and responder/intermediate revocation unresolved.
 - Add an infallible nominal projection that retains the complete reviewed
   server-revocation proof and reifies its already-proven exact delegated
   responder-to-reviewed-root path for later policy composition.
