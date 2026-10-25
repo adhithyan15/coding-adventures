@@ -71,7 +71,13 @@ the actual open PR and its current-head CI logs, and revisit this ordering:
    package BUILD, contracts, required CI and Ruby CodeQL successful.
    Reprioritize reliability, prerequisites, portability and smallest complete
    delivery: [NN46 five-native conformance](../../specs/NN46-five-native-dense-conformance.md)
-   connects Ruby to actual required exchanges before another native port.
+   merged in [PR #18252](https://github.com/adhithyan15/coding-adventures/pull/18252)
+   at exact head `ff37a3e44e3` (squash `da1b408680f`), with actual twenty-pair
+   selected exchange, three-platform native BUILDs and all applicable checks
+   passed. Reassess reliability, prerequisites, portability and smallest
+   complete delivery: C matrix/math/ISO foundations exist, but C has no native
+   JSON parser. [NN47 bounded C JSON](../../specs/NN47-c-bounded-json-foundation.md)
+   precedes a separate C dense implementation and later six-native exchange.
 5. **P2 — Optional Rust dense C ABI.** Specify ownership, shapes, errors,
    versioning, and resumable state before exposing binding consumers. Keep
    those consumers distinct from the native implementations.
@@ -158,10 +164,12 @@ SGD training, inspection, and portable save/reload/resume.
   Native Ruby passes the paper oracle, all-parameter finite differences and
   shared 55-case corpus. Library and executable line coverage are 100%; native
   XOR loss is 0.00023307123378282036 with full model resumes through 3002.
-- [ ] Required five-native conformance incorporating actual Ruby exchange
-  processes, not a static registry entry (NN46 implemented locally; exact-head
-  CI and merge pending). All twenty directed pairs pass through 3002, with
+- [x] Required five-native conformance incorporating actual Ruby exchange
+  processes, not a static registry entry (NN46 merged exact head `ff37a3e44e3`
+  in #18252). All twenty directed pairs pass through 3002, with
   five native lanes, zero bindings and 55 actual child executions.
+- [ ] C bounded JSON prerequisite (NN47): owned, strict, resource-bounded C17
+  parser before accepting native dense checkpoints; not training or a binding.
 - [ ] C native framework.
 - [ ] C++ native framework.
 - [ ] C# native framework.

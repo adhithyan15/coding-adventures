@@ -1,0 +1,102 @@
+# NN47: Bounded JSON Foundation for Native C Training
+
+Status: specified before implementation; library/build evidence pending.
+
+## Reassessment after five-native delivery
+
+NN46 merged PR #18252 at exact head `ff37a3e44e3`, squash `da1b408680f`,
+after every applicable CI/CodeQL check passed. Selected conformance executed
+all twenty directed pairs through 3002, five native lanes and no bindings;
+actual package builds passed on Linux, macOS and Windows. The final roll-up
+recorded required:true/result:success. Runner scheduling delayed the verdict,
+not a source defect, so no source changes or cancellations were made.
+
+Reprioritize reliability, prerequisites, portability and smallest complete
+delivery. C already has independent double-precision matrix and float-math
+foundations and the strict ISO multi-compiler harness. Its `neural-network`
+package is a topology/property graph, explicitly not trainable dense layers.
+There is no native C JSON package in the current package inventory. Safely
+loading bounded, typed, owned checkpoints is therefore a prerequisite: deliver
+one reusable bounded JSON parser before a separate C dense training tranche.
+Do not wrap Rust, introduce an external JSON/ML dependency, or claim C training
+or six-native interchange from this foundation.
+
+## Public C17 ownership contract
+
+Create `code/packages/c/bounded-json` in pure ISO C17 with an installable public
+header and standalone source. Use explicit status codes and an opaque owned
+document with const value views: null, boolean, number, UTF-8 string, ordered
+array and ordered object members. Retain duplicate object names in source order
+so a later closed checkpoint loader can reject duplicate/unknown fields rather
+than silently accept a last-wins interpretation. Names/strings carry lengths,
+including embedded decoded NUL; never truncate names at NUL during lookup.
+
+Provide a default parser plus explicit bounded options and accessors for kind,
+numbers, strings, arrays and object members. Numeric inspection distinguishes
+exact int64 lexical integers from fractional/exponent forms and finite floating
+values; `1.0`, `1e0`, true and null cannot become integer metadata. An integer
+lexeme outside int64 may be represented as a finite float, never wrapped or
+saturated into an integer. JSON number grammar is strict before conversion.
+Numeric conversion must honor JSON's decimal point independently of the caller's
+numeric locale without changing global locale. Reject nonfinite conversion;
+document finite underflow/rounding behavior rather than invent exact bigints.
+
+Caller byte buffers must actually contain the supplied readable length (ordinary
+C pointer precondition). Successful documents own all storage and do not depend
+on the original buffer. Invalid arguments, allocation failure, malformed text
+or limit violations produce no partially owned output. A document release API
+resets its handle and is safe on NULL/empty/already-released handles. Views are
+valid only until their document is released; document that lifetime explicitly.
+Do not promise safety for arbitrary forged C pointers.
+
+All size arithmetic, node/member/string capacities and allocations are checked
+before multiplication/addition. Bound input to 4 MiB and container depth to 128
+by default, with explicit node/allocation budgets preventing tiny-value input
+from expanding without limit. Options may select tighter limits; reject unsafe
+or unrepresentable limits before parsing. Provide allocator injection or a
+similarly deterministic private test seam to exercise every allocation-failure
+path and verify complete partial-tree cleanup. No hidden file/network/process
+I/O or global mutable parse state belongs in the library.
+
+## Text and boundary semantics
+
+Parse exactly one complete JSON value with only RFC JSON whitespace afterward.
+Reject trailing documents, malformed literals/numbers, leading zeros, unfinished
+fractions/exponents, invalid escapes, unescaped controls and truncated tokens.
+Decode escapes, Unicode and surrogate pairs to valid UTF-8; reject invalid raw
+UTF-8, unpaired surrogates, overlong encodings and out-of-range code points.
+Byte, depth, node and memory envelopes must apply on every success/error path,
+including long strings and wide arrays/objects. Error reports expose a closed
+kind and bounded offset, not raw potentially sensitive input fragments.
+
+Test objects with duplicate and embedded-NUL names explicitly. This is text
+parsing, not NN40 checkpoint acceptance: the existing 55 fixture documents may
+be parsed/inspected as JSON, but schema-level rejection still belongs to the
+future public native dense loader. No parser test or package registration is
+native checkpoint-training evidence.
+
+## Portable validation and delivery
+
+Use the existing ISO harness and dependency metadata with both BUILD fronts.
+Linux CI requires GCC and Clang; Windows exercises MSVC; macOS Apple Clang.
+Warnings are errors and non-ISO extensions fail. Tests cover strict grammar,
+all value kinds, nested/wide limits, Unicode, exact integer boundaries, finite
+numeric conversion, ownership, accessor bounds, allocator faults and cleanup.
+Target at least 95% library line coverage; run AddressSanitizer/UBSan where
+supported, including allocation-failure tests. Measure actual coverage, not just
+test counts. Any standalone fixture/command helper targets at least 80%.
+
+Provide explicit install/payload metadata appropriate to the C lane, required
+capabilities, README/API examples, changelog, teaching lesson/trace, curriculum
+and framework roadmap. Use the existing shared harness, not a bespoke competing
+compiler scheduler. Do not change matrix/math semantics or five-native gate
+selection merely to claim this parser is training. Later native C and actual
+six-native exchange remain separate tranches.
+
+Preserve dirty primary/unrelated work and initialize sparse paths before adding
+files. Disk fell near 106 MiB after NN46; only the validated regenerable NN38
+target was cleaned (92.8 MiB, sources retained), while Windows' unregistered
+NN46 residual directory was preserved. Recheck disk before builds. Independent
+read-only security review is mandatory before every push; publish one ready PR,
+inspect real package BUILD/applicable CI/CodeQL and confirm exact-head merge
+before selecting the next tranche.
