@@ -49,13 +49,13 @@ class BoundedJsonWindowsCITests(unittest.TestCase):
 
     def test_selected_package_keeps_windows_without_other_toolchain_flags(self):
         out = self.plan({"affected_packages": ["c/bounded-json"], "packages": []})
-        self.assertEqual(out["run_c_bounded_json_windows"], "true")
+        self.assertEqual(out["needs_c_bounded_json_windows"], "true")
         self.assertIn("windows-2025", out["build_matrix"])
         self.assertEqual(out["shard_count"], "0")
 
     def test_unrelated_plan_does_not_broaden_cpp_windows_scheduling(self):
         out = self.plan({"affected_packages": ["cpp/matrix"], "packages": []})
-        self.assertEqual(out["run_c_bounded_json_windows"], "false")
+        self.assertEqual(out["needs_c_bounded_json_windows"], "false")
         self.assertNotIn("windows-2025", out["build_matrix"])
 
     def test_dependency_aware_windows_override_selects_package(self):
@@ -74,24 +74,24 @@ class BoundedJsonWindowsCITests(unittest.TestCase):
         for plan, missing in [(None, True), (None, False), ({}, False)]:
             with self.subTest(plan=plan, missing=missing):
                 out = self.plan(plan, missing=missing)
-                self.assertEqual(out["run_c_bounded_json_windows"], "true")
+                self.assertEqual(out["needs_c_bounded_json_windows"], "true")
                 self.assertIn("windows-2025", out["build_matrix"])
 
     def test_existing_windows_reasons_remain_independent(self):
         out = self.plan({"affected_packages": [], "packages": []}, NEEDS_RUST="true")
-        self.assertEqual(out["run_c_bounded_json_windows"], "false")
+        self.assertEqual(out["needs_c_bounded_json_windows"], "false")
         self.assertIn("windows-2025", out["build_matrix"])
 
     def test_requirement_wires_bootstrap_execution_and_required_rollup(self):
         self.assertIn(
-            "run_c_bounded_json_windows: ${{ steps.build-matrix.outputs.run_c_bounded_json_windows }}",
+            "needs_c_bounded_json_windows: ${{ steps.build-matrix.outputs.needs_c_bounded_json_windows }}",
             CI,
         )
         bootstrap = CI.split("      - name: Set up MSVC (", 1)[1].split(
             "      - name:", 1
         )[0]
         self.assertIn(
-            "needs.detect.outputs.run_c_bounded_json_windows == 'true'", bootstrap
+            "needs.detect.outputs.needs_c_bounded_json_windows == 'true'", bootstrap
         )
         native = CI.split("      - name: Validate bounded C JSON with MSVC\n", 1)[
             1
