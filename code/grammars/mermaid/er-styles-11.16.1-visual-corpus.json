@@ -6,6 +6,7 @@
     "inline-class",
     "class-and-direct-style",
     "multi-class-composition",
-    "relationship-inline-classes"
+    "relationship-inline-classes",
+    "direct-style-composition"
   ]
 }
