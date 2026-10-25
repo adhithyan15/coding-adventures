@@ -69,12 +69,13 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18112 — prepare, publish, and audit `task-app-v0.5.10`.** The bounded
-board-column floor slice #18030 is complete in #18031 with all PR and release
-payload checks passing. Prioritize this compatible patch checkpoint under
-#13543 before further fidelity work. Preparation must merge before publication;
-audit immutable provenance, manifest, assets and checksums before closing the
-issue. Keep the existing artifact matrix and unsigned limitations unchanged.
+**Next: #18197 — preserve detailed changelog Markdown in release notes.**
+Prioritize this product-scoped SemVer repair under #13543 before further
+fidelity work. The immutable v0.5.10 checkpoint (#18112) is published and audited:
+13 assets, 12 checksum entries, and 11 manifest payloads from
+`1eee296461f07dd5a1657c7a4822799aa1552df9`. All release lanes passed in
+run 40168462613. Keep the existing artifact matrix and unsigned limitations
+unchanged; never rewrite that immutable release to repair its notes.
 
 **Published checkpoint: [#17950](https://github.com/adhithyan15/coding-adventures/issues/17950)
 — prepare, publish, and audit `task-app-v0.5.9`.** P0 lifecycle gates are

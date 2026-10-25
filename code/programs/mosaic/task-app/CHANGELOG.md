@@ -4,6 +4,11 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve version-specific changelog details, multiline bullets, and subsection
+  headings in generated release notes instead of listing only categories (#18197).
+
 Entries added after `task-app-v0.5.10` accumulate here until the next version is
 cut.
 
