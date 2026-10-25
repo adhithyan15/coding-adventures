@@ -1,0 +1,11 @@
+{
+  "id": "GU-C286-sipai",
+  "pathSegment": "GU-PATH-286-GUNO286",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-286-GUNO286",
+      "order": 1
+    }
+  ]
+}

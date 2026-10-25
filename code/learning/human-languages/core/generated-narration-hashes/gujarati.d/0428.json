@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:9a4d24adbc32a3ac",
+  "lessonIds": [
+    "GU-C428-devalu",
+    "GU-C428-lenu",
+    "GU-C428-uchinu",
+    "GU-C428-sahukar",
+    "GU-C428-thagvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch428.txt",
+  "json": "gujarati/narration/ch428.json",
+  "textHash": "fnv1a64:d3e0b5456bed2fbe",
+  "jsonHash": "fnv1a64:805efbfa735929a4",
+  "findings": []
+}

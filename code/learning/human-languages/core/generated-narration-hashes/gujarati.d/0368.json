@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:ebfcc252f0ac9f4a",
+  "lessonIds": [
+    "GU-C368-nasib",
+    "GU-C368-bhagya",
+    "GU-C368-sanyog",
+    "GU-C368-phalvu",
+    "GU-C368-nivadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch368.txt",
+  "json": "gujarati/narration/ch368.json",
+  "textHash": "fnv1a64:b2cae0dea7bc73fc",
+  "jsonHash": "fnv1a64:1cd6909d53e42213",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:4ee2017445347f4f",
+  "lessonIds": [
+    "GU-C536-muhurt",
+    "GU-C536-coghdiyu",
+    "GU-C536-pancag",
+    "GU-C536-kundli",
+    "GU-C536-bhavi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch536.txt",
+  "json": "gujarati/narration/ch536.json",
+  "textHash": "fnv1a64:d6ca3ee9446f9475",
+  "jsonHash": "fnv1a64:de7e5382e703c2b7",
+  "findings": []
+}

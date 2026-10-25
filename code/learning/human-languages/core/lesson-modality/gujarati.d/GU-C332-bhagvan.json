@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C332-bhagvan",
+    "language": "gujarati",
+    "chapter": 332,
+    "sequence": 18420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a871dcaab27d1c5"
+  },
+  "findings": []
+}

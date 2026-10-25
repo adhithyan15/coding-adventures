@@ -1,0 +1,11 @@
+{
+  "id": "GU-C370-apatti",
+  "pathSegment": "GU-PATH-370-KHATRO370",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-370-KHATRO370",
+      "order": 2
+    }
+  ]
+}

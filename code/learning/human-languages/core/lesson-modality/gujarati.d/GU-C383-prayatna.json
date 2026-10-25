@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C383-prayatna",
+    "language": "gujarati",
+    "chapter": 383,
+    "sequence": 21250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eabd20f15181ed59"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:905cbc6c9b1e046b",
+  "lessonIds": [
+    "GU-C336-lekhak",
+    "GU-C336-kavi",
+    "GU-C336-racvu",
+    "GU-C336-atmaktha",
+    "GU-C336-kalpana"
+  ],
+  "tex": "gujarati/book/chapters/ch336-the-author.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C516-dholvu-whitewash",
+  "pathSegment": "GU-PATH-516-CHUNO516",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-516-CHUNO516",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C472-khopri",
+  "pathSegment": "GU-PATH-472-NAS472",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-472-NAS472",
+      "order": 2
+    }
+  ]
+}

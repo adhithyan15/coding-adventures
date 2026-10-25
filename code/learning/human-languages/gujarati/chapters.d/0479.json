@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Taken Ill",
+  "label": "ch:gu-taken-ill",
+  "canDo": "I can say how serious an illness is.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C479-patharivas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can say how serious an illness is.",
+    "assesses": [
+      "GU-LEX-C479-MANDU479-03",
+      "GU-LEX-C479-MANDU479-04",
+      "GU-LEX-C479-MANDU479-05"
+    ]
+  }
+}

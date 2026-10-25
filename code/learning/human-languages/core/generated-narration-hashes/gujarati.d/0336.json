@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:a17de03b23be8f03",
+  "lessonIds": [
+    "GU-C336-lekhak",
+    "GU-C336-kavi",
+    "GU-C336-racvu",
+    "GU-C336-atmaktha",
+    "GU-C336-kalpana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch336.txt",
+  "json": "gujarati/narration/ch336.json",
+  "textHash": "fnv1a64:dfcff49390dc33d0",
+  "jsonHash": "fnv1a64:590671489480e00b",
+  "findings": []
+}

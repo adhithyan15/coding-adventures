@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 548,
+  "sourceHash": "fnv1a64:f13f7c4acb04408d",
+  "lessonIds": [
+    "GU-C548-tim",
+    "GU-C548-kaptan",
+    "GU-C548-mukablo",
+    "GU-C548-vijeta",
+    "GU-C548-jitadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch548.txt",
+  "json": "gujarati/narration/ch548.json",
+  "textHash": "fnv1a64:f2a320545f17aff3",
+  "jsonHash": "fnv1a64:c37672cab4e230a4",
+  "findings": []
+}

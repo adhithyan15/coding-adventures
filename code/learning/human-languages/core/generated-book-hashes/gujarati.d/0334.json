@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:c85fcef2a0c77285",
+  "lessonIds": [
+    "GU-C334-khajano",
+    "GU-C334-ajgar",
+    "GU-C334-lobh",
+    "GU-C334-lalcavvu",
+    "GU-C334-bhatakvu"
+  ],
+  "tex": "gujarati/book/chapters/ch334-the-hidden-treasure.tex"
+}

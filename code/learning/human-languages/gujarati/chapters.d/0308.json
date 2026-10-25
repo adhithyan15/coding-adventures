@@ -1,0 +1,21 @@
+{
+  "chapter": 308,
+  "title": "A Brave Swimmer",
+  "label": "ch:gu-a-brave-swimmer",
+  "canDo": "I can tell how a brave swimmer saved a boy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-R308-review-301-308",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can tell how a brave swimmer saved a boy.",
+    "assesses": [
+      "GU-LEX-C308-SAHAS308-01",
+      "GU-LEX-C308-SAHAS308-02",
+      "GU-LEX-C308-SAHAS308-03",
+      "GU-LEX-C308-SAHAS308-04",
+      "GU-LEX-C308-SAHAS308-05"
+    ]
+  }
+}

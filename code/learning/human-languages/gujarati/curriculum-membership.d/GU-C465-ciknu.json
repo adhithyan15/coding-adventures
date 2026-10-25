@@ -1,0 +1,11 @@
+{
+  "id": "GU-C465-ciknu",
+  "pathSegment": "GU-PATH-465-SAKHAT465",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-465-SAKHAT465",
+      "order": 1
+    }
+  ]
+}

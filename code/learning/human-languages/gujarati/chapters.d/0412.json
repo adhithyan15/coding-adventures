@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Tents and Camps",
+  "label": "ch:gu-tents-and-camps",
+  "canDo": "I can talk about a night spent in a camp.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C412-galvu-spend",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about a night spent in a camp.",
+    "assesses": [
+      "GU-LEX-C412-CAMP412-03",
+      "GU-LEX-C412-CAMP412-04",
+      "GU-LEX-C412-CAMP412-05"
+    ]
+  }
+}

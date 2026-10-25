@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:45dd6753432054bb",
+  "lessonIds": [
+    "GU-C296-embyulans",
+    "GU-C296-upadvu-lift",
+    "GU-C296-pato",
+    "GU-C296-tako",
+    "GU-C296-halat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch296.txt",
+  "json": "gujarati/narration/ch296.json",
+  "textHash": "fnv1a64:1fb1163aacce2aae",
+  "jsonHash": "fnv1a64:e91b7d4a5eb3ca2b",
+  "findings": []
+}

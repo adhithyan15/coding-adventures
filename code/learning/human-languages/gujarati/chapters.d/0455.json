@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "A Heavy Heart",
+  "label": "ch:gu-a-heavy-heart",
+  "canDo": "I can say how grief shows on a person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C455-rudan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can say how grief shows on a person.",
+    "assesses": [
+      "GU-LEX-C455-GAMGIN455-03",
+      "GU-LEX-C455-GAMGIN455-04",
+      "GU-LEX-C455-GAMGIN455-05"
+    ]
+  }
+}

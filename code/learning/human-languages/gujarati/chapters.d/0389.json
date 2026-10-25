@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "Making a Choice",
+  "label": "ch:gu-making-a-choice",
+  "canDo": "I can weigh a choice before I decide.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C389-dagvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can weigh a choice before I decide.",
+    "assesses": [
+      "GU-LEX-C389-NIRNAY389-03",
+      "GU-LEX-C389-NIRNAY389-04",
+      "GU-LEX-C389-NIRNAY389-05"
+    ]
+  }
+}

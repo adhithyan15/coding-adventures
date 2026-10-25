@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:38f6c9cc39f82939",
+  "lessonIds": [
+    "GU-C322-humlo",
+    "GU-C322-ladai",
+    "GU-C322-yoddho",
+    "GU-C322-hanvu",
+    "GU-C322-jhajhumvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch322.txt",
+  "json": "gujarati/narration/ch322.json",
+  "textHash": "fnv1a64:da2b1f43ee07b4a8",
+  "jsonHash": "fnv1a64:17c81a36ce9538a9",
+  "findings": []
+}

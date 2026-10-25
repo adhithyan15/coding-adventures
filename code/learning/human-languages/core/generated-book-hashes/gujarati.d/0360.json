@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:583a07d65526ec8e",
+  "lessonIds": [
+    "GU-C360-iman",
+    "GU-C360-lalac",
+    "GU-C360-vaphadar",
+    "GU-C360-dago",
+    "GU-C360-phasavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch360-loyalty-and-betrayal.tex"
+}

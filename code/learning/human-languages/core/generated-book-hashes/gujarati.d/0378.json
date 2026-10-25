@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:47338dc53a5515a8",
+  "lessonIds": [
+    "GU-C378-had",
+    "GU-C378-maryada",
+    "GU-C378-atisay",
+    "GU-C378-praman",
+    "GU-C378-khamvu",
+    "GU-R378-review-371-378"
+  ],
+  "tex": "gujarati/book/chapters/ch378-within-limits.tex"
+}

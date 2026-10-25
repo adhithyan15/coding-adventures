@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C508-lokhand",
+    "language": "gujarati",
+    "chapter": 508,
+    "sequence": 28350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:548fa139f103037a"
+  },
+  "findings": []
+}

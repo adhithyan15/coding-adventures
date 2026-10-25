@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:2188ad11c5bf1839",
+  "lessonIds": [
+    "GU-C289-adalat",
+    "GU-C289-vakil",
+    "GU-C289-nyay",
+    "GU-C289-saja",
+    "GU-C289-bhogavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch289-in-court.tex"
+}

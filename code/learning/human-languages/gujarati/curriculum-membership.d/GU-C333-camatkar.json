@@ -1,0 +1,11 @@
+{
+  "id": "GU-C333-camatkar",
+  "pathSegment": "GU-PATH-333-PARI333",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-333-PARI333",
+      "order": 2
+    }
+  ]
+}

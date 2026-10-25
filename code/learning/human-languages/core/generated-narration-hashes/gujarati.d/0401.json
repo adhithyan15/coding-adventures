@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:bb7bd97bb7fd6ce7",
+  "lessonIds": [
+    "GU-C401-tayar",
+    "GU-C401-pankcar",
+    "GU-C401-trak",
+    "GU-C401-ghasadvu",
+    "GU-C401-uthalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch401.txt",
+  "json": "gujarati/narration/ch401.json",
+  "textHash": "fnv1a64:28c6936b21d2bbc7",
+  "jsonHash": "fnv1a64:c4adcc8f9406aebe",
+  "findings": []
+}

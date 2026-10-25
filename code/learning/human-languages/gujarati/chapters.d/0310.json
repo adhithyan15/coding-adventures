@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "The Search Team",
+  "label": "ch:gu-the-search-team",
+  "canDo": "I can say how a team searched the forest.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C310-vikheravu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can say how a team searched the forest.",
+    "assesses": [
+      "GU-LEX-C310-TUKDI310-03",
+      "GU-LEX-C310-TUKDI310-04",
+      "GU-LEX-C310-TUKDI310-05"
+    ]
+  }
+}

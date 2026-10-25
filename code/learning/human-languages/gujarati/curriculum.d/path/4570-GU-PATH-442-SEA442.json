@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-442-SEA442",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GU-EXT-442-SEA442"
+  ],
+  "after": []
+}

@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 531,
+  "title": "When Plans Go Wrong",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:edc9574df3516b6f",
+  "lessons": [
+    {
+      "id": "GU-C531-jhanjhat",
+      "sequence": 29530,
+      "title": "ઝંઝટ (jhanjhaṭ) — a hassle",
+      "headword": "ઝંઝટ",
+      "romanization": "jhanjhaṭ",
+      "gloss": "a hassle",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4484688327ec7069",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to push back, then the Gujarati for at long last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝંઝટ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝંઝટ — jhanjhaṭ — \"a hassle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો ટ્રેન મોડી હશે તો ઘણી ઝંઝટ થશે. jo ṭren moḍī haśe to ghaṇī jhanjhaṭ thaśe. If the train is late, there will be a lot of hassle."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝંઝટ (jhanjhaṭ) sounds like what it means, a tangle of small troubles. CDIAL lists Old Gujarati jhaṁjha, \"a quarrel\", and Gujarati jhā̃jh, \"rage\", under Sanskrit jhañjhā, \"the noise of rain\" (CDIAL 5326); it does not list this word, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhanjhaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhanjhaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhanjhaṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhanjhaṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo ṭren moḍī haśe to ghaṇī jhanjhaṭ thaśe. — If the train is late, there will be a lot of hassle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo ṭren moḍī haśe to ghaṇī jhanjhaṭ thaśe.* — If the train is late, there will be a lot of hassle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to push back, then the Gujarati for at long last, then say jhanjhaṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to push back, then the Gujarati for at long last, then say *jhanjhaṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝંઝટ (jhanjhaṭ) mean? (\"A hassle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C531-andharyu",
+      "sequence": 29540,
+      "title": "અણધાર્યું (aṇdhāryũ) — unexpected",
+      "headword": "અણધાર્યું",
+      "romanization": "aṇdhāryũ",
+      "gloss": "unexpected",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14eeecb88e5eb2cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for at long last, then the Gujarati for a hassle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અણધાર્યું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અણધાર્યું — aṇdhāryũ — \"unexpected\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો કંઈક અણધાર્યું બનશે તો મને તરત ફોન કરો. jo kaīk aṇdhāryũ banśe to mane tarat phon karo. If something unexpected happens, phone me at once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અણધાર્યું (aṇdhāryũ) is built from aṇ-, \"un-\", and ધાર્યું, the past of ધારવું, \"to suppose\": not supposed, unexpected. CDIAL files ધારવું under Sanskrit dhāráyati, \"holds\" (CDIAL 6791)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇdhāryũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇdhāryũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇdhāryũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇdhāryũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo kaīk aṇdhāryũ banśe to mane tarat phon karo. — If something unexpected happens, phone me at once.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo kaīk aṇdhāryũ banśe to mane tarat phon karo.* — If something unexpected happens, phone me at once.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for at long last, then the Gujarati for a hassle, then say aṇdhāryũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for at long last, then the Gujarati for a hassle, then say *aṇdhāryũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અણધાર્યું (aṇdhāryũ) mean? (\"Unexpected\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C531-ocintu",
+      "sequence": 29550,
+      "title": "ઓચિંતું (ocintũ) — sudden",
+      "headword": "ઓચિંતું",
+      "romanization": "ocintũ",
+      "gloss": "sudden",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:634fd2d2eef4a498",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a hassle, then the Gujarati for unexpected."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઓચિંતું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઓચિંતું — ocintũ — \"sudden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો ઓચિંતો વરસાદ આવશે તો મેચ બંધ થઈ જશે. jo ocinto varsād āvśe to mec bandh thaī jaśe. If a sudden shower comes, the match will be stopped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઓચિંતું (ocintũ) goes back to a reconstructed apacitta, \"without thought\", and CDIAL lists the Gujarati word, \"suddenly\" (CDIAL 420): what comes without being thought of. It agrees with its noun: ઓચિંતો વરસાદ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ocintũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ocintũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ocintũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ocintũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo ocinto varsād āvśe to mec bandh thaī jaśe. — If a sudden shower comes, the match will be stopped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo ocinto varsād āvśe to mec bandh thaī jaśe.* — If a sudden shower comes, the match will be stopped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a hassle, then the Gujarati for unexpected, then say ocintũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a hassle, then the Gujarati for unexpected, then say *ocintũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઓચિંતું (ocintũ) mean? (\"Sudden\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C531-pherphar",
+      "sequence": 29560,
+      "title": "ફેરફાર (pherphār) — a change",
+      "headword": "ફેરફાર",
+      "romanization": "pherphār",
+      "gloss": "a change",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ecd71641568e4bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for unexpected, then the Gujarati for sudden."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ફેરફાર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફેરફાર — pherphār — \"a change\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો યોજનામાં કોઈ ફેરફાર થશે તો હું તમને કહીશ. jo yojnāmā̃ koī pherphār thaśe to hũ tamne kahīś. If there is any change in the plan, I will tell you."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફેરફાર (pherphār) is built on pher, \"a turn\", which CDIAL files under phirati, \"turns\" (CDIAL 9078), doubled with a rhyming phār."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pherphār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pherphār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pherphār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pherphār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo yojnāmā̃ koī pherphār thaśe to hũ tamne kahīś. — If there is any change in the plan, I will tell you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo yojnāmā̃ koī pherphār thaśe to hũ tamne kahīś.* — If there is any change in the plan, I will tell you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for unexpected, then the Gujarati for sudden, then say pherphār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for unexpected, then the Gujarati for sudden, then say *pherphār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ફેરફાર (pherphār) mean? (\"A change\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C531-bandobast",
+      "sequence": 29570,
+      "title": "બંદોબસ્ત (bandobast) — arrangements (made in advance)",
+      "headword": "બંદોબસ્ત",
+      "romanization": "bandobast",
+      "gloss": "arrangements (made in advance)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c23acab6c594740",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for sudden, then the Gujarati for a change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બંદોબસ્ત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બંદોબસ્ત — bandobast — \"arrangements (made in advance)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો મહેમાનો રાત્રે રોકાશે તો સૂવાનો બંદોબસ્ત કરવો પડશે. jo mahemāno rātre rokāśe to sūvāno bandobast karvo paḍśe. If the guests stay the night, sleeping arrangements will have to be made."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બંદોબસ્ત (bandobast) is usually traced to Persian band-o-bast, \"binding and tying\", and so \"arrangements\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandobast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandobast*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandobast, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandobast*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo mahemāno rātre rokāśe to sūvāno bandobast karvo paḍśe. — If the guests stay the night, sleeping arrangements will have to be made.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo mahemāno rātre rokāśe to sūvāno bandobast karvo paḍśe.* — If the guests stay the night, sleeping arrangements will have to be made.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for sudden, then the Gujarati for a change, then say bandobast again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for sudden, then the Gujarati for a change, then say *bandobast* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બંદોબસ્ત (bandobast) mean? (\"Arrangements (made in advance)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

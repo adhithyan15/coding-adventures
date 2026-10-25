@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:b9424ba10453e1f5",
+  "lessonIds": [
+    "GU-C448-hasya",
+    "GU-C448-hasavvu",
+    "GU-C448-smit",
+    "GU-C448-majak",
+    "GU-C448-cidavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch448.txt",
+  "json": "gujarati/narration/ch448.json",
+  "textHash": "fnv1a64:1cb6752c7403249b",
+  "jsonHash": "fnv1a64:b5f9da1c8ba1e5e3",
+  "findings": []
+}

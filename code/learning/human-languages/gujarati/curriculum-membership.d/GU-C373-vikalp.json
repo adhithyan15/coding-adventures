@@ -1,0 +1,11 @@
+{
+  "id": "GU-C373-vikalp",
+  "pathSegment": "GU-PATH-373-UPAY373",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-373-UPAY373",
+      "order": 2
+    }
+  ]
+}

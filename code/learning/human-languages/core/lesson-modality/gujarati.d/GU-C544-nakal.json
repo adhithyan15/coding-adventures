@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C544-nakal",
+    "language": "gujarati",
+    "chapter": 544,
+    "sequence": 30230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fbf0b658f4aee12"
+  },
+  "findings": []
+}

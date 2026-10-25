@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Making It Grow",
+  "label": "ch:gu-making-it-grow",
+  "canDo": "I can say what will grow if we plant and wait.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C390-upajvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can say what will grow if we plant and wait.",
+    "assesses": [
+      "GU-LEX-C390-PAK390-03",
+      "GU-LEX-C390-PAK390-04",
+      "GU-LEX-C390-PAK390-05"
+    ]
+  }
+}

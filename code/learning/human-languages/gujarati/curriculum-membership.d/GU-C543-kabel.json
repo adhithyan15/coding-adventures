@@ -1,0 +1,11 @@
+{
+  "id": "GU-C543-kabel",
+  "pathSegment": "GU-PATH-543-APVAD543",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-543-APVAD543",
+      "order": 3
+    }
+  ]
+}

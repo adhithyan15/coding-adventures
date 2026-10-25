@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:6a5c3fb501e6413c",
+  "lessonIds": [
+    "GU-C399-vilamb",
+    "GU-C399-sambhlavu",
+    "GU-C399-elan",
+    "GU-C399-talvu",
+    "GU-C399-dokiyu"
+  ],
+  "tex": "gujarati/book/chapters/ch399-delays-and-announcements.tex"
+}

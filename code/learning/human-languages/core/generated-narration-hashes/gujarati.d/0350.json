@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:df8a55b3b3d5b33b",
+  "lessonIds": [
+    "GU-C350-karar",
+    "GU-C350-dastavej",
+    "GU-C350-mukt",
+    "GU-C350-japt",
+    "GU-C350-vasulvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch350.txt",
+  "json": "gujarati/narration/ch350.json",
+  "textHash": "fnv1a64:3509e4cedf2b4945",
+  "jsonHash": "fnv1a64:e84282b7da50205c",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C366-atkal",
+  "pathSegment": "GU-PATH-366-SHARAT366",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-366-SHARAT366",
+      "order": 3
+    }
+  ]
+}

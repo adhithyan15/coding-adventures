@@ -1,0 +1,11 @@
+{
+  "id": "GU-C342-khandan",
+  "pathSegment": "GU-PATH-342-VIVAD342",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-342-VIVAD342",
+      "order": 3
+    }
+  ]
+}

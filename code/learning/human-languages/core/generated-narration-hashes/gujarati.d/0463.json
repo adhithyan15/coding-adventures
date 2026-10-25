@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:56fdad54ecb349e2",
+  "lessonIds": [
+    "GU-C463-saral",
+    "GU-C463-ochabolu",
+    "GU-C463-vacal",
+    "GU-C463-bakvu",
+    "GU-C463-hasmukhu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch463.txt",
+  "json": "gujarati/narration/ch463.json",
+  "textHash": "fnv1a64:f3efcf9b4d5a24ee",
+  "jsonHash": "fnv1a64:6112fba3e0f1c19b",
+  "findings": []
+}

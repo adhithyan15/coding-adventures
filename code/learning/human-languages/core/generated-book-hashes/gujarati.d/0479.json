@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:08d1eaf1455502e8",
+  "lessonIds": [
+    "GU-C479-madu",
+    "GU-C479-lakvo",
+    "GU-C479-acki",
+    "GU-C479-gath",
+    "GU-C479-patharivas"
+  ],
+  "tex": "gujarati/book/chapters/ch479-taken-ill.tex"
+}

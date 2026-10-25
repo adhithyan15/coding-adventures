@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C498-dahej",
+    "language": "gujarati",
+    "chapter": 498,
+    "sequence": 27640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f630c1a24b2a8b32"
+  },
+  "findings": []
+}

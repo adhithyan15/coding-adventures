@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:209b5b3cc20ff2f3",
+  "lessonIds": [
+    "GU-C424-kesiyar",
+    "GU-C424-pasbuk",
+    "GU-C424-kapli",
+    "GU-C424-tokan",
+    "GU-C424-kard",
+    "GU-R424-review-417-424"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch424.txt",
+  "json": "gujarati/narration/ch424.json",
+  "textHash": "fnv1a64:85ea47977dab912a",
+  "jsonHash": "fnv1a64:ba112216d988d583",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Porters and Trunks",
+  "label": "ch:gu-porters-and-trunks",
+  "canDo": "I can ask a porter to carry my luggage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C394-jhalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can ask a porter to carry my luggage.",
+    "assesses": [
+      "GU-LEX-C394-PORTER394-03",
+      "GU-LEX-C394-PORTER394-04",
+      "GU-LEX-C394-PORTER394-05"
+    ]
+  }
+}

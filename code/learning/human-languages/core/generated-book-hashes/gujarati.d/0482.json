@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:5fceb3aa4c077cea",
+  "lessonIds": [
+    "GU-C482-kakhghodi",
+    "GU-C482-dhimdu",
+    "GU-C482-phulvu",
+    "GU-C482-cattu",
+    "GU-C482-aphalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch482-a-bad-fall.tex"
+}

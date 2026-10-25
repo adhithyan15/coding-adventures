@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C328-dhup",
+    "language": "gujarati",
+    "chapter": 328,
+    "sequence": 18240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00bbe49bcaa4ce55"
+  },
+  "findings": []
+}

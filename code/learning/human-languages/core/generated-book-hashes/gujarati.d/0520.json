@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:d1cb2906bc75d760",
+  "lessonIds": [
+    "GU-C520-vagharvu",
+    "GU-C520-satalvu",
+    "GU-C520-capti",
+    "GU-C520-chatvu",
+    "GU-C520-bhujvu"
+  ],
+  "tex": "gujarati/book/chapters/ch520-spices-in-hot-oil.tex"
+}

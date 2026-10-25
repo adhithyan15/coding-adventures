@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C535-sukan",
+    "language": "gujarati",
+    "chapter": 535,
+    "sequence": 29740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:368eb0cd0f993133"
+  },
+  "findings": []
+}

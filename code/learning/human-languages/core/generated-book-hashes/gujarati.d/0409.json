@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:ecf8b8b2779be64d",
+  "lessonIds": [
+    "GU-C409-paronagat",
+    "GU-C409-menejar",
+    "GU-C409-sagvad",
+    "GU-C409-agvad",
+    "GU-C409-avkarvu"
+  ],
+  "tex": "gujarati/book/chapters/ch409-lodgings.tex"
+}

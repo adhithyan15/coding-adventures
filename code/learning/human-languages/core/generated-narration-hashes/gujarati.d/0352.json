@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:c762ff39b1616d3a",
+  "lessonIds": [
+    "GU-C352-sarkar",
+    "GU-C352-rajya",
+    "GU-C352-satta",
+    "GU-C352-praja",
+    "GU-C352-ghadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch352.txt",
+  "json": "gujarati/narration/ch352.json",
+  "textHash": "fnv1a64:ea0d3e96d70ceb30",
+  "jsonHash": "fnv1a64:775a6021f5a6d42a",
+  "findings": []
+}

@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 537,
+  "title": "Choosing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8409343d15904be8",
+  "lessons": [
+    {
+      "id": "GU-C537-pasandgi",
+      "sequence": 29840,
+      "title": "પસંદગી (pasandgī) — a choice",
+      "headword": "પસંદગી",
+      "romanization": "pasandgī",
+      "gloss": "a choice",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:483b21624eccb956",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a birth chart, then the Gujarati for the future."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પસંદગી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પસંદગી — pasandgī — \"a choice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો પસંદગી મારી હોત તો હું પર્વત પર જાત. jo pasandgī mārī hot to hũ parvat par jāt. If the choice were mine, I would go to the mountains."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પસંદગી (pasandgī) is usually traced to Persian pasand, \"approved, liked\", with the ending -gī; પસંદ કરવું is to choose."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pasandgī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pasandgī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pasandgī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pasandgī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo pasandgī mārī hot to hũ parvat par jāt. — If the choice were mine, I would go to the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo pasandgī mārī hot to hũ parvat par jāt.* — If the choice were mine, I would go to the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a birth chart, then the Gujarati for the future, then say pasandgī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a birth chart, then the Gujarati for the future, then say *pasandgī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પસંદગી (pasandgī) mean? (\"A choice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C537-badle",
+      "sequence": 29850,
+      "title": "બદલે (badle) — instead of",
+      "headword": "બદલે",
+      "romanization": "badle",
+      "gloss": "instead of",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f178161286cd048d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for the future, then the Gujarati for a choice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બદલે",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બદલે — badle — \"instead of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો ચા નહીં હોય તો હું ચાને બદલે દૂધ પીશ. jo cā nahī̃ hoy to hũ cāne badle dūdh pīś. If there's no tea, I'll drink milk instead."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બદલે (badle) is usually traced to Arabic badal, \"a substitute\", through Persian, in the form that follows ને: ચાને બદલે, instead of tea. The verb બદલવું, to change, belongs with it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badle, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badle*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo cā nahī̃ hoy to hũ cāne badle dūdh pīś. — If there's no tea, I'll drink milk instead.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo cā nahī̃ hoy to hũ cāne badle dūdh pīś.* — If there's no tea, I'll drink milk instead.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for the future, then the Gujarati for a choice, then say badle again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for the future, then the Gujarati for a choice, then say *badle* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બદલે (badle) mean? (\"Instead of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C537-manapsand",
+      "sequence": 29860,
+      "title": "મનપસંદ (manapsand) — favourite",
+      "headword": "મનપસંદ",
+      "romanization": "manapsand",
+      "gloss": "favourite",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:258ce0cf868557f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a choice, then the Gujarati for instead of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મનપસંદ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મનપસંદ — manapsand — \"favourite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો દુકાનમાં મારો મનપસંદ રંગ હશે તો હું તે સાડી ખરીદીશ. jo dukānmā̃ māro manapsand rang haśe to hũ te sāḍī kharīdīś. If the shop has my favourite colour, I will buy that sari."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મનપસંદ (manapsand) is built from man, \"the mind\", from Sanskrit manas (Monier-Williams), and pasand, \"liked\", usually traced to Persian pasand: liked by one's own mind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manapsand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manapsand*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manapsand, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manapsand*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo dukānmā̃ māro manapsand rang haśe to hũ te sāḍī kharīdīś. — If the shop has my favourite colour, I will buy that sari.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo dukānmā̃ māro manapsand rang haśe to hũ te sāḍī kharīdīś.* — If the shop has my favourite colour, I will buy that sari.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a choice, then the Gujarati for instead of, then say manapsand again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a choice, then the Gujarati for instead of, then say *manapsand* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મનપસંદ (manapsand) mean? (\"Favourite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C537-vinvu",
+      "sequence": 29870,
+      "title": "વીણવું (vīṇvũ) — to pick out (one by one)",
+      "headword": "વીણવું",
+      "romanization": "vīṇvũ",
+      "gloss": "to pick out (one by one)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3b03aeca4765e21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for instead of, then the Gujarati for favourite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વીણવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વીણવું — vīṇvũ — \"to pick out (one by one)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે સારી કેરીઓ વીણશો તો હું તે ખરીદીશ. jo tame sārī kerīo vīṇśo to hũ te kharīdīś. If you pick out the good mangoes, I'll buy them."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે કેરીઓ વીણી, teṇe kerīo vīṇī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વીણવું (vīṇvũ) is inherited from Sanskrit vícinōti, \"picks out, sorts\", and CDIAL lists the Gujarati verb, \"to pick, gather\" (CDIAL 11686)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīṇvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīṇvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīṇvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīṇvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame sārī kerīo vīṇśo to hũ te kharīdīś. — If you pick out the good mangoes, I'll buy them.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame sārī kerīo vīṇśo to hũ te kharīdīś.* — If you pick out the good mangoes, I'll buy them.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for instead of, then the Gujarati for favourite, then say vīṇvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for instead of, then the Gujarati for favourite, then say *vīṇvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વીણવું (vīṇvũ) mean? (\"To pick out (one by one)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C537-rucvu",
+      "sequence": 29880,
+      "title": "રુચવું (rucvũ) — to appeal (to someone)",
+      "headword": "રુચવું",
+      "romanization": "rucvũ",
+      "gloss": "to appeal (to someone)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5f30447a18e625e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for favourite, then the Gujarati for to pick out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: રુચવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રુચવું — rucvũ — \"to appeal (to someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આ યોજના તમને રુચશે તો આપણે કાલે શરૂ કરીશું. jo ā yojnā tamne rucśe to āpaṇe kāle śarū karīśũ. If this plan appeals to you, we will start tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે વાત તેને રુચી, te vāt tene rucī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રુચવું (rucvũ) is inherited from Sanskrit rucyatē, \"is pleasing\", and CDIAL lists the Gujarati verb, \"to be liked\" (CDIAL 10765). The person it appeals to takes ને."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rucvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rucvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rucvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rucvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo ā yojnā tamne rucśe to āpaṇe kāle śarū karīśũ. — If this plan appeals to you, we will start tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo ā yojnā tamne rucśe to āpaṇe kāle śarū karīśũ.* — If this plan appeals to you, we will start tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for favourite, then the Gujarati for to pick out, then say rucvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for favourite, then the Gujarati for to pick out, then say *rucvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does રુચવું (rucvũ) mean? (\"To appeal (to someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

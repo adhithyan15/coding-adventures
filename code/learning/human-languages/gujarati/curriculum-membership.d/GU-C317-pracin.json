@@ -1,0 +1,11 @@
+{
+  "id": "GU-C317-pracin",
+  "pathSegment": "GU-PATH-317-ITIHAS317",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-317-ITIHAS317",
+      "order": 2
+    }
+  ]
+}

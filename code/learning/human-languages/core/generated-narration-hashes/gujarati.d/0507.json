@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:b07ff0c1125afc96",
+  "lessonIds": [
+    "GU-C507-parovvu",
+    "GU-C507-moti",
+    "GU-C507-sandhvu",
+    "GU-C507-thigdu",
+    "GU-C507-bharatkam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch507.txt",
+  "json": "gujarati/narration/ch507.json",
+  "textHash": "fnv1a64:4a1ebadd4e6061f3",
+  "jsonHash": "fnv1a64:399cea215826f668",
+  "findings": []
+}

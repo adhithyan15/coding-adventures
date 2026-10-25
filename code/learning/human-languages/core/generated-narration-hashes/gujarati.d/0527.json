@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:71e5fdae70101c7b",
+  "lessonIds": [
+    "GU-C527-akhado",
+    "GU-C527-pahelvan",
+    "GU-C527-hariph",
+    "GU-C527-pachadvu",
+    "GU-C527-hamphavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch527.txt",
+  "json": "gujarati/narration/ch527.json",
+  "textHash": "fnv1a64:75c0662924b198c4",
+  "jsonHash": "fnv1a64:5493b67aa98d6d07",
+  "findings": []
+}

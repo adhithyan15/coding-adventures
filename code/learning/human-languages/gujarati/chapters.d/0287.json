@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Clues at the Door",
+  "label": "ch:gu-clues-at-the-door",
+  "canDo": "I can say what the thief left behind and how he got in.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C287-todvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can say what the thief left behind and how he got in.",
+    "assesses": [
+      "GU-LEX-C287-PAGLU287-03",
+      "GU-LEX-C287-PAGLU287-04",
+      "GU-LEX-C287-PAGLU287-05"
+    ]
+  }
+}

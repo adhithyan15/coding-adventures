@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C518-jalu",
+    "language": "gujarati",
+    "chapter": 518,
+    "sequence": 28880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b588e5523595ad6"
+  },
+  "findings": []
+}

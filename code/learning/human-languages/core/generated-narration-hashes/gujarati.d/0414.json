@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:95a980134000572c",
+  "lessonIds": [
+    "GU-C414-purva",
+    "GU-C414-pascim",
+    "GU-C414-uttar",
+    "GU-C414-ultu",
+    "GU-C414-hokayantra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch414.txt",
+  "json": "gujarati/narration/ch414.json",
+  "textHash": "fnv1a64:857703754e758a5e",
+  "jsonHash": "fnv1a64:154de04ff7d8a852",
+  "findings": []
+}

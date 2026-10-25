@@ -1,0 +1,11 @@
+{
+  "id": "GU-C407-pagpala",
+  "pathSegment": "GU-PATH-407-ABROAD407",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-407-ABROAD407",
+      "order": 3
+    }
+  ]
+}

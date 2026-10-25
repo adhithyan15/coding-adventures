@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:88a60807138305b9",
+  "lessonIds": [
+    "GU-C500-varso",
+    "GU-C500-vidhva",
+    "GU-C500-anath",
+    "GU-C500-dattak",
+    "GU-C500-tyajvu",
+    "GU-R500-review-494-500",
+    "GU-R500-review-final-500"
+  ],
+  "tex": "gujarati/book/chapters/ch500-what-they-left-us.tex"
+}

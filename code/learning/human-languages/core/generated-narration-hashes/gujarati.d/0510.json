@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:b3d0d6e81e550230",
+  "lessonIds": [
+    "GU-C510-soni",
+    "GU-C510-ogaalvu",
+    "GU-C510-tabu",
+    "GU-C510-dhaalvu",
+    "GU-C510-ghadavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch510.txt",
+  "json": "gujarati/narration/ch510.json",
+  "textHash": "fnv1a64:c72f41f8a9a77526",
+  "jsonHash": "fnv1a64:6a3ae017dc96062b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C404-kedi",
+  "pathSegment": "GU-PATH-404-PATH404",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-404-PATH404",
+      "order": 1
+    }
+  ]
+}

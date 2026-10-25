@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C342-matbhed",
+    "language": "gujarati",
+    "chapter": 342,
+    "sequence": 19170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1daaea920d417b2"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Serving Others",
+  "label": "ch:gu-serving-others",
+  "canDo": "I can talk about helping others and giving things up for them.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C358-nibhavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about helping others and giving things up for them.",
+    "assesses": [
+      "GU-LEX-C358-SEVA358-03",
+      "GU-LEX-C358-SEVA358-04",
+      "GU-LEX-C358-SEVA358-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Lakhs and Crores",
+  "label": "ch:gu-lakhs-and-crores",
+  "canDo": "I can talk about large sums and simple sums.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C426-vadharvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can talk about large sums and simple sums.",
+    "assesses": [
+      "GU-LEX-C426-LAKH426-03",
+      "GU-LEX-C426-LAKH426-04",
+      "GU-LEX-C426-LAKH426-05"
+    ]
+  }
+}

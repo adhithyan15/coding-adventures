@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:f496d3f4f0de1e99",
+  "lessonIds": [
+    "GU-C450-vahal",
+    "GU-C450-sneh",
+    "GU-C450-mamta",
+    "GU-C450-mohvu",
+    "GU-C450-lad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch450.txt",
+  "json": "gujarati/narration/ch450.json",
+  "textHash": "fnv1a64:b1d1ef8126b2b658",
+  "jsonHash": "fnv1a64:270dab865a02e766",
+  "findings": []
+}

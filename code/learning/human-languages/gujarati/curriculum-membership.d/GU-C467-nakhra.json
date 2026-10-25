@@ -1,0 +1,11 @@
+{
+  "id": "GU-C467-nakhra",
+  "pathSegment": "GU-PATH-467-VARTAN467",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-467-VARTAN467",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:385c626697dc8ada",
+  "lessonIds": [
+    "GU-C397-dhamal",
+    "GU-C397-umbro",
+    "GU-C397-patlo",
+    "GU-C397-hadselvu",
+    "GU-C397-bharavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch397.txt",
+  "json": "gujarati/narration/ch397.json",
+  "textHash": "fnv1a64:dd80fecf2542035b",
+  "jsonHash": "fnv1a64:d9d7607d3b812325",
+  "findings": []
+}

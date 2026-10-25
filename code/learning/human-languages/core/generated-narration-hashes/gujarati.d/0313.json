@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:652db54cdef3dc80",
+  "lessonIds": [
+    "GU-C313-aphva",
+    "GU-C313-phelavvu",
+    "GU-C313-satya",
+    "GU-C313-mahiti",
+    "GU-C313-khabar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch313.txt",
+  "json": "gujarati/narration/ch313.json",
+  "textHash": "fnv1a64:ba29e1ab36b964b5",
+  "jsonHash": "fnv1a64:61448335cf2dcd38",
+  "findings": []
+}

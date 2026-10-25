@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:99b5b02e82913984",
+  "lessonIds": [
+    "GU-C373-upay",
+    "GU-C373-nirakaran",
+    "GU-C373-vikalp",
+    "GU-C373-muskeli",
+    "GU-C373-nadvu"
+  ],
+  "tex": "gujarati/book/chapters/ch373-a-way-out.tex"
+}

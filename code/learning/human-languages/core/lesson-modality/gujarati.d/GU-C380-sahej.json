@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C380-sahej",
+    "language": "gujarati",
+    "chapter": 380,
+    "sequence": 21130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:756551d8ef44cf41"
+  },
+  "findings": []
+}

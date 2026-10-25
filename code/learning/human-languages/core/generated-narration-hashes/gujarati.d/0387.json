@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:4b9e101112f97f1f",
+  "lessonIds": [
+    "GU-C387-bahetar",
+    "GU-C387-uttam",
+    "GU-C387-cadiyatu",
+    "GU-C387-saras",
+    "GU-C387-kathalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch387.txt",
+  "json": "gujarati/narration/ch387.json",
+  "textHash": "fnv1a64:2d8304ef7a9a93e9",
+  "jsonHash": "fnv1a64:6c1b8315c94b3b43",
+  "findings": []
+}

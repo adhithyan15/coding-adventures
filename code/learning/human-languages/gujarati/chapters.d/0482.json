@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "A Bad Fall",
+  "label": "ch:gu-a-bad-fall",
+  "canDo": "I can say how I fell and what hurt.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C482-aphalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can say how I fell and what hurt.",
+    "assesses": [
+      "GU-LEX-C482-THOKAR482-03",
+      "GU-LEX-C482-THOKAR482-04",
+      "GU-LEX-C482-THOKAR482-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C431-sangharvu",
+  "pathSegment": "GU-PATH-431-STOCK431",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-431-STOCK431",
+      "order": 4
+    }
+  ]
+}

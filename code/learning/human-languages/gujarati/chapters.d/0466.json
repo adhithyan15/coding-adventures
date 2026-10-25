@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Brave Hearts",
+  "label": "ch:gu-brave-hearts",
+  "canDo": "I can say who is brave and who is afraid.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C466-dagmagvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can say who is brave and who is afraid.",
+    "assesses": [
+      "GU-LEX-C466-SHAURYA466-03",
+      "GU-LEX-C466-SHAURYA466-04",
+      "GU-LEX-C466-SHAURYA466-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-389-NIRNAY389",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GU-EXT-389-NIRNAY389"
+  ],
+  "after": []
+}

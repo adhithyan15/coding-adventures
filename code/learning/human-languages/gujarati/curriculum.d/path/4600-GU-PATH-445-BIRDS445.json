@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-445-BIRDS445",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GU-EXT-445-BIRDS445"
+  ],
+  "after": []
+}
