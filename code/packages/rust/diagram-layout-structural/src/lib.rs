@@ -1713,6 +1713,29 @@ mod tests {
     }
 
     #[test]
+    fn constrained_attribute_rows_reserve_backend_neutral_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "CUSTOMER".into();
+        diagram.nodes[0].label = "CUSTOMER".into();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "customer_number: int [PK, FK] - comment1".into(),
+            "customer_status_start_datetime: datetime [PK, UK, FK]".into(),
+            "customer_status_end_datetime: datetime [PK, UK] - comment3".into(),
+            "customer_firstname: string".into(),
+            "customer_lastname: string - comment5".into(),
+        ];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 5);
+        assert!(layout.nodes[0].width > 400.0);
+        assert!(layout.nodes[0].height > 100.0);
+    }
+
+    #[test]
     fn relationship_labels_resolve_to_backend_neutral_geometry() {
         let mut diagram = two_class_diagram();
         diagram.relationships[0].label = Some("inherits from".into());

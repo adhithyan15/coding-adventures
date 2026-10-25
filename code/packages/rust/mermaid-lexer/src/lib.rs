@@ -1751,6 +1751,24 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_attribute_constraint_lists_and_comments() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER {\n  int customer_number PK, FK \"comment1\"\n  datetime customer_status_start_datetime PK,UK, FK\n  datetime customer_status_end_datetime PK , UK \"comment3\"\n  string customer_firstname\n  string customer_lastname \"comment5\"\n}\n",
+        );
+
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| matches!(token.value.as_str(), "PK" | "FK" | "UK"))
+                .count(),
+            7
+        );
+        for expected in ["comment1", "comment3", "comment5"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+    }
+
+    #[test]
     fn tokenizes_er_attribute_type_forms() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
