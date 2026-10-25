@@ -66,11 +66,13 @@ sign root. Two dynamic roots, path-dependent signs, and effectful selectors
 remain conservative.
 Checked exact-integer normalizers may provide the sign-rooted transform's
 nonnegative exponent when the complete right-associative exponent chain stays
-inside the established unroll cap. Unproven exponents remain conservative.
-Positive variable-free whole-number powers may raise the exact sign-rooted integer
-transform within the existing exponent-unroll cap while checked exponentiation
-remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
-stay conservative. Integer `div` by a variable-free nonzero whole number may
+inside the established unroll cap. A zero result proves the power is exactly
+one; unproven exponents remain conservative.
+Nonnegative variable-free whole-number powers may raise the exact sign-rooted
+integer transform within the existing exponent-unroll cap while checked
+exponentiation remains within `2^53`; zero produces exact one, while negative,
+dynamic, deeper, and oversized powers stay conservative. Integer `div` by a
+variable-free nonzero whole number may
 reduce the exact transform with a truncation-toward-zero bound, including
 composition through later powers, remainders, and exact real division; zero,
 dynamic, and sign-rooted divisors remain outside this composed proof. Integer

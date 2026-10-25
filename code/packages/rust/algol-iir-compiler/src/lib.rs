@@ -4901,10 +4901,12 @@ impl Compiler {
                         },
                     )
                 })?;
-            if exponent == 0 {
-                return None;
-            }
             let mut proof = self.builtin_exact_integer_sign_operand(base)?;
+            if exponent == 0 {
+                proof.magnitude = 1;
+                proof.value_gcd = 1;
+                return Some(proof);
+            }
             proof.magnitude = proof.magnitude.checked_pow(exponent)?;
             proof.value_gcd = proof.value_gcd.checked_pow(exponent)?;
             return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(proof);
@@ -15740,8 +15742,9 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_provenance_crosses_exact_positive_power_entier_sign_widening() {
+    fn al4_runtime_real_provenance_crosses_exact_nonnegative_power_entier_sign_widening() {
         for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ 0); output(result) end",
             "begin real procedure pick; pick := -2.25; real x; x := entier(sign(pick()) ^ (2 - 1)); output(x) end",
             "begin real procedure pick; pick := 3.5; real x; x := entier((abs(sign(pick()))) ^ 1.0); output(x) end",
             "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier((abs(sign(pick()))) ^ (2 - 1)))) end",
@@ -15751,7 +15754,7 @@ mod tests {
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
-                    "an exact unit exponent preserves a bounded sign result through entier for {source:?}: {error}"
+                    "an exact nonnegative exponent preserves a bounded sign result through entier for {source:?}: {error}"
                 )
             });
             let main = module.get_function("main").expect("has main");
@@ -15766,14 +15769,13 @@ mod tests {
     #[test]
     fn al4_exact_power_entier_sign_widening_rejects_unproven_exponents() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ 0); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier((9007199254740992 * sign(pick())) ^ 2); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 1) ^ (-1)); output(result) end",
             "begin real procedure pick; pick := -2.25; integer unit; real result; unit := 1; result := entier(sign(pick()) ^ unit); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(1 ^ sign(pick())); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "a non-unit, variable, or exponent-position sign exceeds the bounded proof",
+                "an overflowing, negative, variable, or exponent-position sign exceeds the bounded proof",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
@@ -16175,6 +16177,8 @@ mod tests {
     #[test]
     fn al4_runtime_real_provenance_crosses_static_normalizer_exponents() {
         for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(sign(pick()) ^ entier(0.75)); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ abs(0.0)); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier(sign(pick()) ^ entier(2.75)); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ abs(-2.0)); output(result) end",
             "begin real procedure pick; pick := -2.25; boolean flag; real result; flag := pick() < 0; result := entier(sign(pick()) ^ sign(if flag then 0.25 else 7.5)); output(result) end",
@@ -16195,7 +16199,6 @@ mod tests {
     #[test]
     fn al4_static_normalizer_exponents_reject_unproven_forms() {
         for source in [
-            "begin real procedure pick; pick := 3.5; real result; result := entier(sign(pick()) ^ sign(0.0)); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier(sign(pick()) ^ sign(-3.75)); output(result) end",
             "begin real procedure pick; pick := 3.5; real procedure power; power := 2.25; real result; result := entier(sign(pick()) ^ sign(power())); output(result) end",
             "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(sign(pick()) ^ sign(if flag then -0.25 else 7.5)); output(result) end",
@@ -16203,7 +16206,7 @@ mod tests {
             "begin real procedure pick; pick := 3.5; real result; result := entier(sign(pick()) ^ entier(65.25)); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "zero, negative, dynamic, path-dependent, effectful, and oversized static-normalizer exponents must remain outside the bounded proof",
+                "negative, dynamic, path-dependent, effectful, and oversized static-normalizer exponents must remain outside the bounded proof",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
