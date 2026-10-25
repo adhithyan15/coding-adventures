@@ -74,6 +74,23 @@ ADVANCED. When `node` is installed, it checks that each output prints what
 the source prints. Sloppy-mode Annex B hoisting, where upstream itself
 changes behaviour, stays open in CLOC12-gaps.
 
+### Fixed - WHITESPACE_ONLY no longer comments out the program after a `#!` line (#18137)
+
+`#!/usr/bin/env node⏎console.log(1)` printed as
+`#!/usr/bin/env nodeconsole.log(1);`. The hashbang was kept as a token
+while its line break was dropped, so the whole program became part of the
+comment and nothing ran. The hashbang is now dropped like any comment, as
+upstream does at every level (closurec's SIMPLE/ADVANCED already did).
+
+Two shapes are refused instead, because dropping the token would delete
+code or accept an invalid program:
+- a `#!` line ended by U+2028/U+2029, which the lexer runs past (#17887);
+- a `#!` anywhere but the very start of the file, which is a SyntaxError.
+
+`tests/regression_ws_hashbang.rs` pins two shapes to the jar's bytes,
+checks with `node` that each output prints what its source prints, and
+checks that four inputs are refused. Two unit tests cover the rules.
+
 ### Fixed - templates, comments and regexes end where JavaScript ends them (#17886, #17888, #17887)
 
 `` var x = `$` // `; console.log('PWN') `` compiled at SIMPLE to
