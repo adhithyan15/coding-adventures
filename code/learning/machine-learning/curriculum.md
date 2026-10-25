@@ -30,6 +30,11 @@ construction, full-network gradients, exact-count SGD, and portable checkpoints
 that resume training across languages. Completion of a teaching lab does not
 imply general framework support for that architecture.
 
+NN38 adds [native Rust dense training](./native-rust-dense-framework.md) above
+the Rust matrix foundation, with the same paper oracle, full-network gradient
+checks, and native checkpoint save/reload/resume. Three-language interchange is
+tracked separately from that native implementation.
+
 Every model family below starts with the smallest example that needs its new
 idea.
 

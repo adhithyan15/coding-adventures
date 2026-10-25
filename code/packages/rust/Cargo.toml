@@ -11,6 +11,7 @@ members = [
     "v8-test262",
     "browser-bookmarks",
     "bounded-json",
+    "neural-framework",
     "browser-bookmarks-file",
     "browser-navigation",
     "browser-form-controls",
