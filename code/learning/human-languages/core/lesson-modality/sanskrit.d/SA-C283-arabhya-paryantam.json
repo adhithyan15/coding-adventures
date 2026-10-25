@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C283-arabhya-paryantam",
+    "language": "sanskrit",
+    "chapter": 283,
+    "sequence": 16560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5862b565aba75ed"
+  },
+  "findings": []
+}

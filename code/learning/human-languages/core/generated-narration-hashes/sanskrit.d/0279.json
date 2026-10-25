@@ -1,0 +1,18 @@
+{
+  "language": "sanskrit",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:bb1bbe061ba8fec7",
+  "lessonIds": [
+    "SA-C279-bhavan-gacchet",
+    "SA-C279-atah-tasmat",
+    "SA-C279-upadesah",
+    "SA-R279-advice-and-what-follows"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "sanskrit/narration/ch279.txt",
+  "json": "sanskrit/narration/ch279.json",
+  "textHash": "fnv1a64:4226bda89bae7b29",
+  "jsonHash": "fnv1a64:2862509b4d618300",
+  "findings": []
+}

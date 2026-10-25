@@ -1,0 +1,22 @@
+{
+  "chapter": 283,
+  "title": "Bigger, Better, and How Long",
+  "label": "ch:sa-bigger-better-and-how-long",
+  "canDo": "I can compare two things (nagaraṃ grāmāpekṣayā mahat; grāmāt mahattaram), say which is best (sarveṣu … śreṣṭhaḥ), and say how long something lasts (prātaḥ ārabhya sāyaṃ paryantam; ekāṃ horām).",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R283-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete SA-R283-comparing-and-time: compare two things, say which is best, and say how long something lasted.",
+    "assesses": [
+      "SA-GRAMMAR-C283-COMPARISON-01",
+      "SA-GRAMMAR-C283-COMPARISON-02",
+      "SA-GRAMMAR-C283-DURATION-01",
+      "SA-GRAMMAR-C283-DURATION-02",
+      "SA-LEX-C283-IDRSAH-01",
+      "SA-SCRIPT-RECOG-229"
+    ]
+  }
+}

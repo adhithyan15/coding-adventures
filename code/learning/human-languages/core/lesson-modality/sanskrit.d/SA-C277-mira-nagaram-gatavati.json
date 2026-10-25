@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C277-mira-nagaram-gatavati",
+    "language": "sanskrit",
+    "chapter": 277,
+    "sequence": 16310,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e1ee7409375bd24e"
+  },
+  "findings": []
+}

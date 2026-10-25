@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:80cf86c58c261016",
+  "lessonIds": [
+    "SA-C283-apeksaya",
+    "SA-C283-arabhya-paryantam",
+    "SA-C283-idrsah",
+    "SA-S229-letter-ii",
+    "SA-R283-comparing-and-time"
+  ],
+  "tex": "sanskrit/book/chapters/ch283-bigger-better-and-how-long.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:58fd24d8542c36af",
+  "lessonIds": [
+    "SA-C278-mama-matena",
+    "SA-C278-yatah-karanat",
+    "SA-C278-manyate",
+    "SA-C278-drdhah",
+    "SA-S227-letter-ddha",
+    "SA-R278-opinion-and-reason"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "sanskrit/narration/ch278.txt",
+  "json": "sanskrit/narration/ch278.json",
+  "textHash": "fnv1a64:1e93194c7c3edc61",
+  "jsonHash": "fnv1a64:befbf36e38fa33f4",
+  "findings": []
+}

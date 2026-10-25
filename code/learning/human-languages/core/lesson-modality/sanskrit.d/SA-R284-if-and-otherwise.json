@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R284-if-and-otherwise",
+    "language": "sanskrit",
+    "chapter": 284,
+    "sequence": 16630,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:58d5ecce98b86187"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:52898bcb17bcc7d0",
+  "lessonIds": [
+    "SA-C277-agatya",
+    "SA-C277-prathamam",
+    "SA-C277-sighram",
+    "SA-C277-mira-nagaram-gatavati",
+    "SA-R277-a-day-in-order"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch277.txt",
+  "json": "sanskrit/narration/ch277.json",
+  "textHash": "fnv1a64:6432f39dfcc377a4",
+  "jsonHash": "fnv1a64:f0f71adbd69f4e6c",
+  "findings": []
+}

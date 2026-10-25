@@ -131,8 +131,10 @@ describe("a passage is the quoted text, not the lesson around it", () => {
 //     malayalam 53   sanskrit 51   italian 47   portuguese 42
 //     bengali   36   kannada  31   tamil    30   telugu     25
 //
-// Malayalam now closes that measured gap with a 90-word retrieval passage;
-// the other seven remain below their first A1 floor. That is not a defect
+// Malayalam now closes that measured gap with a 90-word retrieval passage,
+// and Sanskrit with its B1 core's eighty-word story (chapter 277), each line
+// romanized underneath, so the passage measures 160; the other six remain
+// below their first A1 floor. That is not a defect
 // introduced here. It is the first time the distance was
 // stated as a number rather than left as an absence, and the distance is the
 // point: a track is not "nearly at A1 reading" -- it is between seventeen and

@@ -1,0 +1,12 @@
+{
+  "language": "sanskrit",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:4c2197103cb56adc",
+  "lessonIds": [
+    "SA-C284-yadi-tarhi",
+    "SA-C284-yadi-varsa-bhavisyati",
+    "SA-C284-anyatha",
+    "SA-R284-if-and-otherwise"
+  ],
+  "tex": "sanskrit/book/chapters/ch284-if-it-rains.tex"
+}

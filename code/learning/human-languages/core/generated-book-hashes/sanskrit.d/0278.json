@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:d97c4c6853c97afa",
+  "lessonIds": [
+    "SA-C278-mama-matena",
+    "SA-C278-yatah-karanat",
+    "SA-C278-manyate",
+    "SA-C278-drdhah",
+    "SA-S227-letter-ddha",
+    "SA-R278-opinion-and-reason"
+  ],
+  "tex": "sanskrit/book/chapters/ch278-what-i-think-and-why.tex"
+}

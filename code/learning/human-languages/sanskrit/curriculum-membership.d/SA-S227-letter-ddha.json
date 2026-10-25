@@ -1,0 +1,11 @@
+{
+  "id": "SA-S227-letter-ddha",
+  "pathSegment": "SA-PATH-278-REASONS278",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-278-REASONS278",
+      "order": 4
+    }
+  ]
+}

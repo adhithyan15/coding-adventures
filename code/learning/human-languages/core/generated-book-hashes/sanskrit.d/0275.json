@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:a3b057f30e9c09f5",
+  "lessonIds": [
+    "SA-C275-karisyati",
+    "SA-C275-pathisyati",
+    "SA-R275-what-everyone-will-do"
+  ],
+  "tex": "sanskrit/book/chapters/ch275-what-everyone-will-do.tex"
+}

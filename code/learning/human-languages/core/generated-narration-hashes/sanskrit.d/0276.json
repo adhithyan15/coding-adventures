@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:ed9432d000fb7c03",
+  "lessonIds": [
+    "SA-C276-sah-gatavan",
+    "SA-C276-sah-pathati-sma",
+    "SA-C276-ghatate",
+    "SA-S226-letter-gha",
+    "SA-R276-what-happened"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch276.txt",
+  "json": "sanskrit/narration/ch276.json",
+  "textHash": "fnv1a64:032eaf9dab1e3ee5",
+  "jsonHash": "fnv1a64:c6b1d74cd7208cef",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C284-yadi-varsa-bhavisyati",
+    "language": "sanskrit",
+    "chapter": 284,
+    "sequence": 16610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c22575896e33ae55"
+  },
+  "findings": []
+}

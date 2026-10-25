@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:3b7d04494f700527",
+  "lessonIds": [
+    "SA-C281-ekam-yanapatram-dadatu",
+    "SA-C281-agrimah",
+    "SA-C281-mama-syutah-nastah",
+    "SA-C281-ausadham",
+    "SA-S228-letter-au",
+    "SA-R281-at-the-station"
+  ],
+  "tex": "sanskrit/book/chapters/ch281-at-the-station-and-when-things-go-wrong.tex"
+}

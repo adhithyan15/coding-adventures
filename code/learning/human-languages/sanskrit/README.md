@@ -107,6 +107,25 @@ seven pre-A1 spine nodes are now realized.
   join inside each of the ten headwords, and the chapter-63 payoff reproduces
   that table with his page numbers. A1 exam coverage 141/164 → **142/164**, and
   the Saṅkhyā column closes outright.
+- **Chapters 275–285 — the B1 core** ([`lessons/`](./lessons/), `SA-C275-*`
+  to `SA-R285-depends-and-would`): the track's first running sentences, each
+  line short, romanized and translated. 275 bridges the A2 future — every
+  person and number on करिष्य-, and each verb's own stem (पठिष्यति,
+  द्रक्ष्यति, दास्यति). Then two chapters for each of the five B1 spine nodes:
+  narrating (the -tavat past that follows the doer, सः गतवान् / सा गतवती; the
+  present with स्म in a यदा … तदा scene; -त्वा and -य; प्रथमम् … अन्ते; an
+  eighty-word reading), giving reasons (मम मतेन, मन्ये, यतः, -कारणात्, the
+  optative of advice भवान् गच्छेत्, अतः, तस्मात्), travel (asking the way with
+  the polite -तु, a ticket, a lost bag, a missed train), experience (feelings
+  agreeing with the speaker, भवितुम् इच्छामि, -अपेक्षया and -तर, आरभ्य …
+  पर्यन्तम्) and conditions (यदि … तर्हि, अन्यथा, -अधीन, the conditional
+  अभविष्यत्), closing on a six-line writing task. Pāṇini, Lanman's reader
+  and Monier-Williams are the sources cited. Four letter
+  lessons, `SA-S226-letter-gha` to `SA-S229-letter-ii` (घ ढ औ ई), sit right
+  after their anchor words घटते, दृढः, औषधम् and ईदृशः and read their stroke
+  order from the inventory; four filmstrips are added, and ऊ ऐ झ ळ stay
+  unread. Still untaught: the passive, the perfect and aorist, vowel sandhi
+  across words and the avagraha.
 
 ---
 

@@ -1,0 +1,825 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 277,
+  "title": "One Thing, Then the Next",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:52898bcb17bcc7d0",
+  "lessons": [
+    {
+      "id": "SA-C277-agatya",
+      "sequence": 16280,
+      "title": "आगत्य (āgatya) — one action, then the next",
+      "headword": "आगत्य",
+      "romanization": "āgatya",
+      "gloss": "having come — -tvā after a verb with no prefix, -ya after a prefix",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbf22b48f8561e74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"the boy, having gone home, reads\". (bālaḥ gṛhaṃ gatvā paṭhati.) Then say \"he went home\". (saḥ gṛhaṃ gatavān.) Now put the two together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -त्वा with the past",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सः खादित्वा गतवान्। saḥ khāditvā gatavān. — \"He ate, then he left.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The -त्वा form finishes the first action, and the last verb carries the past for both. खादित्वा (khāditvā) is \"having eaten\", and कृत्वा (kṛtvā) \"having done\":"
+            },
+            {
+              "kind": "speech",
+              "text": "सा गृहं गत्वा पठितवती। sā gṛhaṃ gatvā paṭhitavatī. — \"She went home and read.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ते कार्यं कृत्वा गतवन्तः। te kāryaṃ kṛtvā gatavantaḥ. — \"They did the work and left.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Both actions belong to one doer, and the -त्वा action comes first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -य after a prefix",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A verb with a prefix, such as आगच्छति (āgacchati), \"comes\", or प्रविशति (praviśati), \"goes in\", takes -य (-ya) in place of -त्वा: one short ending, after a prefix (Pāṇini 7.1.37)."
+            },
+            {
+              "kind": "speech",
+              "text": "सः आगत्य पठति। saḥ āgatya paṭhati. — \"He comes and reads.\""
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा गृहं प्रविश्य उपविशति। mīrā gṛhaṃ praviśya upaviśati. — \"Mira goes into the house and sits down.\""
+            },
+            {
+              "kind": "speech",
+              "text": "सा उपविश्य खादितवती। sā upaviśya khāditavatī. — \"She sat down and ate.\""
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the verb",
+                "the action finished"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "the verb: गच्छति. the action finished: गत्वा (gatvā).",
+                "the verb: आगच्छति. the action finished: आगत्य (āgatya).",
+                "the verb: प्रविशति. the action finished: प्रविश्य (praviśya).",
+                "the verb: उपविशति. the action finished: उपविश्य (upaviśya)."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Having come, he reads\" — saḥ āgatya paṭhati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Having come, he reads\" — *saḥ āgatya paṭhati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Having come, he eats\" — saḥ āgatya khādati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Having come, he eats\" — *saḥ āgatya khādati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Having come, he sits down\" — saḥ āgatya upaviśati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Having come, he sits down\" — *saḥ āgatya upaviśati*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C277-agatya-r1",
+              "prompt": "Say that Mira goes into the house and sits down, then that he did the work and left.",
+              "assesses": [
+                "SA-GRAMMAR-C277-SEQUENCE-01",
+                "SA-GRAMMAR-C277-SEQUENCE-02"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "mīrā gṛhaṃ praviśya upaviśati; saḥ kāryaṃ kṛtvā gatavān",
+                "मीरा गृहं प्रविश्य उपविशति। सः कार्यं कृत्वा गतवान्।"
+              ],
+              "feedback": {
+                "correct": "praviśya after the prefix pra-, kṛtvā with no prefix.",
+                "incorrect": "A verb with a prefix takes -ya: praviśya. With no prefix, -tvā: kṛtvā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Having gone in\"? (प्रविश्य.) Why -ya and not -tvā? (The verb has a prefix.) \"She ate and then left\"? (सा खादित्वा गतवती.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C277-prathamam",
+      "sequence": 16290,
+      "title": "प्रथमम्, ततः, अन्ते (prathamam, tataḥ, ante) — first, then, in the end",
+      "headword": "प्रथमम् · ततः · अन्ते",
+      "romanization": "prathamam · tataḥ · ante",
+      "gloss": "first, then, in the end — the words that keep events in order",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8571be616444fa7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"she went home and read\". (sā gṛhaṃ gatvā paṭhitavatī.) Two actions in one sentence. A story needs more sentences, and words to order them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रथमम्, ततः, अनन्तरम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रथमम् (prathamam), \"first\", is प्रथमः (prathamaḥ), \"first\", said as an adverb. ततः (tataḥ), \"then\", and अनन्तरम् (anantaram), \"afterwards\", you know."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रथमं सः खादितवान्। prathamaṃ saḥ khāditavān. — \"First he ate.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ततः सः पठितवान्। tataḥ saḥ paṭhitavān. — \"Then he read.\""
+            },
+            {
+              "kind": "speech",
+              "text": "अनन्तरं सः गतवान्। anantaraṃ saḥ gatavān. — \"Afterwards he left.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: अन्ते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अन्ते (ante), \"in the end\", closes the story."
+            },
+            {
+              "kind": "speech",
+              "text": "अन्ते सः गृहम् आगतवान्। ante saḥ gṛham āgatavān. — \"In the end he came home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Four lines, in order. क्रीतवती (krītavatī) is the past of क्रीणाति (krīṇāti), \"buys\":"
+            },
+            {
+              "kind": "speech",
+              "text": "प्रथमं मीरा आपणं गतवती। prathamaṃ mīrā āpaṇaṃ gatavatī. — \"First Mira went to the shop.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ततः सा फलं क्रीतवती। tataḥ sā phalaṃ krītavatī. — \"Then she bought a fruit.\""
+            },
+            {
+              "kind": "speech",
+              "text": "अनन्तरं सा गृहम् आगतवती। anantaraṃ sā gṛham āgatavatī. — \"Afterwards she came home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "अन्ते सा फलं खादितवती। ante sā phalaṃ khāditavatī. — \"In the end she ate the fruit.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"First I ate\" — prathamam ahaṃ khāditavān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"First I ate\" — *prathamam ahaṃ khāditavān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Then I ate\" — tataḥ ahaṃ khāditavān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Then I ate\" — *tataḥ ahaṃ khāditavān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In the end I ate\" — ante ahaṃ khāditavān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In the end I ate\" — *ante ahaṃ khāditavān*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C277-prathamam-r1",
+              "prompt": "Tell your evening in order: first you ate, then you read, and in the end you went home.",
+              "assesses": [
+                "SA-GRAMMAR-C277-THEN-01",
+                "SA-GRAMMAR-C277-THEN-02"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "prathamam ahaṃ khāditavān; tataḥ ahaṃ paṭhitavān; ante ahaṃ gṛhaṃ gatavān",
+                "प्रथमम् अहं खादितवान्। ततः अहं पठितवान्। अन्ते अहं गृहं गतवान्।",
+                "प्रथमम् अहं खादितवती। ततः अहं पठितवती। अन्ते अहं गृहं गतवती।"
+              ],
+              "feedback": {
+                "correct": "prathamam, tataḥ, ante: the order is in the words, the past in -vān or -vatī.",
+                "incorrect": "Open each line with its order word: prathamam, then tataḥ, then ante."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"First\"? (प्रथमम्.) \"Afterwards\"? (अनन्तरम्.) \"In the end\"? (अन्ते.) Which of them opens a story? (प्रथमम्.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C277-sighram",
+      "sequence": 16300,
+      "title": "शीघ्रम् (śīghram) — quickly",
+      "headword": "शीघ्रम्",
+      "romanization": "śīghram",
+      "gloss": "quickly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edd0b751a21fd8bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"first he ate, then he left\". (prathamaṃ saḥ khāditavān, tataḥ saḥ gatavān.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शीघ्रम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शीघ्रम् — śīghram — \"quickly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शीघ्रम् आगच्छतु। śīghram āgacchatu. — \"Please come quickly.\""
+            },
+            {
+              "kind": "speech",
+              "text": "सः शीघ्रं धावति। saḥ śīghraṃ dhāvati. — \"He runs quickly.\""
+            },
+            {
+              "kind": "speech",
+              "text": "सा शीघ्रं गृहं गतवती। sā śīghraṃ gṛhaṃ gatavatī. — \"She went home quickly.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शीघ्रम् (śīghram) is the neuter of शीघ्र (śīghra), \"quick, swift\", said as an adverb, as प्रथमम् is. Monier-Williams calls its derivation doubtful, so its origin is uncertain. It lives on as Sindhi sigho, \"quick\" (CDIAL 12484)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śīghram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śīghram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Please come quickly\" — śīghram āgacchatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Please come quickly\" — *śīghram āgacchatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"First he came quickly\" — prathamaṃ saḥ śīghram āgatavān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"First he came quickly\" — *prathamaṃ saḥ śīghram āgatavān*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शीघ्रम् (śīghram) mean? (\"Quickly\".) \"She went home quickly\"? (सा शीघ्रं गृहं गतवती.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C277-mira-nagaram-gatavati",
+      "sequence": 16310,
+      "title": "(reading) — Mira's day in the city",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "Mira's day in the city, told in order",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type"
+      ],
+      "sourceHash": "fnv1a64:e1ee7409375bd24e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Eighty words, every one of them met before: Mira's day in the city, told in order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ह्यः मीरा नगरं गतवती। hyaḥ mīrā nagaraṃ gatavatī."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रथमं सा स्थानकं गतवती। prathamaṃ sā sthānakaṃ gatavatī."
+            },
+            {
+              "kind": "speech",
+              "text": "तत्र सा एकं यानपत्रं क्रीतवती। tatra sā ekaṃ yānapatraṃ krītavatī."
+            },
+            {
+              "kind": "speech",
+              "text": "ततः सा धूमयानं प्रविष्टवती। tataḥ sā dhūmayānaṃ praviṣṭavatī."
+            },
+            {
+              "kind": "speech",
+              "text": "धूमयाने सा पुस्तकं पठति स्म। dhūmayāne sā pustakaṃ paṭhati sma."
+            },
+            {
+              "kind": "speech",
+              "text": "यदा सा पठति स्म, तदा वर्षा आगतवती। yadā sā paṭhati sma, tadā varṣā āgatavatī."
+            },
+            {
+              "kind": "speech",
+              "text": "धूमयानं शीघ्रं गच्छति स्म। dhūmayānaṃ śīghraṃ gacchati sma."
+            },
+            {
+              "kind": "speech",
+              "text": "अनन्तरं सा नगरम् आगतवती। anantaraṃ sā nagaram āgatavatī."
+            },
+            {
+              "kind": "speech",
+              "text": "नगरे सा आपणं गत्वा फलानि क्रीतवती। nagare sā āpaṇaṃ gatvā phalāni krītavatī."
+            },
+            {
+              "kind": "speech",
+              "text": "तत्र अरुणः अपि आगतवान्। tatra aruṇaḥ api āgatavān."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा अरुणं दृष्ट्वा प्रसन्ना अभवत्। mīrā aruṇaṃ dṛṣṭvā prasannā abhavat."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुणः मीरा च उद्यानं गतवन्तौ। aruṇaḥ mīrā ca udyānaṃ gatavantau."
+            },
+            {
+              "kind": "speech",
+              "text": "उद्याने बालाः क्रीडन्ति स्म। udyāne bālāḥ krīḍanti sma."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुणः तत्र उपविश्य फलं खादितवान्। aruṇaḥ tatra upaviśya phalaṃ khāditavān."
+            },
+            {
+              "kind": "speech",
+              "text": "ततः वर्षा पुनः आगतवती। tataḥ varṣā punaḥ āgatavatī."
+            },
+            {
+              "kind": "speech",
+              "text": "अन्ते मीरा शीघ्रं गृहम् आगतवती। ante mīrā śīghraṃ gṛham āgatavatī."
+            },
+            {
+              "kind": "speech",
+              "text": "श्वः सा पुनः नगरं गमिष्यति। śvaḥ sā punaḥ nagaraṃ gamiṣyati."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage a second time with the romanization covered, once through, without stopping; do not translate as you go",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage a second time with the romanization covered, once through, without stopping; do not translate as you go]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How this book writes: Pāṇini (1.4.109) calls words said close together saṃhitā, and there the sounds at the joins change. Where this book has bālaḥ gacchati, a classical page has बालो गच्छति (bālo gacchati), and saḥ gacchati is स गच्छति (sa gacchati; Pāṇini 6.1.132). This book writes each word whole, with the one join you know, gṛhaṃ gacchati. Recognise the joined forms; there is nothing here to apply."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Mira did first, at the station",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Mira did first, at the station]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how the day ended, with ante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how the day ended, with *ante*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C277-mira-nagaram-gatavati-r1",
+              "prompt": "What was Mira doing on the train when the rain came?",
+              "assesses": [
+                "SA-SKILL-C277-READ-STORY-01",
+                "SA-GRAMMAR-C276-ONGOING-PAST-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "she was reading a book",
+                "सा पुस्तकं पठति स्म",
+                "sā pustakaṃ paṭhati sma",
+                "reading a book"
+              ],
+              "feedback": {
+                "correct": "paṭhati sma: the scene the rain broke into.",
+                "incorrect": "Find the line that opens with yadā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why paṭhati sma in the train? (The reading was going on when the rain came.) Which words keep the steps in order? (prathamam, tataḥ, anantaram, ante.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R277-a-day-in-order",
+      "sequence": 16320,
+      "title": "Review — a day, in order",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a short day told in order, one event after another",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64eb304b423e1e51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"she went home\" and \"when I was reading, Arun came\". (sā gṛhaṃ gatavatī, yadā ahaṃ paṭhāmi sma, tadā aruṇaḥ āgatavān.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "First I went to the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: First I went to the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Then I bought a ticket and got on the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Then I bought a ticket and got on the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mira came in and sat down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Mira came in and sat down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Afterwards we ate quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Afterwards we ate quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In the end Arun came home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In the end Arun came home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tell Mira's day in the city in four lines, with prathamam, tataḥ, anantaram and ante.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Tell Mira's day in the city in four lines, with *prathamam*, *tataḥ*, *anantaram* and *ante*.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "प्रविश्य or praviśtvā? (प्रविश्य: the verb has a prefix.) \"Having eaten\"? (खादित्वा.) Now the other way round: what does शीघ्रम् (śīghram) mean? (\"Quickly\".) And अन्ते? (\"In the end\".)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

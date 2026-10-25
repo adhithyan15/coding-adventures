@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R277-a-day-in-order",
+    "language": "sanskrit",
+    "chapter": 277,
+    "sequence": 16320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64eb304b423e1e51"
+  },
+  "findings": []
+}

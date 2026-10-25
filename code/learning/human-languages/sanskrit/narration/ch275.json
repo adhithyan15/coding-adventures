@@ -1,0 +1,515 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 275,
+  "title": "What Everyone Will Do",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:f481ab34b7de3e21",
+  "lessons": [
+    {
+      "id": "SA-C275-karisyati",
+      "sequence": 16200,
+      "title": "करिष्यति (kariṣyati) — the future, person by person",
+      "headword": "करिष्यति",
+      "romanization": "kariṣyati",
+      "gloss": "he or she will do — the future for every person, on the stem kariṣya-",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9f50ec0d23e6c3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I will do\", करिष्यामि (kariṣyāmi), and \"I will go\", गमिष्यामि (gamiṣyāmi). Then say \"tomorrow\". (śvaḥ.) This lesson gives that future to every person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: I, you, he and she",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अहं करिष्यामि। ahaṃ kariṣyāmi. — \"I will do it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "त्वं करिष्यसि। tvaṃ kariṣyasi. — \"You will do it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "सः करिष्यति। saḥ kariṣyati. — \"He will do it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "करिष्य- (kariṣya-) is the future stem of \"do\", and the present's endings follow it: kariṣyāmi like gacchāmi, kariṣyati like gacchati."
+            },
+            {
+              "kind": "speech",
+              "text": "सः श्वः कार्यं करिष्यति। saḥ śvaḥ kāryaṃ kariṣyati. — \"He will do the work tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: we, you all, they, and the two",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वयम् (vayam) is \"we\", यूयम् (yūyam) \"you all\", and ते (te) \"they\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वयं करिष्यामः। vayaṃ kariṣyāmaḥ. — \"We will do it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ते करिष्यन्ति। te kariṣyanti. — \"They will do it.\""
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who",
+                "the future of \"do\""
+              ],
+              "columns": 2,
+              "rowCount": 6,
+              "utterances": [
+                "who: अहम् (aham), I. the future of \"do\": करिष्यामि (kariṣyāmi).",
+                "who: त्वम् (tvam), you. the future of \"do\": करिष्यसि (kariṣyasi).",
+                "who: सः, सा (saḥ, sā), he, she. the future of \"do\": करिष्यति (kariṣyati).",
+                "who: वयम् (vayam), we. the future of \"do\": करिष्यामः (kariṣyāmaḥ).",
+                "who: यूयम् (yūyam), you all. the future of \"do\": करिष्यथ (kariṣyatha).",
+                "who: ते (te), they. the future of \"do\": करिष्यन्ति (kariṣyanti)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Exactly two people take the dual, as वदावः (vadāvaḥ), \"we two speak\", did:"
+            },
+            {
+              "kind": "speech",
+              "text": "अरुणः मीरा च करिष्यतः। aruṇaḥ mīrā ca kariṣyataḥ. — \"Arun and Mira will do it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A question puts किम् (kim) first; \"not\" puts न (na) before the verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "किं त्वं श्वः गमिष्यसि? kiṃ tvaṃ śvaḥ gamiṣyasi? — \"Will you go tomorrow?\""
+            },
+            {
+              "kind": "speech",
+              "text": "न, अहं न गमिष्यामि। na, ahaṃ na gamiṣyāmi. — \"No, I will not go.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I will go home\" — ahaṃ gṛhaṃ gamiṣyāmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I will go home\" — *ahaṃ gṛhaṃ gamiṣyāmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We will go home\" — vayaṃ gṛhaṃ gamiṣyāmaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We will go home\" — *vayaṃ gṛhaṃ gamiṣyāmaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"They will go home\" — te gṛhaṃ gamiṣyanti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"They will go home\" — *te gṛhaṃ gamiṣyanti*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C275-karisyati-r1",
+              "prompt": "Say that she will do the work tomorrow, then that we will go.",
+              "assesses": [
+                "SA-GRAMMAR-C275-FUTURE-01",
+                "SA-GRAMMAR-C275-FUTURE-02"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "sā śvaḥ kāryaṃ kariṣyati; vayaṃ gamiṣyāmaḥ",
+                "सा श्वः कार्यं करिष्यति। वयं गमिष्यामः।",
+                "sā śvaḥ kāryaṃ kariṣyati, vayaṃ gamiṣyāmaḥ"
+              ],
+              "feedback": {
+                "correct": "kariṣyati for her, gamiṣyāmaḥ for us: one stem, the present's endings.",
+                "incorrect": "Keep the stem and change the ending: -ati for one person, -āmaḥ for us."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"You will do it\"? (त्वं करिष्यसि.) \"They will do it\"? (ते करिष्यन्ति.) Arun and Mira, the two of them? (करिष्यतः.) Which word opens the question? (किम्.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C275-pathisyati",
+      "sequence": 16210,
+      "title": "पठिष्यति, द्रक्ष्यति (paṭhiṣyati, drakṣyati) — each verb's own future",
+      "headword": "पठिष्यति · द्रक्ष्यति",
+      "romanization": "paṭhiṣyati · drakṣyati",
+      "gloss": "will read, will see — each verb's own future stem, learned with the verb",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3472d7ffda81ea77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"she will do it\" and \"we will do it\". (sā kariṣyati, vayaṃ kariṣyāmaḥ.) Then say \"I will read\". (paṭhiṣyāmi.) The endings stay the same; the stem belongs to each verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -इष्य-",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सः पठिष्यति। saḥ paṭhiṣyati. — \"He will read.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Most verbs you know make the future with -इष्य- (-iṣya-) after the root: पठति gives पठिष्यति, and खादति (khādati), \"eats\", gives खादिष्यति (khādiṣyati)."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा पुस्तकं पठिष्यति। mīrā pustakaṃ paṭhiṣyati. — \"Mira will read the book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "बालः फलं खादिष्यति। bālaḥ phalaṃ khādiṣyati. — \"The boy will eat the fruit.\""
+            },
+            {
+              "kind": "speech",
+              "text": "वदति (vadati), \"speaks\", gives वदिष्यति (vadiṣyati). भवति gives भविष्यति (bhaviṣyati), the \"will be\" you know. लिखति (likhati) changes its vowel: लेखिष्यति (lekhiṣyati), \"will write\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सा श्वः लेखिष्यति। sā śvaḥ lekhiṣyati. — \"She will write tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -स्य-",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A few verbs take -स्य- (-sya-) instead, on the root itself. पश्यति (paśyati), \"sees\", has the root √dṛś, and its future is द्रक्ष्यति (drakṣyati):"
+            },
+            {
+              "kind": "speech",
+              "text": "सः नगरं द्रक्ष्यति। saḥ nagaraṃ drakṣyati. — \"He will see the city.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ददाति (dadāti), \"gives\", has दास्यति (dāsyati); तिष्ठति (tiṣṭhati), \"stands, stays\", has स्थास्यति (sthāsyati):"
+            },
+            {
+              "kind": "speech",
+              "text": "सा पानीयं दास्यति। sā pānīyaṃ dāsyati. — \"She will give water.\""
+            },
+            {
+              "kind": "speech",
+              "text": "अहम् अत्र स्थास्यामि। aham atra sthāsyāmi. — \"I will stay here.\""
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the present",
+                "the future"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "the present: पठति, खादति, वदति. the future: पठिष्यति, खादिष्यति, वदिष्यति.",
+                "the present: लिखति. the future: लेखिष्यति.",
+                "the present: गच्छति. the future: गमिष्यति.",
+                "the present: पश्यति. the future: द्रक्ष्यति.",
+                "the present: ददाति, तिष्ठति. the future: दास्यति, स्थास्यति."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So a future is learned with its verb, as a dictionary gives it: Monier-Williams lists द्रक्ष्यति under √dṛś, and Lanman's reader gives each of these with its root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He will read the book\" — saḥ pustakaṃ paṭhiṣyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He will read the book\" — *saḥ pustakaṃ paṭhiṣyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He will see the book\" — saḥ pustakaṃ drakṣyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He will see the book\" — *saḥ pustakaṃ drakṣyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He will give the book\" — saḥ pustakaṃ dāsyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He will give the book\" — *saḥ pustakaṃ dāsyati*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C275-pathisyati-r1",
+              "prompt": "Say that Mira will see the city, then that you will stay here.",
+              "assesses": [
+                "SA-GRAMMAR-C275-FUTURE-STEM-01",
+                "SA-GRAMMAR-C275-FUTURE-STEM-02"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "mīrā nagaraṃ drakṣyati; aham atra sthāsyāmi",
+                "मीरा नगरं द्रक्ष्यति। अहम् अत्र स्थास्यामि।",
+                "mīrā nagaraṃ drakṣyati, aham atra sthāsyāmi"
+              ],
+              "feedback": {
+                "correct": "drakṣyati and sthāsyāmi: two -sya- futures, learned with their verbs.",
+                "incorrect": "See is drakṣyati, stay is sthāsyati; the ending for I is -āmi."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Will eat\"? (खादिष्यति.) \"Will see\"? (द्रक्ष्यति: the stem comes with the verb.) \"Will give\"? (दास्यति.) And \"I will stay\"? (स्थास्यामि.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R275-what-everyone-will-do",
+      "sequence": 16220,
+      "title": "Review — what everyone will do",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what you, your friends and everyone else will do",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d764100f19771521",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I will do it\" and \"he will read\". (ahaṃ kariṣyāmi, saḥ paṭhiṣyati.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tomorrow I will read a book.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Tomorrow I will read a book.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Will you go home? No, I will not go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Will you go home? No, I will not go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Arun and Mira will see the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Arun and Mira will see the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "We will eat the fruit, and they will give water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: We will eat the fruit, and they will give water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "She will stay here tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: She will stay here tomorrow.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "करिष्यन्ति: how many people? (Three or more.) करिष्यतः? (Two.) Now the other way round: \"will see\"? (द्रक्ष्यति.) \"Will stay\"? (स्थास्यति.) \"We will write\"? (वयं लेखिष्यामः.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
