@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R432-review-426-432
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 25400
+chapter: 432
+type: review
+headword: (dialogue)
+gloss: a review of the words from Pure and Genuine to Sunrise and Sunset
+concept_tag: REVIEW
+prerequisites: [UR-C426-khalis, UR-C426-asli, UR-C426-milavat, UR-C426-ragarna, UR-C426-chamkana, UR-C427-saiz, UR-C427-dhila, UR-C427-poshak, UR-C427-rumal, UR-C427-sajna, UR-C428-bund, UR-C428-barasna, UR-C428-jhari, UR-C428-bhap, UR-C428-umadna, UR-C429-nami, UR-C429-thand, UR-C429-jara, UR-C429-sikurna, UR-C429-akarna, UR-C430-para, UR-C430-digri, UR-C430-tapna, UR-C430-habs, UR-C430-jhalna, UR-C431-abr, UR-C431-ghirna, UR-C431-chhana, UR-C431-dhund, UR-C431-thamna-let-up, UR-C432-tulu, UR-C432-ghurub, UR-C432-ufuq, UR-C432-shafaq, UR-C432-ujala]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C426-KHALIS426-01, UR-LEX-C426-KHALIS426-02, UR-LEX-C426-KHALIS426-03, UR-LEX-C426-KHALIS426-04, UR-LEX-C426-KHALIS426-05, UR-LEX-C427-POSHAK427-01, UR-LEX-C427-POSHAK427-02, UR-LEX-C427-POSHAK427-03, UR-LEX-C427-POSHAK427-04, UR-LEX-C427-POSHAK427-05, UR-LEX-C428-BOOND428-01, UR-LEX-C428-BOOND428-02, UR-LEX-C428-BOOND428-03, UR-LEX-C428-BOOND428-04, UR-LEX-C428-BOOND428-05, UR-LEX-C429-THAND429-01, UR-LEX-C429-THAND429-02, UR-LEX-C429-THAND429-03, UR-LEX-C429-THAND429-04, UR-LEX-C429-THAND429-05, UR-LEX-C430-PARA430-01, UR-LEX-C430-PARA430-02, UR-LEX-C430-PARA430-03, UR-LEX-C430-PARA430-04, UR-LEX-C430-PARA430-05, UR-LEX-C431-ABR431-01, UR-LEX-C431-ABR431-02, UR-LEX-C431-ABR431-03, UR-LEX-C431-ABR431-04, UR-LEX-C431-ABR431-05, UR-LEX-C432-TULU432-01, UR-LEX-C432-TULU432-02, UR-LEX-C432-TULU432-03, UR-LEX-C432-TULU432-04, UR-LEX-C432-TULU432-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C426-KHALIS426-01, UR-LEX-C426-KHALIS426-02, UR-LEX-C426-KHALIS426-03, UR-LEX-C426-KHALIS426-04, UR-LEX-C426-KHALIS426-05, UR-LEX-C427-POSHAK427-01, UR-LEX-C427-POSHAK427-02, UR-LEX-C427-POSHAK427-03, UR-LEX-C427-POSHAK427-04, UR-LEX-C427-POSHAK427-05, UR-LEX-C428-BOOND428-01, UR-LEX-C428-BOOND428-02, UR-LEX-C428-BOOND428-03, UR-LEX-C428-BOOND428-04, UR-LEX-C428-BOOND428-05, UR-LEX-C429-THAND429-01, UR-LEX-C429-THAND429-02, UR-LEX-C429-THAND429-03, UR-LEX-C429-THAND429-04, UR-LEX-C429-THAND429-05, UR-LEX-C430-PARA430-01, UR-LEX-C430-PARA430-02, UR-LEX-C430-PARA430-03, UR-LEX-C430-PARA430-04, UR-LEX-C430-PARA430-05, UR-LEX-C431-ABR431-01, UR-LEX-C431-ABR431-02, UR-LEX-C431-ABR431-03, UR-LEX-C431-ABR431-04, UR-LEX-C431-ABR431-05, UR-LEX-C432-TULU432-01, UR-LEX-C432-TULU432-02, UR-LEX-C432-TULU432-03, UR-LEX-C432-TULU432-04, UR-LEX-C432-TULU432-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C426-khalis, UR-C426-asli, UR-C426-milavat, UR-C426-ragarna, UR-C426-chamkana, UR-C427-saiz, UR-C427-dhila, UR-C427-poshak, UR-C427-rumal, UR-C427-sajna, UR-C428-bund, UR-C428-barasna, UR-C428-jhari, UR-C428-bhap, UR-C428-umadna, UR-C429-nami, UR-C429-thand, UR-C429-jara, UR-C429-sikurna, UR-C429-akarna, UR-C430-para, UR-C430-digri, UR-C430-tapna, UR-C430-habs, UR-C430-jhalna, UR-C431-abr, UR-C431-ghirna, UR-C431-chhana, UR-C431-dhund, UR-C431-thamna-let-up, UR-C432-tulu, UR-C432-ghurub, UR-C432-ufuq, UR-C432-shafaq, UR-C432-ujala]
+---
+
+# Looking back: from Pure and Genuine to Sunrise and Sunset
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C426-KHALIS426-01, UR-LEX-C426-KHALIS426-02] -->
+
+[PAUSE 3s] Say the Urdu for unmixed and authentic.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C426-KHALIS426-01, UR-LEX-C426-KHALIS426-02, UR-LEX-C426-KHALIS426-03, UR-LEX-C426-KHALIS426-04, UR-LEX-C426-KHALIS426-05, UR-LEX-C427-POSHAK427-01, UR-LEX-C427-POSHAK427-02, UR-LEX-C427-POSHAK427-03, UR-LEX-C427-POSHAK427-04, UR-LEX-C427-POSHAK427-05, UR-LEX-C428-BOOND428-01, UR-LEX-C428-BOOND428-02, UR-LEX-C428-BOOND428-03, UR-LEX-C428-BOOND428-04, UR-LEX-C428-BOOND428-05, UR-LEX-C429-THAND429-01, UR-LEX-C429-THAND429-02, UR-LEX-C429-THAND429-03, UR-LEX-C429-THAND429-04, UR-LEX-C429-THAND429-05, UR-LEX-C430-PARA430-01, UR-LEX-C430-PARA430-02, UR-LEX-C430-PARA430-03, UR-LEX-C430-PARA430-04, UR-LEX-C430-PARA430-05, UR-LEX-C431-ABR431-01, UR-LEX-C431-ABR431-02, UR-LEX-C431-ABR431-03, UR-LEX-C431-ABR431-04, UR-LEX-C431-ABR431-05, UR-LEX-C432-TULU432-01, UR-LEX-C432-TULU432-02, UR-LEX-C432-TULU432-03, UR-LEX-C432-TULU432-04, UR-LEX-C432-TULU432-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: unmixed, authentic, adulteration, to rub, to polish]
+- [YOU SAY: a size, loose, an outfit, a handkerchief, to look good (on someone)]
+- [YOU SAY: a drop, to pour (of rain), a spell of rain, steam, to gather (of clouds)]
+- [YOU SAY: moisture, a chill, the cold season, to shrink, to go stiff]
+- [YOU SAY: the temperature (in everyday talk), a degree (of temperature), to be burning hot, airless heat, to fan (someone)]
+- [YOU SAY: a rain cloud, to be surrounded, to spread over, mist, to let up]
+- [YOU SAY: the rising (of the sun), the setting (of the sun), the horizon, the glow of sunset, daylight]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C426-KHALIS426-01, UR-LEX-C426-KHALIS426-02, UR-LEX-C426-KHALIS426-03, UR-LEX-C426-KHALIS426-04, UR-LEX-C426-KHALIS426-05, UR-LEX-C427-POSHAK427-01, UR-LEX-C427-POSHAK427-02, UR-LEX-C427-POSHAK427-03, UR-LEX-C427-POSHAK427-04, UR-LEX-C427-POSHAK427-05, UR-LEX-C428-BOOND428-01, UR-LEX-C428-BOOND428-02, UR-LEX-C428-BOOND428-03, UR-LEX-C428-BOOND428-04, UR-LEX-C428-BOOND428-05, UR-LEX-C429-THAND429-01, UR-LEX-C429-THAND429-02, UR-LEX-C429-THAND429-03, UR-LEX-C429-THAND429-04, UR-LEX-C429-THAND429-05, UR-LEX-C430-PARA430-01, UR-LEX-C430-PARA430-02, UR-LEX-C430-PARA430-03, UR-LEX-C430-PARA430-04, UR-LEX-C430-PARA430-05, UR-LEX-C431-ABR431-01, UR-LEX-C431-ABR431-02, UR-LEX-C431-ABR431-03, UR-LEX-C431-ABR431-04, UR-LEX-C431-ABR431-05, UR-LEX-C432-TULU432-01, UR-LEX-C432-TULU432-02, UR-LEX-C432-TULU432-03, UR-LEX-C432-TULU432-04, UR-LEX-C432-TULU432-05] -->
+
+[PAUSE 3s] Unmixed? (**خالص**, *khālis*.) Authentic? (**اصلی**, *aslī*.) Adulteration? (**ملاوٹ**, *milāvaṭ*.) To rub? (**رگڑنا**, *ragaṛnā*.) To polish? (**چمکانا**, *chamkānā*.) A size? (**سائز**, *sāiz*.) Loose? (**ڈھیلا**, *ḍhīlā*.) An outfit? (**پوشاک**, *poshāk*.) A handkerchief? (**رومال**, *rūmāl*.) To look good (on someone)? (**سجنا**, *sajnā*.) A drop? (**بوند**, *būṅd*.) To pour (of rain)? (**برسنا**, *barasnā*.) A spell of rain? (**جھڑی**, *jhaṛī*.) Steam? (**بھاپ**, *bhāp*.) To gather (of clouds)? (**امڈنا**, *umaḍnā*.) Moisture? (**نمی**, *namī*.) A chill? (**ٹھنڈ**, *ṭhanḍ*.) The cold season? (**جاڑا**, *jāṛā*.) To shrink? (**سکڑنا**, *sikuṛnā*.) To go stiff? (**اکڑنا**, *akaṛnā*.) The temperature (in everyday talk)? (**پارہ**, *pārā*.) A degree (of temperature)? (**ڈگری**, *ḍigrī*.) To be burning hot? (**تپنا**, *tapnā*.) Airless heat? (**حبس**, *habs*.) To fan (someone)? (**جھلنا**, *jhalnā*.) A rain cloud? (**ابر**, *abr*.) To be surrounded? (**گھرنا**, *ghirnā*.) To spread over? (**چھانا**, *chhānā*.) Mist? (**دھند**, *dhund*.) To let up? (**تھمنا**, *thamnā*.) The rising (of the sun)? (**طلوع**, *tulū*.) The setting (of the sun)? (**غروب**, *ghurūb*.) The horizon? (**افق**, *ufuq*.) The glow of sunset? (**شفق**, *shafaq*.) Daylight? (**اجالا**, *ujālā*.)
+`;export{t};

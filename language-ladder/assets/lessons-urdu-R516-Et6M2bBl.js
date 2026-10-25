@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R517-review-510-517
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 30220
+chapter: 517
+type: review
+headword: (dialogue)
+gloss: a review of the words from Peel, Pound, Squeeze to On the Stage
+concept_tag: REVIEW
+prerequisites: [UR-C510-chhilna-peel, UR-C510-kutna, UR-C510-okhli, UR-C510-pisvana, UR-C510-nichorna, UR-C511-tarkib, UR-C511-dastarkhvan, UR-C511-pakvana, UR-C511-phunkna, UR-C511-chakhana, UR-C512-bagh, UR-C512-kyari, UR-C512-khad, UR-C512-sinchna, UR-C512-ukharna-uproot, UR-C513-fursat, UR-C513-mashghala, UR-C513-tafrih, UR-C513-piknik, UR-C513-album, UR-C514-un, UR-C514-pirona, UR-C514-karhna, UR-C514-angushtana, UR-C514-jhalar, UR-C515-tasvir, UR-C515-musavvir, UR-C515-khaka, UR-C515-shahkar, UR-C515-jhalakna, UR-C516-khattati, UR-C516-naqqashi, UR-C516-murti, UR-C516-kanda-karna, UR-C516-but, UR-C517-istej, UR-C517-tali, UR-C517-shaiqin, UR-C517-mukalama, UR-C517-lubhana]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C510-CHHALNI510-01, UR-LEX-C510-CHHALNI510-02, UR-LEX-C510-CHHALNI510-03, UR-LEX-C510-CHHALNI510-04, UR-LEX-C510-CHHALNI510-05, UR-LEX-C511-DASTARKHVAN511-01, UR-LEX-C511-DASTARKHVAN511-02, UR-LEX-C511-DASTARKHVAN511-03, UR-LEX-C511-DASTARKHVAN511-04, UR-LEX-C511-DASTARKHVAN511-05, UR-LEX-C512-KYARI512-01, UR-LEX-C512-KYARI512-02, UR-LEX-C512-KYARI512-03, UR-LEX-C512-KYARI512-04, UR-LEX-C512-KYARI512-05, UR-LEX-C513-FURSAT513-01, UR-LEX-C513-FURSAT513-02, UR-LEX-C513-FURSAT513-03, UR-LEX-C513-FURSAT513-04, UR-LEX-C513-FURSAT513-05, UR-LEX-C514-KARHAI514-01, UR-LEX-C514-KARHAI514-02, UR-LEX-C514-KARHAI514-03, UR-LEX-C514-KARHAI514-04, UR-LEX-C514-KARHAI514-05, UR-LEX-C515-TASVIR515-01, UR-LEX-C515-TASVIR515-02, UR-LEX-C515-TASVIR515-03, UR-LEX-C515-TASVIR515-04, UR-LEX-C515-TASVIR515-05, UR-LEX-C516-KHATTATI516-01, UR-LEX-C516-KHATTATI516-02, UR-LEX-C516-KHATTATI516-03, UR-LEX-C516-KHATTATI516-04, UR-LEX-C516-KHATTATI516-05, UR-LEX-C517-STAGE517-01, UR-LEX-C517-STAGE517-02, UR-LEX-C517-STAGE517-03, UR-LEX-C517-STAGE517-04, UR-LEX-C517-STAGE517-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C510-CHHALNI510-01, UR-LEX-C510-CHHALNI510-02, UR-LEX-C510-CHHALNI510-03, UR-LEX-C510-CHHALNI510-04, UR-LEX-C510-CHHALNI510-05, UR-LEX-C511-DASTARKHVAN511-01, UR-LEX-C511-DASTARKHVAN511-02, UR-LEX-C511-DASTARKHVAN511-03, UR-LEX-C511-DASTARKHVAN511-04, UR-LEX-C511-DASTARKHVAN511-05, UR-LEX-C512-KYARI512-01, UR-LEX-C512-KYARI512-02, UR-LEX-C512-KYARI512-03, UR-LEX-C512-KYARI512-04, UR-LEX-C512-KYARI512-05, UR-LEX-C513-FURSAT513-01, UR-LEX-C513-FURSAT513-02, UR-LEX-C513-FURSAT513-03, UR-LEX-C513-FURSAT513-04, UR-LEX-C513-FURSAT513-05, UR-LEX-C514-KARHAI514-01, UR-LEX-C514-KARHAI514-02, UR-LEX-C514-KARHAI514-03, UR-LEX-C514-KARHAI514-04, UR-LEX-C514-KARHAI514-05, UR-LEX-C515-TASVIR515-01, UR-LEX-C515-TASVIR515-02, UR-LEX-C515-TASVIR515-03, UR-LEX-C515-TASVIR515-04, UR-LEX-C515-TASVIR515-05, UR-LEX-C516-KHATTATI516-01, UR-LEX-C516-KHATTATI516-02, UR-LEX-C516-KHATTATI516-03, UR-LEX-C516-KHATTATI516-04, UR-LEX-C516-KHATTATI516-05, UR-LEX-C517-STAGE517-01, UR-LEX-C517-STAGE517-02, UR-LEX-C517-STAGE517-03, UR-LEX-C517-STAGE517-04, UR-LEX-C517-STAGE517-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C510-chhilna-peel, UR-C510-kutna, UR-C510-okhli, UR-C510-pisvana, UR-C510-nichorna, UR-C511-tarkib, UR-C511-dastarkhvan, UR-C511-pakvana, UR-C511-phunkna, UR-C511-chakhana, UR-C512-bagh, UR-C512-kyari, UR-C512-khad, UR-C512-sinchna, UR-C512-ukharna-uproot, UR-C513-fursat, UR-C513-mashghala, UR-C513-tafrih, UR-C513-piknik, UR-C513-album, UR-C514-un, UR-C514-pirona, UR-C514-karhna, UR-C514-angushtana, UR-C514-jhalar, UR-C515-tasvir, UR-C515-musavvir, UR-C515-khaka, UR-C515-shahkar, UR-C515-jhalakna, UR-C516-khattati, UR-C516-naqqashi, UR-C516-murti, UR-C516-kanda-karna, UR-C516-but, UR-C517-istej, UR-C517-tali, UR-C517-shaiqin, UR-C517-mukalama, UR-C517-lubhana]
+---
+
+# Looking back: from Peel, Pound, Squeeze to On the Stage
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C510-CHHALNI510-01, UR-LEX-C510-CHHALNI510-02] -->
+
+[PAUSE 3s] Say the Urdu for to peel and to pound.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C510-CHHALNI510-01, UR-LEX-C510-CHHALNI510-02, UR-LEX-C510-CHHALNI510-03, UR-LEX-C510-CHHALNI510-04, UR-LEX-C510-CHHALNI510-05, UR-LEX-C511-DASTARKHVAN511-01, UR-LEX-C511-DASTARKHVAN511-02, UR-LEX-C511-DASTARKHVAN511-03, UR-LEX-C511-DASTARKHVAN511-04, UR-LEX-C511-DASTARKHVAN511-05, UR-LEX-C512-KYARI512-01, UR-LEX-C512-KYARI512-02, UR-LEX-C512-KYARI512-03, UR-LEX-C512-KYARI512-04, UR-LEX-C512-KYARI512-05, UR-LEX-C513-FURSAT513-01, UR-LEX-C513-FURSAT513-02, UR-LEX-C513-FURSAT513-03, UR-LEX-C513-FURSAT513-04, UR-LEX-C513-FURSAT513-05, UR-LEX-C514-KARHAI514-01, UR-LEX-C514-KARHAI514-02, UR-LEX-C514-KARHAI514-03, UR-LEX-C514-KARHAI514-04, UR-LEX-C514-KARHAI514-05, UR-LEX-C515-TASVIR515-01, UR-LEX-C515-TASVIR515-02, UR-LEX-C515-TASVIR515-03, UR-LEX-C515-TASVIR515-04, UR-LEX-C515-TASVIR515-05, UR-LEX-C516-KHATTATI516-01, UR-LEX-C516-KHATTATI516-02, UR-LEX-C516-KHATTATI516-03, UR-LEX-C516-KHATTATI516-04, UR-LEX-C516-KHATTATI516-05, UR-LEX-C517-STAGE517-01, UR-LEX-C517-STAGE517-02, UR-LEX-C517-STAGE517-03, UR-LEX-C517-STAGE517-04, UR-LEX-C517-STAGE517-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to peel, to pound, a mortar (for pounding), to have (something) ground, to squeeze out]
+- [YOU SAY: a recipe, a cloth spread for a meal, to have (food) cooked, to blow (on), to give (someone) a taste]
+- [YOU SAY: a garden, a flower bed, fertiliser, to water (plants), to uproot]
+- [YOU SAY: free time, a pastime, recreation, a picnic, an album]
+- [YOU SAY: wool, to thread (a needle), to embroider, a thimble, a fringe]
+- [YOU SAY: a picture, a painter (an artist), a sketch, a masterpiece, to show through]
+- [YOU SAY: calligraphy, carved or painted decoration, a figurine, to engrave, an idol]
+- [YOU SAY: a stage (in a theatre), a clap, fans of a game or show, a dialogue, to charm]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C510-CHHALNI510-01, UR-LEX-C510-CHHALNI510-02, UR-LEX-C510-CHHALNI510-03, UR-LEX-C510-CHHALNI510-04, UR-LEX-C510-CHHALNI510-05, UR-LEX-C511-DASTARKHVAN511-01, UR-LEX-C511-DASTARKHVAN511-02, UR-LEX-C511-DASTARKHVAN511-03, UR-LEX-C511-DASTARKHVAN511-04, UR-LEX-C511-DASTARKHVAN511-05, UR-LEX-C512-KYARI512-01, UR-LEX-C512-KYARI512-02, UR-LEX-C512-KYARI512-03, UR-LEX-C512-KYARI512-04, UR-LEX-C512-KYARI512-05, UR-LEX-C513-FURSAT513-01, UR-LEX-C513-FURSAT513-02, UR-LEX-C513-FURSAT513-03, UR-LEX-C513-FURSAT513-04, UR-LEX-C513-FURSAT513-05, UR-LEX-C514-KARHAI514-01, UR-LEX-C514-KARHAI514-02, UR-LEX-C514-KARHAI514-03, UR-LEX-C514-KARHAI514-04, UR-LEX-C514-KARHAI514-05, UR-LEX-C515-TASVIR515-01, UR-LEX-C515-TASVIR515-02, UR-LEX-C515-TASVIR515-03, UR-LEX-C515-TASVIR515-04, UR-LEX-C515-TASVIR515-05, UR-LEX-C516-KHATTATI516-01, UR-LEX-C516-KHATTATI516-02, UR-LEX-C516-KHATTATI516-03, UR-LEX-C516-KHATTATI516-04, UR-LEX-C516-KHATTATI516-05, UR-LEX-C517-STAGE517-01, UR-LEX-C517-STAGE517-02, UR-LEX-C517-STAGE517-03, UR-LEX-C517-STAGE517-04, UR-LEX-C517-STAGE517-05] -->
+
+[PAUSE 3s] To peel? (**چھیلنا**, *chhīlnā*.) To pound? (**کوٹنا**, *kūṭnā*.) A mortar (for pounding)? (**اوکھلی**, *okhlī*.) To have (something) ground? (**پسوانا**, *pisvānā*.) To squeeze out? (**نچوڑنا**, *nichoṛnā*.) A recipe? (**ترکیب**, *tarkīb*.) A cloth spread for a meal? (**دسترخوان**, *dastarkhvān*.) To have (food) cooked? (**پکوانا**, *pakvānā*.) To blow (on)? (**پھونکنا**, *phūṅknā*.) To give (someone) a taste? (**چکھانا**, *chakhānā*.) A garden? (**باغ**, *bāgh*.) A flower bed? (**کیاری**, *kyārī*.) Fertiliser? (**کھاد**, *khād*.) To water (plants)? (**سینچنا**, *sīṅchnā*.) To uproot? (**اکھاڑنا**, *ukhāṛnā*.) Free time? (**فرصت**, *fursat*.) A pastime? (**مشغلہ**, *mashghalā*.) Recreation? (**تفریح**, *tafrīh*.) A picnic? (**پکنک**, *piknik*.) An album? (**البم**, *album*.) Wool? (**اون**, *ūn*.) To thread (a needle)? (**پرونا**, *pironā*.) To embroider? (**کاڑھنا**, *kāṛhnā*.) A thimble? (**انگشتانہ**, *angushtānā*.) A fringe? (**جھالر**, *jhālar*.) A picture? (**تصویر**, *tasvīr*.) A painter (an artist)? (**مصور**, *musavvir*.) A sketch? (**خاکہ**, *khākā*.) A masterpiece? (**شاہکار**, *shāhkār*.) To show through? (**جھلکنا**, *jhalaknā*.) Calligraphy? (**خطاطی**, *khattātī*.) Carved or painted decoration? (**نقاشی**, *naqqāshī*.) A figurine? (**مورتی**, *mūrtī*.) To engrave? (**کندہ کرنا**, *kandā karnā*.) An idol? (**بت**, *but*.) A stage (in a theatre)? (**اسٹیج**, *isṭej*.) A clap? (**تالی**, *tālī*.) Fans of a game or show? (**شائقین**, *shāiqīn*.) A dialogue? (**مکالمہ**, *mukālamā*.) To charm? (**لبھانا**, *lubhānā*.)
+`;export{t};

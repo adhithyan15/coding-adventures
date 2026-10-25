@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R540-review-534-540
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 31400
+chapter: 540
+type: review
+headword: (dialogue)
+gloss: a review of the words from On the Board to Weighing the Cost
+concept_tag: REVIEW
+prerequisites: [UR-C534-bisat, UR-C534-mohra, UR-C534-piyada, UR-C534-mat, UR-C534-ludo, UR-C535-shagun, UR-C535-manhus, UR-C535-tona, UR-C535-najumi, UR-C535-zaicha, UR-C536-mohtat, UR-C536-chaukanna, UR-C536-intibah, UR-C536-ar, UR-C536-emarjansi, UR-C537-mutabadil, UR-C537-yaksan, UR-C537-evaz, UR-C537-kasauti, UR-C537-muntakhab-karna, UR-C538-tazabzub, UR-C538-mutaraddid, UR-C538-guman, UR-C538-dagmagana, UR-C538-atal, UR-C539-zabardasti, UR-C539-mukhtar, UR-C539-naguzir, UR-C539-salah, UR-C539-jhukana, UR-C540-girvi, UR-C540-ikhrajat, UR-C540-muavaza, UR-C540-tavan, UR-C540-lutna]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C534-BISAT534-01, UR-LEX-C534-BISAT534-02, UR-LEX-C534-BISAT534-03, UR-LEX-C534-BISAT534-04, UR-LEX-C534-BISAT534-05, UR-LEX-C535-SHAGUN535-01, UR-LEX-C535-SHAGUN535-02, UR-LEX-C535-SHAGUN535-03, UR-LEX-C535-SHAGUN535-04, UR-LEX-C535-SHAGUN535-05, UR-LEX-C536-MOHTAT536-01, UR-LEX-C536-MOHTAT536-02, UR-LEX-C536-MOHTAT536-03, UR-LEX-C536-MOHTAT536-04, UR-LEX-C536-MOHTAT536-05, UR-LEX-C537-MUTABADIL537-01, UR-LEX-C537-MUTABADIL537-02, UR-LEX-C537-MUTABADIL537-03, UR-LEX-C537-MUTABADIL537-04, UR-LEX-C537-MUTABADIL537-05, UR-LEX-C538-TAZABZUB538-01, UR-LEX-C538-TAZABZUB538-02, UR-LEX-C538-TAZABZUB538-03, UR-LEX-C538-TAZABZUB538-04, UR-LEX-C538-TAZABZUB538-05, UR-LEX-C539-MUKHTAR539-01, UR-LEX-C539-MUKHTAR539-02, UR-LEX-C539-MUKHTAR539-03, UR-LEX-C539-MUKHTAR539-04, UR-LEX-C539-MUKHTAR539-05, UR-LEX-C540-GHATA540-01, UR-LEX-C540-GHATA540-02, UR-LEX-C540-GHATA540-03, UR-LEX-C540-GHATA540-04, UR-LEX-C540-GHATA540-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C534-BISAT534-01, UR-LEX-C534-BISAT534-02, UR-LEX-C534-BISAT534-03, UR-LEX-C534-BISAT534-04, UR-LEX-C534-BISAT534-05, UR-LEX-C535-SHAGUN535-01, UR-LEX-C535-SHAGUN535-02, UR-LEX-C535-SHAGUN535-03, UR-LEX-C535-SHAGUN535-04, UR-LEX-C535-SHAGUN535-05, UR-LEX-C536-MOHTAT536-01, UR-LEX-C536-MOHTAT536-02, UR-LEX-C536-MOHTAT536-03, UR-LEX-C536-MOHTAT536-04, UR-LEX-C536-MOHTAT536-05, UR-LEX-C537-MUTABADIL537-01, UR-LEX-C537-MUTABADIL537-02, UR-LEX-C537-MUTABADIL537-03, UR-LEX-C537-MUTABADIL537-04, UR-LEX-C537-MUTABADIL537-05, UR-LEX-C538-TAZABZUB538-01, UR-LEX-C538-TAZABZUB538-02, UR-LEX-C538-TAZABZUB538-03, UR-LEX-C538-TAZABZUB538-04, UR-LEX-C538-TAZABZUB538-05, UR-LEX-C539-MUKHTAR539-01, UR-LEX-C539-MUKHTAR539-02, UR-LEX-C539-MUKHTAR539-03, UR-LEX-C539-MUKHTAR539-04, UR-LEX-C539-MUKHTAR539-05, UR-LEX-C540-GHATA540-01, UR-LEX-C540-GHATA540-02, UR-LEX-C540-GHATA540-03, UR-LEX-C540-GHATA540-04, UR-LEX-C540-GHATA540-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C534-bisat, UR-C534-mohra, UR-C534-piyada, UR-C534-mat, UR-C534-ludo, UR-C535-shagun, UR-C535-manhus, UR-C535-tona, UR-C535-najumi, UR-C535-zaicha, UR-C536-mohtat, UR-C536-chaukanna, UR-C536-intibah, UR-C536-ar, UR-C536-emarjansi, UR-C537-mutabadil, UR-C537-yaksan, UR-C537-evaz, UR-C537-kasauti, UR-C537-muntakhab-karna, UR-C538-tazabzub, UR-C538-mutaraddid, UR-C538-guman, UR-C538-dagmagana, UR-C538-atal, UR-C539-zabardasti, UR-C539-mukhtar, UR-C539-naguzir, UR-C539-salah, UR-C539-jhukana, UR-C540-girvi, UR-C540-ikhrajat, UR-C540-muavaza, UR-C540-tavan, UR-C540-lutna]
+---
+
+# Looking back: from On the Board to Weighing the Cost
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C534-BISAT534-01, UR-LEX-C534-BISAT534-02] -->
+
+[PAUSE 3s] Say the Urdu for a game board and a piece (in a board game).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C534-BISAT534-01, UR-LEX-C534-BISAT534-02, UR-LEX-C534-BISAT534-03, UR-LEX-C534-BISAT534-04, UR-LEX-C534-BISAT534-05, UR-LEX-C535-SHAGUN535-01, UR-LEX-C535-SHAGUN535-02, UR-LEX-C535-SHAGUN535-03, UR-LEX-C535-SHAGUN535-04, UR-LEX-C535-SHAGUN535-05, UR-LEX-C536-MOHTAT536-01, UR-LEX-C536-MOHTAT536-02, UR-LEX-C536-MOHTAT536-03, UR-LEX-C536-MOHTAT536-04, UR-LEX-C536-MOHTAT536-05, UR-LEX-C537-MUTABADIL537-01, UR-LEX-C537-MUTABADIL537-02, UR-LEX-C537-MUTABADIL537-03, UR-LEX-C537-MUTABADIL537-04, UR-LEX-C537-MUTABADIL537-05, UR-LEX-C538-TAZABZUB538-01, UR-LEX-C538-TAZABZUB538-02, UR-LEX-C538-TAZABZUB538-03, UR-LEX-C538-TAZABZUB538-04, UR-LEX-C538-TAZABZUB538-05, UR-LEX-C539-MUKHTAR539-01, UR-LEX-C539-MUKHTAR539-02, UR-LEX-C539-MUKHTAR539-03, UR-LEX-C539-MUKHTAR539-04, UR-LEX-C539-MUKHTAR539-05, UR-LEX-C540-GHATA540-01, UR-LEX-C540-GHATA540-02, UR-LEX-C540-GHATA540-03, UR-LEX-C540-GHATA540-04, UR-LEX-C540-GHATA540-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a game board, a piece (in a board game), a pawn, checkmate, ludo]
+- [YOU SAY: an omen, ill-omened, a magic spell, an astrologer, a horoscope]
+- [YOU SAY: cautious, alert, a warning, cover (to shelter behind), an emergency]
+- [YOU SAY: an alternative, alike, something in exchange (for), a touchstone, to select]
+- [YOU SAY: indecision, hesitant, a hunch, to totter, unshakable]
+- [YOU SAY: force, free to decide, unavoidable, a piece of advice, to bow (one's head)]
+- [YOU SAY: pawned, expenses, compensation, damages (to be paid), to be robbed]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C534-BISAT534-01, UR-LEX-C534-BISAT534-02, UR-LEX-C534-BISAT534-03, UR-LEX-C534-BISAT534-04, UR-LEX-C534-BISAT534-05, UR-LEX-C535-SHAGUN535-01, UR-LEX-C535-SHAGUN535-02, UR-LEX-C535-SHAGUN535-03, UR-LEX-C535-SHAGUN535-04, UR-LEX-C535-SHAGUN535-05, UR-LEX-C536-MOHTAT536-01, UR-LEX-C536-MOHTAT536-02, UR-LEX-C536-MOHTAT536-03, UR-LEX-C536-MOHTAT536-04, UR-LEX-C536-MOHTAT536-05, UR-LEX-C537-MUTABADIL537-01, UR-LEX-C537-MUTABADIL537-02, UR-LEX-C537-MUTABADIL537-03, UR-LEX-C537-MUTABADIL537-04, UR-LEX-C537-MUTABADIL537-05, UR-LEX-C538-TAZABZUB538-01, UR-LEX-C538-TAZABZUB538-02, UR-LEX-C538-TAZABZUB538-03, UR-LEX-C538-TAZABZUB538-04, UR-LEX-C538-TAZABZUB538-05, UR-LEX-C539-MUKHTAR539-01, UR-LEX-C539-MUKHTAR539-02, UR-LEX-C539-MUKHTAR539-03, UR-LEX-C539-MUKHTAR539-04, UR-LEX-C539-MUKHTAR539-05, UR-LEX-C540-GHATA540-01, UR-LEX-C540-GHATA540-02, UR-LEX-C540-GHATA540-03, UR-LEX-C540-GHATA540-04, UR-LEX-C540-GHATA540-05] -->
+
+[PAUSE 3s] A game board? (**بساط**, *bisāt*.) A piece (in a board game)? (**مہرہ**, *mohrā*.) A pawn? (**پیادہ**, *piyādā*.) Checkmate? (**مات**, *māt*.) Ludo? (**لوڈو**, *luḍo*.) An omen? (**شگون**, *shagun*.) Ill-omened? (**منحوس**, *manhūs*.) A magic spell? (**ٹونا**, *ṭonā*.) An astrologer? (**نجومی**, *najūmī*.) A horoscope? (**زائچہ**, *zāichā*.) Cautious? (**محتاط**, *mohtāt*.) Alert? (**چوکنا**, *chaukannā*.) A warning? (**انتباہ**, *intibāh*.) Cover (to shelter behind)? (**آڑ**, *āṛ*.) An emergency? (**ایمرجنسی**, *emarjansī*.) An alternative? (**متبادل**, *mutabādil*.) Alike? (**یکساں**, *yaksāṅ*.) Something in exchange (for)? (**عوض**, *evaz*.) A touchstone? (**کسوٹی**, *kasauṭī*.) To select? (**منتخب کرنا**, *muntakhab karnā*.) Indecision? (**تذبذب**, *tazabzub*.) Hesitant? (**متردد**, *mutaraddid*.) A hunch? (**گمان**, *gumān*.) To totter? (**ڈگمگانا**, *ḍagmagānā*.) Unshakable? (**اٹل**, *aṭal*.) Force? (**زبردستی**, *zabardastī*.) Free to decide? (**مختار**, *mukhtār*.) Unavoidable? (**ناگزیر**, *nāguzīr*.) A piece of advice? (**صلاح**, *salāh*.) To bow (one's head)? (**جھکانا**, *jhukānā*.) Pawned? (**گروی**, *girvī*.) Expenses? (**اخراجات**, *ikhrājāt*.) Compensation? (**معاوضہ**, *muāvazā*.) Damages (to be paid)? (**تاوان**, *tāvān*.) To be robbed? (**لٹنا**, *luṭnā*.)
+`;export{t};

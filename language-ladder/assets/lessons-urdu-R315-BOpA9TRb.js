@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R315-review-308-315
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 19040
+chapter: 315
+type: review
+headword: (dialogue)
+gloss: a review of the words from Kings and Emperors to Ancestors
+concept_tag: REVIEW
+prerequisites: [UR-C308-shahanshah, UR-C308-takht, UR-C308-taj, UR-C308-darbar, UR-C308-varis, UR-C309-hamla, UR-C309-qila, UR-C309-gherna, UR-C309-top, UR-C309-bhirna, UR-C310-talvar, UR-C310-dhal, UR-C310-bhala, UR-C310-kaman, UR-C310-lashkar, UR-C311-harana, UR-C311-pachharna, UR-C311-fateh, UR-C311-shahid, UR-C311-sulah, UR-C312-riaya, UR-C312-hukm, UR-C312-ghulam, UR-C312-baghavat, UR-C312-lalkarna, UR-C313-angrez, UR-C313-tahrik, UR-C313-jaddojahd, UR-C313-qurbani, UR-C313-saunpna, UR-C314-khandar, UR-C314-khodna, UR-C314-mujassama, UR-C314-katba, UR-C314-asar, UR-C315-ajdad, UR-C315-basna, UR-C315-nasl, UR-C315-sadi, UR-C315-ujarna]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C308-SHAHENSHAH308-01, UR-LEX-C308-SHAHENSHAH308-02, UR-LEX-C308-SHAHENSHAH308-03, UR-LEX-C308-SHAHENSHAH308-04, UR-LEX-C308-SHAHENSHAH308-05, UR-LEX-C309-HAMLA309-01, UR-LEX-C309-HAMLA309-02, UR-LEX-C309-HAMLA309-03, UR-LEX-C309-HAMLA309-04, UR-LEX-C309-HAMLA309-05, UR-LEX-C310-DHAL310-01, UR-LEX-C310-DHAL310-02, UR-LEX-C310-DHAL310-03, UR-LEX-C310-DHAL310-04, UR-LEX-C310-DHAL310-05, UR-LEX-C311-FATEH311-01, UR-LEX-C311-FATEH311-02, UR-LEX-C311-FATEH311-03, UR-LEX-C311-FATEH311-04, UR-LEX-C311-FATEH311-05, UR-LEX-C312-BAGHAVAT312-01, UR-LEX-C312-BAGHAVAT312-02, UR-LEX-C312-BAGHAVAT312-03, UR-LEX-C312-BAGHAVAT312-04, UR-LEX-C312-BAGHAVAT312-05, UR-LEX-C313-TEHRIK313-01, UR-LEX-C313-TEHRIK313-02, UR-LEX-C313-TEHRIK313-03, UR-LEX-C313-TEHRIK313-04, UR-LEX-C313-TEHRIK313-05, UR-LEX-C314-KHANDAR314-01, UR-LEX-C314-KHANDAR314-02, UR-LEX-C314-KHANDAR314-03, UR-LEX-C314-KHANDAR314-04, UR-LEX-C314-KHANDAR314-05, UR-LEX-C315-AJDAD315-01, UR-LEX-C315-AJDAD315-02, UR-LEX-C315-AJDAD315-03, UR-LEX-C315-AJDAD315-04, UR-LEX-C315-AJDAD315-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C308-SHAHENSHAH308-01, UR-LEX-C308-SHAHENSHAH308-02, UR-LEX-C308-SHAHENSHAH308-03, UR-LEX-C308-SHAHENSHAH308-04, UR-LEX-C308-SHAHENSHAH308-05, UR-LEX-C309-HAMLA309-01, UR-LEX-C309-HAMLA309-02, UR-LEX-C309-HAMLA309-03, UR-LEX-C309-HAMLA309-04, UR-LEX-C309-HAMLA309-05, UR-LEX-C310-DHAL310-01, UR-LEX-C310-DHAL310-02, UR-LEX-C310-DHAL310-03, UR-LEX-C310-DHAL310-04, UR-LEX-C310-DHAL310-05, UR-LEX-C311-FATEH311-01, UR-LEX-C311-FATEH311-02, UR-LEX-C311-FATEH311-03, UR-LEX-C311-FATEH311-04, UR-LEX-C311-FATEH311-05, UR-LEX-C312-BAGHAVAT312-01, UR-LEX-C312-BAGHAVAT312-02, UR-LEX-C312-BAGHAVAT312-03, UR-LEX-C312-BAGHAVAT312-04, UR-LEX-C312-BAGHAVAT312-05, UR-LEX-C313-TEHRIK313-01, UR-LEX-C313-TEHRIK313-02, UR-LEX-C313-TEHRIK313-03, UR-LEX-C313-TEHRIK313-04, UR-LEX-C313-TEHRIK313-05, UR-LEX-C314-KHANDAR314-01, UR-LEX-C314-KHANDAR314-02, UR-LEX-C314-KHANDAR314-03, UR-LEX-C314-KHANDAR314-04, UR-LEX-C314-KHANDAR314-05, UR-LEX-C315-AJDAD315-01, UR-LEX-C315-AJDAD315-02, UR-LEX-C315-AJDAD315-03, UR-LEX-C315-AJDAD315-04, UR-LEX-C315-AJDAD315-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C308-shahanshah, UR-C308-takht, UR-C308-taj, UR-C308-darbar, UR-C308-varis, UR-C309-hamla, UR-C309-qila, UR-C309-gherna, UR-C309-top, UR-C309-bhirna, UR-C310-talvar, UR-C310-dhal, UR-C310-bhala, UR-C310-kaman, UR-C310-lashkar, UR-C311-harana, UR-C311-pachharna, UR-C311-fateh, UR-C311-shahid, UR-C311-sulah, UR-C312-riaya, UR-C312-hukm, UR-C312-ghulam, UR-C312-baghavat, UR-C312-lalkarna, UR-C313-angrez, UR-C313-tahrik, UR-C313-jaddojahd, UR-C313-qurbani, UR-C313-saunpna, UR-C314-khandar, UR-C314-khodna, UR-C314-mujassama, UR-C314-katba, UR-C314-asar, UR-C315-ajdad, UR-C315-basna, UR-C315-nasl, UR-C315-sadi, UR-C315-ujarna]
+---
+
+# Looking back: from Kings and Emperors to Ancestors
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C308-SHAHENSHAH308-01, UR-LEX-C308-SHAHENSHAH308-02] -->
+
+[PAUSE 3s] Say the Urdu for an emperor and a throne.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C308-SHAHENSHAH308-01, UR-LEX-C308-SHAHENSHAH308-02, UR-LEX-C308-SHAHENSHAH308-03, UR-LEX-C308-SHAHENSHAH308-04, UR-LEX-C308-SHAHENSHAH308-05, UR-LEX-C309-HAMLA309-01, UR-LEX-C309-HAMLA309-02, UR-LEX-C309-HAMLA309-03, UR-LEX-C309-HAMLA309-04, UR-LEX-C309-HAMLA309-05, UR-LEX-C310-DHAL310-01, UR-LEX-C310-DHAL310-02, UR-LEX-C310-DHAL310-03, UR-LEX-C310-DHAL310-04, UR-LEX-C310-DHAL310-05, UR-LEX-C311-FATEH311-01, UR-LEX-C311-FATEH311-02, UR-LEX-C311-FATEH311-03, UR-LEX-C311-FATEH311-04, UR-LEX-C311-FATEH311-05, UR-LEX-C312-BAGHAVAT312-01, UR-LEX-C312-BAGHAVAT312-02, UR-LEX-C312-BAGHAVAT312-03, UR-LEX-C312-BAGHAVAT312-04, UR-LEX-C312-BAGHAVAT312-05, UR-LEX-C313-TEHRIK313-01, UR-LEX-C313-TEHRIK313-02, UR-LEX-C313-TEHRIK313-03, UR-LEX-C313-TEHRIK313-04, UR-LEX-C313-TEHRIK313-05, UR-LEX-C314-KHANDAR314-01, UR-LEX-C314-KHANDAR314-02, UR-LEX-C314-KHANDAR314-03, UR-LEX-C314-KHANDAR314-04, UR-LEX-C314-KHANDAR314-05, UR-LEX-C315-AJDAD315-01, UR-LEX-C315-AJDAD315-02, UR-LEX-C315-AJDAD315-03, UR-LEX-C315-AJDAD315-04, UR-LEX-C315-AJDAD315-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an emperor, a throne, a crown, a royal court, an heir]
+- [YOU SAY: an attack, a fort, to surround, a cannon, to clash]
+- [YOU SAY: a sword, a shield, a spear, a bow for arrows, an army on the march]
+- [YOU SAY: to defeat, to throw down, a victory, a martyr, a peace settlement]
+- [YOU SAY: the subjects (of a ruler), an order, a slave, a rebellion, to challenge]
+- [YOU SAY: an English person, a movement (of people), a struggle, a sacrifice, to entrust]
+- [YOU SAY: ruins, to dig, a statue, an inscription, ancient remains]
+- [YOU SAY: ancestors, to settle, a generation, a century, to become deserted]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C308-SHAHENSHAH308-01, UR-LEX-C308-SHAHENSHAH308-02, UR-LEX-C308-SHAHENSHAH308-03, UR-LEX-C308-SHAHENSHAH308-04, UR-LEX-C308-SHAHENSHAH308-05, UR-LEX-C309-HAMLA309-01, UR-LEX-C309-HAMLA309-02, UR-LEX-C309-HAMLA309-03, UR-LEX-C309-HAMLA309-04, UR-LEX-C309-HAMLA309-05, UR-LEX-C310-DHAL310-01, UR-LEX-C310-DHAL310-02, UR-LEX-C310-DHAL310-03, UR-LEX-C310-DHAL310-04, UR-LEX-C310-DHAL310-05, UR-LEX-C311-FATEH311-01, UR-LEX-C311-FATEH311-02, UR-LEX-C311-FATEH311-03, UR-LEX-C311-FATEH311-04, UR-LEX-C311-FATEH311-05, UR-LEX-C312-BAGHAVAT312-01, UR-LEX-C312-BAGHAVAT312-02, UR-LEX-C312-BAGHAVAT312-03, UR-LEX-C312-BAGHAVAT312-04, UR-LEX-C312-BAGHAVAT312-05, UR-LEX-C313-TEHRIK313-01, UR-LEX-C313-TEHRIK313-02, UR-LEX-C313-TEHRIK313-03, UR-LEX-C313-TEHRIK313-04, UR-LEX-C313-TEHRIK313-05, UR-LEX-C314-KHANDAR314-01, UR-LEX-C314-KHANDAR314-02, UR-LEX-C314-KHANDAR314-03, UR-LEX-C314-KHANDAR314-04, UR-LEX-C314-KHANDAR314-05, UR-LEX-C315-AJDAD315-01, UR-LEX-C315-AJDAD315-02, UR-LEX-C315-AJDAD315-03, UR-LEX-C315-AJDAD315-04, UR-LEX-C315-AJDAD315-05] -->
+
+[PAUSE 3s] An emperor? (**شہنشاہ**, *shahanshāh*.) A throne? (**تخت**, *takht*.) A crown? (**تاج**, *tāj*.) A royal court? (**دربار**, *darbār*.) An heir? (**وارث**, *vāris*.) An attack? (**حملہ**, *hamlā*.) A fort? (**قلعہ**, *qilā*.) To surround? (**گھیرنا**, *ghernā*.) A cannon? (**توپ**, *top*.) To clash? (**بھڑنا**, *bhiṛnā*.) A sword? (**تلوار**, *talvār*.) A shield? (**ڈھال**, *ḍhāl*.) A spear? (**بھالا**, *bhālā*.) A bow for arrows? (**کمان**, *kamān*.) An army on the march? (**لشکر**, *lashkar*.) To defeat? (**ہرانا**, *harānā*.) To throw down? (**پچھاڑنا**, *pachhāṛnā*.) A victory? (**فتح**, *fateh*.) A martyr? (**شہید**, *shahīd*.) A peace settlement? (**صلح**, *sulah*.) The subjects (of a ruler)? (**رعایا**, *riāyā*.) An order? (**حکم**, *hukm*.) A slave? (**غلام**, *ghulām*.) A rebellion? (**بغاوت**, *baghāvat*.) To challenge? (**للکارنا**, *lalkārnā*.) An English person? (**انگریز**, *angrez*.) A movement (of people)? (**تحریک**, *tahrīk*.) A struggle? (**جدوجہد**, *jaddojahd*.) A sacrifice? (**قربانی**, *qurbānī*.) To entrust? (**سونپنا**, *saunpnā*.) Ruins? (**کھنڈر**, *khanḍar*.) To dig? (**کھودنا**, *khodnā*.) A statue? (**مجسمہ**, *mujassamā*.) An inscription? (**کتبہ**, *katbā*.) Ancient remains? (**آثار**, *āsār*.) Ancestors? (**اجداد**, *ajdād*.) To settle? (**بسنا**, *basnā*.) A generation? (**نسل**, *nasl*.) A century? (**صدی**, *sadī*.) To become deserted? (**اجڑنا**, *ujaṛnā*.)
+`;export{t};

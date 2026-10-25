@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R455-review-448-455
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 26810
+chapter: 455
+type: review
+headword: (dialogue)
+gloss: a review of the words from Bored or Curious to Faults and Flaws
+concept_tag: REVIEW
+prerequisites: [UR-C448-bezar, UR-C448-dilchasp, UR-C448-tajassus, UR-C448-betab, UR-C448-tohna, UR-C449-mamta, UR-C449-shafqat, UR-C449-chumna, UR-C449-chimatna, UR-C449-ishq, UR-C450-tanha, UR-C450-akela, UR-C450-judai, UR-C450-bisurna, UR-C450-ojhal, UR-C451-hichkichana, UR-C451-lajana, UR-C451-nadamat, UR-C451-pasheman, UR-C451-khijalat, UR-C452-ghurur, UR-C452-shekhi, UR-C452-itrana, UR-C452-nakhra, UR-C452-takabbur, UR-C453-hasana, UR-C453-rulana, UR-C453-qahqaha, UR-C453-sisakna, UR-C453-mazaq, UR-C454-fitrat, UR-C454-tabiat, UR-C454-adat, UR-C454-khubi, UR-C454-shakhsiyat, UR-C455-khami, UR-C455-aib, UR-C455-khudsar, UR-C455-kahil, UR-C455-ghafil]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C448-CURIOUS448-01, UR-LEX-C448-CURIOUS448-02, UR-LEX-C448-CURIOUS448-03, UR-LEX-C448-CURIOUS448-04, UR-LEX-C448-CURIOUS448-05, UR-LEX-C449-LOVE449-01, UR-LEX-C449-LOVE449-02, UR-LEX-C449-LOVE449-03, UR-LEX-C449-LOVE449-04, UR-LEX-C449-LOVE449-05, UR-LEX-C450-MISS450-01, UR-LEX-C450-MISS450-02, UR-LEX-C450-MISS450-03, UR-LEX-C450-MISS450-04, UR-LEX-C450-MISS450-05, UR-LEX-C451-REGRET451-01, UR-LEX-C451-REGRET451-02, UR-LEX-C451-REGRET451-03, UR-LEX-C451-REGRET451-04, UR-LEX-C451-REGRET451-05, UR-LEX-C452-PRIDE452-01, UR-LEX-C452-PRIDE452-02, UR-LEX-C452-PRIDE452-03, UR-LEX-C452-PRIDE452-04, UR-LEX-C452-PRIDE452-05, UR-LEX-C453-LAUGH453-01, UR-LEX-C453-LAUGH453-02, UR-LEX-C453-LAUGH453-03, UR-LEX-C453-LAUGH453-04, UR-LEX-C453-LAUGH453-05, UR-LEX-C454-CHARACTER454-01, UR-LEX-C454-CHARACTER454-02, UR-LEX-C454-CHARACTER454-03, UR-LEX-C454-CHARACTER454-04, UR-LEX-C454-CHARACTER454-05, UR-LEX-C455-FLAW455-01, UR-LEX-C455-FLAW455-02, UR-LEX-C455-FLAW455-03, UR-LEX-C455-FLAW455-04, UR-LEX-C455-FLAW455-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C448-CURIOUS448-01, UR-LEX-C448-CURIOUS448-02, UR-LEX-C448-CURIOUS448-03, UR-LEX-C448-CURIOUS448-04, UR-LEX-C448-CURIOUS448-05, UR-LEX-C449-LOVE449-01, UR-LEX-C449-LOVE449-02, UR-LEX-C449-LOVE449-03, UR-LEX-C449-LOVE449-04, UR-LEX-C449-LOVE449-05, UR-LEX-C450-MISS450-01, UR-LEX-C450-MISS450-02, UR-LEX-C450-MISS450-03, UR-LEX-C450-MISS450-04, UR-LEX-C450-MISS450-05, UR-LEX-C451-REGRET451-01, UR-LEX-C451-REGRET451-02, UR-LEX-C451-REGRET451-03, UR-LEX-C451-REGRET451-04, UR-LEX-C451-REGRET451-05, UR-LEX-C452-PRIDE452-01, UR-LEX-C452-PRIDE452-02, UR-LEX-C452-PRIDE452-03, UR-LEX-C452-PRIDE452-04, UR-LEX-C452-PRIDE452-05, UR-LEX-C453-LAUGH453-01, UR-LEX-C453-LAUGH453-02, UR-LEX-C453-LAUGH453-03, UR-LEX-C453-LAUGH453-04, UR-LEX-C453-LAUGH453-05, UR-LEX-C454-CHARACTER454-01, UR-LEX-C454-CHARACTER454-02, UR-LEX-C454-CHARACTER454-03, UR-LEX-C454-CHARACTER454-04, UR-LEX-C454-CHARACTER454-05, UR-LEX-C455-FLAW455-01, UR-LEX-C455-FLAW455-02, UR-LEX-C455-FLAW455-03, UR-LEX-C455-FLAW455-04, UR-LEX-C455-FLAW455-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C448-bezar, UR-C448-dilchasp, UR-C448-tajassus, UR-C448-betab, UR-C448-tohna, UR-C449-mamta, UR-C449-shafqat, UR-C449-chumna, UR-C449-chimatna, UR-C449-ishq, UR-C450-tanha, UR-C450-akela, UR-C450-judai, UR-C450-bisurna, UR-C450-ojhal, UR-C451-hichkichana, UR-C451-lajana, UR-C451-nadamat, UR-C451-pasheman, UR-C451-khijalat, UR-C452-ghurur, UR-C452-shekhi, UR-C452-itrana, UR-C452-nakhra, UR-C452-takabbur, UR-C453-hasana, UR-C453-rulana, UR-C453-qahqaha, UR-C453-sisakna, UR-C453-mazaq, UR-C454-fitrat, UR-C454-tabiat, UR-C454-adat, UR-C454-khubi, UR-C454-shakhsiyat, UR-C455-khami, UR-C455-aib, UR-C455-khudsar, UR-C455-kahil, UR-C455-ghafil]
+---
+
+# Looking back: from Bored or Curious to Faults and Flaws
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C448-CURIOUS448-01, UR-LEX-C448-CURIOUS448-02] -->
+
+[PAUSE 3s] Say the Urdu for fed up and interesting.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C448-CURIOUS448-01, UR-LEX-C448-CURIOUS448-02, UR-LEX-C448-CURIOUS448-03, UR-LEX-C448-CURIOUS448-04, UR-LEX-C448-CURIOUS448-05, UR-LEX-C449-LOVE449-01, UR-LEX-C449-LOVE449-02, UR-LEX-C449-LOVE449-03, UR-LEX-C449-LOVE449-04, UR-LEX-C449-LOVE449-05, UR-LEX-C450-MISS450-01, UR-LEX-C450-MISS450-02, UR-LEX-C450-MISS450-03, UR-LEX-C450-MISS450-04, UR-LEX-C450-MISS450-05, UR-LEX-C451-REGRET451-01, UR-LEX-C451-REGRET451-02, UR-LEX-C451-REGRET451-03, UR-LEX-C451-REGRET451-04, UR-LEX-C451-REGRET451-05, UR-LEX-C452-PRIDE452-01, UR-LEX-C452-PRIDE452-02, UR-LEX-C452-PRIDE452-03, UR-LEX-C452-PRIDE452-04, UR-LEX-C452-PRIDE452-05, UR-LEX-C453-LAUGH453-01, UR-LEX-C453-LAUGH453-02, UR-LEX-C453-LAUGH453-03, UR-LEX-C453-LAUGH453-04, UR-LEX-C453-LAUGH453-05, UR-LEX-C454-CHARACTER454-01, UR-LEX-C454-CHARACTER454-02, UR-LEX-C454-CHARACTER454-03, UR-LEX-C454-CHARACTER454-04, UR-LEX-C454-CHARACTER454-05, UR-LEX-C455-FLAW455-01, UR-LEX-C455-FLAW455-02, UR-LEX-C455-FLAW455-03, UR-LEX-C455-FLAW455-04, UR-LEX-C455-FLAW455-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: fed up, interesting, curiosity, eager, to feel about for]
+- [YOU SAY: a mother's love, tender affection, to kiss, to cling tightly, passionate love]
+- [YOU SAY: lonely, on one's own, separation, to whimper, out of sight]
+- [YOU SAY: to hesitate, to blush, remorse, contrite, embarrassment]
+- [YOU SAY: arrogance, boasting, to put on airs, fussiness, haughtiness]
+- [YOU SAY: to make (someone) laugh, to make (someone) cry, a burst of laughter, to sob, teasing]
+- [YOU SAY: a person's nature, disposition, a habit, a good quality, a personality]
+- [YOU SAY: a shortcoming, a defect, headstrong, slothful, heedless]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C448-CURIOUS448-01, UR-LEX-C448-CURIOUS448-02, UR-LEX-C448-CURIOUS448-03, UR-LEX-C448-CURIOUS448-04, UR-LEX-C448-CURIOUS448-05, UR-LEX-C449-LOVE449-01, UR-LEX-C449-LOVE449-02, UR-LEX-C449-LOVE449-03, UR-LEX-C449-LOVE449-04, UR-LEX-C449-LOVE449-05, UR-LEX-C450-MISS450-01, UR-LEX-C450-MISS450-02, UR-LEX-C450-MISS450-03, UR-LEX-C450-MISS450-04, UR-LEX-C450-MISS450-05, UR-LEX-C451-REGRET451-01, UR-LEX-C451-REGRET451-02, UR-LEX-C451-REGRET451-03, UR-LEX-C451-REGRET451-04, UR-LEX-C451-REGRET451-05, UR-LEX-C452-PRIDE452-01, UR-LEX-C452-PRIDE452-02, UR-LEX-C452-PRIDE452-03, UR-LEX-C452-PRIDE452-04, UR-LEX-C452-PRIDE452-05, UR-LEX-C453-LAUGH453-01, UR-LEX-C453-LAUGH453-02, UR-LEX-C453-LAUGH453-03, UR-LEX-C453-LAUGH453-04, UR-LEX-C453-LAUGH453-05, UR-LEX-C454-CHARACTER454-01, UR-LEX-C454-CHARACTER454-02, UR-LEX-C454-CHARACTER454-03, UR-LEX-C454-CHARACTER454-04, UR-LEX-C454-CHARACTER454-05, UR-LEX-C455-FLAW455-01, UR-LEX-C455-FLAW455-02, UR-LEX-C455-FLAW455-03, UR-LEX-C455-FLAW455-04, UR-LEX-C455-FLAW455-05] -->
+
+[PAUSE 3s] Fed up? (**بیزار**, *bezār*.) Interesting? (**دلچسپ**, *dilchasp*.) Curiosity? (**تجسس**, *tajassus*.) Eager? (**بیتاب**, *betāb*.) To feel about for? (**ٹوہنا**, *ṭohnā*.) A mother's love? (**ممتا**, *mamtā*.) Tender affection? (**شفقت**, *shafqat*.) To kiss? (**چومنا**, *chūmnā*.) To cling tightly? (**چمٹنا**, *chimaṭnā*.) Passionate love? (**عشق**, *ishq*.) Lonely? (**تنہا**, *tanhā*.) On one's own? (**اکیلا**, *akelā*.) Separation? (**جدائی**, *judāī*.) To whimper? (**بسورنا**, *bisūrnā*.) Out of sight? (**اوجھل**, *ojhal*.) To hesitate? (**ہچکچانا**, *hichkichānā*.) To blush? (**لجانا**, *lajānā*.) Remorse? (**ندامت**, *nadāmat*.) Contrite? (**پشیمان**, *pashemān*.) Embarrassment? (**خجالت**, *khijālat*.) Arrogance? (**غرور**, *ghurūr*.) Boasting? (**شیخی**, *shekhī*.) To put on airs? (**اترانا**, *itrānā*.) Fussiness? (**نخرا**, *nakhrā*.) Haughtiness? (**تکبر**, *takabbur*.) To make (someone) laugh? (**ہنسانا**, *hãsānā*.) To make (someone) cry? (**رلانا**, *rulānā*.) A burst of laughter? (**قہقہہ**, *qahqahā*.) To sob? (**سسکنا**, *sisaknā*.) Teasing? (**مذاق**, *mazāq*.) A person's nature? (**فطرت**, *fitrat*.) Disposition? (**طبیعت**, *tabīat*.) A habit? (**عادت**, *ādat*.) A good quality? (**خوبی**, *khūbī*.) A personality? (**شخصیت**, *shakhsiyat*.) A shortcoming? (**خامی**, *khāmī*.) A defect? (**عیب**, *aib*.) Headstrong? (**خودسر**, *khudsar*.) Slothful? (**کاہل**, *kāhil*.) Heedless? (**غافل**, *ghāfil*.)
+`;export{t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R393-review-386-393
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23400
+chapter: 393
+type: review
+headword: (dialogue)
+gloss: a review of the words from Engines and Carriages to Traffic Jams
+concept_tag: REVIEW
+prerequisites: [UR-C386-injan, UR-C386-dabba, UR-C386-lain, UR-C386-siti, UR-C386-bajna, UR-C387-quli, UR-C387-sanduq, UR-C387-ladna, UR-C387-dhhona, UR-C387-bithana, UR-C388-signal, UR-C388-jankshan, UR-C388-phatak, UR-C388-barth, UR-C388-takna, UR-C389-savar, UR-C389-gathri, UR-C389-sarkana, UR-C389-jamahi, UR-C389-unghna, UR-C390-amad, UR-C390-ravana, UR-C390-takhir, UR-C390-mansukh, UR-C390-utaarna, UR-C391-buking, UR-C391-qatar, UR-C391-kauntar, UR-C391-rash, UR-C391-ghusna, UR-C392-istaind, UR-C392-istap, UR-C392-rah, UR-C392-tahalna, UR-C392-hanpna, UR-C393-jam, UR-C393-harn, UR-C393-kandaktar, UR-C393-sarakna, UR-C393-rukvana]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C386-DABBA386-01, UR-LEX-C386-DABBA386-02, UR-LEX-C386-DABBA386-03, UR-LEX-C386-DABBA386-04, UR-LEX-C386-DABBA386-05, UR-LEX-C387-QULI387-01, UR-LEX-C387-QULI387-02, UR-LEX-C387-QULI387-03, UR-LEX-C387-QULI387-04, UR-LEX-C387-QULI387-05, UR-LEX-C388-SIGNAL388-01, UR-LEX-C388-SIGNAL388-02, UR-LEX-C388-SIGNAL388-03, UR-LEX-C388-SIGNAL388-04, UR-LEX-C388-SIGNAL388-05, UR-LEX-C389-UNGHNA389-01, UR-LEX-C389-UNGHNA389-02, UR-LEX-C389-UNGHNA389-03, UR-LEX-C389-UNGHNA389-04, UR-LEX-C389-UNGHNA389-05, UR-LEX-C390-RAVANA390-01, UR-LEX-C390-RAVANA390-02, UR-LEX-C390-RAVANA390-03, UR-LEX-C390-RAVANA390-04, UR-LEX-C390-RAVANA390-05, UR-LEX-C391-QATAR391-01, UR-LEX-C391-QATAR391-02, UR-LEX-C391-QATAR391-03, UR-LEX-C391-QATAR391-04, UR-LEX-C391-QATAR391-05, UR-LEX-C392-STAND392-01, UR-LEX-C392-STAND392-02, UR-LEX-C392-STAND392-03, UR-LEX-C392-STAND392-04, UR-LEX-C392-STAND392-05, UR-LEX-C393-JAM393-01, UR-LEX-C393-JAM393-02, UR-LEX-C393-JAM393-03, UR-LEX-C393-JAM393-04, UR-LEX-C393-JAM393-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C386-DABBA386-01, UR-LEX-C386-DABBA386-02, UR-LEX-C386-DABBA386-03, UR-LEX-C386-DABBA386-04, UR-LEX-C386-DABBA386-05, UR-LEX-C387-QULI387-01, UR-LEX-C387-QULI387-02, UR-LEX-C387-QULI387-03, UR-LEX-C387-QULI387-04, UR-LEX-C387-QULI387-05, UR-LEX-C388-SIGNAL388-01, UR-LEX-C388-SIGNAL388-02, UR-LEX-C388-SIGNAL388-03, UR-LEX-C388-SIGNAL388-04, UR-LEX-C388-SIGNAL388-05, UR-LEX-C389-UNGHNA389-01, UR-LEX-C389-UNGHNA389-02, UR-LEX-C389-UNGHNA389-03, UR-LEX-C389-UNGHNA389-04, UR-LEX-C389-UNGHNA389-05, UR-LEX-C390-RAVANA390-01, UR-LEX-C390-RAVANA390-02, UR-LEX-C390-RAVANA390-03, UR-LEX-C390-RAVANA390-04, UR-LEX-C390-RAVANA390-05, UR-LEX-C391-QATAR391-01, UR-LEX-C391-QATAR391-02, UR-LEX-C391-QATAR391-03, UR-LEX-C391-QATAR391-04, UR-LEX-C391-QATAR391-05, UR-LEX-C392-STAND392-01, UR-LEX-C392-STAND392-02, UR-LEX-C392-STAND392-03, UR-LEX-C392-STAND392-04, UR-LEX-C392-STAND392-05, UR-LEX-C393-JAM393-01, UR-LEX-C393-JAM393-02, UR-LEX-C393-JAM393-03, UR-LEX-C393-JAM393-04, UR-LEX-C393-JAM393-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C386-injan, UR-C386-dabba, UR-C386-lain, UR-C386-siti, UR-C386-bajna, UR-C387-quli, UR-C387-sanduq, UR-C387-ladna, UR-C387-dhhona, UR-C387-bithana, UR-C388-signal, UR-C388-jankshan, UR-C388-phatak, UR-C388-barth, UR-C388-takna, UR-C389-savar, UR-C389-gathri, UR-C389-sarkana, UR-C389-jamahi, UR-C389-unghna, UR-C390-amad, UR-C390-ravana, UR-C390-takhir, UR-C390-mansukh, UR-C390-utaarna, UR-C391-buking, UR-C391-qatar, UR-C391-kauntar, UR-C391-rash, UR-C391-ghusna, UR-C392-istaind, UR-C392-istap, UR-C392-rah, UR-C392-tahalna, UR-C392-hanpna, UR-C393-jam, UR-C393-harn, UR-C393-kandaktar, UR-C393-sarakna, UR-C393-rukvana]
+---
+
+# Looking back: from Engines and Carriages to Traffic Jams
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C386-DABBA386-01, UR-LEX-C386-DABBA386-02] -->
+
+[PAUSE 3s] Say the Urdu for an engine and a compartment (of a train).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C386-DABBA386-01, UR-LEX-C386-DABBA386-02, UR-LEX-C386-DABBA386-03, UR-LEX-C386-DABBA386-04, UR-LEX-C386-DABBA386-05, UR-LEX-C387-QULI387-01, UR-LEX-C387-QULI387-02, UR-LEX-C387-QULI387-03, UR-LEX-C387-QULI387-04, UR-LEX-C387-QULI387-05, UR-LEX-C388-SIGNAL388-01, UR-LEX-C388-SIGNAL388-02, UR-LEX-C388-SIGNAL388-03, UR-LEX-C388-SIGNAL388-04, UR-LEX-C388-SIGNAL388-05, UR-LEX-C389-UNGHNA389-01, UR-LEX-C389-UNGHNA389-02, UR-LEX-C389-UNGHNA389-03, UR-LEX-C389-UNGHNA389-04, UR-LEX-C389-UNGHNA389-05, UR-LEX-C390-RAVANA390-01, UR-LEX-C390-RAVANA390-02, UR-LEX-C390-RAVANA390-03, UR-LEX-C390-RAVANA390-04, UR-LEX-C390-RAVANA390-05, UR-LEX-C391-QATAR391-01, UR-LEX-C391-QATAR391-02, UR-LEX-C391-QATAR391-03, UR-LEX-C391-QATAR391-04, UR-LEX-C391-QATAR391-05, UR-LEX-C392-STAND392-01, UR-LEX-C392-STAND392-02, UR-LEX-C392-STAND392-03, UR-LEX-C392-STAND392-04, UR-LEX-C392-STAND392-05, UR-LEX-C393-JAM393-01, UR-LEX-C393-JAM393-02, UR-LEX-C393-JAM393-03, UR-LEX-C393-JAM393-04, UR-LEX-C393-JAM393-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an engine, a compartment (of a train), a railway line, a whistle, to sound]
+- [YOU SAY: a porter, a trunk, to load, to haul, to seat (someone)]
+- [YOU SAY: a signal (for trains or traffic), a railway junction, a gate, a berth (on a train), to gaze (at)]
+- [YOU SAY: on board, a bundle (tied in cloth), to slide (something) along, a yawn, to doze]
+- [YOU SAY: an arrival, setting off, lateness, cancelled, to take down]
+- [YOU SAY: a booking, a queue, a counter, a rush (of people), to push in]
+- [YOU SAY: a stand (for taxis or rickshaws), a bus stop, a path, to stroll, to pant]
+- [YOU SAY: a traffic jam, a horn (of a vehicle), a conductor (on a bus), to edge forward, to have (something) stopped]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C386-DABBA386-01, UR-LEX-C386-DABBA386-02, UR-LEX-C386-DABBA386-03, UR-LEX-C386-DABBA386-04, UR-LEX-C386-DABBA386-05, UR-LEX-C387-QULI387-01, UR-LEX-C387-QULI387-02, UR-LEX-C387-QULI387-03, UR-LEX-C387-QULI387-04, UR-LEX-C387-QULI387-05, UR-LEX-C388-SIGNAL388-01, UR-LEX-C388-SIGNAL388-02, UR-LEX-C388-SIGNAL388-03, UR-LEX-C388-SIGNAL388-04, UR-LEX-C388-SIGNAL388-05, UR-LEX-C389-UNGHNA389-01, UR-LEX-C389-UNGHNA389-02, UR-LEX-C389-UNGHNA389-03, UR-LEX-C389-UNGHNA389-04, UR-LEX-C389-UNGHNA389-05, UR-LEX-C390-RAVANA390-01, UR-LEX-C390-RAVANA390-02, UR-LEX-C390-RAVANA390-03, UR-LEX-C390-RAVANA390-04, UR-LEX-C390-RAVANA390-05, UR-LEX-C391-QATAR391-01, UR-LEX-C391-QATAR391-02, UR-LEX-C391-QATAR391-03, UR-LEX-C391-QATAR391-04, UR-LEX-C391-QATAR391-05, UR-LEX-C392-STAND392-01, UR-LEX-C392-STAND392-02, UR-LEX-C392-STAND392-03, UR-LEX-C392-STAND392-04, UR-LEX-C392-STAND392-05, UR-LEX-C393-JAM393-01, UR-LEX-C393-JAM393-02, UR-LEX-C393-JAM393-03, UR-LEX-C393-JAM393-04, UR-LEX-C393-JAM393-05] -->
+
+[PAUSE 3s] An engine? (**انجن**, *injan*.) A compartment (of a train)? (**ڈبہ**, *ḍabbā*.) A railway line? (**لائن**, *lāin*.) A whistle? (**سیٹی**, *sīṭī*.) To sound? (**بجنا**, *bajnā*.) A porter? (**قلی**, *qulī*.) A trunk? (**صندوق**, *sandūq*.) To load? (**لادنا**, *lādnā*.) To haul? (**ڈھونا**, *ḍhonā*.) To seat (someone)? (**بٹھانا**, *biṭhānā*.) A signal (for trains or traffic)? (**سگنل**, *signal*.) A railway junction? (**جنکشن**, *jankshan*.) A gate? (**پھاٹک**, *phāṭak*.) A berth (on a train)? (**برتھ**, *barth*.) To gaze (at)? (**تاکنا**, *tāknā*.) On board? (**سوار**, *savār*.) A bundle (tied in cloth)? (**گٹھری**, *gaṭhrī*.) To slide (something) along? (**سرکانا**, *sarkānā*.) A yawn? (**جماہی**, *jamāhī*.) To doze? (**اونگھنا**, *ūṅghnā*.) An arrival? (**آمد**, *āmad*.) Setting off? (**روانہ**, *ravānā*.) Lateness? (**تاخیر**, *tākhīr*.) Cancelled? (**منسوخ**, *mansūkh*.) To take down? (**اتارنا**, *utārnā*.) A booking? (**بکنگ**, *buking*.) A queue? (**قطار**, *qatār*.) A counter? (**کاؤنٹر**, *kāunṭar*.) A rush (of people)? (**رش**, *rash*.) To push in? (**گھسنا**, *ghusnā*.) A stand (for taxis or rickshaws)? (**اسٹینڈ**, *isṭainḍ*.) A bus stop? (**اسٹاپ**, *isṭāp*.) A path? (**راہ**, *rāh*.) To stroll? (**ٹہلنا**, *ṭahalnā*.) To pant? (**ہانپنا**, *hāṅpnā*.) A traffic jam? (**جام**, *jām*.) A horn (of a vehicle)? (**ہارن**, *hārn*.) A conductor (on a bus)? (**کنڈکٹر**, *kanḍakṭar*.) To edge forward? (**سرکنا**, *saraknā*.) To have (something) stopped? (**رکوانا**, *rukvānā*.)
+`;export{t};

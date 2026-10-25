@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R291-review-284-291
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 17810
+chapter: 291
+type: review
+headword: (dialogue)
+gloss: a review of the words from A Crash on the Road to When the Ground Shook
+concept_tag: REVIEW
+prerequisites: [UR-C284-raftar, UR-C284-takrana, UR-C284-pahiya, UR-C284-ulatna, UR-C284-savari, UR-C285-thokar, UR-C285-larkharana, UR-C285-paon, UR-C285-chhilna, UR-C285-kharash, UR-C286-be-hosh, UR-C286-lahuluhan, UR-C286-ilaj, UR-C286-kuchalna, UR-C286-sambhalna-oneself, UR-C287-angara, UR-C287-sulagna, UR-C287-sharara, UR-C287-bharakna, UR-C287-jalna, UR-C288-chiragh, UR-C288-shola, UR-C288-dahakna, UR-C288-raushni, UR-C288-tapish, UR-C289-sairan, UR-C289-amla, UR-C289-bujhna, UR-C289-pighalna, UR-C289-harbarana, UR-C290-afat, UR-C290-elan, UR-C290-khatra, UR-C290-ttalna, UR-C290-ehtiyat, UR-C291-hilna, UR-C291-jhatka, UR-C291-darar, UR-C291-dhansna, UR-C291-dabna]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C284-TAKKAR284-01, UR-LEX-C284-TAKKAR284-02, UR-LEX-C284-TAKKAR284-03, UR-LEX-C284-TAKKAR284-04, UR-LEX-C284-TAKKAR284-05, UR-LEX-C285-PHISAL285-01, UR-LEX-C285-PHISAL285-02, UR-LEX-C285-PHISAL285-03, UR-LEX-C285-PHISAL285-04, UR-LEX-C285-PHISAL285-05, UR-LEX-C286-ZAKHMI286-01, UR-LEX-C286-ZAKHMI286-02, UR-LEX-C286-ZAKHMI286-03, UR-LEX-C286-ZAKHMI286-04, UR-LEX-C286-ZAKHMI286-05, UR-LEX-C287-AAG287-01, UR-LEX-C287-AAG287-02, UR-LEX-C287-AAG287-03, UR-LEX-C287-AAG287-04, UR-LEX-C287-AAG287-05, UR-LEX-C288-CHIRAGH288-01, UR-LEX-C288-CHIRAGH288-02, UR-LEX-C288-CHIRAGH288-03, UR-LEX-C288-CHIRAGH288-04, UR-LEX-C288-CHIRAGH288-05, UR-LEX-C289-BUJHI289-01, UR-LEX-C289-BUJHI289-02, UR-LEX-C289-BUJHI289-03, UR-LEX-C289-BUJHI289-04, UR-LEX-C289-BUJHI289-05, UR-LEX-C290-AILAN290-01, UR-LEX-C290-AILAN290-02, UR-LEX-C290-AILAN290-03, UR-LEX-C290-AILAN290-04, UR-LEX-C290-AILAN290-05, UR-LEX-C291-ZALZALA291-01, UR-LEX-C291-ZALZALA291-02, UR-LEX-C291-ZALZALA291-03, UR-LEX-C291-ZALZALA291-04, UR-LEX-C291-ZALZALA291-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C284-TAKKAR284-01, UR-LEX-C284-TAKKAR284-02, UR-LEX-C284-TAKKAR284-03, UR-LEX-C284-TAKKAR284-04, UR-LEX-C284-TAKKAR284-05, UR-LEX-C285-PHISAL285-01, UR-LEX-C285-PHISAL285-02, UR-LEX-C285-PHISAL285-03, UR-LEX-C285-PHISAL285-04, UR-LEX-C285-PHISAL285-05, UR-LEX-C286-ZAKHMI286-01, UR-LEX-C286-ZAKHMI286-02, UR-LEX-C286-ZAKHMI286-03, UR-LEX-C286-ZAKHMI286-04, UR-LEX-C286-ZAKHMI286-05, UR-LEX-C287-AAG287-01, UR-LEX-C287-AAG287-02, UR-LEX-C287-AAG287-03, UR-LEX-C287-AAG287-04, UR-LEX-C287-AAG287-05, UR-LEX-C288-CHIRAGH288-01, UR-LEX-C288-CHIRAGH288-02, UR-LEX-C288-CHIRAGH288-03, UR-LEX-C288-CHIRAGH288-04, UR-LEX-C288-CHIRAGH288-05, UR-LEX-C289-BUJHI289-01, UR-LEX-C289-BUJHI289-02, UR-LEX-C289-BUJHI289-03, UR-LEX-C289-BUJHI289-04, UR-LEX-C289-BUJHI289-05, UR-LEX-C290-AILAN290-01, UR-LEX-C290-AILAN290-02, UR-LEX-C290-AILAN290-03, UR-LEX-C290-AILAN290-04, UR-LEX-C290-AILAN290-05, UR-LEX-C291-ZALZALA291-01, UR-LEX-C291-ZALZALA291-02, UR-LEX-C291-ZALZALA291-03, UR-LEX-C291-ZALZALA291-04, UR-LEX-C291-ZALZALA291-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C284-raftar, UR-C284-takrana, UR-C284-pahiya, UR-C284-ulatna, UR-C284-savari, UR-C285-thokar, UR-C285-larkharana, UR-C285-paon, UR-C285-chhilna, UR-C285-kharash, UR-C286-be-hosh, UR-C286-lahuluhan, UR-C286-ilaj, UR-C286-kuchalna, UR-C286-sambhalna-oneself, UR-C287-angara, UR-C287-sulagna, UR-C287-sharara, UR-C287-bharakna, UR-C287-jalna, UR-C288-chiragh, UR-C288-shola, UR-C288-dahakna, UR-C288-raushni, UR-C288-tapish, UR-C289-sairan, UR-C289-amla, UR-C289-bujhna, UR-C289-pighalna, UR-C289-harbarana, UR-C290-afat, UR-C290-elan, UR-C290-khatra, UR-C290-ttalna, UR-C290-ehtiyat, UR-C291-hilna, UR-C291-jhatka, UR-C291-darar, UR-C291-dhansna, UR-C291-dabna]
+---
+
+# Looking back: from A Crash on the Road to When the Ground Shook
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C284-TAKKAR284-01, UR-LEX-C284-TAKKAR284-02] -->
+
+[PAUSE 3s] Say the Urdu for speed and to collide.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C284-TAKKAR284-01, UR-LEX-C284-TAKKAR284-02, UR-LEX-C284-TAKKAR284-03, UR-LEX-C284-TAKKAR284-04, UR-LEX-C284-TAKKAR284-05, UR-LEX-C285-PHISAL285-01, UR-LEX-C285-PHISAL285-02, UR-LEX-C285-PHISAL285-03, UR-LEX-C285-PHISAL285-04, UR-LEX-C285-PHISAL285-05, UR-LEX-C286-ZAKHMI286-01, UR-LEX-C286-ZAKHMI286-02, UR-LEX-C286-ZAKHMI286-03, UR-LEX-C286-ZAKHMI286-04, UR-LEX-C286-ZAKHMI286-05, UR-LEX-C287-AAG287-01, UR-LEX-C287-AAG287-02, UR-LEX-C287-AAG287-03, UR-LEX-C287-AAG287-04, UR-LEX-C287-AAG287-05, UR-LEX-C288-CHIRAGH288-01, UR-LEX-C288-CHIRAGH288-02, UR-LEX-C288-CHIRAGH288-03, UR-LEX-C288-CHIRAGH288-04, UR-LEX-C288-CHIRAGH288-05, UR-LEX-C289-BUJHI289-01, UR-LEX-C289-BUJHI289-02, UR-LEX-C289-BUJHI289-03, UR-LEX-C289-BUJHI289-04, UR-LEX-C289-BUJHI289-05, UR-LEX-C290-AILAN290-01, UR-LEX-C290-AILAN290-02, UR-LEX-C290-AILAN290-03, UR-LEX-C290-AILAN290-04, UR-LEX-C290-AILAN290-05, UR-LEX-C291-ZALZALA291-01, UR-LEX-C291-ZALZALA291-02, UR-LEX-C291-ZALZALA291-03, UR-LEX-C291-ZALZALA291-04, UR-LEX-C291-ZALZALA291-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: speed, to collide, a wheel, to overturn, a ride]
+- [YOU SAY: a stumble, to stagger, a foot, to be grazed, a scratch]
+- [YOU SAY: unconscious, covered in blood, medical treatment, to crush, to steady oneself]
+- [YOU SAY: an ember, to smoulder, a spark, to flare up, to be on fire]
+- [YOU SAY: an oil lamp, a flame, to glow red-hot, brightness, scorching heat]
+- [YOU SAY: a siren, a crew, to go out (of a fire), to melt, to rush in a panic]
+- [YOU SAY: a disaster, an announcement, a danger, to be averted, caution]
+- [YOU SAY: to shake (by itself), a jolt, a crack, to cave in, to be trapped under]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C284-TAKKAR284-01, UR-LEX-C284-TAKKAR284-02, UR-LEX-C284-TAKKAR284-03, UR-LEX-C284-TAKKAR284-04, UR-LEX-C284-TAKKAR284-05, UR-LEX-C285-PHISAL285-01, UR-LEX-C285-PHISAL285-02, UR-LEX-C285-PHISAL285-03, UR-LEX-C285-PHISAL285-04, UR-LEX-C285-PHISAL285-05, UR-LEX-C286-ZAKHMI286-01, UR-LEX-C286-ZAKHMI286-02, UR-LEX-C286-ZAKHMI286-03, UR-LEX-C286-ZAKHMI286-04, UR-LEX-C286-ZAKHMI286-05, UR-LEX-C287-AAG287-01, UR-LEX-C287-AAG287-02, UR-LEX-C287-AAG287-03, UR-LEX-C287-AAG287-04, UR-LEX-C287-AAG287-05, UR-LEX-C288-CHIRAGH288-01, UR-LEX-C288-CHIRAGH288-02, UR-LEX-C288-CHIRAGH288-03, UR-LEX-C288-CHIRAGH288-04, UR-LEX-C288-CHIRAGH288-05, UR-LEX-C289-BUJHI289-01, UR-LEX-C289-BUJHI289-02, UR-LEX-C289-BUJHI289-03, UR-LEX-C289-BUJHI289-04, UR-LEX-C289-BUJHI289-05, UR-LEX-C290-AILAN290-01, UR-LEX-C290-AILAN290-02, UR-LEX-C290-AILAN290-03, UR-LEX-C290-AILAN290-04, UR-LEX-C290-AILAN290-05, UR-LEX-C291-ZALZALA291-01, UR-LEX-C291-ZALZALA291-02, UR-LEX-C291-ZALZALA291-03, UR-LEX-C291-ZALZALA291-04, UR-LEX-C291-ZALZALA291-05] -->
+
+[PAUSE 3s] Speed? (**رفتار**, *raftār*.) To collide? (**ٹکرانا**, *ṭakrānā*.) A wheel? (**پہیا**, *pahiyā*.) To overturn? (**الٹنا**, *ulaṭnā*.) A ride? (**سواری**, *savārī*.) A stumble? (**ٹھوکر**, *ṭhokar*.) To stagger? (**لڑکھڑانا**, *laṛkhaṛānā*.) A foot? (**پاؤں**, *pāoṅ*.) To be grazed? (**چھلنا**, *chhilnā*.) A scratch? (**خراش**, *kharāsh*.) Unconscious? (**بے ہوش**, *be hosh*.) Covered in blood? (**لہولہان**, *lahūluhān*.) Medical treatment? (**علاج**, *ilāj*.) To crush? (**کچلنا**, *kuchalnā*.) To steady oneself? (**سنبھلنا**, *sambhalnā*.) An ember? (**انگارا**, *angārā*.) To smoulder? (**سلگنا**, *sulagnā*.) A spark? (**شرارہ**, *sharārā*.) To flare up? (**بھڑکنا**, *bhaṛaknā*.) To be on fire? (**جلنا**, *jalnā*.) An oil lamp? (**چراغ**, *chirāgh*.) A flame? (**شعلہ**, *sholā*.) To glow red-hot? (**دہکنا**, *dahaknā*.) Brightness? (**روشنی**, *raushnī*.) Scorching heat? (**تپش**, *tapish*.) A siren? (**سائرن**, *sāiran*.) A crew? (**عملہ**, *amlā*.) To go out (of a fire)? (**بجھنا**, *bujhnā*.) To melt? (**پگھلنا**, *pighalnā*.) To rush in a panic? (**ہڑبڑانا**, *haṛbaṛānā*.) A disaster? (**آفت**, *āfat*.) An announcement? (**اعلان**, *elān*.) A danger? (**خطرہ**, *khatrā*.) To be averted? (**ٹلنا**, *ṭalnā*.) Caution? (**احتیاط**, *ehtiyāt*.) To shake (by itself)? (**ہلنا**, *hilnā*.) A jolt? (**جھٹکا**, *jhaṭkā*.) A crack? (**دراڑ**, *darāṛ*.) To cave in? (**دھنسنا**, *dhansnā*.) To be trapped under? (**دبنا**, *dabnā*.)
+`;export{t};

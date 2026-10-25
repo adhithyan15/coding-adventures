@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R378-review-371-378
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 22450
+chapter: 378
+type: review
+headword: (dialogue)
+gloss: a review of the words from Danger and Damage to Setting a Goal
+concept_tag: REVIEW
+prerequisites: [UR-C371-buhran, UR-C371-zahr, UR-C371-jan-leva, UR-C371-risna, UR-C371-phatna, UR-C372-jamna, UR-C372-ubalna-boil-up, UR-C372-galna, UR-C372-tarakna, UR-C372-darmiyana, UR-C373-bikharna, UR-C373-mitna, UR-C373-dantna, UR-C373-dhalna, UR-C373-adhura, UR-C374-sahara, UR-C374-zid, UR-C374-ahl, UR-C374-inhisar, UR-C374-israr-karna, UR-C375-bahut, UR-C375-intihai, UR-C375-khub, UR-C375-zabardast, UR-C375-shadid, UR-C376-tadad, UR-C376-miqdar, UR-C376-mamuli, UR-C376-lag-bhag, UR-C376-had, UR-C377-badtar, UR-C377-umda, UR-C377-am, UR-C377-bigarna-worsen, UR-C377-sudharna-improve, UR-C378-hadaf, UR-C378-azm, UR-C378-qadam, UR-C378-mansuba, UR-C378-hasil-karna]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C371-BUHRAN371-01, UR-LEX-C371-BUHRAN371-02, UR-LEX-C371-BUHRAN371-03, UR-LEX-C371-BUHRAN371-04, UR-LEX-C371-BUHRAN371-05, UR-LEX-C372-JAMNA372-01, UR-LEX-C372-JAMNA372-02, UR-LEX-C372-JAMNA372-03, UR-LEX-C372-JAMNA372-04, UR-LEX-C372-JAMNA372-05, UR-LEX-C373-BIKHARNA373-01, UR-LEX-C373-BIKHARNA373-02, UR-LEX-C373-BIKHARNA373-03, UR-LEX-C373-BIKHARNA373-04, UR-LEX-C373-BIKHARNA373-05, UR-LEX-C374-SAHARA374-01, UR-LEX-C374-SAHARA374-02, UR-LEX-C374-SAHARA374-03, UR-LEX-C374-SAHARA374-04, UR-LEX-C374-SAHARA374-05, UR-LEX-C375-BAHUT375-01, UR-LEX-C375-BAHUT375-02, UR-LEX-C375-BAHUT375-03, UR-LEX-C375-BAHUT375-04, UR-LEX-C375-BAHUT375-05, UR-LEX-C376-MIQDAR376-01, UR-LEX-C376-MIQDAR376-02, UR-LEX-C376-MIQDAR376-03, UR-LEX-C376-MIQDAR376-04, UR-LEX-C376-MIQDAR376-05, UR-LEX-C377-BADTAR377-01, UR-LEX-C377-BADTAR377-02, UR-LEX-C377-BADTAR377-03, UR-LEX-C377-BADTAR377-04, UR-LEX-C377-BADTAR377-05, UR-LEX-C378-HADAF378-01, UR-LEX-C378-HADAF378-02, UR-LEX-C378-HADAF378-03, UR-LEX-C378-HADAF378-04, UR-LEX-C378-HADAF378-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C371-BUHRAN371-01, UR-LEX-C371-BUHRAN371-02, UR-LEX-C371-BUHRAN371-03, UR-LEX-C371-BUHRAN371-04, UR-LEX-C371-BUHRAN371-05, UR-LEX-C372-JAMNA372-01, UR-LEX-C372-JAMNA372-02, UR-LEX-C372-JAMNA372-03, UR-LEX-C372-JAMNA372-04, UR-LEX-C372-JAMNA372-05, UR-LEX-C373-BIKHARNA373-01, UR-LEX-C373-BIKHARNA373-02, UR-LEX-C373-BIKHARNA373-03, UR-LEX-C373-BIKHARNA373-04, UR-LEX-C373-BIKHARNA373-05, UR-LEX-C374-SAHARA374-01, UR-LEX-C374-SAHARA374-02, UR-LEX-C374-SAHARA374-03, UR-LEX-C374-SAHARA374-04, UR-LEX-C374-SAHARA374-05, UR-LEX-C375-BAHUT375-01, UR-LEX-C375-BAHUT375-02, UR-LEX-C375-BAHUT375-03, UR-LEX-C375-BAHUT375-04, UR-LEX-C375-BAHUT375-05, UR-LEX-C376-MIQDAR376-01, UR-LEX-C376-MIQDAR376-02, UR-LEX-C376-MIQDAR376-03, UR-LEX-C376-MIQDAR376-04, UR-LEX-C376-MIQDAR376-05, UR-LEX-C377-BADTAR377-01, UR-LEX-C377-BADTAR377-02, UR-LEX-C377-BADTAR377-03, UR-LEX-C377-BADTAR377-04, UR-LEX-C377-BADTAR377-05, UR-LEX-C378-HADAF378-01, UR-LEX-C378-HADAF378-02, UR-LEX-C378-HADAF378-03, UR-LEX-C378-HADAF378-04, UR-LEX-C378-HADAF378-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C371-buhran, UR-C371-zahr, UR-C371-jan-leva, UR-C371-risna, UR-C371-phatna, UR-C372-jamna, UR-C372-ubalna-boil-up, UR-C372-galna, UR-C372-tarakna, UR-C372-darmiyana, UR-C373-bikharna, UR-C373-mitna, UR-C373-dantna, UR-C373-dhalna, UR-C373-adhura, UR-C374-sahara, UR-C374-zid, UR-C374-ahl, UR-C374-inhisar, UR-C374-israr-karna, UR-C375-bahut, UR-C375-intihai, UR-C375-khub, UR-C375-zabardast, UR-C375-shadid, UR-C376-tadad, UR-C376-miqdar, UR-C376-mamuli, UR-C376-lag-bhag, UR-C376-had, UR-C377-badtar, UR-C377-umda, UR-C377-am, UR-C377-bigarna-worsen, UR-C377-sudharna-improve, UR-C378-hadaf, UR-C378-azm, UR-C378-qadam, UR-C378-mansuba, UR-C378-hasil-karna]
+---
+
+# Looking back: from Danger and Damage to Setting a Goal
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C371-BUHRAN371-01, UR-LEX-C371-BUHRAN371-02] -->
+
+[PAUSE 3s] Say the Urdu for a crisis and poison.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C371-BUHRAN371-01, UR-LEX-C371-BUHRAN371-02, UR-LEX-C371-BUHRAN371-03, UR-LEX-C371-BUHRAN371-04, UR-LEX-C371-BUHRAN371-05, UR-LEX-C372-JAMNA372-01, UR-LEX-C372-JAMNA372-02, UR-LEX-C372-JAMNA372-03, UR-LEX-C372-JAMNA372-04, UR-LEX-C372-JAMNA372-05, UR-LEX-C373-BIKHARNA373-01, UR-LEX-C373-BIKHARNA373-02, UR-LEX-C373-BIKHARNA373-03, UR-LEX-C373-BIKHARNA373-04, UR-LEX-C373-BIKHARNA373-05, UR-LEX-C374-SAHARA374-01, UR-LEX-C374-SAHARA374-02, UR-LEX-C374-SAHARA374-03, UR-LEX-C374-SAHARA374-04, UR-LEX-C374-SAHARA374-05, UR-LEX-C375-BAHUT375-01, UR-LEX-C375-BAHUT375-02, UR-LEX-C375-BAHUT375-03, UR-LEX-C375-BAHUT375-04, UR-LEX-C375-BAHUT375-05, UR-LEX-C376-MIQDAR376-01, UR-LEX-C376-MIQDAR376-02, UR-LEX-C376-MIQDAR376-03, UR-LEX-C376-MIQDAR376-04, UR-LEX-C376-MIQDAR376-05, UR-LEX-C377-BADTAR377-01, UR-LEX-C377-BADTAR377-02, UR-LEX-C377-BADTAR377-03, UR-LEX-C377-BADTAR377-04, UR-LEX-C377-BADTAR377-05, UR-LEX-C378-HADAF378-01, UR-LEX-C378-HADAF378-02, UR-LEX-C378-HADAF378-03, UR-LEX-C378-HADAF378-04, UR-LEX-C378-HADAF378-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a crisis, poison, deadly, to seep, to split open]
+- [YOU SAY: to freeze, to come to the boil, to soften in cooking, to crack, medium]
+- [YOU SAY: to scatter, to fade away, to tell off, to set (of the sun), unfinished]
+- [YOU SAY: someone to lean on, stubbornness, eligible, reliance, to insist]
+- [YOU SAY: very, extremely, thoroughly, tremendous, severe]
+- [YOU SAY: a count, an amount, minor, approximately, a limit]
+- [YOU SAY: worse, excellent, common, to get worse, to get better]
+- [YOU SAY: a target, a resolve, a step, a scheme, to achieve]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C371-BUHRAN371-01, UR-LEX-C371-BUHRAN371-02, UR-LEX-C371-BUHRAN371-03, UR-LEX-C371-BUHRAN371-04, UR-LEX-C371-BUHRAN371-05, UR-LEX-C372-JAMNA372-01, UR-LEX-C372-JAMNA372-02, UR-LEX-C372-JAMNA372-03, UR-LEX-C372-JAMNA372-04, UR-LEX-C372-JAMNA372-05, UR-LEX-C373-BIKHARNA373-01, UR-LEX-C373-BIKHARNA373-02, UR-LEX-C373-BIKHARNA373-03, UR-LEX-C373-BIKHARNA373-04, UR-LEX-C373-BIKHARNA373-05, UR-LEX-C374-SAHARA374-01, UR-LEX-C374-SAHARA374-02, UR-LEX-C374-SAHARA374-03, UR-LEX-C374-SAHARA374-04, UR-LEX-C374-SAHARA374-05, UR-LEX-C375-BAHUT375-01, UR-LEX-C375-BAHUT375-02, UR-LEX-C375-BAHUT375-03, UR-LEX-C375-BAHUT375-04, UR-LEX-C375-BAHUT375-05, UR-LEX-C376-MIQDAR376-01, UR-LEX-C376-MIQDAR376-02, UR-LEX-C376-MIQDAR376-03, UR-LEX-C376-MIQDAR376-04, UR-LEX-C376-MIQDAR376-05, UR-LEX-C377-BADTAR377-01, UR-LEX-C377-BADTAR377-02, UR-LEX-C377-BADTAR377-03, UR-LEX-C377-BADTAR377-04, UR-LEX-C377-BADTAR377-05, UR-LEX-C378-HADAF378-01, UR-LEX-C378-HADAF378-02, UR-LEX-C378-HADAF378-03, UR-LEX-C378-HADAF378-04, UR-LEX-C378-HADAF378-05] -->
+
+[PAUSE 3s] A crisis? (**بحران**, *buhrān*.) Poison? (**زہر**, *zahr*.) Deadly? (**جان لیوا**, *jān-levā*.) To seep? (**رسنا**, *risnā*.) To split open? (**پھٹنا**, *phaṭnā*.) To freeze? (**جمنا**, *jamnā*.) To come to the boil? (**ابلنا**, *ubalnā*.) To soften in cooking? (**گلنا**, *galnā*.) To crack? (**تڑکنا**, *taṛaknā*.) Medium? (**درمیانہ**, *darmiyānā*.) To scatter? (**بکھرنا**, *bikharnā*.) To fade away? (**مٹنا**, *miṭnā*.) To tell off? (**ڈانٹنا**, *ḍānṭnā*.) To set (of the sun)? (**ڈھلنا**, *ḍhalnā*.) Unfinished? (**ادھورا**, *adhūrā*.) Someone to lean on? (**سہارا**, *sahārā*.) Stubbornness? (**ضد**, *zid*.) Eligible? (**اہل**, *ahl*.) Reliance? (**انحصار**, *inhisār*.) To insist? (**اصرار کرنا**, *isrār karnā*.) Very? (**بہت**, *bahut*.) Extremely? (**انتہائی**, *intihāī*.) Thoroughly? (**خوب**, *khūb*.) Tremendous? (**زبردست**, *zabardast*.) Severe? (**شدید**, *shadīd*.) A count? (**تعداد**, *tādād*.) An amount? (**مقدار**, *miqdār*.) Minor? (**معمولی**, *māmūlī*.) Approximately? (**لگ بھگ**, *lag-bhag*.) A limit? (**حد**, *had*.) Worse? (**بدتر**, *badtar*.) Excellent? (**عمدہ**, *umdā*.) Common? (**عام**, *ām*.) To get worse? (**بگڑنا**, *bigaṛnā*.) To get better? (**سدھرنا**, *sudharnā*.) A target? (**ہدف**, *hadaf*.) A resolve? (**عزم**, *azm*.) A step? (**قدم**, *qadam*.) A scheme? (**منصوبہ**, *mansūbā*.) To achieve? (**حاصل کرنا**, *hāsil karnā*.)
+`;export{t};

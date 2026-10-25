@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R501-review-494-501
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 29400
+chapter: 501
+type: review
+headword: (dialogue)
+gloss: a review of the words from Looking for Work to Metal and Jewellery
+concept_tag: REVIEW
+prerequisites: [UR-C494-intarvyu, UR-C494-rozgar, UR-C494-asami, UR-C494-bartaraf, UR-C494-bharti-karna, UR-C495-ujrat, UR-C495-hartal, UR-C495-maharat, UR-C495-thekedar, UR-C495-khapana, UR-C496-varkshap, UR-C496-shikanja, UR-C496-surakh, UR-C496-chhedna, UR-C496-regmal, UR-C497-takhta, UR-C497-burada, UR-C497-randa, UR-C497-thonkna, UR-C497-retna, UR-C498-chak, UR-C498-sancha, UR-C498-ava, UR-C498-matka, UR-C498-tapana, UR-C499-kapas, UR-C499-dhunna, UR-C499-charkha, UR-C499-katna-spin, UR-C499-ganth, UR-C500-astin, UR-C500-silvana, UR-C500-udherna, UR-C500-rafu-karna, UR-C500-udharna, UR-C501-loha, UR-C501-pital, UR-C501-zevar, UR-C501-pighlana, UR-C501-marhna]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C494-ROZGAR494-01, UR-LEX-C494-ROZGAR494-02, UR-LEX-C494-ROZGAR494-03, UR-LEX-C494-ROZGAR494-04, UR-LEX-C494-ROZGAR494-05, UR-LEX-C495-AJRAT495-01, UR-LEX-C495-AJRAT495-02, UR-LEX-C495-AJRAT495-03, UR-LEX-C495-AJRAT495-04, UR-LEX-C495-AJRAT495-05, UR-LEX-C496-VARKSHAP496-01, UR-LEX-C496-VARKSHAP496-02, UR-LEX-C496-VARKSHAP496-03, UR-LEX-C496-VARKSHAP496-04, UR-LEX-C496-VARKSHAP496-05, UR-LEX-C497-TAKHTA497-01, UR-LEX-C497-TAKHTA497-02, UR-LEX-C497-TAKHTA497-03, UR-LEX-C497-TAKHTA497-04, UR-LEX-C497-TAKHTA497-05, UR-LEX-C498-AVA498-01, UR-LEX-C498-AVA498-02, UR-LEX-C498-AVA498-03, UR-LEX-C498-AVA498-04, UR-LEX-C498-AVA498-05, UR-LEX-C499-CHARKHA499-01, UR-LEX-C499-CHARKHA499-02, UR-LEX-C499-CHARKHA499-03, UR-LEX-C499-CHARKHA499-04, UR-LEX-C499-CHARKHA499-05, UR-LEX-C500-SILAI500-01, UR-LEX-C500-SILAI500-02, UR-LEX-C500-SILAI500-03, UR-LEX-C500-SILAI500-04, UR-LEX-C500-SILAI500-05, UR-LEX-C501-LOHA501-01, UR-LEX-C501-LOHA501-02, UR-LEX-C501-LOHA501-03, UR-LEX-C501-LOHA501-04, UR-LEX-C501-LOHA501-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C494-ROZGAR494-01, UR-LEX-C494-ROZGAR494-02, UR-LEX-C494-ROZGAR494-03, UR-LEX-C494-ROZGAR494-04, UR-LEX-C494-ROZGAR494-05, UR-LEX-C495-AJRAT495-01, UR-LEX-C495-AJRAT495-02, UR-LEX-C495-AJRAT495-03, UR-LEX-C495-AJRAT495-04, UR-LEX-C495-AJRAT495-05, UR-LEX-C496-VARKSHAP496-01, UR-LEX-C496-VARKSHAP496-02, UR-LEX-C496-VARKSHAP496-03, UR-LEX-C496-VARKSHAP496-04, UR-LEX-C496-VARKSHAP496-05, UR-LEX-C497-TAKHTA497-01, UR-LEX-C497-TAKHTA497-02, UR-LEX-C497-TAKHTA497-03, UR-LEX-C497-TAKHTA497-04, UR-LEX-C497-TAKHTA497-05, UR-LEX-C498-AVA498-01, UR-LEX-C498-AVA498-02, UR-LEX-C498-AVA498-03, UR-LEX-C498-AVA498-04, UR-LEX-C498-AVA498-05, UR-LEX-C499-CHARKHA499-01, UR-LEX-C499-CHARKHA499-02, UR-LEX-C499-CHARKHA499-03, UR-LEX-C499-CHARKHA499-04, UR-LEX-C499-CHARKHA499-05, UR-LEX-C500-SILAI500-01, UR-LEX-C500-SILAI500-02, UR-LEX-C500-SILAI500-03, UR-LEX-C500-SILAI500-04, UR-LEX-C500-SILAI500-05, UR-LEX-C501-LOHA501-01, UR-LEX-C501-LOHA501-02, UR-LEX-C501-LOHA501-03, UR-LEX-C501-LOHA501-04, UR-LEX-C501-LOHA501-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C494-intarvyu, UR-C494-rozgar, UR-C494-asami, UR-C494-bartaraf, UR-C494-bharti-karna, UR-C495-ujrat, UR-C495-hartal, UR-C495-maharat, UR-C495-thekedar, UR-C495-khapana, UR-C496-varkshap, UR-C496-shikanja, UR-C496-surakh, UR-C496-chhedna, UR-C496-regmal, UR-C497-takhta, UR-C497-burada, UR-C497-randa, UR-C497-thonkna, UR-C497-retna, UR-C498-chak, UR-C498-sancha, UR-C498-ava, UR-C498-matka, UR-C498-tapana, UR-C499-kapas, UR-C499-dhunna, UR-C499-charkha, UR-C499-katna-spin, UR-C499-ganth, UR-C500-astin, UR-C500-silvana, UR-C500-udherna, UR-C500-rafu-karna, UR-C500-udharna, UR-C501-loha, UR-C501-pital, UR-C501-zevar, UR-C501-pighlana, UR-C501-marhna]
+---
+
+# Looking back: from Looking for Work to Metal and Jewellery
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C494-ROZGAR494-01, UR-LEX-C494-ROZGAR494-02] -->
+
+[PAUSE 3s] Say the Urdu for an interview (for a job) and employment.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C494-ROZGAR494-01, UR-LEX-C494-ROZGAR494-02, UR-LEX-C494-ROZGAR494-03, UR-LEX-C494-ROZGAR494-04, UR-LEX-C494-ROZGAR494-05, UR-LEX-C495-AJRAT495-01, UR-LEX-C495-AJRAT495-02, UR-LEX-C495-AJRAT495-03, UR-LEX-C495-AJRAT495-04, UR-LEX-C495-AJRAT495-05, UR-LEX-C496-VARKSHAP496-01, UR-LEX-C496-VARKSHAP496-02, UR-LEX-C496-VARKSHAP496-03, UR-LEX-C496-VARKSHAP496-04, UR-LEX-C496-VARKSHAP496-05, UR-LEX-C497-TAKHTA497-01, UR-LEX-C497-TAKHTA497-02, UR-LEX-C497-TAKHTA497-03, UR-LEX-C497-TAKHTA497-04, UR-LEX-C497-TAKHTA497-05, UR-LEX-C498-AVA498-01, UR-LEX-C498-AVA498-02, UR-LEX-C498-AVA498-03, UR-LEX-C498-AVA498-04, UR-LEX-C498-AVA498-05, UR-LEX-C499-CHARKHA499-01, UR-LEX-C499-CHARKHA499-02, UR-LEX-C499-CHARKHA499-03, UR-LEX-C499-CHARKHA499-04, UR-LEX-C499-CHARKHA499-05, UR-LEX-C500-SILAI500-01, UR-LEX-C500-SILAI500-02, UR-LEX-C500-SILAI500-03, UR-LEX-C500-SILAI500-04, UR-LEX-C500-SILAI500-05, UR-LEX-C501-LOHA501-01, UR-LEX-C501-LOHA501-02, UR-LEX-C501-LOHA501-03, UR-LEX-C501-LOHA501-04, UR-LEX-C501-LOHA501-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an interview (for a job), employment, a vacancy, dismissed from a job, to recruit]
+- [YOU SAY: wages, a strike, expertise, a contractor, to use up (time or effort)]
+- [YOU SAY: a workshop, a clamp, a hole, to bore (a hole), sandpaper]
+- [YOU SAY: a plank, sawdust, a carpenter's plane, to knock in, to file (metal or wood)]
+- [YOU SAY: a potter's wheel, a mould, a potter's kiln, a large clay pot, to heat in a fire]
+- [YOU SAY: cotton (the plant), to card (cotton), a spinning wheel, to spin (thread), a knot]
+- [YOU SAY: a sleeve, to have (clothes) sewn, to unpick (stitches), to darn, to come unstitched]
+- [YOU SAY: iron, brass, jewellery, to melt (something), to plate (with metal)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C494-ROZGAR494-01, UR-LEX-C494-ROZGAR494-02, UR-LEX-C494-ROZGAR494-03, UR-LEX-C494-ROZGAR494-04, UR-LEX-C494-ROZGAR494-05, UR-LEX-C495-AJRAT495-01, UR-LEX-C495-AJRAT495-02, UR-LEX-C495-AJRAT495-03, UR-LEX-C495-AJRAT495-04, UR-LEX-C495-AJRAT495-05, UR-LEX-C496-VARKSHAP496-01, UR-LEX-C496-VARKSHAP496-02, UR-LEX-C496-VARKSHAP496-03, UR-LEX-C496-VARKSHAP496-04, UR-LEX-C496-VARKSHAP496-05, UR-LEX-C497-TAKHTA497-01, UR-LEX-C497-TAKHTA497-02, UR-LEX-C497-TAKHTA497-03, UR-LEX-C497-TAKHTA497-04, UR-LEX-C497-TAKHTA497-05, UR-LEX-C498-AVA498-01, UR-LEX-C498-AVA498-02, UR-LEX-C498-AVA498-03, UR-LEX-C498-AVA498-04, UR-LEX-C498-AVA498-05, UR-LEX-C499-CHARKHA499-01, UR-LEX-C499-CHARKHA499-02, UR-LEX-C499-CHARKHA499-03, UR-LEX-C499-CHARKHA499-04, UR-LEX-C499-CHARKHA499-05, UR-LEX-C500-SILAI500-01, UR-LEX-C500-SILAI500-02, UR-LEX-C500-SILAI500-03, UR-LEX-C500-SILAI500-04, UR-LEX-C500-SILAI500-05, UR-LEX-C501-LOHA501-01, UR-LEX-C501-LOHA501-02, UR-LEX-C501-LOHA501-03, UR-LEX-C501-LOHA501-04, UR-LEX-C501-LOHA501-05] -->
+
+[PAUSE 3s] An interview (for a job)? (**انٹرویو**, *inṭarvyū*.) Employment? (**روزگار**, *rozgār*.) A vacancy? (**اسامی**, *asāmī*.) Dismissed from a job? (**برطرف**, *bartaraf*.) To recruit? (**بھرتی کرنا**, *bhartī karnā*.) Wages? (**اجرت**, *ujrat*.) A strike? (**ہڑتال**, *haṛtāl*.) Expertise? (**مہارت**, *mahārat*.) A contractor? (**ٹھیکیدار**, *ṭhekedār*.) To use up (time or effort)? (**کھپانا**, *khapānā*.) A workshop? (**ورکشاپ**, *varkshāp*.) A clamp? (**شکنجہ**, *shikanjā*.) A hole? (**سوراخ**, *surākh*.) To bore (a hole)? (**چھیدنا**, *chhednā*.) Sandpaper? (**ریگمال**, *regmāl*.) A plank? (**تختہ**, *takhtā*.) Sawdust? (**برادہ**, *burādā*.) A carpenter's plane? (**رندا**, *randā*.) To knock in? (**ٹھونکنا**, *ṭhoṅknā*.) To file (metal or wood)? (**ریتنا**, *retnā*.) A potter's wheel? (**چاک**, *chāk*.) A mould? (**سانچا**, *sāṅchā*.) A potter's kiln? (**آوا**, *āvā*.) A large clay pot? (**مٹکا**, *maṭkā*.) To heat in a fire? (**تپانا**, *tapānā*.) Cotton (the plant)? (**کپاس**, *kapās*.) To card (cotton)? (**دھننا**, *dhunnā*.) A spinning wheel? (**چرخہ**, *charkhā*.) To spin (thread)? (**کاتنا**, *kātnā*.) A knot? (**گانٹھ**, *gāṅṭh*.) A sleeve? (**آستین**, *āstīn*.) To have (clothes) sewn? (**سلوانا**, *silvānā*.) To unpick (stitches)? (**ادھیڑنا**, *udheṛnā*.) To darn? (**رفو کرنا**, *rafū karnā*.) To come unstitched? (**ادھڑنا**, *udhaṛnā*.) Iron? (**لوہا**, *lohā*.) Brass? (**پیتل**, *pītal*.) Jewellery? (**زیور**, *zevar*.) To melt (something)? (**پگھلانا**, *pighlānā*.) To plate (with metal)? (**مڑھنا**, *maṛhnā*.)
+`;export{t};

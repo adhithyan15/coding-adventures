@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R323-review-316-323
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 19450
+chapter: 323
+type: review
+headword: (dialogue)
+gloss: a review of the words from Escape from the Fort to Old Customs
+concept_tag: REVIEW
+prerequisites: [UR-C316-qaidi, UR-C316-pahra, UR-C316-surang, UR-C316-khisakna, UR-C316-rengna, UR-C317-id, UR-C317-hilal, UR-C317-mehndi, UR-C317-jagmagana, UR-C317-raunaq, UR-C318-namaz, UR-C318-idi, UR-C318-sivayan, UR-C318-mubarak-bad, UR-C318-lipatna, UR-C319-basant, UR-C319-dor, UR-C319-charkhi, UR-C319-urana, UR-C319-katna-cut-loose, UR-C320-atish-bazi, UR-C320-patakha, UR-C320-chhirakna, UR-C320-bhigona, UR-C320-jhumna, UR-C321-jhulna, UR-C321-julus, UR-C321-hujum, UR-C321-ikattha, UR-C321-tamasha, UR-C322-roza, UR-C322-sahri, UR-C322-iftari, UR-C322-dua, UR-C322-khairat, UR-C323-rivayat, UR-C323-rivaj, UR-C323-rasm, UR-C323-manna, UR-C323-nibhana]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C316-SURANG316-01, UR-LEX-C316-SURANG316-02, UR-LEX-C316-SURANG316-03, UR-LEX-C316-SURANG316-04, UR-LEX-C316-SURANG316-05, UR-LEX-C317-EID317-01, UR-LEX-C317-EID317-02, UR-LEX-C317-EID317-03, UR-LEX-C317-EID317-04, UR-LEX-C317-EID317-05, UR-LEX-C318-EIDMORNING318-01, UR-LEX-C318-EIDMORNING318-02, UR-LEX-C318-EIDMORNING318-03, UR-LEX-C318-EIDMORNING318-04, UR-LEX-C318-EIDMORNING318-05, UR-LEX-C319-BASANT319-01, UR-LEX-C319-BASANT319-02, UR-LEX-C319-BASANT319-03, UR-LEX-C319-BASANT319-04, UR-LEX-C319-BASANT319-05, UR-LEX-C320-ATISHBAZI320-01, UR-LEX-C320-ATISHBAZI320-02, UR-LEX-C320-ATISHBAZI320-03, UR-LEX-C320-ATISHBAZI320-04, UR-LEX-C320-ATISHBAZI320-05, UR-LEX-C321-MELA321-01, UR-LEX-C321-MELA321-02, UR-LEX-C321-MELA321-03, UR-LEX-C321-MELA321-04, UR-LEX-C321-MELA321-05, UR-LEX-C322-ROZA322-01, UR-LEX-C322-ROZA322-02, UR-LEX-C322-ROZA322-03, UR-LEX-C322-ROZA322-04, UR-LEX-C322-ROZA322-05, UR-LEX-C323-RIVAJ323-01, UR-LEX-C323-RIVAJ323-02, UR-LEX-C323-RIVAJ323-03, UR-LEX-C323-RIVAJ323-04, UR-LEX-C323-RIVAJ323-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C316-SURANG316-01, UR-LEX-C316-SURANG316-02, UR-LEX-C316-SURANG316-03, UR-LEX-C316-SURANG316-04, UR-LEX-C316-SURANG316-05, UR-LEX-C317-EID317-01, UR-LEX-C317-EID317-02, UR-LEX-C317-EID317-03, UR-LEX-C317-EID317-04, UR-LEX-C317-EID317-05, UR-LEX-C318-EIDMORNING318-01, UR-LEX-C318-EIDMORNING318-02, UR-LEX-C318-EIDMORNING318-03, UR-LEX-C318-EIDMORNING318-04, UR-LEX-C318-EIDMORNING318-05, UR-LEX-C319-BASANT319-01, UR-LEX-C319-BASANT319-02, UR-LEX-C319-BASANT319-03, UR-LEX-C319-BASANT319-04, UR-LEX-C319-BASANT319-05, UR-LEX-C320-ATISHBAZI320-01, UR-LEX-C320-ATISHBAZI320-02, UR-LEX-C320-ATISHBAZI320-03, UR-LEX-C320-ATISHBAZI320-04, UR-LEX-C320-ATISHBAZI320-05, UR-LEX-C321-MELA321-01, UR-LEX-C321-MELA321-02, UR-LEX-C321-MELA321-03, UR-LEX-C321-MELA321-04, UR-LEX-C321-MELA321-05, UR-LEX-C322-ROZA322-01, UR-LEX-C322-ROZA322-02, UR-LEX-C322-ROZA322-03, UR-LEX-C322-ROZA322-04, UR-LEX-C322-ROZA322-05, UR-LEX-C323-RIVAJ323-01, UR-LEX-C323-RIVAJ323-02, UR-LEX-C323-RIVAJ323-03, UR-LEX-C323-RIVAJ323-04, UR-LEX-C323-RIVAJ323-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C316-qaidi, UR-C316-pahra, UR-C316-surang, UR-C316-khisakna, UR-C316-rengna, UR-C317-id, UR-C317-hilal, UR-C317-mehndi, UR-C317-jagmagana, UR-C317-raunaq, UR-C318-namaz, UR-C318-idi, UR-C318-sivayan, UR-C318-mubarak-bad, UR-C318-lipatna, UR-C319-basant, UR-C319-dor, UR-C319-charkhi, UR-C319-urana, UR-C319-katna-cut-loose, UR-C320-atish-bazi, UR-C320-patakha, UR-C320-chhirakna, UR-C320-bhigona, UR-C320-jhumna, UR-C321-jhulna, UR-C321-julus, UR-C321-hujum, UR-C321-ikattha, UR-C321-tamasha, UR-C322-roza, UR-C322-sahri, UR-C322-iftari, UR-C322-dua, UR-C322-khairat, UR-C323-rivayat, UR-C323-rivaj, UR-C323-rasm, UR-C323-manna, UR-C323-nibhana]
+---
+
+# Looking back: from Escape from the Fort to Old Customs
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C316-SURANG316-01, UR-LEX-C316-SURANG316-02] -->
+
+[PAUSE 3s] Say the Urdu for a prisoner and a guard kept.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C316-SURANG316-01, UR-LEX-C316-SURANG316-02, UR-LEX-C316-SURANG316-03, UR-LEX-C316-SURANG316-04, UR-LEX-C316-SURANG316-05, UR-LEX-C317-EID317-01, UR-LEX-C317-EID317-02, UR-LEX-C317-EID317-03, UR-LEX-C317-EID317-04, UR-LEX-C317-EID317-05, UR-LEX-C318-EIDMORNING318-01, UR-LEX-C318-EIDMORNING318-02, UR-LEX-C318-EIDMORNING318-03, UR-LEX-C318-EIDMORNING318-04, UR-LEX-C318-EIDMORNING318-05, UR-LEX-C319-BASANT319-01, UR-LEX-C319-BASANT319-02, UR-LEX-C319-BASANT319-03, UR-LEX-C319-BASANT319-04, UR-LEX-C319-BASANT319-05, UR-LEX-C320-ATISHBAZI320-01, UR-LEX-C320-ATISHBAZI320-02, UR-LEX-C320-ATISHBAZI320-03, UR-LEX-C320-ATISHBAZI320-04, UR-LEX-C320-ATISHBAZI320-05, UR-LEX-C321-MELA321-01, UR-LEX-C321-MELA321-02, UR-LEX-C321-MELA321-03, UR-LEX-C321-MELA321-04, UR-LEX-C321-MELA321-05, UR-LEX-C322-ROZA322-01, UR-LEX-C322-ROZA322-02, UR-LEX-C322-ROZA322-03, UR-LEX-C322-ROZA322-04, UR-LEX-C322-ROZA322-05, UR-LEX-C323-RIVAJ323-01, UR-LEX-C323-RIVAJ323-02, UR-LEX-C323-RIVAJ323-03, UR-LEX-C323-RIVAJ323-04, UR-LEX-C323-RIVAJ323-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a prisoner, a guard kept, a tunnel, to slip away, to crawl]
+- [YOU SAY: the festival of Eid, the new crescent moon, henna, to glitter, festive bustle]
+- [YOU SAY: the set prayer, money given at Eid, sweet vermicelli, congratulations, to cling]
+- [YOU SAY: the spring kite festival, a kite string, a spool, to fly a kite, to be cut]
+- [YOU SAY: fireworks, a firecracker, to sprinkle, to drench, to sway]
+- [YOU SAY: to swing, a procession, a crowd, gathered together, a spectacle]
+- [YOU SAY: a fast, the meal before dawn, the food that breaks a fast, a prayer of asking, charity]
+- [YOU SAY: a tradition, a custom, a rite, to accept, to keep up]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C316-SURANG316-01, UR-LEX-C316-SURANG316-02, UR-LEX-C316-SURANG316-03, UR-LEX-C316-SURANG316-04, UR-LEX-C316-SURANG316-05, UR-LEX-C317-EID317-01, UR-LEX-C317-EID317-02, UR-LEX-C317-EID317-03, UR-LEX-C317-EID317-04, UR-LEX-C317-EID317-05, UR-LEX-C318-EIDMORNING318-01, UR-LEX-C318-EIDMORNING318-02, UR-LEX-C318-EIDMORNING318-03, UR-LEX-C318-EIDMORNING318-04, UR-LEX-C318-EIDMORNING318-05, UR-LEX-C319-BASANT319-01, UR-LEX-C319-BASANT319-02, UR-LEX-C319-BASANT319-03, UR-LEX-C319-BASANT319-04, UR-LEX-C319-BASANT319-05, UR-LEX-C320-ATISHBAZI320-01, UR-LEX-C320-ATISHBAZI320-02, UR-LEX-C320-ATISHBAZI320-03, UR-LEX-C320-ATISHBAZI320-04, UR-LEX-C320-ATISHBAZI320-05, UR-LEX-C321-MELA321-01, UR-LEX-C321-MELA321-02, UR-LEX-C321-MELA321-03, UR-LEX-C321-MELA321-04, UR-LEX-C321-MELA321-05, UR-LEX-C322-ROZA322-01, UR-LEX-C322-ROZA322-02, UR-LEX-C322-ROZA322-03, UR-LEX-C322-ROZA322-04, UR-LEX-C322-ROZA322-05, UR-LEX-C323-RIVAJ323-01, UR-LEX-C323-RIVAJ323-02, UR-LEX-C323-RIVAJ323-03, UR-LEX-C323-RIVAJ323-04, UR-LEX-C323-RIVAJ323-05] -->
+
+[PAUSE 3s] A prisoner? (**قیدی**, *qaidī*.) A guard kept? (**پہرہ**, *pahrā*.) A tunnel? (**سرنگ**, *surang*.) To slip away? (**کھسکنا**, *khisaknā*.) To crawl? (**رینگنا**, *rengnā*.) The festival of Eid? (**عید**, *īd*.) The new crescent moon? (**ہلال**, *hilāl*.) Henna? (**مہندی**, *mehndī*.) To glitter? (**جگمگانا**, *jagmagānā*.) Festive bustle? (**رونق**, *raunaq*.) The set prayer? (**نماز**, *namāz*.) Money given at Eid? (**عیدی**, *īdī*.) Sweet vermicelli? (**سویاں**, *sivayāṅ*.) Congratulations? (**مبارک باد**, *mubārak bād*.) To cling? (**لپٹنا**, *lipaṭnā*.) The spring kite festival? (**بسنت**, *basant*.) A kite string? (**ڈور**, *ḍor*.) A spool? (**چرخی**, *charkhī*.) To fly a kite? (**اڑانا**, *uṛānā*.) To be cut? (**کٹنا**, *kaṭnā*.) Fireworks? (**آتش بازی**, *ātish bāzī*.) A firecracker? (**پٹاخا**, *paṭākhā*.) To sprinkle? (**چھڑکنا**, *chhiṛaknā*.) To drench? (**بھگونا**, *bhigonā*.) To sway? (**جھومنا**, *jhūmnā*.) To swing? (**جھولنا**, *jhūlnā*.) A procession? (**جلوس**, *julūs*.) A crowd? (**ہجوم**, *hujūm*.) Gathered together? (**اکٹھا**, *ikaṭṭhā*.) A spectacle? (**تماشا**, *tamāshā*.) A fast? (**روزہ**, *rozā*.) The meal before dawn? (**سحری**, *sahrī*.) The food that breaks a fast? (**افطاری**, *iftārī*.) A prayer of asking? (**دعا**, *duā*.) Charity? (**خیرات**, *khairāt*.) A tradition? (**روایت**, *rivāyat*.) A custom? (**رواج**, *rivāj*.) A rite? (**رسم**, *rasm*.) To accept? (**ماننا**, *mānnā*.) To keep up? (**نبھانا**, *nibhānā*.)
+`;export{t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R509-review-502-509
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 29810
+chapter: 509
+type: review
+headword: (dialogue)
+gloss: a review of the words from Rattles and Rust to Milk and Curd
+concept_tag: REVIEW
+prerequisites: [UR-C502-kharkharana, UR-C502-qabza, UR-C502-nat, UR-C502-zang, UR-C502-ispring, UR-C503-silan, UR-C503-int, UR-C503-palastar, UR-C503-rangvana, UR-C503-lipna, UR-C504-svich, UR-C504-plag, UR-C504-karant, UR-C504-khunti, UR-C504-saket, UR-C505-raddi, UR-C505-jala, UR-C505-atari, UR-C505-pharna, UR-C505-rakhvana, UR-C506-safai, UR-C506-manjhna, UR-C506-chipkana, UR-C506-dhulna, UR-C506-khangalna, UR-C507-chakla, UR-C507-gundhna, UR-C507-belna, UR-C507-thapna, UR-C507-anch, UR-C508-bagharna, UR-C508-bhunna, UR-C508-dhakkan, UR-C508-dhanpna, UR-C508-kafgir, UR-C509-chhachh, UR-C509-bilona, UR-C509-jamana, UR-C509-handi, UR-C509-chhalkana]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C502-ZANG502-01, UR-LEX-C502-ZANG502-02, UR-LEX-C502-ZANG502-03, UR-LEX-C502-ZANG502-04, UR-LEX-C502-ZANG502-05, UR-LEX-C503-SILAN503-01, UR-LEX-C503-SILAN503-02, UR-LEX-C503-SILAN503-03, UR-LEX-C503-SILAN503-04, UR-LEX-C503-SILAN503-05, UR-LEX-C504-SVICH504-01, UR-LEX-C504-SVICH504-02, UR-LEX-C504-SVICH504-03, UR-LEX-C504-SVICH504-04, UR-LEX-C504-SVICH504-05, UR-LEX-C505-ATARI505-01, UR-LEX-C505-ATARI505-02, UR-LEX-C505-ATARI505-03, UR-LEX-C505-ATARI505-04, UR-LEX-C505-ATARI505-05, UR-LEX-C506-SAFAI506-01, UR-LEX-C506-SAFAI506-02, UR-LEX-C506-SAFAI506-03, UR-LEX-C506-SAFAI506-04, UR-LEX-C506-SAFAI506-05, UR-LEX-C507-ROTI507-01, UR-LEX-C507-ROTI507-02, UR-LEX-C507-ROTI507-03, UR-LEX-C507-ROTI507-04, UR-LEX-C507-ROTI507-05, UR-LEX-C508-DHAKKAN508-01, UR-LEX-C508-DHAKKAN508-02, UR-LEX-C508-DHAKKAN508-03, UR-LEX-C508-DHAKKAN508-04, UR-LEX-C508-DHAKKAN508-05, UR-LEX-C509-CHHACHH509-01, UR-LEX-C509-CHHACHH509-02, UR-LEX-C509-CHHACHH509-03, UR-LEX-C509-CHHACHH509-04, UR-LEX-C509-CHHACHH509-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C502-ZANG502-01, UR-LEX-C502-ZANG502-02, UR-LEX-C502-ZANG502-03, UR-LEX-C502-ZANG502-04, UR-LEX-C502-ZANG502-05, UR-LEX-C503-SILAN503-01, UR-LEX-C503-SILAN503-02, UR-LEX-C503-SILAN503-03, UR-LEX-C503-SILAN503-04, UR-LEX-C503-SILAN503-05, UR-LEX-C504-SVICH504-01, UR-LEX-C504-SVICH504-02, UR-LEX-C504-SVICH504-03, UR-LEX-C504-SVICH504-04, UR-LEX-C504-SVICH504-05, UR-LEX-C505-ATARI505-01, UR-LEX-C505-ATARI505-02, UR-LEX-C505-ATARI505-03, UR-LEX-C505-ATARI505-04, UR-LEX-C505-ATARI505-05, UR-LEX-C506-SAFAI506-01, UR-LEX-C506-SAFAI506-02, UR-LEX-C506-SAFAI506-03, UR-LEX-C506-SAFAI506-04, UR-LEX-C506-SAFAI506-05, UR-LEX-C507-ROTI507-01, UR-LEX-C507-ROTI507-02, UR-LEX-C507-ROTI507-03, UR-LEX-C507-ROTI507-04, UR-LEX-C507-ROTI507-05, UR-LEX-C508-DHAKKAN508-01, UR-LEX-C508-DHAKKAN508-02, UR-LEX-C508-DHAKKAN508-03, UR-LEX-C508-DHAKKAN508-04, UR-LEX-C508-DHAKKAN508-05, UR-LEX-C509-CHHACHH509-01, UR-LEX-C509-CHHACHH509-02, UR-LEX-C509-CHHACHH509-03, UR-LEX-C509-CHHACHH509-04, UR-LEX-C509-CHHACHH509-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C502-kharkharana, UR-C502-qabza, UR-C502-nat, UR-C502-zang, UR-C502-ispring, UR-C503-silan, UR-C503-int, UR-C503-palastar, UR-C503-rangvana, UR-C503-lipna, UR-C504-svich, UR-C504-plag, UR-C504-karant, UR-C504-khunti, UR-C504-saket, UR-C505-raddi, UR-C505-jala, UR-C505-atari, UR-C505-pharna, UR-C505-rakhvana, UR-C506-safai, UR-C506-manjhna, UR-C506-chipkana, UR-C506-dhulna, UR-C506-khangalna, UR-C507-chakla, UR-C507-gundhna, UR-C507-belna, UR-C507-thapna, UR-C507-anch, UR-C508-bagharna, UR-C508-bhunna, UR-C508-dhakkan, UR-C508-dhanpna, UR-C508-kafgir, UR-C509-chhachh, UR-C509-bilona, UR-C509-jamana, UR-C509-handi, UR-C509-chhalkana]
+---
+
+# Looking back: from Rattles and Rust to Milk and Curd
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C502-ZANG502-01, UR-LEX-C502-ZANG502-02] -->
+
+[PAUSE 3s] Say the Urdu for to rattle and a hinge.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C502-ZANG502-01, UR-LEX-C502-ZANG502-02, UR-LEX-C502-ZANG502-03, UR-LEX-C502-ZANG502-04, UR-LEX-C502-ZANG502-05, UR-LEX-C503-SILAN503-01, UR-LEX-C503-SILAN503-02, UR-LEX-C503-SILAN503-03, UR-LEX-C503-SILAN503-04, UR-LEX-C503-SILAN503-05, UR-LEX-C504-SVICH504-01, UR-LEX-C504-SVICH504-02, UR-LEX-C504-SVICH504-03, UR-LEX-C504-SVICH504-04, UR-LEX-C504-SVICH504-05, UR-LEX-C505-ATARI505-01, UR-LEX-C505-ATARI505-02, UR-LEX-C505-ATARI505-03, UR-LEX-C505-ATARI505-04, UR-LEX-C505-ATARI505-05, UR-LEX-C506-SAFAI506-01, UR-LEX-C506-SAFAI506-02, UR-LEX-C506-SAFAI506-03, UR-LEX-C506-SAFAI506-04, UR-LEX-C506-SAFAI506-05, UR-LEX-C507-ROTI507-01, UR-LEX-C507-ROTI507-02, UR-LEX-C507-ROTI507-03, UR-LEX-C507-ROTI507-04, UR-LEX-C507-ROTI507-05, UR-LEX-C508-DHAKKAN508-01, UR-LEX-C508-DHAKKAN508-02, UR-LEX-C508-DHAKKAN508-03, UR-LEX-C508-DHAKKAN508-04, UR-LEX-C508-DHAKKAN508-05, UR-LEX-C509-CHHACHH509-01, UR-LEX-C509-CHHACHH509-02, UR-LEX-C509-CHHACHH509-03, UR-LEX-C509-CHHACHH509-04, UR-LEX-C509-CHHACHH509-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to rattle, a hinge, a nut (for a bolt), rust, a metal spring]
+- [YOU SAY: damp (in a wall), a brick, plaster (on a wall), to have (something) painted, to smear (with mud)]
+- [YOU SAY: a switch, a plug (on a cable), electric current, a peg (on a wall), a socket (for a plug)]
+- [YOU SAY: waste paper, a cobweb, a loft, to tear (something), to have (something) put away]
+- [YOU SAY: cleaning, to scour (pots), to stick (something) on, to be washed, to rinse out]
+- [YOU SAY: a board for rolling dough, to knead, to roll out (dough), to pat (into shape), the heat of a flame]
+- [YOU SAY: to temper (with hot spiced oil), to roast in a pan, a lid, to cover, a skimmer]
+- [YOU SAY: buttermilk, to churn, to set (curd), an earthen cooking pot, to spill]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C502-ZANG502-01, UR-LEX-C502-ZANG502-02, UR-LEX-C502-ZANG502-03, UR-LEX-C502-ZANG502-04, UR-LEX-C502-ZANG502-05, UR-LEX-C503-SILAN503-01, UR-LEX-C503-SILAN503-02, UR-LEX-C503-SILAN503-03, UR-LEX-C503-SILAN503-04, UR-LEX-C503-SILAN503-05, UR-LEX-C504-SVICH504-01, UR-LEX-C504-SVICH504-02, UR-LEX-C504-SVICH504-03, UR-LEX-C504-SVICH504-04, UR-LEX-C504-SVICH504-05, UR-LEX-C505-ATARI505-01, UR-LEX-C505-ATARI505-02, UR-LEX-C505-ATARI505-03, UR-LEX-C505-ATARI505-04, UR-LEX-C505-ATARI505-05, UR-LEX-C506-SAFAI506-01, UR-LEX-C506-SAFAI506-02, UR-LEX-C506-SAFAI506-03, UR-LEX-C506-SAFAI506-04, UR-LEX-C506-SAFAI506-05, UR-LEX-C507-ROTI507-01, UR-LEX-C507-ROTI507-02, UR-LEX-C507-ROTI507-03, UR-LEX-C507-ROTI507-04, UR-LEX-C507-ROTI507-05, UR-LEX-C508-DHAKKAN508-01, UR-LEX-C508-DHAKKAN508-02, UR-LEX-C508-DHAKKAN508-03, UR-LEX-C508-DHAKKAN508-04, UR-LEX-C508-DHAKKAN508-05, UR-LEX-C509-CHHACHH509-01, UR-LEX-C509-CHHACHH509-02, UR-LEX-C509-CHHACHH509-03, UR-LEX-C509-CHHACHH509-04, UR-LEX-C509-CHHACHH509-05] -->
+
+[PAUSE 3s] To rattle? (**کھڑکھڑانا**, *khaṛkhaṛānā*.) A hinge? (**قبضہ**, *qabzā*.) A nut (for a bolt)? (**نٹ**, *naṭ*.) Rust? (**زنگ**, *zang*.) A metal spring? (**اسپرنگ**, *ispring*.) Damp (in a wall)? (**سیلن**, *sīlan*.) A brick? (**اینٹ**, *īṅṭ*.) Plaster (on a wall)? (**پلستر**, *palastar*.) To have (something) painted? (**رنگوانا**, *rangvānā*.) To smear (with mud)? (**لیپنا**, *līpnā*.) A switch? (**سوئچ**, *svich*.) A plug (on a cable)? (**پلگ**, *plag*.) Electric current? (**کرنٹ**, *karanṭ*.) A peg (on a wall)? (**کھونٹی**, *khūṅṭī*.) A socket (for a plug)? (**ساکٹ**, *sākeṭ*.) Waste paper? (**ردی**, *raddī*.) A cobweb? (**جالا**, *jālā*.) A loft? (**اٹاری**, *aṭārī*.) To tear (something)? (**پھاڑنا**, *phāṛnā*.) To have (something) put away? (**رکھوانا**, *rakhvānā*.) Cleaning? (**صفائی**, *safāī*.) To scour (pots)? (**مانجھنا**, *māṅjhnā*.) To stick (something) on? (**چپکانا**, *chipkānā*.) To be washed? (**دھلنا**, *dhulnā*.) To rinse out? (**کھنگالنا**, *khaṅgālnā*.) A board for rolling dough? (**چکلا**, *chaklā*.) To knead? (**گوندھنا**, *gūṅdhnā*.) To roll out (dough)? (**بیلنا**, *belnā*.) To pat (into shape)? (**تھاپنا**, *thāpnā*.) The heat of a flame? (**آنچ**, *āṅch*.) To temper (with hot spiced oil)? (**بگھارنا**, *baghārnā*.) To roast in a pan? (**بھوننا**, *bhūnnā*.) A lid? (**ڈھکن**, *ḍhakkan*.) To cover? (**ڈھانپنا**, *ḍhāṅpnā*.) A skimmer? (**کفگیر**, *kafgīr*.) Buttermilk? (**چھاچھ**, *chhāchh*.) To churn? (**بلونا**, *bilonā*.) To set (curd)? (**جمانا**, *jamānā*.) An earthen cooking pot? (**ہانڈی**, *hāṅḍī*.) To spill? (**چھلکانا**, *chhalkānā*.)
+`;export{t};

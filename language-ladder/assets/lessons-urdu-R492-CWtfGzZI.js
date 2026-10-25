@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R493-review-487-493
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 28760
+chapter: 493
+type: review
+headword: (dialogue)
+gloss: a review of the words from A Wedding to Mourning
+concept_tag: REVIEW
+prerequisites: [UR-C487-mangni, UR-C487-nikah, UR-C487-barat, UR-C487-sehra, UR-C487-rukhsat-karna, UR-C488-valima, UR-C488-susral, UR-C488-bahu, UR-C488-damad, UR-C488-byahna, UR-C489-devar, UR-C489-jeth, UR-C489-nanad, UR-C489-bhanja, UR-C489-navasa, UR-C490-taya, UR-C490-khalu, UR-C490-sautela, UR-C490-yatim, UR-C490-god-lena, UR-C491-ranjish, UR-C491-shikva, UR-C491-tana, UR-C491-talaq, UR-C491-maf-karna, UR-C492-burhapa, UR-C492-yaddasht, UR-C492-chhari, UR-C492-vasiyat, UR-C492-virasat, UR-C493-intiqal-karna, UR-C493-janaza, UR-C493-dafnana, UR-C493-taziyat-karna, UR-C493-beva]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C487-WEDDING487-01, UR-LEX-C487-WEDDING487-02, UR-LEX-C487-WEDDING487-03, UR-LEX-C487-WEDDING487-04, UR-LEX-C487-WEDDING487-05, UR-LEX-C488-INLAWS488-01, UR-LEX-C488-INLAWS488-02, UR-LEX-C488-INLAWS488-03, UR-LEX-C488-INLAWS488-04, UR-LEX-C488-INLAWS488-05, UR-LEX-C489-KIN489-01, UR-LEX-C489-KIN489-02, UR-LEX-C489-KIN489-03, UR-LEX-C489-KIN489-04, UR-LEX-C489-KIN489-05, UR-LEX-C490-STEP490-01, UR-LEX-C490-STEP490-02, UR-LEX-C490-STEP490-03, UR-LEX-C490-STEP490-04, UR-LEX-C490-STEP490-05, UR-LEX-C491-MENDING491-01, UR-LEX-C491-MENDING491-02, UR-LEX-C491-MENDING491-03, UR-LEX-C491-MENDING491-04, UR-LEX-C491-MENDING491-05, UR-LEX-C492-OLDAGE492-01, UR-LEX-C492-OLDAGE492-02, UR-LEX-C492-OLDAGE492-03, UR-LEX-C492-OLDAGE492-04, UR-LEX-C492-OLDAGE492-05, UR-LEX-C493-MOURNING493-01, UR-LEX-C493-MOURNING493-02, UR-LEX-C493-MOURNING493-03, UR-LEX-C493-MOURNING493-04, UR-LEX-C493-MOURNING493-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C487-WEDDING487-01, UR-LEX-C487-WEDDING487-02, UR-LEX-C487-WEDDING487-03, UR-LEX-C487-WEDDING487-04, UR-LEX-C487-WEDDING487-05, UR-LEX-C488-INLAWS488-01, UR-LEX-C488-INLAWS488-02, UR-LEX-C488-INLAWS488-03, UR-LEX-C488-INLAWS488-04, UR-LEX-C488-INLAWS488-05, UR-LEX-C489-KIN489-01, UR-LEX-C489-KIN489-02, UR-LEX-C489-KIN489-03, UR-LEX-C489-KIN489-04, UR-LEX-C489-KIN489-05, UR-LEX-C490-STEP490-01, UR-LEX-C490-STEP490-02, UR-LEX-C490-STEP490-03, UR-LEX-C490-STEP490-04, UR-LEX-C490-STEP490-05, UR-LEX-C491-MENDING491-01, UR-LEX-C491-MENDING491-02, UR-LEX-C491-MENDING491-03, UR-LEX-C491-MENDING491-04, UR-LEX-C491-MENDING491-05, UR-LEX-C492-OLDAGE492-01, UR-LEX-C492-OLDAGE492-02, UR-LEX-C492-OLDAGE492-03, UR-LEX-C492-OLDAGE492-04, UR-LEX-C492-OLDAGE492-05, UR-LEX-C493-MOURNING493-01, UR-LEX-C493-MOURNING493-02, UR-LEX-C493-MOURNING493-03, UR-LEX-C493-MOURNING493-04, UR-LEX-C493-MOURNING493-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C487-mangni, UR-C487-nikah, UR-C487-barat, UR-C487-sehra, UR-C487-rukhsat-karna, UR-C488-valima, UR-C488-susral, UR-C488-bahu, UR-C488-damad, UR-C488-byahna, UR-C489-devar, UR-C489-jeth, UR-C489-nanad, UR-C489-bhanja, UR-C489-navasa, UR-C490-taya, UR-C490-khalu, UR-C490-sautela, UR-C490-yatim, UR-C490-god-lena, UR-C491-ranjish, UR-C491-shikva, UR-C491-tana, UR-C491-talaq, UR-C491-maf-karna, UR-C492-burhapa, UR-C492-yaddasht, UR-C492-chhari, UR-C492-vasiyat, UR-C492-virasat, UR-C493-intiqal-karna, UR-C493-janaza, UR-C493-dafnana, UR-C493-taziyat-karna, UR-C493-beva]
+---
+
+# Looking back: from A Wedding to Mourning
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C487-WEDDING487-01, UR-LEX-C487-WEDDING487-02] -->
+
+[PAUSE 3s] Say the Urdu for an engagement to marry and the marriage contract.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C487-WEDDING487-01, UR-LEX-C487-WEDDING487-02, UR-LEX-C487-WEDDING487-03, UR-LEX-C487-WEDDING487-04, UR-LEX-C487-WEDDING487-05, UR-LEX-C488-INLAWS488-01, UR-LEX-C488-INLAWS488-02, UR-LEX-C488-INLAWS488-03, UR-LEX-C488-INLAWS488-04, UR-LEX-C488-INLAWS488-05, UR-LEX-C489-KIN489-01, UR-LEX-C489-KIN489-02, UR-LEX-C489-KIN489-03, UR-LEX-C489-KIN489-04, UR-LEX-C489-KIN489-05, UR-LEX-C490-STEP490-01, UR-LEX-C490-STEP490-02, UR-LEX-C490-STEP490-03, UR-LEX-C490-STEP490-04, UR-LEX-C490-STEP490-05, UR-LEX-C491-MENDING491-01, UR-LEX-C491-MENDING491-02, UR-LEX-C491-MENDING491-03, UR-LEX-C491-MENDING491-04, UR-LEX-C491-MENDING491-05, UR-LEX-C492-OLDAGE492-01, UR-LEX-C492-OLDAGE492-02, UR-LEX-C492-OLDAGE492-03, UR-LEX-C492-OLDAGE492-04, UR-LEX-C492-OLDAGE492-05, UR-LEX-C493-MOURNING493-01, UR-LEX-C493-MOURNING493-02, UR-LEX-C493-MOURNING493-03, UR-LEX-C493-MOURNING493-04, UR-LEX-C493-MOURNING493-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an engagement to marry, the marriage contract, the wedding procession, a bridegroom's veil of flowers, to see off]
+- [YOU SAY: a wedding feast, the in-laws' home, a daughter-in-law, a son-in-law, to marry off]
+- [YOU SAY: a husband's younger brother, a husband's elder brother, a husband's sister, a nephew (a sister's son), a grandson (a daughter's son)]
+- [YOU SAY: a father's elder brother, a mother's sister's husband, related by remarriage, an orphan, to adopt]
+- [YOU SAY: ill feeling, a grievance, a taunt, a divorce, to forgive]
+- [YOU SAY: old age, the power to remember, a walking stick, a last will, an inheritance]
+- [YOU SAY: to pass away, a funeral, to bury the dead, to offer condolences, a widow]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C487-WEDDING487-01, UR-LEX-C487-WEDDING487-02, UR-LEX-C487-WEDDING487-03, UR-LEX-C487-WEDDING487-04, UR-LEX-C487-WEDDING487-05, UR-LEX-C488-INLAWS488-01, UR-LEX-C488-INLAWS488-02, UR-LEX-C488-INLAWS488-03, UR-LEX-C488-INLAWS488-04, UR-LEX-C488-INLAWS488-05, UR-LEX-C489-KIN489-01, UR-LEX-C489-KIN489-02, UR-LEX-C489-KIN489-03, UR-LEX-C489-KIN489-04, UR-LEX-C489-KIN489-05, UR-LEX-C490-STEP490-01, UR-LEX-C490-STEP490-02, UR-LEX-C490-STEP490-03, UR-LEX-C490-STEP490-04, UR-LEX-C490-STEP490-05, UR-LEX-C491-MENDING491-01, UR-LEX-C491-MENDING491-02, UR-LEX-C491-MENDING491-03, UR-LEX-C491-MENDING491-04, UR-LEX-C491-MENDING491-05, UR-LEX-C492-OLDAGE492-01, UR-LEX-C492-OLDAGE492-02, UR-LEX-C492-OLDAGE492-03, UR-LEX-C492-OLDAGE492-04, UR-LEX-C492-OLDAGE492-05, UR-LEX-C493-MOURNING493-01, UR-LEX-C493-MOURNING493-02, UR-LEX-C493-MOURNING493-03, UR-LEX-C493-MOURNING493-04, UR-LEX-C493-MOURNING493-05] -->
+
+[PAUSE 3s] An engagement to marry? (**منگنی**, *mangnī*.) The marriage contract? (**نکاح**, *nikāh*.) The wedding procession? (**بارات**, *bārāt*.) A bridegroom's veil of flowers? (**سہرا**, *sehrā*.) To see off? (**رخصت کرنا**, *rukhsat karnā*.) A wedding feast? (**ولیمہ**, *valīmā*.) The in-laws' home? (**سسرال**, *susrāl*.) A daughter-in-law? (**بہو**, *bahū*.) A son-in-law? (**داماد**, *dāmād*.) To marry off? (**بیاہنا**, *byāhnā*.) A husband's younger brother? (**دیور**, *devar*.) A husband's elder brother? (**جیٹھ**, *jeṭh*.) A husband's sister? (**نند**, *nanad*.) A nephew (a sister's son)? (**بھانجا**, *bhāṅjā*.) A grandson (a daughter's son)? (**نواسا**, *navāsā*.) A father's elder brother? (**تایا**, *tāyā*.) A mother's sister's husband? (**خالو**, *khālū*.) Related by remarriage? (**سوتیلا**, *sautelā*.) An orphan? (**یتیم**, *yatīm*.) To adopt? (**گود لینا**, *god lenā*.) Ill feeling? (**رنجش**, *ranjish*.) A grievance? (**شکوہ**, *shikvā*.) A taunt? (**طعنہ**, *tānā*.) A divorce? (**طلاق**, *talāq*.) To forgive? (**معاف کرنا**, *māf karnā*.) Old age? (**بڑھاپا**, *buṛhāpā*.) The power to remember? (**یادداشت**, *yāddāsht*.) A walking stick? (**چھڑی**, *chhaṛī*.) A last will? (**وصیت**, *vasiyat*.) An inheritance? (**وراثت**, *virāsat*.) To pass away? (**انتقال کرنا**, *intiqāl karnā*.) A funeral? (**جنازہ**, *janāzā*.) To bury the dead? (**دفنانا**, *dafnānā*.) To offer condolences? (**تعزیت کرنا**, *tāziyat karnā*.) A widow? (**بیوہ**, *bevā*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R493-review-final-493
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 28770
+chapter: 493
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [UR-C493-intiqal-karna, UR-C493-janaza, UR-C493-dafnana, UR-C493-taziyat-karna, UR-C493-beva]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C493-MOURNING493-01, UR-LEX-C493-MOURNING493-02, UR-LEX-C493-MOURNING493-03, UR-LEX-C493-MOURNING493-04, UR-LEX-C493-MOURNING493-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C493-MOURNING493-01, UR-LEX-C493-MOURNING493-02, UR-LEX-C493-MOURNING493-03, UR-LEX-C493-MOURNING493-04, UR-LEX-C493-MOURNING493-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C493-intiqal-karna, UR-C493-janaza, UR-C493-dafnana, UR-C493-taziyat-karna, UR-C493-beva]
+---
+
+# Mourning — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C493-MOURNING493-01, UR-LEX-C493-MOURNING493-02] -->
+
+[PAUSE 3s] Say the Urdu for to pass away and a funeral.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C493-MOURNING493-01, UR-LEX-C493-MOURNING493-02, UR-LEX-C493-MOURNING493-03, UR-LEX-C493-MOURNING493-04, UR-LEX-C493-MOURNING493-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to pass away, a funeral, to bury the dead, to offer condolences, a widow]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C493-MOURNING493-01, UR-LEX-C493-MOURNING493-02, UR-LEX-C493-MOURNING493-03, UR-LEX-C493-MOURNING493-04, UR-LEX-C493-MOURNING493-05] -->
+
+[PAUSE 3s] To pass away? (**انتقال کرنا**, *intiqāl karnā*.) A funeral? (**جنازہ**, *janāzā*.) To bury the dead? (**دفنانا**, *dafnānā*.) To offer condolences? (**تعزیت کرنا**, *tāziyat karnā*.) A widow? (**بیوہ**, *bevā*.)
+`;export{t as n,r as t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R417-review-410-417
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24630
+chapter: 417
+type: review
+headword: (dialogue)
+gloss: a review of the words from Landmarks to Accounts and Cash
+concept_tag: REVIEW
+prerequisites: [UR-C410-imarat, UR-C410-maqam, UR-C410-bord, UR-C410-khamba, UR-C410-dikhana, UR-C411-dhalan, UR-C411-lurhakna, UR-C411-baramada, UR-C411-tah-khana, UR-C411-baghal, UR-C412-qasba, UR-C412-abadi, UR-C412-bashinda, UR-C412-dehat, UR-C412-paros, UR-C413-kothi, UR-C413-jhonpri, UR-C413-ahata, UR-C413-chhappar, UR-C413-basana, UR-C414-gard, UR-C414-avara, UR-C414-bhaunkna, UR-C414-ghurrana, UR-C414-bhagana, UR-C415-dhaba, UR-C415-thela, UR-C415-pan, UR-C415-zaiqa, UR-C415-parosna, UR-C416-kura, UR-C416-nali, UR-C416-gatar, UR-C416-badbu, UR-C416-phailana, UR-C417-akaunt, UR-C417-raqam, UR-C417-naqd, UR-C417-chek, UR-C417-nikalvana]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C410-IMARAT410-01, UR-LEX-C410-IMARAT410-02, UR-LEX-C410-IMARAT410-03, UR-LEX-C410-IMARAT410-04, UR-LEX-C410-IMARAT410-05, UR-LEX-C411-DHALAN411-01, UR-LEX-C411-DHALAN411-02, UR-LEX-C411-DHALAN411-03, UR-LEX-C411-DHALAN411-04, UR-LEX-C411-DHALAN411-05, UR-LEX-C412-QASBA412-01, UR-LEX-C412-QASBA412-02, UR-LEX-C412-QASBA412-03, UR-LEX-C412-QASBA412-04, UR-LEX-C412-QASBA412-05, UR-LEX-C413-KOTHI413-01, UR-LEX-C413-KOTHI413-02, UR-LEX-C413-KOTHI413-03, UR-LEX-C413-KOTHI413-04, UR-LEX-C413-KOTHI413-05, UR-LEX-C414-GARD414-01, UR-LEX-C414-GARD414-02, UR-LEX-C414-GARD414-03, UR-LEX-C414-GARD414-04, UR-LEX-C414-GARD414-05, UR-LEX-C415-DHABA415-01, UR-LEX-C415-DHABA415-02, UR-LEX-C415-DHABA415-03, UR-LEX-C415-DHABA415-04, UR-LEX-C415-DHABA415-05, UR-LEX-C416-KURA416-01, UR-LEX-C416-KURA416-02, UR-LEX-C416-KURA416-03, UR-LEX-C416-KURA416-04, UR-LEX-C416-KURA416-05, UR-LEX-C417-RAQAM417-01, UR-LEX-C417-RAQAM417-02, UR-LEX-C417-RAQAM417-03, UR-LEX-C417-RAQAM417-04, UR-LEX-C417-RAQAM417-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C410-IMARAT410-01, UR-LEX-C410-IMARAT410-02, UR-LEX-C410-IMARAT410-03, UR-LEX-C410-IMARAT410-04, UR-LEX-C410-IMARAT410-05, UR-LEX-C411-DHALAN411-01, UR-LEX-C411-DHALAN411-02, UR-LEX-C411-DHALAN411-03, UR-LEX-C411-DHALAN411-04, UR-LEX-C411-DHALAN411-05, UR-LEX-C412-QASBA412-01, UR-LEX-C412-QASBA412-02, UR-LEX-C412-QASBA412-03, UR-LEX-C412-QASBA412-04, UR-LEX-C412-QASBA412-05, UR-LEX-C413-KOTHI413-01, UR-LEX-C413-KOTHI413-02, UR-LEX-C413-KOTHI413-03, UR-LEX-C413-KOTHI413-04, UR-LEX-C413-KOTHI413-05, UR-LEX-C414-GARD414-01, UR-LEX-C414-GARD414-02, UR-LEX-C414-GARD414-03, UR-LEX-C414-GARD414-04, UR-LEX-C414-GARD414-05, UR-LEX-C415-DHABA415-01, UR-LEX-C415-DHABA415-02, UR-LEX-C415-DHABA415-03, UR-LEX-C415-DHABA415-04, UR-LEX-C415-DHABA415-05, UR-LEX-C416-KURA416-01, UR-LEX-C416-KURA416-02, UR-LEX-C416-KURA416-03, UR-LEX-C416-KURA416-04, UR-LEX-C416-KURA416-05, UR-LEX-C417-RAQAM417-01, UR-LEX-C417-RAQAM417-02, UR-LEX-C417-RAQAM417-03, UR-LEX-C417-RAQAM417-04, UR-LEX-C417-RAQAM417-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C410-imarat, UR-C410-maqam, UR-C410-bord, UR-C410-khamba, UR-C410-dikhana, UR-C411-dhalan, UR-C411-lurhakna, UR-C411-baramada, UR-C411-tah-khana, UR-C411-baghal, UR-C412-qasba, UR-C412-abadi, UR-C412-bashinda, UR-C412-dehat, UR-C412-paros, UR-C413-kothi, UR-C413-jhonpri, UR-C413-ahata, UR-C413-chhappar, UR-C413-basana, UR-C414-gard, UR-C414-avara, UR-C414-bhaunkna, UR-C414-ghurrana, UR-C414-bhagana, UR-C415-dhaba, UR-C415-thela, UR-C415-pan, UR-C415-zaiqa, UR-C415-parosna, UR-C416-kura, UR-C416-nali, UR-C416-gatar, UR-C416-badbu, UR-C416-phailana, UR-C417-akaunt, UR-C417-raqam, UR-C417-naqd, UR-C417-chek, UR-C417-nikalvana]
+---
+
+# Looking back: from Landmarks to Accounts and Cash
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C410-IMARAT410-01, UR-LEX-C410-IMARAT410-02] -->
+
+[PAUSE 3s] Say the Urdu for a building and a spot.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C410-IMARAT410-01, UR-LEX-C410-IMARAT410-02, UR-LEX-C410-IMARAT410-03, UR-LEX-C410-IMARAT410-04, UR-LEX-C410-IMARAT410-05, UR-LEX-C411-DHALAN411-01, UR-LEX-C411-DHALAN411-02, UR-LEX-C411-DHALAN411-03, UR-LEX-C411-DHALAN411-04, UR-LEX-C411-DHALAN411-05, UR-LEX-C412-QASBA412-01, UR-LEX-C412-QASBA412-02, UR-LEX-C412-QASBA412-03, UR-LEX-C412-QASBA412-04, UR-LEX-C412-QASBA412-05, UR-LEX-C413-KOTHI413-01, UR-LEX-C413-KOTHI413-02, UR-LEX-C413-KOTHI413-03, UR-LEX-C413-KOTHI413-04, UR-LEX-C413-KOTHI413-05, UR-LEX-C414-GARD414-01, UR-LEX-C414-GARD414-02, UR-LEX-C414-GARD414-03, UR-LEX-C414-GARD414-04, UR-LEX-C414-GARD414-05, UR-LEX-C415-DHABA415-01, UR-LEX-C415-DHABA415-02, UR-LEX-C415-DHABA415-03, UR-LEX-C415-DHABA415-04, UR-LEX-C415-DHABA415-05, UR-LEX-C416-KURA416-01, UR-LEX-C416-KURA416-02, UR-LEX-C416-KURA416-03, UR-LEX-C416-KURA416-04, UR-LEX-C416-KURA416-05, UR-LEX-C417-RAQAM417-01, UR-LEX-C417-RAQAM417-02, UR-LEX-C417-RAQAM417-03, UR-LEX-C417-RAQAM417-04, UR-LEX-C417-RAQAM417-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a building, a spot, a signboard, a pole, to show]
+- [YOU SAY: a slope, to roll (down), a veranda, a basement, beside]
+- [YOU SAY: a small town, a population, an inhabitant, the countryside, next door]
+- [YOU SAY: a large house, a hut, a compound, a thatched roof, to found (a town)]
+- [YOU SAY: a guard, stray, to bark, to growl, to chase off]
+- [YOU SAY: a roadside eatery, a handcart, a betel leaf, a flavour, to serve (food)]
+- [YOU SAY: rubbish, a drain, a sewer, a stink, to spread (something) around]
+- [YOU SAY: a bank account, a sum of money, cash, a cheque, to withdraw (money)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C410-IMARAT410-01, UR-LEX-C410-IMARAT410-02, UR-LEX-C410-IMARAT410-03, UR-LEX-C410-IMARAT410-04, UR-LEX-C410-IMARAT410-05, UR-LEX-C411-DHALAN411-01, UR-LEX-C411-DHALAN411-02, UR-LEX-C411-DHALAN411-03, UR-LEX-C411-DHALAN411-04, UR-LEX-C411-DHALAN411-05, UR-LEX-C412-QASBA412-01, UR-LEX-C412-QASBA412-02, UR-LEX-C412-QASBA412-03, UR-LEX-C412-QASBA412-04, UR-LEX-C412-QASBA412-05, UR-LEX-C413-KOTHI413-01, UR-LEX-C413-KOTHI413-02, UR-LEX-C413-KOTHI413-03, UR-LEX-C413-KOTHI413-04, UR-LEX-C413-KOTHI413-05, UR-LEX-C414-GARD414-01, UR-LEX-C414-GARD414-02, UR-LEX-C414-GARD414-03, UR-LEX-C414-GARD414-04, UR-LEX-C414-GARD414-05, UR-LEX-C415-DHABA415-01, UR-LEX-C415-DHABA415-02, UR-LEX-C415-DHABA415-03, UR-LEX-C415-DHABA415-04, UR-LEX-C415-DHABA415-05, UR-LEX-C416-KURA416-01, UR-LEX-C416-KURA416-02, UR-LEX-C416-KURA416-03, UR-LEX-C416-KURA416-04, UR-LEX-C416-KURA416-05, UR-LEX-C417-RAQAM417-01, UR-LEX-C417-RAQAM417-02, UR-LEX-C417-RAQAM417-03, UR-LEX-C417-RAQAM417-04, UR-LEX-C417-RAQAM417-05] -->
+
+[PAUSE 3s] A building? (**عمارت**, *imārat*.) A spot? (**مقام**, *maqām*.) A signboard? (**بورڈ**, *borḍ*.) A pole? (**کھمبا**, *khambā*.) To show? (**دکھانا**, *dikhānā*.) A slope? (**ڈھلان**, *ḍhalān*.) To roll (down)? (**لڑھکنا**, *luṛhaknā*.) A veranda? (**برآمدہ**, *barāmadā*.) A basement? (**تہہ خانہ**, *tah khānā*.) Beside? (**بغل**, *baghal*.) A small town? (**قصبہ**, *qasbā*.) A population? (**آبادی**, *ābādī*.) An inhabitant? (**باشندہ**, *bāshindā*.) The countryside? (**دیہات**, *dehāt*.) Next door? (**پڑوس**, *paṛos*.) A large house? (**کوٹھی**, *koṭhī*.) A hut? (**جھونپڑی**, *jhoṅpṛī*.) A compound? (**احاطہ**, *ahātā*.) A thatched roof? (**چھپر**, *chhappar*.) To found (a town)? (**بسانا**, *basānā*.) A guard? (**گارڈ**, *gārḍ*.) Stray? (**آوارہ**, *āvārā*.) To bark? (**بھونکنا**, *bhauṅknā*.) To growl? (**غرانا**, *ghurrānā*.) To chase off? (**بھگانا**, *bhagānā*.) A roadside eatery? (**ڈھابا**, *ḍhābā*.) A handcart? (**ٹھیلا**, *ṭhelā*.) A betel leaf? (**پان**, *pān*.) A flavour? (**ذائقہ**, *zāiqā*.) To serve (food)? (**پروسنا**, *parosnā*.) Rubbish? (**کوڑا**, *kūṛā*.) A drain? (**نالی**, *nālī*.) A sewer? (**گٹر**, *gaṭar*.) A stink? (**بدبو**, *badbū*.) To spread (something) around? (**پھیلانا**, *phailānā*.) A bank account? (**اکاؤنٹ**, *akāunṭ*.) A sum of money? (**رقم**, *raqam*.) Cash? (**نقد**, *naqd*.) A cheque? (**چیک**, *chek*.) To withdraw (money)? (**نکلوانا**, *nikalvānā*.)
+`;export{t};

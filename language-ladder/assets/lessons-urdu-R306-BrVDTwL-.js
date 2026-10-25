@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R307-review-300-307
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 18630
+chapter: 307
+type: review
+headword: (dialogue)
+gloss: a review of the words from The Morning News to A Fight in the Market
+concept_tag: REVIEW
+prerequisites: [UR-C300-rediyo, UR-C300-nashr-karna, UR-C300-surkhi, UR-C300-ittila, UR-C300-sansani, UR-C301-sahafi, UR-C301-mauqa, UR-C301-editar, UR-C301-tafsil, UR-C301-likhvana, UR-C302-afvah, UR-C302-charcha, UR-C302-dahshat, UR-C302-bharkana, UR-C302-avam, UR-C303-inkar-karna, UR-C303-iqrar, UR-C303-ttaalna, UR-C303-malumat, UR-C303-haqiqat, UR-C304-fasad, UR-C304-hangama, UR-C304-phutna, UR-C304-lathi, UR-C304-karfyu, UR-C305-muamma, UR-C305-mukhbir, UR-C305-andaza, UR-C305-chaunkna, UR-C305-inkishaf, UR-C306-dhamaka, UR-C306-bam, UR-C306-gunjna, UR-C306-tharrana, UR-C306-sadma, UR-C307-pitna, UR-C307-jharap, UR-C307-ghunsa, UR-C307-thappar, UR-C307-ainthna]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C300-KHABAR300-01, UR-LEX-C300-KHABAR300-02, UR-LEX-C300-KHABAR300-03, UR-LEX-C300-KHABAR300-04, UR-LEX-C300-KHABAR300-05, UR-LEX-C301-SAHAFI301-01, UR-LEX-C301-SAHAFI301-02, UR-LEX-C301-SAHAFI301-03, UR-LEX-C301-SAHAFI301-04, UR-LEX-C301-SAHAFI301-05, UR-LEX-C302-AFWAH302-01, UR-LEX-C302-AFWAH302-02, UR-LEX-C302-AFWAH302-03, UR-LEX-C302-AFWAH302-04, UR-LEX-C302-AFWAH302-05, UR-LEX-C303-INKAR303-01, UR-LEX-C303-INKAR303-02, UR-LEX-C303-INKAR303-03, UR-LEX-C303-INKAR303-04, UR-LEX-C303-INKAR303-05, UR-LEX-C304-FASAD304-01, UR-LEX-C304-FASAD304-02, UR-LEX-C304-FASAD304-03, UR-LEX-C304-FASAD304-04, UR-LEX-C304-FASAD304-05, UR-LEX-C305-MUAMMA305-01, UR-LEX-C305-MUAMMA305-02, UR-LEX-C305-MUAMMA305-03, UR-LEX-C305-MUAMMA305-04, UR-LEX-C305-MUAMMA305-05, UR-LEX-C306-DHAMAKA306-01, UR-LEX-C306-DHAMAKA306-02, UR-LEX-C306-DHAMAKA306-03, UR-LEX-C306-DHAMAKA306-04, UR-LEX-C306-DHAMAKA306-05, UR-LEX-C307-JHAGRA307-01, UR-LEX-C307-JHAGRA307-02, UR-LEX-C307-JHAGRA307-03, UR-LEX-C307-JHAGRA307-04, UR-LEX-C307-JHAGRA307-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C300-KHABAR300-01, UR-LEX-C300-KHABAR300-02, UR-LEX-C300-KHABAR300-03, UR-LEX-C300-KHABAR300-04, UR-LEX-C300-KHABAR300-05, UR-LEX-C301-SAHAFI301-01, UR-LEX-C301-SAHAFI301-02, UR-LEX-C301-SAHAFI301-03, UR-LEX-C301-SAHAFI301-04, UR-LEX-C301-SAHAFI301-05, UR-LEX-C302-AFWAH302-01, UR-LEX-C302-AFWAH302-02, UR-LEX-C302-AFWAH302-03, UR-LEX-C302-AFWAH302-04, UR-LEX-C302-AFWAH302-05, UR-LEX-C303-INKAR303-01, UR-LEX-C303-INKAR303-02, UR-LEX-C303-INKAR303-03, UR-LEX-C303-INKAR303-04, UR-LEX-C303-INKAR303-05, UR-LEX-C304-FASAD304-01, UR-LEX-C304-FASAD304-02, UR-LEX-C304-FASAD304-03, UR-LEX-C304-FASAD304-04, UR-LEX-C304-FASAD304-05, UR-LEX-C305-MUAMMA305-01, UR-LEX-C305-MUAMMA305-02, UR-LEX-C305-MUAMMA305-03, UR-LEX-C305-MUAMMA305-04, UR-LEX-C305-MUAMMA305-05, UR-LEX-C306-DHAMAKA306-01, UR-LEX-C306-DHAMAKA306-02, UR-LEX-C306-DHAMAKA306-03, UR-LEX-C306-DHAMAKA306-04, UR-LEX-C306-DHAMAKA306-05, UR-LEX-C307-JHAGRA307-01, UR-LEX-C307-JHAGRA307-02, UR-LEX-C307-JHAGRA307-03, UR-LEX-C307-JHAGRA307-04, UR-LEX-C307-JHAGRA307-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C300-rediyo, UR-C300-nashr-karna, UR-C300-surkhi, UR-C300-ittila, UR-C300-sansani, UR-C301-sahafi, UR-C301-mauqa, UR-C301-editar, UR-C301-tafsil, UR-C301-likhvana, UR-C302-afvah, UR-C302-charcha, UR-C302-dahshat, UR-C302-bharkana, UR-C302-avam, UR-C303-inkar-karna, UR-C303-iqrar, UR-C303-ttaalna, UR-C303-malumat, UR-C303-haqiqat, UR-C304-fasad, UR-C304-hangama, UR-C304-phutna, UR-C304-lathi, UR-C304-karfyu, UR-C305-muamma, UR-C305-mukhbir, UR-C305-andaza, UR-C305-chaunkna, UR-C305-inkishaf, UR-C306-dhamaka, UR-C306-bam, UR-C306-gunjna, UR-C306-tharrana, UR-C306-sadma, UR-C307-pitna, UR-C307-jharap, UR-C307-ghunsa, UR-C307-thappar, UR-C307-ainthna]
+---
+
+# Looking back: from The Morning News to A Fight in the Market
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C300-KHABAR300-01, UR-LEX-C300-KHABAR300-02] -->
+
+[PAUSE 3s] Say the Urdu for a radio and to broadcast.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C300-KHABAR300-01, UR-LEX-C300-KHABAR300-02, UR-LEX-C300-KHABAR300-03, UR-LEX-C300-KHABAR300-04, UR-LEX-C300-KHABAR300-05, UR-LEX-C301-SAHAFI301-01, UR-LEX-C301-SAHAFI301-02, UR-LEX-C301-SAHAFI301-03, UR-LEX-C301-SAHAFI301-04, UR-LEX-C301-SAHAFI301-05, UR-LEX-C302-AFWAH302-01, UR-LEX-C302-AFWAH302-02, UR-LEX-C302-AFWAH302-03, UR-LEX-C302-AFWAH302-04, UR-LEX-C302-AFWAH302-05, UR-LEX-C303-INKAR303-01, UR-LEX-C303-INKAR303-02, UR-LEX-C303-INKAR303-03, UR-LEX-C303-INKAR303-04, UR-LEX-C303-INKAR303-05, UR-LEX-C304-FASAD304-01, UR-LEX-C304-FASAD304-02, UR-LEX-C304-FASAD304-03, UR-LEX-C304-FASAD304-04, UR-LEX-C304-FASAD304-05, UR-LEX-C305-MUAMMA305-01, UR-LEX-C305-MUAMMA305-02, UR-LEX-C305-MUAMMA305-03, UR-LEX-C305-MUAMMA305-04, UR-LEX-C305-MUAMMA305-05, UR-LEX-C306-DHAMAKA306-01, UR-LEX-C306-DHAMAKA306-02, UR-LEX-C306-DHAMAKA306-03, UR-LEX-C306-DHAMAKA306-04, UR-LEX-C306-DHAMAKA306-05, UR-LEX-C307-JHAGRA307-01, UR-LEX-C307-JHAGRA307-02, UR-LEX-C307-JHAGRA307-03, UR-LEX-C307-JHAGRA307-04, UR-LEX-C307-JHAGRA307-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a radio, to broadcast, a headline, an official notice, a sensation]
+- [YOU SAY: a journalist, the scene of an event, an editor, a detail, to have written down]
+- [YOU SAY: a rumour, talk of the town, terror, to stir up, the public]
+- [YOU SAY: to deny, an admission, to put off, information, the reality]
+- [YOU SAY: a riot, an uproar, to break out, a police baton, a curfew]
+- [YOU SAY: a mystery, an informer, a guess, to be startled, a revelation]
+- [YOU SAY: a blast, a bomb, to echo, to shudder, a shock]
+- [YOU SAY: to beat, a scuffle, a punch, a slap, to twist]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C300-KHABAR300-01, UR-LEX-C300-KHABAR300-02, UR-LEX-C300-KHABAR300-03, UR-LEX-C300-KHABAR300-04, UR-LEX-C300-KHABAR300-05, UR-LEX-C301-SAHAFI301-01, UR-LEX-C301-SAHAFI301-02, UR-LEX-C301-SAHAFI301-03, UR-LEX-C301-SAHAFI301-04, UR-LEX-C301-SAHAFI301-05, UR-LEX-C302-AFWAH302-01, UR-LEX-C302-AFWAH302-02, UR-LEX-C302-AFWAH302-03, UR-LEX-C302-AFWAH302-04, UR-LEX-C302-AFWAH302-05, UR-LEX-C303-INKAR303-01, UR-LEX-C303-INKAR303-02, UR-LEX-C303-INKAR303-03, UR-LEX-C303-INKAR303-04, UR-LEX-C303-INKAR303-05, UR-LEX-C304-FASAD304-01, UR-LEX-C304-FASAD304-02, UR-LEX-C304-FASAD304-03, UR-LEX-C304-FASAD304-04, UR-LEX-C304-FASAD304-05, UR-LEX-C305-MUAMMA305-01, UR-LEX-C305-MUAMMA305-02, UR-LEX-C305-MUAMMA305-03, UR-LEX-C305-MUAMMA305-04, UR-LEX-C305-MUAMMA305-05, UR-LEX-C306-DHAMAKA306-01, UR-LEX-C306-DHAMAKA306-02, UR-LEX-C306-DHAMAKA306-03, UR-LEX-C306-DHAMAKA306-04, UR-LEX-C306-DHAMAKA306-05, UR-LEX-C307-JHAGRA307-01, UR-LEX-C307-JHAGRA307-02, UR-LEX-C307-JHAGRA307-03, UR-LEX-C307-JHAGRA307-04, UR-LEX-C307-JHAGRA307-05] -->
+
+[PAUSE 3s] A radio? (**ریڈیو**, *reḍiyo*.) To broadcast? (**نشر کرنا**, *nashr karnā*.) A headline? (**سرخی**, *surkhī*.) An official notice? (**اطلاع**, *ittilā*.) A sensation? (**سنسنی**, *sansanī*.) A journalist? (**صحافی**, *sahāfī*.) The scene of an event? (**موقع**, *mauqa*.) An editor? (**ایڈیٹر**, *eḍīṭar*.) A detail? (**تفصیل**, *tafsīl*.) To have written down? (**لکھوانا**, *likhvānā*.) A rumour? (**افواہ**, *afvāh*.) Talk of the town? (**چرچا**, *charchā*.) Terror? (**دہشت**, *dahshat*.) To stir up? (**بھڑکانا**, *bhaṛkānā*.) The public? (**عوام**, *avām*.) To deny? (**انکار کرنا**, *inkār karnā*.) An admission? (**اقرار**, *iqrār*.) To put off? (**ٹالنا**, *ṭālnā*.) Information? (**معلومات**, *mālūmāt*.) The reality? (**حقیقت**, *haqīqat*.) A riot? (**فساد**, *fasād*.) An uproar? (**ہنگامہ**, *hangāmā*.) To break out? (**پھوٹنا**, *phūṭnā*.) A police baton? (**لاٹھی**, *lāṭhī*.) A curfew? (**کرفیو**, *karfyū*.) A mystery? (**معمہ**, *muammā*.) An informer? (**مخبر**, *mukhbir*.) A guess? (**اندازہ**, *andāzā*.) To be startled? (**چونکنا**, *chaunknā*.) A revelation? (**انکشاف**, *inkishāf*.) A blast? (**دھماکا**, *dhamākā*.) A bomb? (**بم**, *bam*.) To echo? (**گونجنا**, *gūnjnā*.) To shudder? (**تھرانا**, *tharrānā*.) A shock? (**صدمہ**, *sadmā*.) To beat? (**پیٹنا**, *pīṭnā*.) A scuffle? (**جھڑپ**, *jhaṛap*.) A punch? (**گھونسا**, *ghūnsā*.) A slap? (**تھپڑ**, *thappaṛ*.) To twist? (**اینٹھنا**, *ainṭhnā*.)
+`;export{t};

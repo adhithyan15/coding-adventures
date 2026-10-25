@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: UR-R362-review-355-362
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 21630
+chapter: 362
+type: review
+headword: (dialogue)
+gloss: a review of the words from Praise and Blame to Perhaps, Probably
+concept_tag: REVIEW
+prerequisites: [UR-C355-tarif, UR-C355-qusur, UR-C355-malamat, UR-C355-sarahna, UR-C355-jhelna, UR-C356-islah, UR-C356-meyar, UR-C356-saliqa, UR-C356-sudharna, UR-C356-nikharna, UR-C357-badunvani, UR-C357-idara, UR-C357-pabandi, UR-C357-sifarish, UR-C357-shaffaf, UR-C358-jalsa, UR-C358-sarbarah, UR-C358-zila, UR-C358-aksariyat, UR-C358-thukrana, UR-C359-bavujud, UR-C359-alava, UR-C359-agarche, UR-C359-albatta, UR-C359-jhukna, UR-C360-rahm, UR-C360-hamdardi, UR-C360-vafadar, UR-C360-gunah, UR-C360-thamna, UR-C361-imkan, UR-C361-gunjaish, UR-C361-ittifaq, UR-C361-ehtimal, UR-C361-bitna, UR-C362-takhmina, UR-C362-yaqin, UR-C362-aksar, UR-C362-qiyas, UR-C362-bujhna-guess]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [UR-LEX-C355-TARIF355-01, UR-LEX-C355-TARIF355-02, UR-LEX-C355-TARIF355-03, UR-LEX-C355-TARIF355-04, UR-LEX-C355-TARIF355-05, UR-LEX-C356-ISLAH356-01, UR-LEX-C356-ISLAH356-02, UR-LEX-C356-ISLAH356-03, UR-LEX-C356-ISLAH356-04, UR-LEX-C356-ISLAH356-05, UR-LEX-C357-BADUNVANI357-01, UR-LEX-C357-BADUNVANI357-02, UR-LEX-C357-BADUNVANI357-03, UR-LEX-C357-BADUNVANI357-04, UR-LEX-C357-BADUNVANI357-05, UR-LEX-C358-JALSA358-01, UR-LEX-C358-JALSA358-02, UR-LEX-C358-JALSA358-03, UR-LEX-C358-JALSA358-04, UR-LEX-C358-JALSA358-05, UR-LEX-C359-BAVUJUD359-01, UR-LEX-C359-BAVUJUD359-02, UR-LEX-C359-BAVUJUD359-03, UR-LEX-C359-BAVUJUD359-04, UR-LEX-C359-BAVUJUD359-05, UR-LEX-C360-RAHM360-01, UR-LEX-C360-RAHM360-02, UR-LEX-C360-RAHM360-03, UR-LEX-C360-RAHM360-04, UR-LEX-C360-RAHM360-05, UR-LEX-C361-IMKAN361-01, UR-LEX-C361-IMKAN361-02, UR-LEX-C361-IMKAN361-03, UR-LEX-C361-IMKAN361-04, UR-LEX-C361-IMKAN361-05, UR-LEX-C362-QIYAS362-01, UR-LEX-C362-QIYAS362-02, UR-LEX-C362-QIYAS362-03, UR-LEX-C362-QIYAS362-04, UR-LEX-C362-QIYAS362-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [UR-LEX-C355-TARIF355-01, UR-LEX-C355-TARIF355-02, UR-LEX-C355-TARIF355-03, UR-LEX-C355-TARIF355-04, UR-LEX-C355-TARIF355-05, UR-LEX-C356-ISLAH356-01, UR-LEX-C356-ISLAH356-02, UR-LEX-C356-ISLAH356-03, UR-LEX-C356-ISLAH356-04, UR-LEX-C356-ISLAH356-05, UR-LEX-C357-BADUNVANI357-01, UR-LEX-C357-BADUNVANI357-02, UR-LEX-C357-BADUNVANI357-03, UR-LEX-C357-BADUNVANI357-04, UR-LEX-C357-BADUNVANI357-05, UR-LEX-C358-JALSA358-01, UR-LEX-C358-JALSA358-02, UR-LEX-C358-JALSA358-03, UR-LEX-C358-JALSA358-04, UR-LEX-C358-JALSA358-05, UR-LEX-C359-BAVUJUD359-01, UR-LEX-C359-BAVUJUD359-02, UR-LEX-C359-BAVUJUD359-03, UR-LEX-C359-BAVUJUD359-04, UR-LEX-C359-BAVUJUD359-05, UR-LEX-C360-RAHM360-01, UR-LEX-C360-RAHM360-02, UR-LEX-C360-RAHM360-03, UR-LEX-C360-RAHM360-04, UR-LEX-C360-RAHM360-05, UR-LEX-C361-IMKAN361-01, UR-LEX-C361-IMKAN361-02, UR-LEX-C361-IMKAN361-03, UR-LEX-C361-IMKAN361-04, UR-LEX-C361-IMKAN361-05, UR-LEX-C362-QIYAS362-01, UR-LEX-C362-QIYAS362-02, UR-LEX-C362-QIYAS362-03, UR-LEX-C362-QIYAS362-04, UR-LEX-C362-QIYAS362-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: contemporary-standard-urdu
+reviews_of: [UR-C355-tarif, UR-C355-qusur, UR-C355-malamat, UR-C355-sarahna, UR-C355-jhelna, UR-C356-islah, UR-C356-meyar, UR-C356-saliqa, UR-C356-sudharna, UR-C356-nikharna, UR-C357-badunvani, UR-C357-idara, UR-C357-pabandi, UR-C357-sifarish, UR-C357-shaffaf, UR-C358-jalsa, UR-C358-sarbarah, UR-C358-zila, UR-C358-aksariyat, UR-C358-thukrana, UR-C359-bavujud, UR-C359-alava, UR-C359-agarche, UR-C359-albatta, UR-C359-jhukna, UR-C360-rahm, UR-C360-hamdardi, UR-C360-vafadar, UR-C360-gunah, UR-C360-thamna, UR-C361-imkan, UR-C361-gunjaish, UR-C361-ittifaq, UR-C361-ehtimal, UR-C361-bitna, UR-C362-takhmina, UR-C362-yaqin, UR-C362-aksar, UR-C362-qiyas, UR-C362-bujhna-guess]
+---
+
+# Looking back: from Praise and Blame to Perhaps, Probably
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C355-TARIF355-01, UR-LEX-C355-TARIF355-02] -->
+
+[PAUSE 3s] Say the Urdu for praise and fault.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C355-TARIF355-01, UR-LEX-C355-TARIF355-02, UR-LEX-C355-TARIF355-03, UR-LEX-C355-TARIF355-04, UR-LEX-C355-TARIF355-05, UR-LEX-C356-ISLAH356-01, UR-LEX-C356-ISLAH356-02, UR-LEX-C356-ISLAH356-03, UR-LEX-C356-ISLAH356-04, UR-LEX-C356-ISLAH356-05, UR-LEX-C357-BADUNVANI357-01, UR-LEX-C357-BADUNVANI357-02, UR-LEX-C357-BADUNVANI357-03, UR-LEX-C357-BADUNVANI357-04, UR-LEX-C357-BADUNVANI357-05, UR-LEX-C358-JALSA358-01, UR-LEX-C358-JALSA358-02, UR-LEX-C358-JALSA358-03, UR-LEX-C358-JALSA358-04, UR-LEX-C358-JALSA358-05, UR-LEX-C359-BAVUJUD359-01, UR-LEX-C359-BAVUJUD359-02, UR-LEX-C359-BAVUJUD359-03, UR-LEX-C359-BAVUJUD359-04, UR-LEX-C359-BAVUJUD359-05, UR-LEX-C360-RAHM360-01, UR-LEX-C360-RAHM360-02, UR-LEX-C360-RAHM360-03, UR-LEX-C360-RAHM360-04, UR-LEX-C360-RAHM360-05, UR-LEX-C361-IMKAN361-01, UR-LEX-C361-IMKAN361-02, UR-LEX-C361-IMKAN361-03, UR-LEX-C361-IMKAN361-04, UR-LEX-C361-IMKAN361-05, UR-LEX-C362-QIYAS362-01, UR-LEX-C362-QIYAS362-02, UR-LEX-C362-QIYAS362-03, UR-LEX-C362-QIYAS362-04, UR-LEX-C362-QIYAS362-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: praise, fault, reproach, to commend, to endure]
+- [YOU SAY: a reform, a standard, a knack, to put right, to polish a skill]
+- [YOU SAY: corruption, an institution, a ban, string-pulling, transparent]
+- [YOU SAY: a rally, a head of an organisation, a district, a majority, to spurn]
+- [YOU SAY: despite, besides, even though, however, to give in]
+- [YOU SAY: mercy, sympathy, loyal, a sin, to hold on to]
+- [YOU SAY: a possibility, scope, a coincidence, a probability, to go by]
+- [YOU SAY: an estimate, certainty, often, conjecture, to work out a riddle]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C355-TARIF355-01, UR-LEX-C355-TARIF355-02, UR-LEX-C355-TARIF355-03, UR-LEX-C355-TARIF355-04, UR-LEX-C355-TARIF355-05, UR-LEX-C356-ISLAH356-01, UR-LEX-C356-ISLAH356-02, UR-LEX-C356-ISLAH356-03, UR-LEX-C356-ISLAH356-04, UR-LEX-C356-ISLAH356-05, UR-LEX-C357-BADUNVANI357-01, UR-LEX-C357-BADUNVANI357-02, UR-LEX-C357-BADUNVANI357-03, UR-LEX-C357-BADUNVANI357-04, UR-LEX-C357-BADUNVANI357-05, UR-LEX-C358-JALSA358-01, UR-LEX-C358-JALSA358-02, UR-LEX-C358-JALSA358-03, UR-LEX-C358-JALSA358-04, UR-LEX-C358-JALSA358-05, UR-LEX-C359-BAVUJUD359-01, UR-LEX-C359-BAVUJUD359-02, UR-LEX-C359-BAVUJUD359-03, UR-LEX-C359-BAVUJUD359-04, UR-LEX-C359-BAVUJUD359-05, UR-LEX-C360-RAHM360-01, UR-LEX-C360-RAHM360-02, UR-LEX-C360-RAHM360-03, UR-LEX-C360-RAHM360-04, UR-LEX-C360-RAHM360-05, UR-LEX-C361-IMKAN361-01, UR-LEX-C361-IMKAN361-02, UR-LEX-C361-IMKAN361-03, UR-LEX-C361-IMKAN361-04, UR-LEX-C361-IMKAN361-05, UR-LEX-C362-QIYAS362-01, UR-LEX-C362-QIYAS362-02, UR-LEX-C362-QIYAS362-03, UR-LEX-C362-QIYAS362-04, UR-LEX-C362-QIYAS362-05] -->
+
+[PAUSE 3s] Praise? (**تعریف**, *tārīf*.) Fault? (**قصور**, *qusūr*.) Reproach? (**ملامت**, *malāmat*.) To commend? (**سراہنا**, *sarāhnā*.) To endure? (**جھیلنا**, *jhelnā*.) A reform? (**اصلاح**, *islāh*.) A standard? (**معیار**, *meyār*.) A knack? (**سلیقہ**, *salīqā*.) To put right? (**سدھارنا**, *sudhārnā*.) To polish a skill? (**نکھارنا**, *nikhārnā*.) Corruption? (**بدعنوانی**, *badunvānī*.) An institution? (**ادارہ**, *idārā*.) A ban? (**پابندی**, *pābandī*.) String-pulling? (**سفارش**, *sifārish*.) Transparent? (**شفاف**, *shaffāf*.) A rally? (**جلسہ**, *jalsā*.) A head of an organisation? (**سربراہ**, *sarbarāh*.) A district? (**ضلع**, *zilā*.) A majority? (**اکثریت**, *aksariyat*.) To spurn? (**ٹھکرانا**, *ṭhukrānā*.) Despite? (**باوجود**, *bāvujūd*.) Besides? (**علاوہ**, *alāvā*.) Even though? (**اگرچہ**, *agarche*.) However? (**البتہ**, *albattā*.) To give in? (**جھکنا**, *jhuknā*.) Mercy? (**رحم**, *rahm*.) Sympathy? (**ہمدردی**, *hamdardī*.) Loyal? (**وفادار**, *vafādār*.) A sin? (**گناہ**, *gunāh*.) To hold on to? (**تھامنا**, *thāmnā*.) A possibility? (**امکان**, *imkān*.) Scope? (**گنجائش**, *gunjāish*.) A coincidence? (**اتفاق**, *ittifāq*.) A probability? (**احتمال**, *ehtimāl*.) To go by? (**بیتنا**, *bītnā*.) An estimate? (**تخمینہ**, *takhmīnā*.) Certainty? (**یقین**, *yaqīn*.) Often? (**اکثر**, *aksar*.) Conjecture? (**قیاس**, *qiyās*.) To work out a riddle? (**بوجھنا**, *būjhnā*.)
+`;export{t};
