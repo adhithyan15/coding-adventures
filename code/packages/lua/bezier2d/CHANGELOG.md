@@ -4,6 +4,8 @@
 
 - Adopt the nine-case G2D02 safe-flattening corpus with finite-segment bounds,
   iterative depth/work budgets, and fail-closed numeric validation.
+- Load the shared fixture dynamically on both native build fronts, provisioning
+  pinned `dkjson` only for the test harness.
 
 ## [0.1.0] - 2026-04-02
 

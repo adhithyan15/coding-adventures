@@ -36,7 +36,7 @@ defmodule Bezier2D do
   end
 
   @doc "Split a quadratic Bezier at t into two quadratic Beziers."
-  def split_quad({:quad, p0, p1, p2} = q, t) do
+  def split_quad({:quad, p0, p1, p2}, t) do
     q0 = Point2D.lerp(p0, p1, t)
     q1 = Point2D.lerp(p1, p2, t)
     m  = Point2D.lerp(q0, q1, t)
@@ -177,8 +177,13 @@ defmodule Bezier2D do
           {:cubic, _, _, _, _} -> split_cubic(current, 0.5)
         end
 
-      flatten_pending(curve, tolerance, subdivisions + 1,
-        [{left, depth + 1}, {right, depth + 1} | pending], points)
+      flatten_pending(
+        curve,
+        tolerance,
+        subdivisions + 1,
+        [{left, depth + 1}, {right, depth + 1} | pending],
+        points
+      )
     end
   end
 
@@ -193,7 +198,9 @@ defmodule Bezier2D do
       nx = dx / scale
       ny = dy / scale
       denominator = nx * nx + ny * ny
-      projection = min(1.0, max(0.0, (((px - sx) / scale) * nx + ((py - sy) / scale) * ny) / denominator))
+      projection =
+        min(1.0, max(0.0, ((px - sx) / scale * nx + (py - sy) / scale * ny) / denominator))
+
       scaled_distance({px, py}, {sx + projection * dx, sy + projection * dy})
     end
   end
