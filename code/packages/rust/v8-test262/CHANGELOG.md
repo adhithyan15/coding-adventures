@@ -2,6 +2,19 @@
 
 ## 0.1.0 — unreleased
 
+- **ExpressionStatement lookahead (F12 phase 0): 94 tests now pass, 74 are
+  removed.** The 94 are negative tests that are now correctly rejected, such
+  as `if (x) class C {}` and declarations in loop bodies. The owner approved
+  removing the 74:
+  - 72 are Annex B sloppy-mode forms: `if (x) function f(){}` and
+    `l: function f(){}`, across `annexB/` (69) and
+    `staging/sm/lexical-environment/` (3). Closure refuses them, and the
+    parser had only accepted them by reading the declaration as a function
+    expression.
+  - 2 are `language/statementList/block-with-statment-regexp-literal-flags.js`
+    (sloppy and strict), a block followed by a regex. F12 phase 3 brings them
+    back.
+
 - **208 more tests parse (numeric literals, es2025 lexer).** The 6d security
   review brought es2021–es2025's number patterns in line with ECMA-262's
   NumericLiteralSeparator grammar: `5.`, `5.e1` and `1.e3` lex as one NUMBER
