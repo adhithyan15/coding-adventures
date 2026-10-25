@@ -4,6 +4,12 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve the Qt navigation rail's authored 236-pixel non-shrinking width
+  under horizontal layout pressure (#18250), without changing shared styles
+  or claiming general flex support.
+
 Entries added after `task-app-v0.5.11` accumulate here until the next version is
 cut.
 

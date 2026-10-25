@@ -249,7 +249,11 @@ audited against source `1eee296461f07dd5a1657c7a4822799aa1552df9`.
 Artifact coverage and unsigned native limitations remain unchanged. The next
 release checkpoint, `task-app-v0.5.11` (#18238), ships the merged release-note
 repair (#18197): substantive changelog Markdown, not just category names.
-It is prepared, not yet published, and does not rewrite immutable v0.5.10 notes.
+Published and audited in run 40225950352 from
+`bd533925647b7fbac74eba35e611a8ba3930757f`: 13 assets / 12 checksum entries /
+11 manifest payloads, with unchanged artifact coverage and unsigned limits.
+The next native-fidelity slice (#18250) preserves Qt's 236-pixel navigation
+rail floor; it does not claim general flexbox lowering.
 
 The published `task-app-v0.5.9` patch preserves Qt calendar/timeline text widths
 (#17913), reducing measured Qt style drops from 81 to 78. It also includes Web
