@@ -7,12 +7,13 @@ historical languages or every backend are complete. Follow-up IDs live in the
 
 ## Reading the evidence
 
-The [driver](../packages/rust/lang-aot/src/lib.rs) wires fourteen `Language`
+The [driver](../packages/rust/lang-aot/src/lib.rs) wires fifteen `Language`
 variants (PREP01 slice 1 adds MacroOct; LANG84 phase 4a adds Perl; LANG84
-phase 5a adds Ruby; LANG84 phase 7a adds Python, 7c slice 1 Python 2).
+phase 5a adds Ruby; LANG84 phase 7a adds Python, 7c slice 1 Python 2;
+LANG84 phase 6e adds JavaScript).
 The [unified corpus](../packages/rust/lang-aot/tests/lang_matrix.rs) has rows for all of them except McCarthy Lisp and Macsyma (dedicated capstones below).
 Its seven standard columns are NativeAOT, LLVM, WASM, JVM, CLR, VM and JIT.
-Twig, Nib, Oct, FLOW-MATIC, COBOL-60, Perl, Ruby, Python and (as of VM-042) Brainfuck rows
+Twig, Nib, Oct, FLOW-MATIC, COBOL-60, Perl, Ruby, Python, JavaScript and (as of VM-042) Brainfuck rows
 additionally declare BEAM, each only for the specific rows independently
 proven on real `erl` — see each row's "Additional proof boundary" below for
 the exact count. All counts below are source **declarations**, not counts of
@@ -40,6 +41,7 @@ refusal also does not imply the complete driver refuses that feature.
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 | Python | 72 | 576 | All eight columns (LANG84 phases 7a, 7b and 7c slice 1). Phase 7c slice 1 adds the Python 2 subset `py2-int-print` (the `print` statement and classic `/`, which floors on ints and lowers like `//`): its 19 corpus cases, nine of them `StdoutThenTrap`, on 2.2, the representative of the one Python 2 IIR-identity class (2.2, 2.7.18), so the rows prove stage B for both; their expectations rest on the tags' pinned source and are cross-checked by translating each case to Python 3 (`py2_corpus_agrees_with_host_python3_after_translation` in `python-iir-compiler`). Phases 7a and 7b: The `py-int-print` subset on the default release 3.13.16 (18 rows) and on the two IIR-identity class representatives of `python-iir-compiler`'s release sweep: 3.0a1 (17 rows; it refuses `int_underscores`) and 3.12.3 (18), compiled from the grammar-driven release parse tree; `+ - *` and unary `-` are the LANG83 PR4 checked ops `i64_*_ovf`, `//` and `%` are `i64_div_floor`/`i64_mod_floor`, and `print` is `print_i64`, so no backend has Python code. Each row is a verbatim case of `code/grammars/python/corpus/py-int-print`, and every accepted case is a 3.13.16 row (`python_rows_are_py_int_print_corpus_cases`); the rows are re-checked against host CPython 3.13 (`python_rows_agree_with_the_host_python_oracle`). Nine are `StdoutThenTrap` rows: four `Trap.DivZero` and five `Trap.Overflow`, the first matrix rows whose kind is `Trap.Overflow`. For those five, the oracle checks that CPython prints an `int` outside `i64` there, the subset's stated divergence. `python_rows_pass_the_lang83_check_on_all_nine_backends` runs `check_module_for` on all nine backends, compiling each row at its release. The 3.12.3 rows stand for 3.11.17 and 3.16.0a1 (same class), so the rows prove stage B for all five releases (`release_inventory.py check --matrix`); `python_rows_run_their_corpus_case` ties the rows to the sweep's boundary set |
+| JavaScript | 38 | 277 | LANG84 phase 6e. The `es-number-log` subset (LANG78: `console.log` of IEEE number arithmetic over top-level `let`/`const`): its 12 accepted cases on the default edition es2020 and on the two IIR-identity class representatives of `javascript-iir-compiler`'s release sweep, es2016 (12; it refuses the two numeric-separator cases) and es2021 (14), compiled from the grammar-driven edition parse tree. `+ - * /` and unary `-` are the LANG83 PR6c IEEE ops `f64_*`, `console.log` is `write_f64_js` with `putchar` for the spaces, the newline and the `-` of `-0` (behind an `f64_signbit` test), so no backend has JavaScript code. The 11 literal-only rows declare all eight columns; the 27 with arithmetic declare the seven IEEE columns, because BEAM floats have no `±Infinity`/`NaN` and BEAM refuses `f64_*` at compile time (`UnsupportedOps`, which stage B allows; `javascript_rows_pass_the_lang83_check_on_all_nine_backends` pins exactly which rows BEAM refuses and that it refuses nothing else). Each row is a verbatim corpus case and agrees with host node v22 (`javascript_rows_agree_with_the_host_node_oracle`); `javascript_rows_compile_and_run_on_the_jit_without_its_interpreter_fallback` compiles every row's `main` to JIT bytecode and runs it compiled to the expected stdout (the JIT cells themselves go through `execute_with_jit`, which interprets a printing function), and `javascript_reference_errors_trap_after_output_on_every_available_backend` checks `Trap.ReferenceError` (stable id 7) after output on every column. The rows prove stage B for es2016–es2025 (`release_inventory.py check --matrix`); `javascript_rows_run_their_corpus_case` ties them to the sweep's boundary set |
 
 ### Why the ALGOL row is not pinned, and how to re-derive it
 
@@ -365,8 +367,9 @@ a hand count or a quick regex, and all six matched the doc exactly except
 Twig at that time. That derivation is pinned as
 `feature_coverage_doc_counts_match_programs_source` in `lang_matrix.rs`: it
 asserts each of these non-ALGOL row/cell pairs (Perl's added by LANG84
-phase 4a, Ruby's by phase 5a, Python's by phase 7a; all three grew with
-their release sweeps in phases 4c, 5b and 7b) against the live
+phase 4a, Ruby's by phase 5a, Python's by phase 7a, JavaScript's by
+phase 6e; the first three grew with their release sweeps in phases 4c, 5b
+and 7b) against the live
 `PROGRAMS` corpus, plus that McCarthy Lisp and Macsyma still have zero rows
 there (both use the dedicated capstone files below instead), so a future
 slice that adds or removes a row without updating this table fails a normal

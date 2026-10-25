@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.6.0 - Unreleased - JavaScript on every backend (LANG84 6e)
+
+### Changed
+
+- The module holds LANG83 registry operations only, so every `lang-aot`
+  backend runs it with no JavaScript code: `+ - * /` and unary `-` lower to
+  the PR6c IEEE ops `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` (they
+  were the classic `add`/`sub`/`mul`/`div`/`neg`, whose zero-divisor edges
+  differ by backend).
+- `console.log(a, …)` evaluates every argument, then writes each with
+  `write_f64_js`, `putchar 32` between them and `putchar 10` after the last,
+  in place of the VM-only `js_console_log` builtin. `-0` gets its `-` from a
+  `putchar 45` behind `cmp_gt (f64_signbit x) (f64_signbit (x + 0))`; a
+  literal, or a binding initialized from one, is never `-0` and skips the test.
+- ReferenceErrors (undeclared name, temporal dead zone) lower to
+  `trap "Trap.ReferenceError"` (new `interpreter-ir` kind, id 7) in place of
+  the `js_reference_error_*` builtins, and nothing after the trap is emitted.
+  `run_source`/`run_source_at` still report V8's message
+  (`ReferenceError: z is not defined`), which the compiler records; a bare
+  `run_module` reports `trap: Trap.ReferenceError`.
+- `run_module` registers `write_f64_js` (vm-core's `float_format`) and
+  `putchar` into one buffer, still capped at 1,000,000 bytes.
+- A binding's initializer writes `js.<name>` directly instead of through a
+  `mov` (the JIT keeps float registers away from `mov`); `let y = x` still
+  copies.
+- Numbers outside `1e-6..1e21` print as node prints them (`1e+21`, `1e-7`)
+  instead of being refused.
+- `release_classes.csv` is regenerated: the class digests change with the
+  IIR, the partition (es2016–es2020 | es2021–es2025) does not.
+
 ## 0.5.0 - Unreleased - JavaScript edition selection is real (LANG84 6d)
 
 ### Fixed (6d security review)

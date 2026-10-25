@@ -194,6 +194,7 @@ tell a LANG83 trap from another error checks the atom against the closed table.
 | `Trap.ConvRange` | 4 | `real_to_int_*` of a non-finite / out-of-range value |
 | `Trap.Overflow` | 5 | `i64_div_floor` `MIN / -1`; the PR4 `i64_*_ovf` family |
 | `Trap.User` | 6 | a frontend's explicit abort (`die`, `raise` without a class, …) |
+| `Trap.ReferenceError` | 7 | reading a name that is not bound yet or at all (JavaScript's `ReferenceError`; LANG84 phase 6e) |
 
 The ids are what native backends pass to the runtime (`mov edi, id; call
 __twig_trap`); they are append-only and never renumbered. Language-specific
