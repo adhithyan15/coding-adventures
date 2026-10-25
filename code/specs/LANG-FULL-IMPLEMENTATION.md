@@ -62,8 +62,11 @@ within `2^53`; non-multiplying multiple roots, path-dependent signs, and
 effectful selectors fail closed.
 Multiple-root products may fold a variable-free integer prefix left-to-right
 through checked `*`, exact `/`, `div`, and `mod` when multiplication connects
-that prefix to the first root. Zero, inexact, dynamic, rooted, and inter-root
-reductions fail closed.
+that prefix to the first root. Zero divisors, inexact divisions, dynamic
+divisors, and rooted divisors fail closed. The same checked reductions may
+occur between roots when each later root enters by multiplication; exact `/`
+still requires the conservative common divisor to prove every quotient
+integral.
 Checked exact-integer normalizers may provide the sign-rooted transform's
 nonnegative exponent when the right-associative chain stays within the power
 unroll cap. A zero result proves the complete power is exactly one; negative,
