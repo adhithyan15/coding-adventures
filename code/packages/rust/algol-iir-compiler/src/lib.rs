@@ -4836,7 +4836,7 @@ impl Compiler {
         normalized_value(value)
     }
 
-    /// Recognize an exact-integer transform rooted in one built-in `sign` call
+    /// Recognize an exact-integer transform rooted in built-in `sign` calls
     /// and return its worst-case magnitude. This complements the wider bounded
     /// transform proof above with non-unit integer scaling and positive static
     /// powers while keeping every intermediate operation exactly representable
@@ -4914,7 +4914,7 @@ impl Compiler {
         if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
             let sequence = pieces(node);
             if sequence.len() >= 3 && sequence.len() % 2 == 1 {
-                let mut rooted = None;
+                let mut rooted = Vec::new();
                 let mut static_magnitude = 0u64;
                 let mut static_offset = 0i64;
                 for (index, piece) in sequence.iter().enumerate() {
@@ -4923,9 +4923,7 @@ impl Compiler {
                             return None;
                         };
                         if let Some(candidate) = self.builtin_exact_integer_sign_operand(operand) {
-                            if rooted.replace(candidate).is_some() {
-                                return None;
-                            }
+                            rooted.push(candidate);
                         } else {
                             let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
                                 .or_else(|| {
@@ -4954,7 +4952,17 @@ impl Compiler {
                         return None;
                     }
                 }
-                let mut proof = rooted?;
+                let mut roots = rooted.into_iter();
+                let mut proof = roots.next()?;
+                for candidate in roots {
+                    if !self.is_selector_call_safe_runtime_real_root(proof.operand)
+                        || !self.is_selector_call_safe_runtime_real_root(candidate.operand)
+                    {
+                        return None;
+                    }
+                    proof.magnitude = proof.magnitude.checked_add(candidate.magnitude)?;
+                    proof.value_gcd = integer_gcd(proof.value_gcd, candidate.value_gcd);
+                }
                 proof.magnitude = proof.magnitude.checked_add(static_magnitude)?;
                 proof.value_gcd = integer_gcd(proof.value_gcd, static_offset.unsigned_abs());
                 return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE)
@@ -15691,6 +15699,39 @@ mod tests {
         ] {
             let err = compile_source(source, "test")
                 .expect_err("an offset beyond 2^53 - 1 units, a fractional offset, or a variable term exceeds the bounded sign proof");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_multiple_additive_entier_sign_roots() {
+        for source in [
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sign(left()) + sign(right())); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier((2 * sign(left()) + 2) - abs(sign(right())) + 40); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure third; third := -4.75; real result; result := entier(3 * sign(left()) - 2 * sign(right()) + sign(third())); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "independently bounded additive sign roots preserve an exact integer result for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_multiple_additive_entier_sign_roots_reject_oversized_sums() {
+        for source in [
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(9007199254740992 * sign(left()) + sign(right())); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sign(left()) + sign(right()) + 9007199254740991); output(result) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("an oversized sum exceeds the bounded sign proof");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }

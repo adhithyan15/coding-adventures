@@ -1515,8 +1515,10 @@ backend immediately) come before the enabler-dependent items.
   additive terms, when every intermediate result remains in the exact binary64
   integer range. Independently bounded dynamic sign-rooted transforms may
   multiply under that same checked complete-product limit. Fractional factors,
-  denominator roots, non-multiplying multiple roots, and oversized products
-  remain conservative.
+  denominator roots, and oversized products remain conservative. Independently
+  bounded transforms may also add or subtract under a checked complete-sum
+  magnitude limit. Fractional or dynamic terms, other non-multiplying roots,
+  and oversized sums remain conservative.
   Static nonzero whole-number division may reduce that transform when a
   conservative common-divisor proof shows that every possible path value is
   exactly divisible; inexact and dynamic divisors remain conservative.

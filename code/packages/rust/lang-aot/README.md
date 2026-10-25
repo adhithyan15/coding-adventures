@@ -31,8 +31,10 @@ supported wrappers and applied per conditional path. Exact whole-number
 factors may also scale the sign-rooted integer transform through magnitude
 `2^53`, including exact additive composition. Independently bounded dynamic
 sign-rooted transforms may multiply while their checked complete product stays
-within that limit; fractional factors, denominator roots, non-multiplying
-multiple roots, and oversized products stay conservative. A non-unit
+within that limit. They may add or subtract while their checked complete sum
+stays within the same limit. Fractional factors, denominator roots, other
+non-multiplying multiple roots, and oversized products or sums stay
+conservative. A non-unit
 static divisor is accepted only when it divides
 every possible exact integer value of the sign-rooted transform. Static
 whole-number factors may precede the sign-rooted numerator, including exact
