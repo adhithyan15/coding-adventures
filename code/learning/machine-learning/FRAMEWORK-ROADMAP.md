@@ -56,7 +56,13 @@ the actual open PR and its current-head CI logs, and revisit this ordering:
    exchange, real root Rust workspace, package builds and all applicable checks
    successful. Reprioritize reliability, prerequisites, portability and smallest
    complete delivery: [NN43 shared null numeric cells](../../specs/NN43-shared-null-numeric-checkpoints.md)
-   is next; existing Go guards already reject those cells. Ruby follows.
+   merged in [PR #18235](https://github.com/adhithyan15/coding-adventures/pull/18235)
+   at exact head `dde20a816746` (squash `32369d29a87`), with actual 55-case native
+   corpus suites and all applicable checks successful. Reprioritized by
+   reliability, prerequisites, portability and smallest complete delivery:
+   [NN44 Ruby matrix build foundation](../../specs/NN44-ruby-matrix-build-foundation.md)
+   is next, before the Ruby native framework. The arithmetic passes 47 tests,
+   but its missing BUILD fronts/gem metadata must be fixed first.
 5. **P2 — Optional Rust dense C ABI.** Specify ownership, shapes, errors,
    versioning, and resumable state before exposing binding consumers. Keep
    those consumers distinct from the native implementations.
@@ -127,12 +133,15 @@ SGD training, inspection, and portable save/reload/resume.
   NN42 executes all twelve directed pairs and full model baselines at
   3000/3001/3002 (four native lanes, zero bindings), delivered with actual
   selected required conformance and confirmed exact-head merge in PR #18230.
-- [ ] Expand the shared invalid-checkpoint corpus with literal null numeric
+- [x] Expand the shared invalid-checkpoint corpus with literal null numeric
   cells. Go's decoder defaults null float cells to zero; NN41 guards/tests this
   explicitly, while the prior shared corpus covered other null/shape cases.
-  NN43 adds six explicit documents (55 total, 3 accept/52 reject) with direct
-  local four-native-suite evidence. Actual selected required CI and verified
-  merge still gate completion; no production loader changes were necessary.
+  NN43 adds six explicit documents (55 total, 3 accept/52 reject), delivered
+  through actual four-native-suite CI and exact-head merge in PR #18235.
+  No production loader changes were necessary.
+- [ ] Ruby matrix prerequisite: add missing BUILD/BUILD_windows, gem metadata,
+  package-local test/lint/coverage and actual gem-install evidence (NN44).
+  Existing pure-Ruby arithmetic passes 47 tests; this is not neural training.
 - [ ] Ruby native framework.
 - [ ] C native framework.
 - [ ] C++ native framework.
