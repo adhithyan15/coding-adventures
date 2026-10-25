@@ -1292,6 +1292,24 @@ policy, decide freshness or revocation, fetch or cache data, read a clock, or
 grant path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete
 HTTPS remains unavailable.
 
+A bounded `x509-ocsp-responder-id-binding` prerequisite now matches one exact
+structurally decoded `BasicOCSPResponse` to one exact decoded candidate
+responder certificate. For `byName`, it invokes caller-owned Name policy
+exactly once with the response's responder Name followed by the candidate
+certificate's subject. For `byKey`, it requires the fixed 20-byte RFC 6960
+KeyHash form, computes repository-owned SHA-1 over the candidate certificate's
+`subjectPublicKey` BIT STRING contents excluding the tag, length, and
+unused-bits count octet, and compares the complete digest with the
+repository-owned constant-time equality primitive. Success returns
+non-copyable evidence retaining the exact response, certificate, and matched
+identifier kind so neither input can be substituted after matching. This
+binding does not verify the response signature, prove that the certificate's
+key signed it, authorize the responder, apply certificate role, EKU,
+critical-extension, algorithm, path, or trust policy, bind a `CertID` or status
+to a certificate or constructed path, decide freshness or revocation, fetch or
+cache data, read a clock, or grant TLS, HTTP, OAuth transport, or network
+authority. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
