@@ -173,7 +173,7 @@ impl IasGateLevel {
             });
         }
         let mut words = Vec::with_capacity(word_count);
-        for chunk in bytes.chunks_exact(5) {
+        for chunk in bytes.as_chunks::<5>().0 {
             words.push(
                 (u64::from(chunk[0]) << 32)
                     | (u64::from(chunk[1]) << 24)

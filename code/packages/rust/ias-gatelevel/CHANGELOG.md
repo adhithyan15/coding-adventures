@@ -7,3 +7,4 @@
   partial-store, and checked lifecycle transitions for all IAS orders.
 - Add complete-state and trace differential coverage against the checked
   functional oracle.
+- Keep fixed-width transport parsing warning-clean on Rust 1.99.
