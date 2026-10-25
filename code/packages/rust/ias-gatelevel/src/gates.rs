@@ -148,11 +148,16 @@ pub(crate) fn multiply40(left: u64, right: u64) -> (u64, u64) {
 
 fn unsigned_less40(left: u64, right: u64) -> bool {
     let inverted = from_bits(&bits::<40>(u128::from(right)).map(not_gate));
-    add_width::<40>(u128::from(left), inverted, 1).1 == 0
+    not_gate(add_width::<40>(u128::from(left), inverted, 1).1) != 0
+}
+
+fn is_zero40(value: u64) -> bool {
+    let any = bits::<40>(u128::from(value)).into_iter().fold(0, or_gate);
+    not_gate(any) != 0
 }
 
 pub(crate) fn divide40(dividend: u64, divisor: u64) -> Result<(u64, u64), IasError> {
-    if divisor & WORD_MASK == 0 {
+    if is_zero40(divisor) {
         return Err(IasError::DivideByZero);
     }
     let dividend_negative = is_negative40(dividend);
@@ -171,8 +176,8 @@ pub(crate) fn divide40(dividend: u64, divisor: u64) -> Result<(u64, u64), IasErr
     let result_negative = xor_gate(dividend_negative.into(), divisor_negative.into()) != 0;
     let positive_limit = (1_u64 << 39) - 1;
     let negative_limit = 1_u64 << 39;
-    if (result_negative && quotient > negative_limit)
-        || (!result_negative && quotient > positive_limit)
+    if (result_negative && unsigned_less40(negative_limit, quotient))
+        || (!result_negative && unsigned_less40(positive_limit, quotient))
     {
         return Err(IasError::QuotientOverflow);
     }
@@ -208,6 +213,9 @@ mod tests {
         assert_eq!(multiply40(1 << 39, 1), (WORD_MASK, 1 << 39));
         assert_eq!(multiply40((1 << 39) - 1, 2), (0, WORD_MASK - 1));
         assert_eq!(divide40(17, 5), Ok((2, 3)));
+        assert_eq!(divide40((1 << 39) - 1, 1), Ok((0, (1 << 39) - 1)));
+        assert_eq!(divide40(1 << 39, 1), Ok((0, 1 << 39)));
+        assert_eq!(divide40((1 << 39) - 1, WORD_MASK), Ok((0, (1 << 39) + 1)));
         assert_eq!(divide40(1, 0), Err(IasError::DivideByZero));
         assert_eq!(
             divide40(1 << 39, WORD_MASK),
