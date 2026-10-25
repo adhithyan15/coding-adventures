@@ -444,11 +444,13 @@ framing:
 
 - the exact five-byte `ContentType` / `legacy_record_version` / `length`
   header;
-- the TLS 1.3 `0x0303` legacy record version;
+- plaintext decoding that retains but, as RFC 8446 requires, does not interpret
+  the deprecated legacy record version;
 - caller-policy-bounded plaintext fragments with the protocol maximum of
   `2^14` bytes;
 - ciphertext records whose outer content type is exactly `application_data`
-  and whose fragment is non-empty and no larger than `2^14 + 256` bytes;
+  and whose legacy version is exactly `0x0303`, with a non-empty fragment no
+  larger than `2^14 + 256` bytes;
 - exact decoding that rejects trailing bytes and prefix decoding that returns
   the remaining stream without allocating; and
 - encoding into caller-provided storage only after the record and output
@@ -460,10 +462,10 @@ each epoch. The policy must be non-empty and duplicate-free. Empty plaintext
 fragments are rejected for `change_cipher_spec`, `alert`, and `handshake` but
 remain representable for `application_data`; a later state machine must decide
 whether an application-data record is legal at that point. The framing layer
-does not accept the TLS 1.0 compatibility version sometimes emitted by an
-initial ClientHello; the future client can emit the standards-compliant
-`0x0303` form, and any broader compatibility path must first bind the record to
-the correct handshake state.
+accepts and retains every plaintext legacy-version value without using it for
+policy, including the `0x0301` value recommended for an initial ClientHello.
+Its encoders emit `0x0303`; choosing a different initial-ClientHello wire value
+is a later handshake-state concern.
 
 Validated record values borrow their fragments and have no public unchecked
 construction path. Stable errors expose only categories, not record contents.

@@ -1545,16 +1545,17 @@ unavailable.
 An allocation-free `tls13-record` prerequisite now owns only the outer RFC
 8446 record framing needed by a future repository-owned TLS client. It decodes
 and encodes strict five-byte TLS record headers plus borrowed fragments,
-requires the TLS 1.2 legacy record version carried by TLS 1.3 records, and
-provides separate plaintext and ciphertext entry points. Plaintext callers
+retains but does not interpret the deprecated plaintext legacy record version,
+and provides separate plaintext and ciphertext entry points. Plaintext callers
 supply an explicit non-empty content-type allowlist and a fragment ceiling no
-larger than `2^14`; ciphertext is fixed to outer `application_data`, rejects an
-empty fragment, and is bounded by `2^14 + 256`. Control-plane plaintext
-records cannot be empty, while zero-length application data remains a distinct
-standards-permitted case for later sequencing policy. Exact decoders reject
-trailing bytes and prefix decoders return the unconsumed stream tail. Encoders
-validate the complete record and output capacity before mutating caller-owned
-storage. Stable failures retain no record contents.
+larger than `2^14`; ciphertext requires the TLS 1.3 legacy version `0x0303`, is
+fixed to outer `application_data`, rejects an empty fragment, and is bounded by
+`2^14 + 256`. Control-plane plaintext records cannot be empty, while
+zero-length application data remains a distinct standards-permitted case for
+later sequencing policy. Exact decoders reject trailing bytes and prefix
+decoders return the unconsumed stream tail. Encoders emit `0x0303` and validate
+the complete record and output capacity before mutating caller-owned storage.
+Stable failures retain no record contents.
 
 This slice does not parse handshake messages or `TLSInnerPlaintext`, implement
 record sequencing, negotiate versions or cipher suites, derive keys, encrypt,
