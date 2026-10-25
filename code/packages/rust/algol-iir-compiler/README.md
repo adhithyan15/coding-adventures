@@ -249,14 +249,16 @@ path receives its own budget.
 Exact whole-number multiplication may scale the sign-rooted integer transform
 through magnitude `2^53`, including composition with exact additive terms, as
 long as every intermediate magnitude stays in that exact binary64 range.
-Fractional factors, oversized products, repeated roots, and variable factors
-remain conservative. Exact whole-number division is also permitted when the
-bounded result is the numerator and every possible transformed integer is
-divisible by the static nonzero divisor. Inexact or variable divisors and a
-bounded denominator remain conservative. Static whole-number factors may
-precede the bounded numerator, including exact divisions among those factors,
-provided multiplication connects the resulting prefix to its root; division
-by that root remains conservative.
+Independently bounded dynamic sign-rooted transforms may multiply under the
+same checked magnitude limit because every factor remains an exact integer.
+Fractional factors, oversized products, non-multiplying multiple roots, and
+variable factors remain conservative. Exact whole-number division is also
+permitted when the bounded result is the numerator and every possible
+transformed integer is divisible by the static nonzero divisor. Inexact or
+variable divisors and a bounded denominator remain conservative. Static
+whole-number factors may precede the bounded numerator, including exact
+divisions among those factors, provided multiplication connects the resulting
+prefix to its root; division by that root remains conservative.
 Variable-free integer `div` and `mod` reductions may likewise be folded
 left-to-right before that multiplying connection. Zero or dynamic divisors,
 oversized folded prefixes, and a non-multiplying connection to the root remain

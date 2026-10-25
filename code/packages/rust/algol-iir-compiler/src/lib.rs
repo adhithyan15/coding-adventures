@@ -4964,8 +4964,7 @@ impl Compiler {
         if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
             let sequence = pieces(node);
             if sequence.len() >= 3 && sequence.len() % 2 == 1 {
-                let mut rooted = None;
-                let mut rooted_index = None;
+                let mut rooted = Vec::new();
                 let mut static_terms = Vec::new();
                 for (index, piece) in sequence.iter().enumerate() {
                     if index % 2 == 0 {
@@ -4973,10 +4972,7 @@ impl Compiler {
                             return None;
                         };
                         if let Some(candidate) = self.builtin_exact_integer_sign_operand(operand) {
-                            if rooted.replace(candidate).is_some() {
-                                return None;
-                            }
-                            rooted_index = Some(index);
+                            rooted.push((index, candidate));
                         } else {
                             let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
                                 .or_else(|| {
@@ -5010,8 +5006,33 @@ impl Compiler {
                         }
                     }
                 }
-                let mut proof = rooted?;
-                let rooted_index = rooted_index?;
+                if rooted.len() > 1 {
+                    if sequence.iter().enumerate().any(|(index, piece)| {
+                        !index.is_multiple_of(2)
+                            && !matches!(piece, Piece::Op(op) if op == "*")
+                    }) {
+                        return None;
+                    }
+                    let mut roots = rooted.iter().map(|(_, proof)| *proof);
+                    let mut proof = roots.next()?;
+                    if !self.is_selector_call_safe_runtime_real_root(proof.operand) {
+                        return None;
+                    }
+                    for candidate in roots {
+                        if !self.is_selector_call_safe_runtime_real_root(candidate.operand) {
+                            return None;
+                        }
+                        proof.magnitude = proof.magnitude.checked_mul(candidate.magnitude)?;
+                        proof.value_gcd = proof.value_gcd.checked_mul(candidate.value_gcd)?;
+                    }
+                    for (_, _, units, _) in static_terms {
+                        proof.magnitude = proof.magnitude.checked_mul(units)?;
+                        proof.value_gcd = proof.value_gcd.checked_mul(units)?;
+                    }
+                    return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE)
+                        .then_some(proof);
+                }
+                let (rooted_index, mut proof) = rooted.into_iter().next()?;
                 let folds_integer_prefix = static_terms.iter().any(
                     |(index, operator, _, _)| {
                         *index < rooted_index && matches!(*operator, Some("div" | "mod"))
@@ -15680,6 +15701,9 @@ mod tests {
             "begin real procedure pick; pick := -2.25; real x; x := entier(sign(pick()) * (-1)); output(x) end",
             "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier((-1) * abs(sign(pick())) * 1))) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) * 2); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sign(left()) * sign(right())); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier((2 * sign(left()) + 2) * abs(sign(right()))); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(3 * sign(left()) * sign(right()) * 2); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
@@ -15699,10 +15723,11 @@ mod tests {
     fn al4_multiplicative_entier_sign_widening_rejects_dynamic_factors() {
         for source in [
             "begin real procedure pick; pick := -2.25; integer unit; real result; unit := entier(pick()); result := entier(sign(pick()) * unit); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) * sign(pick())); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sign(left()) / sign(right())); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier((9007199254740992 * sign(left())) * (2 * sign(right()))); output(result) end",
         ] {
             let err = compile_source(source, "test")
-                .expect_err("a variable factor or repeated root exceeds the bounded sign proof");
+                .expect_err("a variable factor, non-multiplying root, or oversized product exceeds the bounded sign proof");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
@@ -16159,13 +16184,12 @@ mod tests {
     #[test]
     fn al4_static_sign_factors_reject_unproven_forms() {
         for source in [
-            "begin real procedure left; left := 3.5; real procedure right; right := 2.25; real result; result := entier(sign(left()) * sign(right())); output(result) end",
             "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(sign(if flag then -0.25 else 7.5) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 3.5; boolean procedure choose; choose := true; real result; result := entier(sign(if choose() then 0.25 else 7.5) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(sign(if flag then pick() else 7.5) * sign(pick())); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "two dynamic sign roots, path-dependent signs, calling selectors, and dynamic branches must remain outside the static sign-factor proof",
+                "path-dependent signs, calling selectors, and dynamic branches must remain outside the static sign-factor proof",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
