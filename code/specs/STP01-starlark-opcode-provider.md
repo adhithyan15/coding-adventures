@@ -207,6 +207,16 @@ filter, across Linux, macOS and Windows plans. Lookalike paths select neither;
 missing required readers fail before plan output is replaced. A package
 directory or skipped Windows front is not native qualification.
 
+Keep the native test dependency plan compatible with the coverage-enabled
+GHC 9.4.8 / Cabal 3.10.3.0 CI front. A solver failure before compilation is
+not a provider failure or a successful test run. A package-local compatibility
+constraint may narrow test dependencies while preserving the public API and
+the existing coverage command. Reproduce the original failure and validate
+the repaired plan with that toolchain; a newer local Cabal alone is insufficient.
+Independent rejection witnesses must isolate byte range/type, row ordering
+and the depth-eight boundary rather than relying on a different malformed
+property of the same candidate.
+
 The package only describes bytes and lookup tables. `LoadModule`, `ImportFrom`,
 `Print` and `Halt` stay inert constructors: this adoption performs no parsing,
 compilation, execution, module resolution, output, process launch, network
