@@ -38,3 +38,8 @@ reusable conformance job plus the required roll-up. NN39 executes all six direct
 exchanges across three independent native lanes, comparing return-trip state at
 steps 3001 and 3002. This changes validation coverage, not the training API or
 checkpoint format, and claims no binding lane.
+
+NN40's shared `checkpoints.json` fixture is covered by the existing fixture
+directory selection rule. All three native package suites directly execute its
+49 accept/reject cases, including accepted round-trip controls. No standalone
+workflow or shell-based checkpoint transport is added for malformed inputs.

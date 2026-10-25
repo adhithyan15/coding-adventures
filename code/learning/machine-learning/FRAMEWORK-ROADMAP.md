@@ -23,18 +23,21 @@ the actual open PR and its current-head CI logs, and revisit this ordering:
    merged exact head `d8ae359c84b`, with required CI, nested native exchange, and
    CodeQL green. The exchange is now a registered required-gate dependency;
    selected jobs must succeed, and duplicate automatic runners are removed.
-2. **P1 — Required three-native-language conformance.** Native Rust
+2. **P1 — Required three-native-language conformance completed.** Native Rust
    [NN38](../../specs/NN38-native-rust-dense-framework.md) merged in
    [PR #18212](https://github.com/adhithyan15/coding-adventures/pull/18212)
    at exact head `d8b90b74a2a`, with actual Linux/macOS package builds and all
    applicable CI/CodeQL green. Reprioritized by reliability, prerequisites,
-   portability, and smallest complete delivery: prove all six directed native
-   checkpoint exchanges next, following
-   [NN39](../../specs/NN39-three-native-dense-conformance.md), before new ports
-   or optional C ABI work.
-3. **P1 — Grow executable conformance with the port roster.** Add a shared
-   invalid-input corpus and explicit native/binding evidence as additional
-   lanes appear. Preserve required-gate ownership as each native port joins.
+   portability, and smallest complete delivery selected
+   [NN39](../../specs/NN39-three-native-dense-conformance.md), delivered in
+   [PR #18218](https://github.com/adhithyan15/coding-adventures/pull/18218)
+   at exact head `f8e5ce59571` (squash `4f320c659bc`). All six native exchanges,
+   real repository workspace builds, CI gate and CodeQL passed.
+3. **P1 — Shared checkpoint rejection corpus next.** Reliability precedes new
+   ports: [NN40](../../specs/NN40-shared-checkpoint-rejection-corpus.md) supplies
+   the smallest portable acceptance/rejection oracle consumed directly by all
+   three native package test suites. Preserve required-gate ownership as ports
+   join; new native Go/Ruby implementations follow this reliability tranche.
 4. **P2 — Extend native reach.** Deliver Go and Ruby, then C/C++, managed and
    functional language ports in the order their existing foundations permit.
    Reassess the smallest complete port after every merge.
@@ -73,6 +76,8 @@ the first is open, or modify the unrelated dirty primary checkout.
 - [ ] Add a language-neutral invalid-checkpoint corpus as ports expand;
   cross-language receipts currently prove valid training/resume, while each
   library owns separate negative tests.
+  NN40 now runs 49 shared documents directly through all three native package
+  suites locally (3 accepted controls, 46 rejected); required CI/merge pending.
 - [x] Extend required conformance selection to Rust workspace/dependency and
   validator inputs. NN38's native package builds passed, but the existing
   two-language interchange gate correctly did not select Rust-only changes.
@@ -92,8 +97,9 @@ SGD training, inspection, and portable save/reload/resume.
   native XOR example, portable save/reload/resume, metadata, local numerical
   evidence, and actual repository-workspace CI delivered in PR #18212.
   No three-language interchange is claimed by this checkbox.
-- [ ] Rust conformance: required CI and actual two-way checkpoint exchange with
-  Python and TypeScript. Depends on the native library; not a binding lane.
+- [x] Rust conformance: required CI and all six directed checkpoint exchanges
+  across Python/TypeScript/Rust passed and merged in PR #18218. Three native
+  lanes, zero binding lanes; full models match through step 3002.
 - [ ] Optional Rust dense C ABI and binding consumers.
 - [ ] Go native framework.
 - [ ] Ruby native framework.

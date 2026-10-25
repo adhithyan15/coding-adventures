@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Execute NN40's shared 49-case checkpoint acceptance/rejection corpus through
+  the public native loader, including valid controls and save/reload checks.
+
 - Extend native checkpoint exchange to Rust alongside Python, checking all
   six directed pairs and full model/loss/prediction state at steps 3001/3002.
 

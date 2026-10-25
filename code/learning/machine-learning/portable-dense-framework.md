@@ -79,6 +79,16 @@ required `CI gate` rejects a selected job that fails, is cancelled, or skips;
 manual dispatch remains available. See the
 [CI ownership contract](../../specs/neural-framework-ci-gate.md).
 
+NN40 adds one [shared checkpoint corpus](../../specs/fixtures/neural-framework-v1/checkpoints.json):
+49 small documents, with 3 accepted controls and 46 rejected cases. Each native
+package test suite loads the same documents through its public API. For example,
+`step: false` must fail: a truth value is not an optimizer-update count.
+The trace is `JSON document -> native loader -> accept/reject`; accepted models
+must also survive save/reload unchanged. Valid controls prevent a loader that
+rejects everything from passing. This tests parsed-document portability, not
+identical text-parser handling of duplicate keys or nesting limits. See
+[NN40](../../specs/NN40-shared-checkpoint-rejection-corpus.md).
+
 The next framework milestones add native ports, shared tensor autograd,
 architecture components, and measured increases in model size. See the
 [framework roadmap](./FRAMEWORK-ROADMAP.md). A successful dense checkpoint does
