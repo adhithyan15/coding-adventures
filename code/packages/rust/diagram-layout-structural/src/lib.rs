@@ -1621,6 +1621,40 @@ mod tests {
     }
 
     #[test]
+    fn mixed_special_topology_keeps_isolated_and_connected_nodes_distinct() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        let template = diagram.nodes[0].clone();
+        diagram.nodes = ["CUSTOMER", "1", "u", "1.5", "2.5"]
+            .into_iter()
+            .map(|id| StructuralNode { id: id.into(), label: id.into(), ..template.clone() })
+            .collect();
+        let template = diagram.relationships[0].clone();
+        diagram.relationships = [("CUSTOMER", "1"), ("1", "u"), ("u", "2.5")]
+            .into_iter()
+            .map(|(from, to)| StructuralRelationship {
+                from: from.into(),
+                to: to.into(),
+                ..template.clone()
+            })
+            .collect();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes.len(), 5);
+        assert_eq!(layout.relationships.len(), 3);
+        for (index, left) in layout.nodes.iter().enumerate() {
+            for right in &layout.nodes[index + 1..] {
+                let separated = left.x + left.width <= right.x
+                    || right.x + right.width <= left.x
+                    || left.y + left.height <= right.y
+                    || right.y + right.height <= left.y;
+                assert!(separated, "{} overlaps {}", left.id, right.id);
+            }
+        }
+    }
+
+    #[test]
     fn relationship_labels_resolve_to_backend_neutral_geometry() {
         let mut diagram = two_class_diagram();
         diagram.relationships[0].label = Some("inherits from".into());

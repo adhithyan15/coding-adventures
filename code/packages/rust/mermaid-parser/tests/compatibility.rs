@@ -189,6 +189,14 @@ const ER_VARIABLE_NODE_WIDTHS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-variable-node-widths-11.16.1-visual-corpus.json"
 ));
+const ER_MIXED_SPECIAL_TOPOLOGY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-mixed-special-topology-11.16.1-corpus.json"
+));
+const ER_MIXED_SPECIAL_TOPOLOGY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-mixed-special-topology-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2738,6 +2746,38 @@ fn pinned_er_variable_node_widths_reach_semantic_ir() {
     assert_eq!(diagram.nodes[0].compartments[0].entries, ["name: string", "turnover: int"]);
     assert_eq!(diagram.nodes[1].id, "EMPLOYEE");
     assert_eq!(diagram.nodes[1].compartments[0].entries, ["officer_of_firm: bool"]);
+}
+
+#[test]
+fn pinned_er_mixed_special_topology_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_MIXED_SPECIAL_TOPOLOGY_CORPUS)
+        .expect("ER mixed special topology corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_MIXED_SPECIAL_TOPOLOGY_VISUAL_CORPUS)
+        .expect("ER mixed special topology visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER mixed special topology source"),
+    )
+    .expect("ER mixed special topology fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 5);
+    assert_eq!(diagram.relationships.len(), 3);
+    for expected in ["CUSTOMER", "1", "u", "1.5", "2.5"] {
+        assert!(diagram.nodes.iter().any(|node| node.id == expected));
+    }
+    let decimal = diagram.nodes.iter().find(|node| node.id == "2.5").expect("2.5");
+    assert_eq!(decimal.compartments[0].entries, ["id: string", "value: float"]);
+    let letter = diagram.nodes.iter().find(|node| node.id == "u").expect("u");
+    assert_eq!(letter.compartments[0].entries, ["name: varchar(50)", "count: int"]);
+    let labels = diagram
+        .relationships
+        .iter()
+        .filter_map(|relationship| relationship.label.as_deref())
+        .collect::<Vec<_>>();
+    assert_eq!(labels, ["places", "contains", "processes"]);
 }
 
 #[test]
