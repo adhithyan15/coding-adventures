@@ -25,3 +25,13 @@ list the values that can reach it *without* that op: literals, folded
 constants, and parameters. Then check that the validator rejects each value
 the target runtime cannot represent. A refusal is a property of the values
 as well as of the opcodes.
+
+**And the follow-up CI failure.** Tightening the validator broke
+`lang-aot/tests/op_conformance.rs`. Its PR6a float-table cases declared BEAM
+"Lowered" because every op they use is lowered there, but the table holds
+`inf`/`nan` constants. Before the push only the iir-to-beam tests and the
+JavaScript/BEAM `lang_matrix` filters ran, so the conformance binary first
+failed in CI. The test's `lowered_on` now also asks whether BEAM can hold the
+case's constants. When you change what a backend accepts, run every lang-aot
+test binary that compiles to that backend (`op_conformance`, `lang_matrix`),
+not only the backend crate's own tests.
