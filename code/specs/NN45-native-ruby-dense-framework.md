@@ -1,6 +1,7 @@
 # NN45: Native Ruby Dense Framework
 
-Status: specified before implementation; native execution and exact-head CI pending.
+Status: specified before implementation; implemented and locally validated;
+publication and exact-head repository CI pending.
 
 ## Smallest complete native port
 
@@ -78,3 +79,18 @@ and applicable selected gates at the exact head. Four-native conformance may be
 unselected until the following Ruby integration tranche; do not claim five-native
 portability here. Confirm merge before another item. Use sparse isolation and
 recheck disk (about1.17GB free at specification); avoid full checkout/Rust builds.
+
+## Local implementation evidence
+
+The native Ruby library and command both reach 100% measured line coverage.
+Paper predictions/loss/every gradient/update match the shared oracle at 1e-12;
+central finite differences cover every parameter of all four activations in
+deep unequal-width multiple-output networks. All 55 checkpoint cases pass
+directly through the public loader, with six null-case IDs pinned. Ownership,
+type/shape/rate/count, JSON/nesting, safe-step, capacity and atomic overflow
+tests pass. Actual XOR loss is 0.00023307123378282036 at 3000; complete native
+models/predictions match through 3001/3002. Both gems build/install in a private
+temporary home and a fresh Ruby child verifies installed source and training.
+The shell-free native validator's command tests cover 98% of its lines.
+No training or checkpoint contract deviation; five-native exchange remains
+explicitly pending, and only actual repository CI can establish portable BUILD.
