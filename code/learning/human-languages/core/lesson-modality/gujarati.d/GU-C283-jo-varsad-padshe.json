@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C283-jo-varsad-padshe",
+    "language": "gujarati",
+    "chapter": 283,
+    "sequence": 15290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:566cfe2e574cb045"
+  },
+  "findings": []
+}

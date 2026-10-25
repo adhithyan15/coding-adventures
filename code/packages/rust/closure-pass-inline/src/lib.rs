@@ -973,10 +973,19 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         }
         // A function *value* binds its own name (if named) and its params
         // at its boundary; record them so an inline never captures or
-        // collides with them. (Its body's own `var`/`let`/`const` live in
-        // a nested scope that this top-level-helper inliner does not
-        // substitute into.)
+        // collides with them.
+        //
+        // #18134: its BODY's free names count too. Spliced into a caller,
+        // the nested function closes over the caller's scope instead of the
+        // helper's, so a free `y` it reads must be visible to the capture
+        // guards:
+        //
+        //   var y=1; function t(){return function(){return y}}
+        //   function g(){var y=2; return t()()}   // 1; spliced, 2
+        //
+        // See `collect_nested_function_body`.
         Expression::FunctionExpression(fe) => {
+            collect_nested_function_body(&fe.body.body, out);
             if let Some(id) = &fe.id {
                 out.insert(id.name.clone());
             }
@@ -992,9 +1001,9 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         }
         // A class *value* binds its own name (if named) and each method
         // value's name (if named) and params at their boundaries; record
-        // them so an inline never captures or collides with them — mirroring
-        // the `FunctionExpression` arm, which records boundary bindings but
-        // does NOT recurse into the (nested-scope) function bodies. The
+        // them so an inline never captures or collides with them, mirroring
+        // the `FunctionExpression` arm. Like that arm, it also walks each
+        // method body's free names (#18134, `collect_nested_function_body`). The
         // `extends` operand, however, is evaluated in the ENCLOSING scope
         // (like a callee), so recurse into it as this walk does for other
         // operand-position sub-expressions. A method KEY is a property name,
@@ -1025,6 +1034,9 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                                 collect_binding_idents_expr(def, out);
                             }
                         }
+                        // #18134: a method body closes over the enclosing
+                        // scope like a nested function's.
+                        collect_nested_function_body(&m.value.body.body, out);
                     }
                     // A field's initializer is evaluated at construction; the
                     // computed key is evaluated in the enclosing scope. Over-
@@ -1100,6 +1112,44 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         Expression::YieldExpression(y) => { if let Some(a) = &y.argument { collect_binding_idents_expr(a, out); } }
         Expression::AwaitExpression(a) => collect_binding_idents_expr(&a.argument, out),
         Expression::ImportExpression(e) => collect_binding_idents_expr(&e.source, out),
+    }
+}
+
+/// #18134: record the names a nested `function` (or method) body reads, for
+/// the capture guards of the function that contains it.
+///
+/// The body is walked like any other, then the four bindings a non-arrow
+/// function makes for itself are removed: `this`, `super`, `new.target` and
+/// `arguments`. Those refer to the nested function's own call, not to the
+/// helper's (#18115 records them for arrows, which have none of their own).
+///
+/// Everything else is kept, including the nested body's own locals and
+/// parameters. Over-collecting can only make a guard decline an inline it
+/// could have done, never accept one it shouldn't. Subtracting the nested
+/// function's declarations would be more precise, but the declaration walk
+/// also counts deeper scopes, and subtracting a name declared only in a
+/// deeper function would hide a real capture.
+fn collect_nested_function_body(body: &[Statement], out: &mut HashSet<String>) {
+    let mut names = HashSet::new();
+    for s in body {
+        collect_used_idents_stmt(s, &mut names);
+    }
+    for own in ["this", "super", "new.target", "arguments"] {
+        names.remove(own);
+    }
+    out.extend(names);
+}
+
+/// Record a parameter list's bound names, and the names its default values
+/// read (`a = SOME_NAME`), for the declaration arms of `collect_used_idents_decl`
+/// (#18134). The expression arms of `collect_binding_idents_expr` do the same
+/// inline.
+fn collect_param_names_and_defaults(params: &[coding_adventures_javascript_ast::FunctionParam], out: &mut HashSet<String>) {
+    for p in params {
+        out.insert(p.binding_identifier().name.clone());
+        if let Some(def) = p.default_value() {
+            collect_binding_idents_expr(def, out);
+        }
     }
 }
 
@@ -4437,6 +4487,10 @@ fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
             }
         }
         Declaration::FunctionDeclaration(fd) => {
+            // #18134: parameter defaults read names too
+            // (`function h(a=y){}`), like the `FunctionExpression` arm's.
+            out.insert(fd.id.name.clone());
+            collect_param_names_and_defaults(&fd.params, out);
             for s in &fd.body.body {
                 collect_used_idents_stmt(s, out);
             }
@@ -4461,6 +4515,8 @@ fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
                         if let PropertyKey::Expression(e) = &m.key {
                             collect_binding_idents_expr(e, out);
                         }
+                        // #18134: so are parameter defaults' names.
+                        collect_param_names_and_defaults(&m.value.params, out);
                         for s in &m.value.body.body {
                             collect_used_idents_stmt(s, out);
                         }
@@ -6100,5 +6156,31 @@ mod tests {
         let prog = bridge::grammar_to_program(&node, EsVersion::Es2025).expect("bridge");
         collect_used_idents_program(&prog, &mut out);
         assert!(out.contains("y"), "arrow body name missed: {out:?}");
+    }
+
+    // ---- #18134: a nested function's free names are seen ---------------
+
+    /// The nested function reads `y`, which `g` shadows, so `t` is not
+    /// spliced into `g`. The output is the input, unchanged.
+    #[test]
+    fn issue18134_nested_function_free_names_block_a_capturing_splice() {
+        for src in [
+            "var y=1;function t(){return function(){return y}}function g(){var y=2;return t()()}log(g());",
+            "var y=1;function t(){return class{m(){return y}}}function g(){var y=2;return t()}log(g());",
+            // A nested declaration's parameter default reads `y` too.
+            "var y=1;function t(h,a){return function(){function h(a=y){return a}return h()}}function g(){var y=2;return t(0,0)()}log(g());",
+            "var y=1;function t(K,m,a){return function(){class K{m(a=y){return a}}return (new K).m()}}function g(){var y=2;return t(0,0,0)()}log(g());",
+        ] {
+            assert_eq!(inline_source(src), src, "t was spliced");
+        }
+    }
+
+    /// A nested function that reads nothing from outside is still inlined.
+    #[test]
+    fn issue18134_self_contained_nested_function_is_still_inlined() {
+        assert_eq!(
+            inline_source("function t(){return function(){return 7}}log(t()());"),
+            "function t(){return function(){return 7}}log((function(){return 7})());"
+        );
     }
 }

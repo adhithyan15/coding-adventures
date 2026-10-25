@@ -173,6 +173,7 @@ pub fn whitespace_only_minify(
 ) -> Result<String, MinifyError> {
     let tokens = tokenize_javascript_typed(source, version)
         .map_err(MinifyError::LexError)?;
+    check_hashbangs(&tokens)?;
 
     // Filter out trivia tokens (comments, whitespace, newlines)
     // and the EOF sentinel. The lexer marks trivia via the
@@ -472,7 +473,15 @@ pub fn whitespace_only_minify(
                     || is_structural_punct(kept[i - 1], "{")
                     || is_structural_punct(kept[i - 1], ";");
                 let in_for_header = matches!(stack.last(), Some(true));
-                if droppable_pos && !in_for_header {
+                // #17907: an empty statement ends a directive prologue. In
+                // `;"use strict";` the string is NOT a directive; drop the
+                // `;` and it becomes one, making sloppy code strict. Keep a
+                // `;` that stands in front of a `use strict` string (at most
+                // one survives: in `;;"use strict"` the first still goes).
+                let shields_use_strict = kept
+                    .get(i + 1)
+                    .is_some_and(|n| is_string_literal(n) && decode_js_string(&n.value) == "use strict");
+                if droppable_pos && !in_for_header && !shields_use_strict {
                     drops.push(i);
                 }
             } else if is_structural_punct(t, "(") {
@@ -2755,6 +2764,7 @@ pub fn whitespace_only_minify(
                 if non_empty
                     && !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, body_open + 1)
                     && (top_semis == 0 || terminated_single)
                 {
                     if let Some(semi) = synth_semi.as_ref() {
@@ -2874,6 +2884,7 @@ pub fn whitespace_only_minify(
                 if non_empty
                     && !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, body_open + 1)
                     && top_semis == 0
                 {
                     if let Some(semi) = synth_semi.as_ref() {
@@ -2992,6 +3003,7 @@ pub fn whitespace_only_minify(
                 if non_empty
                     && !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, body_open + 1)
                     && top_semis == 0
                 {
                     if let Some(semi) = synth_semi.as_ref() {
@@ -3566,6 +3578,7 @@ pub fn whitespace_only_minify(
                 };
                 let eligible = !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, idx + 1)
                     && semi_count == 1
                     && last_before_close == ";";
                 if eligible {
@@ -5060,6 +5073,28 @@ pub(crate) fn emit_quoted_string(out: &mut String, raw_content: &str) {
     // Step 1: decode.
     let decoded = decode_js_string(raw_content);
 
+    // #17907: a source spelling of `use strict` that contains an escape
+    // (`"use\x20strict"`, `"\u0075se strict"`) is a directive but NOT a
+    // Use Strict Directive (ECMA-262 §11.2.1 requires the exact code points
+    // with no escape). Re-encoded canonically it would print as
+    // `"use strict"` and silently make a sloppy script or function strict.
+    // Keep one escape so it stays inert.
+    //
+    //   source                 canonical form    printed
+    //   ---------------------  ----------------  ------------------
+    //   "use strict"           "use strict"      "use strict"
+    //   'use strict'           "use strict"      "use strict"
+    //   "use\x20strict"        "use strict"      "use\x20strict"
+    //   "\u0075se strict"      "use strict"      "use\x20strict"
+    //
+    // The token pass cannot tell a directive position from any other, so
+    // this applies to every such string. Elsewhere the two spellings are
+    // the same value, so nothing observable changes there.
+    if decoded == "use strict" && raw_content != "use strict" {
+        out.push_str("\"use\\x20strict\"");
+        return;
+    }
+
     // Step 2: choose delimiter.
     let dq = decoded.chars().filter(|c| *c == '"').count();
     let sq = decoded.chars().filter(|c| *c == '\'').count();
@@ -5095,6 +5130,14 @@ pub(crate) fn is_trivia(tok: &lexer::token::Token) -> bool {
             upper.as_str(),
             "COMMENT"
                 | "LINE_COMMENT"
+                // #18137: a `#!` hashbang line is a comment too. Kept as a
+                // token, it lost the line break after it (WHITESPACE_ONLY
+                // drops newlines), so `#!/usr/bin/env node⏎f()` printed as
+                // `#!/usr/bin/env nodef();`: the whole program became part
+                // of the comment and nothing ran. Upstream v20260915 drops
+                // the hashbang at every level, and so does closurec's
+                // SIMPLE/ADVANCED path; WHITESPACE_ONLY now does the same.
+                | "HASHBANG"
                 | "BLOCK_COMMENT"
                 | "WHITESPACE"
                 | "WS"
@@ -5109,6 +5152,45 @@ pub(crate) fn is_trivia(tok: &lexer::token::Token) -> bool {
             | lexer::token::TokenType::Indent
             | lexer::token::TokenType::Dedent
     )
+}
+
+/// #18137: `is_trivia` drops a HASHBANG, so first make sure every HASHBANG
+/// token really is one. Two lexer shapes would otherwise turn into silent
+/// miscompiles:
+///
+/// | Input                         | Why it must be refused                 |
+/// |-------------------------------|----------------------------------------|
+/// | `#!/x⟨U+2028⟩console.log(1)`  | U+2028/U+2029 end the hashbang, but the |
+/// |                               | lexer's `[^\n\r]*` runs past them, so  |
+/// |                               | the token holds real code (#17887)     |
+/// | `f();⏎#!x⏎g()` or ` #!x`      | `#!` is only a hashbang at offset 0;   |
+/// |                               | anywhere else it is a SyntaxError      |
+///
+/// Dropping either token would delete code, or turn an invalid program into
+/// a valid one. Refusing keeps the failure loud until the lexer stops at
+/// every line terminator.
+fn check_hashbangs(tokens: &[lexer::token::Token]) -> Result<(), MinifyError> {
+    for (i, t) in tokens.iter().enumerate() {
+        if !t.type_name.as_deref().is_some_and(|n| n.eq_ignore_ascii_case("HASHBANG")) {
+            continue;
+        }
+        // Offset 0: the first token, on line 1 at column 1 (columns are
+        // 1-based), so not even whitespace precedes it.
+        if i != 0 || t.line != 1 || t.column != 1 {
+            return Err(MinifyError::LexError(format!(
+                "line {}: `#!` is only allowed at the very start of a file",
+                t.line
+            )));
+        }
+        if t.value.contains(['\u{2028}', '\u{2029}']) {
+            return Err(MinifyError::LexError(
+                "line 1: a U+2028/U+2029 line terminator inside the `#!` line is not supported \
+                 (#17887)"
+                    .to_string(),
+            ));
+        }
+    }
+    Ok(())
 }
 
 /// True iff this is the EOF sentinel emitted by the lexer.
@@ -6199,6 +6281,45 @@ fn is_plain_identifier(tok: &lexer::token::Token) -> bool {
         );
     }
     matches!(tok.type_, lexer::token::TokenType::Name)
+}
+
+/// #18124: does the statement starting at `kept[at]` declare a lexical
+/// binding (`let`, `const`, `using`)?
+///
+/// A body slot (`if(…) S`, `while(…) S`, `else S`, `do S while…`, `with(…) S`)
+/// takes a *Statement*, and a lexical declaration is not one. So the body
+/// flatten passes must keep the braces around a lone declaration:
+///
+/// | Source                 | Upstream v20260915        | Flattened (invalid) |
+/// |------------------------|---------------------------|---------------------|
+/// | `if(a){let x=1;}`      | `if(a){let x=1};`         | `if(a)let x=1;`     |
+/// | `while(o){const x=1;}` | `while(o){const x=1};`    | `while(o)const x=1;`|
+///
+/// `class` and `function` are already caught by each pass's blocking-keyword
+/// scan. `const` is reserved, so it always declares. `let` and `using` are
+/// also identifiers in sloppy code (`let = 1`, `using(x)`), so they declare
+/// only when a binding follows: an identifier, or `[`/`{` for `let`
+/// destructuring. A wrong "yes" just keeps a block's braces, which is valid.
+fn starts_lexical_declaration(kept: &[&lexer::token::Token], at: usize) -> bool {
+    let Some(first) = kept.get(at) else {
+        return false;
+    };
+    if is_string_literal(first) || !is_word_like(first) {
+        return false;
+    }
+    let next = kept.get(at + 1);
+    let binding_follows = next.is_some_and(|n| is_plain_identifier(n) || n.value == "yield" || n.value == "await");
+    match first.value.as_str() {
+        "const" => true,
+        "let" => {
+            binding_follows
+                || next.is_some_and(|n| is_structural_punct(n, "[") || is_structural_punct(n, "{"))
+        }
+        "using" => binding_follows,
+        // `await using x = …`
+        "await" => next.is_some_and(|n| !is_string_literal(n) && n.value == "using"),
+        _ => false,
+    }
 }
 
 /// #17883: is the `;` at `idx` the empty-statement body of `with(…)`?
@@ -9255,6 +9376,22 @@ mod tests {
     /// keeps it. A genuine `for` loop is distinguished from a `.for(`
     /// property call (`a.for(b)` is untouched and never mistaken for a
     /// for-header).
+    /// #17907: gap-088 keeps the one `;` in front of a `use strict`
+    /// string. That empty statement is what makes the string a plain
+    /// expression rather than a directive.
+    #[test]
+    fn gap088_keeps_the_semi_before_use_strict() {
+        assert_eq!(minify(";\"use strict\";f();"), ";\"use strict\";f();");
+        assert_eq!(minify(";;\"use strict\";f();"), ";\"use strict\";f();");
+        assert_eq!(minify("\"a\";;\"use strict\";f();"), "\"a\";;\"use strict\";f();");
+        assert_eq!(
+            minify("function g(){;'use strict';f()}"),
+            "function g(){;\"use strict\";f()};"
+        );
+        // Any other string still loses the empty statement.
+        assert_eq!(minify(";\"a\";f();"), "\"a\";f();");
+    }
+
     #[test]
     fn gap088_for_header_separators_kept() {
         assert_eq!(minify("for(;;)x();"), "for(;;)x();");
@@ -10926,6 +11063,53 @@ mod tests {
             minify("var{a}=tag`hi`;"),
             "var {a}=tag`hi`;"
         );
+    }
+
+    // ---- #18137: a hashbang is dropped, like a comment -----------------
+
+    #[test]
+    fn issue18137_hashbang_is_dropped() {
+        assert_eq!(minify("#!/usr/bin/env node\nconsole.log(1)"), "console.log(1);");
+        assert_eq!(minify("#!/x\r\nvar a=1;\nf(a)"), "var a=1;f(a);");
+        // A `#!` line followed only by a comment and blank lines.
+        assert_eq!(minify("#!/x\n\n// c\nvar x = 1;"), "var x=1;");
+    }
+
+    #[test]
+    fn issue18137_hashbangs_that_would_lose_code_are_refused() {
+        let refused = |src: &str| {
+            matches!(
+                whitespace_only_minify(src, EsVersion::Es2025, None),
+                Err(MinifyError::LexError(_))
+            )
+        };
+        // U+2028/U+2029 end the hashbang, but the lexer runs past them.
+        assert!(refused("#!/x\u{2028}console.log(1)"));
+        assert!(refused("#!/x\u{2029}console.log(1)\nf()"));
+        // `#!` is only a hashbang at the very start of the file.
+        assert!(refused("console.log(1);\n#!foo\nconsole.log(2);"));
+        assert!(refused(" #!/x\nconsole.log(1)"));
+        assert!(!refused("#!/x\nconsole.log(1)"));
+    }
+
+    // ---- #18124: a lone lexical declaration keeps its block ------------
+
+    #[test]
+    fn issue18124_lexical_declaration_body_keeps_its_braces() {
+        // Upstream v20260915 bytes.
+        assert_eq!(minify("if(a){let x=1;}"), "if(a){let x=1};");
+        assert_eq!(minify("while(o){let x=1;}"), "while(o){let x=1};");
+        assert_eq!(minify("with(o){const x=1;}"), "with(o){const x=1};");
+        assert_eq!(minify("if(a){}else{let x=1;}"), "if(a);else{let x=1};");
+        assert_eq!(minify("do{let x=1;}while(a)"), "do{let x=1}while(a);");
+        assert_eq!(minify("if(a){let [x]=b;}"), "if(a){let [x]=b};");
+    }
+
+    #[test]
+    fn issue18124_other_single_statements_still_flatten() {
+        assert_eq!(minify("if(a){b()}"), "if(a)b();");
+        assert_eq!(minify("if(a){using(b);}"), "if(a)using(b);");
+        assert_eq!(minify("while(o){x++}"), "while(o)x++;");
     }
 
     // ---- #17883: an empty-statement body keeps its `;` before `}` ---

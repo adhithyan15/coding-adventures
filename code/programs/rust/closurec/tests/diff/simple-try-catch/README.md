@@ -1,35 +1,26 @@
 # Fixture: `simple-try-catch`
 
-End-to-end oracle for `--compilation_level SIMPLE` optimization through a
-`try`/`catch`/`finally` statement (CLOC19).
+A refusal fixture since CLOC44 slice 2 (CCR-075, #15860).
 
 | File | Role |
 |------|------|
 | `flags.txt` | CLI args: `--compilation_level SIMPLE --js input/a.js` |
-| `input/a.js` | A single-use function, plus a `try`/`catch (e)`/`finally` whose blocks hold foldable arithmetic and dead-code-after-`return` |
-| `expected.stdout` | The optimized output (see below) |
+| `input/a.js` | A function, plus a top-level `try`/`catch (e)`/`finally` whose `catch` handler holds a `return` |
+| `expected.stdout` | Empty: a refused input produces no output |
+| `expected.stderr` | The pinned jar's diagnostic, byte for byte |
+| `expected.exit` | The jar's exit status (`1`) |
+
+The `return` sits outside any function, so `closure-compiler-v20260915`
+refuses the input:
 
 ```text
-report(1);try{var x=3;risky(x)}catch(e){var y=12;handle(e,y);return}finally{cleanup()}
+tests/diff/simple-try-catch/input/a.js:30:2: ERROR - [JSC_PARSE_ERROR] Parse error. return must be inside function
 ```
 
-What this proves now runs **inside** try/catch/finally — none of which
-was reachable before CLOC19 (any `try` forced a WHITESPACE_ONLY
-fallback):
+closurec refuses it identically. This fixture was written for CLOC19, to show
+SIMPLE optimising through `try`/`catch`/`finally`. That coverage now lives in
+the ladder's `try_catch` rungs and in `advanced-try-catch-rename`, whose
+inputs are valid.
 
-* **Inlining** — `log` is single-use, so `log(1)` becomes `report(1)`
-  and the declaration is deleted.
-* **Constant folding** — `1 + 2` ⇒ `3` and `3 * 4` ⇒ `12` even though
-  they sit inside the `try` and `catch` blocks.
-* **Dead-code elimination** — `dead(99)` after the `return` in the catch
-  handler is unreachable and gets truncated.
-* **Control-flow preservation** — `try`, `catch (e)`, and `finally`
-  survive verbatim; the catch binding `e` is untouched.
-
-Regenerate the expected file after an intentional behavior change:
-
-```sh
-cargo run -- --compilation_level SIMPLE \
-    --js tests/diff/simple-try-catch/input/a.js \
-    > tests/diff/simple-try-catch/expected.stdout
-```
+Regenerate `expected.stderr` and `expected.exit` from the jar, running from
+the package root with the fixture's own `flags.txt`.

@@ -30,6 +30,15 @@ fn construction_load_transport_and_reset_are_strict() {
         Err(Pdp8Error::OddProgramLength { bytes: 1 })
     );
     assert_eq!(cpu.state(), before);
+    let oversized_transport = vec![0; (MEMORY_WORDS + 1) * 2];
+    assert_eq!(
+        cpu.load(&oversized_transport, 0),
+        Err(Pdp8Error::ProgramTooLarge {
+            words: MEMORY_WORDS + 1,
+            capacity: MEMORY_WORDS,
+        })
+    );
+    assert_eq!(cpu.state(), before);
     assert!(matches!(
         cpu.load_words(&[0x1000], 0),
         Err(Pdp8Error::InvalidWord { .. })

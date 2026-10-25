@@ -225,9 +225,19 @@ name, so the expression gate rejects any body that reads one. The statement
 gate rejects `this`, `arguments`, `super` and `new.target` by name.
 
 A `function` or `class` expression nested in the body keeps its own
-`this`, so its body is still not walked. Free names inside it remain
-invisible to both gates. That is a real capture bug (a caller's
-shadowing binding wins), tracked as #18134.
+`this`. Since #18134 its body is walked too (`collect_nested_function_body`,
+also used for class method bodies). Its free names are collected, and its
+own `this`/`super`/`new.target`/`arguments` are dropped. Before that, a
+nested function could close over a caller's shadowing binding after a
+splice:
+
+```js
+var y=1; function t(){return function(){return y}}
+function g(){var y=2; return t()()}   // 1; after the splice, 2
+```
+
+The nested body's own locals are over-collected as well. That can cost an
+inline, never soundness.
 
 ## Test plan
 

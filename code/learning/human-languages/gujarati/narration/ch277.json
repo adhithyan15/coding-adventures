@@ -1,0 +1,660 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 277,
+  "title": "Opinions and reasons",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c33499024ea5fa40",
+  "lessons": [
+    {
+      "id": "GU-C277-mat",
+      "sequence": 14940,
+      "title": "મત (mat) — an opinion; a view",
+      "headword": "મત",
+      "romanization": "mat",
+      "gloss": "an opinion; a view",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7012d2f93010743f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I think that …\", the A2 way. (વિચારું છું કે.) Then \"your\", with respect. (તમારું.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મત — mat — \"an opinion; a view\". It is masculine: તમારો મત, \"your opinion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તમારો મત શું છે? tamāro mat śũ che? — \"What is your opinion?\""
+            },
+            {
+              "kind": "speech",
+              "text": "The answer often opens on મારા મતે (mārā mate), \"in my opinion\": મત (mat) takes the -ે of સવારે, and મારો turns to મારા before it."
+            },
+            {
+              "kind": "speech",
+              "text": "મારા મતે ગુજરાતી અઘરી નથી. mārā mate gujarātī agharī nathī. — \"In my opinion Gujarati is not hard.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મત (mat) is a tatsama: Sanskrit mata, \"thought, held to be\", and as a noun \"an opinion\" (Monier-Williams), taken into Gujarati as it was. It belongs with the Sanskrit verb man-, \"to think\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mat, then tamāro mat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mat*, then *tamāro mat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What is your opinion?\" — tamāro mat śũ che?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What is your opinion?\" — *tamāro mat śũ che?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In my opinion he is a good doctor\" — mārā mate te sāro dāktar che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In my opinion he is a good doctor\" — *mārā mate te sāro dāktar che*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મત (mat) mean? (\"An opinion\".) \"In my opinion\"? (મારા મતે.) Why તમારો, not તમારું? (મત (mat) is masculine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C277-mane-lage-che",
+      "sequence": 14950,
+      "title": "મને લાગે છે કે … (mane lāge che ke …) — I think that …",
+      "headword": "મને લાગે છે કે …",
+      "romanization": "mane lāge che ke …",
+      "gloss": "I think that … — an opinion, with the thinker in the -ne form, and how to ask for one",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85f6efcea6c58fd6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"in my opinion\". (mārā mate.) Then the verb લાગવું: \"to cost; to seem\". Its second sense carries this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: it seems to me",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મને લાગે છે કે વરસાદ પડશે. mane lāge che ke varsād paḍśe. — \"I think it will rain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word: \"to me it seems that it will rain\". The thinker takes -ને, as with મને તાવ છે: તમને, તેને, અરુણને. કે hands over the thought, which keeps its own verb."
+            },
+            {
+              "kind": "speech",
+              "text": "In the past, લાગ્યું: મને લાગ્યું કે તે નહીં આવે (mane lāgyũ ke te nahī̃ āve), \"I thought he wouldn't come\". \"I don't think so\" is મને નથી લાગતું (mane nathī lāgtũ)."
+            },
+            {
+              "kind": "speech",
+              "text": "હું વિચારું છું કે … is thinking something over. મને લાગે છે કે … (mane lāge che ke …) gives an opinion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: asking for a view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તમને શું લાગે છે? tamne śũ lāge che? — \"What do you think?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two ways to ask: તમને શું લાગે છે? and તમારો મત (mat) શું છે? Two ways to answer: મને લાગે છે કે … (mane lāge che ke …) and મારા મતે …: મારા મતે ટ્રેન મોડી આવશે (mārā mate ṭren moḍī āvśe)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I thought he wouldn't come\" — mane lāgyũ ke te nahī̃ āve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I thought he wouldn't come\" — *mane lāgyũ ke te nahī̃ āve*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I don't think so\" — mane nathī lāgtũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I don't think so\" — *mane nathī lāgtũ*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C277-mane-lage-che-r1",
+              "prompt": "Ask a friend what they think, then say that you think it will rain.",
+              "assesses": [
+                "GU-GRAMMAR-C277-LAGE-CHE-KE-01",
+                "GU-GRAMMAR-C277-OPINION-ASK-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "tamne śũ lāge che? mane lāge che ke varsād paḍśe",
+                "તમને શું લાગે છે? મને લાગે છે કે વરસાદ પડશે.",
+                "tamne śũ lāge che? mane lāge che ke varsād paḍśe."
+              ],
+              "feedback": {
+                "correct": "tamne for the one asked, mane for you, and ke before the thought.",
+                "incorrect": "The thinker takes -ne: tamne śũ lāge che? Then mane lāge che ke, and the thought."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think it will rain\"? (મને લાગે છે કે વરસાદ પડશે.) \"What do you think?\" (તમને શું લાગે છે?) Who takes -ને in it? (The thinker.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C277-karan",
+      "sequence": 14960,
+      "title": "કારણ (kāraṇ) — a reason; a cause",
+      "headword": "કારણ",
+      "romanization": "kāraṇ",
+      "gloss": "a reason; a cause",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:233fc379b7ef5a73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ask \"why?\" and answer \"because …\". (કેમ? … કેમકે ….) Then \"I think that …\". (mane lāge che ke …)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કારણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કારણ — kāraṇ — \"a reason; a cause\". It is neuter: તેનું કારણ, \"the reason for it\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તેનું કારણ શું છે? tenũ kāraṇ śũ che? — \"What is the reason for it?\""
+            },
+            {
+              "kind": "speech",
+              "text": "મારી પાસે બે કારણ છે. mārī pāse be kāraṇ che. — \"I have two reasons.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કારણ (kāraṇ) is a tatsama: Sanskrit kāraṇa, \"cause\" (CDIAL 3057), \"what makes a thing happen\", from the root kṛ-, \"to do\", that also stands behind કરવું."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāraṇ, then tenũ kāraṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāraṇ*, then *tenũ kāraṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What is the reason for it?\" — tenũ kāraṇ śũ che?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What is the reason for it?\" — *tenũ kāraṇ śũ che?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have two reasons\" — mārī pāse be kāraṇ che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have two reasons\" — *mārī pāse be kāraṇ che*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કારણ (kāraṇ) mean? (\"A reason; a cause\".) Its gender? (Neuter: તેનું કારણ (kāraṇ).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C277-karan-ke",
+      "sequence": 14970,
+      "title": "કારણ કે, -ને લીધે (kāraṇ ke, -ne līdhe) — because, because of",
+      "headword": "કારણ કે · -ને લીધે",
+      "romanization": "kāraṇ ke · -ne līdhe",
+      "gloss": "because, because of — a reason as a whole clause, or as a noun with -ne līdhe or -ne kāraṇe",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d9b7184ab16c81c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a reason\". (kāraṇ.) Then \"late\". (મોડું.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: કારણ કે, and a clause",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હું મોડો આવ્યો, કારણ કે ટ્રેન મોડી હતી. hũ moḍo āvyo, kāraṇ ke ṭren moḍī hatī. — \"I came late, because the train was late.\""
+            },
+            {
+              "kind": "speech",
+              "text": "કારણ કે (kāraṇ ke) works like કેમકે: what happened first, then the reason, a whole clause with its own verb. મોડો follows the man who came, મોડી the train."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -ને લીધે, and a noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વરસાદને લીધે અમે ઘરે રહ્યા. varsādne līdhe ame ghare rahyā. — \"Because of the rain, we stayed at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When the reason is a single thing, a noun, it takes -ને લીધે (-ne līdhe), \"because of\", or -ને કારણે (-ne kāraṇe), the same thing with the noun you have:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the reason is",
+                "say"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the reason is: a clause: the train was late. say: …, કારણ (kāraṇ) કે ટ્રેન મોડી હતી.",
+                "the reason is: a noun: the rain. say: વરસાદને લીધે …",
+                "the reason is: a noun: the crowd. say: ભીડને કારણે …"
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Because of the crowd, we were late\" — bhīḍne kāraṇe amne moḍũ thayũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Because of the crowd, we were late\" — *bhīḍne kāraṇe amne moḍũ thayũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She won't come, because she has a fever\" — te nahī̃ āve, kāraṇ ke tene tāv che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She won't come, because she has a fever\" — *te nahī̃ āve, kāraṇ ke tene tāv che*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C277-karan-ke-r1",
+              "prompt": "Say that you came late because the train was late, then that because of the rain you stayed at home.",
+              "assesses": [
+                "GU-GRAMMAR-C277-KARAN-KE-01",
+                "GU-GRAMMAR-C277-NE-LIDHE-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "hũ moḍo (moḍī) āvyo (āvī), kāraṇ ke ṭren moḍī hatī; varsādne līdhe hũ ghare rahyo (rahī)",
+                "હું મોડો આવ્યો, કારણ કે ટ્રેન મોડી હતી. વરસાદને લીધે હું ઘરે રહ્યો.",
+                "હું મોડી આવી, કારણ કે ટ્રેન મોડી હતી. વરસાદને લીધે હું ઘરે રહી.",
+                "hũ moḍī āvī, kāraṇ ke ṭren moḍī hatī; varsādne līdhe hũ ghare rahī"
+              ],
+              "feedback": {
+                "correct": "kāraṇ ke before a clause, -ne līdhe after a noun.",
+                "incorrect": "A clause follows kāraṇ ke: ṭren moḍī hatī. A noun takes -ne līdhe: varsādne līdhe."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Because the train was late\"? (કારણ (kāraṇ) કે ટ્રેન મોડી હતી.) \"Because of the rain\"? (વરસાદને લીધે.) Which one takes a noun? (-ને લીધે.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R277-opinion-and-reason",
+      "sequence": 14980,
+      "title": "Review — opinions and reasons",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "an opinion, and the reason for it",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d20a14bce4db369b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I went home and ate\". (hũ ghare jaīne jamyo.) Then \"first we drank tea, then we went to the market\". (pahelā̃ ame cā pīdhī, pachī ame bajār gayā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What do you think? What is your opinion?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What do you think? What is your opinion?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I think it will rain. In my opinion the train will come late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I think it will rain. In my opinion the train will come late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I came late, because the train was late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I came late, because the train was late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Because of the rain, we stayed at home. Because of the rain, I won't go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Because of the rain, we stayed at home. Because of the rain, I won't go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What is the reason for it? I have two reasons.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What is the reason for it? I have two reasons.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"In my opinion\"? (મારા મતે.) \"I don't think so\"? (મને નથી લાગતું.) Which takes a clause, કારણ (kāraṇ) કે or -ને લીધે? (કારણ (kāraṇ) કે.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
