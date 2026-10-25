@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-475-SENSES475",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-475-SENSES475"
+  ],
+  "after": []
+}

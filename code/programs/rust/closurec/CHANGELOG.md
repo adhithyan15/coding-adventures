@@ -224,6 +224,22 @@ loop scope. `tests/regression_for_head_shadow.rs` compiles the issue's matrix at
 SIMPLE and ADVANCED, checks that the outer declaration survives and pins the
 output bytes, and, when `node` is installed, checks that the output prints
 what the source prints.
+### Fixed - WHITESPACE_ONLY leaves methods named `if`/`while`/`for`/`with` alone (#18123)
+
+`class C{if(){}}` printed as `class C{if();}`, `class C{with(a){return a}}`
+as `class C{with(a)return a}` and `x={while(a){c=a;}}` as
+`x={while(a)c=a}`. None parses. The header-body flatten and the
+control-flow-head arming treated the method name as a statement keyword.
+
+`member_list_positions` marks every token whose innermost open bracket is a
+class body or object literal. A keyword there is a member name, so neither
+rule fires. The classification errs towards "block", so a real `if`
+statement is never disarmed.
+
+`tests/regression_ws_keyword_methods.rs` pins 26 shapes to the jar's bytes,
+real statements included, and checks with `node` that each output parses.
+Three unit tests cover the rule and the classification.
+
 ### Added - actual bounded provenance chronology (CV03)
 
 Traced compilation starts a fresh checked chronology log before input graph

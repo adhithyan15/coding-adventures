@@ -1,0 +1,11 @@
+{
+  "id": "GU-C509-phukvu",
+  "pathSegment": "GU-PATH-509-DHAMAN509",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-509-DHAMAN509",
+      "order": 1
+    }
+  ]
+}

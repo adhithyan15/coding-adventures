@@ -1,0 +1,11 @@
+{
+  "id": "GU-C523-bolvu-dip",
+  "pathSegment": "GU-PATH-523-FARSAN523",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-523-FARSAN523",
+      "order": 4
+    }
+  ]
+}

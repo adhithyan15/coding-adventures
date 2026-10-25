@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C405-sutkes",
+    "language": "gujarati",
+    "chapter": 405,
+    "sequence": 22640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3101895455a37d88"
+  },
+  "findings": []
+}

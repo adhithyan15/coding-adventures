@@ -3027,6 +3027,80 @@ pub fn lower_iir_to_beam(
                     restore_live_across_imported_call!(cur_idx);
                 }
 
+                // ── LANG83 PR6c: f64_signbit → two float comparisons ────────
+                //
+                // `f64_signbit x` is 1 when the sign bit of the binary64 `x`
+                // is set, else 0. A BEAM float is always finite (no NaN, no
+                // ±Infinity), so the sign bit is set exactly when
+                //
+                //     x < 0.0    or    x =:= -0.0
+                //
+                // | x      | is_lt x, 0.0 | is_eq_exact x, -0.0 | rd |
+                // |--------|--------------|---------------------|----|
+                // | -2.5   | true         | (not reached)       | 1  |
+                // | -0.0   | false        | true                | 1  |
+                // |  0.0   | false        | false (OTP 27+)     | 0  |
+                // |  2.5   | false        | false               | 0  |
+                //
+                // The second test needs OTP 27, where `0.0 =:= -0.0` is false
+                // (OTP 26 and earlier compared them equal, so `0.0` would read
+                // as negative). Both literals go through the module literal
+                // table, which interns by bit pattern, so `0.0` and `-0.0`
+                // are two distinct entries.
+                //
+                //     is_lt       {f,L_not_neg} {x,src} lit(0.0)
+                //     move        {i,1} {x,rd}
+                //     jump        {f,L_done}
+                //   L_not_neg:
+                //     is_eq_exact {f,L_zero} {x,src} lit(-0.0)
+                //     move        {i,1} {x,rd}
+                //     jump        {f,L_done}
+                //   L_zero:
+                //     move        {i,0} {x,rd}
+                //   L_done:
+                //
+                // `src` is read by both tests before any path writes `rd`, so
+                // `rd == src` (an aliasing dest) is safe. Comparisons are not
+                // GC points and call nothing, so no live set is saved.
+                "f64_signbit" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "f64_signbit must have a dest".into(),
+                        }),
+                    };
+                    let src = BEAMOperand::x(operand_reg!(get_src!(instr, 0)));
+                    let l_not_neg = alloc_synth_label!("f64_signbit tests");
+                    let l_zero = alloc_synth_label!("f64_signbit tests");
+                    let l_done = alloc_synth_label!("f64_signbit tests");
+                    let pos_zero = literal_pool.intern_f64(0.0);
+                    let neg_zero = literal_pool.intern_f64(-0.0);
+
+                    let mut lt = vec![BEAMOperand::f(l_not_neg), src.clone()];
+                    lt.extend(literal_operand(pos_zero));
+                    instrs.push(BEAMInstruction::new(OP_IS_LT, lt));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(1), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(l_done)]));
+
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(l_not_neg as u64)]));
+                    let mut eq = vec![BEAMOperand::f(l_zero), src];
+                    eq.extend(literal_operand(neg_zero));
+                    instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, eq));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(1), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(l_done)]));
+
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(l_zero as u64)]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(0), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(l_done as u64)]));
+                }
+
                 // ── Unary arithmetic: neg, not ──────────────────────────────
                 //
                 // Pattern: gc_bif1 {f,0} {u,live} {u,import_idx} {x,r} {x,rd}

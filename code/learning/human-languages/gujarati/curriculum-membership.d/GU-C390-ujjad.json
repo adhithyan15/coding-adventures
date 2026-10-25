@@ -1,0 +1,11 @@
+{
+  "id": "GU-C390-ujjad",
+  "pathSegment": "GU-PATH-390-PAK390",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-390-PAK390",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:3a4c52b826fd20a8",
+  "lessonIds": [
+    "GU-C519-sagdi",
+    "GU-C519-jhal",
+    "GU-C519-ac",
+    "GU-C519-varal",
+    "GU-C519-thaarvu"
+  ],
+  "tex": "gujarati/book/chapters/ch519-fire-and-steam.tex"
+}

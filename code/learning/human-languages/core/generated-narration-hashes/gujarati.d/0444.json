@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:f1efb0aad739edd7",
+  "lessonIds": [
+    "GU-C444-thad",
+    "GU-C444-chal",
+    "GU-C444-kali",
+    "GU-C444-jhumkhu",
+    "GU-C444-mahekvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch444.txt",
+  "json": "gujarati/narration/ch444.json",
+  "textHash": "fnv1a64:f434df7bb9920611",
+  "jsonHash": "fnv1a64:771bbe1888074985",
+  "findings": []
+}

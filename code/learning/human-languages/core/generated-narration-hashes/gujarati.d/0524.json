@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:3f327ec6a7fc6347",
+  "lessonIds": [
+    "GU-C524-sangrah",
+    "GU-C524-bhamardo",
+    "GU-C524-kodi",
+    "GU-C524-santakukdi",
+    "GU-C524-koydo",
+    "GU-R524-review-517-524"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch524.txt",
+  "json": "gujarati/narration/ch524.json",
+  "textHash": "fnv1a64:cb90e2fa969c4e71",
+  "jsonHash": "fnv1a64:c19a1a8d2ba5f5d8",
+  "findings": []
+}

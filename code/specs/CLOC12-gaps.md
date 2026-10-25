@@ -428,6 +428,29 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_destructuring` flipped IGNORED → PASS.
 - **Resolution:** Extended `needs_separator` with a 3-keyword whitelist: when prev is `var`/`let`/`const` AND next is `{`/`[`, force a separator. Keeps the change scoped; doesn't affect general PUNCTUATION-after-KEYWORD shapes.
 
+### #18123 — a keyword method name is not a statement head
+
+- **The bug.** The gap-076/079 header-body flatten and the emit loop's
+  control-flow-head arming fired on a *method* named `if`/`while`/`for`/
+  `with`. So `class C{if(){}}` printed as `class C{if();}` and
+  `x={while(a){c=a;}}` as `x={while(a)c=a}`, and neither parses. Upstream
+  prints both unchanged.
+- **Resolution.** `member_list_positions` makes one stack pass over `kept`
+  and marks each token whose innermost open bracket is a class body or
+  object literal; a keyword there is a member name. Class bodies are the
+  first `{` at the same depth after `class`. Object literals are a `{` after
+  an unambiguous expression-position token. After `:`, a `{` is an object
+  literal only when that `:` is a property colon or sits inside a paren or
+  bracket. Labels and `case x:{` stay blocks. Misclassifying a block as a
+  member list would disarm a real `if`, so every rule errs towards
+  "block".
+- **Tests.** Three unit tests, and
+  `closurec/tests/regression_ws_keyword_methods.rs` (26 shapes pinned to the
+  jar, node parse check). A `function` keyword at the class head's depth
+  cancels the wait for the class body, since a function expression in
+  `extends` opens its own `{` first; and only a real class head
+  (`class {`, `class extends`, `class Name {|extends`) arms it.
+
 ### gap-036 — switch statement trailing `;` after `}`
 
 - **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_switch` flipped IGNORED → PASS.

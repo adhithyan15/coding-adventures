@@ -1,0 +1,11 @@
+{
+  "id": "GU-C385-kadar",
+  "pathSegment": "GU-PATH-385-PURASKAR385",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-385-PURASKAR385",
+      "order": 1
+    }
+  ]
+}

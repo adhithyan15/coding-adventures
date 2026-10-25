@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:4380e6967d0d6c68",
+  "lessonIds": [
+    "GU-C332-dantaktha",
+    "GU-C332-bhagvan",
+    "GU-C332-daitya",
+    "GU-C332-devi",
+    "GU-C332-vardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch332.txt",
+  "json": "gujarati/narration/ch332.json",
+  "textHash": "fnv1a64:6e8b377842ccd71b",
+  "jsonHash": "fnv1a64:69869baf86c6a609",
+  "findings": []
+}

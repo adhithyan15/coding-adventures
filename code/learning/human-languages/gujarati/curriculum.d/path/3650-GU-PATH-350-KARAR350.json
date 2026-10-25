@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-350-KARAR350",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GU-EXT-350-KARAR350"
+  ],
+  "after": []
+}

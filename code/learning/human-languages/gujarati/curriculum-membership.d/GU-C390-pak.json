@@ -1,0 +1,11 @@
+{
+  "id": "GU-C390-pak",
+  "pathSegment": "GU-PATH-390-PAK390",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-390-PAK390",
+      "order": 0
+    }
+  ]
+}

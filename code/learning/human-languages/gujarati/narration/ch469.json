@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 469,
+  "title": "Habits and Quirks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c8cda66b2171e8ba",
+  "lessons": [
+    {
+      "id": "GU-C469-vicitra",
+      "sequence": 26120,
+      "title": "વિચિત્ર (vicitra) — strange; odd",
+      "headword": "વિચિત્ર",
+      "romanization": "vicitra",
+      "gloss": "strange; odd",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35a428718479bdbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for boasting, then the Gujarati for to beguile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વિચિત્ર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિચિત્ર — vicitra — \"strange; odd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારા કાકાને વિચિત્ર ટેવ છે. mārā kākāne vicitra ṭev che. My uncle has an odd habit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિચિત્ર (vicitra) is a tatsama, Sanskrit vicitra, \"variegated, many-coloured\", as Monier-Williams records it; Gujarati uses it for anything out of the ordinary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicitra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicitra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicitra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicitra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārā kākāne vicitra ṭev che. — My uncle has an odd habit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārā kākāne vicitra ṭev che.* — My uncle has an odd habit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for boasting, then the Gujarati for to beguile, then say vicitra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for boasting, then the Gujarati for to beguile, then say *vicitra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વિચિત્ર (vicitra) mean? (\"Strange; odd\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C469-tarangi",
+      "sequence": 26130,
+      "title": "તરંગી (tarangī) — whimsical",
+      "headword": "તરંગી",
+      "romanization": "tarangī",
+      "gloss": "whimsical",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d1f04194c5626b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to beguile, then the Gujarati for odd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: તરંગી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તરંગી — tarangī — \"whimsical\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તરંગી મામા રોજ નવી યોજના બનાવે છે. tarangī māmā roj navī yojnā banāve che. My whimsical uncle makes a new plan every day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તરંગી (tarangī) is built on taraṅg, \"a wave\", from Sanskrit taraṃga, \"a wave, a billow\" (Monier-Williams), with -ī: a mind that rises and falls like waves."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarangī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarangī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarangī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarangī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarangī māmā roj navī yojnā banāve che. — My whimsical uncle makes a new plan every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarangī māmā roj navī yojnā banāve che.* — My whimsical uncle makes a new plan every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to beguile, then the Gujarati for odd, then say tarangī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to beguile, then the Gujarati for odd, then say *tarangī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does તરંગી (tarangī) mean? (\"Whimsical\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C469-jhanun",
+      "sequence": 26140,
+      "title": "ઝનૂન (jhanūn) — obsession; frenzy",
+      "headword": "ઝનૂન",
+      "romanization": "jhanūn",
+      "gloss": "obsession; frenzy",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83a5f47d6cae351b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for odd, then the Gujarati for whimsical."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝનૂન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝનૂન — jhanūn — \"obsession; frenzy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરાને ક્રિકેટનું ઝનૂન છે. Mīrāne krikeṭnũ jhanūn che. Mira is obsessed with cricket."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝનૂન (jhanūn) is usually traced to Arabic junūn, \"madness\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhanūn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhanūn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhanūn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhanūn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrāne krikeṭnũ jhanūn che. — Mira is obsessed with cricket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrāne krikeṭnũ jhanūn che.* — Mira is obsessed with cricket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for odd, then the Gujarati for whimsical, then say jhanūn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for odd, then the Gujarati for whimsical, then say *jhanūn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝનૂન (jhanūn) mean? (\"Obsession; frenzy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C469-sust",
+      "sequence": 26150,
+      "title": "સુસ્ત (sust) — sluggish",
+      "headword": "સુસ્ત",
+      "romanization": "sust",
+      "gloss": "sluggish",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92e78a694e4064ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for whimsical, then the Gujarati for obsession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સુસ્ત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સુસ્ત — sust — \"sluggish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગરમીમાં બધા સુસ્ત થઈ જાય છે. garmīmā̃ badhā sust thaī jāy che. In the heat everyone becomes sluggish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સુસ્ત (sust) is usually traced to Persian sust, \"slack, weak\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sust",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sust*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sust, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sust*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garmīmā̃ badhā sust thaī jāy che. — In the heat everyone becomes sluggish.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garmīmā̃ badhā sust thaī jāy che.* — In the heat everyone becomes sluggish.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for whimsical, then the Gujarati for obsession, then say sust again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for whimsical, then the Gujarati for obsession, then say *sust* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સુસ્ત (sust) mean? (\"Sluggish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C469-udyam",
+      "sequence": 26160,
+      "title": "ઉદ્યમ (udyam) — industry; steady effort",
+      "headword": "ઉદ્યમ",
+      "romanization": "udyam",
+      "gloss": "industry; steady effort",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa767f442c54cec7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for obsession, then the Gujarati for sluggish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉદ્યમ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉદ્યમ — udyam — \"industry; steady effort\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ઉદ્યમથી ગરીબ માણસ પણ અમીર બને છે. udyamthī garīb māṇas paṇ amīr bane che. Through steady effort even a poor man becomes rich."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉદ્યમ (udyam) is a tatsama, Sanskrit udyama, \"lifting up\" and \"undertaking, exertion\", as Monier-Williams records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyamthī garīb māṇas paṇ amīr bane che. — Through steady effort even a poor man becomes rich.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyamthī garīb māṇas paṇ amīr bane che.* — Through steady effort even a poor man becomes rich.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for obsession, then the Gujarati for sluggish, then say udyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for obsession, then the Gujarati for sluggish, then say *udyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઉદ્યમ (udyam) mean? (\"Industry; steady effort\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

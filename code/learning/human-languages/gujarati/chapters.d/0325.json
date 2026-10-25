@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "The Fight for Freedom",
+  "label": "ch:gu-the-fight-for-freedom",
+  "canDo": "I can say who fought for freedom and against whom.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C325-balvo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can say who fought for freedom and against whom.",
+    "assesses": [
+      "GU-LEX-C325-AZADI325-03",
+      "GU-LEX-C325-AZADI325-04",
+      "GU-LEX-C325-AZADI325-05"
+    ]
+  }
+}

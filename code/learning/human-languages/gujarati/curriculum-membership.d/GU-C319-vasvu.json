@@ -1,0 +1,11 @@
+{
+  "id": "GU-C319-vasvu",
+  "pathSegment": "GU-PATH-319-KILLO319",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-319-KILLO319",
+      "order": 4
+    }
+  ]
+}

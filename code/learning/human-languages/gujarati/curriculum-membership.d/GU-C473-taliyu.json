@@ -1,0 +1,11 @@
+{
+  "id": "GU-C473-taliyu",
+  "pathSegment": "GU-PATH-473-JANGH473",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-473-JANGH473",
+      "order": 1
+    }
+  ]
+}

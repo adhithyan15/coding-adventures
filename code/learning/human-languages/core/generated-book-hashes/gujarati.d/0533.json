@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:1ae38e231174ad50",
+  "lessonIds": [
+    "GU-C533-paso",
+    "GU-C533-copat",
+    "GU-C533-dav",
+    "GU-C533-baji",
+    "GU-C533-khelvu"
+  ],
+  "tex": "gujarati/book/chapters/ch533-a-roll-of-the-dice.tex"
+}

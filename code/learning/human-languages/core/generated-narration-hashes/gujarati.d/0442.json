@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:409fddf7d4721170",
+  "lessonIds": [
+    "GU-C442-samudra",
+    "GU-C442-laher",
+    "GU-C442-nav",
+    "GU-C442-jal",
+    "GU-C442-dolvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch442.txt",
+  "json": "gujarati/narration/ch442.json",
+  "textHash": "fnv1a64:8531a58df4faa77d",
+  "jsonHash": "fnv1a64:83dd8b52edd6a927",
+  "findings": []
+}

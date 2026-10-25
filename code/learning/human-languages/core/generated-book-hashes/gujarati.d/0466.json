@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:aff691ea5ad68afe",
+  "lessonIds": [
+    "GU-C466-kayar",
+    "GU-C466-nidar",
+    "GU-C466-saurya",
+    "GU-C466-khamir",
+    "GU-C466-dagmagvu"
+  ],
+  "tex": "gujarati/book/chapters/ch466-brave-hearts.tex"
+}

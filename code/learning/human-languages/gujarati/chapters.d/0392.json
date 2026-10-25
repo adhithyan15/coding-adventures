@@ -1,0 +1,21 @@
+{
+  "chapter": 392,
+  "title": "Ready for Anything",
+  "label": "ch:gu-ready-for-anything",
+  "canDo": "I can say how we will be ready if trouble comes.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-R392-review-final-392",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can say how we will be ready if trouble comes.",
+    "assesses": [
+      "GU-LEX-C392-SAJJ392-01",
+      "GU-LEX-C392-SAJJ392-02",
+      "GU-LEX-C392-SAJJ392-03",
+      "GU-LEX-C392-SAJJ392-04",
+      "GU-LEX-C392-SAJJ392-05"
+    ]
+  }
+}

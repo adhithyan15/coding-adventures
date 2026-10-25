@@ -234,6 +234,13 @@ macro_rules! python_case {
     };
 }
 
+/// The source of one `py2-int-print` corpus case (LANG84 phase 7c slice 1).
+macro_rules! python2_case {
+    ($name:literal) => {
+        include_str!(concat!("../../../../grammars/python/corpus/py2-int-print/", $name, ".py"))
+    };
+}
+
 /// Every executable column, for rows that run on all of them.
 const EVERY_COLUMN: &[Backend] = &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam];
 
@@ -6632,6 +6639,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - a checked static normalizer may provide the bounded exponent
+    // of the one dynamic sign root.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure rightvalue; rightvalue := -3.5; real result; result := entier(sign(rightvalue()) ^ entier(2.75)); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -11173,6 +11191,34 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_mul") },
     Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_neg_min") },
     Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_min_floordiv_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
+    // Python 2 — LANG84 phase 7c slice 1: the `py2-int-print` subset, the
+    // print *statement* and classic `/` (floor division on ints, lowered
+    // exactly like `//`). 2.2 and 2.7.18 are one IIR-identity class
+    // (`release_classes.csv`), and 2.2, its first release in `releases.csv`,
+    // represents it, so these rows prove stage B for both. Each source is a
+    // case of `code/grammars/python/corpus/py2-int-print/` verbatim; the
+    // expectations rest on the tags' pinned source (no host python2) and are
+    // cross-checked by translating each case to Python 3 in
+    // `python-iir-compiler`'s `py2_corpus_agrees_with_host_python3_after_translation`.
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("print_forms"), expect: Expect::Stdout("1\n\n2\n3\n4"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/print_forms") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/precedence") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("classic_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/classic_div_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("classic_div_chain"), expect: Expect::Stdout("7\n33\n6"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/classic_div_chain") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("floor_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/floor_div_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("mod_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/mod_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("unary"), expect: Expect::Stdout("5\n7\n-24\n7\n-3"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/unary") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("layout"), expect: Expect::Stdout("3\n3\n-1"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/layout") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("i64_bounds"), expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n4611307862899360000\n-9223372036854775808"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/i64_bounds") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("minus_one_divisor"), expect: Expect::Stdout("-7\n0\n-9223372036854775807\n0\n-7"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/minus_one_divisor") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("div_zero_after_output"), expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/div_zero_after_output") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("mod_zero"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/mod_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("floor_div_zero_computed"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/floor_div_zero_computed") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("zero_divisor_inside_item"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/zero_divisor_inside_item") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_add"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_add") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_sub"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_sub") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_mul") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_neg_min") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_min_classic_div_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_min_classic_div_minus_one") },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -13956,7 +14002,12 @@ fn lang84_rows_run_their_corpus_case(rows: &[&Prog], dir: &str, subset: &str, ex
         let [row_subset, case, release, class] = line.split(',').collect::<Vec<_>>()[..] else {
             panic!("{dir}/release_classes.csv: {line}");
         };
-        assert_eq!(row_subset, subset);
+        // One file can hold several subsets' sweeps (Python since phase 7c
+        // slice 1: py-int-print and py2-int-print); each subset's rows are
+        // checked against its own lines only.
+        if row_subset != subset {
+            continue;
+        }
         if class == "rejected" {
             continue;
         }
@@ -14372,8 +14423,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // 3.13.16 (nine of them StdoutThenTrap: four Trap.DivZero, five
         // Trap.Overflow), plus 7b slice 2's rows on the two IIR-identity class
         // representatives: 17 on 3.0a1 (no int_underscores) and 18 on 3.12.3,
-        // all eight columns.
-        (Language::Python, 53, 424),
+        // all eight columns. Phase 7c slice 1 adds the py2-int-print corpus
+        // (19 cases, nine StdoutThenTrap) on its one class representative, 2.2.
+        (Language::Python, 72, 576),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -26215,6 +26267,32 @@ fn algol_static_sign_factor_runtime_real_output_runs_on_every_available_standard
 }
 
 #[test]
+fn algol_static_normalizer_exponent_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("result := entier(sign(rightvalue()) ^ entier(2.75))")
+        })
+        .expect("the static-normalizer exponent ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the static-normalizer exponent program did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_static_conditional_while_effect_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -28374,6 +28452,16 @@ fn python_rows() -> Vec<&'static Prog> {
     rows
 }
 
+/// The Python rows of one subset (`py-int-print`, or since phase 7c slice 1
+/// `py2-int-print`), by the subset prefix of their `case`.
+fn python_rows_of(subset: &str) -> Vec<&'static Prog> {
+    let prefix = format!("{subset}/");
+    let rows: Vec<_> =
+        python_rows().into_iter().filter(|p| p.case.is_some_and(|c| c.starts_with(&prefix))).collect();
+    assert!(!rows.is_empty(), "PROGRAMS has no {subset} rows");
+    rows
+}
+
 /// The `py-int-print` corpus directory, read from `subsets.csv` by header.
 fn python_corpus_dir() -> std::path::PathBuf {
     let grammars = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/python");
@@ -28446,7 +28534,7 @@ fn python_rows_are_py_int_print_corpus_cases() {
         })
         .collect();
     cases.sort();
-    let rows = python_rows();
+    let rows = python_rows_of("py-int-print");
     for program in &rows {
         let Some((_, _, expect)) = cases.iter().find(|(_, source, _)| source == program.src) else {
             panic!("Python row is not a py-int-print corpus case: {:?}", program.src);
@@ -28491,7 +28579,9 @@ fn python_rows_agree_with_the_host_python_oracle() {
         eprintln!("SKIP Python oracle: python3 {version} is not the 3.13 line these rows target");
         return;
     }
-    for program in python_rows() {
+    // Python 3 rows only: a py2-int-print row is Python 2 (its own oracle is
+    // python-iir-compiler's translation check).
+    for program in python_rows_of("py-int-print") {
         let out = run_host_oracle(Command::new("python3").args(["-I", "-"]), program.src);
         // Windows interpreters write text-mode stdout ("\r\n"); the rows
         // record the language's output, so fold the line ending back.
@@ -28517,7 +28607,7 @@ fn python_rows_agree_with_the_host_python_oracle() {
             ref other => panic!("no Python oracle for {other:?}"),
         }
     }
-    eprintln!("Python oracle: {} rows agree with CPython {version}", python_rows().len());
+    eprintln!("Python oracle: {} rows agree with CPython {version}", python_rows_of("py-int-print").len());
 }
 
 /// LANG84 C7.3: every row's module passes `check_module_for` on all nine
@@ -28566,8 +28656,17 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
 /// LANG84 7b slice 2: the Python rows are the `py-int-print` corpus on the
 /// default release (3.13.16) and on each IIR-identity class representative
 /// (3.0a1, which refuses `int_underscores`, and 3.12.3), exactly as
-/// `python-iir-compiler`'s release sweep records them.
+/// `python-iir-compiler`'s release sweep records them. Phase 7c slice 1: the
+/// `py2-int-print` rows are that corpus on its one class representative,
+/// 2.2 (Python 2 has no default release; 2.2 is passed as the default so
+/// only the representative's rows are expected).
 #[test]
 fn python_rows_run_their_corpus_case() {
-    lang84_rows_run_their_corpus_case(&python_rows(), "python", "py-int-print", "py", "3.13.16");
+    lang84_rows_run_their_corpus_case(&python_rows_of("py-int-print"), "python", "py-int-print", "py", "3.13.16");
+    lang84_rows_run_their_corpus_case(&python_rows_of("py2-int-print"), "python", "py2-int-print", "py", "2.2");
+    assert_eq!(
+        python_rows_of("py-int-print").len() + python_rows_of("py2-int-print").len(),
+        python_rows().len(),
+        "every Python row belongs to one subset"
+    );
 }

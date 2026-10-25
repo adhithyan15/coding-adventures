@@ -1,0 +1,11 @@
+{
+  "id": "GU-C287-paglu",
+  "pathSegment": "GU-PATH-287-PAGLU287",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-287-PAGLU287",
+      "order": 1
+    }
+  ]
+}

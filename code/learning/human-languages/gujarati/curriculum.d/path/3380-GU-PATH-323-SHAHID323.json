@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-323-SHAHID323",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-323-SHAHID323"
+  ],
+  "after": []
+}

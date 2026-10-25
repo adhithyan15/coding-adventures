@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:f2b50b0705e33d52",
+  "lessonIds": [
+    "GU-C381-pastavu",
+    "GU-C381-aphsos",
+    "GU-C381-kas",
+    "GU-C381-jhurvu",
+    "GU-C381-moko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch381.txt",
+  "json": "gujarati/narration/ch381.json",
+  "textHash": "fnv1a64:a8d65390cd275e42",
+  "jsonHash": "fnv1a64:b17066f57682f219",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C325-adolan",
+    "language": "gujarati",
+    "chapter": 325,
+    "sequence": 18080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef7ffab77779e7d6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C420-chavu",
+    "language": "gujarati",
+    "chapter": 420,
+    "sequence": 23420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bd86e66c71c478d"
+  },
+  "findings": []
+}

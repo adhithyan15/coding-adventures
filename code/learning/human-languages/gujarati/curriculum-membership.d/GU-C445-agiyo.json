@@ -1,0 +1,11 @@
+{
+  "id": "GU-C445-agiyo",
+  "pathSegment": "GU-PATH-445-BIRDS445",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-445-BIRDS445",
+      "order": 1
+    }
+  ]
+}

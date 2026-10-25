@@ -1,0 +1,11 @@
+{
+  "id": "GU-C510-dhaalvu",
+  "pathSegment": "GU-PATH-510-SONI510",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-510-SONI510",
+      "order": 3
+    }
+  ]
+}

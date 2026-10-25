@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C468-gappu",
+    "language": "gujarati",
+    "chapter": 468,
+    "sequence": 26080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:542cc11dc2bc8617"
+  },
+  "findings": []
+}

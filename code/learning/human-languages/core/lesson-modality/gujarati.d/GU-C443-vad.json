@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C443-vad",
+    "language": "gujarati",
+    "chapter": 443,
+    "sequence": 24570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d791d60d7e3b52de"
+  },
+  "findings": []
+}

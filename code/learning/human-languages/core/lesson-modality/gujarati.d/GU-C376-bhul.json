@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C376-bhul",
+    "language": "gujarati",
+    "chapter": 376,
+    "sequence": 20890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f8b109e4cdaa176"
+  },
+  "findings": []
+}

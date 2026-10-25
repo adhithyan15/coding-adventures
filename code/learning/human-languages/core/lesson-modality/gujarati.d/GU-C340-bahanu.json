@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C340-bahanu",
+    "language": "gujarati",
+    "chapter": 340,
+    "sequence": 19080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea2c7a4753aa4a6f"
+  },
+  "findings": []
+}

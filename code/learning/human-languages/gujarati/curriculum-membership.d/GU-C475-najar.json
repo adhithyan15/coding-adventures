@@ -1,0 +1,11 @@
+{
+  "id": "GU-C475-najar",
+  "pathSegment": "GU-PATH-475-SENSES475",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-475-SENSES475",
+      "order": 3
+    }
+  ]
+}

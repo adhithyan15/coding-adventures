@@ -4,6 +4,12 @@ All notable changes to `coding_adventures_javascript_lexer` will be documented i
 
 ## [Unreleased]
 
+### Fixed
+- Regenerated `_grammar_es2021.rb` … `_grammar_es2025.rb` after those editions' number patterns were brought in line with ECMA-262's NumericLiteralSeparator grammar (no `1__0`, `0_17`, `1_.5`; `5.` and `5.e1` lex as one NUMBER; a legacy octal takes no fraction or exponent). LANG84 6d security review.
+
+### Changed
+- Regenerated `_grammar_es2016.rb` … `_grammar_es2025.rb` after LANG84 phase 6d added `source_ref`/`source_sha`/`PARTIAL` citation lines to the es2016–es2025 pair headers. Only line numbers change.
+
 ### Changed
 - Regenerated `_grammar_es2015.rb` … `_grammar_es2024.rb` after LANG84 phase 6a added the F10 regex/division mode table (`start_mode`, `group div`, `group template_div`) to those editions' `.tokens`. The embedded grammars gain the `div` and `template_div` groups; this Ruby lexer does not apply transitions, so tokenization is unchanged here.
 

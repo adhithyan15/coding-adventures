@@ -1,0 +1,11 @@
+{
+  "id": "GU-C420-vad",
+  "pathSegment": "GU-PATH-420-HOUSE420",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-420-HOUSE420",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:6f90f5a0e1872bd3",
+  "lessonIds": [
+    "GU-C528-yadi",
+    "GU-C528-bajet",
+    "GU-C528-vyavastha",
+    "GU-C528-dayri",
+    "GU-C528-yojvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch528.txt",
+  "json": "gujarati/narration/ch528.json",
+  "textHash": "fnv1a64:aedf76429ddac81b",
+  "jsonHash": "fnv1a64:d82fe7be7bbf9456",
+  "findings": []
+}

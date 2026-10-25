@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 527,
+  "title": "In the Wrestling Ring",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:71e5fdae70101c7b",
+  "lessons": [
+    {
+      "id": "GU-C527-akhado",
+      "sequence": 29330,
+      "title": "અખાડો (akhāḍo) — a wrestling ground",
+      "headword": "અખાડો",
+      "romanization": "akhāḍo",
+      "gloss": "a wrestling ground",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58c48a0a10b73f68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a raga, then the Gujarati for to strike up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અખાડો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અખાડો — akhāḍo — \"a wrestling ground\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમે રોજ સવારે ગામના અખાડામાં કસરત કરીએ છીએ. ame roj savāre gāmnā akhāḍāmā̃ kasrat karīe chīe. Every morning we exercise at the village wrestling ground."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અખાડો (akhāḍo) is inherited from Sanskrit akṣavāṭa, \"a wrestling ground\", and CDIAL lists the Gujarati word (CDIAL 39)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhāḍo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhāḍo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhāḍo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhāḍo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame roj savāre gāmnā akhāḍāmā̃ kasrat karīe chīe. — Every morning we exercise at the village wrestling ground.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame roj savāre gāmnā akhāḍāmā̃ kasrat karīe chīe.* — Every morning we exercise at the village wrestling ground.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a raga, then the Gujarati for to strike up, then say akhāḍo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a raga, then the Gujarati for to strike up, then say *akhāḍo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અખાડો (akhāḍo) mean? (\"A wrestling ground\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C527-pahelvan",
+      "sequence": 29340,
+      "title": "પહેલવાન (pahelvān) — a wrestler",
+      "headword": "પહેલવાન",
+      "romanization": "pahelvān",
+      "gloss": "a wrestler",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6de68d9ec863bf0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to strike up, then the Gujarati for a wrestling ground."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પહેલવાન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પહેલવાન — pahelvān — \"a wrestler\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ પહેલવાન ઘણો મજબૂત છે. ā pahelvān ghaṇo majbūt che. This wrestler is very strong."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પહેલવાન (pahelvān) is usually traced to Persian pahlavān, \"a champion, a wrestler\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahelvān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahelvān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahelvān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahelvān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pahelvān ghaṇo majbūt che. — This wrestler is very strong.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pahelvān ghaṇo majbūt che.* — This wrestler is very strong.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to strike up, then the Gujarati for a wrestling ground, then say pahelvān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to strike up, then the Gujarati for a wrestling ground, then say *pahelvān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પહેલવાન (pahelvān) mean? (\"A wrestler\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C527-hariph",
+      "sequence": 29350,
+      "title": "હરીફ (harīph) — a rival",
+      "headword": "હરીફ",
+      "romanization": "harīph",
+      "gloss": "a rival",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21a0f82b6f2bdc65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a wrestling ground, then the Gujarati for a wrestler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: હરીફ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હરીફ — harīph — \"a rival\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આજે પહેલવાનનો હરીફ તેના કરતાં મોટો છે. āje pahelvānno harīph tenā kartā̃ moṭo che. Today the wrestler's rival is bigger than he is."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine or feminine noun, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હરીફ (harīph) is usually traced to Arabic ḥarīf, \"a rival, a fellow player\", through Persian. The contest itself is હરીફાઈ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harīph",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harīph*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harīph, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harīph*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āje pahelvānno harīph tenā kartā̃ moṭo che. — Today the wrestler's rival is bigger than he is.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āje pahelvānno harīph tenā kartā̃ moṭo che.* — Today the wrestler's rival is bigger than he is.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a wrestling ground, then the Gujarati for a wrestler, then say harīph again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a wrestling ground, then the Gujarati for a wrestler, then say *harīph* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does હરીફ (harīph) mean? (\"A rival\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C527-pachadvu",
+      "sequence": 29360,
+      "title": "પછાડવું (pachāḍvũ) — to throw down",
+      "headword": "પછાડવું",
+      "romanization": "pachāḍvũ",
+      "gloss": "to throw down",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3955c753f6de54ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a wrestler, then the Gujarati for a rival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પછાડવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પછાડવું — pachāḍvũ — \"to throw down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પહેલવાને તેના હરીફને ધરતી પર પછાડ્યો. pahelvāne tenā harīphne dhartī par pachāḍyo. The wrestler threw his rival to the ground."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે હરીફને પછાડ્યો, teṇe harīphne pachāḍyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પછાડવું (pachāḍvũ) comes from pracchaṭ, a form CDIAL reconstructs, and CDIAL lists the Gujarati verb, \"to knock down\" (CDIAL 8493)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pachāḍvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pachāḍvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pachāḍvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pachāḍvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahelvāne tenā harīphne dhartī par pachāḍyo. — The wrestler threw his rival to the ground.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahelvāne tenā harīphne dhartī par pachāḍyo.* — The wrestler threw his rival to the ground.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a wrestler, then the Gujarati for a rival, then say pachāḍvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a wrestler, then the Gujarati for a rival, then say *pachāḍvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પછાડવું (pachāḍvũ) mean? (\"To throw down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C527-hamphavvu",
+      "sequence": 29370,
+      "title": "હંફાવવું (hamphāvvũ) — to tire out (an opponent)",
+      "headword": "હંફાવવું",
+      "romanization": "hamphāvvũ",
+      "gloss": "to tire out (an opponent)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d953f077c4a794e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a rival, then the Gujarati for to throw down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: હંફાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હંફાવવું — hamphāvvũ — \"to tire out (an opponent)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "નાના પહેલવાને મોટા હરીફને ઘણો હંફાવ્યો. nānā pahelvāne moṭā harīphne ghaṇo hamphāvyo. The small wrestler wore out his big rival."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે હરીફને હંફાવ્યો, teṇe harīphne hamphāvyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હંફાવવું (hamphāvvũ) is built from હાંફવું, \"to pant\", with the causative -āv-: to leave an opponent panting. CDIAL files the family under hamph, \"pant\", an imitative form (CDIAL 13973)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamphāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamphāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamphāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamphāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānā pahelvāne moṭā harīphne ghaṇo hamphāvyo. — The small wrestler wore out his big rival.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānā pahelvāne moṭā harīphne ghaṇo hamphāvyo.* — The small wrestler wore out his big rival.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a rival, then the Gujarati for to throw down, then say hamphāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a rival, then the Gujarati for to throw down, then say *hamphāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does હંફાવવું (hamphāvvũ) mean? (\"To tire out (an opponent)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

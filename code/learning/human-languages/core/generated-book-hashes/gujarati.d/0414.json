@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:ce073b73a704ce3e",
+  "lessonIds": [
+    "GU-C414-purva",
+    "GU-C414-pascim",
+    "GU-C414-uttar",
+    "GU-C414-ultu",
+    "GU-C414-hokayantra"
+  ],
+  "tex": "gujarati/book/chapters/ch414-east-and-west.tex"
+}

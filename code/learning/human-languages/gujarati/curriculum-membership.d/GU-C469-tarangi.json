@@ -1,0 +1,11 @@
+{
+  "id": "GU-C469-tarangi",
+  "pathSegment": "GU-PATH-469-TARANGI469",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-469-TARANGI469",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C461-dan",
+    "language": "gujarati",
+    "chapter": 461,
+    "sequence": 25750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86c5c882a745df22"
+  },
+  "findings": []
+}

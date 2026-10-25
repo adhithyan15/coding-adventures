@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C527-akhado",
+    "language": "gujarati",
+    "chapter": 527,
+    "sequence": 29330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58c48a0a10b73f68"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C392-atmavisvas",
+    "language": "gujarati",
+    "chapter": 392,
+    "sequence": 21740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b137f9263be2f2b0"
+  },
+  "findings": []
+}

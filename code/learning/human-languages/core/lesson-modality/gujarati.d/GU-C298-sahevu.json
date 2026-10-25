@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C298-sahevu",
+    "language": "gujarati",
+    "chapter": 298,
+    "sequence": 16700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:984b355f812477d5"
+  },
+  "findings": []
+}

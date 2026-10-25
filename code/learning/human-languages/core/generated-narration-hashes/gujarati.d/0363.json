@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:c18302af47347b6b",
+  "lessonIds": [
+    "GU-C363-akdo",
+    "GU-C363-gantari",
+    "GU-C363-taran",
+    "GU-C363-sankhya",
+    "GU-C363-ghatadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch363.txt",
+  "json": "gujarati/narration/ch363.json",
+  "textHash": "fnv1a64:6c1497987551ca1a",
+  "jsonHash": "fnv1a64:d27c7525871843b2",
+  "findings": []
+}

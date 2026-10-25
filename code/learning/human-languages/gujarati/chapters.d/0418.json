@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Societies and Flats",
+  "label": "ch:gu-societies-and-flats",
+  "canDo": "I can say where and how I live in a town.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C418-bhadut",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can say where and how I live in a town.",
+    "assesses": [
+      "GU-LEX-C418-SOCIETY418-03",
+      "GU-LEX-C418-SOCIETY418-04",
+      "GU-LEX-C418-SOCIETY418-05"
+    ]
+  }
+}

@@ -905,6 +905,49 @@ fn emit_instr(
         asm.str_(Reg::X0, Reg::Sp, slot)?;          // store the integer
         return Ok(());
     }
+    // LANG83 PR6c — IEEE-754 binary64 arithmetic that never traps, and the
+    // sign bit. AArch64 FP exceptions are non-trapping by default (FPCR's
+    // trap-enable bits are clear), so `FDIV` of 1 by 0 is `+inf`, 0 by 0 is
+    // the default NaN, and an overflow is `±inf`:
+    //
+    //   f64_add d <- a, b   ldr d0,[a]; ldr d1,[b]; fadd d0,d0,d1; str d0,[d]
+    //   (sub/mul/div likewise — the shared `emit_fp_binop`)
+    //
+    // Negation and the sign test only touch bit 63, so they run on the
+    // integer side, on the raw bits the stack slot already holds:
+    //
+    //   f64_neg d <- a      ldr x0,[a]; mov x1,#0x8000000000000000; eor x0,x0,x1; str x0,[d]
+    //   f64_signbit d <- a  ldr x0,[a]; mov x1,#63; lsr x0,x0,x1; str x0,[d]   (0 or 1)
+    //
+    // `eor` with the sign mask is exactly IEEE `negate` (`-0.0` from `0.0`;
+    // a NaN stays a NaN) — never `0.0 - x`, which loses `-0.0`. `lsr` is the
+    // LOGICAL shift, so the bit arrives as 0 or 1, never -1. Every source is
+    // read before `[d]` is written, so `d == a` is safe.
+    if let Some(kind) = match op {
+        "f64_add" => Some(FpBin::Add),
+        "f64_sub" => Some(FpBin::Sub),
+        "f64_mul" => Some(FpBin::Mul),
+        "f64_div" => Some(FpBin::Div),
+        _ => None,
+    } {
+        return emit_fp_binop(asm, alloc, instr, kind);
+    }
+    if op == "f64_neg" || op == "f64_signbit" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_f64_bits(asm, alloc, Reg::X0, src)?;   // x0 = bits of a
+        if op == "f64_neg" {
+            asm.mov_imm64(Reg::X1, 1u64 << 63);      // the sign mask
+            asm.eor(Reg::X0, Reg::X0, Reg::X1);      // flip bit 63
+        } else {
+            asm.mov_imm64(Reg::X1, 63);
+            asm.lsr_reg(Reg::X0, Reg::X0, Reg::X1);  // bit 63 → 0/1
+        }
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
     // AL8 sqrt — `FSQRT Dd, Dn` (single hardware FP instruction, no libm).
     //   f64_sqrt dest <- src  →  ldr_d D0,[src]; fsqrt D0,D0; str_d D0,[dest]
     // NaN propagates; negative input → NaN (IEEE-754 / matches VM `f64::sqrt`).
@@ -1882,6 +1925,31 @@ fn load_fp_operand(
         }
         other => Err(BackendError::UnsupportedOp(format!(
             "f64 operand must be a Var (materialise the constant first), got {other:?}"
+        ))),
+    }
+}
+
+/// Load the raw 64-bit pattern of an `f64` operand into an X register
+/// (LANG83 PR6c): a `Var`'s stack slot, or a float literal's `to_bits()`.
+/// An integer literal is refused — reading `1` as float bits would be a
+/// miscompile.
+fn load_f64_bits(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    dst: Reg,
+    op: &CIROperand,
+) -> Result<(), BackendError> {
+    match op {
+        CIROperand::Var(name) => {
+            let slot = alloc.slot_of(name);
+            asm.ldr(dst, Reg::Sp, slot).map_err(BackendError::from)
+        }
+        CIROperand::Float(x) => {
+            asm.mov_imm64(dst, x.to_bits());
+            Ok(())
+        }
+        other => Err(BackendError::UnsupportedOp(format!(
+            "f64 operand must be a Var or a float literal, got {other:?}"
         ))),
     }
 }
@@ -3584,6 +3652,60 @@ mod tests {
         assert_eq!(ws[mul + 4], word_of(|a| a.movz(Reg::X0, 5, 0)));
         assert_eq!(ws[mul + 6], u32::from(TRAP_UDF_IMM));
         assert_eq!(relocs.iter().filter(|r| r.symbol == "__twig_trap").count(), 1);
+    }
+
+    // ── LANG83 PR6c: IEEE f64 arithmetic and the sign bit ──────────────────
+
+    fn pr6c_fn(op: &str, srcs: Vec<CIROperand>) -> Vec<u32> {
+        let cir = |op: &str, dest: Option<&str>, srcs: Vec<CIROperand>| CIRInstr {
+            op: op.into(), dest: dest.map(Into::into), srcs, ty: "f64".into(), deopt_to: None,
+        };
+        let params: [(String, String); 0] = [];
+        let body = vec![
+            cir("const_f64", Some("a"), vec![CIROperand::Float(1.5)]),
+            cir("const_f64", Some("b"), vec![CIROperand::Float(0.0)]),
+            cir(op, Some("r"), srcs),
+            cir("ret_void", None, vec![]),
+        ];
+        let (bytes, _) = compile_with_relocs(&ctx("f", &params, "void"), &body).unwrap_or_else(|e| panic!("{op}: {e}"));
+        words(&bytes)
+    }
+
+    /// The four binops are one FP instruction on d0, d1, then the store from
+    /// d0 — no compare, no trap (FPCR trap enables are clear).
+    #[test]
+    fn ieee_binops_are_one_fp_instruction() {
+        let ab = || vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())];
+        for (op, word) in [
+            ("f64_add", word_of(|a| a.fadd(Reg::X0, Reg::X0, Reg::X1))),
+            ("f64_sub", word_of(|a| a.fsub(Reg::X0, Reg::X0, Reg::X1))),
+            ("f64_mul", word_of(|a| a.fmul(Reg::X0, Reg::X0, Reg::X1))),
+            ("f64_div", word_of(|a| a.fdiv(Reg::X0, Reg::X0, Reg::X1))),
+        ] {
+            let ws = pr6c_fn(op, ab());
+            pos(&ws, word);
+            assert!(!ws.contains(&u32::from(TRAP_UDF_IMM)), "{op}: no trap");
+        }
+    }
+
+    /// `f64_neg` flips bit 63 with an integer `eor` (exact IEEE negate);
+    /// `f64_signbit` is a LOGICAL `lsr` by 63 (0 or 1, never -1).
+    #[test]
+    fn ieee_neg_and_signbit_work_on_the_raw_bits() {
+        let ws = pr6c_fn("f64_neg", vec![CIROperand::Var("b".into())]);
+        let mask = pos(&ws, word_of(|a| a.movz(Reg::X1, 0x8000, 3)));
+        assert_eq!(ws[mask + 1], word_of(|a| a.eor(Reg::X0, Reg::X0, Reg::X1)));
+        let ws = pr6c_fn("f64_signbit", vec![CIROperand::Var("a".into())]);
+        let shift = pos(&ws, word_of(|a| a.movz(Reg::X1, 63, 0)));
+        assert_eq!(ws[shift + 1], word_of(|a| a.lsr_reg(Reg::X0, Reg::X0, Reg::X1)));
+        // A propagated float literal is materialised as its bits (-0.0 is
+        // just the sign bit), an integer literal is refused.
+        let ws = pr6c_fn("f64_signbit", vec![CIROperand::Float(-0.0)]);
+        pos(&ws, word_of(|a| a.movz(Reg::X0, 0x8000, 3)));
+        let params: [(String, String); 0] = [];
+        let bad = vec![CIRInstr { op: "f64_neg".into(), dest: Some("r".into()),
+                                  srcs: vec![CIROperand::Int(1)], ty: "f64".into(), deopt_to: None }];
+        assert!(compile(&ctx("f", &params, "void"), &bad).is_err());
     }
 
     #[test]

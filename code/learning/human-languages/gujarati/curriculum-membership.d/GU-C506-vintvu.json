@@ -1,0 +1,11 @@
+{
+  "id": "GU-C506-vintvu",
+  "pathSegment": "GU-PATH-506-TANTANO506",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-506-TANTANO506",
+      "order": 4
+    }
+  ]
+}

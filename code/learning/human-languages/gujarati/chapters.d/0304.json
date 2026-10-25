@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "The Flood",
+  "label": "ch:gu-the-flood",
+  "canDo": "I can say what the flood carried away and what it cost.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C304-sankat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can say what the flood carried away and what it cost.",
+    "assesses": [
+      "GU-LEX-C304-PUR304-03",
+      "GU-LEX-C304-PUR304-04",
+      "GU-LEX-C304-PUR304-05"
+    ]
+  }
+}

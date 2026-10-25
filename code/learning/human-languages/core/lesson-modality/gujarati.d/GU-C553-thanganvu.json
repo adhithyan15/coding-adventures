@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C553-thanganvu",
+    "language": "gujarati",
+    "chapter": 553,
+    "sequence": 30700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e71f8935e35f1dd0"
+  },
+  "findings": []
+}

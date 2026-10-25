@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C496-vadhavvu",
+    "language": "gujarati",
+    "chapter": 496,
+    "sequence": 27540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06b780a7fe1626d2"
+  },
+  "findings": []
+}

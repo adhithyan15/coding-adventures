@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "At the Goldsmith's",
+  "label": "ch:gu-at-the-goldsmith-s",
+  "canDo": "I can talk about what a goldsmith melts, casts and makes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C510-ghadavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about what a goldsmith melts, casts and makes.",
+    "assesses": [
+      "GU-LEX-C510-SONI510-03",
+      "GU-LEX-C510-SONI510-04",
+      "GU-LEX-C510-SONI510-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:a3a6e42545f68275",
+  "lessonIds": [
+    "GU-C330-mandap",
+    "GU-C330-ghumvu",
+    "GU-C330-jhulvu",
+    "GU-C330-bhajan",
+    "GU-C330-bhakt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch330.txt",
+  "json": "gujarati/narration/ch330.json",
+  "textHash": "fnv1a64:09136c77c8c90237",
+  "jsonHash": "fnv1a64:778c66311e02066e",
+  "findings": []
+}

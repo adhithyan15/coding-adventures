@@ -1,5 +1,57 @@
 # Changelog
 
+## Unreleased — LANG84 phase 7c, slice 1: Python 2 (`py2-int-print`)
+
+### Added
+- **The `py2` profile** (`profiles::PY2`, `Slash::Classic`) for releases 2.2
+  and 2.7.18, and a `subset` field on `ReleaseProfile` (`py-int-print` for
+  `py3`, `py2-int-print` for `py2`). The profile's doc comment cites the
+  tags' `Objects/intobject.c` (classic `/` floors through `i_divmod`; a zero
+  divisor raises `ZeroDivisionError`; a result past the C `long` is promoted
+  to `long`), `Python/ceval.c` (`PRINT_ITEM`/`PRINT_NEWLINE`) and
+  `Python/pythonrun.c` (`Py_FlushLine`). Blob IDs are in
+  `pair-evidence.csv`.
+- **Python 2's `print` statement.** `int_lower` dispatches on the shape of
+  the tree: a `small_stmt` whose child is a `print_stmt` node is the Python 2
+  statement, never a release ID. `print <expr>` lowers to `print_i64` and a
+  bare `print` to `putchar 10`. `print a, b` and `print a,` are refused
+  (`Unsupported`): CPython 2 flushes a pending softspace as `\n` before an
+  uncaught exception, so `print 1, 1/0` writes `1\n`, and only a trap
+  handler could reproduce that.
+- **Classic `/`** lowers exactly like `//`, including the `-1` divisor fold.
+  Before this it was refused as "no release pair yet".
+- `SUBSETS` (both subsets) and `profiles::PROFILE_RULES` (rules a profile's
+  grammars add). `cst_contract` checks that `print_stmt` exists in exactly
+  the `py2` releases.
+- **Tests.** The corpus, identity-class and sweep tests run once per subset;
+  `tests/common` takes the subset by name.
+  - `py2_int_print_corpus_holds_on_every_claiming_release`: 38 cases × 2
+    releases.
+  - `python_2_and_python_3_disagree_where_the_languages_do`.
+  - `py2_corpus_agrees_with_host_python3_after_translation`: there is no
+    host `python2`, so each accepted case is translated (`print X` →
+    `print(X)`, `/` → `//`) and run on host `python3`. The translation is
+    exact on ints, because both languages floor and neither overflows.
+  - `release_classes.csv` gains the `py2-int-print` rows: one class,
+    {2.2, 2.7.18}, represented by 2.2.
+
+### Security
+
+- `compile_cst` refuses a tree whose `print` shape belongs to the other
+  profile's grammar. A `print_stmt` lowers only under `py2`, and a call-form
+  `print(…)` only under `py3`. Before this, a Python 3 tree compiled under a
+  Python 2 release lowered `print()` as a newline, but Python 2 prints `()`.
+  Source paths always parse with the release's own grammar, so only direct
+  `compile_cst` callers could reach this. The security review found it, and
+  the test is `a_tree_from_the_other_profiles_grammar_is_refused`.
+
+### Changed
+- Error messages name the release's subset (`py-int-print` or
+  `py2-int-print`) instead of always `py-int-print`. A release with no
+  profile is refused with `no IIR profile for any of py-int-print,
+  py2-int-print`. The leading-zero message covers both Python 2 (octal) and
+  Python 3 (SyntaxError).
+
 ## Unreleased — grammar-tools adjacency predicates (E6)
 
 ### Changed

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:f9ad83c469286b1c",
+  "lessonIds": [
+    "GU-C334-khajano",
+    "GU-C334-ajgar",
+    "GU-C334-lobh",
+    "GU-C334-lalcavvu",
+    "GU-C334-bhatakvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch334.txt",
+  "json": "gujarati/narration/ch334.json",
+  "textHash": "fnv1a64:489f1c15741f5bc7",
+  "jsonHash": "fnv1a64:455bab5f5152d87b",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-423-TOWN423",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GU-EXT-423-TOWN423"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C412-dero",
+  "pathSegment": "GU-PATH-412-CAMP412",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-412-CAMP412",
+      "order": 0
+    }
+  ]
+}

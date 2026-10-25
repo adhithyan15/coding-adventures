@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C534-joganujog",
+    "language": "gujarati",
+    "chapter": 534,
+    "sequence": 29730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d56140f2356fc24"
+  },
+  "findings": []
+}

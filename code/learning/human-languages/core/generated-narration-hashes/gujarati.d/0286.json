@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:6fcc627eb11c0095",
+  "lessonIds": [
+    "GU-C286-guno",
+    "GU-C286-sipai",
+    "GU-C286-sanka",
+    "GU-C286-khub",
+    "GU-C286-chupavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch286.txt",
+  "json": "gujarati/narration/ch286.json",
+  "textHash": "fnv1a64:1d98a48780da974c",
+  "jsonHash": "fnv1a64:53a85e84b27140fd",
+  "findings": []
+}

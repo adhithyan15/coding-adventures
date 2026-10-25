@@ -301,6 +301,10 @@ An exact `sign` result is classified as a static factor rather than a second
 runtime sign root, so it may compose directly with the one dynamic root. Two
 dynamic roots, path-dependent signs, and effectful selectors remain
 conservative.
+Checked exact-integer normalizers may also provide a nonnegative exponent for
+the sign-rooted transform when the right-associative exponent chain stays
+within the existing unroll cap. Zero, negative, dynamic, path-dependent,
+effectful, and oversized exponents remain conservative.
 Positive variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
 exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and

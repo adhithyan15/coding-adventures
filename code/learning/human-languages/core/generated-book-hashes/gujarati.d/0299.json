@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:6c92e13dd6dea611",
+  "lessonIds": [
+    "GU-C299-cis",
+    "GU-C299-bum",
+    "GU-C299-rokvu",
+    "GU-C299-atkavvu",
+    "GU-C299-salamat"
+  ],
+  "tex": "gujarati/book/chapters/ch299-shouts-in-the-street.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Contracts and Papers",
+  "label": "ch:gu-contracts-and-papers",
+  "canDo": "I can talk about contracts, papers and money owed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C350-vasulvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can talk about contracts, papers and money owed.",
+    "assesses": [
+      "GU-LEX-C350-KARAR350-03",
+      "GU-LEX-C350-KARAR350-04",
+      "GU-LEX-C350-KARAR350-05"
+    ]
+  }
+}

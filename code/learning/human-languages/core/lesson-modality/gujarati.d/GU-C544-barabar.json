@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C544-barabar",
+    "language": "gujarati",
+    "chapter": 544,
+    "sequence": 30240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10c0501f532aa490"
+  },
+  "findings": []
+}

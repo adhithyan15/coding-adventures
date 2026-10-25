@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:1ba7d0dc66eb4b51",
+  "lessonIds": [
+    "GU-C502-karvat",
+    "GU-C502-korvu",
+    "GU-C502-hathodi",
+    "GU-C502-mekh",
+    "GU-C502-thokvu"
+  ],
+  "tex": "gujarati/book/chapters/ch502-in-the-carpenter-s-shop.tex"
+}

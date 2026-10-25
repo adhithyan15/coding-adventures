@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "Meeting Halfway",
+  "label": "ch:gu-meeting-halfway",
+  "canDo": "I can talk about talks, compromise and asking someone for help.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C542-vinanti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can talk about talks, compromise and asking someone for help.",
+    "assesses": [
+      "GU-LEX-C542-SAMADHAN542-03",
+      "GU-LEX-C542-SAMADHAN542-04",
+      "GU-LEX-C542-SAMADHAN542-05"
+    ]
+  }
+}

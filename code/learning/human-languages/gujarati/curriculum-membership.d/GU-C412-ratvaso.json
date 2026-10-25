@@ -1,0 +1,11 @@
+{
+  "id": "GU-C412-ratvaso",
+  "pathSegment": "GU-PATH-412-CAMP412",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-412-CAMP412",
+      "order": 2
+    }
+  ]
+}

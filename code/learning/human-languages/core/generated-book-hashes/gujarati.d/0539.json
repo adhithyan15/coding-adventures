@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:2429d6a5d3742c7b",
+  "lessonIds": [
+    "GU-C539-makkam",
+    "GU-C539-tharavvu",
+    "GU-C539-kasoti",
+    "GU-C539-jhamplavvu",
+    "GU-C539-niscay"
+  ],
+  "tex": "gujarati/book/chapters/ch539-making-up-my-mind.tex"
+}

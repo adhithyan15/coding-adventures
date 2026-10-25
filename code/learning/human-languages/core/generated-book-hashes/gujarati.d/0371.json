@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:b4930aa33ca2a8a8",
+  "lessonIds": [
+    "GU-C371-phaydo",
+    "GU-C371-labh",
+    "GU-C371-upyog",
+    "GU-C371-karaj",
+    "GU-C371-khovu"
+  ],
+  "tex": "gujarati/book/chapters/ch371-gains-and-losses.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:142129e42d83c299",
+  "lessonIds": [
+    "GU-C440-jharnu",
+    "GU-C440-pravah",
+    "GU-C440-sangam",
+    "GU-C440-naher",
+    "GU-C440-vahavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch440.txt",
+  "json": "gujarati/narration/ch440.json",
+  "textHash": "fnv1a64:c5bbc93c67ccf86f",
+  "jsonHash": "fnv1a64:42b4fe3cc248fd10",
+  "findings": []
+}

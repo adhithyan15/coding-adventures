@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:bd3d7fbbd0eccec8",
+  "lessonIds": [
+    "GU-C441-sarovar",
+    "GU-C441-dem",
+    "GU-C441-vav",
+    "GU-C441-katho",
+    "GU-C441-khupvu"
+  ],
+  "tex": "gujarati/book/chapters/ch441-lakes-dams-and-stepwells.tex"
+}

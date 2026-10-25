@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 412,
+  "title": "Tents and Camps",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b249010a6649fd26",
+  "lessons": [
+    {
+      "id": "GU-C412-dero",
+      "sequence": 22970,
+      "title": "ડેરો (ḍero) — a tent; a camp (for a stay)",
+      "headword": "ડેરો",
+      "romanization": "ḍero",
+      "gloss": "a tent; a camp (for a stay)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad23734715e3d3a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to roll up, then the Gujarati for to put to sleep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ડેરો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડેરો — ḍero — \"a tent; a camp (for a stay)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "નદીના કિનારે અમે ડેરો નાખ્યો. nadīnā kināre ame ḍero nākhyo. We pitched our tent on the river bank."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડેરો (ḍero) goes back to ḍēra, \"a resting place\", a form CDIAL reconstructs; CDIAL lists the Gujarati word, \"a tent, a shelter\" (CDIAL 5564)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍero*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍero, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍero*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadīnā kināre ame ḍero nākhyo. — We pitched our tent on the river bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadīnā kināre ame ḍero nākhyo.* — We pitched our tent on the river bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to roll up, then the Gujarati for to put to sleep, then say ḍero again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to roll up, then the Gujarati for to put to sleep, then say *ḍero* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ડેરો (ḍero) mean? (\"A tent; a camp (for a stay)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C412-padav",
+      "sequence": 22980,
+      "title": "પડાવ (paḍāv) — a halt for the night; a camp",
+      "headword": "પડાવ",
+      "romanization": "paḍāv",
+      "gloss": "a halt for the night; a camp",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a3e0f9c80275442",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to put to sleep, then the Gujarati for a tent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પડાવ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પડાવ — paḍāv — \"a halt for the night; a camp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સાંજે અમારો પડાવ ગામની બહાર હતો. sā̃je amāro paḍāv gāmnī bahār hato. In the evening our camp was outside the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પડાવ (paḍāv) seems to be built on પડવું, to fall, here to stop and lie down for the night; CDIAL lists that verb under Sanskrit pátati, \"falls\" (CDIAL 7722), but gives no form for પડાવ itself, so the link is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḍāv",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḍāv*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḍāv, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḍāv*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃je amāro paḍāv gāmnī bahār hato. — In the evening our camp was outside the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃je amāro paḍāv gāmnī bahār hato.* — In the evening our camp was outside the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to put to sleep, then the Gujarati for a tent, then say paḍāv again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to put to sleep, then the Gujarati for a tent, then say *paḍāv* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પડાવ (paḍāv) mean? (\"A halt for the night; a camp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C412-ratvaso",
+      "sequence": 22990,
+      "title": "રાતવાસો (rātvāso) — a night's stay",
+      "headword": "રાતવાસો",
+      "romanization": "rātvāso",
+      "gloss": "a night's stay",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bbab3f97142b478",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a tent, then the Gujarati for a halt for the night."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: રાતવાસો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રાતવાસો — rātvāso — \"a night's stay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમે ધર્મશાળામાં રાતવાસો કર્યો. ame dharmaśāḷāmā̃ rātvāso karyo. We stayed the night at the rest house."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રાતવાસો (rātvāso) is built from રાત, night, and વાસો, a stay, from Sanskrit vāsa, \"a dwelling, an abode\" (Monier-Williams): a roof for one night."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātvāso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātvāso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātvāso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātvāso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame dharmaśāḷāmā̃ rātvāso karyo. — We stayed the night at the rest house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame dharmaśāḷāmā̃ rātvāso karyo.* — We stayed the night at the rest house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a tent, then the Gujarati for a halt for the night, then say rātvāso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a tent, then the Gujarati for a halt for the night, then say *rātvāso* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does રાતવાસો (rātvāso) mean? (\"A night's stay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C412-khodvu-peg",
+      "sequence": 23000,
+      "title": "ખોડવું (khoḍvũ) — to drive in (a peg); to plant (a pole)",
+      "headword": "ખોડવું",
+      "romanization": "khoḍvũ",
+      "gloss": "to drive in (a peg); to plant (a pole)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:373ed640e74b69fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a halt for the night, then the Gujarati for a night's stay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ખોડવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખોડવું — khoḍvũ — \"to drive in (a peg); to plant (a pole)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "છોકરાએ રેતીમાં લાંબી ડાળી ખોડી. chokrāe retīmā̃ lā̃bī ḍāḷī khoḍī. The boy stuck a long branch into the sand."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ડાળી ખોડી, teṇe ḍāḷī khoḍī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખોડવું (khoḍvũ) may belong with a Gujarati word for a large block of wood, which CDIAL lists under Sanskrit kṣōḍa, \"a post to which an elephant is tied\" (CDIAL 3748), beside Marathi khoḍ, \"a tree stump\": to drive a post into the ground. CDIAL gives no form for ખોડવું itself, so the link is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoḍvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoḍvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoḍvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoḍvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chokrāe retīmā̃ lā̃bī ḍāḷī khoḍī. — The boy stuck a long branch into the sand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chokrāe retīmā̃ lā̃bī ḍāḷī khoḍī.* — The boy stuck a long branch into the sand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a halt for the night, then the Gujarati for a night's stay, then say khoḍvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a halt for the night, then the Gujarati for a night's stay, then say *khoḍvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ખોડવું (khoḍvũ) mean? (\"To drive in (a peg); to plant (a pole)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C412-galvu-spend",
+      "sequence": 23010,
+      "title": "ગાળવું (gāḷvũ) — to spend (time)",
+      "headword": "ગાળવું",
+      "romanization": "gāḷvũ",
+      "gloss": "to spend (time)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9df9a6666170445",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a night's stay, then the Gujarati for to drive in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગાળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગાળવું — gāḷvũ — \"to spend (time)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમે બે દિવસ ગામમાં ગાળ્યા. ame be divas gāmmā̃ gāḷyā. We spent two days in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે રાત ત્યાં ગાળી, teṇe rāt tyā̃ gāḷī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગાળવું (gāḷvũ) is a tadbhava of Sanskrit gālayati, \"causes to drop, strains, melts\"; CDIAL lists the Gujarati verb, which also means to pass time (CDIAL 4144): the days drip away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame be divas gāmmā̃ gāḷyā. — We spent two days in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame be divas gāmmā̃ gāḷyā.* — We spent two days in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a night's stay, then the Gujarati for to drive in, then say gāḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a night's stay, then the Gujarati for to drive in, then say *gāḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગાળવું (gāḷvũ) mean? (\"To spend (time)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

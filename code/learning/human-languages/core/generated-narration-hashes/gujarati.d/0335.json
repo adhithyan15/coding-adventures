@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:0c2b24db3f86ee50",
+  "lessonIds": [
+    "GU-C335-sadhu",
+    "GU-C335-srap",
+    "GU-C335-bodh",
+    "GU-C335-kahevat",
+    "GU-C335-sambhalavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch335.txt",
+  "json": "gujarati/narration/ch335.json",
+  "textHash": "fnv1a64:2c4395f2312199d6",
+  "jsonHash": "fnv1a64:fe72927aff54723e",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:da4b93ec8478135a",
+  "lessonIds": [
+    "GU-C417-pol",
+    "GU-C417-deli",
+    "GU-C417-otlo",
+    "GU-C417-khadki",
+    "GU-C417-vasvu-shut"
+  ],
+  "tex": "gujarati/book/chapters/ch417-the-pol.tex"
+}

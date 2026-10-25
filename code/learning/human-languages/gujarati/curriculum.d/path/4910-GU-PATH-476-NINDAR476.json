@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-476-NINDAR476",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-476-NINDAR476"
+  ],
+  "after": []
+}

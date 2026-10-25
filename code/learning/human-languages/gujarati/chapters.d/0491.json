@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "A Wedding in the Family",
+  "label": "ch:gu-a-wedding-in-the-family",
+  "canDo": "I can name relatives by marriage.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C491-vevan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can name relatives by marriage.",
+    "assesses": [
+      "GU-LEX-C491-JAMAI491-03",
+      "GU-LEX-C491-JAMAI491-04",
+      "GU-LEX-C491-JAMAI491-05"
+    ]
+  }
+}

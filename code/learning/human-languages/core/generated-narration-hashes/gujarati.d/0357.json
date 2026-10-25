@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:3cc4f69fc1faa065",
+  "lessonIds": [
+    "GU-C357-mulya",
+    "GU-C357-sanskar",
+    "GU-C357-niti",
+    "GU-C357-pratha",
+    "GU-C357-apnavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch357.txt",
+  "json": "gujarati/narration/ch357.json",
+  "textHash": "fnv1a64:f609112106a7c5a1",
+  "jsonHash": "fnv1a64:8d81b8f037b19486",
+  "findings": []
+}

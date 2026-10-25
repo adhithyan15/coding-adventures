@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:24afb66a86f330f3",
+  "lessonIds": [
+    "GU-C430-trajvu",
+    "GU-C430-man",
+    "GU-C430-padiku",
+    "GU-C430-gharak",
+    "GU-C430-jokhvu"
+  ],
+  "tex": "gujarati/book/chapters/ch430-scales-and-packets.tex"
+}
