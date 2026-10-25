@@ -479,12 +479,22 @@ fn embedded_document_inherits_the_container_depth_and_element_budget() {
     let root = decoder.decode_exact(&encoded).unwrap();
     let mut fields = decoder.sequence(root).unwrap();
     let container = fields.read(&mut decoder).unwrap().unwrap();
+    let context = container.container_context().unwrap();
     let contents = decode_octet_string(container).unwrap();
 
     assert_eq!(decoder.elements_read(), 2);
     assert_eq!(
         decoder
             .decode_exact_embedded(container, contents)
+            .unwrap_err()
+            .kind(),
+        Asn1ErrorKind::DepthLimitExceeded
+    );
+    assert_eq!(decoder.elements_read(), 2);
+
+    assert_eq!(
+        decoder
+            .decode_exact_embedded_context(context, contents)
             .unwrap_err()
             .kind(),
         Asn1ErrorKind::DepthLimitExceeded

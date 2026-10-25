@@ -41,8 +41,7 @@ fn decodes_absent_critical_as_false_and_borrows_value() {
     assert!(extension.extension_id().equals(&[2, 5, 29, 17]));
     assert!(!extension.critical());
     assert_eq!(extension.extension_value(), inner_value);
-    assert_eq!(extension.extension_value_element().value(), inner_value);
-    assert_eq!(extension.extension_value_element().depth(), 1);
+    assert_eq!(std::mem::size_of_val(&extension), 72);
 }
 
 #[test]

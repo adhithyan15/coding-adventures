@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- Retained the checked extension-value OCTET STRING element so semantic
-  extension decoders can preserve the enclosing DER depth budget.
+- Retained compact opaque authority from the checked extension-value OCTET
+  STRING so semantic decoders preserve the enclosing DER depth budget without
+  inflating every bounded inline extension slot.
 
 ## 0.1.0 — 2026-09-20
 

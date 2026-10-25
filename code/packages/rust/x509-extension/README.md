@@ -4,8 +4,9 @@
 above the repository-owned `der-asn1` primitive. It borrows one validated
 extension OID and one opaque OCTET STRING while enforcing DER omission of the
 default `critical = FALSE` field. It also retains the checked OCTET STRING
-element so a later semantic decoder can preserve the enclosing DER depth when
-opening the embedded document.
+container's compact opaque context so a later semantic decoder can preserve
+the enclosing DER depth when opening the embedded document without retaining
+the complete framing element in every extension slot.
 
 ## Security boundary
 

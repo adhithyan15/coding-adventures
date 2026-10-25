@@ -195,8 +195,8 @@ pub fn decode_authority_information_access<'a>(
     }
 
     let root = decoder
-        .decode_exact_embedded(
-            extension.extension_value_element(),
+        .decode_exact_embedded_context(
+            extension.extension_value_context(),
             extension.extension_value(),
         )
         .map_err(AuthorityInformationAccessError::structure)?;
