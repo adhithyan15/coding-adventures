@@ -51,8 +51,12 @@ the actual open PR and its current-head CI logs, and revisit this ordering:
    BUILD, metadata, required CI and Go CodeQL successful. Reprioritized by
    reliability, prerequisites, portability and smallest complete delivery:
    [NN42 four-native conformance](../../specs/NN42-four-native-dense-conformance.md)
-   is next, before another port. Shared null-cell corpus expansion follows;
-   existing Go production guards already reject those cells. Ruby follows.
+   merged in [PR #18230](https://github.com/adhithyan15/coding-adventures/pull/18230)
+   at exact head `a34090527bbe` (squash `705defb19b2`), with actual twelve-direction
+   exchange, real root Rust workspace, package builds and all applicable checks
+   successful. Reprioritize reliability, prerequisites, portability and smallest
+   complete delivery: [NN43 shared null numeric cells](../../specs/NN43-shared-null-numeric-checkpoints.md)
+   is next; existing Go guards already reject those cells. Ruby follows.
 5. **P2 — Optional Rust dense C ABI.** Specify ownership, shapes, errors,
    versioning, and resumable state before exposing binding consumers. Keep
    those consumers distinct from the native implementations.
@@ -118,11 +122,11 @@ SGD training, inspection, and portable save/reload/resume.
   NN41's native library, paper/gradient/boundary/corpus tests and direct XOR
   save/reload/resume passed locally and actual repository CI; exact head
   `020d21876294` merged in PR #18226. Four-language conformance is separate.
-- [ ] Go conformance: required CI and all directed exchanges with existing
+- [x] Go conformance: required CI and all directed exchanges with existing
   Python/TypeScript/Rust native lanes, after the native Go library is delivered.
-  NN42 locally executes all twelve directed pairs and full model baselines at
-  3000/3001/3002 (four native lanes, zero bindings); exact-head selected required
-  conformance and confirmed merge still gate completion.
+  NN42 executes all twelve directed pairs and full model baselines at
+  3000/3001/3002 (four native lanes, zero bindings), delivered with actual
+  selected required conformance and confirmed exact-head merge in PR #18230.
 - [ ] Expand the shared invalid-checkpoint corpus with literal null numeric
   cells. Go's decoder defaults null float cells to zero; NN41 guards/tests this
   explicitly, while the shared corpus currently covers other null/shape cases.
