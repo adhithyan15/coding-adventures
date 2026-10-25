@@ -4,6 +4,36 @@ All notable changes to the `parser` crate will be documented in this file.
 
 ## Unreleased
 
+### Added — `@asi(T, C…)` automatic insertion (F11, LANG84 E6)
+
+`GrammarElement::AutoInsert` is evaluated at the cursor without moving it. It
+finds the next token exactly as the adjacency predicates do. It succeeds when
+any of these holds:
+- a line break precedes that token: a newline flag, a stepped-over
+  `NEWLINE`, or a significant `NEWLINE` as the next token;
+- the token is one of the closers, matched as a token reference matches;
+- the input has ended.
+
+On success it adds a synthetic token:
+- `type_`/`type_name` as `GrammarLexer` would give `T`;
+- an empty `value`;
+- the next token's line and column;
+- `flags: Some(TOKEN_SYNTHETIC)` and `cv: None`.
+
+On failure it records no expectation. ECMAScript's "offending token"
+condition comes from PEG ordering, so `a ⏎ (b)` stays a call.
+
+- **Spans skip synthetic tokens.** A statement ends at its last written
+  token, and a node holding only synthetic tokens has no span.
+- **Budget.** A finished tree may hold at most one synthetic token per input
+  token, EOF included. More fails with "automatic insertion budget
+  exceeded". The count walks each distinct shared node once.
+- **Tests.** `tests/auto_insert.rs` has 16 tests: the truth table, a written
+  `;` winning, the error left unchanged, the token's fields, a custom `T`,
+  spans, `a ⏎ (b)`, restricted `return` and postfix `++`, a
+  newline-significant grammar, lookahead, repetition, the budget,
+  hand-built streams, and a compiled-grammar fixture round trip.
+
 ### Fixed — repetitions with a body that matches nothing no longer hang
 
 `{ }`, `{ }+` and `{ x // sep }` now stop after an iteration that succeeded
