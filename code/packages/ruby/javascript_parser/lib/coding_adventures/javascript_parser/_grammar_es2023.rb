@@ -20,7 +20,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::OptionalElement.new(element: GT::RuleReference.new(name: "HASHBANG", is_token: true)),
         GT::Repetition.new(element: GT::RuleReference.new(name: "source_element", is_token: false)),
       ]),
-      line_number: 30,
+      line_number: 33,
     ),
     GT::GrammarRule.new(
       name: "source_element",
@@ -34,7 +34,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "class_declaration", is_token: false),
         GT::RuleReference.new(name: "statement", is_token: false),
       ]),
-      line_number: 32,
+      line_number: 35,
     ),
     GT::GrammarRule.new(
       name: "function_declaration",
@@ -48,7 +48,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "function_body", is_token: false),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 45,
+      line_number: 48,
     ),
     GT::GrammarRule.new(
       name: "formal_parameters",
@@ -60,7 +60,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::OptionalElement.new(element: GT::RuleReference.new(name: "COMMA", is_token: true)),
       ]),
-      line_number: 48,
+      line_number: 51,
     ),
     GT::GrammarRule.new(
       name: "formal_parameter",
@@ -83,12 +83,12 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             ])),
         ]),
       ]),
-      line_number: 50,
+      line_number: 53,
     ),
     GT::GrammarRule.new(
       name: "function_body",
       body: GT::Repetition.new(element: GT::RuleReference.new(name: "source_element", is_token: false)),
-      line_number: 53,
+      line_number: 56,
     ),
     GT::GrammarRule.new(
       name: "generator_declaration",
@@ -103,7 +103,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "function_body", is_token: false),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 55,
+      line_number: 58,
     ),
     GT::GrammarRule.new(
       name: "generator_expression",
@@ -118,7 +118,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "function_body", is_token: false),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 58,
+      line_number: 61,
     ),
     GT::GrammarRule.new(
       name: "yield_expression",
@@ -127,7 +127,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::OptionalElement.new(element: GT::RuleReference.new(name: "STAR", is_token: true)),
         GT::RuleReference.new(name: "assignment_expression", is_token: false),
       ]),
-      line_number: 61,
+      line_number: 64,
     ),
     GT::GrammarRule.new(
       name: "async_function_declaration",
@@ -142,7 +142,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "function_body", is_token: false),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 63,
+      line_number: 66,
     ),
     GT::GrammarRule.new(
       name: "async_function_expression",
@@ -157,7 +157,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "function_body", is_token: false),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 66,
+      line_number: 69,
     ),
     GT::GrammarRule.new(
       name: "async_arrow_function",
@@ -167,7 +167,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "ARROW", is_token: true),
         GT::RuleReference.new(name: "concise_body", is_token: false),
       ]),
-      line_number: 69,
+      line_number: 72,
     ),
     GT::GrammarRule.new(
       name: "async_method",
@@ -182,7 +182,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "function_body", is_token: false),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 71,
+      line_number: 74,
     ),
     GT::GrammarRule.new(
       name: "await_expression",
@@ -190,7 +190,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::Literal.new(value: "await"),
         GT::RuleReference.new(name: "unary_expression", is_token: false),
       ]),
-      line_number: 74,
+      line_number: 77,
     ),
     GT::GrammarRule.new(
       name: "async_generator_declaration",
@@ -206,7 +206,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "function_body", is_token: false),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 76,
+      line_number: 79,
     ),
     GT::GrammarRule.new(
       name: "async_generator_expression",
@@ -222,7 +222,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "function_body", is_token: false),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 80,
+      line_number: 83,
     ),
     GT::GrammarRule.new(
       name: "lexical_declaration",
@@ -234,7 +234,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "binding_list", is_token: false),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 84,
+      line_number: 87,
     ),
     GT::GrammarRule.new(
       name: "binding_list",
@@ -245,7 +245,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "lexical_binding", is_token: false),
           ])),
       ]),
-      line_number: 86,
+      line_number: 89,
     ),
     GT::GrammarRule.new(
       name: "lexical_binding",
@@ -259,7 +259,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "assignment_expression", is_token: false),
           ])),
       ]),
-      line_number: 88,
+      line_number: 91,
     ),
     GT::GrammarRule.new(
       name: "class_declaration",
@@ -269,7 +269,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::OptionalElement.new(element: GT::RuleReference.new(name: "class_heritage", is_token: false)),
         GT::RuleReference.new(name: "class_body", is_token: false),
       ]),
-      line_number: 92,
+      line_number: 95,
     ),
     GT::GrammarRule.new(
       name: "class_expression",
@@ -279,7 +279,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::OptionalElement.new(element: GT::RuleReference.new(name: "class_heritage", is_token: false)),
         GT::RuleReference.new(name: "class_body", is_token: false),
       ]),
-      line_number: 94,
+      line_number: 97,
     ),
     GT::GrammarRule.new(
       name: "class_heritage",
@@ -287,7 +287,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::Literal.new(value: "extends"),
         GT::RuleReference.new(name: "left_hand_side_expression", is_token: false),
       ]),
-      line_number: 96,
+      line_number: 99,
     ),
     GT::GrammarRule.new(
       name: "class_body",
@@ -296,7 +296,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::Repetition.new(element: GT::RuleReference.new(name: "class_element", is_token: false)),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 98,
+      line_number: 101,
     ),
     GT::GrammarRule.new(
       name: "class_element",
@@ -316,7 +316,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "static_block", is_token: false),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 100,
+      line_number: 103,
     ),
     GT::GrammarRule.new(
       name: "class_field_declaration",
@@ -332,7 +332,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 107,
+      line_number: 110,
     ),
     GT::GrammarRule.new(
       name: "private_method_definition",
@@ -392,7 +392,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "RBRACE", is_token: true),
         ]),
       ]),
-      line_number: 110,
+      line_number: 113,
     ),
     GT::GrammarRule.new(
       name: "static_block",
@@ -402,7 +402,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::Repetition.new(element: GT::RuleReference.new(name: "statement", is_token: false)),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 125,
+      line_number: 128,
     ),
     GT::GrammarRule.new(
       name: "method_definition",
@@ -446,7 +446,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "RBRACE", is_token: true),
         ]),
       ]),
-      line_number: 127,
+      line_number: 130,
     ),
     GT::GrammarRule.new(
       name: "import_declaration",
@@ -463,7 +463,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "SEMICOLON", is_token: true),
         ]),
       ]),
-      line_number: 138,
+      line_number: 141,
     ),
     GT::GrammarRule.new(
       name: "import_clause",
@@ -485,12 +485,12 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "named_imports", is_token: false),
         GT::RuleReference.new(name: "namespace_import", is_token: false),
       ]),
-      line_number: 141,
+      line_number: 144,
     ),
     GT::GrammarRule.new(
       name: "default_import",
       body: GT::RuleReference.new(name: "NAME", is_token: true),
-      line_number: 146,
+      line_number: 149,
     ),
     GT::GrammarRule.new(
       name: "named_imports",
@@ -506,7 +506,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 148,
+      line_number: 151,
     ),
     GT::GrammarRule.new(
       name: "import_specifier",
@@ -517,7 +517,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "NAME", is_token: true),
           ])),
       ]),
-      line_number: 150,
+      line_number: 153,
     ),
     GT::GrammarRule.new(
       name: "namespace_import",
@@ -526,7 +526,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::Literal.new(value: "as"),
         GT::RuleReference.new(name: "NAME", is_token: true),
       ]),
-      line_number: 152,
+      line_number: 155,
     ),
     GT::GrammarRule.new(
       name: "from_clause",
@@ -534,12 +534,12 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::Literal.new(value: "from"),
         GT::RuleReference.new(name: "STRING", is_token: true),
       ]),
-      line_number: 154,
+      line_number: 157,
     ),
     GT::GrammarRule.new(
       name: "module_specifier",
       body: GT::RuleReference.new(name: "STRING", is_token: true),
-      line_number: 156,
+      line_number: 159,
     ),
     GT::GrammarRule.new(
       name: "export_declaration",
@@ -584,7 +584,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "SEMICOLON", is_token: true),
         ]),
       ]),
-      line_number: 158,
+      line_number: 161,
     ),
     GT::GrammarRule.new(
       name: "named_exports",
@@ -600,7 +600,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 171,
+      line_number: 174,
     ),
     GT::GrammarRule.new(
       name: "export_specifier",
@@ -611,7 +611,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "NAME", is_token: true),
           ])),
       ]),
-      line_number: 173,
+      line_number: 176,
     ),
     GT::GrammarRule.new(
       name: "binding_pattern",
@@ -619,7 +619,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "object_binding_pattern", is_token: false),
         GT::RuleReference.new(name: "array_binding_pattern", is_token: false),
       ]),
-      line_number: 179,
+      line_number: 182,
     ),
     GT::GrammarRule.new(
       name: "object_binding_pattern",
@@ -636,7 +636,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::OptionalElement.new(element: GT::RuleReference.new(name: "object_rest_property", is_token: false)),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 182,
+      line_number: 185,
     ),
     GT::GrammarRule.new(
       name: "object_rest_property",
@@ -644,7 +644,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "ELLIPSIS", is_token: true),
         GT::RuleReference.new(name: "NAME", is_token: true),
       ]),
-      line_number: 185,
+      line_number: 188,
     ),
     GT::GrammarRule.new(
       name: "array_binding_pattern",
@@ -660,7 +660,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::RuleReference.new(name: "RBRACKET", is_token: true),
       ]),
-      line_number: 187,
+      line_number: 190,
     ),
     GT::GrammarRule.new(
       name: "binding_property",
@@ -678,7 +678,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             ])),
         ]),
       ]),
-      line_number: 189,
+      line_number: 192,
     ),
     GT::GrammarRule.new(
       name: "binding_element",
@@ -698,7 +698,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "NAME", is_token: true),
         ]),
       ]),
-      line_number: 192,
+      line_number: 195,
     ),
     GT::GrammarRule.new(
       name: "statement",
@@ -725,7 +725,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "lexical_declaration", is_token: false),
         GT::RuleReference.new(name: "expression_statement", is_token: false),
       ]),
-      line_number: 199,
+      line_number: 202,
     ),
     GT::GrammarRule.new(
       name: "block",
@@ -741,7 +741,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             ]))),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 226,
+      line_number: 229,
     ),
     GT::GrammarRule.new(
       name: "variable_statement",
@@ -750,7 +750,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "variable_declaration_list", is_token: false),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 228,
+      line_number: 231,
     ),
     GT::GrammarRule.new(
       name: "variable_declaration_list",
@@ -761,7 +761,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "variable_declaration", is_token: false),
           ])),
       ]),
-      line_number: 230,
+      line_number: 233,
     ),
     GT::GrammarRule.new(
       name: "variable_declaration",
@@ -775,12 +775,12 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "assignment_expression", is_token: false),
           ])),
       ]),
-      line_number: 232,
+      line_number: 235,
     ),
     GT::GrammarRule.new(
       name: "empty_statement",
       body: GT::RuleReference.new(name: "SEMICOLON", is_token: true),
-      line_number: 234,
+      line_number: 237,
     ),
     GT::GrammarRule.new(
       name: "expression_statement",
@@ -788,7 +788,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "expression", is_token: false),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 236,
+      line_number: 239,
     ),
     GT::GrammarRule.new(
       name: "if_statement",
@@ -803,7 +803,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "statement", is_token: false),
           ])),
       ]),
-      line_number: 238,
+      line_number: 241,
     ),
     GT::GrammarRule.new(
       name: "while_statement",
@@ -814,7 +814,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "RPAREN", is_token: true),
         GT::RuleReference.new(name: "statement", is_token: false),
       ]),
-      line_number: 240,
+      line_number: 243,
     ),
     GT::GrammarRule.new(
       name: "do_while_statement",
@@ -827,7 +827,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "RPAREN", is_token: true),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 242,
+      line_number: 245,
     ),
     GT::GrammarRule.new(
       name: "for_statement",
@@ -856,7 +856,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "RPAREN", is_token: true),
         GT::RuleReference.new(name: "statement", is_token: false),
       ]),
-      line_number: 244,
+      line_number: 247,
     ),
     GT::GrammarRule.new(
       name: "for_in_statement",
@@ -883,7 +883,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "RPAREN", is_token: true),
         GT::RuleReference.new(name: "statement", is_token: false),
       ]),
-      line_number: 253,
+      line_number: 256,
     ),
     GT::GrammarRule.new(
       name: "for_of_statement",
@@ -910,7 +910,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "RPAREN", is_token: true),
         GT::RuleReference.new(name: "statement", is_token: false),
       ]),
-      line_number: 260,
+      line_number: 263,
     ),
     GT::GrammarRule.new(
       name: "for_await_of_statement",
@@ -938,7 +938,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "RPAREN", is_token: true),
         GT::RuleReference.new(name: "statement", is_token: false),
       ]),
-      line_number: 267,
+      line_number: 270,
     ),
     GT::GrammarRule.new(
       name: "continue_statement",
@@ -947,7 +947,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::OptionalElement.new(element: GT::RuleReference.new(name: "NAME", is_token: true)),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 274,
+      line_number: 277,
     ),
     GT::GrammarRule.new(
       name: "break_statement",
@@ -956,7 +956,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::OptionalElement.new(element: GT::RuleReference.new(name: "NAME", is_token: true)),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 276,
+      line_number: 279,
     ),
     GT::GrammarRule.new(
       name: "return_statement",
@@ -965,7 +965,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::OptionalElement.new(element: GT::RuleReference.new(name: "expression", is_token: false)),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 278,
+      line_number: 281,
     ),
     GT::GrammarRule.new(
       name: "with_statement",
@@ -976,7 +976,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "RPAREN", is_token: true),
         GT::RuleReference.new(name: "statement", is_token: false),
       ]),
-      line_number: 280,
+      line_number: 283,
     ),
     GT::GrammarRule.new(
       name: "switch_statement",
@@ -993,7 +993,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 282,
+      line_number: 285,
     ),
     GT::GrammarRule.new(
       name: "case_clause",
@@ -1010,7 +1010,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
               GT::RuleReference.new(name: "statement", is_token: false),
             ]))),
       ]),
-      line_number: 285,
+      line_number: 288,
     ),
     GT::GrammarRule.new(
       name: "default_clause",
@@ -1026,7 +1026,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
               GT::RuleReference.new(name: "statement", is_token: false),
             ]))),
       ]),
-      line_number: 287,
+      line_number: 290,
     ),
     GT::GrammarRule.new(
       name: "labelled_statement",
@@ -1035,7 +1035,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "COLON", is_token: true),
         GT::RuleReference.new(name: "statement", is_token: false),
       ]),
-      line_number: 289,
+      line_number: 292,
     ),
     GT::GrammarRule.new(
       name: "try_statement",
@@ -1050,7 +1050,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "finally_clause", is_token: false),
           ])),
       ]),
-      line_number: 291,
+      line_number: 294,
     ),
     GT::GrammarRule.new(
       name: "catch_clause",
@@ -1063,7 +1063,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::RuleReference.new(name: "block", is_token: false),
       ]),
-      line_number: 293,
+      line_number: 296,
     ),
     GT::GrammarRule.new(
       name: "finally_clause",
@@ -1071,7 +1071,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::Literal.new(value: "finally"),
         GT::RuleReference.new(name: "block", is_token: false),
       ]),
-      line_number: 295,
+      line_number: 298,
     ),
     GT::GrammarRule.new(
       name: "throw_statement",
@@ -1080,7 +1080,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "expression", is_token: false),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 297,
+      line_number: 300,
     ),
     GT::GrammarRule.new(
       name: "debugger_statement",
@@ -1088,7 +1088,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::Literal.new(value: "debugger"),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),
-      line_number: 299,
+      line_number: 302,
     ),
     GT::GrammarRule.new(
       name: "expression",
@@ -1099,7 +1099,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "assignment_expression", is_token: false),
           ])),
       ]),
-      line_number: 305,
+      line_number: 308,
     ),
     GT::GrammarRule.new(
       name: "assignment_expression",
@@ -1114,7 +1114,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         ]),
         GT::RuleReference.new(name: "conditional_expression", is_token: false),
       ]),
-      line_number: 307,
+      line_number: 310,
     ),
     GT::GrammarRule.new(
       name: "assignment_operator",
@@ -1136,7 +1136,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "AND_AND_EQUALS", is_token: true),
         GT::RuleReference.new(name: "NULLISH_COALESCE_EQUALS", is_token: true),
       ]),
-      line_number: 313,
+      line_number: 316,
     ),
     GT::GrammarRule.new(
       name: "conditional_expression",
@@ -1149,7 +1149,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "assignment_expression", is_token: false),
           ])),
       ]),
-      line_number: 320,
+      line_number: 323,
     ),
     GT::GrammarRule.new(
       name: "nullish_coalescing_expression",
@@ -1160,7 +1160,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "logical_or_expression", is_token: false),
           ])),
       ]),
-      line_number: 323,
+      line_number: 326,
     ),
     GT::GrammarRule.new(
       name: "logical_or_expression",
@@ -1171,7 +1171,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "logical_and_expression", is_token: false),
           ])),
       ]),
-      line_number: 326,
+      line_number: 329,
     ),
     GT::GrammarRule.new(
       name: "logical_and_expression",
@@ -1182,7 +1182,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "bitwise_or_expression", is_token: false),
           ])),
       ]),
-      line_number: 328,
+      line_number: 331,
     ),
     GT::GrammarRule.new(
       name: "bitwise_or_expression",
@@ -1193,7 +1193,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "bitwise_xor_expression", is_token: false),
           ])),
       ]),
-      line_number: 330,
+      line_number: 333,
     ),
     GT::GrammarRule.new(
       name: "bitwise_xor_expression",
@@ -1204,7 +1204,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "bitwise_and_expression", is_token: false),
           ])),
       ]),
-      line_number: 332,
+      line_number: 335,
     ),
     GT::GrammarRule.new(
       name: "bitwise_and_expression",
@@ -1215,7 +1215,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "equality_expression", is_token: false),
           ])),
       ]),
-      line_number: 334,
+      line_number: 337,
     ),
     GT::GrammarRule.new(
       name: "equality_expression",
@@ -1231,7 +1231,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "relational_expression", is_token: false),
           ])),
       ]),
-      line_number: 336,
+      line_number: 339,
     ),
     GT::GrammarRule.new(
       name: "relational_expression",
@@ -1256,7 +1256,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "shift_expression", is_token: false),
         ]),
       ]),
-      line_number: 340,
+      line_number: 343,
     ),
     GT::GrammarRule.new(
       name: "shift_expression",
@@ -1271,7 +1271,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "additive_expression", is_token: false),
           ])),
       ]),
-      line_number: 345,
+      line_number: 348,
     ),
     GT::GrammarRule.new(
       name: "additive_expression",
@@ -1285,7 +1285,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "multiplicative_expression", is_token: false),
           ])),
       ]),
-      line_number: 348,
+      line_number: 351,
     ),
     GT::GrammarRule.new(
       name: "multiplicative_expression",
@@ -1300,7 +1300,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "exponentiation_expression", is_token: false),
           ])),
       ]),
-      line_number: 351,
+      line_number: 354,
     ),
     GT::GrammarRule.new(
       name: "exponentiation_expression",
@@ -1311,7 +1311,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "exponentiation_expression", is_token: false),
           ])),
       ]),
-      line_number: 354,
+      line_number: 357,
     ),
     GT::GrammarRule.new(
       name: "unary_expression",
@@ -1355,7 +1355,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "unary_expression", is_token: false),
         ]),
       ]),
-      line_number: 356,
+      line_number: 359,
     ),
     GT::GrammarRule.new(
       name: "postfix_expression",
@@ -1366,7 +1366,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "MINUS_MINUS", is_token: true),
           ])),
       ]),
-      line_number: 368,
+      line_number: 371,
     ),
     GT::GrammarRule.new(
       name: "left_hand_side_expression",
@@ -1375,7 +1375,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "optional_chain_expression", is_token: false),
         GT::RuleReference.new(name: "new_expression", is_token: false),
       ]),
-      line_number: 370,
+      line_number: 373,
     ),
     GT::GrammarRule.new(
       name: "call_expression",
@@ -1400,7 +1400,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "template_literal", is_token: false),
           ])),
       ]),
-      line_number: 374,
+      line_number: 377,
     ),
     GT::GrammarRule.new(
       name: "optional_chain_expression",
@@ -1442,7 +1442,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "template_literal", is_token: false),
           ])),
       ]),
-      line_number: 378,
+      line_number: 381,
     ),
     GT::GrammarRule.new(
       name: "new_expression",
@@ -1453,7 +1453,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "new_expression", is_token: false),
         ]),
       ]),
-      line_number: 389,
+      line_number: 392,
     ),
     GT::GrammarRule.new(
       name: "member_expression",
@@ -1499,7 +1499,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::Literal.new(value: "target"),
         ]),
       ]),
-      line_number: 392,
+      line_number: 395,
     ),
     GT::GrammarRule.new(
       name: "arguments",
@@ -1511,7 +1511,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::RuleReference.new(name: "RPAREN", is_token: true),
       ]),
-      line_number: 400,
+      line_number: 403,
     ),
     GT::GrammarRule.new(
       name: "argument_list",
@@ -1528,7 +1528,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
               ])),
           ])),
       ]),
-      line_number: 402,
+      line_number: 405,
     ),
     GT::GrammarRule.new(
       name: "spread_element",
@@ -1536,7 +1536,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "ELLIPSIS", is_token: true),
         GT::RuleReference.new(name: "assignment_expression", is_token: false),
       ]),
-      line_number: 405,
+      line_number: 408,
     ),
     GT::GrammarRule.new(
       name: "arrow_function",
@@ -1545,7 +1545,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "ARROW", is_token: true),
         GT::RuleReference.new(name: "concise_body", is_token: false),
       ]),
-      line_number: 407,
+      line_number: 410,
     ),
     GT::GrammarRule.new(
       name: "arrow_parameters",
@@ -1557,7 +1557,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "RPAREN", is_token: true),
         ]),
       ]),
-      line_number: 409,
+      line_number: 412,
     ),
     GT::GrammarRule.new(
       name: "concise_body",
@@ -1569,7 +1569,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "RBRACE", is_token: true),
         ]),
       ]),
-      line_number: 412,
+      line_number: 415,
     ),
     GT::GrammarRule.new(
       name: "primary_expression",
@@ -1598,7 +1598,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "RPAREN", is_token: true),
         ]),
       ]),
-      line_number: 415,
+      line_number: 418,
     ),
     GT::GrammarRule.new(
       name: "dynamic_import",
@@ -1608,7 +1608,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "assignment_expression", is_token: false),
         GT::RuleReference.new(name: "RPAREN", is_token: true),
       ]),
-      line_number: 435,
+      line_number: 438,
     ),
     GT::GrammarRule.new(
       name: "import_meta",
@@ -1617,7 +1617,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "DOT", is_token: true),
         GT::Literal.new(value: "meta"),
       ]),
-      line_number: 437,
+      line_number: 440,
     ),
     GT::GrammarRule.new(
       name: "array_literal",
@@ -1626,7 +1626,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::OptionalElement.new(element: GT::RuleReference.new(name: "element_list", is_token: false)),
         GT::RuleReference.new(name: "RBRACKET", is_token: true),
       ]),
-      line_number: 439,
+      line_number: 442,
     ),
     GT::GrammarRule.new(
       name: "element_list",
@@ -1643,7 +1643,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
               ])),
           ])),
       ]),
-      line_number: 441,
+      line_number: 444,
     ),
     GT::GrammarRule.new(
       name: "object_literal",
@@ -1659,7 +1659,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 444,
+      line_number: 447,
     ),
     GT::GrammarRule.new(
       name: "property_definition",
@@ -1674,7 +1674,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "async_method", is_token: false),
         GT::RuleReference.new(name: "object_spread_property", is_token: false),
       ]),
-      line_number: 446,
+      line_number: 449,
     ),
     GT::GrammarRule.new(
       name: "object_spread_property",
@@ -1682,7 +1682,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "ELLIPSIS", is_token: true),
         GT::RuleReference.new(name: "assignment_expression", is_token: false),
       ]),
-      line_number: 452,
+      line_number: 455,
     ),
     GT::GrammarRule.new(
       name: "property_name",
@@ -1696,7 +1696,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "RBRACKET", is_token: true),
         ]),
       ]),
-      line_number: 454,
+      line_number: 457,
     ),
     GT::GrammarRule.new(
       name: "function_expression",
@@ -1710,7 +1710,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "function_body", is_token: false),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 459,
+      line_number: 462,
     ),
     GT::GrammarRule.new(
       name: "template_literal",
@@ -1722,7 +1722,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "TEMPLATE_TAIL", is_token: true),
         ]),
       ]),
-      line_number: 462,
+      line_number: 465,
     ),
     GT::GrammarRule.new(
       name: "template_span",
@@ -1730,7 +1730,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "expression", is_token: false),
         GT::RuleReference.new(name: "TEMPLATE_MIDDLE", is_token: true),
       ]),
-      line_number: 465,
+      line_number: 468,
     ),
   ],
 )

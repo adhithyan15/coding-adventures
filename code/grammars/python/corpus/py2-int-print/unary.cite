@@ -1,0 +1,3 @@
+oracle: pinned historical source, CPython v2.2 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+evidence: Grammar/Grammar factor: ('+'|'-'|'~') factor | power; int_pos is the identity, int_neg negates
+result: the subset prints exactly what CPython 2.2 and 2.7.18 print

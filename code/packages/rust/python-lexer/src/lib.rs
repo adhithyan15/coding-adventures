@@ -123,12 +123,14 @@ mod tests {
     use super::releases::{grammar_class, token_grammar, SUPPORTED_RELEASES};
 
     #[test]
-    fn release_tables_list_the_phase_7a_pairs_in_inventory_order() {
+    fn release_tables_list_the_paired_releases_in_inventory_order() {
         // Inventory (date) order: 3.13.16 (2026-09-30) precedes 3.11.17
-        // (2026-10-01), so this is not version-sorted, on purpose.
+        // (2026-10-01), so this is not version-sorted, on purpose. 2.7.18
+        // (2020-04-19) comes after 3.0a1 (2007-08-31) for the same reason.
+        // 2.2 and 2.7.18 are the phase 7c slice 1 (Python 2) pairs.
         assert_eq!(
             SUPPORTED_RELEASES,
-            ["3.0a1", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"]
+            ["2.2", "3.0a1", "2.7.18", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"]
         );
         for release in SUPPORTED_RELEASES {
             let grammar = token_grammar(release).expect("paired release has a table");
@@ -148,6 +150,28 @@ mod tests {
         assert_eq!(class("3.13.16"), class("3.16.0a1"));
         assert_ne!(class("3.11.17"), class("3.13.16"));
         assert_ne!(class("3.0a1"), class("3.11.17"));
+        // Python 2: 2.7.18 adds `@` (decorators, 2.4) and the keywords `as`
+        // and `with` (2.6) to 2.2's table, and neither matches Python 3's.
+        assert_ne!(class("2.2"), class("2.7.18"));
+        assert_ne!(class("2.7.18"), class("3.0a1"));
+    }
+
+    #[test]
+    fn python_2_pairs_lex_print_as_a_keyword_and_keep_the_old_operators() {
+        for release in ["2.2", "2.7.18"] {
+            let grammar = token_grammar(release).unwrap();
+            let tokens = GrammarLexer::new("print 7 / 2 <> 3
+", &grammar).tokenize().unwrap();
+            let kinds: Vec<&str> = tokens.iter().map(|t| t.effective_type_name()).collect();
+            assert_eq!(kinds[..6], ["KEYWORD", "INT", "SLASH", "INT", "LEGACY_NOT_EQUALS", "INT"], "{release}");
+            // Octal, long and `_` literals are lexer errors in this slice.
+            for source in ["print 010\n", "print 1L\n", "print 1_0\n", "print 00\n"] {
+                assert!(GrammarLexer::new(source, &grammar).tokenize().is_err(), "{release} {source:?}");
+            }
+        }
+        // `@` is a token from 2.4 on: 2.2 refuses it, 2.7.18 lexes it.
+        let at = |r| GrammarLexer::new("@\n", &token_grammar(r).unwrap()).tokenize().is_ok();
+        assert!(!at("2.2") && at("2.7.18"));
     }
 
     #[test]

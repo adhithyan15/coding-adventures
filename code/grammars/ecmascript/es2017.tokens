@@ -1,6 +1,9 @@
 # ECMAScript 2017 (ES8) — Lexical Grammar
 # @version 1
 # @ecmascript_edition 2017
+# source_ref: https://github.com/tc39/ecma262/tree/es2017
+# source_sha: 7301daf5ab1f0959b203c2e63ecccb21fe13d5e5
+# PARTIAL: the IIR path claims es-number-log only (LANG84 phase 6d; see releases.csv); this lexical pair predates LANG84 and is not yet audited clause by clause against the tagged spec text.
 #
 # ECMA-262, 8th Edition — June 2017
 #

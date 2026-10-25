@@ -1,0 +1,3 @@
+oracle: pinned historical source, CPython v2.2 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+evidence: Objects/intobject.c int_mod -> i_divmod: the remainder takes the divisor's sign
+result: the subset prints exactly what CPython 2.2 and 2.7.18 print

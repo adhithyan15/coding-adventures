@@ -1,0 +1,3 @@
+oracle: pinned historical source, CPython v2.2 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+evidence: the item is evaluated before PRINT_ITEM, so the failing statement writes nothing (and softspace is clear, so no flush newline)
+result: CPython 2 writes the stdout before `trap:` and then exits with ZeroDivisionError; the subset traps Trap.DivZero after the same stdout

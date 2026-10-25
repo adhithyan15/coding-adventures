@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## 0.10.1 — Unreleased — LANG84 phase 6d: pair headers cite their releases
+
+### Fixed
+
+- The legacy-octal-like part of es2021–es2025's `FLOAT_NUMBER` and
+  `SCI_NUMBER` is now `0[0-7]*[89][0-9]*` (was `0[0-9]*[89][0-9]*`). The two
+  match the same strings, but the old one was ambiguous: backtracking engines
+  (the Python and TypeScript lexers that read these `.tokens`) took quadratic
+  time on `0` followed by many `8`s (5 s for 20 KB). Rust's `regex` was
+  already linear. Found by the 6d security re-review (L3).
+- es2021–es2025 number patterns follow ECMA-262's NumericLiteralSeparator
+  grammar: one `_` between two digits; none after a lone leading `0` or in a
+  legacy octal / NonOctalDecimal literal; none beside `.`, an exponent or a
+  radix prefix. `5.`, `5.e1` and `1.e3` lex as one NUMBER again (the fraction
+  digits are optional, as in es2020), and a legacy octal no longer takes a
+  fraction or exponent (`017.5`), while `08.5` does. Tables regenerated.
+
+### Changed
+
+- `_grammar.rs` regenerated after the es2016–es2025 `.tokens` headers
+  gained `source_ref`/`source_sha`/`PARTIAL` lines (LANG84 stage G). Only
+  `line_number` fields change; no pattern, group or transition differs.
+
 ## 0.10.0 — Unreleased — LANG84 phase 6a: the grammar tells a regex from a division
 
 ### Removed (breaking)

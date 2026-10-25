@@ -1,4 +1,4 @@
-//! # The LANG84 release path: `py-int-print` for one exact CPython release
+//! # The LANG84 release path: `py-int-print` (or `py2-int-print`) for one exact CPython release
 //!
 //! ```text
 //!   source ──► resolve_release ──► GrammarLexer(python<release>.tokens)
@@ -26,9 +26,15 @@ use crate::frontend_error::FrontendError;
 use crate::int_lower::{shown_rule, Lowering, MAX_IIR_INSTRUCTIONS};
 use crate::profiles::{profile_for, ReleaseProfile};
 
-/// The subset the release path lowers, as `code/grammars/python/subsets.csv`
-/// names it.
+/// The subset the default release (`DEFAULT_RELEASE`) lowers, as
+/// `code/grammars/python/subsets.csv` names it. Each release's own subset is
+/// its profile's (`profiles::profile_for(release).subset`); [`SUBSETS`]
+/// lists them all.
 pub const SUBSET: &str = "py-int-print";
+
+/// Every subset the release path lowers, one per profile (LANG84 phase 7c
+/// slice 1 added `py2-int-print`).
+pub const SUBSETS: &[&str] = &["py-int-print", "py2-int-print"];
 
 // Budgets for a caller-supplied tree (LANG84 C5). A tree that came from
 // source is already bounded by the parser's token and depth budgets; one
@@ -78,7 +84,7 @@ fn release_and_profile(release: Option<&str>) -> Result<(&'static str, &'static 
     let release = resolve_release(release)?;
     let profile = profile_for(release).ok_or_else(|| FrontendError::ReleaseNotAvailable {
         release: release.to_string(),
-        stage: format!("no IIR profile for {SUBSET} (iir_status is -)"),
+        stage: format!("no IIR profile for any of {} (iir_status is -)", SUBSETS.join(", ")),
     })?;
     Ok((release, profile))
 }

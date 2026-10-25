@@ -1,11 +1,13 @@
 //! Shared readers for the LANG84 integration tests (`release_subsets.rs`,
-//! `release_sweep.rs`): the Python release inventory and the `py-int-print`
-//! corpus, both read from `code/grammars/python/`.
+//! `release_sweep.rs`): the Python release inventory and the corpora of the
+//! release-path subsets (`py-int-print`; `py2-int-print` since phase 7c
+//! slice 1), all read from `code/grammars/python/`. Every reader takes the
+//! subset by name, as `subsets.csv` and `iir_status` spell it.
 //!
 //! ```text
 //!   code/grammars/python/
 //!     releases.csv                 one row per release; columns read by NAME
-//!     subsets.csv                  py-int-print -> corpus/py-int-print
+//!     subsets.csv                  py-int-print -> corpus/py-int-print, py2-int-print -> …
 //!     corpus/py-int-print/
 //!       mod_zero.py  mod_zero.expect  mod_zero.cite        a positive case
 //!       int_underscores.reject@3.0a1                       ... refused by one release
@@ -22,7 +24,7 @@
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-use python_iir_compiler::{supported_releases, SUBSET};
+use python_iir_compiler::supported_releases;
 
 /// `code/grammars/python`, from this crate's manifest directory.
 pub fn python_grammars() -> PathBuf {
@@ -45,11 +47,11 @@ pub fn inventory() -> Vec<BTreeMap<String, String>> {
     csv_rows(&python_grammars().join("releases.csv"))
 }
 
-/// Releases whose `iir_status` lists the subset, in inventory order.
-pub fn claiming_releases() -> Vec<String> {
+/// Releases whose `iir_status` lists `subset`, in inventory order.
+pub fn claiming_releases(subset: &str) -> Vec<String> {
     inventory()
         .into_iter()
-        .filter(|row| row["iir_status"].split(';').any(|s| s == SUBSET))
+        .filter(|row| row["iir_status"].split(';').any(|s| s == subset))
         .map(|row| row["release"].clone())
         .collect()
 }
@@ -88,16 +90,17 @@ impl Case {
     }
 }
 
-/// `corpus/py-int-print/`, located through `subsets.csv`.
-pub fn corpus_dir() -> PathBuf {
+/// `corpus/<subset>/`, located through `subsets.csv`.
+pub fn corpus_dir(subset: &str) -> PathBuf {
     let rows = csv_rows(&python_grammars().join("subsets.csv"));
-    let row = rows.iter().find(|row| row["subset"] == SUBSET).expect("subsets.csv declares py-int-print");
+    let row = rows.iter().find(|row| row["subset"] == subset).unwrap_or_else(|| panic!("subsets.csv declares {subset}"));
     python_grammars().join(&row["corpus_dir"])
 }
 
-/// Every case, sorted by name, with its `.reject@<release>` overrides.
-pub fn corpus() -> Vec<Case> {
-    let dir = corpus_dir();
+/// Every case of `subset`, sorted by name, with its `.reject@<release>`
+/// overrides.
+pub fn corpus(subset: &str) -> Vec<Case> {
+    let dir = corpus_dir(subset);
     let mut names: Vec<String> = Vec::new();
     let mut overrides: BTreeMap<String, BTreeMap<String, String>> = BTreeMap::new();
     for entry in std::fs::read_dir(&dir).unwrap_or_else(|e| panic!("{}: {e}", dir.display())) {

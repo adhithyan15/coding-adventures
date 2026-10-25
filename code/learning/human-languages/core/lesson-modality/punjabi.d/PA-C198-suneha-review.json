@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C198-suneha-review",
+    "language": "punjabi",
+    "chapter": 198,
+    "sequence": 10790,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:46d21782621852e6"
+  },
+  "findings": []
+}
