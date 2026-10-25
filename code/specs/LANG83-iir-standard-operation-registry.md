@@ -919,6 +919,19 @@ the wrong class also refuses the function: a float register or float literal
 given to `int_to_real`, or an integer given to a narrowing op. No float bits
 are ever read as an integer, and no integer is ever read as float bits.
 
+**An integer register must hold an integer.** The class rules above cover
+values the function computes. Values that enter from outside are checked when
+they arrive:
+- An argument for a non-`f64` parameter must be `Int` or `Bool`. Anything
+  else fails the call before any instruction runs.
+- A `call_builtin` result stored in a register must be `Int`, `Bool`, or a
+  void `Null` (stored as 0).
+
+Both used to collapse to 0, so `int_to_real` of a parameter that received
+`Float(2.5)` returned `0.0` where the VM raises "operand is not an integer".
+It now fails closed. An `f64` parameter is still checked by its `PARAM_F64`
+prologue instruction.
+
 **The narrowing failure matches the VM, not `Trap.ConvRange`.** vm-core's
 `real_to_i64_checked` rejects a non-finite `t` with
 `VMError::Custom("real_to_int: operand is not finite")`. It rejects a `t`

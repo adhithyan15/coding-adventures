@@ -24,6 +24,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   integer source given to a narrowing op, a narrowing destination that is
   also a float register, or an `int_to_real` into a non-`f64` parameter
   refuses the function. Bits are never reinterpreted.
+- **Non-integer values fail closed (security review).** `run` used to seed
+  every non-`f64` parameter with `as_i64().unwrap_or(0)`, and stored every
+  `call_builtin` result the same way. So a `Float(2.5)` or string argument,
+  or a builtin returning a `Float`, silently read as 0, and with
+  `int_to_real` now lowered, `int_to_real` of such a value returned 0.0
+  where the interpreter raises. Now:
+  - an argument that is not `Int` or `Bool` errors before any instruction
+    runs, unless its register belongs to an `f64` parameter. Those are found
+    from the leading `PARAM_F64` prologue, which checks them itself;
+  - a builtin result other than `Int`, `Bool` or a void `Null` (still 0)
+    errors too.
+
+  Tests: `f64_parameter_is_loaded_by_a_checked_prologue` now pins the error
+  instead of the old 0. New: `int_to_real_of_a_float_argument_fails_closed`
+  and `a_non_integer_builtin_result_fails_closed`.
 - **Failures match the VM.** A non-finite or out-of-range narrowing writes
   vm-core's exact `real_to_int: …` text. `error_from_message` returns that
   text as the same `VMError::Custom`, without the `generic-cir-jit:` prefix.

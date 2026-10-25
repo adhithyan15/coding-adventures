@@ -521,14 +521,41 @@ impl Backend for GenericCirJit {
         // `compile_function` pre-binds parameters to registers
         // `0..params.len()` in declaration order, and `compile_fn` passes the
         // arguments in that same order, so argument `i` lands in register `i`.
-        // Non-integer values collapse to their `i64` view (the register file
-        // is i64-only), and `.take(256)` keeps a long argument list from
-        // walking off the fixed-size file — a defensive bound, never reached
-        // in practice (a function cannot declare more than 256 registers).
+        // The register file is i64-only, so an argument must be an integer
+        // (`Int`, or `Bool` as 0/1), unless its register belongs to an
+        // `f64` parameter: those are seeded by their `PARAM_F64` prologue
+        // instructions (LANG83 PR6a), which lead the code and check for
+        // `Value::Float` themselves. Any other value fails closed. It used to
+        // collapse to 0, so a parameter that received `Float(2.5)` computed
+        // with 0 where the interpreter computes with 2.5, and `int_to_real`
+        // returned 0.0 where the interpreter raises.
+        //
+        // | argument          | f64 parameter?  | outcome                   |
+        // |-------------------|-----------------|---------------------------|
+        // | `Int` / `Bool`    | no              | seeded as the integer     |
+        // | anything else     | no              | error, nothing runs       |
+        // | anything          | yes             | `PARAM_F64` checks/seeds  |
+        //
+        // `.take(256)` keeps a long argument list from walking off the
+        // fixed-size file, a defensive bound never reached in practice (a
+        // function cannot declare more than 256 registers).
+        let mut f64_param = [false; 256];
+        let mut prologue = 0;
+        while prologue + 1 < code.len() && code[prologue] == opcode::PARAM_F64 {
+            f64_param[code[prologue + 1] as usize] = true;
+            prologue += 2;
+        }
         for (i, a) in args.iter().enumerate().take(regs.len()) {
-            // An `f64`-typed parameter is re-seeded by its `PARAM_F64`
-            // prologue instruction (LANG83 PR6a), which checks the type.
-            regs[i] = a.as_i64().unwrap_or(0);
+            match a.as_i64() {
+                Some(n) => regs[i] = n,
+                None if f64_param[i] => {}
+                None => {
+                    self.set_error(format!(
+                        "GenericCirJit: integer parameter {i} received {a:?}, not an integer"
+                    ));
+                    return Value::Null;
+                }
+            }
         }
 
         let mut tape: Vec<u8> = if self.tape_size > 0 {
@@ -879,11 +906,24 @@ impl Backend for GenericCirJit {
                     };
                     let result = cb(&args);
                     if dst != 0xFF {
-                        // Coerce result to i64 — generic JIT carries
-                        // everything as i64 in regs.  Non-i64 results
-                        // are flattened via `as_i64()` (which handles
-                        // Int / Bool).
-                        let n = result.as_i64().unwrap_or(0);
+                        // The generic JIT carries everything as i64 in its
+                        // registers: an `Int` or `Bool` result is stored as
+                        // its integer, and a void builtin's `Null` as 0, the
+                        // value its destination has always held. Any other
+                        // result (a `Float`, a string) has no integer view,
+                        // so it fails closed rather than reading as 0.
+                        let n = match result {
+                            Value::Null => 0,
+                            ref other => match other.as_i64() {
+                                Some(n) => n,
+                                None => {
+                                    self.set_error(format!(
+                                        "GenericCirJit: builtin result {other:?} stored in an integer register"
+                                    ));
+                                    return Value::Null;
+                                }
+                            },
+                        };
                         regs[dst as usize] = n;
                     }
                 }
@@ -2147,8 +2187,8 @@ mod tests {
 
     /// An `f64` parameter arrives as `Value::Float` and its `PARAM_F64`
     /// prologue loads the bits; any other value fails the call closed. A float
-    /// passed to an integer parameter is NOT reinterpreted (it stays 0, as
-    /// before PR6a).
+    /// passed to an integer parameter is NOT reinterpreted, and no longer
+    /// reads as 0 either: it fails the call closed too.
     #[test]
     fn f64_parameter_is_loaded_by_a_checked_prologue() {
         let cir = vec![write_f64("write_f64_py", "p"), CIRInstr::new("ret_void", None::<&str>, vec![], "void")];
@@ -2164,12 +2204,63 @@ mod tests {
             assert!(j.take_error().is_some(), "{bad:?} for an f64 parameter must fail closed");
         }
         assert_eq!(seen.lock().unwrap().len(), 1, "nothing printed for a bad argument");
-        // An integer parameter given a float keeps the old coercion (0).
+        // An integer parameter given a non-integer fails closed (it used to
+        // read as 0); `Int` and `Bool` still seed it.
         let ret = vec![CIRInstr::new("ret_i64", None::<&str>, vec![var("n")], "i64")];
         let params = [("n".to_string(), "i64".to_string())];
         let ctx = FunctionContext { name: "g", params: &params, return_type: "i64" };
         let bin = j.compile_function(&ctx, &ret).unwrap();
-        assert_eq!(j.run(&bin, &[Value::Float(1.5)]), Value::Int(0));
+        for bad in [Value::Float(1.5), Value::Null, Value::Str("x".into())] {
+            assert_eq!(j.run(&bin, std::slice::from_ref(&bad)), Value::Null, "{bad:?}");
+            let err = j.take_error().unwrap_or_else(|| panic!("{bad:?} must fail closed"));
+            assert!(format!("{err:?}").contains("integer parameter 0"), "{err:?}");
+        }
+        assert_eq!(j.run(&bin, &[Value::Int(7)]), Value::Int(7));
+        assert_eq!(j.run(&bin, &[Value::Bool(true)]), Value::Int(1));
+        assert!(j.take_error().is_none());
+    }
+
+    /// A builtin result stored in a register must have an integer view:
+    /// `Int`/`Bool` are stored, a void builtin's `Null` is 0 (as always), and
+    /// a `Float` or string fails closed instead of reading as 0.
+    #[test]
+    fn a_non_integer_builtin_result_fails_closed() {
+        let j = GenericCirJit::new();
+        j.register_builtin("half", |_: &[Value]| Value::Float(0.5));
+        j.register_builtin("seven", |_: &[Value]| Value::Int(7));
+        j.register_builtin("nothing", |_: &[Value]| Value::Null);
+        let call = |name: &str| {
+            vec![
+                CIRInstr::new("call_builtin", Some("r"), vec![var(name)], "i64"),
+                CIRInstr::new("ret_i64", None::<&str>, vec![var("r")], "i64"),
+            ]
+        };
+        let bin = j.compile(&call("seven")).unwrap();
+        assert_eq!(j.run(&bin, &[]), Value::Int(7));
+        let bin = j.compile(&call("nothing")).unwrap();
+        assert_eq!(j.run(&bin, &[]), Value::Int(0));
+        assert!(j.take_error().is_none());
+        let bin = j.compile(&call("half")).unwrap();
+        assert_eq!(j.run(&bin, &[]), Value::Null);
+        let err = j.take_error().expect("a Float builtin result must fail closed");
+        assert!(format!("{err:?}").contains("builtin result"), "{err:?}");
+    }
+
+    /// `int_to_real` of a parameter that received a float fails closed in
+    /// the prologue instead of converting the 0 the old seeding produced
+    /// (the interpreter raises "operand is not an integer" for it).
+    #[test]
+    fn int_to_real_of_a_float_argument_fails_closed() {
+        let params = [("n".to_string(), "i64".to_string())];
+        let ctx = FunctionContext { name: "f", params: &params, return_type: "f64" };
+        let cir = vec![
+            CIRInstr::new("int_to_real", Some("x"), vec![var("n")], "f64"),
+            CIRInstr::new("ret_f64", None::<&str>, vec![var("x")], "f64"),
+        ];
+        let (j, _) = f64_writer_jit();
+        let bin = j.compile_function(&ctx, &cir).unwrap();
+        assert_eq!(j.run(&bin, &[Value::Float(2.5)]), Value::Null);
+        assert!(j.take_error().is_some());
     }
 
     /// Every other use of a float register refuses the function, so the
