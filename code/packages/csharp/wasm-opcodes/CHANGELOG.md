@@ -4,6 +4,10 @@
 
 ### Fixed
 
+- Wire both Coverlet integrations into the native test project and make the
+  Unix and Windows build fronts instrument a clean project-reference graph,
+  report only production coverage, and enforce the 95% library line target.
+
 - BUILD now passes `--artifacts-path .artifacts` instead of
   `/p:BaseIntermediateOutputPath=.../\$(MSBuildProjectName)/` and
   `/p:BaseOutputPath=...`. MSBuild does not expand property references in a

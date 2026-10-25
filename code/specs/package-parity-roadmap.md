@@ -17971,7 +17971,8 @@ Windows fronts. Each front must:
    WasmOpcodes production assembly;
 3. enforce the repository's 95% library target rather than weakening the
    historical 80% placeholder; and
-4. fail nonzero under a deliberate threshold above the measured result.
+4. fail nonzero when a deliberately incomplete test selection leaves the
+   measured line coverage below that threshold.
 
 The package APIs, opcode tables, WebAssembly semantics, and wider .NET package
 fleet are out of scope. The active parity PRs touch none of these package or
