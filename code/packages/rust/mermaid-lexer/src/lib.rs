@@ -1769,6 +1769,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_key_prefix_attribute_names() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nBOOK {\n  int fk_title FK\n  string pk_author PK\n  string uk_address UK\n  float pk_price PK \"comment\"\n}\n",
+        );
+
+        for expected in ["fk_title", "pk_author", "uk_address", "pk_price"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+        assert_eq!(tokens.iter().filter(|token| token.value == "PK").count(), 2);
+        assert_eq!(tokens.iter().filter(|token| token.value == "FK").count(), 1);
+        assert_eq!(tokens.iter().filter(|token| token.value == "UK").count(), 1);
+    }
+
+    #[test]
     fn tokenizes_er_attribute_type_forms() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
