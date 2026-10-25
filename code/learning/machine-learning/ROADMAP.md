@@ -1,5 +1,9 @@
 # Neural Learning Delivery Roadmap
 
+The teaching tranches below are complete. Reusable native frameworks, full
+architecture training, and expansion to every language are tracked separately
+in the [Neural Framework Delivery Roadmap](./FRAMEWORK-ROADMAP.md).
+
 This roadmap drives the long-lived neural-learning delivery loop. Each tranche
 should land as one reviewable commit and must include the smallest complete
 learning loop: explanation, hand calculation, deterministic oracle, interactive

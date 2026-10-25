@@ -1,0 +1,67 @@
+name: Neural Framework Conformance
+
+on:
+  pull_request:
+    paths:
+      - "code/packages/python/neural-framework/**"
+      - "code/packages/typescript/neural-framework/**"
+      - "code/packages/python/matrix/**"
+      - "code/packages/typescript/matrix/**"
+      - "code/specs/fixtures/neural-framework-v1/**"
+      - "code/scripts/validate_neural_framework_interchange.py"
+      - ".github/workflows/neural-framework.yml"
+  push:
+    branches: [main]
+    paths:
+      - "code/packages/python/neural-framework/**"
+      - "code/packages/typescript/neural-framework/**"
+      - "code/packages/python/matrix/**"
+      - "code/packages/typescript/matrix/**"
+      - "code/specs/fixtures/neural-framework-v1/**"
+      - "code/scripts/validate_neural_framework_interchange.py"
+      - ".github/workflows/neural-framework.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-training-and-checkpoint-exchange:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            code/packages/python/neural-framework
+            code/packages/python/matrix
+            code/packages/typescript/neural-framework
+            code/packages/typescript/matrix
+            code/packages/typescript/matrix-rust-napi
+            code/specs/fixtures/neural-framework-v1
+            code/scripts
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+      - name: Validate native Python framework
+        working-directory: code/packages/python/neural-framework
+        run: |
+          python -m pip install --no-deps -e ../matrix
+          python -m pip install --no-deps -e .
+          python -m pip install pytest pytest-cov ruff build
+          ruff check src tests examples
+          python -m pytest
+          python -m build --wheel
+      - name: Validate native TypeScript framework
+        working-directory: code/packages/typescript/neural-framework
+        run: |
+          npm --prefix ../matrix ci --omit=dev --ignore-scripts
+          npm ci --ignore-scripts
+          npm run build
+          npm run test:coverage
+      - name: Execute training and exchange portable checkpoints both ways
+        run: python code/scripts/validate_neural_framework_interchange.py

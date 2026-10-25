@@ -1,0 +1,11 @@
+# Changelog
+
+## 0.1.0 — 2026-10-25
+
+- Add native configurable dense networks above the existing matrix package.
+- Add deterministic initialization, linear/sigmoid/tanh/ReLU activations,
+  full-network gradients, and exact-count SGD training.
+- Add copied closed checkpoints shared with Python and atomic update validation.
+- Add paper-oracle, finite-difference, seeded XOR, malformed-input, ownership,
+  and checkpoint resume tests with enforced coverage thresholds.
+- Add an executable JSON example and cross-language checkpoint exchange gate.
