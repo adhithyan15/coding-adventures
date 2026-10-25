@@ -11,6 +11,9 @@ defmodule Bezier2D do
   All evaluation uses de Casteljau's algorithm for numerical stability.
   """
 
+  @max_flattening_depth 32
+  @max_flattening_subdivisions 65_535
+
   # ---------------------------------------------------------------------------
   # Quadratic Bezier
   # ---------------------------------------------------------------------------
@@ -45,16 +48,7 @@ defmodule Bezier2D do
   Returns a list of `{x, y}` points.
   """
   def polyline_quad({:quad, p0, p1, p2} = q, tolerance) do
-    chord_mid = Point2D.lerp(p0, p2, 0.5)
-    curve_mid = eval_quad(q, 0.5)
-    if Point2D.distance(chord_mid, curve_mid) <= tolerance do
-      [p0, p2]
-    else
-      {left, right} = split_quad(q, 0.5)
-      lpts = polyline_quad(left, tolerance)
-      rpts = polyline_quad(right, tolerance)
-      lpts ++ tl(rpts)
-    end
+    flatten(q, tolerance, [p0, p1, p2])
   end
 
   @doc "Tight bounding box of a quadratic Bezier."
@@ -122,17 +116,8 @@ defmodule Bezier2D do
   end
 
   @doc "Adaptively subdivide a cubic Bezier into a polyline within `tolerance`."
-  def polyline_cubic({:cubic, p0, _p1, _p2, p3} = c, tolerance) do
-    chord_mid = Point2D.lerp(p0, p3, 0.5)
-    curve_mid = eval_cubic(c, 0.5)
-    if Point2D.distance(chord_mid, curve_mid) <= tolerance do
-      [p0, p3]
-    else
-      {left, right} = split_cubic(c, 0.5)
-      lpts = polyline_cubic(left, tolerance)
-      rpts = polyline_cubic(right, tolerance)
-      lpts ++ tl(rpts)
-    end
+  def polyline_cubic({:cubic, p0, p1, p2, p3} = c, tolerance) do
+    flatten(c, tolerance, [p0, p1, p2, p3])
   end
 
   @doc "Tight bounding box of a cubic Bezier."
@@ -151,6 +136,74 @@ defmodule Bezier2D do
   # ---------------------------------------------------------------------------
   # Private helpers
   # ---------------------------------------------------------------------------
+
+  defp flatten(curve, tolerance, controls) do
+    if not is_number(tolerance) or tolerance <= 0.0,
+      do: raise(ArgumentError, "tolerance must be finite and positive")
+
+    unless Enum.all?(controls, fn {x, y} -> is_number(x) and is_number(y) end),
+      do: raise(ArgumentError, "control points must be finite")
+
+    try do
+      curve
+      |> flatten_pending(tolerance, 0, [{curve, 0}], [hd(controls)])
+      |> Enum.reverse()
+    rescue
+      ArithmeticError -> raise RuntimeError, "Bezier subdivision produced nonfinite geometry"
+    end
+  end
+
+  defp flatten_pending(_curve, _tolerance, _subdivisions, [], points), do: points
+
+  defp flatten_pending(curve, tolerance, subdivisions, [{current, depth} | pending], points) do
+    {endpoint, off_curve} =
+      case current do
+        {:quad, _p0, p1, p2} -> {p2, [p1]}
+        {:cubic, _p0, p1, p2, p3} -> {p3, [p1, p2]}
+      end
+
+    start_point = elem(current, 1)
+    error = off_curve |> Enum.map(&distance_to_segment(&1, start_point, endpoint)) |> Enum.max()
+
+    if error <= tolerance do
+      flatten_pending(curve, tolerance, subdivisions, pending, [endpoint | points])
+    else
+      if depth >= @max_flattening_depth or subdivisions >= @max_flattening_subdivisions,
+        do: raise(RuntimeError, "Bezier flattening exceeded the depth or subdivision budget")
+
+      {left, right} =
+        case current do
+          {:quad, _, _, _} -> split_quad(current, 0.5)
+          {:cubic, _, _, _, _} -> split_cubic(current, 0.5)
+        end
+
+      flatten_pending(curve, tolerance, subdivisions + 1,
+        [{left, depth + 1}, {right, depth + 1} | pending], points)
+    end
+  end
+
+  defp distance_to_segment({px, py}, {sx, sy} = start_point, {ex, ey}) do
+    dx = ex - sx
+    dy = ey - sy
+    scale = max(abs(dx), abs(dy))
+
+    if scale == 0.0 do
+      scaled_distance({px, py}, start_point)
+    else
+      nx = dx / scale
+      ny = dy / scale
+      denominator = nx * nx + ny * ny
+      projection = min(1.0, max(0.0, (((px - sx) / scale) * nx + ((py - sy) / scale) * ny) / denominator))
+      scaled_distance({px, py}, {sx + projection * dx, sy + projection * dy})
+    end
+  end
+
+  defp scaled_distance({x1, y1}, {x2, y2}) do
+    dx = x1 - x2
+    dy = y1 - y2
+    scale = max(abs(dx), abs(dy))
+    if scale == 0.0, do: 0.0, else: scale * :math.sqrt((dx / scale) ** 2 + (dy / scale) ** 2)
+  end
 
   defp quad_extremum(min_v, max_v, v0, v1, v2, eval_fn) do
     denom = v0 - 2 * v1 + v2
