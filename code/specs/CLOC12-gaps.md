@@ -303,6 +303,56 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **WHITESPACE_ONLY token path: open.** It is queued behind #17840 (newline
   ASI), since both rewrite the same statement boundaries.
 
+### #17907 — a non-directive is never printed as `"use strict"`
+
+- **The bug.** ECMA-262 §11.2.1 makes a body strict only when its directive
+  prologue holds the exact token `"use strict"` or `'use strict'`. The AST
+  keeps no record of which statements were directives: the bridge decodes
+  escapes and drops grouping parentheses, and passes fold `` `use strict` ``
+  to a string and split `"use strict",1` into two statements. The printer
+  then wrote each of `"use\x20strict";`, `` `use strict`; ``,
+  `("use strict");` and `"use strict",1;` back as `"use strict";`, which made
+  sloppy code strict.
+- **Upstream rule (v20260915, probed on the jar).** Upstream never prints an
+  input `"use strict"`. It drops the leading run of statements in a program
+  or function body whose string value is `use strict`, whatever the escapes
+  or parentheses. It keeps one that follows any other statement
+  (`"a";"use strict"` and `0;"use strict"` print unchanged). It adds one
+  top-level directive back only for `--emit_use_strict`, single-quoted.
+- **AST emitter (SIMPLE/ADVANCED): resolved.** `without_use_strict` drops
+  every statement with value `use strict` from a body's directive prologue
+  (its leading run of lone string statements), and `emit_program` and the
+  new `emit_function_body` print what is left. Function declarations, function
+  expressions, methods, accessors, constructors and block-bodied arrows all
+  print their bodies through it. A plain block and a class `static {}` block
+  are not prologues and keep their strings.
+- **Deliberate divergences, both where upstream miscompiles.**
+  - Upstream strips at parse time, before folding, so at SIMPLE it prints
+    `` `use strict`;x=1 `` as `"use strict";x=1;` and `"use strict",1;x=1`
+    as `"use strict";1;x=1;`. Both outputs are strict. closurec strips
+    after folding and prints `x=1;` and `1;x=1;`.
+  - Upstream strips only the leading run, so after `"a";` it keeps a
+    `"use strict"`. SIMPLE's flattening then turns `"a";{"use strict"}`,
+    `"a";if(1){"use strict"}` and `"a";1&&"use strict"` into a live
+    `"a";"use strict";…`. closurec drops a `"use strict"` anywhere in the
+    prologue, so even a genuine `"a";"use strict";f()` prints as `"a";f();`.
+    That is consistent with stripping the genuine leading ones.
+- **WHITESPACE_ONLY token path: the escape case is resolved.**
+  `emit_quoted_string` prints a `use strict` string whose source spelling had
+  an escape as `"use\x20strict"`, so it stays inert. gap-088 (empty
+  statement removal) keeps the one `;` in front of a `use strict` string:
+  in `;"use strict";…` that empty statement is what ends the prologue, and
+  dropping it made the string a live directive. The template,
+  parenthesised and sequence forms already printed as written. Stripping the
+  leading run in WHITESPACE_ONLY, which needs function-body boundaries in the
+  token stream, is left to CCR-085 (#15920).
+- **Tests.** Eleven emitter unit tests, and
+  `closurec/tests/regression_use_strict_prologue.rs`. The closurec test pins
+  WHITESPACE_ONLY and SIMPLE bytes for seven shapes, SIMPLE bytes for seven
+  more (in function bodies, and after `"a";`), asserts that no level opens
+  its output with `"use strict"`, and, when `node` is on `PATH`, checks
+  that every output prints what its source prints.
+
 ### gap-031 — empty `{}` body collapses to `;`
 
 - **Status:** **RESOLVED** in CLOC12.41 (PR pending). `minify_for_loop` flipped IGNORED → PASS.
@@ -377,6 +427,29 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 - **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_destructuring` flipped IGNORED → PASS.
 - **Resolution:** Extended `needs_separator` with a 3-keyword whitelist: when prev is `var`/`let`/`const` AND next is `{`/`[`, force a separator. Keeps the change scoped; doesn't affect general PUNCTUATION-after-KEYWORD shapes.
+
+### #18123 — a keyword method name is not a statement head
+
+- **The bug.** The gap-076/079 header-body flatten and the emit loop's
+  control-flow-head arming fired on a *method* named `if`/`while`/`for`/
+  `with`. So `class C{if(){}}` printed as `class C{if();}` and
+  `x={while(a){c=a;}}` as `x={while(a)c=a}`, and neither parses. Upstream
+  prints both unchanged.
+- **Resolution.** `member_list_positions` makes one stack pass over `kept`
+  and marks each token whose innermost open bracket is a class body or
+  object literal; a keyword there is a member name. Class bodies are the
+  first `{` at the same depth after `class`. Object literals are a `{` after
+  an unambiguous expression-position token. After `:`, a `{` is an object
+  literal only when that `:` is a property colon or sits inside a paren or
+  bracket. Labels and `case x:{` stay blocks. Misclassifying a block as a
+  member list would disarm a real `if`, so every rule errs towards
+  "block".
+- **Tests.** Three unit tests, and
+  `closurec/tests/regression_ws_keyword_methods.rs` (26 shapes pinned to the
+  jar, node parse check). A `function` keyword at the class head's depth
+  cancels the wait for the class body, since a function expression in
+  `extends` opens its own `{` first; and only a real class head
+  (`class {`, `class extends`, `class Name {|extends`) arms it.
 
 ### gap-036 — switch statement trailing `;` after `}`
 

@@ -4,6 +4,31 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - a non-directive no longer becomes `"use strict"` (#17907)
+
+`("use strict");x=1;console.log(x)` prints `1` in node. closurec compiled it
+at SIMPLE and ADVANCED to `"use strict";x=1;…`, which throws
+`ReferenceError`. The same happened for `"use\x20strict"`, for
+`` `use strict` `` and for `"use strict",1`, in programs and in function
+bodies. WHITESPACE_ONLY turned `"use\x20strict"` into `"use strict"` too.
+
+- SIMPLE and ADVANCED now drop every `"use strict"` statement in a body's
+  directive prologue (`closure-emitter` 0.63.0). Upstream strips the
+  leading ones too, so real directives no longer reach the output.
+  `--emit_use_strict` still adds one at the top. After `"a";`, upstream
+  keeps a `"use strict"`, and SIMPLE's flattening can then make one out of
+  `"a";{"use strict"}`. closurec drops it there too.
+- WHITESPACE_ONLY prints an escaped spelling as `"use\x20strict"`, which
+  stays inert. It also keeps the `;` in `;"use strict";…`: that empty
+  statement ends the prologue, and dropping it (gap-088) made the string a
+  live directive. It still keeps real directives, which CCR-085 (#15920) will
+  strip.
+
+`tests/regression_use_strict_prologue.rs` pins WHITESPACE_ONLY and SIMPLE
+bytes for seven shapes and SIMPLE bytes for seven more. It asserts that no
+level opens its output with `"use strict"` and, with `node`, that every
+output prints what its source prints.
+
 ### Fixed - ADVANCED no longer inlines a function that reads `this` (#18115)
 
 `function t(){return this}var o={m:function(){return t()}};console.log(o.m()===o)`
@@ -199,6 +224,22 @@ loop scope. `tests/regression_for_head_shadow.rs` compiles the issue's matrix at
 SIMPLE and ADVANCED, checks that the outer declaration survives and pins the
 output bytes, and, when `node` is installed, checks that the output prints
 what the source prints.
+### Fixed - WHITESPACE_ONLY leaves methods named `if`/`while`/`for`/`with` alone (#18123)
+
+`class C{if(){}}` printed as `class C{if();}`, `class C{with(a){return a}}`
+as `class C{with(a)return a}` and `x={while(a){c=a;}}` as
+`x={while(a)c=a}`. None parses. The header-body flatten and the
+control-flow-head arming treated the method name as a statement keyword.
+
+`member_list_positions` marks every token whose innermost open bracket is a
+class body or object literal. A keyword there is a member name, so neither
+rule fires. The classification errs towards "block", so a real `if`
+statement is never disarmed.
+
+`tests/regression_ws_keyword_methods.rs` pins 26 shapes to the jar's bytes,
+real statements included, and checks with `node` that each output parses.
+Three unit tests cover the rule and the classification.
+
 ### Added - actual bounded provenance chronology (CV03)
 
 Traced compilation starts a fresh checked chronology log before input graph

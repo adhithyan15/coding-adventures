@@ -2146,6 +2146,28 @@ fn pinned_er_style_corpus_reaches_semantic_ir() {
     assert_eq!(order.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
     assert_eq!(order.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#b45309"));
     assert_eq!(order.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+
+    let composed = parse_er_diagram(fixtures[2]["source"].as_str().expect("multi-class source"))
+        .expect("composed ER classes must parse");
+    let customer = composed.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER");
+    let order = composed.nodes.iter().find(|node| node.id == "ORDER").expect("ORDER");
+    let product = composed.nodes.iter().find(|node| node.id == "PRODUCT").expect("PRODUCT");
+    assert_eq!(customer.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#b45309"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.text_color.as_deref()), Some("#14532d"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+    assert_eq!(order.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#dbeafe"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#1d4ed8"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.text_color.as_deref()), Some("#14532d"));
+    assert_eq!(product.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
+
+    let relationship =
+        parse_er_diagram(fixtures[3]["source"].as_str().expect("relationship class source"))
+            .expect("relationship endpoint classes must parse");
+    assert_eq!(relationship.relationships.len(), 1);
+    assert!(relationship.nodes.iter().all(|node| {
+        node.style.as_ref().and_then(|style| style.fill.as_deref()) == Some("#fee2e2")
+    }));
 }
 
 #[test]

@@ -355,7 +355,10 @@ impl<'a> Emitter<'a> {
     const LINE_LENGTH_BUDGET: u32 = 500;
 
     fn emit_program(&mut self, p: &Program) {
-        for (i, item) in p.body.iter().enumerate() {
+        // The program body is a directive prologue too (see
+        // [`without_use_strict`]).
+        let body = program_without_use_strict(&p.body);
+        for (i, item) in body.iter().enumerate() {
             if i > 0 && self.opts.pretty {
                 self.newline();
             }
@@ -365,7 +368,7 @@ impl<'a> Emitter<'a> {
             // statement that pushes the line past the budget -- see
             // `LINE_LENGTH_BUDGET` for the oracle table. Skipped on the final item
             // so the output does not gain a trailing blank line.
-            if !self.opts.pretty && self.col > Self::LINE_LENGTH_BUDGET && i + 1 < p.body.len() {
+            if !self.opts.pretty && self.col > Self::LINE_LENGTH_BUDGET && i + 1 < body.len() {
                 self.newline();
             }
         }
@@ -547,15 +550,29 @@ impl<'a> Emitter<'a> {
 
     fn emit_block_statement(&mut self, b: &BlockStatement) {
         self.maybe_map(&b.cv);
+        self.emit_braced_statements(&b.body.iter().collect::<Vec<_>>());
+    }
+
+    /// Emit the block body of a function, method, accessor, constructor or
+    /// arrow. It is an ordinary block except that its directive prologue
+    /// loses every `"use strict"` (see [`without_use_strict`]).
+    fn emit_function_body(&mut self, b: &BlockStatement) {
+        self.maybe_map(&b.cv);
+        self.emit_braced_statements(&without_use_strict(&b.body));
+    }
+
+    /// Emit `{stmt…}` for a statement list. Shared by plain blocks and function
+    /// bodies, which differ only in which statements they hand over.
+    fn emit_braced_statements(&mut self, body: &[&Statement]) {
         self.write_str("{");
-        if b.body.is_empty() {
+        if body.is_empty() {
             self.write_str("}");
             return;
         }
         if self.opts.pretty {
             self.newline();
             self.indent += 1;
-            for (i, s) in b.body.iter().enumerate() {
+            for (i, s) in body.iter().enumerate() {
                 if i > 0 {
                     self.newline();
                 }
@@ -566,7 +583,7 @@ impl<'a> Emitter<'a> {
             self.newline();
             self.indent_str();
         } else {
-            for (i, s) in b.body.iter().enumerate() {
+            for (i, s) in body.iter().enumerate() {
                 if i > 0 {
                     self.pretty_ws();
                 }
@@ -585,7 +602,7 @@ impl<'a> Emitter<'a> {
             // because the grammar requires a Statement there
             // and `}` is not a valid Statement start. The
             // last-child type tells us which case we're in.
-            if let Some(last) = b.body.last() {
+            if let Some(last) = body.last() {
                 if last_stmt_uses_terminator_semi(last) {
                     self.pop_trailing_semi_if_compact();
                 }
@@ -1290,7 +1307,7 @@ impl<'a> Emitter<'a> {
         }
         self.write_str(")");
         self.pretty_ws();
-        self.emit_block_statement(&f.body);
+        self.emit_function_body(&f.body);
         // A function declaration is NOT an expression statement, so it needs no
         // trailing `;` — `function f(){}g()` is valid and the reference compiler
         // emits exactly that (no separator before `g()`). The one place it does
@@ -1377,7 +1394,7 @@ impl<'a> Emitter<'a> {
         }
         self.write_str(")");
         self.pretty_ws();
-        self.emit_block_statement(body);
+        self.emit_function_body(body);
     }
 
     /// Emit a [`ClassExpression`] — `class[ id][ extends S]{members}`.
@@ -1650,7 +1667,7 @@ impl<'a> Emitter<'a> {
         self.write_str("=>");
         self.pretty_ws();
         match &a.body {
-            ArrowBody::Block(b) => self.emit_block_statement(b),
+            ArrowBody::Block(b) => self.emit_function_body(b),
             ArrowBody::Expression(e) => {
                 // A concise body that starts with `{` (an object literal)
                 // would otherwise be read as a block body.
@@ -3341,6 +3358,113 @@ fn unary_op_str(op: UnaryOperator) -> &'static str {
         UnaryOperator::TypeOf => "typeof",
         UnaryOperator::Void => "void",
         UnaryOperator::Delete => "delete",
+    }
+}
+
+/// A program or function body with every `"use strict"` statement in its
+/// directive prologue removed (#17907).
+///
+/// # Why drop them
+///
+/// The pinned upstream (v20260915) never prints a leading `"use strict"` it
+/// read from the input, and adds a single top-level one back only for
+/// `--emit_use_strict`. Probed on the oracle:
+///
+/// | Body starts with                    | upstream prints                 |
+/// |-------------------------------------|---------------------------------|
+/// | `"use strict";` / `'use strict';`   | nothing                         |
+/// | `"use strict";"use strict";`        | nothing                         |
+/// | `"use\x20strict";` (escape)         | nothing                         |
+/// | `("use strict");` (parenthesised)   | nothing                         |
+/// | `"a";"use strict";`                 | `"a";"use strict";`             |
+/// | `0;"use strict";`                   | `0;"use strict";`               |
+///
+/// Dropping is also what keeps the output safe. Our AST does not record
+/// which statements were real directives in the source: the bridge decodes
+/// escapes and drops grouping parentheses, and passes fold
+/// `` `use strict` `` to a string, split `"use strict",1` into two
+/// statements, and flatten `{"use strict"}` or `1&&"use strict"` into a bare
+/// string statement. Printed back where a directive prologue reads it, any
+/// of those becomes a genuine Use Strict Directive and turns sloppy code
+/// strict: `this` in a plain call becomes `undefined`, and assigning an
+/// undeclared name throws. Dropping such a statement is always safe, since
+/// an expression statement that is only a string has no effect.
+///
+/// # What is dropped
+///
+/// The prologue is the leading run of statements that are each a lone
+/// string literal; it ends at the first statement of any other kind. Every
+/// statement in it whose *decoded* value is `use strict` is dropped.
+/// Decoded, because the printer writes strings back from `value`
+/// (`emit_string`), so a value of `use strict` always prints as
+/// `"use strict"`. The other strings (`"a"`, `"use asm"`) stay, and nothing
+/// after the prologue is touched.
+///
+/// # Where this differs from upstream
+///
+/// Both differences are where upstream itself miscompiles:
+///
+/// - Upstream strips only a *leading* `"use strict"` run, at parse time.
+///   After `"a";` it keeps one, which lets SIMPLE's folding create a live
+///   directive from `"a";{"use strict"}` or `"a";1&&"use strict"`. We drop
+///   it anywhere in the prologue, so `"a";"use strict";f()` prints as
+///   `"a";f();`.
+/// - Upstream strips before folding, so for `` `use strict`;x=1 `` and
+///   `"use strict",1;x=1` at SIMPLE it prints a strict `"use strict";…`.
+///   We strip after folding and print `x=1;` and `1;x=1;`.
+fn without_use_strict(body: &[Statement]) -> Vec<&Statement> {
+    let mut in_prologue = true;
+    body.iter()
+        .filter(|s| {
+            if !in_prologue {
+                return true;
+            }
+            match string_statement_value(s) {
+                Some(value) => value != "use strict",
+                None => {
+                    in_prologue = false;
+                    true
+                }
+            }
+        })
+        .collect()
+}
+
+/// The program-level twin of [`without_use_strict`]. A declaration ends the
+/// prologue like any other non-string statement.
+fn program_without_use_strict(body: &[ProgramItem]) -> Vec<&ProgramItem> {
+    let mut in_prologue = true;
+    body.iter()
+        .filter(|item| {
+            if !in_prologue {
+                return true;
+            }
+            match item {
+                ProgramItem::Statement(s) => match string_statement_value(s) {
+                    Some(value) => value != "use strict",
+                    None => {
+                        in_prologue = false;
+                        true
+                    }
+                },
+                ProgramItem::Declaration(_) => {
+                    in_prologue = false;
+                    true
+                }
+            }
+        })
+        .collect()
+}
+
+/// If `s` is an expression statement whose whole expression is a string
+/// literal, that string's decoded value.
+fn string_statement_value(s: &Statement) -> Option<&str> {
+    match s {
+        Statement::Tagged(TaggedStatement::ExpressionStatement(ExpressionStatement {
+            expression: Expression::StringLiteral(lit),
+            ..
+        })) => Some(&lit.value),
+        _ => None,
     }
 }
 
@@ -8736,5 +8860,175 @@ mod tests {
             alternate: Some(Box::new(block_of(vec![expr_stmt(ident("b")), expr_stmt(ident("e"))]))),
         });
         assert_eq!(emit_stmt(s), "if(c)a;else{b;e};");
+    }
+
+    // ---- "use strict" prologue (#17907) -------------------------------
+    //
+    // See `without_use_strict` for the oracle table these pin.
+
+    /// A string literal whose decoded value is `value`, spelled `raw` in the
+    /// source. The printer only reads `value`, which is the point: an escaped
+    /// or parenthesised source spelling decodes to the same value.
+    fn decoded_string(value: &str, raw: &str) -> Expression {
+        Expression::StringLiteral(StringLiteral {
+            cv: None,
+            value: value.to_string(),
+            raw: raw.to_string(),
+        })
+    }
+
+    fn use_strict_program(body: Vec<ProgramItem>) -> String {
+        emit_default(program().with_body(body)).code
+    }
+
+    #[test]
+    fn leading_use_strict_is_dropped_from_the_program() {
+        // `"use strict"; x = 1;` → `x=1;`
+        let out = use_strict_program(vec![
+            stmt(string("use strict")),
+            stmt(assign("x", AssignmentOperator::Eq, num(1.0))),
+        ]);
+        assert_eq!(out, "x=1;");
+    }
+
+    #[test]
+    fn escaped_use_strict_never_prints_as_a_real_directive() {
+        // `"use\x20strict"; x = 1;` is a directive, but not a Use Strict
+        // Directive. Printed from its decoded value it would become one.
+        let out = use_strict_program(vec![
+            stmt(decoded_string("use strict", "use\\x20strict")),
+            stmt(assign("x", AssignmentOperator::Eq, num(1.0))),
+        ]);
+        assert_eq!(out, "x=1;");
+    }
+
+    #[test]
+    fn the_whole_leading_run_is_dropped() {
+        // `"use strict";"use strict";f();` → `f();`
+        let out = use_strict_program(vec![
+            stmt(string("use strict")),
+            stmt(string("use strict")),
+            stmt(call(ident("f"), vec![])),
+        ]);
+        assert_eq!(out, "f();");
+    }
+
+    #[test]
+    fn a_use_strict_anywhere_in_the_prologue_is_dropped() {
+        // Upstream keeps the second statement here. SIMPLE's folding can
+        // make the same shape out of `"a";{"use strict"}`, so we drop it.
+        let out = use_strict_program(vec![
+            stmt(string("a")),
+            stmt(string("use strict")),
+            stmt(string("b")),
+            stmt(call(ident("f"), vec![])),
+        ]);
+        assert_eq!(out, "\"a\";\"b\";f();");
+    }
+
+    #[test]
+    fn a_use_strict_after_the_prologue_is_kept() {
+        // A non-string statement ends the prologue; a later string is an
+        // ordinary expression, as upstream prints it.
+        let after_number = use_strict_program(vec![
+            stmt(num(0.0)),
+            stmt(string("use strict")),
+            stmt(call(ident("f"), vec![])),
+        ]);
+        assert_eq!(after_number, "0;\"use strict\";f();");
+        let after_call = use_strict_program(vec![
+            stmt(call(ident("f"), vec![])),
+            stmt(string("use strict")),
+        ]);
+        assert_eq!(after_call, "f();\"use strict\";");
+    }
+
+    #[test]
+    fn other_leading_strings_are_untouched() {
+        // Only the value `use strict` matters; `"use asm"` and a string
+        // that merely contains the words stay.
+        let out = use_strict_program(vec![
+            stmt(string("use asm")),
+            stmt(string("use strict ")),
+            stmt(call(ident("f"), vec![])),
+        ]);
+        assert_eq!(out, "\"use asm\";\"use strict \";f();");
+    }
+
+    #[test]
+    fn a_program_of_only_use_strict_prints_nothing() {
+        assert_eq!(use_strict_program(vec![stmt(string("use strict"))]), "");
+    }
+
+    #[test]
+    fn leading_use_strict_is_dropped_from_a_function_declaration() {
+        // `function f(){"use strict";return this}` → `function f(){return this};`
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![
+                    expr_stmt(string("use strict")),
+                    Statement::return_statement(ReturnStatement {
+                        cv: None,
+                        argument: Some(Expression::ThisExpression(ThisExpression { cv: None })),
+                    }),
+                ],
+            },
+            generator: false,
+            is_async: false,
+        };
+        let out = use_strict_program(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        assert_eq!(out, "function f(){return this};");
+    }
+
+    #[test]
+    fn leading_use_strict_is_dropped_from_a_function_expression() {
+        // `(function(){"use strict"})();` → `(function(){})();`
+        let f = Expression::FunctionExpression(FunctionExpression {
+            cv: None,
+            id: None,
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![expr_stmt(string("use strict"))],
+            },
+            generator: false,
+            is_async: false,
+        });
+        assert_eq!(
+            use_strict_program(vec![stmt(call(f, vec![]))]),
+            "(function(){})();"
+        );
+    }
+
+    #[test]
+    fn leading_use_strict_is_dropped_from_an_arrow_block_body() {
+        // `()=>{"use strict";f()}` → `()=>{f()}`
+        let a = arrow_block(
+            &[],
+            vec![
+                expr_stmt(string("use strict")),
+                expr_stmt(call(ident("f"), vec![])),
+            ],
+        );
+        assert_eq!(use_strict_program(vec![stmt(a)]), "()=>{f()};");
+    }
+
+    #[test]
+    fn a_plain_block_keeps_its_leading_use_strict() {
+        // A block is not a directive prologue, so `{"use strict"}` is just a
+        // string expression there and upstream keeps it.
+        let out = use_strict_program(vec![ProgramItem::Statement(block_of(vec![expr_stmt(
+            string("use strict"),
+        )]))]);
+        assert_eq!(out, "{\"use strict\"};");
     }
 }
