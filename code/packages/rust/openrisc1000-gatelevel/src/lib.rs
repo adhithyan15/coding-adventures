@@ -95,6 +95,23 @@ impl OpenRisc1000GateLevel {
     /// Snapshot every architectural bit into owned storage.
     #[must_use]
     pub fn get_state(&self) -> OpenRisc1000State {
+        self.state_with_memory(self.memory.snapshot())
+    }
+
+    fn try_get_state(&self) -> Result<OpenRisc1000State, OpenRisc1000Error> {
+        let memory = self
+            .memory
+            .try_snapshot()
+            .map_err(|()| OpenRisc1000Error::AllocationFailed)?;
+        Ok(self.state_with_memory(memory))
+    }
+
+    fn state_in_preallocated(&self, mut memory: Vec<u8>) -> OpenRisc1000State {
+        self.memory.snapshot_into(&mut memory);
+        self.state_with_memory(memory)
+    }
+
+    fn state_with_memory(&self, memory: Vec<u8>) -> OpenRisc1000State {
         OpenRisc1000State {
             gpr: std::array::from_fn(|index| read_bits(&self.gpr[index]) as u32),
             pc: read_bits(&self.pc) as u32,
@@ -107,7 +124,7 @@ impl OpenRisc1000GateLevel {
             machi: read_bits(&self.machi) as u32,
             reservation: (self.reservation_valid == 1)
                 .then(|| read_bits(&self.reservation_address) as u32),
-            memory: self.memory.snapshot(),
+            memory,
             halted: self.halted == 1,
             loaded_origin: read_bits(&self.loaded_origin) as u32,
             loaded_len: read_bits(&self.loaded_len) as usize,
@@ -121,8 +138,7 @@ impl OpenRisc1000GateLevel {
                 reason: "memory must contain exactly 65536 bytes",
             });
         }
-        let mut validator = engine::OpenRisc1000Simulator::new();
-        validator.restore(snapshot.clone())?;
+        engine::validate_state(&snapshot)?;
         self.restore_validated(&snapshot);
         Ok(())
     }
@@ -150,8 +166,9 @@ impl OpenRisc1000GateLevel {
         clock_bits(&mut self.loaded_len, snapshot.loaded_len as u64);
     }
 
-    fn commit_transition(&mut self, before: &OpenRisc1000State, next: &OpenRisc1000State) {
-        for (address, (&old, &new)) in before.memory.iter().zip(&next.memory).enumerate() {
+    fn commit_transition(&mut self, next: &OpenRisc1000State) {
+        for (address, &new) in next.memory.iter().enumerate() {
+            let old = self.memory.read(address);
             if gates::byte_changed(old, new) == 1 {
                 self.memory.write(address, new);
             }
@@ -179,8 +196,7 @@ impl OpenRisc1000GateLevel {
 
     /// Install a checked, nonempty, word-aligned big-endian image.
     pub fn load(&mut self, program: &[u8], origin: u32) -> Result<(), OpenRisc1000Error> {
-        let mut validator = engine::OpenRisc1000Simulator::new();
-        validator.load(program, origin)?;
+        engine::validate_image(program, origin)?;
         self.reset();
         for (offset, value) in program.iter().copied().enumerate() {
             self.memory.write(origin as usize + offset, value);
@@ -236,29 +252,39 @@ impl OpenRisc1000GateLevel {
         for (index, value) in range.zip(bytes.iter().copied()) {
             self.memory.write(index, value);
         }
-        let state = self.get_state();
-        if let Some(reserved) = state.reservation {
-            let write_end = u64::from(address) + bytes.len() as u64;
-            let reservation_end = u64::from(reserved) + 4;
-            if u64::from(address) < reservation_end && u64::from(reserved) < write_end {
+        if self.reservation_valid == 1 {
+            let reserved = read_bits(&self.reservation_address) as u32;
+            let write_end = gates::add_32(address, bytes.len() as u32, 0).0;
+            let reservation_end = gates::add_32(reserved, 4, 0).0;
+            if logic_gates::gates::and_gate(
+                gates::unsigned_less_32(address, reservation_end),
+                gates::unsigned_less_32(reserved, write_end),
+            ) == 1
+            {
                 clock_bit(&mut self.reservation_valid, false);
             }
         }
         Ok(())
     }
 
-    /// Execute one independent transition and clock its gate-validated result.
+    /// Execute one gate-derived transition and clock its settled result.
     pub fn step(&mut self) -> Result<StepTrace, OpenRisc1000Error> {
-        let before = self.get_state();
-        if before.halted {
+        if self.halted == 1 {
             return Err(OpenRisc1000Error::Halted);
         }
-        validate_gate_primary(&before)?;
-        let mut engine = engine::OpenRisc1000Simulator::new();
-        engine.restore(before.clone())?;
-        let trace = engine.step()?;
-        validate_gate_datapath(&before, &trace)?;
-        self.commit_transition(&before, &trace.state_after);
+        let before = self.try_get_state()?;
+        let trace = engine::step_state(before)?;
+        self.commit_transition(&trace.state_after);
+        Ok(trace)
+    }
+
+    fn step_in_preallocated(&mut self, memory: Vec<u8>) -> Result<StepTrace, OpenRisc1000Error> {
+        if self.halted == 1 {
+            return Err(OpenRisc1000Error::Halted);
+        }
+        let before = self.state_in_preallocated(memory);
+        let trace = engine::step_state(before)?;
+        self.commit_transition(&trace.state_after);
         Ok(trace)
     }
 
@@ -270,13 +296,35 @@ impl OpenRisc1000GateLevel {
                 limit: MAX_RETAINED_STEPS,
             });
         }
-        let before = self.get_state();
+        let allocation_count = max_steps
+            .checked_add(2)
+            .ok_or(OpenRisc1000Error::AllocationFailed)?;
+        let mut state_memories = Vec::new();
+        state_memories
+            .try_reserve_exact(allocation_count)
+            .map_err(|_| OpenRisc1000Error::AllocationFailed)?;
+        for _ in 0..allocation_count {
+            let mut memory = Vec::new();
+            memory
+                .try_reserve_exact(MEMORY_SIZE)
+                .map_err(|_| OpenRisc1000Error::AllocationFailed)?;
+            memory.resize(MEMORY_SIZE, 0);
+            state_memories.push(memory);
+        }
+        let before = self.state_in_preallocated(
+            state_memories
+                .pop()
+                .expect("rollback memory was preallocated"),
+        );
         let mut traces = Vec::new();
         traces
             .try_reserve_exact(max_steps)
             .map_err(|_| OpenRisc1000Error::AllocationFailed)?;
         for _ in 0..max_steps {
-            match self.step() {
+            let memory = state_memories
+                .pop()
+                .expect("one trace memory was preallocated per allowed step");
+            match self.step_in_preallocated(memory) {
                 Ok(trace) => {
                     let halted = trace.state_after.halted;
                     traces.push(trace);
@@ -285,7 +333,11 @@ impl OpenRisc1000GateLevel {
                             halted: true,
                             steps: traces.len(),
                             traces,
-                            final_state: self.get_state(),
+                            final_state: self.state_in_preallocated(
+                                state_memories
+                                    .pop()
+                                    .expect("final-state memory was preallocated"),
+                            ),
                         });
                     }
                 }
@@ -312,7 +364,7 @@ impl OpenRisc1000GateLevel {
                 limit: MAX_RETAINED_STEPS,
             });
         }
-        let before = self.get_state();
+        let before = self.try_get_state()?;
         self.load(program, origin)?;
         match self.run(max_steps) {
             Ok(result) => Ok(result),
@@ -332,98 +384,4 @@ impl OpenRisc1000GateLevel {
     pub const fn gate_count(&self) -> usize {
         ESTIMATED_GATE_COUNT
     }
-}
-
-fn validate_gate_primary(state: &OpenRisc1000State) -> Result<(), OpenRisc1000Error> {
-    if state.pc & 3 != 0 {
-        return Ok(());
-    }
-    let start = state.pc as usize;
-    let image_start = state.loaded_origin as usize;
-    let image_end = image_start.saturating_add(state.loaded_len);
-    let Some(end) = start.checked_add(4) else {
-        return Ok(());
-    };
-    if start < image_start || end > image_end || end > state.memory.len() {
-        return Ok(());
-    }
-    let word = u32::from_be_bytes(state.memory[start..end].try_into().expect("word slice"));
-    let opcode = (word >> 26) as u8;
-    let gate_implemented = gates::primary_is_implemented(opcode) == 1;
-    let gate_unsupported = gates::primary_is_unsupported(opcode) == 1;
-    let local_unsupported = matches!(
-        opcode,
-        0x0a | 0x1a | 0x20 | 0x32 | 0x1c..=0x1f | 0x3c..=0x3f
-    );
-    if gate_implemented != engine::primary_opcode_is_implemented(opcode) {
-        return Err(OpenRisc1000Error::InvalidState {
-            reason: "gate primary decoder disagrees with the local transition engine",
-        });
-    }
-    if gate_unsupported != local_unsupported || (gate_implemented && gate_unsupported) {
-        return Err(OpenRisc1000Error::InvalidState {
-            reason: "gate unsupported decoder disagrees with the local transition engine",
-        });
-    }
-    Ok(())
-}
-
-fn validate_gate_datapath(
-    before: &OpenRisc1000State,
-    trace: &StepTrace,
-) -> Result<(), OpenRisc1000Error> {
-    let word = trace.raw_word;
-    let opcode = (word >> 26) as u8;
-    let rd = ((word >> 21) & 0x1f) as usize;
-    let ra = ((word >> 16) & 0x1f) as usize;
-    let rb = ((word >> 11) & 0x1f) as usize;
-    let immediate = word as u16;
-    let actual = trace.state_after.gpr[rd];
-    let expected = match opcode {
-        0x27 => Some(gates::add_32(before.gpr[ra], (immediate as i16 as i32) as u32, 0).0),
-        0x28 => Some(
-            gates::add_32(
-                before.gpr[ra],
-                (immediate as i16 as i32) as u32,
-                u8::from(before.sr & SR_CY != 0),
-            )
-            .0,
-        ),
-        0x29 => Some(gates::bit_and_32(before.gpr[ra], u32::from(immediate))),
-        0x2a => Some(gates::bit_or_32(before.gpr[ra], u32::from(immediate))),
-        0x2b => Some(gates::bit_xor_32(
-            before.gpr[ra],
-            (immediate as i16 as i32) as u32,
-        )),
-        0x2e => match (word >> 6) & 3 {
-            0 => Some(gates::shift_left_32(before.gpr[ra], word & 0x1f)),
-            1 => Some(gates::shift_right_32(before.gpr[ra], word & 0x1f)),
-            _ => None,
-        },
-        0x38 => match word & 0x7ff {
-            0x000 => Some(gates::add_32(before.gpr[ra], before.gpr[rb], 0).0),
-            0x001 => Some(
-                gates::add_32(
-                    before.gpr[ra],
-                    before.gpr[rb],
-                    u8::from(before.sr & SR_CY != 0),
-                )
-                .0,
-            ),
-            0x002 => Some(gates::sub_32(before.gpr[ra], before.gpr[rb]).0),
-            0x003 => Some(gates::bit_and_32(before.gpr[ra], before.gpr[rb])),
-            0x004 => Some(gates::bit_or_32(before.gpr[ra], before.gpr[rb])),
-            0x005 => Some(gates::bit_xor_32(before.gpr[ra], before.gpr[rb])),
-            0x008 => Some(gates::shift_left_32(before.gpr[ra], before.gpr[rb] & 0x1f)),
-            0x048 => Some(gates::shift_right_32(before.gpr[ra], before.gpr[rb] & 0x1f)),
-            _ => None,
-        },
-        _ => None,
-    };
-    if expected.is_some_and(|value| value != actual) {
-        return Err(OpenRisc1000Error::InvalidState {
-            reason: "gate arithmetic network disagrees with the local transition engine",
-        });
-    }
-    Ok(())
 }

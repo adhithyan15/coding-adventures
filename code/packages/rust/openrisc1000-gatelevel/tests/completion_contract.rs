@@ -1,7 +1,7 @@
 use openrisc1000_gatelevel::{
     primary_opcode_is_implemented, ExecutionResult, OpenRisc1000Error,
-    OpenRisc1000GateLevel as OpenRisc1000Simulator, OpenRisc1000State, MEMORY_SIZE, SR_CY, SR_F,
-    SR_FO, SR_OV, SR_SM,
+    OpenRisc1000GateLevel as OpenRisc1000Simulator, OpenRisc1000State, MAX_RETAINED_STEPS,
+    MEMORY_SIZE, SR_CY, SR_F, SR_FO, SR_OV, SR_SM,
 };
 
 fn words(words: &[u32]) -> Vec<u8> {
@@ -464,7 +464,7 @@ fn retention_budget_and_halt_are_checked_before_mutation() {
     let mut simulator = loaded(&[HALT]);
     let before = simulator.get_state();
     assert!(matches!(
-        simulator.run(1_025),
+        simulator.run(MAX_RETAINED_STEPS + 1),
         Err(OpenRisc1000Error::RetentionLimitExceeded { .. })
     ));
     assert_eq!(simulator.get_state(), before);
@@ -549,8 +549,8 @@ fn every_error_has_stable_nonempty_display_text() {
         OpenRisc1000Error::DivideByZero,
         OpenRisc1000Error::SignedDivisionOverflow,
         OpenRisc1000Error::RetentionLimitExceeded {
-            requested: 1_025,
-            limit: 1_024,
+            requested: MAX_RETAINED_STEPS + 1,
+            limit: MAX_RETAINED_STEPS,
         },
         OpenRisc1000Error::AllocationFailed,
         OpenRisc1000Error::StepLimitExceeded { limit: 3 },

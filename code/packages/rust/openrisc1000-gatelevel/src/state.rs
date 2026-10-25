@@ -54,6 +54,18 @@ impl DffMemory {
         self.q.clone()
     }
 
+    pub(crate) fn try_snapshot(&self) -> Result<Vec<u8>, ()> {
+        let mut bytes = Vec::new();
+        bytes.try_reserve_exact(self.q.len()).map_err(|_| ())?;
+        bytes.extend_from_slice(&self.q);
+        Ok(bytes)
+    }
+
+    pub(crate) fn snapshot_into(&self, bytes: &mut Vec<u8>) {
+        bytes.clear();
+        bytes.extend_from_slice(&self.q);
+    }
+
     pub(crate) fn restore_snapshot(&mut self, bytes: &[u8]) {
         for (address, value) in bytes.iter().copied().enumerate() {
             if crate::gates::byte_changed(self.q[address], value) == 1 {
