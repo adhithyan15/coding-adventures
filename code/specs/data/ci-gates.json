@@ -4,12 +4,15 @@
   "gates": {
     "neural-framework-conformance": {
       "scope": "job",
-      "description": "NN37 native training and portable checkpoint resume in both directions.",
+      "description": "NN39 three-native-language training and six directed checkpoint exchanges.",
       "packages": [
         "python/neural-framework",
         "typescript/neural-framework",
         "python/matrix",
-        "typescript/matrix"
+        "typescript/matrix",
+        "rust/neural-framework",
+        "rust/matrix",
+        "rust/bounded-json"
       ],
       "paths": [
         "code/packages/python/neural-framework/**",
@@ -17,6 +20,13 @@
         "code/packages/python/matrix/**",
         "code/packages/typescript/matrix/**",
         "code/packages/typescript/matrix-rust-napi/**",
+        "code/packages/rust/neural-framework/**",
+        "code/packages/rust/matrix/**",
+        "code/packages/rust/bounded-json/**",
+        "code/packages/rust/Cargo.toml",
+        "code/scripts/validate_neural_framework_rust.py",
+        "code/scripts/tests/test_neural_framework_rust.py",
+        "code/scripts/tests/test_neural_framework_interchange.py",
         "code/specs/fixtures/neural-framework-v1/**",
         "code/scripts/validate_neural_framework_interchange.py",
         "code/scripts/tests/test_neural_framework_ci_gate.py",

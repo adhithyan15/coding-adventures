@@ -1,6 +1,7 @@
 # NN39: Three Native Dense Framework Conformance
 
-Status: specified; execution and required current-head CI pending.
+Status: local three-runtime execution implemented and passed; required
+current-head CI and merge remain pending.
 
 ## Smallest complete deliverable
 

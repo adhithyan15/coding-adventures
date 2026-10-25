@@ -73,9 +73,10 @@ the first is open, or modify the unrelated dirty primary checkout.
 - [ ] Add a language-neutral invalid-checkpoint corpus as ports expand;
   cross-language receipts currently prove valid training/resume, while each
   library owns separate negative tests.
-- [ ] Extend required conformance selection to Rust workspace/dependency and
+- [x] Extend required conformance selection to Rust workspace/dependency and
   validator inputs. NN38's native package builds passed, but the existing
   two-language interchange gate correctly did not select Rust-only changes.
+  NN39 adds those inputs; current-head required CI/merge still gates delivery.
 - [ ] Check available disk before Rust workspace builds. The initial full
   checkout exhausted disk; sparse checkout recovered the task, but compilation
   needs a measured output budget. Preserve other tasks and their artifacts.
