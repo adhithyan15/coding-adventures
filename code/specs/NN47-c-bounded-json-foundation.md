@@ -44,6 +44,13 @@ toolchain/action/checksum/bootstrap rules and mutation-rejection tests. Extend
 the executable planner regressions to prove an OCaml-only requirement still
 selects Windows independently of bounded-json. This is not a toolchain upgrade.
 
+The exact parsed production run block independently hashes to 056461d8. All 55
+OCaml contract tests complete successfully locally (two POSIX-only cases skip on
+Windows), including unchanged malformed/mutation rejection and repository CLI
+validation. Six C Windows planner tests also pass with independent OCaml/Rust
+selection cases. Required OCaml package/program inventory and Go executor sources
+were added sparsely for validation, without building an unrelated toolchain.
+
 ## Reassessment after five-native delivery
 
 NN46 merged PR #18252 at exact head `ff37a3e44e3`, squash `da1b408680f`,

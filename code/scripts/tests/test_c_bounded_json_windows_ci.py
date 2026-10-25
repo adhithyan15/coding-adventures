@@ -78,9 +78,14 @@ class BoundedJsonWindowsCITests(unittest.TestCase):
                 self.assertIn("windows-2025", out["build_matrix"])
 
     def test_existing_windows_reasons_remain_independent(self):
-        out = self.plan({"affected_packages": [], "packages": []}, NEEDS_RUST="true")
-        self.assertEqual(out["needs_c_bounded_json_windows"], "false")
-        self.assertIn("windows-2025", out["build_matrix"])
+        for requirement in ("NEEDS_RUST", "NEEDS_OCAML"):
+            with self.subTest(requirement=requirement):
+                out = self.plan(
+                    {"affected_packages": [], "packages": []},
+                    **{requirement: "true"},
+                )
+                self.assertEqual(out["needs_c_bounded_json_windows"], "false")
+                self.assertIn("windows-2025", out["build_matrix"])
 
     def test_requirement_wires_bootstrap_execution_and_required_rollup(self):
         self.assertIn(

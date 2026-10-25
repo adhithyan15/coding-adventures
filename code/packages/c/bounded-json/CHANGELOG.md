@@ -5,6 +5,8 @@
 - Repair a confirmed CI coverage gap: dependency-aware bounded-json selection
   now retains the existing Windows/MSVC job and executes the shared harness and
   package front, with failures owned by the required build roll-up.
+- Refresh OCAML03's reviewed shared-planner identity after auditing the scoped C
+  Windows addition; retain OCaml toolchain pins and all mutation-rejection rules.
 
 - NN47: independent pure C17 owned JSON parser with explicit statuses/const views.
 - Enforce 4 MiB/128-depth/65536-node/16 MiB allocation ceilings, tighter options,
