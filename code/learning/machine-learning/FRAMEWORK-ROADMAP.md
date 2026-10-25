@@ -170,6 +170,10 @@ SGD training, inspection, and portable save/reload/resume.
   five native lanes, zero bindings and 55 actual child executions.
 - [ ] C bounded JSON prerequisite (NN47): owned, strict, resource-bounded C17
   parser before accepting native dense checkpoints; not training or a binding.
+  Implemented locally with 1605 GCC/Clang/MSVC checks, allocator-fault cleanup,
+  ASan/UBSan and installed static-library consumer evidence; exact-head CI and
+  merge pending. Confirmed Windows ISO-harness prerequisite repairs retain the
+  existing scheduler and strict flags, with six cardinality regressions.
 - [ ] C native framework.
 - [ ] C++ native framework.
 - [ ] C# native framework.

@@ -90,7 +90,7 @@ function Iso-BuildAndRun {
         [Parameter(Mandatory)][string[]]$Sources
     )
     Iso-RequireCheck
-    $compilers = Iso-Compilers -Lang $Lang
+    $compilers = @(Iso-Compilers -Lang $Lang)
     if ($compilers.Count -eq 0) {
         throw "iso-harness: no $Lang compiler found (need cl.exe or clang-cl.exe on PATH)"
     }
@@ -117,7 +117,7 @@ function Iso-ExpectCompileFail {
         [Parameter(Mandatory)][string]$Source
     )
     Iso-RequireCheck
-    $compilers = Iso-Compilers -Lang $Lang
+    $compilers = @(Iso-Compilers -Lang $Lang)
     if ($compilers.Count -eq 0) {
         throw "iso-harness: no $Lang compiler found for negative test"
     }
@@ -130,7 +130,7 @@ function Iso-ExpectCompileFail {
         # /c compiles without linking; we only care about the accept/reject verdict.
         & $cc @flags '/c' $Source "/Fo:$buildDir\" *> $null
         if ($LASTEXITCODE -eq 0) {
-            throw "iso-harness: [$cc] ACCEPTED non-ISO source $Source — strict flags are not enforcing conformance!"
+            throw "iso-harness: [$cc] ACCEPTED non-ISO source $Source - strict flags are not enforcing conformance!"
         }
         Write-Host "iso-harness: [$cc] correctly rejected $Source"
     }

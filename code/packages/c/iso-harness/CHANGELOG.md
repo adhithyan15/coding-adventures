@@ -4,6 +4,14 @@ All notable changes to `iso-harness` are documented here.
 
 ## [Unreleased]
 
+- NN47 Windows prerequisite repair: capture compiler discovery as an array in
+  both build/negative guards, including zero/one/multiple-compiler regressions.
+  Keep the executable diagnostic ASCII so PowerShell 5 can load the BOM-free
+  shared source without interpreting a mojibake smart quote as syntax.
+- Express the conforming C fixture's integer-width invariant with C17
+  `_Static_assert` and exercise its runtime message macro with a function call,
+  avoiding MSVC C4127 without suppressing warnings.
+
 ### Added
 
 - **Extended `iso_test.h` assertions** for the Rust→C/C++ port campaign:

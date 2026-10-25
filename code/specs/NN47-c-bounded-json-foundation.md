@@ -1,6 +1,7 @@
 # NN47: Bounded JSON Foundation for Native C Training
 
-Status: specified before implementation; library/build evidence pending.
+Status: specified before implementation; implemented and locally validated;
+publication and exact-head CI pending.
 
 ## Reassessment after five-native delivery
 
@@ -100,3 +101,34 @@ NN46 residual directory was preserved. Recheck disk before builds. Independent
 read-only security review is mandatory before every push; publish one ready PR,
 inspect real package BUILD/applicable CI/CodeQL and confirm exact-head merge
 before selecting the next tranche.
+
+## Confirmed prerequisite repairs and local evidence
+
+The existing Windows ISO harness exposed three blockers during actual native
+validation: scalar compiler discovery under StrictMode, a BOM-free UTF-8
+diagnostic misdecoded by PowerShell 5, and a constant runtime self-test assertion
+rejected by MSVC /W4 /WX. Capture discovery with @(...), keep the diagnostic ASCII,
+and use _Static_assert for the compile-time invariant; six production-guard
+cardinality regressions cover zero/one/two compiler results. The scheduler and
+strict flags remain unchanged. The new wrapper explicitly decodes the trusted
+shared source as UTF-8. These narrowly confirmed dependency repairs are included
+because native package BUILD cannot succeed without them; no unrelated harness
+refactor is part of NN47.
+
+The parser passes 1605 checks under GCC, Clang and actual MSVC, plus Clang
+ASan/UBSan. GCC gcov reports 100% library lines, 100% branches executed and
+96.15% branches taken at least once; GCC's static analyzer reports no findings.
+Coverage is measured from successful complete fixture-owning package
+runs, not a failed output-directory run. The shared C/C++ conforming and negative
+fixtures pass under GCC/Clang/MSVC, as do all six compiler-cardinality guards.
+An actual CMake static-library build/install and separate find_package consumer
+compile/link/run prove the exported header/archive/config payload.
+
+Default resource budgets are 65536 value nodes and 16 MiB arena allocations;
+all options may only tighten hard ceilings. Numeric conversion translates the
+JSON decimal point to the host locale's spelling before strtod without changing
+locale; caller-controlled concurrent global locale changes need external
+serialization. Every allocator failure in valid and malformed partial trees
+returns no document and zero live custom allocations. Native C training and
+six-native exchange remain entirely pending. No checkpoint-schema acceptance
+claim is derived from parsing the 55-case fixture inventory.
