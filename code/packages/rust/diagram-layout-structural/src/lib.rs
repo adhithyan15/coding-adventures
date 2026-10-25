@@ -1758,6 +1758,37 @@ mod tests {
     }
 
     #[test]
+    fn numeric_entity_boundaries_layout_distinct_targets() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes[0].id = "a".into();
+        diagram.nodes[0].label = "a".into();
+        diagram.nodes[0].compartments.clear();
+        diagram.nodes[1].id = "1".into();
+        diagram.nodes[1].label = "1".into();
+        diagram.nodes[1].compartments.clear();
+        let mut twelve = diagram.nodes[1].clone();
+        twelve.id = "12".into();
+        twelve.label = "12".into();
+        diagram.nodes.push(twelve);
+        diagram.relationships[0].from = "a".into();
+        diagram.relationships[0].to = "1".into();
+        diagram.relationships[0].from_mult = Some("0..*".into());
+        diagram.relationships[0].to_mult = Some("1".into());
+        diagram.relationships[0].label = Some("label".into());
+        let mut second = diagram.relationships[0].clone();
+        second.to = "12".into();
+        diagram.relationships.push(second);
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes.len(), 3);
+        assert_eq!(layout.relationships.len(), 2);
+        assert!(layout.nodes.iter().any(|node| node.id == "1"));
+        assert!(layout.nodes.iter().any(|node| node.id == "12"));
+    }
+
+    #[test]
     fn relationship_labels_resolve_to_backend_neutral_geometry() {
         let mut diagram = two_class_diagram();
         diagram.relationships[0].label = Some("inherits from".into());

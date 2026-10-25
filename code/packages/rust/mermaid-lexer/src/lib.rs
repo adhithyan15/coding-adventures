@@ -1559,6 +1559,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_numeric_entities_after_one_cardinality() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\na many to 1 1: label\na many to 1 12: label\n",
+        );
+        let numbers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ == TokenType::Number)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(numbers, ["1", "1", "1", "12"]);
+    }
+
+    #[test]
     fn distinguishes_er_entity_strings_from_general_quoted_text() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\n\"Customer Account\" ||--|| ORDER : \"100% complete\"\n",
