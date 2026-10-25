@@ -656,6 +656,11 @@ jobs:
           # Main's shard weights come from this parser; a report-format drift
           # it no longer recognizes must fail here, not unbalance main.
           python3 -m unittest discover -s code/scripts/tests -p 'test_ci_package_durations.py'
+          # The canonical CommonMark foundation is specs-and-scripts-only, so
+          # no native package build is selected when its corpus changes. Keep
+          # both its bounded validator and falsification suite always running.
+          python3 code/scripts/commonmark_conformance.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_commonmark_conformance.py'
           python3 code/scripts/geometry2d_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_geometry2d_conformance.py'
           python3 code/scripts/bezier2d_flattening_conformance.py
@@ -3604,7 +3609,7 @@ jobs:
         run: gem install bundler
 
       - name: Set up Node.js
-        if: needs.detect.outputs.needs_typescript == 'true'
+        if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
         uses: actions/setup-node@v7
         with:
           node-version: '22'
@@ -3613,7 +3618,7 @@ jobs:
       # ("Cannot read properties of null (reading 'edgesOut')").
       # Keep the independently validated installer fixed across all build OSes.
       - name: Set up npm
-        if: needs.detect.outputs.needs_typescript == 'true'
+        if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
         run: npm install --global npm@11.13.0
 
       - name: Delegate Forme sandbox cgroup v2 root

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:coding-adventures:commonmark-0.31.2-corpus",
+  "title": "CommonMark 0.31.2 official example corpus",
+  "type": "array",
+  "minItems": 652,
+  "maxItems": 652,
+  "items": {"$ref": "#/$defs/example"},
+  "$defs": {
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["markdown", "html", "example", "start_line", "end_line", "section"],
+      "properties": {
+        "markdown": {"type": "string", "maxLength": 8192},
+        "html": {"type": "string", "maxLength": 32768},
+        "example": {"type": "integer", "minimum": 1, "maximum": 652},
+        "start_line": {"type": "integer", "minimum": 1, "maximum": 100000},
+        "end_line": {"type": "integer", "minimum": 2, "maximum": 100000},
+        "section": {"type": "string", "minLength": 1, "maxLength": 128}
+      }
+    }
+  }
+}
