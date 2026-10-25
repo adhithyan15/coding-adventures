@@ -33,14 +33,20 @@ the actual open PR and its current-head CI logs, and revisit this ordering:
    [PR #18218](https://github.com/adhithyan15/coding-adventures/pull/18218)
    at exact head `f8e5ce59571` (squash `4f320c659bc`). All six native exchanges,
    real repository workspace builds, CI gate and CodeQL passed.
-3. **P1 — Shared checkpoint rejection corpus next.** Reliability precedes new
+3. **P1 — Shared checkpoint rejection corpus completed.** Reliability precedes new
    ports: [NN40](../../specs/NN40-shared-checkpoint-rejection-corpus.md) supplies
    the smallest portable acceptance/rejection oracle consumed directly by all
    three native package test suites. Preserve required-gate ownership as ports
-   join; new native Go/Ruby implementations follow this reliability tranche.
+   join. [PR #18222](https://github.com/adhithyan15/coding-adventures/pull/18222)
+   merged exact head `63e51b92796` as `6ed5fc102e0`, with all applicable checks
+   and actual native corpus tests green.
 4. **P2 — Extend native reach.** Deliver Go and Ruby, then C/C++, managed and
    functional language ports in the order their existing foundations permit.
    Reassess the smallest complete port after every merge.
+   Reprioritized after NN40 by reliability, prerequisites, portability and
+   smallest complete delivery: [NN41 native Go](../../specs/NN41-native-go-dense-framework.md)
+   first, then a separately specified four-native-language conformance tranche.
+   Go's matrix foundation exists; Ruby remains next after Go earns direct proof.
 5. **P2 — Optional Rust dense C ABI.** Specify ownership, shapes, errors,
    versioning, and resumable state before exposing binding consumers. Keep
    those consumers distinct from the native implementations.
@@ -73,11 +79,12 @@ the first is open, or modify the unrelated dirty primary checkout.
 - [x] Integrate framework checkpoint interchange into the required repository
   CI gate ([contract](../../specs/neural-framework-ci-gate.md)); selected jobs
   must succeed, not skip. Publication/current-head CI still proves delivery.
-- [ ] Add a language-neutral invalid-checkpoint corpus as ports expand;
+- [x] Add a language-neutral invalid-checkpoint corpus as ports expand;
   cross-language receipts currently prove valid training/resume, while each
   library owns separate negative tests.
   NN40 now runs 49 shared documents directly through all three native package
-  suites locally (3 accepted controls, 46 rejected); required CI/merge pending.
+  suites (3 accepted controls, 46 rejected), delivered with actual required
+  repository CI and confirmed merge in PR #18222.
 - [x] Extend required conformance selection to Rust workspace/dependency and
   validator inputs. NN38's native package builds passed, but the existing
   two-language interchange gate correctly did not select Rust-only changes.
@@ -102,6 +109,13 @@ SGD training, inspection, and portable save/reload/resume.
   lanes, zero binding lanes; full models match through step 3002.
 - [ ] Optional Rust dense C ABI and binding consumers.
 - [ ] Go native framework.
+  NN41's native library, paper/gradient/boundary/corpus tests and direct XOR
+  save/reload/resume pass locally; actual repository CI/merge still pending.
+- [ ] Go conformance: required CI and all directed exchanges with existing
+  Python/TypeScript/Rust native lanes, after the native Go library is delivered.
+- [ ] Expand the shared invalid-checkpoint corpus with literal null numeric
+  cells. Go's decoder defaults null float cells to zero; NN41 guards/tests this
+  explicitly, while the shared corpus currently covers other null/shape cases.
 - [ ] Ruby native framework.
 - [ ] C native framework.
 - [ ] C++ native framework.
