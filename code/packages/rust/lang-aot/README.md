@@ -854,6 +854,14 @@ way:
 There is no shared helper library. The conformance suite checks a 90-value
 table on every executable column against host `python3` and `node`.
 
+Since LANG83 PR6c the eight IEEE backends lower `f64_add`, `f64_sub`,
+`f64_mul`, `f64_div` and `f64_neg`, which never trap (`1/0` is `Infinity`,
+`0/0` is `NaN`, `-0` survives), and all nine lower `f64_signbit` (0/1). BEAM
+refuses the arithmetic at compile time with `UnsupportedOps`, because an
+Erlang float has no infinities or NaN. The conformance suite runs the IEEE
+edge table, the sign bit and an aliased-destination case on every executable
+column.
+
 ## Limitations
 
 - **Host-targets-host only.** Same V1 policy as `twig-aot`.  Use the

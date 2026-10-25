@@ -1,5 +1,14 @@
 # Changelog — iir-to-wasm
 
+## [0.53.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
+
+- **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /
+  `f64_signbit`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6c): `f64.add`/`sub`/`mul`/`div`/`neg`, and
+  `i64.reinterpret_f64; i64.const 63; i64.shr_u` (new
+  `I64_REINTERPRET_F64` opcode constant).
+- `op_support`: all six `Lowered`. Tests run the edge table on the
+  in-process runtime and pin the sign-bit sequence.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)
