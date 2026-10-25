@@ -1680,6 +1680,24 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_variable_node_width_fixture() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nPRIVATE_FINANCIAL_INSTITUTION {\n  string name\n  int turnover\n}\nPRIVATE_FINANCIAL_INSTITUTION ||..|{ EMPLOYEE : employs\nEMPLOYEE { bool officer_of_firm }\n",
+        );
+
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.value == "PRIVATE_FINANCIAL_INSTITUTION")
+                .count(),
+            2
+        );
+        for expected in ["turnover", "EMPLOYEE", "officer_of_firm", "employs"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+    }
+
+    #[test]
     fn tokenizes_er_attribute_type_forms() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
