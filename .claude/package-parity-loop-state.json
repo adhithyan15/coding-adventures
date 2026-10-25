@@ -19,8 +19,8 @@
   "active_pr": 18183,
   "last_ci_action": {
     "pr_number": 18183,
-    "head": "231de32b81482caebbdf484387263d86b13b2602",
-    "action": "Same-PR recovery local native/Go/planner/metadata/parity checks pass; exactsource80a01 reviewed, finaldocsdelta required before exact-lease push. HostedCI must rerun; no auto-merge enrollment."
+    "head": "e04acc841ef2de4f61a56b5ae671a3927c81a38f",
+    "action": "Exact macOS job121277004429 failed during dependency linking on runner-image20261013.0424.1: SDK27 arm64e.x1 unsupported by default linker. Same-PR command-local Darwin CLT selection at52471c9a02f passes shell routing/exit/isolation tests and actual GHC9.4.8/Cabal3.10.3.0 Windows BUILD. Independent exact-final-source review and fresh hosted native CI required; no auto-merge enrollment."
   },
   "last_inventory": {
     "revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",

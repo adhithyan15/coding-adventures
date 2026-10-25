@@ -13,3 +13,7 @@
 - Added independent range, ordering, null-pair, depth and retained-map witnesses;
   all 13 native examples pass with production HPC at 447/447 expressions and
   61/61 alternatives. The Windows CI front's explicit skip is not native proof.
+- Scoped Darwin Cabal to the Command Line Tools linker matching GHC's SDK,
+  addressing runner-image SDK27 stub failures without global tool selection,
+  version changes, dependency caps or reduced coverage. Shell routing and native
+  Windows reruns pass; fresh macOS hosted qualification remains required.

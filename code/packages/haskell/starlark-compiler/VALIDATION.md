@@ -5,7 +5,27 @@ onto `9000beddee61a136cf5c0c6c5787f81d3d717834`. The production provider is
 unchanged: Git blob `efead53ef959a6c836afa58d56a51368e97bf3b6`.
 The runtime source reviewed and tested is commit
 `80a01e81ca1e1034f1658109a284f4f45bcc0c7f`; subsequent changes document evidence
-and lifecycle state.
+and lifecycle state. A later macOS-only BUILD environment repair is described
+below; it leaves the provider and test source unchanged.
+
+## macOS runner-image linker follow-up
+
+Exact head `e04acc841ef2de4f61a56b5ae671a3927c81a38f`, run 40228623570,
+job 121277004429 failed on image macos-26-arm64 20261013.0424.1. Dependency
+linking rejected `arm64e.x1` in Command Line Tools SDK27 stubs before provider
+tests. This matches [runner-images #14940](https://github.com/actions/runner-images/issues/14940)
+and the [merged Acton repair](https://github.com/actonlang/acton/pull/3283).
+
+The BUILD repair selects `DEVELOPER_DIR=/Library/Developer/CommandLineTools`
+only for Darwin's Cabal command and descendants. It changes no SDK files,
+global tool selection, compiler/dependency versions, coverage or test set.
+Three executable shell tests establish Darwin selection, preservation of the
+parent/non-Darwin environment and propagation of Cabal failures. The Darwin
+test failed before the repair and all three pass afterwards. Ruff check/format
+and six Haskell-capability checks pass. The actual Unix BUILD again passes
+on Windows with GHC9.4.8/Cabal3.10.3.0: 13 examples, zero failures, HPC enabled.
+These results do not establish macOS linking success; fresh hosted CI remains
+required. The prior production HPC measurements below remain source-identical.
 
 ## Native package
 

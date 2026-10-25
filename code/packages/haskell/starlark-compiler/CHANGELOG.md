@@ -4,6 +4,10 @@
 
 ### Fixed
 
+- Scoped Darwin Cabal execution to Command Line Tools so the linker matches
+  GHC's hardcoded SDK on macos-26-arm64 image 20261013.0424.1. Added executable
+  routing, environment-isolation and failure-propagation tests. Native macOS
+  qualification remains pending fresh hosted CI.
 - Enabled coverage in the named project-package stanza and removed the global
   BUILD flag that makes Cabal 3.10.3.0 reject internal-library dependencies.
   Kept library/test instrumentation, dependency bounds and provider APIs.

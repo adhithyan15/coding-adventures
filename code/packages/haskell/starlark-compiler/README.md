@@ -42,6 +42,13 @@ for this library and its test executable. Do not add the global
 `--enable-coverage` flag: Cabal 3.10.3.0 applies a conflicting planning mode
 to dependencies with internal libraries. Dependency bounds stay unchanged.
 
+The Unix BUILD front selects Command Line Tools for the Darwin Cabal process
+with `DEVELOPER_DIR=/Library/Developer/CommandLineTools`. This pairs GHC's
+hardcoded SDK with its matching linker on affected macOS runner images. The
+override does not change global xcode-select state or other packages. Shell
+routing tests and a Windows native run do not qualify the macOS linker; fresh
+hosted native checks remain required.
+
 The native suite dynamically reads the shared
 `code/specs/fixtures/starlark-opcode-provider-v1/cases.json` corpus. It visits
 all 359 records through public APIs, verifies every byte and hole, proves map
