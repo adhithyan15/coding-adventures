@@ -61,8 +61,14 @@ the actual open PR and its current-head CI logs, and revisit this ordering:
    corpus suites and all applicable checks successful. Reprioritized by
    reliability, prerequisites, portability and smallest complete delivery:
    [NN44 Ruby matrix build foundation](../../specs/NN44-ruby-matrix-build-foundation.md)
-   is next, before the Ruby native framework. The arithmetic passes 47 tests,
-   but its missing BUILD fronts/gem metadata must be fixed first.
+   merged in [PR #18243](https://github.com/adhithyan15/coding-adventures/pull/18243)
+   at exact head `bf21d308e98` (squash `58756842612`), with actual Ruby matrix
+   BUILD, metadata and Ruby CodeQL successful. Reprioritize reliability,
+   prerequisites, portability and smallest complete delivery:
+   [NN45 native Ruby dense framework](../../specs/NN45-native-ruby-dense-framework.md)
+   is implemented locally with full numerical, owned-checkpoint and native
+   resume evidence; publication/exact-head CI are pending. Five-native
+   conformance remains a separate following tranche.
 5. **P2 — Optional Rust dense C ABI.** Specify ownership, shapes, errors,
    versioning, and resumable state before exposing binding consumers. Keep
    those consumers distinct from the native implementations.
@@ -139,13 +145,18 @@ SGD training, inspection, and portable save/reload/resume.
   NN43 adds six explicit documents (55 total, 3 accept/52 reject), delivered
   through actual four-native-suite CI and exact-head merge in PR #18235.
   No production loader changes were necessary.
-- [ ] Ruby matrix prerequisite: add missing BUILD/BUILD_windows, gem metadata,
+- [x] Ruby matrix prerequisite: add missing BUILD/BUILD_windows, gem metadata,
   package-local test/lint/coverage and actual gem-install evidence (NN44).
   Existing pure-Ruby arithmetic passes 47 tests; this is not neural training.
-  NN44 now passes 55 tests/125 assertions at 100% library line coverage locally,
-  Standard lint and an actual isolated installed-gem dot-product oracle. Actual
-  repository package discovery/build CI and verified merge still gate completion.
-- [ ] Ruby native framework.
+  NN44 passes 55 tests/125 assertions at 100% library line coverage locally,
+  Standard lint and an actual isolated installed-gem dot-product oracle; actual
+  repository discovery/build CI and exact-head merge completed in PR #18243.
+- [ ] Ruby native framework (NN45 implemented locally; exact-head CI/merge pending).
+  Native Ruby passes the paper oracle, all-parameter finite differences and
+  shared 55-case corpus. Library and executable line coverage are 100%; native
+  XOR loss is 0.00023307123378282036 with full model resumes through 3002.
+- [ ] Required five-native conformance incorporating actual Ruby exchange
+  processes, not a static registry entry (separate following tranche).
 - [ ] C native framework.
 - [ ] C++ native framework.
 - [ ] C# native framework.

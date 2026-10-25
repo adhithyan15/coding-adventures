@@ -51,6 +51,11 @@ NN44 makes the existing Ruby matrix foundation package-buildable before Ruby
 neural training begins. A gem-install arithmetic receipt is library-build
 evidence, not a training framework or cross-language checkpoint result.
 
+NN45 adds [independent native Ruby dense training](./native-ruby-dense-framework.md)
+above that matrix gem. Its analytical gradients, owned checkpoints, 55-case
+rejection corpus and native resume through step 3002 are tested directly.
+Five-native interchange is a separate following tranche, not a packaging claim.
+
 Every model family below starts with the smallest example that needs its new
 idea.
 
