@@ -1,10 +1,13 @@
 # F11: Token-Adjacency Predicates in `.grammar`
 
-**Status:** Draft, 2026-10-20. Implements the *predicate* half of
-[LANG84 extension E6](LANG84-grammar-driven-versioned-frontends.md#e6-token-adjacency-predicates-and-asi-in-grammar).
-`@asi(...)` (automatic semicolon insertion) is the other half of E6 and is
-**not** part of F11; it lands in a follow-up that reuses the flags and the
-element defined here.
+**Status:** Draft, 2026-10-20; amended 2026-10-25. Implements
+[LANG84 extension E6](LANG84-grammar-driven-versioned-frontends.md#e6-token-adjacency-predicates-and-asi-in-grammar)
+in two parts:
+
+- the six **adjacency predicates**, which landed first (2026-10-20);
+- **`@asi(T, C…)`**, automatic insertion, which reuses the predicates' flags
+  and the way they find the next token. It is specified in
+  [Automatic insertion](#automatic-insertion-asi) (2026-10-25).
 
 ## Overview
 
@@ -135,9 +138,8 @@ Predicate names are case-sensitive lowercase. Unknown names are a parse
 error that lists the six valid names, and a bare `@` is an error too. The
 reserved E6/E7 forms fail loudly rather than parsing into something else:
 
-- `@asi(...)` gets its own error: not implemented yet (LANG84 E6 follow-up).
-  It is raised while tokenizing, before the comma-separated argument list
-  could produce a confusing "unexpected character ','".
+- `@asi` is not a predicate. It takes an argument list and is specified in
+  [Automatic insertion](#automatic-insertion-asi).
 - `NAME@declare`, `@scope(...)` and the other E7 binding forms are rejected as
   unknown predicates.
 
@@ -262,6 +264,146 @@ Consequences:
   JavaScript ASI pass, whose grammar skips newlines as whitespace and so never
   sees a `NEWLINE` token. Its behaviour is unchanged.
 
+## Automatic insertion: `@asi`
+
+ECMAScript's Automatic Semicolon Insertion (ECMA-262 §12.10) lets a program
+leave out a `;` where a line break, a `}` or the end of the input follows.
+Before this element the Rust JavaScript parser did that with a hand-written
+retry pass (`javascript-parser/src/asi.rs`). The pass re-parsed the whole
+program once per insertion, which is quadratic on hostile input, and it
+inspected the parser's failure internals. `@asi` puts the rule in the
+versioned `.grammar` file, next to the restricted productions that it works
+with:
+
+```text
+statement_end    = SEMICOLON | @asi(SEMICOLON, RBRACE) ;
+return_statement = "return" [ @no_newline_before expression ] statement_end ;
+for_header       = "for" LPAREN [ init ] SEMICOLON [ test ] SEMICOLON [ update ] RPAREN ;
+```
+
+### Syntax
+
+```text
+@asi( T )
+@asi( T , C1 , C2 , … )
+```
+
+- `T`, the **inserted token**, and every `C`, the **closers**, are token
+  names: UPPERCASE identifiers, spelled as a token reference is spelled.
+  Literals (`"}"`) are not accepted. Spaces may appear around the
+  parentheses and the commas, but the whole element must sit on one line.
+- `T` must not be `NEWLINE` or `EOF`. Those are structural tokens, and
+  inserting one would change the meaning of the token stream around it.
+- A closer must not repeat, and must not be `T` itself. With `T` as a closer,
+  a written `T` would trigger an insertion in front of itself.
+- The closer list may be empty: `@asi(SEMICOLON)` inserts only before a line
+  break or at the end of the input.
+
+Every malformed spelling is a parse error with its own message:
+- a missing `(`;
+- an empty list;
+- a lowercase name or a literal;
+- a trailing or doubled comma;
+- a missing `)`;
+- a forbidden `T`;
+- a repeated closer, or `T` among the closers.
+
+### Semantics
+
+`@asi(T, C…)` is evaluated at the cursor, without moving it:
+
+1. Find the next token exactly as the adjacency predicates do. If the grammar
+   is not newline-significant, step over `NEWLINE` tokens; each one counts as
+   a line break. Past the end, the last token (`EOF`) is used.
+2. The element **succeeds** when any of these holds:
+   - **a line break precedes the next token:** a `NEWLINE` was stepped over,
+     the next token carries `TOKEN_PRECEDED_BY_NEWLINE`, or, in a
+     newline-significant grammar, the next token *is* a `NEWLINE`;
+   - **the next token is a closer:** its type matches one of `C…` the way a
+     token reference matches (`type_name` first, then the built-in
+     `TokenType`);
+   - **the input has ended:** the next token is `EOF`, or the cursor is past
+     the end of the stream.
+3. On success it produces exactly one child, a **synthetic token**:
+
+   | Field | Value |
+   | --- | --- |
+   | `type_`, `type_name` | what `GrammarLexer` would give a `T` token: `string_to_token_type(T)`, with `type_name = Some(T)` when that is `Name` and `T` is not `NAME` |
+   | `value` | `""`, because it is zero width |
+   | `line`, `column` | those of the next token from step 1 |
+   | `flags` | `Some(TOKEN_SYNTHETIC)` (a new lexer bit, value `8`) and nothing else |
+
+   So the CST has the same shape whether or not the `;` was written. A
+   consumer that cares tests `flags & TOKEN_SYNTHETIC`. A real token never
+   carries that bit: `GrammarLexer` never sets it, and hand-built streams
+   should not.
+4. On failure nothing is recorded in the furthest-failure set, as with the
+   predicates. In `SEMICOLON | @asi(SEMICOLON, RBRACE)` the written
+   alternative already records `SEMICOLON`, so the error for `a = 1 b`
+   stays "Expected SEMICOLON, got \"b\"".
+
+**The offending-token rule comes from PEG ordering.** ECMAScript inserts a
+semicolon only when the next token cannot continue the statement. `@asi` is
+reached only after the statement's expression has stopped consuming, so
+`a ⏎ (b)` is still a call and `a ⏎ ++b` still depends on the
+`@no_newline_before` in the postfix rule. Where ASI must never apply, for
+example inside the `for (;;)` header or for an empty statement, the grammar
+writes a plain `SEMICOLON`.
+
+**Spans ignore synthetic tokens.** When the CST positions are computed, a
+synthetic token counts as neither the first nor the last token of its
+ancestors. Otherwise a statement that ends in an inserted `;` would claim to
+end where the *next* statement starts. A node whose only tokens are synthetic
+has no span (`None`).
+
+**Zero width everywhere.** Under `&`/`!` the synthetic child is discarded,
+like every lookahead child. In a repetition, an iteration that only inserted
+a token made no progress, so the termination guard undoes it and stops.
+
+### Validation
+
+- `T` and the closers count as **token references**. The tokens/grammar
+  cross-validator therefore reports a name that the `.tokens` file does not
+  define, and those tokens are never reported as unused.
+- `@asi` is **nullable**: it consumes no token. A repetition whose nullable
+  body contains `@asi`, directly or through the rules it references, is an
+  error, as one containing an adjacency predicate is
+  (`{ @asi(SEMICOLON) }`, `{ [ NAME ] @asi(SEMICOLON) }`).
+- `@asi` does not make a grammar newline-significant.
+
+### Packrat safety and budget
+
+- **Memo-safe.** The result reads only the token stream at the cursor, so the
+  memo key `(rule, position)` still determines it. The synthetic token is
+  built fresh on each success and shared with the memo like any other
+  child.
+- **Budget.** After a successful parse, the tree may hold at most one
+  synthetic token per token of the input stream, `EOF` included. A grammar
+  that inserts more, for example `s = @asi(SEMICOLON) @asi(SEMICOLON) ;` on
+  an empty input, fails with "automatic insertion budget exceeded: N
+  synthetic tokens for M input tokens". Two insertions in one gap are never
+  correct ECMAScript, and the cap keeps the CST linear in the input whatever
+  the grammar says. During the parse each `@asi` success creates one token,
+  and the packrat memo bounds the number of `(rule, position)` evaluations,
+  so the work stays linear too.
+
+### Compiled grammars
+
+`GrammarElement` gains a second variant:
+
+```rust
+AutoInsert { token: String, closers: Vec<String> }
+```
+
+`compile_parser_grammar` emits it as
+
+```rust
+GrammarElement::AutoInsert { token: "SEMICOLON".to_string(), closers: vec!["RBRACE".to_string()] }
+```
+
+which needs no new `use` line. Grammars without `@asi` regenerate
+byte-identically.
+
 ## Other grammar-tools ports
 
 LANG84 requires the non-Rust ports to *reject* a grammar that uses an
@@ -279,8 +421,9 @@ Follow-ups, in order of value:
 ## Testing
 
 - **grammar-tools:** each of the six predicates parses, also under `!`, `&`,
-  `[ ]`, `{ }` with a consuming element, and after a token; unknown names and
-  `@asi(...)` are rejected with clear messages; a bare `@` is rejected; the
+  `[ ]`, `{ }` with a consuming element, and after a token; unknown names are
+  rejected with clear messages; `@asi` parses with zero, one and several
+  closers, and every malformed spelling has its own error; a bare `@` is rejected; the
   nullability fixpoint; nullable repetitions are errors with a predicate
   (including the security-review probes and nullability through rule
   references), warnings without one, and silent when the body consumes;
@@ -300,6 +443,13 @@ Follow-ups, in order of value:
   predicate; every nullable-repetition probe (`{ }`, `{ }+`, `{ x // s }`,
   through a rule) terminates with the right tree or error, and a `>>` split
   still counts as progress.
+- **`@asi`:** succeeds on a line break before the next token (both from a
+  flag and from a stepped-over `NEWLINE`), on a closer, at `EOF` and past the
+  end, and fails otherwise without recording an expectation; the synthetic
+  token's type, `type_name`, value, position and flags; `a ⏎ (b)` stays a
+  call; a restricted `return ⏎ x`; a written `;` wins over insertion; spans
+  skip synthetic tokens; `@asi` under `!`/`&` and in a repetition; the
+  budget; the round trip through `compile_parser_grammar`.
 - **Regression:** existing grammar consumers' test suites pass unchanged, and
   regenerating every Rust compiled grammar gives the same output before and
   after F11.
