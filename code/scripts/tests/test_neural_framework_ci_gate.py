@@ -51,6 +51,9 @@ class NeuralFrameworkCIGateTests(unittest.TestCase):
                 "typescript/neural-framework",
                 "python/matrix",
                 "typescript/matrix",
+                "rust/neural-framework",
+                "rust/matrix",
+                "rust/bounded-json",
             },
         )
         paths = set(self.gate["paths"])
@@ -62,6 +65,10 @@ class NeuralFrameworkCIGateTests(unittest.TestCase):
             ".github/workflows/ci.yml",
             ".github/workflows/neural-framework.yml",
             "code/packages/typescript/matrix-rust-napi/**",
+            "code/packages/rust/Cargo.toml",
+            "code/scripts/validate_neural_framework_rust.py",
+            "code/scripts/tests/test_neural_framework_rust.py",
+            "code/scripts/tests/test_neural_framework_interchange.py",
         ):
             self.assertIn(pattern, paths)
         for package in self.gate["packages"]:
@@ -98,9 +105,13 @@ class NeuralFrameworkCIGateTests(unittest.TestCase):
             "npm run build",
             "npm run test:coverage",
             "python code/scripts/validate_neural_framework_interchange.py",
+            "cargo +stable test -p neural-framework",
+            "cargo +stable build -p neural-framework --release --example xor",
+            "test_neural_framework_interchange.py",
         ):
             self.assertIn(command, self.reusable)
         self.assertIn("persist-credentials: false", self.reusable)
+        self.assertNotIn("sparse-checkout:", self.reusable)
         self.assertNotIn("secrets: inherit", self.ci)
 
     @unittest.skipUnless(shutil.which("bash"), "roll-up uses Bash, available on CI")

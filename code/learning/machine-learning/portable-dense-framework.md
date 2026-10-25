@@ -54,17 +54,40 @@ History includes both the initial loss and the loss at the final model state.
 
 A checkpoint records each layer's activation, weights, and biases, plus the
 number of completed SGD steps. It is ordinary JSON data, so Python can write
-it and TypeScript can load it, or vice versa. Neither implementation executes
+it and TypeScript or Rust can load it, or vice versa. No implementation executes
 code from the document. Run
 `python code/scripts/validate_neural_framework_interchange.py` at repository
-root after installing the TypeScript package dependencies to prove training and
-checkpoint exchange in both directions.
+root after installing the TypeScript package dependencies and Cargo to prove
+training and all six directed checkpoint exchanges. The JSON receipt identifies
+three native lanes and zero binding lanes, not three wrappers over one runtime.
+
+NN39 first trains each model to step 3000, then computes its native 3001/3002
+baseline. The trace for Python to Rust is `Python(3000) -> Rust(3001) ->
+Python(3002)`: each arrow transports the actual owned JSON parameters on stdin.
+Every parameter, prediction, loss, and exact step is compared with the baseline;
+the same trace repeats for each ordered pair. The paper calculation above and
+its shared fixture stay unchanged. See [NN39](../../specs/NN39-three-native-dense-conformance.md).
+
+On a sparse local checkout, `--rust-manifest-path` may name a disposable
+workspace containing exact Rust/matrix/bounded-JSON/fixture copies. That proves
+native numerical interchange locally, not full repository-workspace resolution;
+the required CI job separately builds/tests that real workspace.
 
 Automatic changes to either native lane, its matrix foundation, shared fixture,
 or validator now select a reusable conformance job inside repository CI. The
 required `CI gate` rejects a selected job that fails, is cancelled, or skips;
 manual dispatch remains available. See the
 [CI ownership contract](../../specs/neural-framework-ci-gate.md).
+
+NN40 adds one [shared checkpoint corpus](../../specs/fixtures/neural-framework-v1/checkpoints.json):
+49 small documents, with 3 accepted controls and 46 rejected cases. Each native
+package test suite loads the same documents through its public API. For example,
+`step: false` must fail: a truth value is not an optimizer-update count.
+The trace is `JSON document -> native loader -> accept/reject`; accepted models
+must also survive save/reload unchanged. Valid controls prevent a loader that
+rejects everything from passing. This tests parsed-document portability, not
+identical text-parser handling of duplicate keys or nesting limits. See
+[NN40](../../specs/NN40-shared-checkpoint-rejection-corpus.md).
 
 The next framework milestones add native ports, shared tensor autograd,
 architecture components, and measured increases in model size. See the

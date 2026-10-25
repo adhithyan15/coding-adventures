@@ -1,0 +1,938 @@
+{
+  "contract": "NN40",
+  "cases": [
+    {
+      "id": "valid-single",
+      "accept": true,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "valid-safe-step",
+      "accept": true,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 9007199254740991,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "valid-connected",
+      "accept": true,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "tanh",
+            "weights": [
+              [
+                0.5,
+                -0.5
+              ]
+            ],
+            "biases": [
+              0,
+              0
+            ]
+          },
+          {
+            "activation": "sigmoid",
+            "weights": [
+              [
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "root-null",
+      "accept": false,
+      "checkpoint": null
+    },
+    {
+      "id": "root-array",
+      "accept": false,
+      "checkpoint": []
+    },
+    {
+      "id": "root-number",
+      "accept": false,
+      "checkpoint": 1
+    },
+    {
+      "id": "root-string",
+      "accept": false,
+      "checkpoint": "model"
+    },
+    {
+      "id": "root-boolean",
+      "accept": false,
+      "checkpoint": true
+    },
+    {
+      "id": "format-type",
+      "accept": false,
+      "checkpoint": {
+        "format": 1,
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "format-wrong",
+      "accept": false,
+      "checkpoint": {
+        "format": "unknown",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "version-boolean",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": true,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "version-fraction",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1.5,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "version-wrong",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 2,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "version-string",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": "1",
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "step-boolean",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": false,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "step-negative",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": -1,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "step-fraction",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0.5,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "step-unsafe",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 9007199254740992,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "step-string",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": "0",
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "step-null",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": null,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "layers-null",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": null
+      }
+    },
+    {
+      "id": "layers-empty",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": []
+      }
+    },
+    {
+      "id": "layers-object",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": {}
+      }
+    },
+    {
+      "id": "layer-null",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          null
+        ]
+      }
+    },
+    {
+      "id": "layer-number",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          1
+        ]
+      }
+    },
+    {
+      "id": "unknown-root-field",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ],
+        "extra": 0
+      }
+    },
+    {
+      "id": "missing-format",
+      "accept": false,
+      "checkpoint": {
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "missing-version",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "missing-step",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "missing-layers",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0
+      }
+    },
+    {
+      "id": "activation-unknown",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "softmax",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "activation-type",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": false,
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weights-empty",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weights-empty-row",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              []
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weights-ragged",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weights-boolean",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                true
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weights-string",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                "1"
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weights-null",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": null,
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weights-vector",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              1
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "biases-empty",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "biases-width",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "biases-boolean",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              false
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "biases-null",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "biases-string",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              "0"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "missing-layer-activation",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "missing-layer-weights",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "missing-layer-biases",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "unknown-layer-field",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ],
+            "extra": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "disconnected-layers",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense",
+        "version": 1,
+        "step": 0,
+        "layers": [
+          {
+            "activation": "linear",
+            "weights": [
+              [
+                0.5
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          },
+          {
+            "activation": "relu",
+            "weights": [
+              [
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "biases": [
+              0
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

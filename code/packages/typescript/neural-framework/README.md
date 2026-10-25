@@ -1,5 +1,9 @@
 # Neural Framework — TypeScript
 
+NN40's shared checkpoint corpus is executed directly by the native package
+tests: 3 accepted round-trip controls and 46 rejected malformed documents.
+It supplements, rather than replaces, numerical and checkpoint-resume tests.
+
 A native TypeScript framework for configurable dense neural networks above the
 existing `matrix` package. Forward propagation, analytical backpropagation,
 full-batch SGD, and checkpoint validation run in TypeScript using binary64

@@ -1,5 +1,9 @@
 # Neural Framework — Python
 
+NN40's shared checkpoint corpus is executed directly by the native package
+tests: 3 accepted round-trip controls and 46 rejected malformed documents.
+It supplements, rather than replaces, numerical and checkpoint-resume tests.
+
 A native Python framework for configurable dense neural networks. It composes
 the existing `matrix` package into forward propagation, analytical gradients,
 full-batch SGD, and portable JSON checkpoints. No external ML framework or

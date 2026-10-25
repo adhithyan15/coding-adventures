@@ -1,5 +1,9 @@
 # Native Rust Neural Framework
 
+NN40's shared checkpoint corpus is executed directly by the native package
+tests: 3 accepted round-trip controls and 46 rejected malformed documents.
+It supplements, rather than replaces, numerical and checkpoint-resume tests.
+
 NN38 independently implements NN37 dense training above the existing Rust
 `matrix` foundation. It is native Rust, not an FFI binding or a teaching-only
 warm start. Configurable widths support linear, sigmoid, tanh, and ReLU layers,
@@ -54,8 +58,11 @@ fixture sources into a disposable minimal workspace. This does not replace the
 real monorepo workspace validation in CI. No unrelated workspace members should
 be materialized merely to run a small local oracle.
 
-Three-language checkpoint interchange is **pending a separate conformance
-tranche**. Native save/reload/resume is not proof of that interchange. C ABI,
+NN39's `python code/scripts/validate_neural_framework_interchange.py` from the
+repository root executes six directed exchanges with Python and TypeScript,
+including return-trip comparison at step 3002. Its selected reusable CI job must
+pass before claiming required conformance delivery. Native save/reload/resume
+alone is not proof of interchange. C ABI,
 bindings, CNN/RNN/transformer training, GPU execution, and large-model performance
 are not provided here. See [NN38](../../../specs/NN38-native-rust-dense-framework.md)
 and the [framework roadmap](../../../learning/machine-learning/FRAMEWORK-ROADMAP.md).

@@ -11,6 +11,57 @@ fn field<'a>(value: &'a J, key: &str) -> &'a J {
     };
     &fields.iter().find(|(name, _)| name == key).unwrap().1
 }
+
+/// The shared parsed-document corpus is deliberately not a Rust mutation list.
+/// Every lane receives the same data; accepted controls rule out reject-all.
+#[test]
+fn shared_nn40_checkpoint_decisions() {
+    let corpus = parse(include_str!(
+        "../../../../specs/fixtures/neural-framework-v1/checkpoints.json"
+    ))
+    .unwrap();
+    let J::Object(root) = &corpus else {
+        panic!("corpus object")
+    };
+    assert_eq!(root.len(), 2);
+    assert_eq!(field(&corpus, "contract"), &J::String("NN40".into()));
+    let cases = array(field(&corpus, "cases"));
+    assert_eq!(cases.len(), 49);
+    let mut ids = std::collections::HashSet::new();
+    let mut accepted = 0;
+    for case in cases {
+        let J::Object(fields) = case else {
+            panic!("case object")
+        };
+        assert_eq!(fields.len(), 3);
+        let J::String(id) = field(case, "id") else {
+            panic!("case id")
+        };
+        assert!(!id.is_empty() && ids.insert(id));
+        let J::Bool(want) = field(case, "accept") else {
+            panic!("accept boolean")
+        };
+        let document = serialize(field(case, "checkpoint")).unwrap();
+        let result = DenseNetwork::from_json(&document);
+        assert_eq!(result.is_ok(), *want, "NN40 {id}: {result:?}");
+        if *want {
+            accepted += 1;
+            let model = result.unwrap();
+            let checkpoint = model.to_checkpoint();
+            assert_eq!(
+                DenseNetwork::from_checkpoint(checkpoint.clone())
+                    .unwrap()
+                    .to_checkpoint(),
+                checkpoint
+            );
+            assert_eq!(
+                DenseNetwork::from_json(&model.to_json().unwrap()).unwrap(),
+                model
+            );
+        }
+    }
+    assert_eq!(accepted, 3);
+}
 fn number(value: &J) -> f64 {
     match value {
         J::Number(JsonNumber::Float(n)) => *n,

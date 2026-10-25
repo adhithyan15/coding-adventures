@@ -17,20 +17,25 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-          sparse-checkout: |
-            code/packages/python/neural-framework
-            code/packages/python/matrix
-            code/packages/typescript/neural-framework
-            code/packages/typescript/matrix
-            code/packages/typescript/matrix-rust-napi
-            code/specs/fixtures/neural-framework-v1
-            code/scripts
+          # Cargo's repository workspace references crates outside the three
+          # small native lanes. CI must validate that real workspace as well.
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: "3.12"
       - uses: actions/setup-node@v7
         with:
           node-version: "24"
+      - name: Set up Rust
+        run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+      - name: Validate native Rust framework
+        working-directory: code/packages/rust/neural-framework
+        run: |
+          cargo +stable fmt -p neural-framework -- --check
+          cargo +stable clippy -p neural-framework --all-targets --no-deps -- -D warnings
+          cargo +stable test -p neural-framework
+          cargo +stable build -p neural-framework --release --example xor
+          python -m unittest discover -s ../../../scripts/tests -p test_neural_framework_rust.py
+          python ../../../scripts/validate_neural_framework_rust.py
       - name: Validate native Python framework
         working-directory: code/packages/python/neural-framework
         run: |
@@ -48,4 +53,6 @@ jobs:
           npm run build
           npm run test:coverage
       - name: Execute training and exchange portable checkpoints both ways
-        run: python code/scripts/validate_neural_framework_interchange.py
+        run: |
+          python -m unittest discover -s code/scripts/tests -p test_neural_framework_interchange.py
+          python code/scripts/validate_neural_framework_interchange.py
