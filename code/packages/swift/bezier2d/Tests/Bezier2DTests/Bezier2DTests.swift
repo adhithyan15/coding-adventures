@@ -77,6 +77,13 @@ final class Bezier2DTests: XCTestCase {
         XCTAssertEqual(bb.height, 1, accuracy: eps)  // y at t=0.5 is 1
     }
 
+    func testQuadBboxIncludesInteriorXExtremum() {
+        let q = QuadraticBezier(Point(0,0), Point(10,0), Point(0,1))
+        let bb = q.boundingBox
+        XCTAssertEqual(bb.x, 0, accuracy: eps)
+        XCTAssertEqual(bb.width, 5, accuracy: eps)
+    }
+
     func testQuadElevate() {
         let q = QuadraticBezier(Point(0,0), Point(1,2), Point(2,0))
         let c = q.elevate()
@@ -151,5 +158,14 @@ final class Bezier2DTests: XCTestCase {
         XCTAssertEqual(bb.x, 0, accuracy: eps)
         XCTAssertEqual(bb.width, 3, accuracy: eps)
         XCTAssertEqual(bb.height, 0, accuracy: eps)
+    }
+
+    func testCubicBboxIncludesBothInteriorExtrema() {
+        let c = CubicBezier(Point(0,0), Point(10,10), Point(-10,-10), Point(0,0))
+        let bb = c.boundingBox
+        XCTAssertLessThan(bb.x, -2.8)
+        XCTAssertGreaterThan(bb.x + bb.width, 2.8)
+        XCTAssertLessThan(bb.y, -2.8)
+        XCTAssertGreaterThan(bb.y + bb.height, 2.8)
     }
 }
