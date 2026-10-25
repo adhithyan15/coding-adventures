@@ -15,6 +15,10 @@ The track has two equally important outputs:
 
 ## Start Here
 
+To build on the lessons as a library author, follow the
+[Neural Framework Delivery Roadmap](./FRAMEWORK-ROADMAP.md) and
+[From Teaching Examples to a Trainable Framework](./portable-dense-framework.md).
+
 Read these in order and reproduce each worked calculation before training a
 larger network:
 

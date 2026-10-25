@@ -15,7 +15,8 @@ The first contract is [NN37](../../specs/NN37-portable-neural-framework.md).
 Completion means seeded construction, full-network backpropagation, exact-count
 SGD training, inspection, and portable save/reload/resume.
 
-- [ ] Python and TypeScript reference frameworks and checkpoint interchange.
+- [x] Python and TypeScript reference frameworks and checkpoint interchange
+  ([lesson and runnable examples](./portable-dense-framework.md)).
 - [ ] Rust native framework and optional C ABI.
 - [ ] Go native framework.
 - [ ] Ruby native framework.

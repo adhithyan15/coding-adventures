@@ -1,6 +1,7 @@
 # NN37: Portable Neural Framework Foundation
 
-Status: implementation in progress
+Status: Python and TypeScript dense reference implementations delivered;
+remaining ports and architectures tracked in the framework roadmap.
 
 ## Goal
 

@@ -23,6 +23,13 @@ structure helps.
 Implementation progress and the commit-sized delivery queue live in the
 [neural learning delivery roadmap](./ROADMAP.md).
 
+The [neural framework roadmap](./FRAMEWORK-ROADMAP.md) extends those teaching
+labs into reusable native libraries across every language. NN37 starts with
+Python and TypeScript dense frameworks: configurable layer widths, seeded
+construction, full-network gradients, exact-count SGD, and portable checkpoints
+that resume training across languages. Completion of a teaching lab does not
+imply general framework support for that architecture.
+
 Every model family below starts with the smallest example that needs its new
 idea.
 
