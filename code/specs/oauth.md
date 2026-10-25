@@ -1333,11 +1333,12 @@ non-copyable `CertID` binding and one explicit validated caller-owned time. It
 derives status, `thisUpdate`, and `nextUpdate` only from the exact retained
 `SingleResponse`, rejects every currently unsupported `singleExtensions`
 collection, and applies the shared repository-owned fail-closed revocation
-policy. Only `good` inside an ordered inclusive bounded freshness interval
-succeeds. The distinct non-copyable result retains the complete target,
-issuer, and response binding plus the exact observation time, preventing
-detached status or freshness values from being attached to another
-certificate. This composition does not authenticate the OCSP signature,
+policy. Only `good` inside the ordered half-open freshness interval
+`thisUpdate <= observation_time < nextUpdate` succeeds. The distinct
+non-copyable result retains the complete target, issuer, and response binding
+plus the exact observation time, preventing detached status or freshness
+values from being attached to another certificate. This composition does not
+authenticate the OCSP signature,
 authorize or bind a responder, interpret outer response extensions, prove the
 candidate issuer signed the target, bind the result to a constructed path,
 fetch or cache revocation data, read a clock, implement nonce policy, establish

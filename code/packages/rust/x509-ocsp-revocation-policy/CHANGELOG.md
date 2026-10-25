@@ -15,12 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `SingleResponse` and the shared fail-closed revocation-policy gate.
 - Added non-copyable evidence retaining the exact CertID binding and explicit
   observation time, plus stable payload-free failure categories.
-- Added focused good, revoked, unknown, missing-next-update, inclusive-boundary,
+- Added focused good, revoked, unknown, missing-next-update, half-open-boundary,
   inverted, future, stale, and unsupported-extension coverage.
 
 ### Security
 
 - All `singleExtensions` fail closed until their semantics are implemented.
+- OCSP evidence expires at `nextUpdate`; successful freshness requires
+  `thisUpdate <= observation_time < nextUpdate`.
 - Response-signature verification, responder authorization, outer extension
   policy, issuer-link and path authentication, trust, TLS, HTTP, OAuth, clock,
   cache, and network authority remain separate boundaries.

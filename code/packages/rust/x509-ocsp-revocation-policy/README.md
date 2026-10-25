@@ -7,10 +7,10 @@ The crate accepts non-copyable `BoundX509OcspCertId` evidence and one explicit
 caller-owned validated time. It derives the status, `thisUpdate`, and
 `nextUpdate` only from the exact retained response, rejects every currently
 unsupported `singleExtensions` collection, and applies the repository-owned
-strict revocation policy. Only `good` inside an ordered inclusive bounded
-freshness interval succeeds. The non-copyable result retains the exact CertID
-binding and observation time, preventing detached status or freshness values
-from being attached to another certificate.
+strict revocation policy. Only `good` inside the ordered half-open interval
+`thisUpdate <= observation_time < nextUpdate` succeeds. The non-copyable result
+retains the exact CertID binding and observation time, preventing detached
+status or freshness values from being attached to another certificate.
 
 ## Security boundary
 

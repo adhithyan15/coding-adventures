@@ -179,7 +179,7 @@ fn validates_exact_bound_good_response_and_retains_inputs() {
 }
 
 #[test]
-fn accepts_inclusive_freshness_endpoints() {
+fn accepts_this_update_and_rejects_next_update_endpoint() {
     let response_der = single_response(0x80, b"20261024120000Z", Some(b"20261024130000Z"));
     let (target_der, issuer_der) = fixture_certificates();
     let response = decode_response(&response_der);
@@ -188,7 +188,12 @@ fn accepts_inclusive_freshness_endpoints() {
     let binding = bind(&response, &target, &issuer);
 
     validate_bound_x509_ocsp_revocation(&binding, observed_time(b"20261024120000Z")).unwrap();
-    validate_bound_x509_ocsp_revocation(&binding, observed_time(b"20261024130000Z")).unwrap();
+    let error = validate_bound_x509_ocsp_revocation(&binding, observed_time(b"20261024130000Z"))
+        .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509OcspRevocationPolicyErrorKind::Policy(X509RevocationPolicyErrorKind::StaleNextUpdate)
+    );
 }
 
 #[test]

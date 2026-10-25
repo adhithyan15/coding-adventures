@@ -9,7 +9,7 @@
 
 #![deny(unsafe_code)]
 
-use core::fmt;
+use core::{cmp::Ordering, fmt};
 use x509_ocsp_cert_id_binding::BoundX509OcspCertId;
 use x509_ocsp_cert_status::X509OcspCertStatus;
 use x509_revocation_policy::{
@@ -62,7 +62,7 @@ impl std::error::Error for X509OcspRevocationPolicyError {}
 ///
 /// The retained binding fixes the exact `SingleResponse`, target certificate,
 /// and candidate issuer whose identifier hashes matched. This result adds only
-/// strict good-status and closed-interval freshness policy for that exact
+/// strict good-status and half-open freshness policy for that exact
 /// response. It does not authenticate the response or authorize its responder.
 pub struct ValidatedBoundX509OcspRevocation<
     'binding,
@@ -132,9 +132,10 @@ impl fmt::Debug for ValidatedBoundX509OcspRevocation<'_, '_, '_, '_, '_, '_, '_>
 /// Apply strict status and freshness policy to one exact CertID-bound response.
 ///
 /// Failure order is stable: unsupported `singleExtensions`, then the shared
-/// revocation policy's status and freshness ordering. The observation is
-/// derived internally from the retained response, preventing a caller from
-/// attaching detached status or time endpoints to another certificate.
+/// revocation policy's status and freshness ordering, then OCSP's strict
+/// `observation_time < nextUpdate` endpoint. The observation is derived
+/// internally from the retained response, preventing a caller from attaching
+/// detached status or time endpoints to another certificate.
 pub fn validate_bound_x509_ocsp_revocation<
     'binding,
     'response,
@@ -177,11 +178,9 @@ pub fn validate_bound_x509_ocsp_revocation<
         X509OcspCertStatus::Revoked(_) => X509RevocationStatus::Revoked,
         X509OcspCertStatus::Unknown => X509RevocationStatus::Unknown,
     };
-    let observation = X509RevocationObservation::new(
-        status,
-        Some(response.this_update()),
-        response.next_update(),
-    );
+    let next_update = response.next_update();
+    let observation =
+        X509RevocationObservation::new(status, Some(response.this_update()), next_update);
     evaluate_x509_revocation_observation(Some(&observation), observation_time).map_err(
         |error| {
             X509OcspRevocationPolicyError::new(X509OcspRevocationPolicyErrorKind::Policy(
@@ -189,6 +188,14 @@ pub fn validate_bound_x509_ocsp_revocation<
             ))
         },
     )?;
+    if next_update.is_some_and(|endpoint| observation_time.cmp_fields(&endpoint) != Ordering::Less)
+    {
+        return Err(X509OcspRevocationPolicyError::new(
+            X509OcspRevocationPolicyErrorKind::Policy(
+                X509RevocationPolicyErrorKind::StaleNextUpdate,
+            ),
+        ));
+    }
 
     Ok(ValidatedBoundX509OcspRevocation {
         cert_id_binding,
