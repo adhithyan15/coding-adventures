@@ -1,0 +1,3 @@
+oracle: pinned historical source, CPython v2.2 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+evidence: classic `/` is left-associative at the term level and floors at each step (i_divmod)
+result: the subset prints exactly what CPython 2.2 and 2.7.18 print

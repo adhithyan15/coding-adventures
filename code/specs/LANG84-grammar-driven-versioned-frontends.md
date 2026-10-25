@@ -1002,7 +1002,7 @@ noted.
 | Maxima | re-exports Macsyma | — | CST | none of its own | No grammar of its own | Own `maxima<release>` pairs from Maxima tags before any `Language::Maxima`. Until then `--lang maxima` is an error, not a silent Macsyma alias |
 | Maple, Reduce | GL | GP | CST | unversioned | Compliant, not in lang-aot | Inventory; `Language` variants |
 | Nib, Oct | GL | GP | CST | unversioned | Compliant (in-repo languages) | Single-row inventory (see open questions) |
-| Python | GL (indentation mode) | GP | CST | 5 release pairs (3.0a1, 3.11.17, 3.12.3, 3.13.16, 3.16.0a1) + legacy minor lines 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned | **Compliant; release selection real since phase 7a** for `py-int-print` (`compile_source_at`, I for all five, `Language::Python` on all nine backends; `--lang python@<release>` since 7b slice 1; release sweep and B for all five in 7b slice 2). LANG79's float pilot still uses the legacy `"3.12"` minor line | 7c |
+| Python | GL (indentation mode) | GP | CST | 7 release pairs (2.2, 2.7.18, 3.0a1, 3.11.17, 3.12.3, 3.13.16, 3.16.0a1) + legacy minor lines 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned | **Compliant; release selection real since phase 7a** for `py-int-print` (`compile_source_at`, I for all five, `Language::Python` on all nine backends; `--lang python@<release>` since 7b slice 1; release sweep and B for all five in 7b slice 2); Python 2 `py2-int-print` (print statement, classic `/`) on 2.2 and 2.7.18 with B since 7c slice 1. LANG79's float pilot still uses the legacy `"3.12"` minor line | 7c (rest) |
 | Perl | GL | GP | CST | 118 partial versioned pairs, compiled into 5 distinct token and 2 distinct parser tables; `releases.csv` 776 rows | Compliant; `compile_source_at` selects any checked release; `DEFAULT_RELEASE` is the inventory release `5.38.0` and the unversioned pair is off the IIR path (4b); `IIRModule.release` recorded; `Language::Perl` on all nine backends with `--lang perl@<release>` (4a, 4b) | Phase 4c |
 | COBOL-60 | GL + `strip_cobol_columns` | GP | CST | unversioned | Compliant (C3 hook) | Inventory (60, 61, 61-ext, 65, 68, 74, 85, 2002, 2014, 2023); `Cobol60` → `Cobol` |
 | Dartmouth BASIC | GL + 2 hooks (`lib.rs`: 391 non-test lines incl. docs) | GP | CST | unversioned | Compliant (C3 hooks) | Inventory (editions 1–7) |
@@ -1932,6 +1932,132 @@ section above.
 7c is the rest of the 7b/7c row in the phase table: Python 2, more
 releases, and the float subset.
 
+**Phase 7c, slice 1 (Python 2: `py2-int-print`).** This slice brings the
+first Python 2 releases onto the release path. It adds a new subset,
+`py2-int-print`: py-int-print's integer arithmetic, spoken in Python 2's
+syntax and meaning. It is a separate subset rather than a profile of
+`py-int-print`, because the two disagree on what the same text means.
+`print(1, 2)` is a call with two arguments in Python 3 and a tuple in
+Python 2, `print()` writes `()` in Python 2, and `/` is a different
+operator. A shared corpus would need an override on almost every case.
+
+```python
+print 1 + 2 * 3           # 7
+print -7 / 2              # -4   (classic division on ints floors)
+print -7 // 2; print      # -4, then an empty line
+print (1 + 2) * 3         # 9    (a parenthesised atom, not a call)
+```
+
+- **Statements.** `print <expr>` or a bare `print`, separated by NEWLINE or
+  `;`, with an optional trailing `;`. The trivia are py-int-print's: blank
+  lines, `#` comments, `\`-newline, and newlines inside parentheses.
+- **Expressions.** py-int-print's, plus `/`: decimal integer literals,
+  parentheses, unary `+ -`, and binary `+ - * / // %` at Python's
+  precedence, all left-associative.
+- **Refused.** The grammar admits Python 2's print item list, so these
+  compile errors are typed `Unsupported`:
+  - `print a, b`, which writes `a b`;
+  - `print a,`, which writes no newline.
+  - **Why refuse them?** Both set the stream's *softspace* flag, and CPython 2
+    flushes a pending softspace as `\n` before it reports an uncaught
+    exception (`Py_FlushLine` in `PyErr_Display`, `Python/pythonrun.c`). So
+    `print 1, 1/0` writes `1\n`, not `1`.
+  - **What it needs.** Lowering that faithfully needs a trap handler, which
+    LANG83 does not have yet.
+  - **Parse errors** (the release grammar does not admit them): `print >>f, x`,
+    `print()` (an empty tuple), a parenthesised tuple, and everything else
+    py-int-print's grammar refuses.
+  - **Lexer errors:** an octal literal (`010`), a `long` suffix (`1L`), a
+    `_` separator, and `00`.
+- **Semantics.**
+  - **`/` is classic division.** On two ints it is floor division. At both
+    tags, `Objects/intobject.c` `int_classic_div` (`nb_divide`) and
+    `int_div` (`nb_floor_divide`) go through `i_divmod`, which adjusts a
+    truncated quotient down when the signs differ. The profile records this
+    as `Slash::Classic`, and the compiler lowers `/` exactly like `//`,
+    including the `-1` divisor fold.
+  - **A zero divisor** raises `ZeroDivisionError` ("integer division or
+    modulo by zero"), giving `Trap.DivZero` after the output so far.
+  - **Integers outside `i64`.** A result outside `i64` is promoted to `long`
+    in CPython: `int_add` and friends call `PyLong_Type`'s slot, and
+    `i_divmod` returns `DIVMOD_OVERFLOW` for `LONG_MIN / -1`. Here it gives
+    `Trap.Overflow`, the same stated divergence as py-int-print.
+  - **`print <expr>`** evaluates the expression, then writes `str()` of it and
+    `\n` (PRINT_ITEM, PRINT_NEWLINE), so a trap in the expression writes
+    nothing for that statement. A bare `print` writes `\n`. This lowers to
+    py-int-print's `print_i64` and `putchar 10`. There are no new IIR ops.
+- **Releases.** Two tags get a pair. The file stems `python2.2.*` and
+  `python2.7.18.*` do not collide with the legacy minor-line pair
+  `python2.7.*`. Both are `partial`, stage `P`, and claim `py2-int-print`
+  under profile `py2`. Their evidence rows go in `pair-evidence.csv`.
+
+  | Release | Why | Oracle |
+  | --- | --- | --- |
+  | 2.2 | the first final release with `//` (PEP 238: `DOUBLESLASH` in `Parser/tokenizer.c`, `'//'` in `Grammar/Grammar` `term`) | pinned historical source |
+  | 2.7.18 | the last Python 2 release | pinned historical source |
+
+  There is no host `python2`, so both rest on the tags' own `Grammar/Grammar`,
+  `Parser/tokenizer.c`, `Lib/keyword.py`, `Objects/intobject.c`,
+  `Python/ceval.c` (PRINT_ITEM, PRINT_NEWLINE) and `Python/pythonrun.c`.
+  Their blob IDs are in `pair-evidence.csv` and the profile's doc comment.
+  Each `.cite` names its oracle as `pinned historical source`.
+- **Tokens.** Each tag's operator table comes from `PyToken_OneChar`,
+  `TwoChars` and `ThreeChars`: 44 operators in 2.2 (including `<>` and the
+  backquote) and 45 in 2.7.18, which adds `@`. The keywords come from
+  `kwlist`: 29 in 2.2 and 31 in 2.7.18, which adds `as` and `with`. `print`
+  is a keyword in both. Integers are decimal only: `[1-9][0-9]*` or a single
+  `0`, closed by `\b`, so octal, `L` suffixes and `_` are lexer errors (a
+  narrowing; none is read differently).
+- **Grammar.** The rule names stay python3.12.grammar's (C8). The one new rule
+  is `print_stmt = "print" [ expression { COMMA expression } [ COMMA ] ]`, and
+  `small_stmt = print_stmt | expression`. Rules a profile adds are listed in
+  `python-iir-compiler`'s `PROFILE_RULES`, so `cst_contract` checks them for
+  the releases of that profile only.
+- **Crates.**
+  - `python-iir-compiler` gains:
+    - `PY2` (`Slash::Classic`);
+    - `subset_for(profile)`, which maps py3 to `py-int-print` and py2 to
+      `py2-int-print`;
+    - the `print_stmt` walk, chosen by tree shape;
+    - classic `/`.
+  - The corpus tests run every subset declared in `subsets.csv` for its
+    claiming releases.
+  - `release_sweep.rs` writes the py2 releases' classes into
+    `release_classes.csv`.
+  - `lang-aot` needs no new code, because `--lang python@2.2` and
+    `python@2.7.18` resolve through the shared release API.
+  - `lang_matrix` gets `py2-int-print` rows on each py2 class representative,
+    on every executable column. `backend_status` claims the subset for the
+    releases whose class those rows cover.
+- **Not in this slice:**
+  - multi-item and trailing-comma `print`, and `print >>`, which need
+    catchable traps or a stream model;
+  - octal and `long` literals;
+  - Python 2 releases other than these two;
+  - the float subset.
+
+**Status (7c slice 1, 2026-10-24).** Landed as planned above.
+- **Pairs and inventory.** The `python2.2` and `python2.7.18` pairs are two
+  token classes and one grammar class. `pair-evidence.csv` gains three
+  columns (`intobject_c_blob`, `ceval_c_blob`, `pythonrun_c_blob`), which are
+  `-` for the py3 rows. Both rows claim `py2-int-print` at stage B, and
+  `check --matrix` reports Python 7 claims (72 cells direct, 55 by IIR class).
+- **Stage I.** The corpus has 19 accepted cases (nine trap) and 19 refused
+  cases (Lex, Parse and Unsupported), all checked on both releases.
+- **Oracle.** There is no host `python2`, so each `.cite` names the pinned
+  source. As an independent check of the arithmetic, every accepted case is
+  translated to Python 3 (`print X` → `print(X)`, `/` → `//`) and run on host
+  `python3` (`py2_corpus_agrees_with_host_python3_after_translation`). On
+  ints the translation is exact, and the five overflow cases print the bigger
+  integers each `.cite` records.
+- **Sweep and matrix.** The release sweep finds one Python 2 class,
+  {2.2, 2.7.18}, represented by 2.2. `lang_matrix` has 19 rows on 2.2 on
+  every column, bringing Python to 72 rows and 576 cells. Locally, native,
+  LLVM, WASM, JVM, VM and JIT ran all of their cells. CLR and BEAM run in CI
+  only, because the authoring host has neither `dotnet` nor `erl`.
+- **Divergences from the plan:** none. `subset` became a field of
+  `ReleaseProfile`, not a separate `subset_for` function.
+
 ### Wire every IIR frontend into lang-aot
 
 Add `Language` variants with release support for Python, JavaScript, Ruby and
@@ -2013,7 +2139,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b done:** default on the inventory release `5.38.0` (new pair grounded in tag `v5.38.0`); `IIRModule.release`; lang-aot release API; `cst_contract`; child-process hostile probes. **4c done:** `pl-int-print` corpus, `ReleaseProfile`s, release sweep (3 IIR-identity classes), `Prog.release`/`case`, I and B for all 118 checked releases. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
 | 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs. **5a done:** `rb_int_div` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer`; I(rb-int-puts) for 3.3.5–3.3.7, B for 3.3.6. **5b slice 1 done:** lang-aot release selection (`--lang ruby@<release>`, `IIRModule.release`). **5b slice 2 done:** release sweep (one IIR-identity class, representative 3.3.5), matrix rows on it, B for 3.3.5 and 3.3.7 | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0; 6a, the F10 table in es2015–es2024 replacing the `REGEX` deletion, done in `javascript-iir-compiler` 0.4.0) | ~3,000 lines over 5 PRs |
-| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b slice 1 done:** lang-aot release selection (`--lang python@<release>`, `IIRModule.release`). **7b slice 2 done:** release sweep (two classes, representatives 3.0a1 and 3.12.3), matrix rows on them, B for all five. **7c:** Python 2 (print statement, classic `/`), more releases, and the float subset after LANG83 float formatting | ~2,000 lines over 3 PRs |
+| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b slice 1 done:** lang-aot release selection (`--lang python@<release>`, `IIRModule.release`). **7b slice 2 done:** release sweep (two classes, representatives 3.0a1 and 3.12.3), matrix rows on them, B for all five. **7c slice 1 done:** Python 2 (`py2-int-print`: print statement, classic `/`) on 2.2 and 2.7.18, B for both. **7c rest:** more releases, multi-item `print` (needs catchable traps), and the float subset after LANG83 float formatting | ~2,000 lines over 3 PRs |
 | 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 

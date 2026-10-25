@@ -13,6 +13,7 @@ use coding_adventures_python_lexer::releases::token_grammar;
 use coding_adventures_python_parser::release_parser_grammar;
 use grammar_tools::parser_grammar::GrammarElement;
 use python_iir_compiler::profiles::profile_for;
+use python_iir_compiler::profiles::PROFILE_RULES;
 use python_iir_compiler::{supported_releases, DISPATCHED_RULES, DISPATCHED_TOKENS};
 
 /// Every token name a grammar element references.
@@ -47,12 +48,21 @@ fn referenced_tokens(element: &GrammarElement, out: &mut BTreeSet<String>) {
 #[test]
 fn every_dispatched_name_exists_in_every_claiming_release() {
     let claiming: Vec<_> = supported_releases().iter().filter(|r| profile_for(r).is_some()).collect();
-    assert_eq!(claiming.len(), 5);
+    assert_eq!(claiming.len(), 7);
     for release in claiming {
         let grammar = release_parser_grammar(release).unwrap();
         let rules: BTreeSet<_> = grammar.rules.iter().map(|r| r.name.as_str()).collect();
         for rule in DISPATCHED_RULES {
             assert!(rules.contains(rule), "{release}: the grammar has no rule `{rule}`");
+        }
+        // A rule one profile adds (Python 2's `print_stmt`) exists in every
+        // release of that profile and in no other: the compiler chooses the
+        // statement form by this shape, so it must not appear by accident.
+        let profile = profile_for(release).unwrap().name;
+        for (owner, extra) in PROFILE_RULES {
+            for rule in *extra {
+                assert_eq!(rules.contains(rule), *owner == profile, "{release} ({profile}): rule `{rule}`");
+            }
         }
         let mut referenced = BTreeSet::new();
         for rule in &grammar.rules {
