@@ -1,1 +1,1 @@
-ruby -Itest -e 'Dir["test/test_*.rb"].sort.each { |file| require_relative file }'
+ruby -Itest -e 'Dir["test/test_*.rb"].sort.each { |file| load file }'

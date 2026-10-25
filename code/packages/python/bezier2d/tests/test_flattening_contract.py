@@ -8,7 +8,6 @@ import pytest
 from bezier2d import CubicBezier, QuadraticBezier
 from point2d import Point
 
-
 FIXTURE_PATH = (
     Path(__file__).resolve().parents[4]
     / "specs"
