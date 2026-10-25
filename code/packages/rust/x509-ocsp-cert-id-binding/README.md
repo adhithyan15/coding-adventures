@@ -9,8 +9,8 @@ policy. It then:
 
 1. requires the target certificate's canonical serial number to match the
    `CertID` serial;
-2. invokes hash policy with the exact `CertID` algorithm and the issuer
-   certificate's canonical subject Name DER;
+2. invokes hash policy with the exact `CertID` algorithm and the checked target
+   certificate's canonical issuer Name DER;
 3. invokes the same policy with that algorithm and the issuer certificate's
    `subjectPublicKey` BIT STRING contents; and
 4. compares both complete, caller-sized digests with the repository-owned

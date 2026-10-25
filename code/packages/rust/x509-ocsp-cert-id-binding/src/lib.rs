@@ -14,12 +14,12 @@ use x509_algorithm_identifier::X509AlgorithmIdentifier;
 use x509_certificate::X509Certificate;
 use x509_ocsp_single_response::X509OcspSingleResponse;
 
-/// The exact issuer-certificate input requested from caller-owned hash policy.
+/// The exact certificate input requested from caller-owned hash policy.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum X509OcspCertIdHashInput<'input> {
-    /// Canonical DER encoding of the issuer certificate's subject Name,
+    /// Canonical DER encoding of the checked target certificate's issuer Name,
     /// including the outer SEQUENCE tag and length.
-    IssuerNameDer(&'input [u8]),
+    TargetIssuerNameDer(&'input [u8]),
     /// Issuer certificate `subjectPublicKey` BIT STRING contents, excluding the
     /// DER tag, length, and unused-bits count octet.
     IssuerSubjectPublicKey(&'input [u8]),
@@ -29,7 +29,7 @@ impl<'input> X509OcspCertIdHashInput<'input> {
     /// Return the exact public bytes to hash for this identifier component.
     pub const fn bytes(self) -> &'input [u8] {
         match self {
-            Self::IssuerNameDer(bytes) | Self::IssuerSubjectPublicKey(bytes) => bytes,
+            Self::TargetIssuerNameDer(bytes) | Self::IssuerSubjectPublicKey(bytes) => bytes,
         }
     }
 }
@@ -186,7 +186,7 @@ where
         .expect("length was checked above");
     let computed_name_hash = hash_policy(
         cert_id.hash_algorithm(),
-        X509OcspCertIdHashInput::IssuerNameDer(issuer.tbs_certificate().subject().encoded()),
+        X509OcspCertIdHashInput::TargetIssuerNameDer(target.tbs_certificate().issuer().encoded()),
     )
     .ok_or_else(|| {
         X509OcspCertIdBindingError::new(

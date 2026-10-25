@@ -115,7 +115,7 @@ fn binds_exact_response_target_and_issuer_in_stable_hash_order() {
             assert_eq!(algorithm, expected_algorithm);
             calls += 1;
             match (calls, input) {
-                (1, X509OcspCertIdHashInput::IssuerNameDer(bytes)) => {
+                (1, X509OcspCertIdHashInput::TargetIssuerNameDer(bytes)) => {
                     assert_eq!(bytes, name(ISSUER_NAME));
                     assert_eq!(input.bytes(), bytes);
                     Some(NAME_HASH)
@@ -193,6 +193,37 @@ fn rejects_target_serial_mismatch_before_hash_policy() {
 }
 
 #[test]
+fn rejects_equal_serial_when_target_names_a_different_issuer() {
+    let (response_der, _, issuer_der) = fixtures();
+    let target_der = certificate(&[2], b"different-issuer", b"target", &[0x01]);
+    let response = decode_response(&response_der);
+    let target = decode_certificate(&target_der);
+    let issuer = decode_certificate(&issuer_der);
+    let expected_target_issuer = name(b"different-issuer");
+    let mut calls = 0usize;
+
+    let error = bind_x509_ocsp_cert_id_to_certificates(&response, &target, &issuer, |_, input| {
+        calls += 1;
+        match input {
+            X509OcspCertIdHashInput::TargetIssuerNameDer(bytes) => {
+                assert_eq!(bytes, expected_target_issuer);
+                Some([0x33; 4])
+            }
+            X509OcspCertIdHashInput::IssuerSubjectPublicKey(_) => {
+                panic!("key policy must not run after issuer Name mismatch")
+            }
+        }
+    })
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509OcspCertIdBindingErrorKind::IssuerNameHashMismatch
+    );
+    assert_eq!(calls, 1);
+}
+
+#[test]
 fn reports_name_hash_policy_rejection_without_payloads() {
     let (response_der, target_der, issuer_der) = fixtures();
     let response = decode_response(&response_der);
@@ -202,7 +233,10 @@ fn reports_name_hash_policy_rejection_without_payloads() {
 
     let error = bind_x509_ocsp_cert_id_to_certificates(&response, &target, &issuer, |_, input| {
         calls += 1;
-        assert!(matches!(input, X509OcspCertIdHashInput::IssuerNameDer(_)));
+        assert!(matches!(
+            input,
+            X509OcspCertIdHashInput::TargetIssuerNameDer(_)
+        ));
         None::<[u8; 4]>
     })
     .unwrap_err();
@@ -230,7 +264,10 @@ fn rejects_complete_name_hash_mismatches_before_key_policy() {
         let error =
             bind_x509_ocsp_cert_id_to_certificates(&response, &target, &issuer, |_, input| {
                 calls += 1;
-                assert!(matches!(input, X509OcspCertIdHashInput::IssuerNameDer(_)));
+                assert!(matches!(
+                    input,
+                    X509OcspCertIdHashInput::TargetIssuerNameDer(_)
+                ));
                 Some(computed)
             })
             .unwrap_err();
@@ -253,7 +290,7 @@ fn reports_key_hash_policy_rejection_after_name_match() {
     let error = bind_x509_ocsp_cert_id_to_certificates(&response, &target, &issuer, |_, input| {
         calls += 1;
         match input {
-            X509OcspCertIdHashInput::IssuerNameDer(_) => Some(NAME_HASH),
+            X509OcspCertIdHashInput::TargetIssuerNameDer(_) => Some(NAME_HASH),
             X509OcspCertIdHashInput::IssuerSubjectPublicKey(_) => None,
         }
     })
@@ -281,7 +318,7 @@ fn rejects_complete_key_hash_mismatches_after_name_match() {
             bind_x509_ocsp_cert_id_to_certificates(&response, &target, &issuer, |_, input| {
                 calls += 1;
                 match input {
-                    X509OcspCertIdHashInput::IssuerNameDer(_) => Some(NAME_HASH),
+                    X509OcspCertIdHashInput::TargetIssuerNameDer(_) => Some(NAME_HASH),
                     X509OcspCertIdHashInput::IssuerSubjectPublicKey(_) => Some(computed),
                 }
             })

@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added exact target-serial and issuer-identity binding for one decoded OCSP
   `SingleResponse`.
 - Added a caller-owned data-driven hash policy receiving the exact `CertID`
-  algorithm and exact issuer Name/key inputs in stable order.
+  algorithm, exact checked-certificate issuer Name, and candidate-issuer key
+  inputs in stable order.
 - Added complete fixed-size constant-time digest comparisons and non-copyable
   evidence retaining the exact response, target, and issuer certificates.
 - Added stable payload-free failures and focused identity, ordering, rejection,
