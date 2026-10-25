@@ -1698,6 +1698,27 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_mixed_special_entity_topology() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER ||--o{ 1 : places\n1 ||--|{ u : contains\n1.5\nu ||--|| 2.5 : processes\n2.5 {\n  string id\n  float value\n}\nu {\n  varchar(50) name\n  int count\n}\n",
+        );
+
+        for expected in ["CUSTOMER", "1", "u", "1.5", "2.5", "varchar(50)"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| matches!(
+                    token.type_name.as_deref(),
+                    Some("IDENTIFYING" | "NON_IDENTIFYING")
+                ))
+                .count(),
+            3
+        );
+    }
+
+    #[test]
     fn tokenizes_er_attribute_type_forms() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
