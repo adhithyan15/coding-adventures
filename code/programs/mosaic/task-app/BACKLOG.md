@@ -69,6 +69,13 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
+**Next: #18112 — prepare, publish, and audit `task-app-v0.5.10`.** The bounded
+board-column floor slice #18030 is complete in #18031 with all PR and release
+payload checks passing. Prioritize this compatible patch checkpoint under
+#13543 before further fidelity work. Preparation must merge before publication;
+audit immutable provenance, manifest, assets and checksums before closing the
+issue. Keep the existing artifact matrix and unsigned limitations unchanged.
+
 **Published checkpoint: [#17950](https://github.com/adhithyan15/coding-adventures/issues/17950)
 — prepare, publish, and audit `task-app-v0.5.9`.** P0 lifecycle gates are
 complete. Qt Text widths shipped in #17915 with native payload CI passing;
@@ -83,7 +90,7 @@ Published and audited from `fa203bccd486279cbd651ccd492987c1b2b1004e`
 in run 39904677952: all six payload jobs and publisher passed; the immutable
 tag, manifest source, thirteen assets and twelve checksum entries were verified.
 Receipt reconciliation #17999 is complete in #18001. The current bounded
-#12022 fidelity slice is #18030: preserve the 260-pixel board-column minimum
+#12022 fidelity slice #18030 completed in #18031: preserve the 260-pixel board-column minimum
 from both themes' existing width/non-shrink intent on Qt's For delegate, without claiming general flex lowering
 or reducing the style-drop budget. Feature composition remains paused
 behind #14011 and signing remains credential-blocked in #13977.
