@@ -2168,6 +2168,18 @@ fn pinned_er_style_corpus_reaches_semantic_ir() {
     assert!(relationship.nodes.iter().all(|node| {
         node.style.as_ref().and_then(|style| style.fill.as_deref()) == Some("#fee2e2")
     }));
+
+    let direct = parse_er_diagram(fixtures[4]["source"].as_str().expect("direct style source"))
+        .expect("composed direct ER styles must parse");
+    let customer = direct.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER");
+    let order = direct.nodes.iter().find(|node| node.id == "ORDER").expect("ORDER");
+    assert_eq!(customer.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#1d4ed8"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.text_color.as_deref()), Some("#14532d"));
+    assert_eq!(customer.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+    assert_eq!(order.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#dbeafe"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#1d4ed8"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.text_color.as_deref()), None);
 }
 
 #[test]
