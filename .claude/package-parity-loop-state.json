@@ -25703,7 +25703,7 @@
     {
       "id": "dotnet-wasm-opcodes-build-coverage-enforcement",
       "title": "Wire and prove C# and F# WasmOpcodes BUILD coverage gates",
-      "status": "pending",
+      "status": "in_progress",
       "depends_on": [],
       "delivery_class": "portable",
       "selection_blocked": false,
