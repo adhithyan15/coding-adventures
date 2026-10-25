@@ -3,6 +3,17 @@
 Status: specified before implementation; implemented and locally validated;
 publication and exact-head CI pending.
 
+### Exact-head CI scheduling repair
+
+Initial head e20ded7a22e passed applicable CI, but the planner omitted Windows
+for C-only inputs. Linux and macOS each actually built bounded-json and the ISO
+harness; that is not MSVC CI evidence. Before merge, expose a narrow plan-derived
+Windows requirement when c/bounded-json is affected (fail closed on an unreadable
+plan), retain the existing Windows runner and MSVC bootstrap, and run the shared
+harness self-test and this package's existing Windows front there. Pin selection,
+bootstrap, execution and required-build-rollup ownership with executable planner
+tests. Do not broaden all C/C++ scheduling or introduce another compiler scheduler.
+
 ## Reassessment after five-native delivery
 
 NN46 merged PR #18252 at exact head `ff37a3e44e3`, squash `da1b408680f`,
