@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Make native numerical validation and portable checkpoint exchange a selected,
+  fail-closed dependency of the required repository CI gate.
+
 ## 0.1.0 — 2026-10-25
 
 - Add configurable dense networks over the existing native matrix foundation.

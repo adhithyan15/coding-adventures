@@ -1,25 +1,9 @@
 name: Neural Framework Conformance
 
 on:
-  pull_request:
-    paths:
-      - "code/packages/python/neural-framework/**"
-      - "code/packages/typescript/neural-framework/**"
-      - "code/packages/python/matrix/**"
-      - "code/packages/typescript/matrix/**"
-      - "code/specs/fixtures/neural-framework-v1/**"
-      - "code/scripts/validate_neural_framework_interchange.py"
-      - ".github/workflows/neural-framework.yml"
-  push:
-    branches: [main]
-    paths:
-      - "code/packages/python/neural-framework/**"
-      - "code/packages/typescript/neural-framework/**"
-      - "code/packages/python/matrix/**"
-      - "code/packages/typescript/matrix/**"
-      - "code/specs/fixtures/neural-framework-v1/**"
-      - "code/scripts/validate_neural_framework_interchange.py"
-      - ".github/workflows/neural-framework.yml"
+  # ci.yml owns automatic scheduling and the required roll-up. Reuse the same
+  # numerical gate without claiming a second runner for a standalone PR event.
+  workflow_call:
   workflow_dispatch:
 
 permissions:

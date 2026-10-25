@@ -16,10 +16,12 @@ The delivery loop is authorized to implement, publish, repair, and auto-merge
 one item at a time. Before choosing each new item, fetch current main, inspect
 the actual open PR and its current-head CI logs, and revisit this ordering:
 
-1. **P0 — Finish the active delivery.** Resolve real CI failures or merge
-   conflicts on [PR #18201](https://github.com/adhithyan15/coding-adventures/pull/18201).
-   The standalone matrix bootstrap repair is included; confirm its current
-   checks rather than treating the earlier framework-only green run as final.
+1. **P0 — Required conformance ownership.** The initial native frameworks
+   merged in [PR #18201](https://github.com/adhithyan15/coding-adventures/pull/18201)
+   at head `772f2fc2bb7`, with CI, CodeQL, and native checkpoint exchange green.
+   Close the smaller reliability prerequisite next: make the existing exchange
+   workflow a registered dependency of the required repository CI gate, with
+   fail-closed selected-job results and no duplicate automatic runners.
 2. **P1 — Native Rust dense framework.** Implement NN37 training and checkpoint
    interchange independently over the Rust matrix foundation. The optional C
    ABI is a separate later item, so native correctness is established first.
@@ -59,8 +61,9 @@ the first is open, or modify the unrelated dirty primary checkout.
 
 ## Discovered reliability work
 
-- [ ] Integrate framework checkpoint interchange into the required repository
-  CI gate, so merge eligibility cannot omit the separate conformance workflow.
+- [x] Integrate framework checkpoint interchange into the required repository
+  CI gate ([contract](../../specs/neural-framework-ci-gate.md)); selected jobs
+  must succeed, not skip. Publication/current-head CI still proves delivery.
 - [ ] Add a language-neutral invalid-checkpoint corpus as ports expand;
   cross-language receipts currently prove valid training/resume, while each
   library owns separate negative tests.

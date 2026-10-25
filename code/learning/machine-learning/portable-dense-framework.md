@@ -60,6 +60,12 @@ code from the document. Run
 root after installing the TypeScript package dependencies to prove training and
 checkpoint exchange in both directions.
 
+Automatic changes to either native lane, its matrix foundation, shared fixture,
+or validator now select a reusable conformance job inside repository CI. The
+required `CI gate` rejects a selected job that fails, is cancelled, or skips;
+manual dispatch remains available. See the
+[CI ownership contract](../../specs/neural-framework-ci-gate.md).
+
 The next framework milestones add native ports, shared tensor autograd,
 architecture components, and measured increases in model size. See the
 [framework roadmap](./FRAMEWORK-ROADMAP.md). A successful dense checkpoint does

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Reuse native numerical validation and checkpoint exchange inside the required
+  repository CI gate, rejecting selected jobs without successful evidence.
+
 ## 0.1.0 — 2026-10-25
 
 - Add native configurable dense networks above the existing matrix package.
