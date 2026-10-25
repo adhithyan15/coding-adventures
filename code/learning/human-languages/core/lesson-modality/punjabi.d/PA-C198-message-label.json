@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C198-message-label",
+    "language": "punjabi",
+    "chapter": 198,
+    "sequence": 10800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c7af88bbccb29dd"
+  },
+  "findings": []
+}
