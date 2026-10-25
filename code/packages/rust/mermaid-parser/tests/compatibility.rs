@@ -237,6 +237,14 @@ const ER_KEY_PREFIX_ATTRIBUTES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-key-prefix-attributes-11.16.1-visual-corpus.json"
 ));
+const ER_ATTRIBUTE_NAME_VALIDATION_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-attribute-name-validation-11.16.1-corpus.json"
+));
+const ER_ATTRIBUTE_NAME_VALIDATION_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-attribute-name-validation-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2952,6 +2960,40 @@ fn pinned_er_key_prefix_attributes_reach_semantic_ir() {
             "pk_price: float [PK] - comment"
         ]
     );
+}
+
+#[test]
+fn pinned_er_attribute_name_boundaries_match_upstream() {
+    let syntax: Value = serde_json::from_str(ER_ATTRIBUTE_NAME_VALIDATION_CORPUS)
+        .expect("ER attribute-name validation corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ATTRIBUTE_NAME_VALIDATION_VISUAL_CORPUS)
+        .expect("ER attribute-name validation visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["valid"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["valid"][0]["source"]
+            .as_str()
+            .expect("valid ER attribute-name source"),
+    )
+    .expect("embedded numeric attribute names must parse");
+
+    assert_eq!(
+        diagram.nodes[0].compartments[0].entries,
+        ["name1: string", "value2: int"]
+    );
+    for fixture in syntax["invalid"]
+        .as_array()
+        .expect("invalid ER attribute-name fixtures")
+    {
+        let source = fixture["source"]
+            .as_str()
+            .expect("invalid ER attribute-name source");
+        assert!(
+            parse_er_diagram(source).is_err(),
+            "{} must be rejected",
+            fixture["name"]
+        );
+    }
 }
 
 #[test]
