@@ -2,6 +2,10 @@
 
 ## 0.1.0 — 2026-10-25
 
+- Repair a confirmed CI coverage gap: dependency-aware bounded-json selection
+  now retains the existing Windows/MSVC job and executes the shared harness and
+  package front, with failures owned by the required build roll-up.
+
 - NN47: independent pure C17 owned JSON parser with explicit statuses/const views.
 - Enforce 4 MiB/128-depth/65536-node/16 MiB allocation ceilings, tighter options,
   checked sizes, injectable allocators and complete partial-parse cleanup.

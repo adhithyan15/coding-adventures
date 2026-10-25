@@ -14,6 +14,14 @@ harness self-test and this package's existing Windows front there. Pin selection
 bootstrap, execution and required-build-rollup ownership with executable planner
 tests. Do not broaden all C/C++ scheduling or introduce another compiler scheduler.
 
+The repair passes six executable production-planner/ownership tests plus the
+existing four neural-gate tests. GCC/Clang each repeat 1605 checks; actual local
+MSVC repeats the same 1605 plus shared C/C++ positive/negative fixtures and six
+cardinality guards through the new step's commands. Windows CI remains pending
+until the repaired head actually runs. Initial Linux/macOS package BUILD success
+and the neutral CodeQL workflow (no configured C/C++ analyzer) are not C scanning
+or Windows execution evidence.
+
 ## Reassessment after five-native delivery
 
 NN46 merged PR #18252 at exact head `ff37a3e44e3`, squash `da1b408680f`,

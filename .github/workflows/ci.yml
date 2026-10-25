@@ -94,6 +94,7 @@ jobs:
       needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
       needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
       needs_cpp: ${{ steps.toolchains.outputs.needs_cpp }}
+      run_c_bounded_json_windows: ${{ steps.build-matrix.outputs.run_c_bounded_json_windows }}
       needs_lang_windows: ${{ steps.lang-windows.outputs.required }}
       needs_venture_windows: ${{ steps.venture-windows.outputs.required }}
       needs_mosaic_xaml_windows: ${{ steps.mosaic-xaml-windows.outputs.required }}
@@ -474,7 +475,8 @@ jobs:
             toolchain flag, so they need their own gate, or a change to the
             containment code would drop the only tests that cover it."""
             return (
-              flag("RUN_WINDOWS_OS_SUITES")
+              bounded_json_windows
+              or flag("RUN_WINDOWS_OS_SUITES")
               or flag("NEEDS_SWIFT")
               or flag("NEEDS_ELIXIR")
               or flag("NEEDS_OCAML")
@@ -494,6 +496,20 @@ jobs:
               # full matrix rather than silently narrowing coverage.
               return None
 
+          # NN47 needs actual MSVC evidence, not a green Unix-only roll-up.
+          # Use the dependency-aware Windows plan, never a checkpoint/input path.
+          # Missing or malformed planner data must not silently drop the lane.
+          plan = load_plan()
+          try:
+            windows_affected = platform_state(plan, "windows") if isinstance(plan, dict) else None
+          except (AttributeError, TypeError):
+            windows_affected = None
+          bounded_json_windows = (
+            not isinstance(windows_affected, list)
+            or "c/bounded-json" in windows_affected
+          )
+          print("run_c_bounded_json_windows=" + str(bounded_json_windows).lower())
+
           if os.environ["FULL_BUILD"] == "true":
             shards = json.loads(os.environ.get("BUILD_SHARDS") or "[]")
             entries = [
@@ -509,7 +525,6 @@ jobs:
             ]
             shard_count = len(entries)
           elif os.environ["EVENT_NAME"] == "pull_request":
-            plan = load_plan()
             entries = [LINUX]
             if needs_macos(plan):
               entries.append(MACOS)
@@ -637,6 +652,7 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_c_bounded_json_windows_ci.py'
           # LANG84 release inventories (`code/grammars/*/releases.csv`): the
           # common header (every inventory, Perl's included since phase 2b),
           # date order, predecessor lineage, status claims, `subsets.csv` and
@@ -3512,9 +3528,25 @@ jobs:
         run: python -m unittest discover -s code/scripts/tests -p 'test_setup_msvc_dev_cmd.py'
 
       - name: Set up MSVC (Lua + C/C++ + Venture + LANG)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true') && runner.os == 'Windows'
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true' || needs.detect.outputs.run_c_bounded_json_windows == 'true') && runner.os == 'Windows'
         shell: pwsh
         run: python code/scripts/setup_msvc_dev_cmd.py --arch x64
+
+      - name: Validate bounded C JSON with MSVC
+        if: runner.os == 'Windows' && needs.detect.outputs.run_c_bounded_json_windows == 'true'
+        shell: pwsh
+        timeout-minutes: 10
+        env:
+          ISO_REQUIRE: cl
+        run: |
+          # The existing shared harness owns compiler invocation and strict flags.
+          $windowsPowerShell = Join-Path $env:SystemRoot 'System32/WindowsPowerShell/v1.0/powershell.exe'
+          Push-Location code/packages/c/iso-harness
+          try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/selftest.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
+          finally { Pop-Location }
+          Push-Location code/packages/c/bounded-json
+          try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/run.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
+          finally { Pop-Location }
 
       - name: Restore pinned Lua 5.4.7 cache
         id: lua-cache
