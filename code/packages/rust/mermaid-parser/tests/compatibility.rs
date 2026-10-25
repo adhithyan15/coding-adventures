@@ -149,6 +149,14 @@ const ER_DUPLICATE_ENTITIES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-duplicate-entities-11.16.1-visual-corpus.json"
 ));
+const ER_RELATIONSHIP_LABELS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-relationship-labels-11.16.1-corpus.json"
+));
+const ER_RELATIONSHIP_LABELS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-relationship-labels-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2559,6 +2567,33 @@ fn pinned_er_duplicate_entities_coalesce_in_semantic_ir() {
     assert_eq!(diagram.relationships.len(), 1);
     assert_eq!(diagram.relationships[0].from, "CUSTOMER");
     assert_eq!(diagram.relationships[0].to, "ORDER");
+}
+
+#[test]
+fn pinned_er_relationship_label_forms_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_RELATIONSHIP_LABELS_CORPUS)
+        .expect("ER relationship labels corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_RELATIONSHIP_LABELS_VISUAL_CORPUS)
+        .expect("ER relationship labels visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER relationship labels source"),
+    )
+    .expect("ER relationship label forms must parse");
+    assert_eq!(diagram.nodes.len(), 4);
+    assert_eq!(diagram.relationships.len(), 3);
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some(""));
+    assert_eq!(diagram.relationships[1].label.as_deref(), Some("contains"));
+    assert_eq!(diagram.relationships[2].label.as_deref(), Some("assigned"));
+    assert_eq!(diagram.relationships[0].from_mult.as_deref(), Some("1"));
+    assert_eq!(diagram.relationships[0].to_mult.as_deref(), Some("1"));
+    assert_eq!(diagram.relationships[1].to_mult.as_deref(), Some("0..*"));
+    assert_eq!(diagram.relationships[2].from_mult.as_deref(), Some("0..*"));
+    assert_eq!(diagram.relationships[2].to_mult.as_deref(), Some("1"));
 }
 
 #[test]

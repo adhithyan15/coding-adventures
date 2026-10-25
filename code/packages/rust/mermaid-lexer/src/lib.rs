@@ -1622,6 +1622,24 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_relationship_label_forms() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nACCOUNT ||--|| PROFILE : \"\"\nPROFILE ||--o{ ORDER : \"contains\"\nORDER }o..|| PRODUCT : assigned\n",
+        );
+        let labels: Vec<&str> = tokens
+            .iter()
+            .filter(|token| {
+                token.type_ == TokenType::String
+                    || token.type_name.as_deref() == Some("ENTITY_STRING")
+            })
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(labels, ["", "contains"]);
+        assert!(tokens.iter().any(|token| token.value == "assigned"));
+    }
+
+    #[test]
     fn tokenizes_er_attribute_type_forms() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
