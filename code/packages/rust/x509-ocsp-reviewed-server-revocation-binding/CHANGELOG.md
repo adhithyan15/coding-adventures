@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Add an infallible nominal projection that retains the complete reviewed
+  server-revocation proof and reifies its already-proven exact delegated
+  responder-to-reviewed-root path for later policy composition.
+- Preserve responder and intermediate exact-observation validity without new
+  cryptography or effects, while leaving responder name constraints and
+  responder/intermediate revocation explicitly unresolved.
+
 ## 0.1.0
 
 - Add exact target-and-issuer binding between authenticated OCSP revocation and

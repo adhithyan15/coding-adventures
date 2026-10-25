@@ -21,18 +21,28 @@ Failures expose only stable mismatch or target/issuer validity categories and
 retain no certificate, response, key, signature, status, hostname, or time
 payloads.
 
+The follow-up `reify_x509_ocsp_reviewed_responder_path` projection consumes
+that complete result and reifies its delegated responder-to-reviewed-root path
+as a distinct non-copyable type for later policy composition. Earlier safe
+constructors already prove the exact responder-policy, responder-link, shared
+issuer, and reviewed-path identities; this infallible projection performs no
+additional validation. It preserves responder and intermediate validity at the
+OCSP observation time together with the complete signed response,
+target-revocation, server-path, path-length, and reviewed-root evidence.
+
 ## Boundary
 
 This crate performs evidence composition and exact-time validity checks only.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
-RFC 5280 policy, validate a responder path to trust, check responder-certificate
-or intermediate revocation, interpret unsupported OCSP extensions, acquire or
-cache OCSP data, read a clock, implement TLS or HTTP, authorize OAuth
-transport, open a network connection, or access a credential. The reviewed
-Mozilla root snapshot excludes OS, enterprise, user-installed, and local roots.
-`webpki-roots` remains reviewed public data only, not a TLS or validation
-implementation. Concrete OAuth HTTPS remains unavailable.
+RFC 5280 policy, apply anchor or intermediate name constraints to the responder
+certificate, check responder-certificate or intermediate revocation, interpret
+unsupported OCSP extensions, acquire or cache OCSP data, read a clock,
+implement TLS or HTTP, authorize OAuth transport, open a network connection, or
+access a credential. The reviewed Mozilla root snapshot excludes OS,
+enterprise, user-installed, and local roots. `webpki-roots` remains reviewed
+public data only, not a TLS or validation implementation. Concrete OAuth HTTPS
+remains unavailable.
 
 ## Public integration-fixture provenance
 
