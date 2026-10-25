@@ -64,6 +64,7 @@ module FlatteningConformanceTests =
 
         let root = document.RootElement
         Assert.Equal(1, root.GetProperty("version").GetInt32())
+        Assert.Equal(fixtureTolerance, root.GetProperty("absolute_tolerance").GetDouble())
         Assert.Equal(32, root.GetProperty("max_depth").GetInt32())
         Assert.Equal(65_535, root.GetProperty("max_subdivisions").GetInt32())
 
@@ -132,3 +133,39 @@ module FlatteningConformanceTests =
                 .ToPolyline 0.1
             |> ignore)
         |> ignore
+
+    [<Fact>]
+    let ``finite inputs that overflow derived geometry fail closed`` () =
+        let negative = Point.New(-Double.MaxValue / 2.0, 0.0)
+        let positive = Point.New(Double.MaxValue / 2.0, 0.0)
+
+        Assert.Throws<InvalidOperationException>(fun () ->
+            QuadraticBezier.New(negative, Point.New(0.0, 1.0), positive).ToPolyline 0.1 |> ignore)
+        |> ignore
+
+        Assert.Throws<InvalidOperationException>(fun () ->
+            CubicBezier.New(negative, Point.New(0.0, 1.0), Point.New(0.0, -1.0), positive).ToPolyline 0.1
+            |> ignore)
+        |> ignore
+
+    [<Fact>]
+    let ``depth budget fails before returning a partial polyline`` () =
+        let quadratic = QuadraticBezier.New(Point.New(0.0, 0.0), Point.New(0.5, 1.0), Point.New(1.0, 0.0))
+        let cubic =
+            CubicBezier.New(Point.New(0.0, 0.0), Point.New(0.0, 1.0), Point.New(1.0, 1.0), Point.New(1.0, 0.0))
+
+        Assert.Throws<InvalidOperationException>(fun () -> quadratic.ToPolyline Double.Epsilon |> ignore) |> ignore
+        Assert.Throws<InvalidOperationException>(fun () -> cubic.ToPolyline Double.Epsilon |> ignore) |> ignore
+
+    [<Fact>]
+    let ``bounding boxes include interior x extrema`` () =
+        let quadratic = QuadraticBezier.New(Point.New(0.0, 0.0), Point.New(10.0, 0.0), Point.New(0.0, 1.0))
+        let quadraticBounds = quadratic.BoundingBox()
+        Assert.True(quadraticBounds.X + quadraticBounds.Width > 4.9)
+
+        let cubic =
+            CubicBezier.New(Point.New(0.0, 0.0), Point.New(10.0, 0.0), Point.New(-10.0, 0.0), Point.New(0.0, 1.0))
+
+        let cubicBounds = cubic.BoundingBox()
+        Assert.True(cubicBounds.X < -2.8)
+        Assert.True(cubicBounds.X + cubicBounds.Width > 2.8)

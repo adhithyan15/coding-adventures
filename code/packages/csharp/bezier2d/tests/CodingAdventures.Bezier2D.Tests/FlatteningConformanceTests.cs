@@ -14,6 +14,7 @@ public sealed class FlatteningConformanceTests
         var root = document.RootElement;
 
         Assert.Equal(1, root.GetProperty("version").GetInt32());
+        Assert.Equal(FixtureTolerance, root.GetProperty("absolute_tolerance").GetDouble());
         Assert.Equal(32, root.GetProperty("max_depth").GetInt32());
         Assert.Equal(65_535, root.GetProperty("max_subdivisions").GetInt32());
 
@@ -81,6 +82,40 @@ public sealed class FlatteningConformanceTests
             new QuadraticBezier(origin, new Point(double.NaN, 1), new Point(1, 0)).ToPolyline(0.1));
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             new CubicBezier(origin, new Point(0, 1), new Point(double.PositiveInfinity, -1), origin).ToPolyline(0.1));
+    }
+
+    [Fact]
+    public void FiniteInputsThatOverflowDerivedGeometryFailClosed()
+    {
+        var negative = new Point(-double.MaxValue / 2, 0);
+        var positive = new Point(double.MaxValue / 2, 0);
+
+        Assert.Throws<InvalidOperationException>(() =>
+            new QuadraticBezier(negative, new Point(0, 1), positive).ToPolyline(0.1));
+        Assert.Throws<InvalidOperationException>(() =>
+            new CubicBezier(negative, new Point(0, 1), new Point(0, -1), positive).ToPolyline(0.1));
+    }
+
+    [Fact]
+    public void DepthBudgetFailsBeforeReturningAPartialPolyline()
+    {
+        var quadratic = new QuadraticBezier(new Point(0, 0), new Point(0.5, 1), new Point(1, 0));
+        var cubic = new CubicBezier(new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 0));
+        Assert.Throws<InvalidOperationException>(() => quadratic.ToPolyline(double.Epsilon));
+        Assert.Throws<InvalidOperationException>(() => cubic.ToPolyline(double.Epsilon));
+    }
+
+    [Fact]
+    public void BoundingBoxesIncludeInteriorXExtrema()
+    {
+        var quadratic = new QuadraticBezier(new Point(0, 0), new Point(10, 0), new Point(0, 1));
+        var quadraticBounds = quadratic.BoundingBox();
+        Assert.True(quadraticBounds.X + quadraticBounds.Width > 4.9);
+
+        var cubic = new CubicBezier(new Point(0, 0), new Point(10, 0), new Point(-10, 0), new Point(0, 1));
+        var cubicBounds = cubic.BoundingBox();
+        Assert.True(cubicBounds.X < -2.8);
+        Assert.True(cubicBounds.X + cubicBounds.Width > 2.8);
     }
 
     private static IReadOnlyList<Point> Flatten(int degree, IReadOnlyList<Point> controls, double tolerance) =>
