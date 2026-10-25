@@ -17947,6 +17947,37 @@ The private operational journal has reconciled all 103 pinned audits and eleven 
 
 This PR preserves the neutral validator and fixture bytes, recovers the observed Venture-only Node/npm setup failure, and retains the foundation-versus-reader-migration boundary. See the [current validation receipt](fixtures/commonmark-0.31.2/VALIDATION.md).
 
+## October 25, 2026: C# and F# WasmOpcodes coverage-gate preparation
+
+The publication ceiling remains occupied by the TypeScript GFM adoption,
+CommonMark fixture foundation, and Haskell Starlark opcode provider. Work does
+not need to idle behind their hosted queues, so the next dependency-safe local
+preparation is `dotnet-wasm-opcodes-build-coverage-enforcement`.
+
+The C# and F# `wasm-opcodes` build fronts currently pass
+`CollectCoverage`, `Threshold`, and `ThresholdType` properties to MSBuild. A
+clean C# baseline executes all seven tests successfully but emits no coverage
+report because its test project has no coverage provider. F# has only the data
+collector, while the build front invokes the separate MSBuild integration.
+Those green commands therefore do not prove or enforce their stated floor.
+
+This tranche is limited to those two existing packages and their Unix and
+Windows fronts. Each front must:
+
+1. build the project-reference graph with the same production-assembly filter
+   that the coverage run will use, so a clean isolated artifact tree is
+   instrumented before `--no-build` testing;
+2. produce an actual line-coverage report for only the corresponding
+   WasmOpcodes production assembly;
+3. enforce the repository's 95% library target rather than weakening the
+   historical 80% placeholder; and
+4. fail nonzero under a deliberate threshold above the measured result.
+
+The package APIs, opcode tables, WebAssembly semantics, and wider .NET package
+fleet are out of scope. The active parity PRs touch none of these package or
+build-front files; shared bookkeeping will be reconciled only when a
+publication slot opens.
+
 ## October 25, 2026: C# document-AST Windows-front preparation
 
 After locally completing the independent .NET WasmOpcodes coverage repair,
