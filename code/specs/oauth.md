@@ -1310,6 +1310,22 @@ to a certificate or constructed path, decide freshness or revocation, fetch or
 cache data, read a clock, or grant TLS, HTTP, OAuth transport, or network
 authority. Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-responder-certificate-policy` prerequisite now consumes
+certificate-wide role evidence and data-driven algorithm evidence for one
+exact decoded candidate responder certificate. It rejects evidence from
+distinct decoded objects, requires the retained certificate to have the
+end-entity role, requires any present Key Usage to assert `digitalSignature`
+or `contentCommitment`, checks its validity at one explicit caller-owned time,
+and requires the fixed RFC 6960 `id-kp-OCSPSigning` Extended Key Usage purpose.
+Success returns non-copyable evidence retaining both consumed policy results
+and the derived validity and purpose results, so a caller cannot substitute a
+different certificate after authorization. This target-certificate policy
+does not bind a `ResponderID`, verify or bind a response signature, prove an
+issuer relationship or delegated authorization, construct or validate a path,
+establish trust, check the responder certificate's revocation, fetch or cache
+revocation data, read a clock, perform TLS or HTTP, authorize OAuth transport,
+or grant network authority. Concrete HTTPS remains unavailable.
+
 A bounded `x509-ocsp-cert-id-binding` prerequisite now binds one exact
 structurally decoded `SingleResponse` to one exact target certificate and one
 exact candidate issuer certificate. It first requires the target certificate's
