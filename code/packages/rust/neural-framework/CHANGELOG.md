@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Correct the Linux coverage include filter to match Cargo-workspace-relative
+  library paths; preserve the 95% threshold and integration-test execution.
+
 ## 0.1.0 — 2026-10-25
 
 - Add native configurable dense networks above Rust matrix arithmetic.

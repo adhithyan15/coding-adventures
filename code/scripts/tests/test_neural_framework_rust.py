@@ -117,6 +117,26 @@ class NativeRustEvidenceTests(unittest.TestCase):
             self.assertIn("test_neural_framework_rust.py", text)
             self.assertIn("validate_neural_framework_rust.py", text)
 
+    def test_coverage_filter_is_relative_to_the_real_workspace(self):
+        # Tarpaulin 0.37.2 strips cargo metadata.workspace_root, not the
+        # repository root. A leading */ requires an absent parent directory.
+        import fnmatch
+        import shlex
+
+        workspace = SCRIPT.parents[2] / "code/packages/rust"
+        source = workspace / "neural-framework/src/lib.rs"
+        build = (workspace / "neural-framework/BUILD").read_text(encoding="utf-8")
+        command = shlex.split(build.split("then ", 1)[1].split("; fi", 1)[0])
+        pattern = command[command.index("--include-files") + 1]
+        relative = source.relative_to(workspace).as_posix()
+        self.assertEqual(pattern, "neural-framework/src/*")
+        self.assertTrue(fnmatch.fnmatchcase(relative, pattern))
+        self.assertFalse(fnmatch.fnmatchcase(relative, "*/neural-framework/src/*"))
+        for excluded in ("matrix/src/lib.rs", "neural-framework/tests/dense.rs"):
+            self.assertFalse(fnmatch.fnmatchcase(excluded, pattern))
+        self.assertEqual(command[command.index("--fail-under") + 1], "95")
+        self.assertIn("--tests", command)
+
 
 if __name__ == "__main__":
     unittest.main()
