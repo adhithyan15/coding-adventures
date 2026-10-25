@@ -4,6 +4,12 @@
 
 ### Fixed (6e security review)
 
+- `main` returns an `i64` exit status, `const 0` then `ret`, like Python's and
+  Ruby's. Before, it ended in `ret_void`, which every AOT launcher but BEAM's
+  treated as 0. BEAM read back `[]`, so every JavaScript BEAM cell failed in
+  CI. The trap path still ends with the same epilogue, and the release
+  classes are regenerated.
+
 - `decode_number` refuses a spelling that does not start with a digit, or
   with `.` followed by a digit. Rust's `f64` parser also accepts `-0`, `+1`,
   `inf` and `NaN`, and no edition's NUMBER pattern produces any of those.

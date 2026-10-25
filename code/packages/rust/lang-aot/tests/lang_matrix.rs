@@ -28845,7 +28845,7 @@ fn javascript_rows_agree_with_the_host_node_oracle() {
 
 /// LANG84 C7.3: every row's module holds only registry ops — the PR6c IEEE
 /// arithmetic and `f64_signbit`, `cmp_gt`, `write_f64_js`, `putchar` — plus
-/// the ungated `const`, the `-0` branch and `ret_void`; no JavaScript-named
+/// the ungated `const`, the `-0` branch and `ret` of the exit status; no JavaScript-named
 /// builtin survives. Eight backends accept every row's module at compile
 /// time. BEAM accepts exactly the literal-only rows and refuses the others
 /// with `UnsupportedOps` naming only `f64_*` arithmetic — at compile time,
@@ -28872,7 +28872,7 @@ fn javascript_rows_pass_the_lang83_check_on_all_nine_backends() {
                     program.case
                 ),
                 None => assert!(
-                    ["const", "jmp_if_false", "label", "ret_void"].contains(&instr.op.as_str()),
+                    ["const", "jmp_if_false", "label", "ret"].contains(&instr.op.as_str()),
                     "{:?}: {instr:?}",
                     program.case
                 ),
@@ -29014,7 +29014,8 @@ fn javascript_reference_errors_trap_after_output_on_every_available_backend() {
         // The trap ends the program: nothing after it is even emitted.
         let module = prog_iir(program, "main").unwrap();
         let ops: Vec<_> = module.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
-        assert_eq!(&ops[ops.len() - 2..], ["trap", "ret_void"], "{:?}", program.src);
+        // `main` still ends with its exit status (`const 0`, `ret`).
+        assert_eq!(&ops[ops.len() - 3..], ["trap", "const", "ret"], "{:?}", program.src);
     }
     assert!(ran > 0);
 }

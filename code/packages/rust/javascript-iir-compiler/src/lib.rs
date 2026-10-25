@@ -428,18 +428,28 @@ fn compile_ast_parts(ast: &GrammarASTNode, module_name: &str) -> Result<Compiled
             }
         }
     }
+    // A script that runs off its end exits 0. `main` returns a real `i64`,
+    // not `ret_void`, because every AOT entry point reads an integer back:
+    // native and LLVM turn it into the exit status, and the CLR launcher and
+    // BEAM print it (a void `main` reads as `[]` on BEAM). This is the LANG84
+    // 4a/5a lesson that Python and Ruby already follow.
+    //
     // Pushed directly, not through `emit`: after a ReferenceError's trap the
     // rest of the body is dropped (see `Compiler::emit`), but the function
     // still ends the way every LANG83 trap test's does, with its `ret`.
+    let exit = compiler.register();
     compiler
         .instructions
-        .push(IIRInstr::new("ret_void", None, vec![], "void"));
+        .push(IIRInstr::new("const", Some(exit.clone()), vec![Operand::Int(0)], "i64"));
+    compiler
+        .instructions
+        .push(IIRInstr::new("ret", None, vec![Operand::Var(exit)], "i64"));
     let mut module = IIRModule::new(module_name, "javascript");
     module.entry_point = Some("main".into());
     module.add_or_replace(IIRFunction::new(
         "main",
         vec![],
-        "void",
+        "i64",
         compiler.instructions,
     ));
     let errors = module.validate();
@@ -2529,13 +2539,14 @@ mod tests {
         // since nothing can jump past an unconditional trap.
         let module = compile_source("console.log(a); let a = 2; console.log(a);", "tdz").unwrap();
         let instructions = &module.functions[0].instructions;
-        assert_eq!(instructions.len(), 2, "{instructions:?}");
+        assert_eq!(instructions.len(), 3, "{instructions:?}");
         assert_eq!(instructions[0].op, "trap");
         assert_eq!(
             instructions[0].srcs,
             vec![Operand::Str("Trap.ReferenceError".into())]
         );
-        assert_eq!(instructions[1].op, "ret_void");
+        // `main` still ends with its exit status: `const 0`, `ret`.
+        assert_eq!((instructions[1].op.as_str(), instructions[2].op.as_str()), ("const", "ret"));
         // `run_module` sees only the IIR, which does not name the binding.
         let error = run_module(compile_source("console.log(8); a; let a = 1;", "tdz").unwrap()).unwrap_err();
         assert_eq!((error.output.as_str(), error.message.as_str()), ("8\n", "trap: Trap.ReferenceError"));
@@ -2663,7 +2674,9 @@ mod tests {
                 // '\n'
                 "const",
                 "call_builtin",
-                "ret_void",
+                // exit status 0
+                "const",
+                "ret",
             ]
         );
 
@@ -2776,7 +2789,7 @@ mod tests {
     #[test]
     fn the_module_holds_only_lang83_registry_operations() {
         // Every op a backend lowers or refuses by name, plus the ungated
-        // `const`, the branch and `ret_void` (LANG84 C2: no JavaScript-named
+        // `const`, the branch and `ret` (LANG84 C2: no JavaScript-named
         // builtin survives).
         let source = "let a = 1 / 0; const b = -a * 0; console.log(a, b - 1, 2); \
                       console.log(); z;";
@@ -2792,7 +2805,7 @@ mod tests {
                     "{instruction:?}"
                 ),
                 None => assert!(
-                    ["const", "jmp_if_false", "label", "ret_void"].contains(&instruction.op.as_str()),
+                    ["const", "jmp_if_false", "label", "ret"].contains(&instruction.op.as_str()),
                     "{instruction:?}"
                 ),
             }

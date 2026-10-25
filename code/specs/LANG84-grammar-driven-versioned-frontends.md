@@ -1556,8 +1556,9 @@ Divergences from this spec in 5b/7b slice 2:
      `LANGUAGE_TRAP_KINDS` entry: an unbound name is not JavaScript's alone
      (Python's `NameError`, a Lisp's unbound variable). `twig_runtime.c`'s
      kind table gains it. A trap ends straight-line code, so the compiler
-     drops every instruction after it (the function still ends in
-     `ret_void`), and records V8's message (`ReferenceError: z is not
+     drops every instruction after it (the function still ends with its
+     exit status, `const 0` and an `i64` `ret`; a `ret_void` `main` read
+     back as `[]` on BEAM, which CI caught), and records V8's message (`ReferenceError: z is not
      defined`) for `run_source`, since the IIR does not name the binding;
      `run_module` alone reports `trap: Trap.ReferenceError`.
    - **No `StdoutThenTrap` rows in `PROGRAMS`.** The `es-number-log` corpus
