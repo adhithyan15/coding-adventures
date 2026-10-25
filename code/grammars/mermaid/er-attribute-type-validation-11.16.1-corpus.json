@@ -1,0 +1,18 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER attribute-type boundary vertical slice",
+  "valid": [
+    {
+      "name": "key-prefix-attribute-types",
+      "source": "erDiagram\nENTITY {\n  PKType primary\n  fk_type foreign\n  string? alias UK\n}"
+    }
+  ],
+  "invalid": [
+    { "name": "reserved-pk-type", "source": "erDiagram\nENTITY {\n  PK id\n}" },
+    { "name": "reserved-fk-type", "source": "erDiagram\nENTITY {\n  FK id\n}" },
+    { "name": "reserved-uk-type", "source": "erDiagram\nENTITY {\n  UK id\n}" },
+    { "name": "numeric-type", "source": "erDiagram\nENTITY {\n  1 id\n}" },
+    { "name": "quoted-type", "source": "erDiagram\nENTITY {\n  \"string\" id\n}" }
+  ]
+}
