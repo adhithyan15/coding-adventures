@@ -1,7 +1,6 @@
 # DOC00 — Documentation Site Cluster Vision
 
-> **Status:** v0 vision document.  Per-package specs and
-> implementations follow.
+> **Status:** v0 cluster complete. All eleven DOC00 packages ship.
 > **Layer:** DOC00 (new top-level cluster, parallel to FM00).
 > **Depends on:** `commonmark-parser`, `gfm-parser`,
 > `document-ast`, `document-ast-to-html` (already shipped) +
@@ -432,9 +431,9 @@ Net effect: **docs sites are FM00 deployments**.  Same trust
 boundaries, same atomicity guarantees, same content-addressed
 hashes, same diff-mode incremental deploys.
 
-## 10. Implementation order
+## 10. Completed implementation order
 
-Recommended PR sequence (each one independently testable):
+The cluster shipped in this independently testable sequence:
 
 1. `DOC00-docs-vision.md` (this document).  Spec-only PR.
 2. `forme-doc-frontmatter` — smallest, narrowest scope.
@@ -452,8 +451,8 @@ Recommended PR sequence (each one independently testable):
 12. `forme-doc-site-emitter` — depends on everything above +
     forme-aot-page-bundle-emitter.
 
-Twelve PRs in total (counting this vision doc as #1).  At the
-rate the FM00 v0 cluster shipped, that's ~12 babysit cycles.
+Twelve delivery steps in total (counting this vision doc as #1).
+All are complete.
 
 ## 11. Future work (v1+)
 
@@ -478,25 +477,20 @@ likely user demand:
 - **API reference auto-generation** — for TypeScript / Rust /
   Python packages, parse declarations into doc-page input.
 
-## 12. Open design decisions for v0
+## 12. Resolved design decisions for v0
 
-Before implementation starts, a few decisions need confirming
-(the user has answered most of these — repeating them here for
-the spec record):
+The implementation resolved every v0 decision as follows:
 
-| Decision | v0 choice | Confirmed? |
+| Decision | Shipped v0 choice | Status |
 |---|---|---|
-| Markdown engine | use existing `commonmark-parser` / `gfm-parser` | ✓ |
-| Advanced features | search engine ONLY (defer multi-version, i18n, MDX, dev server, dark mode) | ✓ |
-| Theme aesthetic | RTD-minimal (two-column, no-frills) | ✓ |
-| Timing | start after FM00 v0 finishes | ✓ |
+| Markdown engine | Existing `commonmark-parser` / `gfm-parser` | shipped |
+| Advanced features | Search engine only; multi-version, i18n, MDX, dev server, and dark mode remain explicit v1+ work | shipped |
+| Theme aesthetic | RTD-minimal (two-column, no-frills) | shipped |
+| Timing | Implement after FM00 v0 | shipped |
+| Syntax highlighting | Expose the eleven-language hint inventory, preserve decorated block metadata, and emit deterministic plain spans; grammar-backed colouring remains v1 work | shipped |
+| Search sharding | Deterministic two-character term-prefix shards by default, configurable to other positive prefix widths; no compressed-byte target is imposed by the pure in-memory builder | shipped |
 
-Two remaining decisions to confirm during implementation:
-
-1. **Syntax highlighter grammar set for v0.** Proposed:
-   TypeScript, JavaScript, Python, Ruby, Go, Rust, Bash, JSON,
-   HTML, CSS, Markdown.  Add others on demand.
-2. **Search shard size budget.**  Proposed: 50–100KB
-   compressed per shard, ~26 shards by alphabet prefix.
-   Re-tune based on real-world corpus sizes once one site is
-   built.
+The last two choices deliberately narrowed the original proposal. v0 keeps the
+language contract without bundling TextMate grammars, and it makes shard
+partitioning deterministic without coupling a pure transform to deploy-time
+compression measurements.
