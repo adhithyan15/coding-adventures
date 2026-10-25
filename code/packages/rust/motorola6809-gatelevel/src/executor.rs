@@ -5,8 +5,8 @@
 //! engine fetches, decodes, addresses, and executes from an owned state copy.
 
 use crate::{
-    gates, indexed_postbyte_is_valid, opcode_is_documented, Motorola6809Error, Motorola6809State,
-    StepTrace, CC_C, CC_E, CC_F, CC_H, CC_I, CC_N, CC_V, CC_Z,
+    gates, Motorola6809Error, Motorola6809State, StepTrace, CC_C, CC_E, CC_F, CC_H, CC_I, CC_N,
+    CC_V, CC_Z,
 };
 
 #[derive(Clone, Copy)]
@@ -17,13 +17,105 @@ enum Mode {
     Extended,
 }
 
+fn opcode_is_documented(page: u8, opcode: u8) -> bool {
+    match page {
+        0 => !matches!(
+            opcode,
+            0x01 | 0x02
+                | 0x05
+                | 0x0b
+                | 0x14
+                | 0x15
+                | 0x18
+                | 0x1b
+                | 0x38
+                | 0x3e
+                | 0x41
+                | 0x42
+                | 0x45
+                | 0x4b
+                | 0x4e
+                | 0x51
+                | 0x52
+                | 0x55
+                | 0x5b
+                | 0x5e
+                | 0x61
+                | 0x62
+                | 0x65
+                | 0x6b
+                | 0x71
+                | 0x72
+                | 0x75
+                | 0x7b
+                | 0x87
+                | 0x8f
+                | 0xc7
+                | 0xcd
+                | 0xcf
+        ),
+        0x10 => matches!(
+            opcode,
+            0x21..=0x2f
+                | 0x3f
+                | 0x83
+                | 0x8c
+                | 0x8e
+                | 0x93
+                | 0x9c
+                | 0x9e
+                | 0x9f
+                | 0xa3
+                | 0xac
+                | 0xae
+                | 0xaf
+                | 0xb3
+                | 0xbc
+                | 0xbe
+                | 0xbf
+                | 0xce
+                | 0xde
+                | 0xdf
+                | 0xee
+                | 0xef
+                | 0xfe
+                | 0xff
+        ),
+        0x11 => matches!(
+            opcode,
+            0x3f | 0x83 | 0x8c | 0x93 | 0x9c | 0xa3 | 0xac | 0xb3 | 0xbc
+        ),
+        _ => false,
+    }
+}
+
+fn indexed_postbyte_is_valid(postbyte: u8) -> bool {
+    if gates::flag(postbyte, 0x80) == 0 {
+        return true;
+    }
+    let indirect = gates::flag(postbyte, 0x10) == 1;
+    let mode = gates::bit_and_8(postbyte, 0x0f);
+    match mode {
+        0 | 2 => !indirect,
+        1 | 3 | 4 | 5 | 6 | 8 | 9 | 0x0b | 0x0c | 0x0d => true,
+        0x0f => gates::equal_8(postbyte, 0x9f) == 1,
+        _ => false,
+    }
+}
+
 struct GateEngine {
     state: Motorola6809State,
     fetched: usize,
     fetched_bytes: [u8; 8],
+    writes: Vec<(usize, u8)>,
 }
 
-pub(crate) fn execute(before: &Motorola6809State) -> Result<StepTrace, Motorola6809Error> {
+pub(crate) struct GateTransition {
+    pub(crate) trace: StepTrace,
+    pub(crate) writes: Vec<(usize, u8)>,
+}
+
+pub(crate) fn execute(before: &Motorola6809State) -> Result<GateTransition, Motorola6809Error> {
     if before.halted {
         return Err(Motorola6809Error::Halted);
     }
@@ -31,13 +123,24 @@ pub(crate) fn execute(before: &Motorola6809State) -> Result<StepTrace, Motorola6
         state: before.clone(),
         fetched: 0,
         fetched_bytes: [0; 8],
+        writes: Vec::new(),
     };
-    engine.step_inner()
+    let trace = engine.step_inner()?;
+    Ok(GateTransition {
+        trace,
+        writes: engine.writes,
+    })
 }
 
 impl GateEngine {
     fn set_d(&mut self, value: u16) {
         [self.state.a, self.state.b] = value.to_be_bytes();
+    }
+
+    fn set_memory(&mut self, address: u16, value: u8) {
+        let index = usize::from(address);
+        self.state.memory[index] = value;
+        self.writes.push((index, value));
     }
 
     fn step_inner(&mut self) -> Result<StepTrace, Motorola6809Error> {
@@ -121,8 +224,8 @@ impl GateEngine {
 
     fn write16(&mut self, address: u16, value: u16) {
         let [hi, lo] = value.to_be_bytes();
-        self.state.memory[usize::from(address)] = hi;
-        self.state.memory[usize::from(gates::add_16(address, 1, 0).0)] = lo;
+        self.set_memory(address, hi);
+        self.set_memory(gates::add_16(address, 1, 0).0, lo);
     }
 
     fn mode_for(opcode: u8) -> Mode {
@@ -588,7 +691,7 @@ impl GateEngine {
             }
             7 => {
                 let address = self.address(mode, pc)?;
-                self.state.memory[usize::from(address)] = self.state.a;
+                self.set_memory(address, self.state.a);
                 self.load8_flags(self.state.a);
                 Ok("STA")
             }
@@ -689,7 +792,7 @@ impl GateEngine {
             }
             7 => {
                 let address = self.address(mode, pc)?;
-                self.state.memory[usize::from(address)] = self.state.b;
+                self.set_memory(address, self.state.b);
                 self.load8_flags(self.state.b);
                 Ok("STB")
             }
@@ -795,7 +898,7 @@ impl GateEngine {
         let value = self.state.memory[usize::from(address)];
         let (result, mnemonic, write) = self.rmw_value(opcode & 0x0f, value);
         if write {
-            self.state.memory[usize::from(address)] = result;
+            self.set_memory(address, result);
         }
         Ok(mnemonic)
     }
@@ -950,7 +1053,7 @@ impl GateEngine {
 
     fn push8_s(&mut self, value: u8) {
         self.state.s = gates::sub_16(self.state.s, 1).0;
-        self.state.memory[usize::from(self.state.s)] = value;
+        self.set_memory(self.state.s, value);
     }
     fn pull8_s(&mut self) -> u8 {
         let value = self.state.memory[usize::from(self.state.s)];
@@ -967,7 +1070,7 @@ impl GateEngine {
     }
     fn push8_u(&mut self, value: u8) {
         self.state.u = gates::sub_16(self.state.u, 1).0;
-        self.state.memory[usize::from(self.state.u)] = value;
+        self.set_memory(self.state.u, value);
     }
     fn pull8_u(&mut self) -> u8 {
         let value = self.state.memory[usize::from(self.state.u)];

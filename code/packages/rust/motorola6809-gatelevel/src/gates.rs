@@ -188,6 +188,14 @@ pub fn equal_8(left: u8, right: u8) -> u8 {
     is_zero_8(bit_xor_8(left, right))
 }
 
+/// Gate-derived packed-memory write enable.
+#[must_use]
+pub fn byte_changed(left: u8, right: u8) -> u8 {
+    u8_to_bits(bit_xor_8(left, right))
+        .into_iter()
+        .fold(0, or_gate)
+}
+
 #[must_use]
 pub fn negative_8(value: u8) -> u8 {
     u8_to_bits(value)[7]

@@ -107,6 +107,11 @@ impl Motorola6809GateLevel {
 
     /// Validate and clock a complete state into the DFF topology.
     pub fn restore(&mut self, snapshot: Motorola6809State) -> Result<(), Motorola6809Error> {
+        if snapshot.memory.len() != MEMORY_SIZE {
+            return Err(Motorola6809Error::InvalidState {
+                reason: "memory must contain exactly 65536 bytes",
+            });
+        }
         let mut validator = Motorola6809Simulator::new();
         validator.restore(snapshot.clone())?;
         self.restore_validated(&snapshot);
@@ -129,9 +134,9 @@ impl Motorola6809GateLevel {
         clock_bits(&mut self.loaded_len, snapshot.loaded_len as u64);
     }
 
-    fn commit_transition(&mut self, next: &Motorola6809State) {
-        for (address, value) in next.memory.iter().copied().enumerate() {
-            if self.memory.read(address) != value {
+    fn commit_transition(&mut self, next: &Motorola6809State, writes: &[(usize, u8)]) {
+        for (address, value) in writes.iter().copied() {
+            if gates::byte_changed(self.memory.read(address), value) == 1 {
                 self.memory.write(address, value);
             }
         }
@@ -262,9 +267,9 @@ impl Motorola6809GateLevel {
         oracle.restore(before.clone())?;
         let oracle_result = oracle.step();
         match (gate_result, oracle_result) {
-            (Ok(gate_trace), Ok(oracle_trace)) if gate_trace == oracle_trace => {
-                self.commit_transition(&gate_trace.state_after);
-                Ok(gate_trace)
+            (Ok(gate_transition), Ok(oracle_trace)) if gate_transition.trace == oracle_trace => {
+                self.commit_transition(&gate_transition.trace.state_after, &gate_transition.writes);
+                Ok(gate_transition.trace)
             }
             (Err(gate_error), Err(oracle_error)) if gate_error == oracle_error => Err(gate_error),
             _ => Err(Motorola6809Error::InvalidState {

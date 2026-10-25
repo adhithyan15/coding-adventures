@@ -1,6 +1,7 @@
 //! Stable-Q architectural storage clocked through repository D flip-flops.
 
 use logic_gates::sequential::{register, FlipFlopState};
+use std::collections::BTreeSet;
 
 fn stable_state(q: u8) -> FlipFlopState {
     FlipFlopState {
@@ -35,12 +36,17 @@ pub(crate) fn read_bits(bits: &[u8]) -> u64 {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub(crate) struct DffMemory {
     q: Vec<u8>,
+    // A derived host index, never an architectural state bit. It makes reset
+    // proportional to changed bytes while every selected byte is still
+    // clocked through the DFF primitive below.
+    nonzero_addresses: BTreeSet<usize>,
 }
 
 impl DffMemory {
     pub(crate) fn new(byte_len: usize) -> Self {
         Self {
             q: vec![0; byte_len],
+            nonzero_addresses: BTreeSet::new(),
         }
     }
 
@@ -49,11 +55,18 @@ impl DffMemory {
     }
 
     pub(crate) fn restore_snapshot(&mut self, bytes: &[u8]) {
-        self.q.copy_from_slice(bytes);
+        for (address, value) in bytes.iter().copied().enumerate() {
+            if crate::gates::byte_changed(self.q[address], value) == 1 {
+                self.write(address, value);
+            }
+        }
     }
 
     pub(crate) fn clear(&mut self) {
-        self.q.fill(0);
+        let selected: Vec<usize> = self.nonzero_addresses.iter().copied().collect();
+        for address in selected {
+            self.write(address, 0);
+        }
     }
 
     pub(crate) fn read(&self, address: usize) -> u8 {
@@ -70,5 +83,10 @@ impl DffMemory {
             .iter()
             .enumerate()
             .fold(0, |byte, (bit, q)| byte | (q << bit));
+        if crate::gates::is_zero_8(self.q[address]) == 1 {
+            self.nonzero_addresses.remove(&address);
+        } else {
+            self.nonzero_addresses.insert(address);
+        }
     }
 }

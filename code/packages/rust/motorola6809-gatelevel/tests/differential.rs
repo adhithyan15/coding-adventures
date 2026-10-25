@@ -62,6 +62,8 @@ fn primitive_networks_cover_decode_arithmetic_logic_shift_branch_and_multiply() 
     assert_eq!(gates::bit_and_8(0xf0, 0x5a), 0x50);
     assert_eq!(gates::bit_or_8(0xf0, 0x5a), 0xfa);
     assert_eq!(gates::bit_xor_8(0xf0, 0x5a), 0xaa);
+    assert_eq!(gates::byte_changed(0x5a, 0x5a), 0);
+    assert_eq!(gates::byte_changed(0x5a, 0x5b), 1);
     assert_eq!(gates::shift_left_8(0x81, 1), 0x03);
     assert_eq!(gates::shift_right_8(0x81, 1), 0xc0);
     assert_eq!(gates::select_16(0x1234, 0xabcd, 0), 0x1234);
@@ -320,5 +322,9 @@ fn typed_faults_bounded_runs_and_execute_are_atomic() {
     let mut invalid = gate.get_state();
     invalid.memory.pop();
     assert!(gate.restore(invalid).is_err());
+    assert_eq!(gate.get_state(), before);
+    let mut oversized = gate.get_state();
+    oversized.memory.extend_from_slice(&[0; 1_024]);
+    assert!(gate.restore(oversized).is_err());
     assert_eq!(gate.get_state(), before);
 }

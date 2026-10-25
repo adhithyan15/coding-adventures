@@ -11,4 +11,4 @@ All notable changes to this package will be documented in this file.
   and indexed-addressing MC6809 surface.
 - Exhaustive opcode-page and indexed-postbyte classification, branch, stack,
   interrupt, lifecycle, transactional-fault, and strict-check validation with
-  98.55% package line coverage (1,363/1,383).
+  98.54% package line coverage (1,417/1,438).
