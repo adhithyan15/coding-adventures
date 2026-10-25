@@ -721,9 +721,17 @@ impl<'a> Lowering<'a> {
     /// Decode one `INT` token's value (LANG84 C1.4 allows decoding a single
     /// token; it never splits one). The profile's [`IntLiterals`] says which
     /// spellings exist; a caller-supplied tree is not bound by the lexer, so
-    /// the spelling is checked again here, and a value above `i64::MAX` is
-    /// refused (CPython would keep it as a bigger int or a long, which no
-    /// integer subset has yet).
+    /// the spelling is checked again here against the *profile*, and a value
+    /// above `i64::MAX` is refused (CPython would keep it as a bigger int or a
+    /// long, which no integer subset has yet).
+    ///
+    /// The check is per profile, not per release: lowering never branches on
+    /// the release ID (LANG84 C2). Spellings that only some releases of a
+    /// profile lex (PEP 3127's `0o`/`0b` from 2.6, PEP 515's `_` from 3.6)
+    /// are refused by that release's own lexer; a forged `compile_cst` tree
+    /// claiming 2.2 with `0o17` decodes to 15, the value every release that
+    /// can spell it gives. No input a release's lexer can produce decodes to
+    /// a wrong value.
     fn decode_integer(&self, atom: &GrammarASTNode, token: &Token) -> Result<i64, FrontendError> {
         let text = token.value.as_str();
         let decoded = match self.profile.int_literals {
