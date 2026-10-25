@@ -348,7 +348,7 @@ class FormeSpecMapTests(unittest.TestCase):
             roadmap,
         )
         self.assertIn(
-            "| 74 | FM-B075 | active | Reconcile plugin-manifest kernel-kind recognition |",
+            "| 74 | FM-B075 | done | Reconcile plugin-manifest kernel-kind recognition |",
             roadmap,
         )
 

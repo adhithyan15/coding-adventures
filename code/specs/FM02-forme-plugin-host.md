@@ -391,9 +391,13 @@ A `plugin.toml` is valid when:
    the optional `configSchema` parses as JSON Schema draft-07. A kind
    reference is either a bare kind name or `Stream<KindName>`; nested
    stream wrappers are rejected. This keeps streaming visible to DAG
-   typechecking before any untrusted process launches.
+   typechecking before any untrusted process launches. The accepted kernel
+   names are derived from FM01's exported `KINDS` roster rather than repeated
+   in the manifest package; consequently every shipped descriptor, including
+   `TerminalBuffer`, is accepted immediately and a removed or renamed kernel
+   kind cannot remain silently recognised by stale manifest code.
 10. Every `contributes.kinds` entry has a name beginning with
-    `ext:`; kernel kind names are reserved. A manifest contributes at most
+    `ext:`; the same complete FM01 `KINDS` roster is reserved. A manifest contributes at most
     1,024 kinds, and one resolved host snapshot retains at most 4,096
     contributed kinds across all precedence-selected plugins.
 11. `resources.*` values are positive integers within the host's
