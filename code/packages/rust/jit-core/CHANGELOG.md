@@ -20,6 +20,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   returns an `f64` it computed is now JIT-compiled (it fell back before).
 - `op_support`: all six `Lowered`; the declaration test types
   `f64_signbit`'s result as `i64`.
+- **A parameter not typed `f64` that a float op or `const_f64` writes now
+  refuses the function** (security review M1). Such a parameter is seeded as
+  an integer, so `f64_add x <- x, 1.0` on an `i64`/`any` `x` read the
+  integer's bits as a float: `f(Int(5))` and `f(Float(2.5))` both returned
+  `Float(1.0)`. The function now falls back to the interpreter; an `f64`
+  parameter is still compiled. The `const_f64` case existed since PR6a.
+  Regression test `a_non_f64_param_written_by_a_float_op_is_refused`.
 
 ## [0.9.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
 

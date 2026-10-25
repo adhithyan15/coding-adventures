@@ -1073,6 +1073,26 @@ fn compile_to_bytecode(
         )
         .collect();
 
+    // A parameter that is NOT typed `f64` is seeded by the generic integer
+    // prologue (`as_i64`), so its register holds an integer, not float bits.
+    // If a float op or `const_f64` also writes it, `f64_vars` would claim the
+    // register holds float bits from the first instruction on, and a read
+    // before that write (`f64_add x <- x, 1.0`) would reinterpret the
+    // integer's bits as a float: a silent wrong result. A parameter's
+    // float-ness must come from its declared type, so refuse the function.
+    //
+    // | param type | written by an f64 op? | outcome                    |
+    // |------------|-----------------------|----------------------------|
+    // | `f64`      | yes or no             | compiled (PARAM_F64 seeds) |
+    // | other      | no                    | compiled (integer seeding) |
+    // | other      | yes                   | refused → interpreter tier |
+    if params
+        .iter()
+        .any(|(name, ty)| ty != "f64" && f64_vars.contains(name.as_str()))
+    {
+        return None;
+    }
+
     // A float operand of a PR6c op or `ret_f64`: a float register, or a
     // float literal the optimiser propagated into the instruction (loaded
     // into a fresh register as its bits). Anything else — an integer
@@ -2201,6 +2221,45 @@ mod tests {
             let (j, _) = f64_writer_jit();
             assert!(j.compile(&cir).is_none(), "{what} must refuse JIT compilation");
         }
+    }
+
+    /// A parameter's float-ness comes from its declared type. A non-`f64`
+    /// parameter is seeded as an integer, so a float op or `const_f64` that
+    /// writes it must refuse the function: otherwise `f64_add x <- x, 1.0`
+    /// reads the integer's bits as a float (`f(Int(5))` and `f(Float(2.5))`
+    /// both returned `Float(1.0)` before this check — PR6c review M1).
+    #[test]
+    fn a_non_f64_param_written_by_a_float_op_is_refused() {
+        let add_one = || {
+            vec![
+                CIRInstr::new("f64_add", Some("x"), vec![var("x"), CIROperand::Float(1.0)], "f64"),
+                CIRInstr::new("ret_f64", None::<&str>, vec![var("x")], "f64"),
+            ]
+        };
+        let const_into = || {
+            vec![
+                fconst("x", 2.5),
+                CIRInstr::new("ret_f64", None::<&str>, vec![var("x")], "f64"),
+            ]
+        };
+        for ty in ["i64", "any"] {
+            let params = [("x".to_string(), ty.to_string())];
+            let ctx = FunctionContext { name: "f", params: &params, return_type: "f64" };
+            for (what, cir) in [("f64_add into", add_one()), ("const_f64 into", const_into())] {
+                let (j, _) = f64_writer_jit();
+                assert!(
+                    j.compile_function(&ctx, &cir).is_none(),
+                    "{what} a `{ty}` parameter must refuse JIT compilation"
+                );
+            }
+        }
+        // The same shape with an `f64` parameter is still compiled, and reads
+        // the argument as a float.
+        let params = [("x".to_string(), "f64".to_string())];
+        let ctx = FunctionContext { name: "f", params: &params, return_type: "f64" };
+        let (j, _) = f64_writer_jit();
+        let bin = j.compile_function(&ctx, &add_one()).expect("an f64 parameter still compiles");
+        assert_eq!(j.run(&bin, &[Value::Float(2.5)]), Value::Float(3.5));
     }
 
     #[test]
