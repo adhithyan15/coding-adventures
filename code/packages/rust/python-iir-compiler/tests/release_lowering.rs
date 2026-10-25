@@ -174,6 +174,24 @@ fn forged_trees_are_refused() {
         let error = compile_cst(&ast, None, "t").unwrap_err();
         assert!(error.to_string().contains(needle), "{to:?}: {error}");
     }
+    // The same checks under the py2 decoder (phase 7c slice 2): every
+    // Python 2 spelling is re-checked, and Python 3's `_` is not one.
+    let budgets = FrontendBudgets::default();
+    for (to, needle) in [
+        ("1_0", "not a Python 2 integer literal"),
+        ("0x", "not a Python 2 integer literal"),
+        ("08", "not a Python 2 integer literal"),
+        ("1LL", "not a Python 2 integer literal"),
+        ("L", "not a Python 2 integer literal"),
+        ("0b1000000000000000000000000000000000000000000000000000000000000000", "outside i64"),
+        ("01000000000000000000000L", "outside i64"),
+    ] {
+        let mut ast = coding_adventures_python_parser::parse_python_at("print 1\n", Some("2.6"), &budgets).unwrap().ast;
+        assert!(edit_first_token(&mut ast, &mut |t| (t.value == "1").then(|| t.value = to.into()).is_some()));
+        let error = compile_cst(&ast, Some("2.6"), "t").unwrap_err();
+        assert_eq!(error.category(), "Unsupported", "{to:?}: {error}");
+        assert!(error.to_string().contains(needle), "{to:?}: {error}");
+    }
     let mut ast = tree("print(1)\n");
     assert!(edit_first_token(&mut ast, &mut |t| (t.value == "print").then(|| t.value = "exec".into()).is_some()));
     assert!(compile_cst(&ast, None, "t").unwrap_err().to_string().contains("only `print`"));

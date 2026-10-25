@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C455-vyatha",
+    "language": "gujarati",
+    "chapter": 455,
+    "sequence": 25420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d1fcb1679b6da4f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C512-karkirdi",
+    "language": "gujarati",
+    "chapter": 512,
+    "sequence": 28590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77d06cd8db9a0a5d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "The Confession",
+  "label": "ch:gu-the-confession",
+  "canDo": "I can say who confessed and who denied it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C288-jel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can say who confessed and who denied it.",
+    "assesses": [
+      "GU-LEX-C288-KABUL288-03",
+      "GU-LEX-C288-KABUL288-04",
+      "GU-LEX-C288-KABUL288-05"
+    ]
+  }
+}

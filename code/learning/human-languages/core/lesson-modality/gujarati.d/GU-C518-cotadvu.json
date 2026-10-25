@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C518-cotadvu",
+    "language": "gujarati",
+    "chapter": 518,
+    "sequence": 28910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:995fbe9a4f1de1db"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:cbd4804855d09886",
+  "lessonIds": [
+    "GU-C312-patrakar",
+    "GU-C312-ghatna",
+    "GU-C312-kisso",
+    "GU-C312-aheval",
+    "GU-C312-varnavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch312-the-reporter.tex"
+}

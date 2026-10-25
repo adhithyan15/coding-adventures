@@ -1,0 +1,11 @@
+{
+  "id": "GU-C360-lalac",
+  "pathSegment": "GU-PATH-360-IMAN360",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-360-IMAN360",
+      "order": 1
+    }
+  ]
+}

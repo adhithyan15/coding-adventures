@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-405-FLIGHT405",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find my gate and talk about the flight.",
+  "prerequisites": []
+}

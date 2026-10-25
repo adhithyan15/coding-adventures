@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C356-svatantra",
+    "language": "gujarati",
+    "chapter": 356,
+    "sequence": 19880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:130e628145887ba7"
+  },
+  "findings": []
+}

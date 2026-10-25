@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:8a7abef63e9cea12",
+  "lessonIds": [
+    "GU-C459-komal",
+    "GU-C459-kathor",
+    "GU-C459-krur",
+    "GU-C459-bhalu",
+    "GU-C459-pigalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch459-gentle-and-harsh.tex"
+}

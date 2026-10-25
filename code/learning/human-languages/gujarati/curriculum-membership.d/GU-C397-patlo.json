@@ -1,0 +1,11 @@
+{
+  "id": "GU-C397-patlo",
+  "pathSegment": "GU-PATH-397-DOOR397",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-397-DOOR397",
+      "order": 2
+    }
+  ]
+}

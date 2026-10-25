@@ -1,0 +1,11 @@
+{
+  "id": "GU-C377-badlavu",
+  "pathSegment": "GU-PATH-377-DASHA377",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-377-DASHA377",
+      "order": 3
+    }
+  ]
+}

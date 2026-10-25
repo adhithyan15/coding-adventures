@@ -1,0 +1,11 @@
+{
+  "id": "GU-C363-taran",
+  "pathSegment": "GU-PATH-363-ANKDO363",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-363-ANKDO363",
+      "order": 2
+    }
+  ]
+}

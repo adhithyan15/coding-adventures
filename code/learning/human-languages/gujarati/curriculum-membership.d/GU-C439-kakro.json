@@ -1,0 +1,11 @@
+{
+  "id": "GU-C439-kakro",
+  "pathSegment": "GU-PATH-439-HILL439",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-439-HILL439",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C418-phlet",
+  "pathSegment": "GU-PATH-418-SOCIETY418",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-418-SOCIETY418",
+      "order": 1
+    }
+  ]
+}

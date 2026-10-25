@@ -94,6 +94,48 @@ still require substantial expansion.
 | 42 | Say first to fifth, agree each with the three genders, and tell the one ordinal Gujarati builds from the four it hands down. |
 | 43 | Count one to ten, write the one new letter eight needs, and build the ordinal of any number from seventh upward without being taught the word. |
 
+The table above describes the opening chapters only. Canonical lessons now
+continue through Chapter 554:
+
+- **Chapters 273–284 — the B1 core** ([`lessons/`](./lessons/), `GU-C273-*`
+  to `GU-W54-six-lines`): 273–274 complete the A2 past and future — a name or
+  a noun as the doer of an object verb takes -એ (અરુણે, મીરાએ, છોકરાઓએ) while
+  the verb still follows the object, a -ને object included (અરુણે મીરાને
+  જોઈ); the perfect and the pluperfect; the negative future નહીં + the short
+  form; and -વાનો હતો. Then two chapters for each of the five B1 spine nodes:
+  narrating (-તો હતો, the -ઈને form, -્યા પછી, પહેલાં / પછી / ત્યાર પછી, a
+  ninety-seven-word reading), giving reasons (મને લાગે છે કે, કારણ કે, -ને
+  લીધે, -વું જોઈએ, -વું પડે, એટલે / તેથી), travel (the way, a ticket, a lost
+  bag, a missed train), experience (feelings, મારે … -વું છે, કરતાં / સૌથી,
+  -થી … સુધી) and conditions (જો … તો, નહીંતર, … પર આધાર રાખે છે, the -ત
+  counterfactual), closing on a six-line writing task. Letter lessons for
+  ઝ, ઃ, ઇ, ૌ and ઋ sit right after their anchor words and quote the
+  inventory's source-backed stroke order.
+- **Chapters 285–554 — the B1 vocabulary** ([`lessons/`](./lessons/),
+  `GU-C285-*` to `GU-R554-*`): 1,350 headwords, 351 of them verbs (each shown
+  in the past with the right agreement and, for an object verb, the -એ doer),
+  one word per lesson, with eight reviews in each of the five tranches:
+  - 285–338: narrating (theft and the courts, accidents and fire, storms,
+    floods and earthquakes, rescue and relief, the news, kings and wars,
+    festivals, legends and books);
+  - 339–392: reasons and conditions (cause and effect, argument and proof,
+    the law and the courts, government and citizens, values, research, then
+    conditions, chance, danger, effort and success);
+  - 393–446: travel (trains, roads and vehicles, flights and borders, a place
+    to stay, the way, the neighbourhood and the town, money and the market,
+    the weather and nature);
+  - 447–500: experience (feelings and character, the body and health, the
+    family from a wedding to a birth and a death);
+  - 501–554: crafts and work, the kitchen, the arts and wrestling, then
+    plans, luck and choices, and sport.
+
+  The first words of chapters 285–292 practise the core's last grammar points
+  again (… પર આધાર રાખે છે, the -ત counterfactual, જો … તો), two words each,
+  and each of the five new letters comes back twice in chapters 295–323.
+  With the core, Gujarati teaches 2,607 headwords at or below B1 and attains
+  B1 on the level gate. ષ, ઞ (and so જ્ઞ), ઙ, ઐ, ઔ, the candra vowels and the
+  Gujarati digits stay untaught.
+
 The exact chapter titles, lesson ranges, and ordered lesson IDs are in the
 [session map](session-map.md). The [roadmap](roadmap.md) separates this authored
 boundary from the dependency-ordered work still needed for pre-A1 through C2.

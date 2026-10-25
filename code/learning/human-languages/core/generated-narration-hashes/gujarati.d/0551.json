@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:9287daeda9b9001b",
+  "lessonIds": [
+    "GU-C551-talim",
+    "GU-C551-koc",
+    "GU-C551-riyajh",
+    "GU-C551-dodavvu",
+    "GU-C551-trophi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch551.txt",
+  "json": "gujarati/narration/ch551.json",
+  "textHash": "fnv1a64:41536f255dc558be",
+  "jsonHash": "fnv1a64:454efd2da28c06fd",
+  "findings": []
+}

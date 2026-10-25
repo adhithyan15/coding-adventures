@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C480-khas",
+    "language": "gujarati",
+    "chapter": 480,
+    "sequence": 26690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd8c909d853941e4"
+  },
+  "findings": []
+}

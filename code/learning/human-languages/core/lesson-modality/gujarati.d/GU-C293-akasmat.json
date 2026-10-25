@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C293-akasmat",
+    "language": "gujarati",
+    "chapter": 293,
+    "sequence": 16410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc2fa0405c02566f"
+  },
+  "findings": []
+}

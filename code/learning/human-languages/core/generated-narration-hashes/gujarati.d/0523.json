@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:04d988e6290042af",
+  "lessonIds": [
+    "GU-C523-pharsan",
+    "GU-C523-khaman",
+    "GU-C523-udhiyu",
+    "GU-C523-bhavvu",
+    "GU-C523-bolvu-dip"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch523.txt",
+  "json": "gujarati/narration/ch523.json",
+  "textHash": "fnv1a64:ca703f2ef8db98aa",
+  "jsonHash": "fnv1a64:f46f83904c82fdd1",
+  "findings": []
+}

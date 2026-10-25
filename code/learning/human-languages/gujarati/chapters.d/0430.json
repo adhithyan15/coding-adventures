@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Scales and Packets",
+  "label": "ch:gu-scales-and-packets",
+  "canDo": "I can buy loose goods by weight.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C430-jokhvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can buy loose goods by weight.",
+    "assesses": [
+      "GU-LEX-C430-SCALES430-03",
+      "GU-LEX-C430-SCALES430-04",
+      "GU-LEX-C430-SCALES430-05"
+    ]
+  }
+}

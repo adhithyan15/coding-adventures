@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "What the Figures Say",
+  "label": "ch:gu-what-the-figures-say",
+  "canDo": "I can say what the numbers show.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C363-ghatadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can say what the numbers show.",
+    "assesses": [
+      "GU-LEX-C363-ANKDO363-03",
+      "GU-LEX-C363-ANKDO363-04",
+      "GU-LEX-C363-ANKDO363-05"
+    ]
+  }
+}

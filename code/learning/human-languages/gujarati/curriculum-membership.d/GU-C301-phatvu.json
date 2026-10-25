@@ -1,0 +1,11 @@
+{
+  "id": "GU-C301-phatvu",
+  "pathSegment": "GU-PATH-301-IMARAT301",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-301-IMARAT301",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C425-hapto",
+  "pathSegment": "GU-PATH-425-LOAN425",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-425-LOAN425",
+      "order": 1
+    }
+  ]
+}

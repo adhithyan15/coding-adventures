@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:fd9b614fe2347b13",
+  "lessonIds": [
+    "GU-C339-asar",
+    "GU-C339-prabhav",
+    "GU-C339-nipajvu",
+    "GU-C339-paristhiti",
+    "GU-C339-sanjog"
+  ],
+  "tex": "gujarati/book/chapters/ch339-cause-and-effect.tex"
+}

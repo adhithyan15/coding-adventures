@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:130e90422fb9f341",
+  "lessonIds": [
+    "GU-C463-saral",
+    "GU-C463-ochabolu",
+    "GU-C463-vacal",
+    "GU-C463-bakvu",
+    "GU-C463-hasmukhu"
+  ],
+  "tex": "gujarati/book/chapters/ch463-chatty-and-quiet.tex"
+}

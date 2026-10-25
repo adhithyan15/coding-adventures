@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:63905146e8531d67",
+  "lessonIds": [
+    "GU-C538-vimasan",
+    "GU-C538-dhacupcu",
+    "GU-C538-gadamthal",
+    "GU-C538-gholvu",
+    "GU-C538-nivedo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch538.txt",
+  "json": "gujarati/narration/ch538.json",
+  "textHash": "fnv1a64:081f02a9347eadf4",
+  "jsonHash": "fnv1a64:1de03f2fa609068c",
+  "findings": []
+}

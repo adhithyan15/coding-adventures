@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C460-calak",
+    "language": "gujarati",
+    "chapter": 460,
+    "sequence": 25680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:581229f445fedd45"
+  },
+  "findings": []
+}

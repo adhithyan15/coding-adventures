@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:e28775ba61c14a26",
+  "lessonIds": [
+    "GU-C546-vagar",
+    "GU-C546-vina",
+    "GU-C546-sivay",
+    "GU-C546-uprat",
+    "GU-C546-kadi"
+  ],
+  "tex": "gujarati/book/chapters/ch546-with-or-without.tex"
+}

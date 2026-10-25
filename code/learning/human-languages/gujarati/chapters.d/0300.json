@@ -1,0 +1,21 @@
+{
+  "chapter": 300,
+  "title": "Smoke from the Kitchen",
+  "label": "ch:gu-smoke-from-the-kitchen",
+  "canDo": "I can say how a fire started and who got burnt.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-R300-review-293-300",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can say how a fire started and who got burnt.",
+    "assesses": [
+      "GU-LEX-C300-AAG300-01",
+      "GU-LEX-C300-AAG300-02",
+      "GU-LEX-C300-AAG300-03",
+      "GU-LEX-C300-AAG300-04",
+      "GU-LEX-C300-AAG300-05"
+    ]
+  }
+}

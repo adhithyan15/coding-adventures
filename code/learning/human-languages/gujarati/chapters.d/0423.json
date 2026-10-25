@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Towns and Drains",
+  "label": "ch:gu-towns-and-drains",
+  "canDo": "I can talk about a town and its drains.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C423-vasavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can talk about a town and its drains.",
+    "assesses": [
+      "GU-LEX-C423-TOWN423-03",
+      "GU-LEX-C423-TOWN423-04",
+      "GU-LEX-C423-TOWN423-05"
+    ]
+  }
+}

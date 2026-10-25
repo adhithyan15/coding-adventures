@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "Facts and Mix-ups",
+  "label": "ch:gu-facts-and-mix-ups",
+  "canDo": "I can tell a fact from a misunderstanding.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C351-chetravu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can tell a fact from a misunderstanding.",
+    "assesses": [
+      "GU-LEX-C351-HAKIKAT351-03",
+      "GU-LEX-C351-HAKIKAT351-04",
+      "GU-LEX-C351-HAKIKAT351-05"
+    ]
+  }
+}

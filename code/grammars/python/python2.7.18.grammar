@@ -5,10 +5,10 @@
 # source_sha: 8d21aa21f2cbc6d50aab3f420bb23be1d081dac4
 # evidence: Grammar/Grammar blob 4c3f33da32d5ca202b3e5549032e6c09e9784a6f; Grammar/Tokens blob -;
 #   Parser/tokenizer.c blob 89666611940cf84c0a6e88ac7c365b134e9c5a26; Lib/keyword.py blob 69794bda8c879a098a2adaef5e4bcee32f8683c8
-# basis: reviewed against the tag's own syntax files (LANG84 phase 7c slice 1). Tokens follow tokenizer.c tok_get (decimal [1-9][0-9]* or a single 0; octal, hex and `L` suffixes are not lexed) and PyToken_OneChar/TwoChars/ThreeChars (45 operators), and keyword.py kwlist (31, `print` among them); the grammar follows Grammar/Grammar file_input..print_stmt..atom/trailer/arglist.
+# basis: reviewed against the tag's own syntax files (LANG84 phase 7c slices 1 and 2). Tokens follow tokenizer.c tok_get (decimal, octal 0[0-7]*, hex 0x, 0o and 0b, each with an optional l/L suffix) and PyToken_OneChar/TwoChars/ThreeChars (45 operators), and keyword.py kwlist (31, `print` among them); the grammar follows Grammar/Grammar file_input..print_stmt..atom/trailer/arglist.
 
 # ---------------------------------------------------------------------------
-# py2-int-print (LANG84 phase 7c slice 1) as this release's grammar admits
+# py2-int-print (LANG84 phase 7c slices 1 and 2) as this release's grammar admits
 # it. The release's own rules, from the tag's Grammar/Grammar:
 #
 #   file_input : (NEWLINE | stmt)* ENDMARKER

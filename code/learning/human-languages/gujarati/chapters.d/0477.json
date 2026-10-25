@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "After a Big Meal",
+  "label": "ch:gu-after-a-big-meal",
+  "canDo": "I can say what my stomach feels after eating.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C477-jiravvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can say what my stomach feels after eating.",
+    "assesses": [
+      "GU-LEX-C477-ODKAR477-03",
+      "GU-LEX-C477-ODKAR477-04",
+      "GU-LEX-C477-ODKAR477-05"
+    ]
+  }
+}

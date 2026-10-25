@@ -1,0 +1,11 @@
+{
+  "id": "GU-C296-embyulans",
+  "pathSegment": "GU-PATH-296-AMBULANS296",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-296-AMBULANS296",
+      "order": 0
+    }
+  ]
+}

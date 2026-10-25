@@ -1,0 +1,11 @@
+{
+  "id": "GU-C321-dhal",
+  "pathSegment": "GU-PATH-321-TALVAR321",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-321-TALVAR321",
+      "order": 1
+    }
+  ]
+}

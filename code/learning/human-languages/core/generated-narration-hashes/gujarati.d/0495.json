@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:a5f00a9203e4c47a",
+  "lessonIds": [
+    "GU-C495-sagarbha",
+    "GU-C495-prasuti",
+    "GU-C495-simant",
+    "GU-C495-avtarvu",
+    "GU-C495-janvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch495.txt",
+  "json": "gujarati/narration/ch495.json",
+  "textHash": "fnv1a64:3622ed045fb09368",
+  "jsonHash": "fnv1a64:61b757aa11d1ebc5",
+  "findings": []
+}

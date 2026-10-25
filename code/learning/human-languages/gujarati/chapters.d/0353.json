@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Citizens and Votes",
+  "label": "ch:gu-citizens-and-votes",
+  "canDo": "I can talk about voting and candidates.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C353-cutavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can talk about voting and candidates.",
+    "assesses": [
+      "GU-LEX-C353-MATDAN353-03",
+      "GU-LEX-C353-MATDAN353-04",
+      "GU-LEX-C353-MATDAN353-05"
+    ]
+  }
+}

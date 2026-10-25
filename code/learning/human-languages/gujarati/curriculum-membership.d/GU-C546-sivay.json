@@ -1,0 +1,11 @@
+{
+  "id": "GU-C546-sivay",
+  "pathSegment": "GU-PATH-546-VAGAR546",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-546-VAGAR546",
+      "order": 2
+    }
+  ]
+}

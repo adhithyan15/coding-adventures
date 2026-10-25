@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C536-coghdiyu",
+    "language": "gujarati",
+    "chapter": 536,
+    "sequence": 29800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1a34e67dfa1d2b0"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 508,
+  "title": "The Blacksmith's Fire",
+  "label": "ch:gu-the-blacksmith-s-fire",
+  "canDo": "I can talk about a blacksmith, his fire and his anvil.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R508-review-501-508",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can talk about a blacksmith, his fire and his anvil.",
+    "assesses": [
+      "GU-LEX-C508-LUHAR508-01",
+      "GU-LEX-C508-LUHAR508-02",
+      "GU-LEX-C508-LUHAR508-03",
+      "GU-LEX-C508-LUHAR508-04",
+      "GU-LEX-C508-LUHAR508-05"
+    ]
+  }
+}

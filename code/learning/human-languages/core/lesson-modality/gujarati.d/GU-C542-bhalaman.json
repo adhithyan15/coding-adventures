@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C542-bhalaman",
+    "language": "gujarati",
+    "chapter": 542,
+    "sequence": 30130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b010579e19a91c1"
+  },
+  "findings": []
+}

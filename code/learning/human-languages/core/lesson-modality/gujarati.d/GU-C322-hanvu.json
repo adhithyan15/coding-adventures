@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C322-hanvu",
+    "language": "gujarati",
+    "chapter": 322,
+    "sequence": 17920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61493de5150f2499"
+  },
+  "findings": []
+}

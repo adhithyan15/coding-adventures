@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C520-chatvu",
+    "language": "gujarati",
+    "chapter": 520,
+    "sequence": 29000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1e0ed18a9c52352"
+  },
+  "findings": []
+}

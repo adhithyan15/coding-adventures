@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:e44dd8900c81b23e",
+  "lessonIds": [
+    "GU-C507-parovvu",
+    "GU-C507-moti",
+    "GU-C507-sandhvu",
+    "GU-C507-thigdu",
+    "GU-C507-bharatkam"
+  ],
+  "tex": "gujarati/book/chapters/ch507-needle-and-thread.tex"
+}

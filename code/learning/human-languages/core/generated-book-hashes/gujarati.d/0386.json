@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:b9b2e8453ae5d6d0",
+  "lessonIds": [
+    "GU-C386-astha",
+    "GU-C386-asro",
+    "GU-C386-agrah",
+    "GU-C386-adhin",
+    "GU-C386-jhukvu"
+  ],
+  "tex": "gujarati/book/chapters/ch386-trust-and-dependence.tex"
+}

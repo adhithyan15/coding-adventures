@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:a7d9d2ff7c1eb8d5",
+  "lessonIds": [
+    "GU-C409-paronagat",
+    "GU-C409-menejar",
+    "GU-C409-sagvad",
+    "GU-C409-agvad",
+    "GU-C409-avkarvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch409.txt",
+  "json": "gujarati/narration/ch409.json",
+  "textHash": "fnv1a64:dd1355f9bf2ebaf6",
+  "jsonHash": "fnv1a64:30dc8d8371f55e3e",
+  "findings": []
+}

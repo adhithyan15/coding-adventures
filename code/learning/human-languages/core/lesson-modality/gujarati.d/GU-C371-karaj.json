@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C371-karaj",
+    "language": "gujarati",
+    "chapter": 371,
+    "sequence": 20670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca7de65787b611bc"
+  },
+  "findings": []
+}

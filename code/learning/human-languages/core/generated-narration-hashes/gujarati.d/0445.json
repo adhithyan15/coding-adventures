@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:1cca7ada6d77faad",
+  "lessonIds": [
+    "GU-C445-malo",
+    "GU-C445-agiyo",
+    "GU-C445-tamru",
+    "GU-C445-tahukvu",
+    "GU-C445-cahekvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch445.txt",
+  "json": "gujarati/narration/ch445.json",
+  "textHash": "fnv1a64:e8e5f1d06796e628",
+  "jsonHash": "fnv1a64:0e641bff0f67c0fd",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 554,
+  "title": "Dancing All Night",
+  "label": "ch:gu-dancing-all-night",
+  "canDo": "I can talk about dancing raas and garba through the night.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-R554-review-final-554",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 554: I can talk about dancing raas and garba through the night.",
+    "assesses": [
+      "GU-LEX-C554-RAAS554-01",
+      "GU-LEX-C554-RAAS554-02",
+      "GU-LEX-C554-RAAS554-03",
+      "GU-LEX-C554-RAAS554-04",
+      "GU-LEX-C554-RAAS554-05"
+    ]
+  }
+}

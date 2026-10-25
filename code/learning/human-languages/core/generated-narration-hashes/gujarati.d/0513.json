@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:a3011bb33383185c",
+  "lessonIds": [
+    "GU-C513-udyog",
+    "GU-C513-kampni",
+    "GU-C513-masin",
+    "GU-C513-pittal",
+    "GU-C513-bhangar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch513.txt",
+  "json": "gujarati/narration/ch513.json",
+  "textHash": "fnv1a64:d04741b9ed629bd3",
+  "jsonHash": "fnv1a64:a87615702ee4619d",
+  "findings": []
+}

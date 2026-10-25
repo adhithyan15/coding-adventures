@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C446-goval",
+    "language": "gujarati",
+    "chapter": 446,
+    "sequence": 24730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2be2b64d48b7e00"
+  },
+  "findings": []
+}

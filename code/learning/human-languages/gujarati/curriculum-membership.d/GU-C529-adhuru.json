@@ -1,0 +1,11 @@
+{
+  "id": "GU-C529-adhuru",
+  "pathSegment": "GU-PATH-529-TABAKKO529",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-529-TABAKKO529",
+      "order": 3
+    }
+  ]
+}

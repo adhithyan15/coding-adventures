@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:5271066d42056fc3",
+  "lessonIds": [
+    "GU-C495-sagarbha",
+    "GU-C495-prasuti",
+    "GU-C495-simant",
+    "GU-C495-avtarvu",
+    "GU-C495-janvu"
+  ],
+  "tex": "gujarati/book/chapters/ch495-a-baby-on-the-way.tex"
+}

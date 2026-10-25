@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C375-avasyak",
+    "language": "gujarati",
+    "chapter": 375,
+    "sequence": 20840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c469941267772626"
+  },
+  "findings": []
+}

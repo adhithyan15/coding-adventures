@@ -4,6 +4,11 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+Entries added after `task-app-v0.5.10` accumulate here until the next version is
+cut.
+
+## [0.5.10] - 2026-10-24
+
 ### Fixed
 
 - Preserve the 260-pixel board-column minimum in both themes and across Qt's
@@ -19,9 +24,6 @@ All notable changes to the `task-app` web program are documented here.
 ### Changed
 
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
-
-Entries added after `task-app-v0.5.9` accumulate here until the next version is
-cut.
 
 ## [0.5.9] - 2026-10-22
 

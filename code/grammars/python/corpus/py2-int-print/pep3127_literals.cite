@@ -1,0 +1,4 @@
+oracle: pinned historical source, CPython v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+evidence: PEP 3127 (2.6): tok_get lexes 0o/0O and 0b/0B and requires a digit after the prefix; PyOS_strtoul (Python/mystrtoul.c) and PyLong_FromString read them with base 0 as base 8 and base 2
+result: the subset prints exactly what CPython 2.6 and 2.7.18 print
+not 2.2 or 2.4: their tok_get has no o or b branch, so 0o17 is NUMBER 0 then NAME o17, a SyntaxError; the 2.2 and 2.4 pairs refuse it as a lexer error (see pep3127_literals.reject@2.2 and @2.4)

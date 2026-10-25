@@ -21,8 +21,10 @@ assert!(parse_python_at("print(1)\n", Some("3.12"), &FrontendBudgets::default())
 ```
 
 Releases with a pair today are 3.0a1, 3.11.17, 3.12.3, 3.13.16 and 3.16.0a1
-(LANG84 phase 7a). Their pairs are partial and cover the `py-int-print`
-subset. `python-iir-compiler`'s `compile_source_at` is built on this API.
+(LANG84 phase 7a), 2.2 and 2.7.18 (phase 7c slice 1), and 2.4, 2.6, 3.5.10
+and 3.6.0 (slice 2). Their pairs are partial: the Python 3 pairs cover the
+`py-int-print` subset, and the Python 2 pairs `py2-int-print`, whose grammar
+adds `print_stmt`. `python-iir-compiler`'s `compile_source_at` is built on this API.
 `parse_python(source, "3.12")` and the other minor-line versions are a
 separate, unchanged legacy API.
 

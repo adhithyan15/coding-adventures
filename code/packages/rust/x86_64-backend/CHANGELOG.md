@@ -1,4 +1,15 @@
 # Changelog — `x86_64-backend`
+## Unreleased — LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`
+
+- **`f64_add` / `f64_sub` / `f64_mul` / `f64_div`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6c): the existing
+  SSE2 `emit_fp_binop` (`addsd`/`subsd`/`mulsd`/`divsd`; masked FP
+  exceptions, so `1/0` is `+inf` and nothing traps).
+- **`f64_neg` / `f64_signbit`** on the raw bits: `mov rax,[a]`, then
+  `xor rax, 0x8000…` (exact IEEE negate) or `shr rax, 63` (0/1). A float
+  literal operand is loaded as its `to_bits()` immediate (new
+  `load_f64_bits`); an integer literal is refused.
+- `op_support`: all six `Lowered`. Tests pin the byte sequences.
+
 ## Unreleased — LANG83 PR6a — shortest round-trip float output
 
 - **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): two `V1_BUILTINS` rows,

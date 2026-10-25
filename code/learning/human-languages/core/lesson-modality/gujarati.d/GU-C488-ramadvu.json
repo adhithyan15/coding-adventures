@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C488-ramadvu",
+    "language": "gujarati",
+    "chapter": 488,
+    "sequence": 27130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0130f93da89fecf"
+  },
+  "findings": []
+}

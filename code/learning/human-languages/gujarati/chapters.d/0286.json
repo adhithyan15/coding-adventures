@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Calling the Police",
+  "label": "ch:gu-calling-the-police",
+  "canDo": "I can report a crime and say whom I suspect.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C286-chupavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can report a crime and say whom I suspect.",
+    "assesses": [
+      "GU-LEX-C286-GUNO286-03",
+      "GU-LEX-C286-GUNO286-04",
+      "GU-LEX-C286-GUNO286-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:cd7c852fd05e1e2a",
+  "lessonIds": [
+    "GU-C401-tayar",
+    "GU-C401-pankcar",
+    "GU-C401-trak",
+    "GU-C401-ghasadvu",
+    "GU-C401-uthalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch401-a-flat-tyre.tex"
+}

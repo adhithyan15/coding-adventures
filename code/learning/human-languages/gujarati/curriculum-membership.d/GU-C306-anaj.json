@@ -1,0 +1,11 @@
+{
+  "id": "GU-C306-anaj",
+  "pathSegment": "GU-PATH-306-RAHAT306",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-306-RAHAT306",
+      "order": 3
+    }
+  ]
+}

@@ -248,6 +248,9 @@ module that uses a refused op at compile time, with a typed error. Since LANG83 
 LANG83 PR4 adds the overflow-checked `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`
 and `i64_neg_ovf` (Rust `checked_*`; an out-of-range result is
 `VMError::Trap { kind: "Trap.Overflow" }`).
+LANG83 PR6c adds `f64_add`, `f64_sub`, `f64_mul`, `f64_div` and `f64_neg`
+(Rust `f64` arithmetic on `Value::Float`: IEEE, never an error, so `1/0` is
+`inf` and `-0.0` survives) and `f64_signbit` (`is_sign_negative()` as 0/1).
 LANG83 PR6a adds the default builtins `write_f64_py` and `write_f64_js`. They
 print a float as the shortest decimal that reads back as exactly that value,
 in Python's `repr` layout or JavaScript's `toString` layout, with no newline.

@@ -73,6 +73,13 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_atan", Lowered),
     ("f64_tan", Lowered),
     ("f64_pow", Lowered),
+    // LANG83 PR6c — IEEE-754 binary64 arithmetic that never traps.
+    ("f64_add", Lowered),
+    ("f64_sub", Lowered),
+    ("f64_mul", Lowered),
+    ("f64_div", Lowered),
+    ("f64_neg", Lowered),
+    ("f64_signbit", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),

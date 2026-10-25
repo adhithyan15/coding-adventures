@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:56e14aacf541a14e",
+  "lessonIds": [
+    "GU-C371-phaydo",
+    "GU-C371-labh",
+    "GU-C371-upyog",
+    "GU-C371-karaj",
+    "GU-C371-khovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch371.txt",
+  "json": "gujarati/narration/ch371.json",
+  "textHash": "fnv1a64:3372dcf02bb50115",
+  "jsonHash": "fnv1a64:d97f28af8c238457",
+  "findings": []
+}

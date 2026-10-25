@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:a941941450276552",
+  "lessonIds": [
+    "GU-C439-dungar",
+    "GU-C439-sikhar",
+    "GU-C439-khadak",
+    "GU-C439-kakro",
+    "GU-C439-padghavu",
+    "GU-R439-review-433-439"
+  ],
+  "tex": "gujarati/book/chapters/ch439-hills-and-rocks.tex"
+}

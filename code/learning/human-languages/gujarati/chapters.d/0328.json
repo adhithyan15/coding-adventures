@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Evening Prayers at the Temple",
+  "label": "ch:gu-evening-prayers-at-the-temple",
+  "canDo": "I can say what happens at a temple in the evening.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C328-dhup",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can say what happens at a temple in the evening.",
+    "assesses": [
+      "GU-LEX-C328-PUJA328-03",
+      "GU-LEX-C328-PUJA328-04",
+      "GU-LEX-C328-PUJA328-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:3d3b438cb8fb79ef",
+  "lessonIds": [
+    "GU-C544-pher",
+    "GU-C544-taphavat",
+    "GU-C544-alag",
+    "GU-C544-nakal",
+    "GU-C544-barabar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch544.txt",
+  "json": "gujarati/narration/ch544.json",
+  "textHash": "fnv1a64:fec44667ff625768",
+  "jsonHash": "fnv1a64:701099245dfa9a7a",
+  "findings": []
+}

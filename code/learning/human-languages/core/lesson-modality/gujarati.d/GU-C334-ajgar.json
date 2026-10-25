@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C334-ajgar",
+    "language": "gujarati",
+    "chapter": 334,
+    "sequence": 18520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52b2e9e45d273689"
+  },
+  "findings": []
+}

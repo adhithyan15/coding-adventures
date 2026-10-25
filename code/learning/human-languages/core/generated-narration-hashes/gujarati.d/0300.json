@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:f29a642397950587",
+  "lessonIds": [
+    "GU-C300-angaro",
+    "GU-C300-dhumado",
+    "GU-C300-jvala",
+    "GU-C300-salgavvu",
+    "GU-C300-dajhvu",
+    "GU-R300-review-293-300"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch300.txt",
+  "json": "gujarati/narration/ch300.json",
+  "textHash": "fnv1a64:cccedfbb7dd51812",
+  "jsonHash": "fnv1a64:5e7e8af8ff70c6a6",
+  "findings": []
+}

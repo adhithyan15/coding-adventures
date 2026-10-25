@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C399-dokiyu",
+    "language": "gujarati",
+    "chapter": 399,
+    "sequence": 22340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2473d329c7d87999"
+  },
+  "findings": []
+}

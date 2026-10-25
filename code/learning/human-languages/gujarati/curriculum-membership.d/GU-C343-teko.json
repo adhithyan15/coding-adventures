@@ -1,0 +1,11 @@
+{
+  "id": "GU-C343-teko",
+  "pathSegment": "GU-PATH-343-TEKO343",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-343-TEKO343",
+      "order": 0
+    }
+  ]
+}

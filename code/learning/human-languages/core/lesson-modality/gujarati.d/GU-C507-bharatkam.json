@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C507-bharatkam",
+    "language": "gujarati",
+    "chapter": 507,
+    "sequence": 28340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42a4510db1a6fa90"
+  },
+  "findings": []
+}

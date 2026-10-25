@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 424,
+  "title": "At the Bank Counter",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:209b5b3cc20ff2f3",
+  "lessons": [
+    {
+      "id": "GU-C424-kesiyar",
+      "sequence": 23580,
+      "title": "કેશિયર (keśiyar) — a cashier",
+      "headword": "કેશિયર",
+      "romanization": "keśiyar",
+      "gloss": "a cashier",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1eb93a0db7a93b0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a stink, then the Gujarati for to set up a home."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કેશિયર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કેશિયર — keśiyar — \"a cashier\"."
+            },
+            {
+              "kind": "speech",
+              "text": "બેંકના કેશિયરે મને નવી નોટો આપી. beṅknā keśiyre mane navī noṭo āpī. The bank cashier gave me new notes."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કેશિયર (keśiyar) is borrowed from English cashier."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keśiyar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keśiyar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keśiyar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keśiyar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṅknā keśiyre mane navī noṭo āpī. — The bank cashier gave me new notes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṅknā keśiyre mane navī noṭo āpī.* — The bank cashier gave me new notes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a stink, then the Gujarati for to set up a home, then say keśiyar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a stink, then the Gujarati for to set up a home, then say *keśiyar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કેશિયર (keśiyar) mean? (\"A cashier\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C424-pasbuk",
+      "sequence": 23590,
+      "title": "પાસબુક (pāsbuk) — a passbook (of a bank account)",
+      "headword": "પાસબુક",
+      "romanization": "pāsbuk",
+      "gloss": "a passbook (of a bank account)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11b030f0c208b6f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to set up a home, then the Gujarati for a cashier."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પાસબુક",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાસબુક — pāsbuk — \"a passbook (of a bank account)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારી પાસબુક ઘરે રહી ગઈ. mārī pāsbuk ghare rahī gaī. I left my passbook at home."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાસબુક (pāsbuk) is borrowed from English passbook, the little book where a bank writes up your account."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāsbuk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāsbuk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāsbuk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāsbuk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārī pāsbuk ghare rahī gaī. — I left my passbook at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārī pāsbuk ghare rahī gaī.* — I left my passbook at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to set up a home, then the Gujarati for a cashier, then say pāsbuk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to set up a home, then the Gujarati for a cashier, then say *pāsbuk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પાસબુક (pāsbuk) mean? (\"A passbook (of a bank account)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C424-kapli",
+      "sequence": 23600,
+      "title": "કાપલી (kāplī) — a slip of paper",
+      "headword": "કાપલી",
+      "romanization": "kāplī",
+      "gloss": "a slip of paper",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9624dd45c7cc2b75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a cashier, then the Gujarati for a passbook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કાપલી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાપલી — kāplī — \"a slip of paper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પૈસા જમા કરવા માટે આ કાપલી ભરો. paisā jamā karvā māṭe ā kāplī bharo. Fill in this slip to deposit money."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાપલી (kāplī) is built on કાપવું, to cut, a tadbhava of Sanskrit kalpayati, \"trims, cuts\" (CDIAL 2944): a strip of paper cut off."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāplī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāplī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāplī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāplī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paisā jamā karvā māṭe ā kāplī bharo. — Fill in this slip to deposit money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paisā jamā karvā māṭe ā kāplī bharo.* — Fill in this slip to deposit money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a cashier, then the Gujarati for a passbook, then say kāplī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a cashier, then the Gujarati for a passbook, then say *kāplī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કાપલી (kāplī) mean? (\"A slip of paper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C424-tokan",
+      "sequence": 23610,
+      "title": "ટોકન (ṭokan) — a token (a numbered slip for your turn)",
+      "headword": "ટોકન",
+      "romanization": "ṭokan",
+      "gloss": "a token (a numbered slip for your turn)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a4331e23095ffad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a passbook, then the Gujarati for a slip of paper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટોકન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટોકન — ṭokan — \"a token (a numbered slip for your turn)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "બેંકમાં મને પાંચ નંબરનું ટોકન મળ્યું. beṅkmā̃ mane pā̃c nambarnũ ṭokan maḷyũ. At the bank I got token number five."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટોકન (ṭokan) is borrowed from English token: at a bank or a clinic, the numbered slip that keeps your place in the queue."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭokan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭokan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭokan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭokan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṅkmā̃ mane pā̃c nambarnũ ṭokan maḷyũ. — At the bank I got token number five.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṅkmā̃ mane pā̃c nambarnũ ṭokan maḷyũ.* — At the bank I got token number five.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a passbook, then the Gujarati for a slip of paper, then say ṭokan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a passbook, then the Gujarati for a slip of paper, then say *ṭokan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટોકન (ṭokan) mean? (\"A token (a numbered slip for your turn)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C424-kard",
+      "sequence": 23620,
+      "title": "કાર્ડ (kārḍ) — a card (a bank card)",
+      "headword": "કાર્ડ",
+      "romanization": "kārḍ",
+      "gloss": "a card (a bank card)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c969924bd2d469f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a slip of paper, then the Gujarati for a token."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કાર્ડ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાર્ડ — kārḍ — \"a card (a bank card)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તેણે કાર્ડથી બિલ ચૂકવ્યું. teṇe kārḍathī bil cūkavyũ. She paid the bill by card."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાર્ડ (kārḍ) is borrowed from English card, here a bank card."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teṇe kārḍathī bil cūkavyũ. — She paid the bill by card.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teṇe kārḍathī bil cūkavyũ.* — She paid the bill by card.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a slip of paper, then the Gujarati for a token, then say kārḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a slip of paper, then the Gujarati for a token, then say *kārḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કાર્ડ (kārḍ) mean? (\"A card (a bank card)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R424-review-417-424",
+      "sequence": 23630,
+      "title": "Looking back: from The Pol to At the Bank Counter",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from The Pol to At the Bank Counter",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c32cf4498bedc5e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for a pol and an entrance gateway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pol, an entrance gateway, a raised platform, a small gated lane, to shut (a door)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pol, an entrance gateway, a raised platform, a small gated lane, to shut (a door)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a housing society, a flat, a bungalow, a water tank, a tenant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a housing society, a flat, a bungalow, a water tank, a tenant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a street, a neighbourhood lane, a quarter of a town, a resident, to wander aimlessly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a street, a neighbourhood lane, a quarter of a town, a resident, to wander aimlessly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wooden door, a roof tile, a hedge, a post, to thatch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wooden door, a roof tile, a hedge, a post, to thatch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a din, an uproar, cattle, to growl, to chase away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a din, an uproar, cattle, to growl, to chase away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a handcart, a hawker, a paan stall, a sweet-maker, to sell well",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a handcart, a hawker, a paan stall, a sweet-maker, to sell well]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a town, a district, a sewer, a stink, to set up a home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a town, a district, a sewer, a stink, to set up a home]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cashier, a passbook, a slip of paper, a token, a bank card",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cashier, a passbook, a slip of paper, a token, a bank card]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A pol? (પોળ, poḷ.) An entrance gateway? (ડેલી, ḍelī.) A raised platform? (ઓટલો, oṭlo.) A small gated lane? (ખડકી, khaḍkī.) To shut (a door)? (વાસવું, vāsvũ.) A housing society? (સોસાયટી, sosāyṭī.) A flat? (ફ્લેટ, phleṭ.) A bungalow? (બંગલો, banglo.) A water tank? (ટાંકી, ṭā̃kī.) A tenant? (ભાડૂત, bhāḍūt.) A street? (શેરી, śerī.) A neighbourhood lane? (ફળિયું, phaḷiyũ.) A quarter of a town? (મહોલ્લો, mahollo.) A resident? (રહેવાસી, rahevāsī.) To wander aimlessly? (રઝળવું, rajhaḷvũ.) A wooden door? (કમાડ, kamāḍ.) A roof tile? (નળિયું, naḷiyũ.) A hedge? (વાડ, vāḍ.) A post? (થાંભલો, thā̃bhlo.) To thatch? (છાવું, chāvũ.) A din? (ઘોંઘાટ, ghõghāṭ.) An uproar? (હોબાળો, hobāḷo.) Cattle? (ઢોર, ḍhor.) To growl? (ઘુરકવું, ghurakvũ.) To chase away? (ભગાડવું, bhagāḍvũ.) A handcart? (લારી, lārī.) A hawker? (ફેરિયો, pheriyo.) A paan stall? (ગલ્લો, gallo.) A sweet-maker? (કંદોઈ, kandoī.) To sell well? (ખપવું, khapvũ.) A town? (નગર, nagar.) A district? (જિલ્લો, jillo.) A sewer? (ગટર, gaṭar.) A stink? (દુર્ગંધ, durgandh.) To set up a home? (વસાવવું, vasāvvũ.) A cashier? (કેશિયર, keśiyar.) A passbook? (પાસબુક, pāsbuk.) A slip of paper? (કાપલી, kāplī.) A token? (ટોકન, ṭokan.) A bank card? (કાર્ડ, kārḍ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C533-copat",
+  "pathSegment": "GU-PATH-533-PASO533",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-533-PASO533",
+      "order": 1
+    }
+  ]
+}

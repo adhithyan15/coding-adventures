@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:672d4beb757dc90b",
+  "lessonIds": [
+    "GU-C485-opresan",
+    "GU-C485-dakhal",
+    "GU-C485-tapkavvu",
+    "GU-C485-matra",
+    "GU-C485-pareji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch485.txt",
+  "json": "gujarati/narration/ch485.json",
+  "textHash": "fnv1a64:fccb11b296582dd7",
+  "jsonHash": "fnv1a64:c1aa1f71c1c423d7",
+  "findings": []
+}
