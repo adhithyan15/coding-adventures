@@ -7,11 +7,10 @@ establish whether Apple's native linker accepts an SDK; hosted macOS must do so.
 from __future__ import annotations
 
 import os
-from pathlib import Path
 import shutil
 import subprocess
 import unittest
-
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 FRONT = ROOT / "code/packages/haskell/starlark-compiler/BUILD"
@@ -25,7 +24,7 @@ class HaskellBuildFrontTests(unittest.TestCase):
         env["DEVELOPER_DIR"] = "/original/developer"
         # A shell function witnesses precisely the environment Cabal receives.
         # Checking the parent afterwards catches accidental persistent exports.
-        script = r'''
+        script = r"""
 platform="$2"
 uname() { printf '%s\n' "$platform"; }
 status="$3"
@@ -34,10 +33,13 @@ source "$1"
 front_status=$?
 printf 'parent-env=%s\n' "$DEVELOPER_DIR"
 exit "$front_status"
-'''
+"""
         return subprocess.run(
             [bash, "-c", script, "front-test", FRONT.as_posix(), platform, str(status)],
-            env=env, text=True, capture_output=True, check=False,
+            env=env,
+            text=True,
+            capture_output=True,
+            check=False,
         )
 
     def test_darwin_uses_matching_tools_only_for_cabal(self):
