@@ -69,10 +69,15 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18238 — prepare, publish, and audit v0.5.11.**
-The release-note detail repair #18197 merged in #18198. Ship it as a compatible
-patch under #13543 before further fidelity work. Preparation is not publication:
-require all existing payload checks and audit the immutable release afterward.
+**Next: #18250 — preserve Qt fixed non-shrinking rail geometry.**
+The v0.5.11 checkpoint (#18238) is published and audited: run 40225950352,
+source `bd533925647b7fbac74eba35e611a8ba3930757f`, 13 assets / 12 checksums /
+11 manifest payloads. Return to bounded native fidelity under #12022: preserve
+the rail's 236-pixel floor without changing shared styles or diagnostic budgets.
+
+**Published checkpoint: #18238 — v0.5.11.**
+The release-note detail repair #18197 merged in #18198 and shipped in v0.5.11.
+All existing payload checks and the immutable metadata audit passed.
 The immutable v0.5.10 checkpoint (#18112) is published and audited:
 13 assets, 12 checksum entries, and 11 manifest payloads from
 `1eee296461f07dd5a1657c7a4822799aa1552df9`. All release lanes passed in

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C203-about-the-book",
+  "pathSegment": "PA-PATH-203-A2-BAARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-203-A2-BAARE",
+      "order": 3
+    }
+  ]
+}

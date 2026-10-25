@@ -1,5 +1,10 @@
 # mosaic-emit-qt
 
+Static fixed-width Row/Column/Box containers paired with exact `flex-shrink: 0`
+retain a minimum width, including painted wrappers. State geometry overrides
+and conflicting min/max/flex constraints remain outside this narrow bridge;
+general flex-shrink remains reported as unsupported.
+
 **Qt/QML backend for the Mosaic compiler.** Consumes the three-language
 pipeline IR (`.mil`, `.mll`, `.msl`) produced by `mosmodel-compiler`,
 `moslayout-compiler`, and `mosstyle-compiler`, and emits a `.qml` source
