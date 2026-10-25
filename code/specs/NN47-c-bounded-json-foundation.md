@@ -22,6 +22,14 @@ until the repaired head actually runs. Initial Linux/macOS package BUILD success
 and the neutral CodeQL workflow (no configured C/C++ analyzer) are not C scanning
 or Windows execution evidence.
 
+Repaired-head Windows job121319644429 then confirmed that clang-cl accepted
+both negative GNU-extension fixtures under the shared MSVC-only flags, while
+cl rejected them and both compilers passed positive fixtures. Extend the shared
+flag helper with compiler-specific Clang pedantic diagnostics in positive and
+negative paths; preserve the existing standard, warning and error flags, and
+all installed compiler discovery. Test flag selection plus real cl/clang-cl
+accept/reject and full parser execution before a new exact-head review/push.
+
 ## Reassessment after five-native delivery
 
 NN46 merged PR #18252 at exact head `ff37a3e44e3`, squash `da1b408680f`,
