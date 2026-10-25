@@ -59,8 +59,7 @@ jobs:
       - name: Validate native TypeScript framework
         working-directory: code/packages/typescript/neural-framework
         run: |
-          npm --prefix ../matrix-rust-napi install --omit=dev --ignore-scripts
-          npm --prefix ../matrix install --omit=dev --ignore-scripts
+          npm --prefix ../matrix ci --omit=dev --ignore-scripts
           npm ci --ignore-scripts
           npm run build
           npm run test:coverage

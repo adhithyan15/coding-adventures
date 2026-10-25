@@ -1,5 +1,5 @@
-npm --prefix ../matrix-rust-napi install --omit=dev --ignore-scripts
-npm --prefix ../matrix install --omit=dev --ignore-scripts
+# matrix's lock materializes its shim; reference training never builds the addon.
+npm --prefix ../matrix ci --omit=dev --ignore-scripts
 npm ci --ignore-scripts
 npm run build
 npm run test:coverage
