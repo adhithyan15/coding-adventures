@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extend native checkpoint exchange to Rust alongside Python, checking all
+  six directed pairs and full model/loss/prediction state at steps 3001/3002.
+
 - Reuse native numerical validation and checkpoint exchange inside the required
   repository CI gate, rejecting selected jobs without successful evidence.
 

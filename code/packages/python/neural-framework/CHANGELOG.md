@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extend native checkpoint exchange to Rust alongside TypeScript, checking all
+  six directed pairs and full model/loss/prediction state at steps 3001/3002.
+
 - Make native numerical validation and portable checkpoint exchange a selected,
   fail-closed dependency of the required repository CI gate.
 

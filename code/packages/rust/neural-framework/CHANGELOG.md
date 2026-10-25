@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add native Rust to required NN39 three-language checkpoint exchange, including
+  both directions with Python and TypeScript and exact resumed-step receipts.
+
 - Correct the Linux coverage include filter to match Cargo-workspace-relative
   library paths; preserve the 95% threshold and integration-test execution.
 
