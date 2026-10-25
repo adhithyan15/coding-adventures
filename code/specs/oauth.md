@@ -1488,6 +1488,23 @@ constraints, non-DNS constraints, responder or intermediate revocation,
 generalized path construction or validation, TLS, HTTP, OAuth transport, or
 network authority. Concrete HTTPS remains unavailable.
 
+A following bounded revocation-policy slice consumes that complete responder
+DNS proof and applies RFC 6960's trust-for-certificate-lifetime branch to the
+exact authenticated responder. The responder certificate is derived only
+through the retained proof; callers cannot substitute a certificate or
+extension value. The structurally unique `id-pkix-ocsp-nocheck` extension must
+be present and its value must be exact DER `NULL`. A critical instance can
+reach this semantic gate only when the prerequisite certificate-wide policy
+explicitly recognized its OID; RFC 6960 recommends, but does not require, a
+non-critical extension. Success retains the complete reviewed responder proof,
+including issuer authorization and responder validity at the exact OCSP
+observation time. Stable failures expose no certificate, extension, response,
+key, signature, status, hostname, or time payload. This implements only the
+no-check branch: responders without the extension still require separately
+authenticated revocation evidence, and intermediate revocation, generalized
+path validation, TLS, HTTP, OAuth transport, and network authority remain
+unavailable. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

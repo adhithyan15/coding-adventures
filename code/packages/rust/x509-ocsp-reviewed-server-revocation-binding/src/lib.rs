@@ -5,8 +5,9 @@
 //! target and issuer must be the same exact decoded certificate objects in
 //! both inputs. Byte-equal independent decodes are rejected.
 //!
-//! This is an evidence-composition, exact-time validity, and bounded responder
-//! DNS-policy boundary. It performs no new cryptography, path search,
+//! This is an evidence-composition, exact-time validity, bounded responder
+//! DNS-policy, and exact responder no-check boundary. It performs no new
+//! cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
 //! that names the delegated responder's already-proven exact path through the
@@ -31,6 +32,11 @@ use x509_rsa_sha256_reviewed_server_link::ValidatedX509RsaSha256ConstructedRevie
 use x509_subject_alt_name::{
     decode_subject_alt_name, SubjectAltNameErrorKind, SUBJECT_ALT_NAME_OID,
 };
+
+/// RFC 6960 `id-pkix-ocsp-nocheck` certificate-extension object identifier.
+pub const OCSP_NO_CHECK_OID: &[u64] = &[1, 3, 6, 1, 5, 5, 7, 48, 1, 5];
+
+const DER_NULL: &[u8] = &[0x05, 0x00];
 
 /// Stable payload-free failure categories.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -582,6 +588,44 @@ impl fmt::Display for X509OcspReviewedResponderIntermediateDnsPolicyError {
 
 impl std::error::Error for X509OcspReviewedResponderIntermediateDnsPolicyError {}
 
+/// Stable payload-free responder no-check policy failure categories.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509OcspReviewedResponderNoCheckPolicyErrorKind {
+    /// The exact authenticated responder did not carry `id-pkix-ocsp-nocheck`.
+    MissingNoCheckExtension,
+    /// The extension value was not the exact DER `NULL` required by RFC 6960.
+    InvalidNoCheckExtensionValue,
+}
+
+/// A redacted responder no-check failure for one reviewed responder path.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509OcspReviewedResponderNoCheckPolicyError {
+    kind: X509OcspReviewedResponderNoCheckPolicyErrorKind,
+}
+
+impl X509OcspReviewedResponderNoCheckPolicyError {
+    const fn new(kind: X509OcspReviewedResponderNoCheckPolicyErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    pub const fn kind(self) -> X509OcspReviewedResponderNoCheckPolicyErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509OcspReviewedResponderNoCheckPolicyError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 OCSP reviewed-responder no-check policy error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509OcspReviewedResponderNoCheckPolicyError {}
+
 /// Non-copyable reviewed responder-path evidence after selected-anchor DNS policy.
 ///
 /// Success proves either that the exact reviewed terminal selected by the
@@ -641,6 +685,36 @@ impl<Proof> ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<Proof> {
 impl<Proof> fmt::Debug for ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<Proof> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("ValidatedX509OcspReviewedResponderIntermediateDnsPolicy")
+    }
+}
+
+/// Non-copyable reviewed responder evidence after RFC 6960 no-check policy.
+///
+/// Success retains the complete intermediate-DNS responder proof and proves
+/// that its exact authenticated responder carries one structurally unique
+/// `id-pkix-ocsp-nocheck` extension whose value is exact DER `NULL`. The
+/// retained path already proves that the exact intermediate signed and
+/// authorized this responder and that the responder was valid at the exact
+/// OCSP observation time. This covers only RFC 6960's trust-for-certificate-
+/// lifetime responder-revocation branch. It does not check intermediate
+/// revocation, generalize path validation, or grant TLS, HTTP, OAuth, or
+/// network authority.
+pub struct ValidatedX509OcspReviewedResponderNoCheckPolicy<Proof> {
+    intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<Proof>,
+}
+
+impl<Proof> ValidatedX509OcspReviewedResponderNoCheckPolicy<Proof> {
+    /// Return the consumed complete intermediate-DNS responder proof.
+    pub const fn intermediate_dns_policy(
+        &self,
+    ) -> &ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<Proof> {
+        &self.intermediate_dns_policy
+    }
+}
+
+impl<Proof> fmt::Debug for ValidatedX509OcspReviewedResponderNoCheckPolicy<Proof> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedX509OcspReviewedResponderNoCheckPolicy")
     }
 }
 
@@ -764,6 +838,32 @@ fn evaluate_responder_intermediate_dns_policy(
         })?;
 
     Ok(Some(constrained_dns_names))
+}
+
+fn evaluate_responder_no_check_policy(
+    responder_certificate: &x509_certificate::X509Certificate<'_>,
+) -> Result<(), X509OcspReviewedResponderNoCheckPolicyError> {
+    let extension = responder_certificate
+        .tbs_certificate()
+        .extensions()
+        .and_then(|extensions| {
+            extensions
+                .iter()
+                .find(|extension| extension.extension_id().equals(OCSP_NO_CHECK_OID))
+        })
+        .ok_or_else(|| {
+            X509OcspReviewedResponderNoCheckPolicyError::new(
+                X509OcspReviewedResponderNoCheckPolicyErrorKind::MissingNoCheckExtension,
+            )
+        })?;
+
+    if extension.extension_value() != DER_NULL {
+        return Err(X509OcspReviewedResponderNoCheckPolicyError::new(
+            X509OcspReviewedResponderNoCheckPolicyErrorKind::InvalidNoCheckExtensionValue,
+        ));
+    }
+
+    Ok(())
 }
 
 /// Apply the selected reviewed anchor's supported DNS policy to the responder.
@@ -970,6 +1070,95 @@ pub fn validate_x509_ocsp_reviewed_responder_intermediate_dns_policy<
     })
 }
 
+/// Require RFC 6960 no-check policy for the exact reviewed-path responder.
+///
+/// This consumes the complete responder intermediate-DNS proof and derives the
+/// responder certificate only through that retained path. A structurally
+/// unique `id-pkix-ocsp-nocheck` extension must be present with exact DER
+/// `NULL` contents. RFC 6960 recommends a non-critical extension but does not
+/// require it; a critical instance can reach this semantic gate only when the
+/// prerequisite certificate-wide role policy explicitly recognized its OID.
+#[allow(clippy::type_complexity)]
+pub fn validate_x509_ocsp_reviewed_responder_no_check_policy<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'target,
+    'target_encoded,
+    'issuer,
+    'issuer_encoded,
+    'path,
+    'server_certificate,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<
+        BoundX509OcspReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    >,
+) -> Result<
+    ValidatedX509OcspReviewedResponderNoCheckPolicy<
+        BoundX509OcspReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    >,
+    X509OcspReviewedResponderNoCheckPolicyError,
+> {
+    let responder_certificate = intermediate_dns_policy
+        .anchor_policy()
+        .responder_path()
+        .reviewed_server_revocation()
+        .authenticated_revocation()
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    evaluate_responder_no_check_policy(responder_certificate)?;
+
+    Ok(ValidatedX509OcspReviewedResponderNoCheckPolicy {
+        intermediate_dns_policy,
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -981,6 +1170,7 @@ mod tests {
     const KEY_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
     const NAME_CONSTRAINTS_OID_DER: &[u8] = &[0x55, 0x1d, 0x1e];
     const SUBJECT_ALT_NAME_OID_DER: &[u8] = &[0x55, 0x1d, 0x11];
+    const OCSP_NO_CHECK_OID_DER: &[u8] = &[0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x30, 0x01, 0x05];
     const NULL_DER: &[u8] = &[0x05, 0x00];
 
     fn fixture(hexadecimal: &str) -> Vec<u8> {
@@ -1135,6 +1325,13 @@ mod tests {
             Asn1Limits::default(),
             Asn1Limits::default(),
         )
+    }
+
+    fn evaluate_responder_no_check(
+        responder_encoded: &[u8],
+    ) -> Result<(), X509OcspReviewedResponderNoCheckPolicyError> {
+        let responder = decode_x509_certificate(responder_encoded, Asn1Limits::default()).unwrap();
+        evaluate_responder_no_check_policy(&responder)
     }
 
     #[test]
@@ -1378,5 +1575,51 @@ mod tests {
             X509OcspReviewedResponderIntermediateDnsPolicyErrorKind::ResponderIntermediateDnsNameConstraints(_)
         ));
         assert!(!format!("{error:?} {error}").contains("other.test"));
+    }
+
+    #[test]
+    fn exact_noncritical_no_check_null_succeeds() {
+        let responder = certificate(&[extension(OCSP_NO_CHECK_OID_DER, NULL_DER)]);
+
+        evaluate_responder_no_check(&responder).unwrap();
+    }
+
+    #[test]
+    fn exact_critical_no_check_null_is_semantically_valid() {
+        let responder = certificate(&[critical_extension(OCSP_NO_CHECK_OID_DER, NULL_DER)]);
+
+        evaluate_responder_no_check(&responder).unwrap();
+    }
+
+    #[test]
+    fn missing_no_check_extension_fails_closed() {
+        let responder = certificate(&[]);
+
+        let error = evaluate_responder_no_check(&responder).unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509OcspReviewedResponderNoCheckPolicyErrorKind::MissingNoCheckExtension
+        );
+        assert_eq!(
+            error.to_string(),
+            "X.509 OCSP reviewed-responder no-check policy error MissingNoCheckExtension"
+        );
+    }
+
+    #[test]
+    fn malformed_no_check_extension_is_rejected_without_payload() {
+        let responder = certificate(&[extension(OCSP_NO_CHECK_OID_DER, &[0x05, 0x01, 0x00])]);
+
+        let error = evaluate_responder_no_check(&responder).unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509OcspReviewedResponderNoCheckPolicyErrorKind::InvalidNoCheckExtensionValue
+        );
+        assert_eq!(
+            format!("{error:?} {error}"),
+            "X509OcspReviewedResponderNoCheckPolicyError { kind: InvalidNoCheckExtensionValue } X.509 OCSP reviewed-responder no-check policy error InvalidNoCheckExtensionValue"
+        );
     }
 }
