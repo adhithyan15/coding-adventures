@@ -1,0 +1,17 @@
+{
+  "language": "gujarati",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:39fd6c3d2f73a97f",
+  "lessonIds": [
+    "GU-C274-nahi-avu",
+    "GU-C274-javano-hato",
+    "GU-R274-plans-that-changed"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "gujarati/narration/ch274.txt",
+  "json": "gujarati/narration/ch274.json",
+  "textHash": "fnv1a64:7bdbc5e158814e2b",
+  "jsonHash": "fnv1a64:104f542808c236e5",
+  "findings": []
+}

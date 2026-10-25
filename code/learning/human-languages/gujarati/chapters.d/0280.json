@@ -1,0 +1,23 @@
+{
+  "chapter": 280,
+  "title": "Tickets, and when things go wrong",
+  "label": "ch:gu-tickets-and-when-things-go-wrong",
+  "canDo": "I can buy a ticket and ask about the next train (āvtī ṭren kyāre che?), report a lost bag or a missed train (khovāī gaī, chūṭī gaī), make a complaint, and read and write ઝ in ઝડપી.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-R280-at-the-station",
+    "kind": "production",
+    "summary": "Complete GU-R280-at-the-station: buy a ticket, and report a problem.",
+    "assesses": [
+      "GU-LEX-C280-JHADPI-01",
+      "GU-SCRIPT-C280-JHA-01",
+      "GU-GRAMMAR-C280-TICKET-ASK-01",
+      "GU-GRAMMAR-C280-NEXT-TRAIN-01",
+      "GU-LEX-C280-PHARIYAD-01",
+      "GU-GRAMMAR-C280-LOST-01",
+      "GU-GRAMMAR-C280-MISSED-HELP-01"
+    ]
+  }
+}

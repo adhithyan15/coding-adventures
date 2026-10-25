@@ -1,0 +1,22 @@
+{
+  "language": "gujarati",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:b08f85c73a4a4517",
+  "lessonIds": [
+    "GU-C282-sauthi",
+    "GU-W52-au-sign",
+    "GU-C282-kartan",
+    "GU-C282-sudhi",
+    "GU-C282-be-varasthi",
+    "GU-C282-rtu",
+    "GU-W53-vocalic-r-letter",
+    "GU-R282-comparing-and-time"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "gujarati/narration/ch282.txt",
+  "json": "gujarati/narration/ch282.json",
+  "textHash": "fnv1a64:0653074e3c0e9ad1",
+  "jsonHash": "fnv1a64:69c8c8032c15c672",
+  "findings": []
+}

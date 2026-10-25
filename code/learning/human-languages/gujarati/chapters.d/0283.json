@@ -1,0 +1,21 @@
+{
+  "chapter": 283,
+  "title": "If, then, or else",
+  "label": "ch:gu-if-then-or-else",
+  "canDo": "I can say what will happen if something does (jo varsād paḍśe, to …), give advice on a condition, and warn with nahī̃tar, or else.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-R283-if-and-otherwise",
+    "kind": "production",
+    "summary": "Complete GU-R283-if-and-otherwise: say what happens if, and what happens otherwise.",
+    "assesses": [
+      "GU-GRAMMAR-C283-JO-TO-01",
+      "GU-GRAMMAR-C283-JO-PRESENT-01",
+      "GU-GRAMMAR-C283-IF-FUTURE-01",
+      "GU-GRAMMAR-C283-IF-PERFECTIVE-01",
+      "GU-LEX-C283-NAHINTAR-01"
+    ]
+  }
+}

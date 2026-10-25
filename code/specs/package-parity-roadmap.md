@@ -17675,6 +17675,40 @@ response containers and authentication out of scope. The regenerated inventory
 now has 1,533 identities / 4,815 slots in the same 15 established lanes, with
 zero collisions or unknown buckets. No new implementation is selected.
 
+## C# CommonMark prerequisite split and renderer selection (2026-10-24)
+
+PR #18105 merged the fenced-block contract prerequisite as
+`8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738`. The independent C# lane audit
+confirms that `commonmark-parser` is already a substantive package root, while
+`document-ast-to-html` and the thin `commonmark` facade are the two actual
+missing C# identities. Native qualification executed every official CommonMark
+0.31.2 example through the public parser/renderer seam: 233 of 652 outputs
+matched exactly and 419 did not. That evidence forbids a facade conformance
+claim and makes a full parser rewrite too broad for the renderer tranche.
+
+Split the former `commonmark-html-csharp-lane-prerequisites` owner into three
+dependency-shaped children and retain the former owner only as a
+selection-blocked aggregate:
+
+- `document-ast-to-html-csharp-lane-parity` owns the missing renderer root;
+- `commonmark-parser-csharp-652-reconciliation` owns the measured parser gap;
+- `commonmark-csharp-facade-lane-parity` depends on both and owns the facade.
+
+Select only `document-ast-to-html-csharp-lane-parity` on branch
+`codex/parity-csharp-commonmark-html-20261024` from `ce1fe9b5`.
+
+This tranche adds a pure C# TE00 renderer with independent public-API vectors,
+bounded traversal/output, raw-node routing, URL hardening, coverage and both
+platform build fronts. It leaves the existing parser untouched and adds no
+facade. It does not adopt the GFM fixture or claim sanitizer/browser authority.
+
+The audit also discovered that CommonMark corpora and renderer vectors remain
+duplicated inside language packages rather than owned by a central neutral
+fixture. Register `commonmark-language-neutral-conformance-centralization` as
+a separate pending foundation. It should pin provenance, resource limits,
+native-reader routing, and independently authored renderer vectors without
+absorbing GFM. That centralization is not a prerequisite for this already
+established per-language corpus pattern and is not selected in this tranche.
 ## Post-#18105 GFM parity-loop restart (October 24, 2026)
 
 PR #18105 merged the TE04 fenced-block AST and consumer repair as
@@ -17732,3 +17766,87 @@ This prioritization distinguishes structural roots from behavior. C# and F#
 already expose substantive CommonMark parsers but lack the portable facade and
 HTML families; Haskell's similarly named roots do not yet establish Markdown
 semantics. Java, Kotlin, and Dart currently have only document AST foundations.
+
+## Post-#18118 F# renderer selection and prerequisite decomposition (October 24, 2026)
+
+PR #18118 merged the language-neutral GFM fixture at
+`83f1871e3d61e8151b0e9313337f5dc2c842a3e6` on
+`2026-10-24T18:59:25Z`.  It closes only the neutral foundation; no native lane
+inherits adoption credit from that merge.
+
+The next dependency review found that the combined F# CommonMark/HTML owner is
+not one reviewable implementation.  F# already has `document-ast` and a
+substantive `commonmark-parser`, but it lacks both `document-ast-to-html` and
+the thin `commonmark` facade.  Preserve the combined owner as a
+selection-blocked aggregate for its existing downstream references, and split
+it into this sequence:
+
+1. `document-ast-to-html-fsharp-lane-parity`, selected now, adds only the pure
+   native renderer root;
+2. `commonmark-parser-fsharp-652-reconciliation` measures and reconciles all
+   official CommonMark 0.31.2 outputs after the renderer merges; and
+3. `commonmark-fsharp-facade-lane-parity` adds composition only after both
+   prerequisites pass.
+
+The selected renderer has no dependency on the active C# renderer or
+TypeScript GFM adoption and no production-file overlap with either.  Its only
+runtime dependency is the existing F# `document-ast`.  The tranche covers all
+current F# AST variants, raw-node control, URL hardening, deterministic output,
+bounded ownership, native coverage and both platform build fronts.  Parser,
+facade, GFM, fenced-block adoption, external engines and ambient authority stay
+out of scope.
+
+The same audit records three future decompositions without selecting them:
+
+- the measured C# parser gap must become a full-652 harness/failure inventory,
+  sequential block and inline repairs, and a final exact gate rather than one
+  parser replacement;
+- Swift GFM requires a source-preserving fenced-block AST/parser/renderer
+  adoption and a 652-case CommonMark reconciliation before the missing
+  `gfm-parser` root, after which its existing facade owner may proceed; and
+- CommonMark corpus centralization must separate a provenance-pinned canonical
+  fixture/validator foundation from per-language reader and CI migrations.
+  Nine current readers across seven languages contain the same 140,487-byte
+  corpus with SHA-256
+  `d431b29d97b6f73e69d547109cf5081578fac931e72afe95639ebe766c1b2a20`.
+
+Those future records do not block or broaden the selected F# renderer.
+
+### F# renderer publication
+
+Draft PR #18154 opened from reviewed head
+`d6c1de44ada1343b1612be0c80546f09d9160755` over current main
+`e9ea4be4fbdf1379918f401f6e9498f1563d04aa`.  Two independent clean-archive
+first runs passed all 20 tests with 100% line, 99.16% branch and 100% method
+coverage.  The package, dependency-audit, exact build-selection, collision and
+1,531-owner state-graph checks also pass.  This renderer-only PR is the third
+active independent parity PR under the three-PR ceiling; it remains separate
+from the C# renderer and TypeScript GFM adopter and introduces no parser,
+facade or GFM claim.
+
+After the C# renderer merged, reconciling its mainline receipt exposed a fresh
+independent-review finding at `c05fcf8dc9`: per-table alignment-list length and
+array conversion did not bound aggregate work when callers reused the same
+large immutable list across many otherwise-empty tables. A failing repeated-
+alias regression now precedes a single-pass collector that charges at most
+100,000 alignment entries per render, including every alias visit. The updated
+21-test suite passes with 100% line, 99.17% branch and 100% method coverage; a
+new exact-head independent review remains the publication gate.
+## October 24, 2026: C# security follow-up and preserved audit owners
+
+Keep the operator-authorized ceiling of three dependency-safe parity PRs in
+flight. PR #18143 now bounds aggregate URL normalization work and executes its
+Windows native tests on repeated builds. Six genuine RED regressions became
+GREEN; all 33 renderer tests pass with 100% line and 98.82% branch coverage,
+including installed-package checks. No CommonMark/GFM parser qualification or
+facade completion follows; exact-head review and hosted CI remain required.
+
+Carry the 29 post-#18118 audit receipts and twelve pending classification/native
+adoption owners from the preserved parity journal into this public successor.
+The bounded sixteen-case TE04 TypeScript adoption proceeds independently in
+PR #18147; the pending authority classifier owns broader GFM behavior and does
+not retroactively block that published-corpus adoption. C++ remains emerging,
+and the fresh main inventory remains 15 established lanes, 1,536 identities
+and 4,818 slots with no collisions.
+The existing C# document-AST Windows repeat-build gap has a separate pending
+owner; its four directly executed native tests grant no build-front credit.

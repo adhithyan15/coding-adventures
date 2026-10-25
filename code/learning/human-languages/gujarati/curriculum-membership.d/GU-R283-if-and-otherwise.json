@@ -1,0 +1,11 @@
+{
+  "id": "GU-R283-if-and-otherwise",
+  "pathSegment": "GU-PATH-283-CONDITION-IF",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-283-CONDITION-IF",
+      "order": 3
+    }
+  ]
+}
