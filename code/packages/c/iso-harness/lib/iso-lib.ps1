@@ -11,9 +11,9 @@
         C   :  /std:c17   /permissive- /W4 /WX
         C++ :  /std:c++17 /permissive- /W4 /WX /EHsc
 
-    `/permissive-` is MSVC's equivalent of GCC/Clang's -pedantic-errors: it
-    disables Microsoft language extensions and enforces standard conformance.
-    `/WX` makes every warning fatal, mirroring -Werror.
+    `/permissive-` requests MSVC conformance. Clang's MSVC-compatible driver
+    still accepts GNU extensions with that switch, so clang-cl additionally
+    receives /clang:-pedantic-errors. `/WX` keeps every warning fatal.
 
     The design mirrors iso-lib.sh exactly: compile with EVERY compiler present,
     fail if none are found, honor an ISO_REQUIRE list of must-be-present
@@ -45,8 +45,14 @@ function Iso-Cxxstd { if ($env:ISO_CXXSTD) { return $env:ISO_CXXSTD } else { ret
 
 # Strict flag list for MSVC-family compilers, as an array of tokens.
 function Iso-StrictFlags {
-    param([Parameter(Mandatory)][ValidateSet('c','cpp')][string]$Lang)
+    param(
+        [Parameter(Mandatory)][ValidateSet('c','cpp')][string]$Lang,
+        [ValidateSet('cl','clang-cl')][string]$Compiler = 'cl'
+    )
     $flags = @('/nologo', '/permissive-', '/W4', '/WX')
+    # Do not treat clang-cl as MSVC internally: its extension diagnostics use
+    # Clang's policy even though its command-line dialect looks like cl.exe.
+    if ($Compiler -eq 'clang-cl') { $flags += '/clang:-pedantic-errors' }
     if ($Lang -eq 'cpp') {
         $flags += @("/std:$(Iso-Cxxstd)", '/EHsc')
     } else {
@@ -96,9 +102,8 @@ function Iso-BuildAndRun {
     }
     $buildDir = Iso-BuildDir
     New-Item -ItemType Directory -Force -Path $buildDir | Out-Null
-    $flags = Iso-StrictFlags -Lang $Lang
-
     foreach ($cc in $compilers) {
+        $flags = Iso-StrictFlags -Lang $Lang -Compiler $cc
         $exe = Join-Path $buildDir "$cc-$Name.exe"
         Write-Host "iso-harness: [$cc] compiling $Name"
         # /Fe: sets the output executable; /Fo: the intermediate obj directory.
@@ -123,13 +128,20 @@ function Iso-ExpectCompileFail {
     }
     $buildDir = Iso-BuildDir
     New-Item -ItemType Directory -Force -Path $buildDir | Out-Null
-    $flags = Iso-StrictFlags -Lang $Lang
-
     foreach ($cc in $compilers) {
+        $flags = Iso-StrictFlags -Lang $Lang -Compiler $cc
         Write-Host "iso-harness: [$cc] expecting REJECTION of $Source"
         # /c compiles without linking; we only care about the accept/reject verdict.
-        & $cc @flags '/c' $Source "/Fo:$buildDir\" *> $null
-        if ($LASTEXITCODE -eq 0) {
+        # Windows PowerShell 5 wraps clang-cl's expected stderr diagnostics in
+        # NativeCommandError records. They are not harness exceptions: capture
+        # the real compiler exit status, then restore the caller's error policy.
+        $savedErrorPreference = $ErrorActionPreference
+        try {
+            $ErrorActionPreference = 'Continue'
+            & $cc @flags '/c' $Source "/Fo:$buildDir\" *> $null
+            $compileExitCode = $LASTEXITCODE
+        } finally { $ErrorActionPreference = $savedErrorPreference }
+        if ($compileExitCode -eq 0) {
             throw "iso-harness: [$cc] ACCEPTED non-ISO source $Source - strict flags are not enforcing conformance!"
         }
         Write-Host "iso-harness: [$cc] correctly rejected $Source"

@@ -4,6 +4,13 @@ All notable changes to `iso-harness` are documented here.
 
 ## [Unreleased]
 
+- Fix actual NN47 Windows CI negative-fixture failures under clang-cl: add its
+  explicit `/clang:-pedantic-errors` in both positive and negative compiler paths,
+  preserving `/permissive- /W4 /WX` and standards. Pin all four language/compiler
+  flag policies; retain all installed compilers and the negative fixtures.
+  Capture expected negative-compile stderr under a locally restored PowerShell 5
+  error preference and decide rejection from the actual compiler exit status.
+
 - NN47 Windows prerequisite repair: capture compiler discovery as an array in
   both build/negative guards, including zero/one/multiple-compiler regressions.
   Keep the executable diagnostic ASCII so PowerShell 5 can load the BOM-free

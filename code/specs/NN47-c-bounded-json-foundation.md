@@ -30,6 +30,13 @@ negative paths; preserve the existing standard, warning and error flags, and
 all installed compiler discovery. Test flag selection plus real cl/clang-cl
 accept/reject and full parser execution before a new exact-head review/push.
 
+Local repaired validation now includes actual cl and clang-cl: both run the
+positive C/C++ fixtures and reject both negative fixtures, then each passes all
+1605 parser checks. Four explicit compiler/language flag-policy regressions
+join the six cardinality checks. Expected clang-cl stderr in PowerShell 5 is
+handled only within the negative invocation, restoring error policy in finally
+and checking the real exit status; positive diagnostics remain fatal.
+
 ## Reassessment after five-native delivery
 
 NN46 merged PR #18252 at exact head `ff37a3e44e3`, squash `da1b408680f`,
