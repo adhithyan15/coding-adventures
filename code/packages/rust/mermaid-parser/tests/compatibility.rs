@@ -165,6 +165,14 @@ const ER_CYCLES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-cycles-11.16.1-visual-corpus.json"
 ));
+const ER_COMPLEX_TOPOLOGY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-complex-topology-11.16.1-corpus.json"
+));
+const ER_COMPLEX_TOPOLOGY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-complex-topology-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2630,6 +2638,45 @@ fn pinned_er_cycle_reaches_semantic_ir() {
             && relationship.from_mult.as_deref() == Some("1")
             && relationship.to_mult.as_deref() == Some("1..*")
     }));
+}
+
+#[test]
+fn pinned_er_complex_topology_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_COMPLEX_TOPOLOGY_CORPUS)
+        .expect("ER complex topology corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_COMPLEX_TOPOLOGY_VISUAL_CORPUS)
+        .expect("ER complex topology visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER complex topology source"),
+    )
+    .expect("complex ER topology must parse");
+    assert_eq!(diagram.nodes.len(), 7);
+    assert_eq!(diagram.relationships.len(), 8);
+    for expected in [
+        "CUSTOMER",
+        "DELIVERY-ADDRESS",
+        "ORDER",
+        "INVOICE",
+        "ORDER-ITEM",
+        "PRODUCT-CATEGORY",
+        "PRODUCT",
+    ] {
+        assert!(diagram.nodes.iter().any(|node| node.id == expected));
+    }
+    let labels: Vec<&str> = diagram
+        .relationships
+        .iter()
+        .filter_map(|relationship| relationship.label.as_deref())
+        .collect();
+    assert_eq!(
+        labels,
+        ["has", "places", "liable for", "receives", "covers", "includes", "contains", "ordered in"]
+    );
 }
 
 #[test]
