@@ -2263,6 +2263,119 @@ print 7L / 2                    # 3   (classic division floors on longs too)
   and finds no digit, so they read it as the int `0`. The fix is in the
   plan's text above. The pairs refuse `0x` either way.
 
+**Phase 7c, slice 3 (`py-float-print`: floats on the Python 3 releases
+whose `print` writes `repr`).** LANG83 PR6c (IEEE `f64_add`/`f64_sub`/
+`f64_mul`/`f64_div`/`f64_neg`, merged) and PR6a (`write_f64_py`) are what the
+float subset waited on. This slice moves floats onto the release path.
+
+```python
+print(7 / 2)            # 3.5    true division of two ints (PEP 238)
+print(0.1 + 0.2)        # 0.30000000000000004   repr: shortest round trip
+print(1 + 0.5)          # 1.5    the int is converted (PyLong_AsDouble)
+print(-0.0, end="")     # refused: keyword arguments (as in py-int-print)
+print(-0.0)             # -0.0
+print(1e308 * 10)       # inf    float * never raises
+print(1.0 / 0)          # Trap.DivZero (ZeroDivisionError: float division by zero)
+print(7.5 // 2)         # refused: float `//` and `%` (no LANG83 op yet)
+```
+
+- **The subset.** `py-float-print` (the name LANG79 gave its pilot) becomes
+  a LANG84 release subset: `py-int-print` plus float literals, `/` as true
+  division, and `int`/`float` mixing in `+ - * /` and unary `+ -`, with a
+  float printed as `repr`. Its corpus, `corpus/py-float-print/`, holds the
+  float cases only; the int cases stay in `py-int-print`. A release that
+  claims both lists both: `iir_status` and `backend_status` become
+  `py-int-print;py-float-print`, and `grammar_subset` names the larger one,
+  `py-float-print`. LANG79's pilot (`compile_source`, `run_source`) keeps its
+  API, its legacy `"3.12"` grammar and its own tests. It is not a claim of
+  `py-float-print`: it predates the corpus model, and its bindings, NameError
+  and multi-argument `print` are later slices of the release subset.
+- **Which releases.** The six `py3` releases whose `str(float)` is `repr`:
+  3.5.10, 3.6.0, 3.11.17, 3.12.3, 3.13.16 and 3.16.0a1 (`float_repr` is
+  `tp_str` since 3.2; `Objects/floatobject.c` at v3.5.10 lines 1849/1855).
+  **Not** 3.0a1: its `float_str` formats with `PREC_STR` 12 (`%.12g`,
+  `Objects/floatobject.c` at v3.0a1 lines 285–299), so `print(1/3)` writes
+  `0.333333333333`, a layout no LANG83 writer has. **Not** Python 2: every
+  2.x `str(float)` is `%.12g` too. Both wait for a `write_f64_py_str12`-style
+  writer (a LANG83 addition, not this slice).
+- **Profiles.** A new field `ReleaseProfile::floats` (`Floats::Repr` or
+  `Floats::None`). `py3` keeps the six releases above and gets `Repr`.
+  3.0a1 moves to a new profile `py30` (`Floats::None`, otherwise as `py3`),
+  because the difference is semantic, not lexical (C2): its lexer could
+  never be the only guard, since `7 / 2` lexes in every release. `py2` gets
+  `Floats::None`. A profile now names a *list* of subsets (`subsets`):
+  `py3` → `py-int-print`, `py-float-print`; `py30` → `py-int-print`;
+  `py2` → `py2-int-print`. Under `Floats::None` a `FLOAT` token (from a
+  forged `compile_cst` tree) and a true `/` stay `Unsupported`.
+- **Lexing (the six pairs).** One `FLOAT` token, before `INT`, from each
+  tag's `tok_get` (`Parser/tokenizer.c`, `Parser/lexer/lexer.c` at 3.13.16
+  and 3.16.0a1): a digit part `D` is `[0-9]+` at 3.5.10 and
+  `[0-9](?:_?[0-9])*` from 3.6.0 (PEP 515); a float is `D.D?E?`, `.D E?` or
+  `D E`, with `E` = `[eE][+-]?D`. Leading zeros are allowed in a float
+  (`00.5`, `0123e1`), unlike an int. A second definition, `D.` aliased to
+  `FLOAT`, accepts a trailing-dot literal before a non-word character
+  (`print(1.)`), which the first, `\b`-terminated pattern cannot. Not lexed:
+  imaginary literals (`1j`, `1.5j`), hex floats (Python has none).
+  Narrowings (each rejects): a float running into a name character
+  (`1.5if`), as for `INT`.
+- **Grammar (the six pairs).** `atom = INT | FLOAT | NAME | paren_expr`.
+  3.0a1's and the `py2` pairs are unchanged.
+- **Lowering.** Each value has a static type, `int` (`i64`) or `float`
+  (`f64`), known at compile time because the subset has no variables.
+
+  | Python | IIR |
+  | --- | --- |
+  | `1.5`, `.5`, `1e16`, `1_0.5` | `const 1.5 : f64` (correctly rounded, as `PyOS_string_to_double`) |
+  | `int + float` (any order), `- *` | `int_to_real` on the int, then `f64_add` / `f64_sub` / `f64_mul` |
+  | `float + float`, `- *` | `f64_add` / `f64_sub` / `f64_mul` |
+  | `a / b` (any types) | `int_to_real` on each int, then `f64_div` |
+  | `a / b`, `b` is `±0` | `trap "Trap.DivZero"`, then the `f64_div` (dead) |
+  | `-x` (float) | `f64_neg` (so `-0.0` is `-0.0`) |
+  | `+x` (float) | nothing: `float.__pos__` is the identity |
+  | `print(x)` (float) | `call_builtin write_f64_py, x`, `putchar 10` |
+  | `a // b`, `a % b` with a float | `Unsupported` |
+
+  - *Why the zero test is at compile time.* CPython's `float_div` (and
+    `long_true_divide`) raise `ZeroDivisionError` on a zero divisor;
+    `f64_div` never traps (PR6c). Every value is known while lowering, so
+    the compiler knows when a divisor is `±0` and emits LANG83's `trap`
+    there; the program stops after its earlier output, as CPython does.
+    Known float values are computed with Rust's IEEE `f64` ops, the same
+    binary64 arithmetic the PR6c ops specify.
+  - *Why `int / int` above 2^53 is refused.* `long_true_divide` returns the
+    correctly rounded quotient of the exact integers. When both operands
+    are at most 2^53 in magnitude it takes the fast path `(double)a /
+    (double)b`, which is exactly `int_to_real` then `f64_div`. Above that,
+    converting first rounds twice and can differ, so such a division is
+    `Unsupported` (the operands are known).
+  - *Why a literal that overflows is refused.* `1e400` is `inf` in CPython,
+    but a non-finite `const` has no LANG83 contract (BEAM's literal table
+    cannot hold one). `1e308 * 10` reaches `inf` through `f64_mul` instead.
+  - *Mixing.* `float + int` converts the int with `PyLong_AsDouble`, which
+    rounds to nearest even, as `int_to_real` does (`cvtsi2sd`, `l2d`,
+    `conv.r8`, `f64.convert_i64_s`, `sitofp`). An int expression inside a
+    float one keeps its checked `i64` ops, so `(2**62 * 4) * 1.0` still
+    traps `Trap.Overflow` (the subset's stated divergence).
+- **Backends.** Every op above is LANG83. BEAM lowers `write_f64_py`,
+  `int_to_real` and `trap` but refuses the PR6c arithmetic at compile time
+  (`UnsupportedOps`, which stage B allows), so a row with float arithmetic
+  declares the seven IEEE columns and a literal-only row all eight.
+- **Tests and oracle.** New `py-float-print` corpus (positive cases with
+  `.expect` and `.cite`, negative cases for every refusal above, a
+  `.reject@3.5.10` for `_` in a float). The oracle is the host
+  interpreters 3.11.17, 3.12.3 and 3.13.16; 3.5.10, 3.6.0 and 3.16.0a1 rest
+  on the pinned source (`float_repr` as `tp_str`, `long_true_divide`'s fast
+  path, `float_div`'s zero check). `py-int-print`'s `reject_float` and
+  `reject_true_division` leave that corpus: they compile on the six
+  releases now, and 3.0a1's refusal of both is pinned in
+  `release_lowering.rs`. The release sweep adds `py-float-print` (two
+  classes are expected: 3.5.10, without `_`, and the five from 3.6.0), and
+  `lang_matrix` runs the corpus on the default release and on each class
+  representative.
+- **Not in this slice:** float `//`, `%` and `**`; comparisons; multi-item
+  `print`; bindings and NameError (LANG79's remaining features); floats on
+  3.0a1 and Python 2 (a `%.12g` writer); literals that overflow to `inf`.
+
 ### Wire every IIR frontend into lang-aot
 
 Add `Language` variants with release support for Python, JavaScript, Ruby and
