@@ -245,6 +245,14 @@ const ER_ATTRIBUTE_NAME_VALIDATION_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-name-validation-11.16.1-visual-corpus.json"
 ));
+const ER_UNICODE_SYMBOLS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-unicode-symbols-11.16.1-corpus.json"
+));
+const ER_UNICODE_SYMBOLS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-unicode-symbols-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2994,6 +3002,36 @@ fn pinned_er_attribute_name_boundaries_match_upstream() {
             fixture["name"]
         );
     }
+}
+
+#[test]
+fn pinned_er_unicode_symbols_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_UNICODE_SYMBOLS_CORPUS)
+        .expect("ER Unicode-symbol corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_UNICODE_SYMBOLS_VISUAL_CORPUS)
+        .expect("ER Unicode-symbol visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER Unicode-symbol source"),
+    )
+    .expect("ER Unicode-symbol fixture must parse");
+
+    let symbol = diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "_**testẽζ➕Ø😀㌕ぼ**_")
+        .expect("Unicode-symbol entity");
+    let person = diagram.nodes.iter().find(|node| node.id == "person").expect("person");
+    assert_eq!(symbol.compartments[0].entries, ["_age_: int"]);
+    assert_eq!(person.label, "😀");
+    assert_eq!(
+        person.compartments[0].entries,
+        ["*first*Name: string", "_**last**Name_: string"]
+    );
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some("__hẽ😀__"));
 }
 
 #[test]
