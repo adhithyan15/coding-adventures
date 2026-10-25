@@ -4,7 +4,7 @@
   "chapter": 199,
   "title": "This Is Information",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:26896c37327a6885",
+  "sourceHash": "fnv1a64:cc9ebeeb0e8c21ed",
   "lessons": [
     {
       "id": "PA-C199-information-return",
@@ -116,7 +116,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d35f3329b7d6ee26",
+      "sourceHash": "fnv1a64:ae6e8432eb6c1072",
       "notice": null,
       "blocks": [
         {
@@ -162,7 +162,7 @@
             },
             {
               "kind": "speech",
-              "text": "The exact history of modern written ਸੂਚਨਾ (suchnaa) remains unresolved in the sources used here, so this lesson makes no etymological claim. Keep the present-day Punjabi noun whole rather than turning spelling resemblance into a derivation. A Government of Punjab Language Department publication provides a current public-administration use. Source: Government of Punjab."
+              "text": "The exact history of modern written ਸੂਚਨਾ (suchnaa) remains unresolved in the sources used here: its exact origin remains unknown here. This lesson therefore makes no etymological claim. Keep the present-day Punjabi noun whole rather than turning spelling resemblance into a derivation. A Government of Punjab Language Department publication provides a current public-administration use. Source: Government of Punjab."
             }
           ]
         },

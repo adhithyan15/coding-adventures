@@ -56,10 +56,11 @@ news, and notice meanings. It supports the bounded present-day information and
 notice senses taught here. Source: [Punjabi University Punjabipedia](https://punjabipedia.org/topic.aspx?txt=%E0%A8%B8%E0%A9%82%E0%A8%9A%E0%A8%A8%E0%A8%BE).
 
 The exact history of modern written **ਸੂਚਨਾ** remains unresolved in the
-sources used here, so this lesson makes no etymological claim. Keep the
-present-day Punjabi noun whole rather than turning spelling resemblance into a
-derivation. A Government of Punjab Language Department publication provides a
-current public-administration use. Source: [Government of Punjab](https://punjab.gov.in/wp-content/uploads/2023/02/Language-Department-RTI2023-1.pdf).
+sources used here: its exact origin remains unknown here. This lesson therefore
+makes no etymological claim. Keep the present-day Punjabi noun whole rather
+than turning spelling resemblance into a derivation. A Government of Punjab
+Language Department publication provides a current public-administration use.
+Source: [Government of Punjab](https://punjab.gov.in/wp-content/uploads/2023/02/Language-Department-RTI2023-1.pdf).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SUCHNA-199] -->
