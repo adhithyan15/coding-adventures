@@ -5,8 +5,9 @@ import math
 from pathlib import Path
 
 import pytest
-from bezier2d import CubicBezier, QuadraticBezier
 from point2d import Point
+
+from bezier2d import CubicBezier, QuadraticBezier
 
 FIXTURE_PATH = (
     Path(__file__).resolve().parents[4]
@@ -15,7 +16,14 @@ FIXTURE_PATH = (
     / "bezier2d-flattening-v1"
     / "cases.json"
 )
-CASES = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))["cases"]
+FIXTURE = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+CASES = FIXTURE["cases"]
+
+
+def test_fixture_metadata_matches_implementation_limits():
+    assert FIXTURE["version"] == 1
+    assert FIXTURE["max_depth"] == 32
+    assert FIXTURE["max_subdivisions"] == 65_535
 
 
 def _curve(case):

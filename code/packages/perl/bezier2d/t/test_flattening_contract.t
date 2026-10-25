@@ -16,6 +16,10 @@ local $/;
 my $fixture = decode_json(<$fixture_fh>);
 close $fixture_fh;
 
+is $fixture->{version}, 1, 'fixture version matches implementation';
+is $fixture->{max_depth}, 32, 'fixture depth matches implementation';
+is $fixture->{max_subdivisions}, 65_535, 'fixture split budget matches implementation';
+
 sub curve_for {
     my ($case) = @_;
     my @points = map { new_point($_->[0], $_->[1]) } @{$case->{control_points}};

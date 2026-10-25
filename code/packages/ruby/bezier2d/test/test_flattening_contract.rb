@@ -10,7 +10,14 @@ class TestSafeFlatteningContract < Minitest::Test
   FIXTURE_PATH = File.expand_path(
     "../../../../specs/fixtures/bezier2d-flattening-v1/cases.json", __dir__
   )
-  CASES = JSON.parse(File.read(FIXTURE_PATH, encoding: "UTF-8")).fetch("cases")
+  FIXTURE = JSON.parse(File.read(FIXTURE_PATH, encoding: "UTF-8"))
+  CASES = FIXTURE.fetch("cases")
+
+  def test_fixture_metadata_matches_implementation_limits
+    assert_equal 1, FIXTURE.fetch("version")
+    assert_equal 32, FIXTURE.fetch("max_depth")
+    assert_equal 65_535, FIXTURE.fetch("max_subdivisions")
+  end
 
   def curve_for(test_case)
     points = test_case.fetch("control_points").map { |x, y| Point.new(x, y) }

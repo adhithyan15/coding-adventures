@@ -138,8 +138,8 @@ module Bezier2D
     end
 
     # polyline adaptively subdivides the curve to within tolerance.
-    # If the midpoint of the chord (straight line) is close to the actual
-    # curve midpoint, the segment is flat enough to represent as a line.
+    # Every control point must be within tolerance of the finite chord segment;
+    # depth and total subdivisions are bounded so failure is deterministic.
     def polyline(tolerance)
       Bezier2D.flatten(self, tolerance, [p0, p1, p2])
     end

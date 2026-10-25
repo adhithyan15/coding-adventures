@@ -17991,8 +17991,10 @@ The prepared implementation now replaces recursion in all three lanes with a
 left-first explicit stack, a depth limit of 32, and a shared 65,535-split
 budget. Scaled finite-segment distance arithmetic also carries the independent
 .NET review's subnormal-underflow lesson into these lanes before publication.
-All native fixtures and same-language Arc2D suites pass. Python's 34-test
+All native fixtures and same-language Arc2D suites pass. Python's 35-test
 Bezier2D build measures 95.73% production coverage and its one-test negative
-selection fails the raised 95% floor; Ruby passes 18 tests with 135 assertions,
-and Perl passes 83 assertions. Hosted platforms and independent final-head
+selection fails the raised 95% floor; Ruby passes 19 tests with 138 assertions,
+and Perl passes 86 assertions. Independent review also pinned the fixture
+version, depth, and split-budget metadata in every reader and corrected Ruby's
+retired midpoint-flatness comment. Hosted platforms and independent final-head
 review remain required before this tranche can be published.
