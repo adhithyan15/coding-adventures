@@ -1758,6 +1758,23 @@ mod tests {
     }
 
     #[test]
+    fn embedded_numeric_attribute_names_reserve_rows() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "ENTITY".into();
+        diagram.nodes[0].label = "ENTITY".into();
+        diagram.nodes[0].compartments[0].entries =
+            vec!["name1: string".into(), "value2: int".into()];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 2);
+        assert!(layout.nodes[0].height > 60.0);
+    }
+
+    #[test]
     fn numeric_entity_boundaries_layout_distinct_targets() {
         let mut diagram = two_class_diagram();
         diagram.title = None;
