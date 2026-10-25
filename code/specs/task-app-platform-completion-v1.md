@@ -372,6 +372,12 @@ remains the signing tracker.
 
 ### Selected fidelity slice — Qt fixed rail floor (#18250)
 
+Delivery blocker #18254: preserve the native XAML typography build/runtime
+gate while pinning its bootstrap to an available compatible .NET 9 SDK.
+Channel resolution selected 9.0.320 twice with HTTP 409; official release
+metadata lists 9.0.319 and its Windows x64 archive responds successfully.
+The repaired CI job, not archive availability alone, is the acceptance evidence.
+
 Ordinary Qt styled containers must preserve a static fixed width as their
 minimum when paired with exact `flex-shrink: 0`, including TaskApp's 236-pixel
 navigation rail. Reuse the conservative delegate-floor checks: finite,
