@@ -1,8 +1,8 @@
 # Forme Completion Roadmap
 
-> **Status:** Completion record, freshly audited 2026-10-24; all 75 roadmap
-> items are done and no actionable Forme completion backlog remains after
-> FM-B075 closed the final manifest/kernel inventory gap.
+> **Status:** Living completion record, freshly audited 2026-10-25; 75 of 76
+> roadmap items are done and FM-B076 is the sole active item after the audit
+> found stale AOT/DOC00 completion claims outside the numbered FM specs.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -11,7 +11,7 @@
 
 | Surface | Status | Canonical specification |
 |---|---|---|
-| Vision and delivery backlog | All 75 roadmap items done; no item active | [FM00 vision](FM00-forme-vision.md) and this roadmap |
+| Vision and delivery backlog | 75 of 76 roadmap items done; FM-B076 active | [FM00 vision](FM00-forme-vision.md) and this roadmap |
 | Kernel | Product contract and extension-kind subtype enforcement implemented | [FM01](FM01-forme-kernel.md) |
 | Plugin host | Extensible v1 implemented: installation, authority, runners, native sandboxes, product composition, and live storage watches | [FM02](FM02-forme-plugin-host.md) |
 | Orchestrator | Headless v0 product and declarative TOML parity implemented | [FM03](FM03-forme-orchestrator.md) |
@@ -205,6 +205,7 @@ blocked item names its dependency.
 | 72 | FM-B073 | done | Implement the declarative TOML pipeline form | Close FM03 §2.3 with a bounded parser that produces the same `PipelineConfig` shape as the canonical TypeScript form, rejects duplicate or unsupported input deterministically, resolves package stages through FM02, and runs through the real CLI product path. Differential and subprocess acceptance tests prove equivalent TOML and TypeScript pipelines. |
 | 73 | FM-B074 | done | Enforce plugin extension-kind subtype compatibility | Close FM01 §§2.5–2.6 by threading one immutable validated FM02 kind registry into DAG compatibility checks. Produced extension kinds may widen to their registered parent; generic producers may not narrow into specialized consumers without an explicit validating refinement stage. Bind every parent edge to its resolved descriptor/version, reject duplicate global names, missing parents and cycles, and preserve version, discriminant, stream, and named-port rules. Tests cover direct and transitive widening plus unsafe narrowing and every invalid registration. |
 | 74 | FM-B075 | done | Reconcile plugin-manifest kernel-kind recognition | Derive or exhaustively pin FM02's accepted built-in kind names to the FM01 kernel roster so plugin stages can consume or produce the shipped `TerminalBuffer` kind without reopening unknown-kind acceptance. A parity regression fails whenever the two inventories drift again. |
+| 75 | FM-B076 | active | Reconcile shipped AOT and DOC00 completion surfaces | Mark the complete eleven-package DOC00 v0 cluster as shipped, replace package READMEs that still call existing downstream packages planned or remaining, preserve intentional v1 non-goals as explicit scope, and extend the repository contract test so these completion claims cannot drift again. |
 
 ## Dependency path
 
@@ -228,7 +229,9 @@ FM-B029 closes the remaining CI-state clarity gap without reopening the shipped
 release horizon. Authoring v1 is complete. The 2026-10-18 conformance audit
 found two independently reviewable gaps outside the already-proven product
 paths: FM-B073 and FM-B074 are complete. The 2026-10-24 loop audit found the
-smaller manifest/kernel inventory drift now active as FM-B075.
+smaller manifest/kernel inventory drift closed by FM-B075. The 2026-10-25
+namespace-wide audit activated FM-B076 as the only remaining documentation
+truthfulness gap after confirming every referenced AOT/DOC00 package ships.
 
 ### FM-B070 web-quality contract
 
@@ -485,6 +488,7 @@ work.
 | 2026-10-18 | A fresh audit of all 333 open GitHub issues found one Forme-owned regression, #17558: parse5's repeated paragraph-in-button-scope scan made a 10,000-deep interactivity identity check exceed its ordinary test deadline under full-build load. PR #17710 replaced that repeated scan with an exact cached live-stack scope tracker, strengthened the regression to 40,000 elements plus malformed/foreign-content differential cases, passed the complete Linux/macOS/Windows release matrix and mandatory security review, and closed the issue. The same audit found completed FM02–FM09 surfaces still described as pending in several specs and package READMEs; #17631 is a repo-wide full-build performance issue, not unfinished Forme functionality. | Reconcile the stale status surfaces and pin them with `test_forme_spec_map.py`. Keep all 72 roadmap items done and no item active; after the reconciliation merges, rerun the open-issue and source-status audit before declaring the completion backlog clear. |
 | 2026-10-24 | FM-B075 found FM02's handwritten reserved-kind set had omitted the shipped `TerminalBuffer` descriptor even though the plugin host already resolved built-ins from FM01's canonical runtime roster. A fresh audit of all 344 open GitHub issues found no Forme-owned issue, and a repository-wide Forme spec/README status scan found no unfinished product claim; the remaining matches describe runtime pending-state semantics or completed historical discoveries. | Derive manifest recognition and reservation directly from `forme-types`' frozen `KINDS` roster, pin exact roster parity and `TerminalBuffer` acceptance, and close FM-B075. All 75 roadmap items are done, with no item active and no actionable Forme completion backlog. |
 | 2026-10-24 | Mandatory security review found that freezing the exported reserved-name `Set` did not freeze its entries: a consumer could mutate that compatibility view and make unknown stage kinds or subtype parents pass validation. | Keep the public parity view for compatibility, but make admission consult FM01's immutable `KINDS` roster directly and pin both affected validation paths with a fail-closed mutation regression. |
+| 2026-10-25 | After FM-B075 merged, a fresh audit found no open Forme pull request or issue among 25 open pull requests and 340 open issues, and all 75 existing roadmap rows were done. A broader namespace scan found three stale package claims: `forme-aot-page-bundle-emitter` still called the shipped deploy-manifest emitter planned, while two DOC00 READMEs still called already-shipped search/site packages remaining. `DOC00-docs-vision.md` likewise remained phrased as a pre-implementation plan even though all eleven packages exist. | Add FM-B076 as the sole active item. Reconcile only stale completion language, retain documented v1+ simplifications as intentional non-goals, and pin the shipped package inventory plus forbidden stale claims in `test_forme_spec_map.py`. |
 
 ## Loop protocol
 
