@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## Unreleased — LANG84 R1b: `=begin`/`=end`, `__END__`, fail closed
+
+### Changed
+
+- `tokenize_ruby_at`/`parse_ruby_at` on 3.3.5, 3.3.6 and 3.3.7 skip `=begin`
+  … `=end` embedded documents and stop at a `__END__` line, both only at a
+  line start. This follows parse.y's `word_match_p`/`whole_match_p` and was
+  checked against host ruby 3.3.6. An `=begin` with no `=end` line is a
+  `Lex` error.
+- The same releases now refuse, with a `Lex` error, every literal opener
+  Ruby might read and the pairs cannot lex:
+  - heredoc-shaped `<<`;
+  - `/` `/=` `%` `%=` with no whitespace after them, and any of them in
+    `beg` or in a `def` head.
+  These used to lex as operators. Refusing them keeps a skipped line from
+  ever being one Ruby reads as literal text (LANG84 R1b plan, "Fail
+  closed"). `x/2` and `a%b` without spaces are refused as a result.
+- Every newline resets the lexer mode to `beg`, as Ruby's lexer does. A line
+  that starts with `?a` after a value is now a `CHAR`. This was a
+  documented R0 divergence, and `documented_modern_divergences` is updated.
+
+### Added
+
+- `tests/r1b_line_start.rs` has 15 tests:
+  - the word rule, CRLF, input edges, line numbers after a document, and
+    line continuation;
+  - every `__END__` form, and an unterminated document;
+  - each refusal, and the def head;
+  - six valid-Ruby exploits that run `exit(1)` behind a document. Host ruby
+    exits 1 on all six; every one is refused.
+  - `every_token_kind_has_a_rule_in_defparams`, which proves that only `)`
+    leaves the parameter list.
+- The Ripper differential corpus gains `23_embdoc` and `24_end_marker`.
+  `on_embdoc_beg`/`on_embdoc`/`on_embdoc_end`/`on___end__` count as trivia,
+  and both programs are listed as hand-written `ruby-lexer` divergences
+  (it has no embedded documents).
+
 ## Unreleased — LANG84 phase 5a (the Ruby IIR path on the R0 pairs)
 
 ### Added

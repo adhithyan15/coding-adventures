@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## Unreleased — LANG84 R1b: embedded documents, `__END__` and the refusals
+
+### Changed
+
+- `src/_grammar.rs` is regenerated from the R1b pairs. The three 3.3.x token
+  grammars (still one deduplicated class) gain the following.
+  - **Skip patterns.** `EMBDOC` (`=begin` … `=end`) and `DATA_END` (a
+    `__END__` line plus the rest of the input), both guarded by
+    `@line_start` (LANG84 E1).
+  - **Refused tokens.** `HEREDOC_OPEN` and `EMBDOC_UNTERMINATED`.
+  - **Def-head modes.** `deffname`, `defn` and `defparams`, with their group
+    tokens.
+  - **Refusal rules.** E8 `-> refuse` rules for `/` `/=` `%` `%=` when no
+    whitespace follows, in `beg`, and in the def head.
+  - **NEWLINE.** A rule now resets the mode to `beg`.
+- 0.49 and 0.50 change only in comments: they have no embedded documents,
+  and their `__END__` predates R1b.
+- Every `TokenDefinition` literal carries `guard:` (239 of 239), and every
+  `ModeTransition` literal carries `conditions:` (85 of 85).
+
 ## Unreleased — LANG84 release token tables (R0)
 
 ### Added — LANG84 release token tables

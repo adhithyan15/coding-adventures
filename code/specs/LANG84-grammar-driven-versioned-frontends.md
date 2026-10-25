@@ -1126,7 +1126,7 @@ is checked by differential tests against the current `ruby-lexer` and against
 | Slice | Constructs | Needs |
 | --- | --- | --- |
 | R0 | Integers (decimal, `0x`, `0b`, `0o`/leading `0`, `_` separators), floats, identifiers, constants, `@iv`, `@@cv`, `$g`, `:sym`, `?c`, keywords, operators (`**`, `<=>`, `>>`, compound assignments, `&.` from 2.3, `..`/`...`, `->` from 1.9), `#` comments, `\` line continuation, `NEWLINE`/`;`. Newline-after-operator continuation is handled in `.grammar` with optional `NEWLINE` after binary operators | nothing new (F10 exists) |
-| R1 | Non-interpolating strings `'…'`, simple `"…"`, `=begin`/`=end`, `__END__` | E1 |
+| R1 | R1a: non-interpolating strings `'…'`, simple `"…"` (parked until after R4/R6). R1b: `=begin`/`=end`, `__END__` (**done** for 3.3.x; 0.49/0.50 had `__END__` from R0) | E1 |
 | R2 | Interpolation `"…#{…}…"`, backticks, `:"…"`, char escapes | E2, E4 |
 | R3 | `%w %W %i %I %q %Q %r %s %x %()` with nesting brackets and arbitrary delimiters | E2, E4 |
 | R4 | Regex literal versus division, and modifier `if`/`unless`/`while`/`until`/`rescue`, via F10 flat modes (EXPR_BEG/END/ARG/FNAME/DOT); newline trivia after operators and inside `[`/hash `{` | F10, E3 |
@@ -1283,6 +1283,32 @@ gone).
   document or `__END__`, plus `.reject` cases for an unterminated `=begin`,
   an indented `=begin` and a heredoc, each with a host-ruby `.cite` record.
 - The release sweep and the I/B claims must not change: comments emit no IIR.
+
+**R1b result (2026-10-25).** Landed as planned for 3.3.5, 3.3.6 and 3.3.7
+(one reviewed body, two copies by `ruby_release_pairs.py`), with these
+details:
+
+- **One positive corpus case.** `rb-int-puts` gained one positive case,
+  `embedded_document_and_end`, and two `.reject` cases: `reject_heredoc` and
+  `reject_unspaced_slash`, both `Lex`.
+  - The planned rejects for an unterminated or indented `=begin` are not
+    corpus cases. The corpus rule is that Ruby must accept every `.reject`,
+    and Ruby refuses both. `tests/r1b_line_start.rs` covers them instead.
+- **Two matrix rows.** The new case runs on 3.3.6 and 3.3.5, all eight
+  columns, so Ruby is 30 rows / 240 cells.
+- **Release classes.** `release_classes.csv` is regenerated: the class
+  digest changes because a case was added, and the partition is still the
+  single class {3.3.5, 3.3.6, 3.3.7}.
+- **Exploits.** `tests/r1b_line_start.rs` holds six valid-Ruby programs that
+  run `exit(1)` behind a document. Host ruby exits 1 on each; all six are
+  refused.
+  - The heredoc, the `beg`-mode regexp, the `def`-parameter regexp, the
+    `%`-literal argument, the `%` statement and `__END__` inside a regexp
+    are each pinned.
+  - `every_token_kind_has_a_rule_in_defparams` reads each pair and fails if
+    any token kind the pair can emit has no rule in `defparams`.
+- **Ripper differential.** It gained `23_embdoc` and `24_end_marker`; the
+  embdoc and `__END__` events count as trivia.
 
 **Status (3.2, R0, 2026-10-20).** Five rows have pairs and claim `partial`,
 stage `P`, subset `rb-int-puts`: the start of the inventory (`0.49`, `0.50`,
