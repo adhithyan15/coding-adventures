@@ -20696,7 +20696,7 @@
     {
       "id": "geometry-bezier2d-flattening-csharp-fsharp",
       "title": "Consume safe Bezier flattening contract in C# and F#",
-      "status": "pending",
+      "status": "in_progress",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
