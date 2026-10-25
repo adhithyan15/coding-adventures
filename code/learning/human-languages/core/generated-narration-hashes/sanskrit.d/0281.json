@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 281,
-  "sourceHash": "fnv1a64:441192c8ee946502",
+  "sourceHash": "fnv1a64:edc7ea884662eae4",
   "lessonIds": [
     "SA-C281-ekam-yanapatram-dadatu",
     "SA-C281-agrimah",
@@ -14,7 +14,7 @@
   "drivablePrefix": 4,
   "text": "sanskrit/narration/ch281.txt",
   "json": "sanskrit/narration/ch281.json",
-  "textHash": "fnv1a64:a0b1be6a8a2c9604",
-  "jsonHash": "fnv1a64:c1b35b4b06159983",
+  "textHash": "fnv1a64:7040ec3755e0fd15",
+  "jsonHash": "fnv1a64:c5875cbd63fc317d",
   "findings": []
 }

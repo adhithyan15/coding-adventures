@@ -35,7 +35,7 @@ reviews_of: [SA-C284-yadi-tarhi, SA-C284-yadi-varsa-bhavisyati, SA-C284-anyatha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C283-COMPARISON-01, SA-GRAMMAR-C283-DURATION-01] -->
 
-[PAUSE 2s] Say "the train goes faster than the bus". (*dhūmayānaṃ lokayānāpekṣayā śīghraṃ gacchati*.) Then "from morning until evening". (*prātaḥ ārabhya sāyaṃ paryantam*.)
+[PAUSE 2s] Say "the train goes faster than the bus". (*dhūmayānaṃ lokayānāpekṣayā śīghraṃ gacchati*.) Then "from morning until night". (*prātaḥ ārabhya rātriparyantam*.)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C284-IF-01, SA-GRAMMAR-C284-IF-02, SA-GRAMMAR-C284-CONDITIONAL-REAL-01, SA-GRAMMAR-C284-CONDITIONAL-REAL-02, SA-LEX-C284-ANYATHA-01, SA-LEX-C76-WEATHER-01, SA-LEX-C86-WEEKEND-04] -->

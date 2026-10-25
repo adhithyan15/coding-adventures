@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 278,
-  "sourceHash": "fnv1a64:58fd24d8542c36af",
+  "sourceHash": "fnv1a64:8a0760f4f619b2f6",
   "lessonIds": [
     "SA-C278-mama-matena",
     "SA-C278-yatah-karanat",
@@ -14,7 +14,7 @@
   "drivablePrefix": 4,
   "text": "sanskrit/narration/ch278.txt",
   "json": "sanskrit/narration/ch278.json",
-  "textHash": "fnv1a64:1e93194c7c3edc61",
-  "jsonHash": "fnv1a64:befbf36e38fa33f4",
+  "textHash": "fnv1a64:78192a7beb8f44fa",
+  "jsonHash": "fnv1a64:4593f4facbd3519c",
   "findings": []
 }

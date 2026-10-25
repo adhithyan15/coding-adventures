@@ -11,12 +11,12 @@ Before the new one: say "big". (mahat.) Then say "the city is big". (nagaraṃ m
 
 You'll want to know: Y-अपेक्षया.
 नगरं ग्रामापेक्षया महत्। nagaraṃ grāmāpekṣayā mahat. — "The city is bigger than the village."
-अपेक्षया (apekṣayā), "compared with", joins the end of the thing compared, as one word: grāma and apekṣayā meet as ग्रामापेक्षया (grāmāpekṣayā), two short as making one long ā. The describing word stays as it is: महत्, "big", says "bigger" here.
+अपेक्षया (apekṣayā), "compared with", joins the end of the thing compared, as one word: grāma and apekṣayā meet as ग्रामापेक्षया (grāmāpekṣayā), two short as making one long ā. Monier-Williams gives apekṣayā as "with regard to", at the end of a compound: with regard to the village, the city is big. The describing word stays as it is: महत्, "big", says "bigger" here.
 उद्यानं वनापेक्षया सुन्दरम्। udyānaṃ vanāpekṣayā sundaram. — "The garden is more beautiful than the forest."
 धूमयानं लोकयानापेक्षया शीघ्रं गच्छति। dhūmayānaṃ lokayānāpekṣayā śīghraṃ gacchati. — "The train goes faster than the bus."
 
 You'll want to know: -आत् with -तर, and the best.
-The other way puts the thing compared in the -āt form of भारतात् (bhāratāt), "from India", and adds -तर (-tara), "more", to the describing word (Pāṇini 2.3.42):
+The other way puts the thing compared in the -āt form you know from भारतात् (bhāratāt), "from India", and adds -तर (-tara), "more", to the describing word (Pāṇini 2.3.42):
 नगरं ग्रामात् महत्तरम्। nagaraṃ grāmāt mahattaram. — "The city is bigger than the village."
 उद्यानं वनात् सुन्दरतरम्। udyānaṃ vanāt sundarataram. — "The garden is more beautiful than the forest."
 For the best of all, सर्वेषु (sarveṣu), "among all", with श्रेष्ठः (śreṣṭhaḥ), "best":
@@ -44,12 +44,12 @@ Lesson 2 of 5.
 
 Warm-up.
 [pause 2 seconds]
-Say "morning" and "evening". (prātaḥ, sāyam.) Then say "the city is bigger than the village". (nagaraṃ grāmāpekṣayā mahat.)
+Say "morning" and "night". (prātaḥ, rātriḥ.) Then say "the city is bigger than the village". (nagaraṃ grāmāpekṣayā mahat.)
 
 You'll want to know: from … until.
-प्रातः आरभ्य सायं पर्यन्तम्। prātaḥ ārabhya sāyaṃ paryantam. — "From morning until evening."
-आरभ्य (ārabhya) is the -ya form of आरभते (ārabhate), "begins": "beginning from", so "from, since". पर्यन्तम् (paryantam) is "up to, until".
-अहं सायं पर्यन्तं कार्यं करोमि। ahaṃ sāyaṃ paryantaṃ kāryaṃ karomi. — "I work until evening."
+प्रातः आरभ्य रात्रिपर्यन्तम्। prātaḥ ārabhya rātriparyantam. — "From morning until night."
+आरभ्य (ārabhya) is the -ya form of आरभते (ārabhate), "begins": "beginning from", so "from, since". पर्यन्तम् (paryantam) is "up to, until", and it joins the end of the time it reaches, as अपेक्षया (apekṣayā) joins its word: रात्रिपर्यन्तम् (rātriparyantam), "until night". Monier-Williams gives paryanta, "extending as far as", at the end of a compound.
+अहं रात्रिपर्यन्तं कार्यं करोमि। ahaṃ rātriparyantaṃ kāryaṃ karomi. — "I work until night."
 सः ह्यः आरभ्य रुग्णः अस्ति। saḥ hyaḥ ārabhya rugṇaḥ asti. — "He has been ill since yesterday."
 
 You'll want to know: for how long.
@@ -65,14 +65,14 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "I read the whole day" — ahaṃ sarvaṃ dinaṃ paṭhāmi]
 [pause 8 seconds for the answer]
-[your turn — say: "I read until evening" — ahaṃ sāyaṃ paryantaṃ paṭhāmi]
+[your turn — say: "I read until night" — ahaṃ rātriparyantaṃ paṭhāmi]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 28 seconds]
-Say that you work from morning until evening, then that she read for an hour.
+Say that you work from morning until night, then that she read for an hour.
 
 Wrap-up Recall.
 [pause 3 seconds]
-"From morning"? (प्रातः आरभ्य.) "Until evening"? (सायं पर्यन्तम्.) "For an hour"? (एकां होराम्.) Which word means "for"? (None: the time says it by its form.)
+"From morning"? (प्रातः आरभ्य.) "Until night"? (रात्रिपर्यन्तम्.) "For an hour"? (एकां होराम्.) Which word means "for"? (None: the time says it by its form.)
 
 
 Lesson 3 of 5.
@@ -88,7 +88,7 @@ You'll want to know: ईदृशः.
 ईदृशं नगरम् अहं न दृष्टवान्। īdṛśaṃ nagaram ahaṃ na dṛṣṭavān. — "I have not seen a city like this."
 
 The word, taken apart.
-ईदृशः (īdṛśaḥ) is built from ī, "this", and the root √dṛś, "to see", the root of द्रक्ष्यति: "looking like this" (CDIAL 1611 gives the two parts). Monier-Williams compares Latin tālis, "such". It lives on as Hindi aisā, "such, like this" (CDIAL 1611).
+ईदृशः (īdṛśaḥ) is built from ī, "this", and the root √dṛś, "to see", the root of द्रक्ष्यति: "looking like this" (CDIAL 1611 gives the two parts). Monier-Williams compares its ending -dṛśa with the -li- of Latin tālis, "such". It lives on as Hindi aisā, "such, like this" (CDIAL 1611).
 
 Guided Practice.
 [pause 1 second]
@@ -162,11 +162,11 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: Of all fruits, the mango is the best.]
 [pause 8 seconds for the answer]
-[your turn — say: I worked from morning until evening.]
+[your turn — say: I worked from morning until night.]
 [pause 8 seconds for the answer]
-[your turn — say: She stayed in the village for two months. I like such a life.]
+[your turn — say: She stayed in the village for two months. I like such an experience.]
 [pause 8 seconds for the answer]
-[once you have stopped driving — read: ईदृशः (īdṛśaḥ) aloud, and say the sign that is its sitting form]
+[once you have stopped driving — read: ईदृशः (īdṛśaḥ) aloud, and name the sign its first vowel takes on a consonant]
 
 Wrap-up Recall.
 [pause 3 seconds]

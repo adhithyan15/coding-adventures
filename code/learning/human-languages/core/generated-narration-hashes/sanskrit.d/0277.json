@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 277,
-  "sourceHash": "fnv1a64:52898bcb17bcc7d0",
+  "sourceHash": "fnv1a64:ad68ec3dd133cdc9",
   "lessonIds": [
     "SA-C277-agatya",
     "SA-C277-prathamam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "sanskrit/narration/ch277.txt",
   "json": "sanskrit/narration/ch277.json",
-  "textHash": "fnv1a64:6432f39dfcc377a4",
-  "jsonHash": "fnv1a64:f0f71adbd69f4e6c",
+  "textHash": "fnv1a64:4002b5df226d03b2",
+  "jsonHash": "fnv1a64:e929f7f7ad83c46d",
   "findings": []
 }

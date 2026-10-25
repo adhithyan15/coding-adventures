@@ -16,7 +16,7 @@ prerequisites: [SA-C282-aham-prasannah-asmi, SA-C15-big, SA-C16-city, SA-C16-vil
 sounds: []
 roots: []
 duration:
-  max_seconds: 265
+  max_seconds: 280
 requires:
   knowledge: [SA-GRAMMAR-C282-FEELING-01, SA-LEX-C15-ADJ-01, SA-LEX-C16-PLACE-05, SA-LEX-C16-PLACE-02, SA-LEX-C89-DESCRIBE-01, SA-LEX-C81-PLANTS-04, SA-LEX-C16-PLACE-04, SA-LEX-C257-TRV257-02, SA-LEX-C36-REPLY-02, SA-LEX-C78-FOOD-01, SA-LEX-C24-ASK-03, SA-GRAMMAR-ABLATIVE-ORIGIN-01, SA-LEX-C16-PLACE-01]
 introduces:
@@ -45,7 +45,7 @@ reviews_of: [SA-C282-aham-prasannah-asmi, SA-C15-big, SA-C16-city]
 >
 > *nagaraṃ grāmāpekṣayā mahat.* — "The city is bigger than the village."
 
-**अपेक्षया** (*apekṣayā*), "compared with", joins the end of the thing compared, as one word: *grāma* and *apekṣayā* meet as **ग्रामापेक्षया** (*grāmāpekṣayā*), two short *a*s making one long *ā*. The describing word stays as it is: **महत्**, "big", says "bigger" here.
+**अपेक्षया** (*apekṣayā*), "compared with", joins the end of the thing compared, as one word: *grāma* and *apekṣayā* meet as **ग्रामापेक्षया** (*grāmāpekṣayā*), two short *a*s making one long *ā*. Monier-Williams gives *apekṣayā* as "with regard to", at the end of a compound: with regard to the village, the city is big. The describing word stays as it is: **महत्**, "big", says "bigger" here.
 
 > **उद्यानं वनापेक्षया सुन्दरम्।**
 >
@@ -58,7 +58,7 @@ reviews_of: [SA-C282-aham-prasannah-asmi, SA-C15-big, SA-C16-city]
 ## You'll want to know: -आत् with -तर, and the best
 <!-- hl-knowledge: introduces=[SA-GRAMMAR-C283-COMPARISON-02]; assesses=[SA-LEX-C36-REPLY-02, SA-LEX-C78-FOOD-01, SA-LEX-C24-ASK-03, SA-GRAMMAR-ABLATIVE-ORIGIN-01] -->
 
-The other way puts the thing compared in the *-āt* form of **भारतात्** (*bhāratāt*), "from India", and adds **-तर** (*-tara*), "more", to the describing word (Pāṇini 2.3.42):
+The other way puts the thing compared in the *-āt* form you know from **भारतात्** (*bhāratāt*), "from India", and adds **-तर** (*-tara*), "more", to the describing word (Pāṇini 2.3.42):
 
 > **नगरं ग्रामात् महत्तरम्।**
 >

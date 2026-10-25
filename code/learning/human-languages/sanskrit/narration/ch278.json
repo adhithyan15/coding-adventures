@@ -4,7 +4,7 @@
   "chapter": 278,
   "title": "What I Think, and Why",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:58fd24d8542c36af",
+  "sourceHash": "fnv1a64:8a0760f4f619b2f6",
   "lessons": [
     {
       "id": "SA-C278-mama-matena",
@@ -769,7 +769,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46d78dd0b0c0de1d",
+      "sourceHash": "fnv1a64:b2a49faf26a5bbdd",
       "notice": null,
       "blocks": [
         {
@@ -830,20 +830,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "Because of the rain the children did not play.",
+              "instruction": "Because of the rain Mira did not come.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: Because of the rain the children did not play.]"
+              "source": "[YOU SAY: Because of the rain Mira did not come.]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "What does Arun think? His decision is firm.",
+              "instruction": "What does Arun think? My decision is firm.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: What does Arun think? His decision is firm.]"
+              "source": "[YOU SAY: What does Arun think? My decision is firm.]"
             },
             {
               "kind": "prompt",

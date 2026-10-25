@@ -67,7 +67,7 @@ reviews_of: [SA-C279-bhavan-gacchet, SA-C279-atah-tasmat]
 [PAUSE 1s]
 - [YOU SAY: *upadeśaḥ*]
 - [YOU SAY: "I have a piece of advice" — *mama upadeśaḥ asti*]
-- [YOU SAY: "My advice: you should rest at home" — *mama upadeśaḥ: bhavān gṛhe tiṣṭhet*]
+- [YOU SAY: "My advice: you should stay at home" — *mama upadeśaḥ: bhavān gṛhe tiṣṭhet*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C279-UPADESAH-01] -->

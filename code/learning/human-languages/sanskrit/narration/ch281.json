@@ -4,7 +4,7 @@
   "chapter": 281,
   "title": "At the Station, and When Things Go Wrong",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:441192c8ee946502",
+  "sourceHash": "fnv1a64:edc7ea884662eae4",
   "lessons": [
     {
       "id": "SA-C281-ekam-yanapatram-dadatu",
@@ -820,7 +820,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c59113bcfb7ae55",
+      "sourceHash": "fnv1a64:837e717f0096c557",
       "notice": null,
       "blocks": [
         {
@@ -899,11 +899,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "औषधम् (auṣadham) aloud, and say the sign that is its sitting form",
+              "instruction": "औषधम् (auṣadham) aloud, and name the sign its first vowel takes on a consonant",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **औषधम्** aloud, and say the sign that is its sitting form]"
+              "source": "[YOU READ: **औषधम्** aloud, and name the sign its first vowel takes on a consonant]"
             }
           ]
         },

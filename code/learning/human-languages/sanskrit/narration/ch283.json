@@ -4,7 +4,7 @@
   "chapter": 283,
   "title": "Bigger, Better, and How Long",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:3cbbee7819de90b1",
+  "sourceHash": "fnv1a64:26fab38a65ceae51",
   "lessons": [
     {
       "id": "SA-C283-apeksaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:930bb63f78520e1f",
+      "sourceHash": "fnv1a64:6bdf85bffec2d2d6",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "अपेक्षया (apekṣayā), \"compared with\", joins the end of the thing compared, as one word: grāma and apekṣayā meet as ग्रामापेक्षया (grāmāpekṣayā), two short as making one long ā. The describing word stays as it is: महत्, \"big\", says \"bigger\" here."
+              "text": "अपेक्षया (apekṣayā), \"compared with\", joins the end of the thing compared, as one word: grāma and apekṣayā meet as ग्रामापेक्षया (grāmāpekṣayā), two short as making one long ā. Monier-Williams gives apekṣayā as \"with regard to\", at the end of a compound: with regard to the village, the city is big. The describing word stays as it is: महत्, \"big\", says \"bigger\" here."
             },
             {
               "kind": "speech",
@@ -69,7 +69,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The other way puts the thing compared in the -āt form of भारतात् (bhāratāt), \"from India\", and adds -तर (-tara), \"more\", to the describing word (Pāṇini 2.3.42):"
+              "text": "The other way puts the thing compared in the -āt form you know from भारतात् (bhāratāt), \"from India\", and adds -तर (-tara), \"more\", to the describing word (Pāṇini 2.3.42):"
             },
             {
               "kind": "speech",
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5862b565aba75ed",
+      "sourceHash": "fnv1a64:f6b19fe27bab2da8",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"morning\" and \"evening\". (prātaḥ, sāyam.) Then say \"the city is bigger than the village\". (nagaraṃ grāmāpekṣayā mahat.)"
+              "text": "Say \"morning\" and \"night\". (prātaḥ, rātriḥ.) Then say \"the city is bigger than the village\". (nagaraṃ grāmāpekṣayā mahat.)"
             }
           ]
         },
@@ -212,15 +212,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "प्रातः आरभ्य सायं पर्यन्तम्। prātaḥ ārabhya sāyaṃ paryantam. — \"From morning until evening.\""
+              "text": "प्रातः आरभ्य रात्रिपर्यन्तम्। prātaḥ ārabhya rātriparyantam. — \"From morning until night.\""
             },
             {
               "kind": "speech",
-              "text": "आरभ्य (ārabhya) is the -ya form of आरभते (ārabhate), \"begins\": \"beginning from\", so \"from, since\". पर्यन्तम् (paryantam) is \"up to, until\"."
+              "text": "आरभ्य (ārabhya) is the -ya form of आरभते (ārabhate), \"begins\": \"beginning from\", so \"from, since\". पर्यन्तम् (paryantam) is \"up to, until\", and it joins the end of the time it reaches, as अपेक्षया (apekṣayā) joins its word: रात्रिपर्यन्तम् (rātriparyantam), \"until night\". Monier-Williams gives paryanta, \"extending as far as\", at the end of a compound."
             },
             {
               "kind": "speech",
-              "text": "अहं सायं पर्यन्तं कार्यं करोमि। ahaṃ sāyaṃ paryantaṃ kāryaṃ karomi. — \"I work until evening.\""
+              "text": "अहं रात्रिपर्यन्तं कार्यं करोमि। ahaṃ rātriparyantaṃ kāryaṃ karomi. — \"I work until night.\""
             },
             {
               "kind": "speech",
@@ -287,30 +287,30 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I read until evening\" — ahaṃ sāyaṃ paryantaṃ paṭhāmi",
+              "instruction": "\"I read until night\" — ahaṃ rātriparyantaṃ paṭhāmi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I read until evening\" — *ahaṃ sāyaṃ paryantaṃ paṭhāmi*]"
+              "source": "[YOU SAY: \"I read until night\" — *ahaṃ rātriparyantaṃ paṭhāmi*]"
             },
             {
               "kind": "activity",
               "scored": true,
               "spoken": true,
               "id": "SA-C283-arabhya-paryantam-r1",
-              "prompt": "Say that you work from morning until evening, then that she read for an hour.",
+              "prompt": "Say that you work from morning until night, then that she read for an hour.",
               "assesses": [
                 "SA-GRAMMAR-C283-DURATION-01",
                 "SA-GRAMMAR-C283-DURATION-02"
               ],
               "responseSeconds": 28,
               "acceptedResponses": [
-                "ahaṃ prātaḥ ārabhya sāyaṃ paryantaṃ kāryaṃ karomi; sā ekāṃ horāṃ paṭhitavatī",
-                "अहं प्रातः आरभ्य सायं पर्यन्तं कार्यं करोमि। सा एकां होरां पठितवती।"
+                "ahaṃ prātaḥ ārabhya rātriparyantaṃ kāryaṃ karomi; sā ekāṃ horāṃ paṭhitavatī",
+                "अहं प्रातः आरभ्य रात्रिपर्यन्तं कार्यं करोमि। सा एकां होरां पठितवती।"
               ],
               "feedback": {
                 "correct": "ārabhya … paryantam for the span; ekāṃ horām with no word for for.",
-                "incorrect": "From: ārabhya after the start. Until: paryantam after the end. For an hour: ekāṃ horām."
+                "incorrect": "From: ārabhya after the start. Until: -paryantam joined to the end. For an hour: ekāṃ horām."
               }
             }
           ]
@@ -328,7 +328,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"From morning\"? (प्रातः आरभ्य.) \"Until evening\"? (सायं पर्यन्तम्.) \"For an hour\"? (एकां होराम्.) Which word means \"for\"? (None: the time says it by its form.)"
+              "text": "\"From morning\"? (प्रातः आरभ्य.) \"Until night\"? (रात्रिपर्यन्तम्.) \"For an hour\"? (एकां होराम्.) Which word means \"for\"? (None: the time says it by its form.)"
             }
           ]
         }
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:183e50691315163e",
+      "sourceHash": "fnv1a64:cfbaf6b961faed64",
       "notice": null,
       "blocks": [
         {
@@ -393,7 +393,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ईदृशः (īdṛśaḥ) is built from ī, \"this\", and the root √dṛś, \"to see\", the root of द्रक्ष्यति: \"looking like this\" (CDIAL 1611 gives the two parts). Monier-Williams compares Latin tālis, \"such\". It lives on as Hindi aisā, \"such, like this\" (CDIAL 1611)."
+              "text": "ईदृशः (īdṛśaḥ) is built from ī, \"this\", and the root √dṛś, \"to see\", the root of द्रक्ष्यति: \"looking like this\" (CDIAL 1611 gives the two parts). Monier-Williams compares its ending -dṛśa with the -li- of Latin tālis, \"such\". It lives on as Hindi aisā, \"such, like this\" (CDIAL 1611)."
             }
           ]
         },
@@ -658,7 +658,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55f391045df4de2c",
+      "sourceHash": "fnv1a64:ba89677f853ab4c8",
       "notice": null,
       "blocks": [
         {
@@ -719,29 +719,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "I worked from morning until evening.",
+              "instruction": "I worked from morning until night.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: I worked from morning until evening.]"
+              "source": "[YOU SAY: I worked from morning until night.]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "She stayed in the village for two months. I like such a life.",
+              "instruction": "She stayed in the village for two months. I like such an experience.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: She stayed in the village for two months. I like such a life.]"
+              "source": "[YOU SAY: She stayed in the village for two months. I like such an experience.]"
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ईदृशः (īdṛśaḥ) aloud, and say the sign that is its sitting form",
+              "instruction": "ईदृशः (īdṛśaḥ) aloud, and name the sign its first vowel takes on a consonant",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **ईदृशः** aloud, and say the sign that is its sitting form]"
+              "source": "[YOU READ: **ईदृशः** aloud, and name the sign its first vowel takes on a consonant]"
             }
           ]
         },

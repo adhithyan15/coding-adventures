@@ -102,4 +102,4 @@ After a condition in the present, the second half can ask or advise, with **-त
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C284-CONDITIONAL-REAL-01, SA-GRAMMAR-C284-CONDITIONAL-REAL-02] -->
 
-[PAUSE 3s] "If it rains tomorrow, I will stay at home"? (**यदि श्वः वर्षा भविष्यति, तर्हि अहं गृहे स्थास्यामि**.) Which form goes in both halves? (The future.) "If you are ill, please go to the doctor"? (**यदि भवान् रुग्णः अस्ति, तर्हि वैद्यं गच्छतु**.)
+[PAUSE 3s] "If it rains tomorrow, I will stay at home"? (**यदि श्वः वर्षा भविष्यति**, **तर्हि अहं गृहे स्थास्यामि**.) Which form goes in both halves? (The future.) "If you are ill, please go to the doctor"? (**यदि भवान् रुग्णः अस्ति, तर्हि वैद्यं गच्छतु**.)

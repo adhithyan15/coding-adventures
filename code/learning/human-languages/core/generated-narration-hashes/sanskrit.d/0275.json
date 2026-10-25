@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 275,
-  "sourceHash": "fnv1a64:f481ab34b7de3e21",
+  "sourceHash": "fnv1a64:d8d52b9dd4e687e4",
   "lessonIds": [
     "SA-C275-karisyati",
     "SA-C275-pathisyati",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "sanskrit/narration/ch275.txt",
   "json": "sanskrit/narration/ch275.json",
-  "textHash": "fnv1a64:4ad63d79a877256f",
-  "jsonHash": "fnv1a64:8e18651852bd4835",
+  "textHash": "fnv1a64:1501376e8668db9e",
+  "jsonHash": "fnv1a64:7c546b91b894b964",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 276,
   "title": "What Happened, and What Was Going On",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ed9432d000fb7c03",
+  "sourceHash": "fnv1a64:4f1b3d67a5bbbd09",
   "lessons": [
     {
       "id": "SA-C276-sah-gatavan",
@@ -223,7 +223,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1930ac1e1ae20f61",
+      "sourceHash": "fnv1a64:20388b3a1d30eb61",
       "notice": null,
       "blocks": [
         {

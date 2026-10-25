@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 276,
-  "sourceHash": "fnv1a64:ed9432d000fb7c03",
+  "sourceHash": "fnv1a64:4f1b3d67a5bbbd09",
   "lessonIds": [
     "SA-C276-sah-gatavan",
     "SA-C276-sah-pathati-sma",
@@ -14,6 +14,6 @@
   "text": "sanskrit/narration/ch276.txt",
   "json": "sanskrit/narration/ch276.json",
   "textHash": "fnv1a64:032eaf9dab1e3ee5",
-  "jsonHash": "fnv1a64:c6b1d74cd7208cef",
+  "jsonHash": "fnv1a64:8eceef9699973465",
   "findings": []
 }

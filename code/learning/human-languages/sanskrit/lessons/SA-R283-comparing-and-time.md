@@ -44,9 +44,9 @@ reviews_of: [SA-C283-apeksaya, SA-C283-arabhya-paryantam, SA-C283-idrsah, SA-S22
 - [YOU SAY: The city is bigger than the village.]
 - [YOU SAY: The train goes faster than the bus.]
 - [YOU SAY: Of all fruits, the mango is the best.]
-- [YOU SAY: I worked from morning until evening.]
-- [YOU SAY: She stayed in the village for two months. I like such a life.]
-- [YOU READ: **ईदृशः** aloud, and say the sign that is its sitting form]
+- [YOU SAY: I worked from morning until night.]
+- [YOU SAY: She stayed in the village for two months. I like such an experience.]
+- [YOU READ: **ईदृशः** aloud, and name the sign its first vowel takes on a consonant]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C283-COMPARISON-01, SA-GRAMMAR-C283-COMPARISON-02, SA-GRAMMAR-C283-DURATION-01, SA-GRAMMAR-C283-DURATION-02] -->

@@ -46,7 +46,7 @@ reviews_of: [SA-C281-ekam-yanapatram-dadatu, SA-C281-agrimah, SA-C281-mama-syuta
 - [YOU SAY: My bag is lost, and the train has gone.]
 - [YOU SAY: I am ill. Where is the medicine?]
 - [YOU SAY: Please help.]
-- [YOU READ: **औषधम्** aloud, and say the sign that is its sitting form]
+- [YOU READ: **औषधम्** aloud, and name the sign its first vowel takes on a consonant]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C281-TICKET-01, SA-GRAMMAR-C281-TICKET-02, SA-GRAMMAR-C281-PROBLEM-01, SA-GRAMMAR-C281-PROBLEM-02] -->

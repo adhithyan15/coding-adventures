@@ -51,4 +51,4 @@ reviews_of: [SA-C277-agatya, SA-C277-prathamam, SA-C277-sighram, SA-C277-mira-na
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C277-SEQUENCE-01, SA-GRAMMAR-C277-SEQUENCE-02, SA-GRAMMAR-C277-THEN-01, SA-GRAMMAR-C277-THEN-02, SA-LEX-C277-SIGHRAM-01] -->
 
-[PAUSE 3s] **प्रविश्य** or *praviśtvā*? (**प्रविश्य**: the verb has a prefix.) "Having eaten"? (**खादित्वा**.) Now the other way round: what does **शीघ्रम्** mean? ("Quickly".) And **अन्ते**? ("In the end".)
+[PAUSE 3s] "Having gone in": *-ya* or *-tvā*? (*-ya*, **प्रविश्य**: the verb has a prefix.) "Having eaten"? (**खादित्वा**.) Now the other way round: what does **शीघ्रम्** mean? ("Quickly".) And **अन्ते**? ("In the end".)

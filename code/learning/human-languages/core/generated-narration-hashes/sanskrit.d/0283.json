@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 283,
-  "sourceHash": "fnv1a64:3cbbee7819de90b1",
+  "sourceHash": "fnv1a64:26fab38a65ceae51",
   "lessonIds": [
     "SA-C283-apeksaya",
     "SA-C283-arabhya-paryantam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "sanskrit/narration/ch283.txt",
   "json": "sanskrit/narration/ch283.json",
-  "textHash": "fnv1a64:280d0773e4e47bf2",
-  "jsonHash": "fnv1a64:9c12c7aa30c94eb5",
+  "textHash": "fnv1a64:ddab556cc9d74c2b",
+  "jsonHash": "fnv1a64:90f4046fe7f8a92a",
   "findings": []
 }

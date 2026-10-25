@@ -4,7 +4,7 @@
   "chapter": 277,
   "title": "One Thing, Then the Next",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:52898bcb17bcc7d0",
+  "sourceHash": "fnv1a64:ad68ec3dd133cdc9",
   "lessons": [
     {
       "id": "SA-C277-agatya",
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "reading-type"
       ],
-      "sourceHash": "fnv1a64:e1ee7409375bd24e",
+      "sourceHash": "fnv1a64:ea583688c819b965",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -518,7 +518,7 @@
             },
             {
               "kind": "speech",
-              "text": "Eighty words, every one of them met before: Mira's day in the city, told in order."
+              "text": "Eighty words, all met before but two new forms: प्रविष्टवती (praviṣṭavatī), \"she went in\", and दृष्ट्वा (dṛṣṭvā), \"having seen\"."
             }
           ]
         },
@@ -714,7 +714,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64eb304b423e1e51",
+      "sourceHash": "fnv1a64:2535040edfdb938b",
       "notice": null,
       "blocks": [
         {
@@ -814,7 +814,7 @@
             },
             {
               "kind": "speech",
-              "text": "प्रविश्य or praviśtvā? (प्रविश्य: the verb has a prefix.) \"Having eaten\"? (खादित्वा.) Now the other way round: what does शीघ्रम् (śīghram) mean? (\"Quickly\".) And अन्ते? (\"In the end\".)"
+              "text": "\"Having gone in\": -ya or -tvā? (-ya, प्रविश्य: the verb has a prefix.) \"Having eaten\"? (खादित्वा.) Now the other way round: what does शीघ्रम् (śīghram) mean? (\"Quickly\".) And अन्ते? (\"In the end\".)"
             }
           ]
         }

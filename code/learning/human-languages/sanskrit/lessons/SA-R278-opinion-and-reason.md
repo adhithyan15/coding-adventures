@@ -44,8 +44,8 @@ reviews_of: [SA-C278-mama-matena, SA-C278-yatah-karanat, SA-C278-manyate, SA-C27
 - [YOU SAY: In my opinion the city is beautiful.]
 - [YOU SAY: I think that Mira will come tomorrow.]
 - [YOU SAY: I will not go, because I am tired.]
-- [YOU SAY: Because of the rain the children did not play.]
-- [YOU SAY: What does Arun think? His decision is firm.]
+- [YOU SAY: Because of the rain Mira did not come.]
+- [YOU SAY: What does Arun think? My decision is firm.]
 - [YOU READ: **दृढः** and **मम दृढः विश्वासः अस्ति** aloud]
 
 ## Wrap-up Recall

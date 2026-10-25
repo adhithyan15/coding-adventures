@@ -4,7 +4,7 @@
   "chapter": 279,
   "title": "Advice, and What Follows",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:bb1bbe061ba8fec7",
+  "sourceHash": "fnv1a64:e104786a84afd8f3",
   "lessons": [
     {
       "id": "SA-C279-bhavan-gacchet",
@@ -383,7 +383,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2e8dc7207980ab5",
+      "sourceHash": "fnv1a64:1c84c30fcd7b1e9b",
       "notice": null,
       "blocks": [
         {
@@ -469,11 +469,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"My advice: you should rest at home\" — mama upadeśaḥ: bhavān gṛhe tiṣṭhet",
+              "instruction": "\"My advice: you should stay at home\" — mama upadeśaḥ: bhavān gṛhe tiṣṭhet",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"My advice: you should rest at home\" — *mama upadeśaḥ: bhavān gṛhe tiṣṭhet*]"
+              "source": "[YOU SAY: \"My advice: you should stay at home\" — *mama upadeśaḥ: bhavān gṛhe tiṣṭhet*]"
             }
           ]
         },

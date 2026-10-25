@@ -93,4 +93,4 @@ reviews_of: [SA-C276-sah-gatavan]
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C276-ONGOING-PAST-01, SA-GRAMMAR-C276-ONGOING-PAST-02] -->
 
-[PAUSE 3s] "He was playing"? (**सः क्रीडति स्म**.) "When I was reading, Arun came"? (**यदा अहं पठामि स्म, तदा अरुणः आगतवान्**.) Which form tells the scene? (The present with **स्म**.)
+[PAUSE 3s] "He was playing"? (**सः क्रीडति स्म**.) "When I was reading, Arun came"? (**यदा अहं पठामि स्म**, **तदा अरुणः आगतवान्**.) Which form tells the scene? (The present with **स्म**.)

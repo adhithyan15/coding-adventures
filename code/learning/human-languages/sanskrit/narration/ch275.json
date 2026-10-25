@@ -4,7 +4,7 @@
   "chapter": 275,
   "title": "What Everyone Will Do",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f481ab34b7de3e21",
+  "sourceHash": "fnv1a64:d8d52b9dd4e687e4",
   "lessons": [
     {
       "id": "SA-C275-karisyati",
@@ -215,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3472d7ffda81ea77",
+      "sourceHash": "fnv1a64:942f1bd17f30b8b5",
       "notice": null,
       "blocks": [
         {
@@ -309,7 +309,7 @@
             },
             {
               "kind": "speech",
-              "text": "So a future is learned with its verb, as a dictionary gives it: Monier-Williams lists द्रक्ष्यति under √dṛś, and Lanman's reader gives each of these with its root."
+              "text": "So a future is learned with its verb, as a dictionary gives it: Monier-Williams lists द्रक्ष्यति under √dṛś and लेखिष्यति under √likh."
             }
           ]
         },

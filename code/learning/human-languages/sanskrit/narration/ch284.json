@@ -4,7 +4,7 @@
   "chapter": 284,
   "title": "If It Rains",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:12c4197e61ece994",
+  "sourceHash": "fnv1a64:d9e712a1913c6bd6",
   "lessons": [
     {
       "id": "SA-C284-yadi-tarhi",
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c22575896e33ae55",
+      "sourceHash": "fnv1a64:4900b30f3dca9635",
       "notice": null,
       "blocks": [
         {
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:58d5ecce98b86187",
+      "sourceHash": "fnv1a64:bf0bd2bc23aa42cf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -476,7 +476,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the train goes faster than the bus\". (dhūmayānaṃ lokayānāpekṣayā śīghraṃ gacchati.) Then \"from morning until evening\". (prātaḥ ārabhya sāyaṃ paryantam.)"
+              "text": "Say \"the train goes faster than the bus\". (dhūmayānaṃ lokayānāpekṣayā śīghraṃ gacchati.) Then \"from morning until night\". (prātaḥ ārabhya rātriparyantam.)"
             }
           ]
         },

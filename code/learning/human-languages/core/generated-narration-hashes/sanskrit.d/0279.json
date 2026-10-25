@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 279,
-  "sourceHash": "fnv1a64:bb1bbe061ba8fec7",
+  "sourceHash": "fnv1a64:e104786a84afd8f3",
   "lessonIds": [
     "SA-C279-bhavan-gacchet",
     "SA-C279-atah-tasmat",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "sanskrit/narration/ch279.txt",
   "json": "sanskrit/narration/ch279.json",
-  "textHash": "fnv1a64:4226bda89bae7b29",
-  "jsonHash": "fnv1a64:2862509b4d618300",
+  "textHash": "fnv1a64:d4ef70739eab8482",
+  "jsonHash": "fnv1a64:7b530ab7c76ac9e1",
   "findings": []
 }

@@ -15,7 +15,7 @@ concept_tag: SA-EXP283-IDRSAH
 prerequisites: [SA-C283-apeksaya, SA-C283-arabhya-paryantam, SA-C230-anubhavah, SA-C58-rocate, SA-C16-city]
 sounds: []
 roots: [sanskrit-idrsha]
-etymology_hook: 'īdṛśa ''such'' (MW; CDIAL 1611: ī ''this'' + √dṛś ''see''); MW compares Latin tālis; Hindi aisā (CDIAL 1611)'
+etymology_hook: 'īdṛśa ''such'' (MW; CDIAL 1611: ī ''this'' + √dṛś ''see''); MW compares its -dṛśa with the -li- of Latin tālis; Hindi aisā (CDIAL 1611)'
 duration:
   max_seconds: 150
 requires:
@@ -55,7 +55,7 @@ reviews_of: [SA-C283-apeksaya, SA-C283-arabhya-paryantam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ईदृशः** (*īdṛśaḥ*) is built from *ī*, "this", and the root √dṛś, "to see", the root of **द्रक्ष्यति**: "looking like this" (CDIAL 1611 gives the two parts). Monier-Williams compares Latin *tālis*, "such". It lives on as Hindi *aisā*, "such, like this" (CDIAL 1611).
+**ईदृशः** (*īdṛśaḥ*) is built from *ī*, "this", and the root √dṛś, "to see", the root of **द्रक्ष्यति**: "looking like this" (CDIAL 1611 gives the two parts). Monier-Williams compares its ending *-dṛśa* with the *-li-* of Latin *tālis*, "such". It lives on as Hindi *aisā*, "such, like this" (CDIAL 1611).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C283-IDRSAH-01, SA-GRAMMAR-C283-DURATION-02] -->

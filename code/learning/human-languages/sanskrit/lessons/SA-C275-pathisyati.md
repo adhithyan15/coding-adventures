@@ -16,7 +16,7 @@ prerequisites: [SA-C275-karisyati, SA-C264-pathisyami, SA-C08-pathati, SA-C07-kh
 sounds: []
 roots: []
 duration:
-  max_seconds: 290
+  max_seconds: 285
 requires:
   knowledge: [SA-GRAMMAR-C275-FUTURE-01, SA-GRAMMAR-C275-FUTURE-02, SA-VERB-C264-PATHISYAMI-02, SA-LEX-PATHATI-READ, SA-LEX-KHADATI-EAT, SA-LEX-LIKHATI-WRITE, SA-LEX-ASTI-BHAVATI-BE, SA-LEX-C35-HOUSE-04, SA-LEX-C24-ASK-03, SA-LEX-PASHYATI-SEE, SA-LEX-C72-HOUSEWORK-05, SA-LEX-STAND, SA-LEX-C14-DEIXIS-03, SA-LEX-C16-PLACE-05, SA-LEX-PANIYAM-WATER]
 introduces:
@@ -88,7 +88,7 @@ A few verbs take **-स्य-** (*-sya-*) instead, on the root itself. **पश
 | **पश्यति** | **द्रक्ष्यति** |
 | **ददाति**, **तिष्ठति** | **दास्यति**, **स्थास्यति** |
 
-So a future is learned with its verb, as a dictionary gives it: Monier-Williams lists **द्रक्ष्यति** under √dṛś, and Lanman's reader gives each of these with its root.
+So a future is learned with its verb, as a dictionary gives it: Monier-Williams lists **द्रक्ष्यति** under √dṛś and **लेखिष्यति** under √likh.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C275-FUTURE-STEM-01, SA-GRAMMAR-C275-FUTURE-STEM-02, SA-LEX-C16-PLACE-05] -->
