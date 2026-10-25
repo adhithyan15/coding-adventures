@@ -37,6 +37,13 @@ join the six cardinality checks. Expected clang-cl stderr in PowerShell 5 is
 handled only within the negative invocation, restoring error policy in finally
 and checking the real exit status; positive diagnostics remain fatal.
 
+Current-head contracts job121326114275 confirmed the shared planner's OCAML03
+reviewed digest was stale after the C Windows selection repair (30ea6d06 versus
+056461d8). Review and refresh only that planner identity, preserving all OCaml
+toolchain/action/checksum/bootstrap rules and mutation-rejection tests. Extend
+the executable planner regressions to prove an OCaml-only requirement still
+selects Windows independently of bounded-json. This is not a toolchain upgrade.
+
 ## Reassessment after five-native delivery
 
 NN46 merged PR #18252 at exact head `ff37a3e44e3`, squash `da1b408680f`,
