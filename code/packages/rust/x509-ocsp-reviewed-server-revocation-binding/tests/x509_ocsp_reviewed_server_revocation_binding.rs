@@ -26,7 +26,7 @@ use x509_ocsp_response::{
     decode_x509_ocsp_basic_response_bytes, decode_x509_ocsp_response, X509OcspBasicResponse,
 };
 use x509_ocsp_reviewed_server_revocation_binding::{
-    bind_x509_ocsp_revocation_to_reviewed_server_path,
+    bind_x509_ocsp_revocation_to_reviewed_server_path, reify_x509_ocsp_reviewed_responder_path,
     X509OcspReviewedServerRevocationBindingErrorKind,
 };
 use x509_ocsp_revocation_policy::validate_bound_x509_ocsp_revocation;
@@ -396,6 +396,8 @@ fn binds_authenticated_ocsp_to_the_same_exact_reviewed_server_path_inner() {
 
     let bound =
         bind_x509_ocsp_revocation_to_reviewed_server_path(authenticated, reviewed_server).unwrap();
+    let responder_path = reify_x509_ocsp_reviewed_responder_path(bound);
+    let bound = responder_path.reviewed_server_revocation();
 
     assert!(std::ptr::eq(
         bound
@@ -425,6 +427,26 @@ fn binds_authenticated_ocsp_to_the_same_exact_reviewed_server_path_inner() {
     assert_eq!(
         bound.issuer_validity_at_observation(),
         ValidatedCertificateValidity::clone(&bound.issuer_validity_at_observation())
+    );
+    assert!(std::ptr::eq(
+        bound
+            .authenticated_revocation()
+            .issuer_bound_responder()
+            .responder_issuer_link()
+            .candidate_issuer(),
+        bound
+            .reviewed_server_path()
+            .anchor_policy()
+            .reviewed_intermediate_server_path()
+            .reviewed_intermediate_path()
+            .authenticated_path()
+            .authenticated_intermediate()
+            .intermediate_policy()
+            .certificate()
+    ));
+    assert_eq!(
+        format!("{responder_path:?}"),
+        "BoundX509OcspReviewedResponderPath"
     );
     let _ = binding;
     let _ = path;

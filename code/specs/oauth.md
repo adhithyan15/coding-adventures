@@ -1438,6 +1438,25 @@ or intermediate revocation, interpret unsupported OCSP extensions, fetch or
 cache data, read a clock, implement TLS or HTTP, authorize OAuth transport, or
 grant network authority. Concrete HTTPS remains unavailable.
 
+A bounded follow-up in
+`x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
+reviewed server-revocation proof and reifies its delegated
+responder-to-reviewed-root path as a distinct non-copyable type for later
+policy composition. Earlier safe constructors already prove the exact
+responder-policy, responder-link, shared-issuer, and reviewed-path identities;
+this infallible projection performs no additional validation.
+Success retains the signed response, good-and-fresh target status, responder
+policy and signature, target and responder issuer links, constructed two-link
+server path, path-length state, selected Mozilla-reviewed root, and the
+exact-observation responder/intermediate validity evidence in one non-copyable
+result. This establishes only the fixed RSA SHA-256 responder-to-reviewed-root
+path evidence already present in those exact inputs. It does not apply anchor
+or intermediate name constraints to the responder, check responder-certificate
+or intermediate revocation, generalize path construction or validation,
+interpret unsupported OCSP extensions, fetch or cache data, read a clock,
+perform TLS or HTTP, authorize OAuth transport, or grant network authority.
+Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
