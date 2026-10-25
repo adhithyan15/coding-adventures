@@ -252,8 +252,10 @@ repair (#18197): substantive changelog Markdown, not just category names.
 Published and audited in run 40225950352 from
 `bd533925647b7fbac74eba35e611a8ba3930757f`: 13 assets / 12 checksum entries /
 11 manifest payloads, with unchanged artifact coverage and unsigned limits.
-The next native-fidelity slice (#18250) preserves Qt's 236-pixel navigation
-rail floor; it does not claim general flexbox lowering.
+The Qt rail repair (#18250) merged in #18251 and preserves its 236-pixel floor;
+all release payload validations passed in run 40230057835. The compatible
+`task-app-v0.5.12` checkpoint (#18264) is prepared, not yet published. It does
+not claim general flexbox lowering or expand downloadable artifact coverage.
 
 The published `task-app-v0.5.9` patch preserves Qt calendar/timeline text widths
 (#17913), reducing measured Qt style drops from 81 to 78. It also includes Web
