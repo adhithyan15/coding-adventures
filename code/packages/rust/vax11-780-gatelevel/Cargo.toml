@@ -1,0 +1,11 @@
+[package]
+name = "vax11-780-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed educational DEC VAX-11/780 gate-level simulator"
+license = "MIT"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+vax11-780-simulator = { path = "../vax11-780-simulator" }
