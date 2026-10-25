@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Execute NN40's shared 49-case checkpoint acceptance/rejection corpus through
+  the native JSON/model loader, including valid controls and save/reload checks.
+
 - Add native Rust to required NN39 three-language checkpoint exchange, including
   both directions with Python and TypeScript and exact resumed-step receipts.
 

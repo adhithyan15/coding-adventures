@@ -1,6 +1,7 @@
 # NN40: Shared Native Checkpoint Rejection Corpus
 
-Status: specified before implementation.
+Status: implemented with direct local three-native-suite evidence; exact-head
+repository CI and confirmed merge remain required before delivery.
 
 ## Prioritized deliverable
 
@@ -47,3 +48,9 @@ documented exact-copy manifest override without claiming full workspace proof.
 
 Update lesson, changelogs and roadmap. Mark completion only with direct native
 execution and exact-head required CI plus confirmed merge.
+
+Local evidence: 49 shared cases (3 accept, 46 reject); Python 117 tests and
+TypeScript 114 tests at 100% library coverage, native Rust 10 integration tests
+and README doctest plus Clippy in the documented exact-copy workspace. Actual
+six-direction NN39 checkpoint exchange still passes through step 3002. No
+production algorithm or format change was needed; existing loaders agree.

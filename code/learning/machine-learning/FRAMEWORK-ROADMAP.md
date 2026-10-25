@@ -76,6 +76,8 @@ the first is open, or modify the unrelated dirty primary checkout.
 - [ ] Add a language-neutral invalid-checkpoint corpus as ports expand;
   cross-language receipts currently prove valid training/resume, while each
   library owns separate negative tests.
+  NN40 now runs 49 shared documents directly through all three native package
+  suites locally (3 accepted controls, 46 rejected); required CI/merge pending.
 - [x] Extend required conformance selection to Rust workspace/dependency and
   validator inputs. NN38's native package builds passed, but the existing
   two-language interchange gate correctly did not select Rust-only changes.
