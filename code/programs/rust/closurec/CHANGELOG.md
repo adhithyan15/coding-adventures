@@ -154,6 +154,31 @@ with SIGABRT (exit 134) and gave no diagnostic. Two changes fix this:
 - For six chain shapes, the deepest chain the bound admits compiles at SIMPLE
   and ADVANCED, and one link deeper fails cleanly.
 
+### Changed - refuse `return` and `new.target` outside a function, as upstream does (CCR-075 slice 2, #15860)
+
+closurec used to compile `if(a){return}` and `f(new.target)` at top level.
+The pinned upstream rejects both with `JSC_PARSE_ERROR` ("return must be
+inside function", "new.target must be inside a function"). closurec now
+rejects them identically: the same diagnostic, location and exit status at
+every level, and no output.
+
+Upstream's rule is Closure's own:
+- An arrow counts as a function, so a top-level `()=>new.target` compiles.
+- A class `static {}` block clears the context for `return` only;
+  `new.target` there, or in a field initialiser, follows the enclosing
+  context. So `class A{x=new.target}` is refused at top level, and compiles
+  inside a function.
+- A method's computed key is outside the method, so
+  `class A{[new.target](){}}` is refused at top level.
+
+The check parses only files that contain a `return` or `new` keyword token,
+and walks the tree iteratively. Every refusal is reported in source order,
+interleaved with the slice-1 private-element errors.
+
+The `simple-newtarget` and `simple-try-catch` fixtures now pin the jar's
+refusal. Six unit tests cover the rule. closurec gains a direct path
+dependency on `parser` (already a transitive one) for the parse-tree types.
+
 ### Fixed - outer binding shadowed by a `for`-head `let`/`const` survives (#16008)
 
 `var x = 1; for (let x of [7]) console.log(x); console.log(x);` compiled at
