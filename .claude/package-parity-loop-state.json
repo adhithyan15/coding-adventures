@@ -20,7 +20,7 @@
   "last_ci_action": {
     "pr_number": 18183,
     "head": "231de32b81482caebbdf484387263d86b13b2602",
-    "action": "Serial recovery in clean checkout; careful rebase then exact original toolchain failure reproduction. No current native qualification claimed."
+    "action": "Same-PR recovery local native/Go/planner/metadata/parity checks pass; exactsource80a01 reviewed, finaldocsdelta required before exact-lease push. HostedCI must rerun; no auto-merge enrollment."
   },
   "last_inventory": {
     "revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
@@ -23034,7 +23034,74 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18183",
       "recovery_original_head": "231de32b81482caebbdf484387263d86b13b2602",
       "recovery_base": "9000beddee61a136cf5c0c6c5787f81d3d717834",
-      "recovery_note": "Sole serial recovery after externally verified18174merge. Original runtime delivery fields above are historical. Exact Cabal3.10.3.0/GHC9.4.8 CI fails in vector0.13.2 coverage planning before compilation; current recovery/native validation pending."
+      "recovery_note": "Sole serial recovery after externally verified18174merge. Original delivery fields remain historical. ExactGHC9.4.8/Cabal3.10.3.0 globalcoverage failure reproduced; package-scoped coverage repair passesnative13tests/all359records and productionHPC447/447expressions61/61alternatives. Source review80a01PASS; finaldocsdelta and freshhostedCI required.",
+      "lifecycle_events": [
+        {
+          "from": "pending",
+          "to": "in-progress",
+          "observed_at": "2026-10-25T19:27:52.636432+00:00",
+          "kind": "resume-existing-pr-serial-recovery",
+          "pr_number": 18183,
+          "head": "231de32b81482caebbdf484387263d86b13b2602"
+        },
+        {
+          "from": "in-progress",
+          "to": "pr-open",
+          "observed_at": "2026-10-25T19:27:52.636432+00:00",
+          "kind": "resume-existing-pr-serial-recovery",
+          "pr_number": 18183,
+          "head": "231de32b81482caebbdf484387263d86b13b2602"
+        }
+      ],
+      "recovery_validation": {
+        "status": "local-validation-pass-hosted-CI-required",
+        "toolchain": {
+          "ghc": "9.4.8",
+          "cabal": "3.10.3.0",
+          "host": "Windows amd64"
+        },
+        "native_examples": 13,
+        "corpus_records": 359,
+        "production_hpc": {
+          "expressions": "447/447",
+          "alternatives": "61/61",
+          "top_level_declarations": "17/39"
+        },
+        "cabal_check": "PASS",
+        "warning_as_error_build": "PASS",
+        "actual_BUILD": "PASS through verified short root junction using exact Cabal3.10.3.0, no modified arguments or wrapper",
+        "Windows_CI_front": "explicit skip, not native qualification",
+        "production_source": "unchanged from original231de32",
+        "recovery": "package-scoped coverageTrue; dependency ranges unchanged, no vector/attoparsec caps",
+        "limits": "Oversized-file IO rejection branch not executed by in-memory oversized transport witness. Historical local validation remains separately labeled.",
+        "go_build_tool": {
+          "packages": 15,
+          "coverage_total_percent": 84.6,
+          "main_package_percent": 62.8,
+          "vet_and_build": "PASS",
+          "real_powershell_no_skip": true,
+          "starlark_build_files": 45,
+          "packages_discovered": 5389,
+          "affected_closure": 14,
+          "pending_exemptions": 37
+        },
+        "go_provider_coverage_percent": 99.0,
+        "python_checks": {
+          "ci_registry": 19,
+          "haskell_capabilities": 6,
+          "parity_reporter": 10
+        },
+        "lesson_shards": 1540,
+        "final_structural_parity": {
+          "identities": 1562,
+          "slots": 4850,
+          "lanes": 15,
+          "collisions": 0,
+          "unknown_buckets": 0,
+          "ocaml_emerging": 5
+        },
+        "receipt": "code/packages/haskell/starlark-compiler/VALIDATION.md"
+      }
     },
     {
       "id": "starlark-compiler-java-opcode-provider-parity",

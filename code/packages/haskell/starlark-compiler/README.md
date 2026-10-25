@@ -33,9 +33,14 @@ lookup.
 From this directory:
 
 ```sh
-cabal test all --enable-coverage
+cabal test all
 cabal check
 ```
+
+The named `package starlark-compiler` stanza in `cabal.project` enables HPC
+for this library and its test executable. Do not add the global
+`--enable-coverage` flag: Cabal 3.10.3.0 applies a conflicting planning mode
+to dependencies with internal libraries. Dependency bounds stay unchanged.
 
 The native suite dynamically reads the shared
 `code/specs/fixtures/starlark-opcode-provider-v1/cases.json` corpus. It visits
@@ -43,6 +48,15 @@ all 359 records through public APIs, verifies every byte and hole, proves map
 ownership, and rejects bounded transport, shape, ordering, type, and semantic
 corruption. Expected values come from the independent fixture rather than from
 the provider implementation.
+
+Recovery validation used GHC 9.4.8 and Cabal 3.10.3.0 on Windows: 13 examples
+passed, including independent range, ordering, depth and map-ownership
+witnesses. Production-only HPC measured 447/447 expressions and 61/61
+alternatives; the 17/39 top-level declaration figure is a different metric.
+`cabal check`, a `-Wall -Werror` build and the actual Unix BUILD command passed.
+The Windows CI front still explicitly skips Haskell; that skip grants no
+native qualification. The test reader's oversized-file IO rejection branch
+is not covered by its in-memory oversized-transport witness.
 
 See [`STP01-starlark-opcode-provider.md`](../../../specs/STP01-starlark-opcode-provider.md)
 for the normative profile.
