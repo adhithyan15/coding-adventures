@@ -1303,6 +1303,7 @@ members = [
   "pdp11-gatelevel",
   "pdp8-simulator",
   "pdp8-gatelevel",
+  "ias-simulator",
   "edsac-simulator",
   "edsac-gatelevel",
   "openrisc1000-simulator",
