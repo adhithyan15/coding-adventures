@@ -433,6 +433,49 @@ deliberately ugly to make accidental use show up in code review.
 
 ---
 
+## Repository-Owned TLS 1.3 Prerequisites
+
+The OAuth HTTPS boundary may not use the initial `rustls` backend as its
+production implementation. Repository-owned TLS is being assembled as small,
+independently reviewable protocol packages before a native connector is added.
+
+The first such package is `tls13-record`. It owns only RFC 8446 outer-record
+framing:
+
+- the exact five-byte `ContentType` / `legacy_record_version` / `length`
+  header;
+- the TLS 1.3 `0x0303` legacy record version;
+- caller-policy-bounded plaintext fragments with the protocol maximum of
+  `2^14` bytes;
+- ciphertext records whose outer content type is exactly `application_data`
+  and whose fragment is non-empty and no larger than `2^14 + 256` bytes;
+- exact decoding that rejects trailing bytes and prefix decoding that returns
+  the remaining stream without allocating; and
+- encoding into caller-provided storage only after the record and output
+  capacity have been fully validated.
+
+Plaintext content types are caller policy data because the future handshake
+state machine, not the framing layer, decides which record types are legal at
+each epoch. The policy must be non-empty and duplicate-free. Empty plaintext
+fragments are rejected for `change_cipher_spec`, `alert`, and `handshake` but
+remain representable for `application_data`; a later state machine must decide
+whether an application-data record is legal at that point. The framing layer
+does not accept the TLS 1.0 compatibility version sometimes emitted by an
+initial ClientHello; the future client can emit the standards-compliant
+`0x0303` form, and any broader compatibility path must first bind the record to
+the correct handshake state.
+
+Validated record values borrow their fragments and have no public unchecked
+construction path. Stable errors expose only categories, not record contents.
+The package performs no allocation, handshake parsing, `TLSInnerPlaintext`
+decoding, sequencing, version or cipher-suite negotiation, key derivation,
+encryption, decryption, authentication, entropy or clock access, certificate
+validation, trust-root selection, revocation, I/O, socket access, HTTP, or
+OAuth authorization. It is not a TLS connector and does not make concrete
+HTTPS available.
+
+---
+
 ## Test Strategy
 
 ### Unit Tests (per backend)
@@ -481,12 +524,12 @@ servers). `>=95%` for the trait wrappers and the config types.
 
 ## Trade-Offs
 
-**No protocol implementation in this crate.** We rely on three
-different OS implementations with three different bug surfaces. A
-single underlying TLS bug therefore affects only one OS in our
-codebase. This is also a downside: cipher lists, session resumption
-behavior, and TLS 1.3 0-RTT semantics may differ subtly across
-backends. We document known divergences as we find them.
+**The platform trait and initial backend do not implement the protocol.** The
+initial backend relies on an external implementation, while the separately
+reviewed repository-owned TLS 1.3 packages remain prerequisites rather than a
+connector. Until those packages are composed and tested end to end, the
+repository-owned path is unavailable and the initial backend is not acceptable
+for the concrete OAuth HTTPS boundary.
 
 **OpenSSL ABI compatibility on Linux.** Different distributions
 ship different OpenSSL major versions (1.0, 1.1, 3.x). We probe at
@@ -524,9 +567,9 @@ debugging.
 
 ## Future Extensions
 
-- **Native Rust TLS backend** (`tls-platform-rust`) implementing
-  TLS 1.3 from RFC 8446. A genuine engineering project; satisfies
-  the same trait.
+- **Complete native TLS backend** (`tls-platform-rust`) composing the
+  independently reviewed repository-owned RFC 8446 packages behind the same
+  trait.
 - **Async trait** (`AsyncTlsConnector`, `AsyncTlsStream`) for
   high-concurrency servers.
 - **OCSP stapling** support, surfaced as a method on `TlsStream`.
