@@ -219,6 +219,15 @@ Independent rejection witnesses must isolate byte range/type, row ordering
 and the depth-eight boundary rather than relying on a different malformed
 property of the same candidate.
 
+On macOS, run this package's Cabal process with
+`DEVELOPER_DIR=/Library/Developer/CommandLineTools`. GHC's Darwin bindist links
+against that SDK; its linker must understand the same SDK's stub architectures.
+Keep the override scoped to that process, without changing global xcode-select
+state, other packages, compiler versions, coverage or the test set. Other
+platforms retain their inherited developer-tool environment. A linker failure
+before tests is not native qualification; shell routing tests do not substitute
+for a real macOS build.
+
 The package only describes bytes and lookup tables. `LoadModule`, `ImportFrom`,
 `Print` and `Halt` stay inert constructors: this adoption performs no parsing,
 compilation, execution, module resolution, output, process launch, network
