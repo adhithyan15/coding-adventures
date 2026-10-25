@@ -18076,3 +18076,10 @@ the proved budget-error case. Both package fronts must enforce at least 95%
 production line coverage, and both dependent Arc2D suites must stay green.
 Evaluation, derivatives, splitting, bounding boxes, Arc2D behavior, and other
 language lanes remain outside this implementation repair.
+
+Independent review then found that direct squaring in the chord-distance norm
+could underflow for finite subnormal geometry and incorrectly accept a chord.
+Both lanes now scale their norm and projection arithmetic before squaring; a
+shared-shape `Double.Epsilon` regression reaches the bounded failure instead
+of failing open. The same review reconciled release metadata by keeping the
+existing public package version and labeling these changes Unreleased.

@@ -27,16 +27,26 @@ internal static class Flattening
     {
         var dx = Finite(end.X - start.X);
         var dy = Finite(end.Y - start.Y);
-        var lengthSquared = Finite(dx * dx + dy * dy);
+        var scale = Math.Max(Math.Abs(dx), Math.Abs(dy));
 
-        if (lengthSquared == 0.0)
+        if (scale == 0.0)
         {
             return Distance(point, start);
         }
 
+        var normalizedX = dx / scale;
+        var normalizedY = dy / scale;
+        var normalizedLengthSquared = Finite(
+            Finite(normalizedX * normalizedX) + Finite(normalizedY * normalizedY));
         var offsetX = Finite(point.X - start.X);
         var offsetY = Finite(point.Y - start.Y);
-        var projection = Finite((offsetX * dx + offsetY * dy) / lengthSquared);
+        var normalizedOffsetX = Finite(offsetX / scale);
+        var normalizedOffsetY = Finite(offsetY / scale);
+        var projection = Finite(
+            Finite(
+                Finite(normalizedOffsetX * normalizedX)
+                + Finite(normalizedOffsetY * normalizedY))
+            / normalizedLengthSquared);
         projection = Math.Clamp(projection, 0.0, 1.0);
         var nearest = new Point(
             Finite(start.X + projection * dx),
@@ -51,7 +61,16 @@ internal static class Flattening
     {
         var dx = Finite(left.X - right.X);
         var dy = Finite(left.Y - right.Y);
-        return Finite(Math.Sqrt(Finite(dx * dx + dy * dy)));
+        var scale = Math.Max(Math.Abs(dx), Math.Abs(dy));
+        if (scale == 0.0)
+        {
+            return 0.0;
+        }
+
+        var normalizedX = dx / scale;
+        var normalizedY = dy / scale;
+        return Finite(scale * Math.Sqrt(Finite(
+            Finite(normalizedX * normalizedX) + Finite(normalizedY * normalizedY))));
     }
 
     private static double Finite(double value) =>

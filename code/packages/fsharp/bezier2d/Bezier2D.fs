@@ -29,20 +29,37 @@ module private BezierHelpers =
     let distance (left: Point) (right: Point) =
         let dx = finite (left.X - right.X)
         let dy = finite (left.Y - right.Y)
-        finite (Math.Sqrt(finite (dx * dx + dy * dy)))
+        let scale = max (abs dx) (abs dy)
+
+        if scale = 0.0 then
+            0.0
+        else
+            let normalizedX = dx / scale
+            let normalizedY = dy / scale
+            let normalizedLengthSquared = finite (finite (normalizedX * normalizedX) + finite (normalizedY * normalizedY))
+            finite (scale * Math.Sqrt normalizedLengthSquared)
 
     let distanceToSegment (point: Point) (startPoint: Point) (endPoint: Point) =
         let dx = finite (endPoint.X - startPoint.X)
         let dy = finite (endPoint.Y - startPoint.Y)
-        let lengthSquared = finite (dx * dx + dy * dy)
+        let scale = max (abs dx) (abs dy)
 
-        if lengthSquared = 0.0 then
+        if scale = 0.0 then
             distance point startPoint
         else
+            let normalizedX = dx / scale
+            let normalizedY = dy / scale
+            let normalizedLengthSquared = finite (finite (normalizedX * normalizedX) + finite (normalizedY * normalizedY))
             let offsetX = finite (point.X - startPoint.X)
             let offsetY = finite (point.Y - startPoint.Y)
+            let normalizedOffsetX = finite (offsetX / scale)
+            let normalizedOffsetY = finite (offsetY / scale)
             let projection =
-                finite ((offsetX * dx + offsetY * dy) / lengthSquared)
+                finite (
+                    finite (
+                        finite (normalizedOffsetX * normalizedX)
+                        + finite (normalizedOffsetY * normalizedY))
+                    / normalizedLengthSquared)
                 |> fun value -> Math.Clamp(value, 0.0, 1.0)
             let nearest = Point.New(finite (startPoint.X + projection * dx), finite (startPoint.Y + projection * dy))
             distance point nearest
