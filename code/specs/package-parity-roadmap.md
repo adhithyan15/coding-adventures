@@ -17970,12 +17970,17 @@ of scope.
 
 ## October 25, 2026: Haskell and Swift Bezier flattening selection
 
-All three publication slots remain occupied, the TypeScript Arc2D build-front
-repair has reached its local exact-head review gate, and the prepared C#/F#
-Bezier tranche remains first in the publication queue. Reprioritization now
-selects `geometry-bezier2d-flattening-haskell-swift`: it advances two non-Rust
-lanes, depends only on the merged neutral contract, and does not overlap any
-active or prepared implementation branch.
+All three publication slots remain occupied, and the prepared C#/F# Bezier
+tranche remains first in the publication queue. Independent review rejected
+the unpublished TypeScript Arc2D build-front candidate: the production runner
+already starts every BUILD line in the package directory, while the proposed
+POSIX identity guard would fail when the shared front falls back to `cmd /C` on
+Windows. That non-defect branch is retired instead of published.
+
+Reprioritization therefore selects
+`geometry-bezier2d-flattening-haskell-swift`: it advances two non-Rust lanes,
+depends only on the merged neutral contract, and does not overlap any active or
+prepared implementation branch.
 
 Both selected lanes still use midpoint-only flatness and unbounded recursion.
 This owner will define deterministic Haskell `Either` and Swift throwing APIs,
