@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-R308-review-301-308
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 17220
+chapter: 308
+type: review
+headword: (dialogue)
+gloss: a review of the words from A Building on Fire to A Brave Swimmer
+concept_tag: REVIEW
+prerequisites: [GU-C301-imarat, GU-C301-sidi, GU-C301-guglavu, GU-C301-phatvu, GU-C301-dhadako, GU-C302-bambo, GU-C302-bujhavvu, GU-C302-dordu, GU-C302-ogalvu, GU-C302-bhadko, GU-C303-vavajhodu, GU-C303-tratakvu, GU-C303-chapru, GU-C303-jhupdu, GU-C303-ujadvu, GU-C304-tanavu, GU-C304-dubadvu, GU-C304-nuksan, GU-C304-aphat, GU-C304-sankat, GU-C305-halvu, GU-C305-dhaglo, GU-C305-dhasvu, GU-C305-datavu, GU-C305-katmal, GU-C306-svayansevak, GU-C306-rahat, GU-C306-chavni, GU-C306-anaj, GU-C306-umatvu, GU-C307-ugarvu, GU-C307-rni, GU-C307-udu, GU-C307-hemkhem, GU-C307-has, GU-C308-tarapo, GU-C308-sahas, GU-C308-vir, GU-C308-dhiraj, GU-C308-kargarvu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-LEX-C301-IMARAT301-01, GU-LEX-C301-IMARAT301-02, GU-LEX-C301-IMARAT301-03, GU-LEX-C301-IMARAT301-04, GU-LEX-C301-IMARAT301-05, GU-LEX-C302-BAMBO302-01, GU-LEX-C302-BAMBO302-02, GU-LEX-C302-BAMBO302-03, GU-LEX-C302-BAMBO302-04, GU-LEX-C302-BAMBO302-05, GU-LEX-C303-VAVAZODU303-01, GU-LEX-C303-VAVAZODU303-02, GU-LEX-C303-VAVAZODU303-03, GU-LEX-C303-VAVAZODU303-04, GU-LEX-C303-VAVAZODU303-05, GU-LEX-C304-PUR304-01, GU-LEX-C304-PUR304-02, GU-LEX-C304-PUR304-03, GU-LEX-C304-PUR304-04, GU-LEX-C304-PUR304-05, GU-LEX-C305-BHUKAMP305-01, GU-LEX-C305-BHUKAMP305-02, GU-LEX-C305-BHUKAMP305-03, GU-LEX-C305-BHUKAMP305-04, GU-LEX-C305-BHUKAMP305-05, GU-LEX-C306-RAHAT306-01, GU-LEX-C306-RAHAT306-02, GU-LEX-C306-RAHAT306-03, GU-LEX-C306-RAHAT306-04, GU-LEX-C306-RAHAT306-05, GU-LEX-C307-RUNI307-01, GU-LEX-C307-RUNI307-02, GU-LEX-C307-RUNI307-03, GU-LEX-C307-RUNI307-04, GU-LEX-C307-RUNI307-05, GU-LEX-C308-SAHAS308-01, GU-LEX-C308-SAHAS308-02, GU-LEX-C308-SAHAS308-03, GU-LEX-C308-SAHAS308-04, GU-LEX-C308-SAHAS308-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GU-LEX-C301-IMARAT301-01, GU-LEX-C301-IMARAT301-02, GU-LEX-C301-IMARAT301-03, GU-LEX-C301-IMARAT301-04, GU-LEX-C301-IMARAT301-05, GU-LEX-C302-BAMBO302-01, GU-LEX-C302-BAMBO302-02, GU-LEX-C302-BAMBO302-03, GU-LEX-C302-BAMBO302-04, GU-LEX-C302-BAMBO302-05, GU-LEX-C303-VAVAZODU303-01, GU-LEX-C303-VAVAZODU303-02, GU-LEX-C303-VAVAZODU303-03, GU-LEX-C303-VAVAZODU303-04, GU-LEX-C303-VAVAZODU303-05, GU-LEX-C304-PUR304-01, GU-LEX-C304-PUR304-02, GU-LEX-C304-PUR304-03, GU-LEX-C304-PUR304-04, GU-LEX-C304-PUR304-05, GU-LEX-C305-BHUKAMP305-01, GU-LEX-C305-BHUKAMP305-02, GU-LEX-C305-BHUKAMP305-03, GU-LEX-C305-BHUKAMP305-04, GU-LEX-C305-BHUKAMP305-05, GU-LEX-C306-RAHAT306-01, GU-LEX-C306-RAHAT306-02, GU-LEX-C306-RAHAT306-03, GU-LEX-C306-RAHAT306-04, GU-LEX-C306-RAHAT306-05, GU-LEX-C307-RUNI307-01, GU-LEX-C307-RUNI307-02, GU-LEX-C307-RUNI307-03, GU-LEX-C307-RUNI307-04, GU-LEX-C307-RUNI307-05, GU-LEX-C308-SAHAS308-01, GU-LEX-C308-SAHAS308-02, GU-LEX-C308-SAHAS308-03, GU-LEX-C308-SAHAS308-04, GU-LEX-C308-SAHAS308-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C301-imarat, GU-C301-sidi, GU-C301-guglavu, GU-C301-phatvu, GU-C301-dhadako, GU-C302-bambo, GU-C302-bujhavvu, GU-C302-dordu, GU-C302-ogalvu, GU-C302-bhadko, GU-C303-vavajhodu, GU-C303-tratakvu, GU-C303-chapru, GU-C303-jhupdu, GU-C303-ujadvu, GU-C304-tanavu, GU-C304-dubadvu, GU-C304-nuksan, GU-C304-aphat, GU-C304-sankat, GU-C305-halvu, GU-C305-dhaglo, GU-C305-dhasvu, GU-C305-datavu, GU-C305-katmal, GU-C306-svayansevak, GU-C306-rahat, GU-C306-chavni, GU-C306-anaj, GU-C306-umatvu, GU-C307-ugarvu, GU-C307-rni, GU-C307-udu, GU-C307-hemkhem, GU-C307-has, GU-C308-tarapo, GU-C308-sahas, GU-C308-vir, GU-C308-dhiraj, GU-C308-kargarvu]
+---
+
+# Looking back: from A Building on Fire to A Brave Swimmer
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C301-IMARAT301-01, GU-LEX-C301-IMARAT301-02] -->
+
+[PAUSE 3s] Say the Gujarati for a large building and a ladder.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C301-IMARAT301-01, GU-LEX-C301-IMARAT301-02, GU-LEX-C301-IMARAT301-03, GU-LEX-C301-IMARAT301-04, GU-LEX-C301-IMARAT301-05, GU-LEX-C302-BAMBO302-01, GU-LEX-C302-BAMBO302-02, GU-LEX-C302-BAMBO302-03, GU-LEX-C302-BAMBO302-04, GU-LEX-C302-BAMBO302-05, GU-LEX-C303-VAVAZODU303-01, GU-LEX-C303-VAVAZODU303-02, GU-LEX-C303-VAVAZODU303-03, GU-LEX-C303-VAVAZODU303-04, GU-LEX-C303-VAVAZODU303-05, GU-LEX-C304-PUR304-01, GU-LEX-C304-PUR304-02, GU-LEX-C304-PUR304-03, GU-LEX-C304-PUR304-04, GU-LEX-C304-PUR304-05, GU-LEX-C305-BHUKAMP305-01, GU-LEX-C305-BHUKAMP305-02, GU-LEX-C305-BHUKAMP305-03, GU-LEX-C305-BHUKAMP305-04, GU-LEX-C305-BHUKAMP305-05, GU-LEX-C306-RAHAT306-01, GU-LEX-C306-RAHAT306-02, GU-LEX-C306-RAHAT306-03, GU-LEX-C306-RAHAT306-04, GU-LEX-C306-RAHAT306-05, GU-LEX-C307-RUNI307-01, GU-LEX-C307-RUNI307-02, GU-LEX-C307-RUNI307-03, GU-LEX-C307-RUNI307-04, GU-LEX-C307-RUNI307-05, GU-LEX-C308-SAHAS308-01, GU-LEX-C308-SAHAS308-02, GU-LEX-C308-SAHAS308-03, GU-LEX-C308-SAHAS308-04, GU-LEX-C308-SAHAS308-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a large building, a ladder, to choke, to burst, a bang]
+- [YOU SAY: a fire engine, to extinguish, a rope, to melt, a blaze]
+- [YOU SAY: a cyclone, to strike, a thatched roof, a hut, to lay waste]
+- [YOU SAY: to be swept away, to submerge, damage, a calamity, a crisis]
+- [YOU SAY: to shake, a heap, to give way, to be buried, rubble]
+- [YOU SAY: a volunteer, relief, a camp, grain, to throng]
+- [YOU SAY: to rescue, indebted, deep, safe and sound, phew]
+- [YOU SAY: a raft, daring, a hero, patience, to plead]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C301-IMARAT301-01, GU-LEX-C301-IMARAT301-02, GU-LEX-C301-IMARAT301-03, GU-LEX-C301-IMARAT301-04, GU-LEX-C301-IMARAT301-05, GU-LEX-C302-BAMBO302-01, GU-LEX-C302-BAMBO302-02, GU-LEX-C302-BAMBO302-03, GU-LEX-C302-BAMBO302-04, GU-LEX-C302-BAMBO302-05, GU-LEX-C303-VAVAZODU303-01, GU-LEX-C303-VAVAZODU303-02, GU-LEX-C303-VAVAZODU303-03, GU-LEX-C303-VAVAZODU303-04, GU-LEX-C303-VAVAZODU303-05, GU-LEX-C304-PUR304-01, GU-LEX-C304-PUR304-02, GU-LEX-C304-PUR304-03, GU-LEX-C304-PUR304-04, GU-LEX-C304-PUR304-05, GU-LEX-C305-BHUKAMP305-01, GU-LEX-C305-BHUKAMP305-02, GU-LEX-C305-BHUKAMP305-03, GU-LEX-C305-BHUKAMP305-04, GU-LEX-C305-BHUKAMP305-05, GU-LEX-C306-RAHAT306-01, GU-LEX-C306-RAHAT306-02, GU-LEX-C306-RAHAT306-03, GU-LEX-C306-RAHAT306-04, GU-LEX-C306-RAHAT306-05, GU-LEX-C307-RUNI307-01, GU-LEX-C307-RUNI307-02, GU-LEX-C307-RUNI307-03, GU-LEX-C307-RUNI307-04, GU-LEX-C307-RUNI307-05, GU-LEX-C308-SAHAS308-01, GU-LEX-C308-SAHAS308-02, GU-LEX-C308-SAHAS308-03, GU-LEX-C308-SAHAS308-04, GU-LEX-C308-SAHAS308-05] -->
+
+[PAUSE 3s] A large building? (**ઇમારત**, *imārat*.) A ladder? (**સીડી**, *sīḍī*.) To choke? (**ગૂંગળાવું**, *gū̃gḷāvũ*.) To burst? (**ફાટવું**, *phāṭvũ*.) A bang? (**ધડાકો**, *dhaḍāko*.) A fire engine? (**બંબો**, *bambo*.) To extinguish? (**બુઝાવવું**, *bujhāvvũ*.) A rope? (**દોરડું**, *dorḍũ*.) To melt? (**ઓગળવું**, *ogaḷvũ*.) A blaze? (**ભડકો**, *bhaḍko*.) A cyclone? (**વાવાઝોડું**, *vāvājhoḍũ*.) To strike? (**ત્રાટકવું**, *trāṭakvũ*.) A thatched roof? (**છાપરું**, *chāprũ*.) A hut? (**ઝૂંપડું**, *jhū̃pḍũ*.) To lay waste? (**ઉજાડવું**, *ujāḍvũ*.) To be swept away? (**તણાવું**, *taṇāvũ*.) To submerge? (**ડુબાડવું**, *ḍubāḍvũ*.) Damage? (**નુકસાન**, *nuksān*.) A calamity? (**આફત**, *āphat*.) A crisis? (**સંકટ**, *sankaṭ*.) To shake? (**હલવું**, *halvũ*.) A heap? (**ઢગલો**, *ḍhaglo*.) To give way? (**ધસવું**, *dhasvũ*.) To be buried? (**દટાવું**, *daṭāvũ*.) Rubble? (**કાટમાળ**, *kāṭmāḷ*.) A volunteer? (**સ્વયંસેવક**, *svayansevak*.) Relief? (**રાહત**, *rāhat*.) A camp? (**છાવણી**, *chāvṇī*.) Grain? (**અનાજ**, *anāj*.) To throng? (**ઊમટવું**, *ūmaṭvũ*.) To rescue? (**ઉગારવું**, *ugārvũ*.) Indebted? (**ઋણી**, *ṛṇī*.) Deep? (**ઊંડું**, *ū̃ḍũ*.) Safe and sound? (**હેમખેમ**, *hemkhem*.) Phew? (**હાશ**, *hāś*.) A raft? (**તરાપો**, *tarāpo*.) Daring? (**સાહસ**, *sāhas*.) A hero? (**વીર**, *vīr*.) Patience? (**ધીરજ**, *dhīraj*.) To plead? (**કરગરવું**, *kargarvũ*.)
+`;export{t};

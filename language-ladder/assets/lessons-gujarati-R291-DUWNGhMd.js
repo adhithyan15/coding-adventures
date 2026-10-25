@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-R292-review-285-292
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 16400
+chapter: 292
+type: review
+headword: (dialogue)
+gloss: a review of the words from A Thief in the Night to A Swindle Uncovered
+concept_tag: REVIEW
+prerequisites: [GU-C285-cor, GU-C285-cori, GU-C285-nasvu, GU-C285-pakadvu, GU-C285-loko, GU-C286-guno, GU-C286-sipai, GU-C286-sanka, GU-C286-khub, GU-C286-chupavvu, GU-C287-bhal, GU-C287-paglu, GU-C287-khakhdavvu, GU-C287-santavu, GU-C287-todvu, GU-C288-dharpakad, GU-C288-kabulvu, GU-C288-nakarvu, GU-C288-gunegar, GU-C288-jel, GU-C289-adalat, GU-C289-vakil, GU-C289-nyay, GU-C289-saja, GU-C289-bhogavvu, GU-C290-daku, GU-C290-banduk, GU-C290-dhamki, GU-C290-dhamkavvu, GU-C290-chinavvu, GU-C291-apaharan, GU-C291-gum, GU-C291-ghervu, GU-C291-kedi, GU-C291-chodavvu, GU-C292-thag, GU-C292-kaubhad, GU-C292-lac, GU-C292-jasus, GU-C292-jhadapvu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-LEX-C285-CHOR285-01, GU-LEX-C285-CHOR285-02, GU-LEX-C285-CHOR285-03, GU-LEX-C285-CHOR285-04, GU-LEX-C285-CHOR285-05, GU-LEX-C286-GUNO286-01, GU-LEX-C286-GUNO286-02, GU-LEX-C286-GUNO286-03, GU-LEX-C286-GUNO286-04, GU-LEX-C286-GUNO286-05, GU-LEX-C287-PAGLU287-01, GU-LEX-C287-PAGLU287-02, GU-LEX-C287-PAGLU287-03, GU-LEX-C287-PAGLU287-04, GU-LEX-C287-PAGLU287-05, GU-LEX-C288-KABUL288-01, GU-LEX-C288-KABUL288-02, GU-LEX-C288-KABUL288-03, GU-LEX-C288-KABUL288-04, GU-LEX-C288-KABUL288-05, GU-LEX-C289-ADALAT289-01, GU-LEX-C289-ADALAT289-02, GU-LEX-C289-ADALAT289-03, GU-LEX-C289-ADALAT289-04, GU-LEX-C289-ADALAT289-05, GU-LEX-C290-DAKU290-01, GU-LEX-C290-DAKU290-02, GU-LEX-C290-DAKU290-03, GU-LEX-C290-DAKU290-04, GU-LEX-C290-DAKU290-05, GU-LEX-C291-GHERVU291-01, GU-LEX-C291-GHERVU291-02, GU-LEX-C291-GHERVU291-03, GU-LEX-C291-GHERVU291-04, GU-LEX-C291-GHERVU291-05, GU-LEX-C292-KAUBHAND292-01, GU-LEX-C292-KAUBHAND292-02, GU-LEX-C292-KAUBHAND292-03, GU-LEX-C292-KAUBHAND292-04, GU-LEX-C292-KAUBHAND292-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GU-LEX-C285-CHOR285-01, GU-LEX-C285-CHOR285-02, GU-LEX-C285-CHOR285-03, GU-LEX-C285-CHOR285-04, GU-LEX-C285-CHOR285-05, GU-LEX-C286-GUNO286-01, GU-LEX-C286-GUNO286-02, GU-LEX-C286-GUNO286-03, GU-LEX-C286-GUNO286-04, GU-LEX-C286-GUNO286-05, GU-LEX-C287-PAGLU287-01, GU-LEX-C287-PAGLU287-02, GU-LEX-C287-PAGLU287-03, GU-LEX-C287-PAGLU287-04, GU-LEX-C287-PAGLU287-05, GU-LEX-C288-KABUL288-01, GU-LEX-C288-KABUL288-02, GU-LEX-C288-KABUL288-03, GU-LEX-C288-KABUL288-04, GU-LEX-C288-KABUL288-05, GU-LEX-C289-ADALAT289-01, GU-LEX-C289-ADALAT289-02, GU-LEX-C289-ADALAT289-03, GU-LEX-C289-ADALAT289-04, GU-LEX-C289-ADALAT289-05, GU-LEX-C290-DAKU290-01, GU-LEX-C290-DAKU290-02, GU-LEX-C290-DAKU290-03, GU-LEX-C290-DAKU290-04, GU-LEX-C290-DAKU290-05, GU-LEX-C291-GHERVU291-01, GU-LEX-C291-GHERVU291-02, GU-LEX-C291-GHERVU291-03, GU-LEX-C291-GHERVU291-04, GU-LEX-C291-GHERVU291-05, GU-LEX-C292-KAUBHAND292-01, GU-LEX-C292-KAUBHAND292-02, GU-LEX-C292-KAUBHAND292-03, GU-LEX-C292-KAUBHAND292-04, GU-LEX-C292-KAUBHAND292-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C285-cor, GU-C285-cori, GU-C285-nasvu, GU-C285-pakadvu, GU-C285-loko, GU-C286-guno, GU-C286-sipai, GU-C286-sanka, GU-C286-khub, GU-C286-chupavvu, GU-C287-bhal, GU-C287-paglu, GU-C287-khakhdavvu, GU-C287-santavu, GU-C287-todvu, GU-C288-dharpakad, GU-C288-kabulvu, GU-C288-nakarvu, GU-C288-gunegar, GU-C288-jel, GU-C289-adalat, GU-C289-vakil, GU-C289-nyay, GU-C289-saja, GU-C289-bhogavvu, GU-C290-daku, GU-C290-banduk, GU-C290-dhamki, GU-C290-dhamkavvu, GU-C290-chinavvu, GU-C291-apaharan, GU-C291-gum, GU-C291-ghervu, GU-C291-kedi, GU-C291-chodavvu, GU-C292-thag, GU-C292-kaubhad, GU-C292-lac, GU-C292-jasus, GU-C292-jhadapvu]
+---
+
+# Looking back: from A Thief in the Night to A Swindle Uncovered
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C285-CHOR285-01, GU-LEX-C285-CHOR285-02] -->
+
+[PAUSE 3s] Say the Gujarati for a thief and a theft.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C285-CHOR285-01, GU-LEX-C285-CHOR285-02, GU-LEX-C285-CHOR285-03, GU-LEX-C285-CHOR285-04, GU-LEX-C285-CHOR285-05, GU-LEX-C286-GUNO286-01, GU-LEX-C286-GUNO286-02, GU-LEX-C286-GUNO286-03, GU-LEX-C286-GUNO286-04, GU-LEX-C286-GUNO286-05, GU-LEX-C287-PAGLU287-01, GU-LEX-C287-PAGLU287-02, GU-LEX-C287-PAGLU287-03, GU-LEX-C287-PAGLU287-04, GU-LEX-C287-PAGLU287-05, GU-LEX-C288-KABUL288-01, GU-LEX-C288-KABUL288-02, GU-LEX-C288-KABUL288-03, GU-LEX-C288-KABUL288-04, GU-LEX-C288-KABUL288-05, GU-LEX-C289-ADALAT289-01, GU-LEX-C289-ADALAT289-02, GU-LEX-C289-ADALAT289-03, GU-LEX-C289-ADALAT289-04, GU-LEX-C289-ADALAT289-05, GU-LEX-C290-DAKU290-01, GU-LEX-C290-DAKU290-02, GU-LEX-C290-DAKU290-03, GU-LEX-C290-DAKU290-04, GU-LEX-C290-DAKU290-05, GU-LEX-C291-GHERVU291-01, GU-LEX-C291-GHERVU291-02, GU-LEX-C291-GHERVU291-03, GU-LEX-C291-GHERVU291-04, GU-LEX-C291-GHERVU291-05, GU-LEX-C292-KAUBHAND292-01, GU-LEX-C292-KAUBHAND292-02, GU-LEX-C292-KAUBHAND292-03, GU-LEX-C292-KAUBHAND292-04, GU-LEX-C292-KAUBHAND292-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a thief, a theft, to flee, to catch, people]
+- [YOU SAY: a crime, a constable, a suspicion, very, to hide (something)]
+- [YOU SAY: a trace, a footstep, to knock, to hide oneself, to break (something)]
+- [YOU SAY: an arrest, to confess, to deny, a criminal, a jail]
+- [YOU SAY: a court, a lawyer, justice, a punishment, to undergo]
+- [YOU SAY: a bandit, a gun, a threat, to threaten, to snatch]
+- [YOU SAY: a kidnapping, missing, to surround, a prisoner, to set free]
+- [YOU SAY: a swindler, a scam, a bribe, a detective, to nab]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C285-CHOR285-01, GU-LEX-C285-CHOR285-02, GU-LEX-C285-CHOR285-03, GU-LEX-C285-CHOR285-04, GU-LEX-C285-CHOR285-05, GU-LEX-C286-GUNO286-01, GU-LEX-C286-GUNO286-02, GU-LEX-C286-GUNO286-03, GU-LEX-C286-GUNO286-04, GU-LEX-C286-GUNO286-05, GU-LEX-C287-PAGLU287-01, GU-LEX-C287-PAGLU287-02, GU-LEX-C287-PAGLU287-03, GU-LEX-C287-PAGLU287-04, GU-LEX-C287-PAGLU287-05, GU-LEX-C288-KABUL288-01, GU-LEX-C288-KABUL288-02, GU-LEX-C288-KABUL288-03, GU-LEX-C288-KABUL288-04, GU-LEX-C288-KABUL288-05, GU-LEX-C289-ADALAT289-01, GU-LEX-C289-ADALAT289-02, GU-LEX-C289-ADALAT289-03, GU-LEX-C289-ADALAT289-04, GU-LEX-C289-ADALAT289-05, GU-LEX-C290-DAKU290-01, GU-LEX-C290-DAKU290-02, GU-LEX-C290-DAKU290-03, GU-LEX-C290-DAKU290-04, GU-LEX-C290-DAKU290-05, GU-LEX-C291-GHERVU291-01, GU-LEX-C291-GHERVU291-02, GU-LEX-C291-GHERVU291-03, GU-LEX-C291-GHERVU291-04, GU-LEX-C291-GHERVU291-05, GU-LEX-C292-KAUBHAND292-01, GU-LEX-C292-KAUBHAND292-02, GU-LEX-C292-KAUBHAND292-03, GU-LEX-C292-KAUBHAND292-04, GU-LEX-C292-KAUBHAND292-05] -->
+
+[PAUSE 3s] A thief? (**ચોર**, *cor*.) A theft? (**ચોરી**, *corī*.) To flee? (**નાસવું**, *nāsvũ*.) To catch? (**પકડવું**, *pakaḍvũ*.) People? (**લોકો**, *loko*.) A crime? (**ગુનો**, *guno*.) A constable? (**સિપાઈ**, *sipāī*.) A suspicion? (**શંકા**, *śankā*.) Very? (**ખૂબ**, *khūb*.) To hide (something)? (**છુપાવવું**, *chupāvvũ*.) A trace? (**ભાળ**, *bhāḷ*.) A footstep? (**પગલું**, *paglũ*.) To knock? (**ખખડાવવું**, *khakhḍāvvũ*.) To hide oneself? (**સંતાવું**, *santāvũ*.) To break (something)? (**તોડવું**, *toḍvũ*.) An arrest? (**ધરપકડ**, *dharpakaḍ*.) To confess? (**કબૂલવું**, *kabūlvũ*.) To deny? (**નકારવું**, *nakārvũ*.) A criminal? (**ગુનેગાર**, *gunegār*.) A jail? (**જેલ**, *jel*.) A court? (**અદાલત**, *adālat*.) A lawyer? (**વકીલ**, *vakīl*.) Justice? (**ન્યાય**, *nyāy*.) A punishment? (**સજા**, *sajā*.) To undergo? (**ભોગવવું**, *bhogavvũ*.) A bandit? (**ડાકુ**, *ḍāku*.) A gun? (**બંદૂક**, *bandūk*.) A threat? (**ધમકી**, *dhamkī*.) To threaten? (**ધમકાવવું**, *dhamkāvvũ*.) To snatch? (**છીનવવું**, *chīnavvũ*.) A kidnapping? (**અપહરણ**, *apaharaṇ*.) Missing? (**ગુમ**, *gum*.) To surround? (**ઘેરવું**, *ghervũ*.) A prisoner? (**કેદી**, *kedī*.) To set free? (**છોડાવવું**, *choḍāvvũ*.) A swindler? (**ઠગ**, *ṭhag*.) A scam? (**કૌભાંડ**, *kaubhā̃ḍ*.) A bribe? (**લાંચ**, *lā̃c*.) A detective? (**જાસૂસ**, *jāsūs*.) To nab? (**ઝડપવું**, *jhaḍapvũ*.)
+`;export{t};

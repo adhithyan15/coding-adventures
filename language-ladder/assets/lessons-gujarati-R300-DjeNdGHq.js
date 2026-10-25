@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-R300-review-293-300
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 16810
+chapter: 300
+type: review
+headword: (dialogue)
+gloss: a review of the words from An Accident near the Bridge to Smoke from the Kitchen
+concept_tag: REVIEW
+prerequisites: [GU-C293-akasmat, GU-C293-takkar, GU-C293-ghayal, GU-C293-gambhir, GU-C293-gabhravu, GU-C294-lapasvu, GU-C294-ujhardo, GU-C294-gabadvu, GU-C294-dhal, GU-C294-bhan, GU-C295-valak, GU-C295-brek, GU-C295-bedarkar, GU-C295-dand, GU-C295-kacadvu, GU-C296-embyulans, GU-C296-upadvu-lift, GU-C296-pato, GU-C296-tako, GU-C296-halat, GU-C297-cetavvu, GU-C297-savdhan, GU-C297-udhu, GU-C297-tolu, GU-C297-dhakko, GU-C298-mrtyu, GU-C298-sok, GU-C298-aghat, GU-C298-asvasan, GU-C298-sahevu, GU-C299-cis, GU-C299-bum, GU-C299-rokvu, GU-C299-atkavvu, GU-C299-salamat, GU-C300-angaro, GU-C300-dhumado, GU-C300-jvala, GU-C300-salgavvu, GU-C300-dajhvu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-LEX-C293-AKASMAT293-01, GU-LEX-C293-AKASMAT293-02, GU-LEX-C293-AKASMAT293-03, GU-LEX-C293-AKASMAT293-04, GU-LEX-C293-AKASMAT293-05, GU-LEX-C294-LAPAS294-01, GU-LEX-C294-LAPAS294-02, GU-LEX-C294-LAPAS294-03, GU-LEX-C294-LAPAS294-04, GU-LEX-C294-LAPAS294-05, GU-LEX-C295-VALANK295-01, GU-LEX-C295-VALANK295-02, GU-LEX-C295-VALANK295-03, GU-LEX-C295-VALANK295-04, GU-LEX-C295-VALANK295-05, GU-LEX-C296-AMBULANS296-01, GU-LEX-C296-AMBULANS296-02, GU-LEX-C296-AMBULANS296-03, GU-LEX-C296-AMBULANS296-04, GU-LEX-C296-AMBULANS296-05, GU-LEX-C297-CHETAV297-01, GU-LEX-C297-CHETAV297-02, GU-LEX-C297-CHETAV297-03, GU-LEX-C297-CHETAV297-04, GU-LEX-C297-CHETAV297-05, GU-LEX-C298-MRUTYU298-01, GU-LEX-C298-MRUTYU298-02, GU-LEX-C298-MRUTYU298-03, GU-LEX-C298-MRUTYU298-04, GU-LEX-C298-MRUTYU298-05, GU-LEX-C299-BUM299-01, GU-LEX-C299-BUM299-02, GU-LEX-C299-BUM299-03, GU-LEX-C299-BUM299-04, GU-LEX-C299-BUM299-05, GU-LEX-C300-AAG300-01, GU-LEX-C300-AAG300-02, GU-LEX-C300-AAG300-03, GU-LEX-C300-AAG300-04, GU-LEX-C300-AAG300-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GU-LEX-C293-AKASMAT293-01, GU-LEX-C293-AKASMAT293-02, GU-LEX-C293-AKASMAT293-03, GU-LEX-C293-AKASMAT293-04, GU-LEX-C293-AKASMAT293-05, GU-LEX-C294-LAPAS294-01, GU-LEX-C294-LAPAS294-02, GU-LEX-C294-LAPAS294-03, GU-LEX-C294-LAPAS294-04, GU-LEX-C294-LAPAS294-05, GU-LEX-C295-VALANK295-01, GU-LEX-C295-VALANK295-02, GU-LEX-C295-VALANK295-03, GU-LEX-C295-VALANK295-04, GU-LEX-C295-VALANK295-05, GU-LEX-C296-AMBULANS296-01, GU-LEX-C296-AMBULANS296-02, GU-LEX-C296-AMBULANS296-03, GU-LEX-C296-AMBULANS296-04, GU-LEX-C296-AMBULANS296-05, GU-LEX-C297-CHETAV297-01, GU-LEX-C297-CHETAV297-02, GU-LEX-C297-CHETAV297-03, GU-LEX-C297-CHETAV297-04, GU-LEX-C297-CHETAV297-05, GU-LEX-C298-MRUTYU298-01, GU-LEX-C298-MRUTYU298-02, GU-LEX-C298-MRUTYU298-03, GU-LEX-C298-MRUTYU298-04, GU-LEX-C298-MRUTYU298-05, GU-LEX-C299-BUM299-01, GU-LEX-C299-BUM299-02, GU-LEX-C299-BUM299-03, GU-LEX-C299-BUM299-04, GU-LEX-C299-BUM299-05, GU-LEX-C300-AAG300-01, GU-LEX-C300-AAG300-02, GU-LEX-C300-AAG300-03, GU-LEX-C300-AAG300-04, GU-LEX-C300-AAG300-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C293-akasmat, GU-C293-takkar, GU-C293-ghayal, GU-C293-gambhir, GU-C293-gabhravu, GU-C294-lapasvu, GU-C294-ujhardo, GU-C294-gabadvu, GU-C294-dhal, GU-C294-bhan, GU-C295-valak, GU-C295-brek, GU-C295-bedarkar, GU-C295-dand, GU-C295-kacadvu, GU-C296-embyulans, GU-C296-upadvu-lift, GU-C296-pato, GU-C296-tako, GU-C296-halat, GU-C297-cetavvu, GU-C297-savdhan, GU-C297-udhu, GU-C297-tolu, GU-C297-dhakko, GU-C298-mrtyu, GU-C298-sok, GU-C298-aghat, GU-C298-asvasan, GU-C298-sahevu, GU-C299-cis, GU-C299-bum, GU-C299-rokvu, GU-C299-atkavvu, GU-C299-salamat, GU-C300-angaro, GU-C300-dhumado, GU-C300-jvala, GU-C300-salgavvu, GU-C300-dajhvu]
+---
+
+# Looking back: from An Accident near the Bridge to Smoke from the Kitchen
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C293-AKASMAT293-01, GU-LEX-C293-AKASMAT293-02] -->
+
+[PAUSE 3s] Say the Gujarati for an accident and a collision.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C293-AKASMAT293-01, GU-LEX-C293-AKASMAT293-02, GU-LEX-C293-AKASMAT293-03, GU-LEX-C293-AKASMAT293-04, GU-LEX-C293-AKASMAT293-05, GU-LEX-C294-LAPAS294-01, GU-LEX-C294-LAPAS294-02, GU-LEX-C294-LAPAS294-03, GU-LEX-C294-LAPAS294-04, GU-LEX-C294-LAPAS294-05, GU-LEX-C295-VALANK295-01, GU-LEX-C295-VALANK295-02, GU-LEX-C295-VALANK295-03, GU-LEX-C295-VALANK295-04, GU-LEX-C295-VALANK295-05, GU-LEX-C296-AMBULANS296-01, GU-LEX-C296-AMBULANS296-02, GU-LEX-C296-AMBULANS296-03, GU-LEX-C296-AMBULANS296-04, GU-LEX-C296-AMBULANS296-05, GU-LEX-C297-CHETAV297-01, GU-LEX-C297-CHETAV297-02, GU-LEX-C297-CHETAV297-03, GU-LEX-C297-CHETAV297-04, GU-LEX-C297-CHETAV297-05, GU-LEX-C298-MRUTYU298-01, GU-LEX-C298-MRUTYU298-02, GU-LEX-C298-MRUTYU298-03, GU-LEX-C298-MRUTYU298-04, GU-LEX-C298-MRUTYU298-05, GU-LEX-C299-BUM299-01, GU-LEX-C299-BUM299-02, GU-LEX-C299-BUM299-03, GU-LEX-C299-BUM299-04, GU-LEX-C299-BUM299-05, GU-LEX-C300-AAG300-01, GU-LEX-C300-AAG300-02, GU-LEX-C300-AAG300-03, GU-LEX-C300-AAG300-04, GU-LEX-C300-AAG300-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an accident, a collision, injured, serious, to panic]
+- [YOU SAY: to slip, a graze, to tumble, a slope, consciousness]
+- [YOU SAY: a bend, a brake, careless, a fine, to crush]
+- [YOU SAY: an ambulance, to pick up, a bandage, a stitch, a condition]
+- [YOU SAY: to warn, careful, upside down, a gathered crowd, a push]
+- [YOU SAY: death, mourning, a shock, consolation, to bear]
+- [YOU SAY: a scream, a shout, to bring to a stop, to hold back, safe]
+- [YOU SAY: an ember, smoke, a flame, to set alight, to be scalded]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C293-AKASMAT293-01, GU-LEX-C293-AKASMAT293-02, GU-LEX-C293-AKASMAT293-03, GU-LEX-C293-AKASMAT293-04, GU-LEX-C293-AKASMAT293-05, GU-LEX-C294-LAPAS294-01, GU-LEX-C294-LAPAS294-02, GU-LEX-C294-LAPAS294-03, GU-LEX-C294-LAPAS294-04, GU-LEX-C294-LAPAS294-05, GU-LEX-C295-VALANK295-01, GU-LEX-C295-VALANK295-02, GU-LEX-C295-VALANK295-03, GU-LEX-C295-VALANK295-04, GU-LEX-C295-VALANK295-05, GU-LEX-C296-AMBULANS296-01, GU-LEX-C296-AMBULANS296-02, GU-LEX-C296-AMBULANS296-03, GU-LEX-C296-AMBULANS296-04, GU-LEX-C296-AMBULANS296-05, GU-LEX-C297-CHETAV297-01, GU-LEX-C297-CHETAV297-02, GU-LEX-C297-CHETAV297-03, GU-LEX-C297-CHETAV297-04, GU-LEX-C297-CHETAV297-05, GU-LEX-C298-MRUTYU298-01, GU-LEX-C298-MRUTYU298-02, GU-LEX-C298-MRUTYU298-03, GU-LEX-C298-MRUTYU298-04, GU-LEX-C298-MRUTYU298-05, GU-LEX-C299-BUM299-01, GU-LEX-C299-BUM299-02, GU-LEX-C299-BUM299-03, GU-LEX-C299-BUM299-04, GU-LEX-C299-BUM299-05, GU-LEX-C300-AAG300-01, GU-LEX-C300-AAG300-02, GU-LEX-C300-AAG300-03, GU-LEX-C300-AAG300-04, GU-LEX-C300-AAG300-05] -->
+
+[PAUSE 3s] An accident? (**અકસ્માત**, *akasmāt*.) A collision? (**ટક્કર**, *ṭakkar*.) Injured? (**ઘાયલ**, *ghāyal*.) Serious? (**ગંભીર**, *gambhīr*.) To panic? (**ગભરાવું**, *gabhrāvũ*.) To slip? (**લપસવું**, *lapasvũ*.) A graze? (**ઉઝરડો**, *ujharḍo*.) To tumble? (**ગબડવું**, *gabaḍvũ*.) A slope? (**ઢાળ**, *ḍhāḷ*.) Consciousness? (**ભાન**, *bhān*.) A bend? (**વળાંક**, *vaḷā̃k*.) A brake? (**બ્રેક**, *brek*.) Careless? (**બેદરકાર**, *bedarkār*.) A fine? (**દંડ**, *danḍ*.) To crush? (**કચડવું**, *kacaḍvũ*.) An ambulance? (**એમ્બ્યુલન્સ**, *embyulans*.) To pick up? (**ઉપાડવું**, *upāḍvũ*.) A bandage? (**પાટો**, *pāṭo*.) A stitch? (**ટાંકો**, *ṭā̃ko*.) A condition? (**હાલત**, *hālat*.) To warn? (**ચેતવવું**, *cetavvũ*.) Careful? (**સાવધાન**, *sāvdhān*.) Upside down? (**ઊંધું**, *ū̃dhũ*.) A gathered crowd? (**ટોળું**, *ṭoḷũ*.) A push? (**ધક્કો**, *dhakko*.) Death? (**મૃત્યુ**, *mṛtyu*.) Mourning? (**શોક**, *śok*.) A shock? (**આઘાત**, *āghāt*.) Consolation? (**આશ્વાસન**, *āśvāsan*.) To bear? (**સહેવું**, *sahevũ*.) A scream? (**ચીસ**, *cīs*.) A shout? (**બૂમ**, *būm*.) To bring to a stop? (**રોકવું**, *rokvũ*.) To hold back? (**અટકાવવું**, *aṭkāvvũ*.) Safe? (**સલામત**, *salāmat*.) An ember? (**અંગારો**, *angāro*.) Smoke? (**ધુમાડો**, *dhumāḍo*.) A flame? (**જ્વાળા**, *jvāḷā*.) To set alight? (**સળગાવવું**, *saḷgāvvũ*.) To be scalded? (**દાઝવું**, *dājhvũ*.)
+`;export{t};

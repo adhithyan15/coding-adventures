@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-R331-review-325-331
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 18400
+chapter: 331
+type: review
+headword: (dialogue)
+gloss: a review of the words from The Fight for Freedom to Fasts and Vows
+concept_tag: REVIEW
+prerequisites: [GU-C325-ajhadi, GU-C325-gulam, GU-C325-angrej, GU-C325-adolan, GU-C325-balvo, GU-C326-jhando, GU-C326-pharkavvu, GU-C326-santi, GU-C326-sarhad, GU-C326-sthapvu, GU-C327-utsav, GU-C327-ujavvu, GU-C327-parampara, GU-C327-rivaj, GU-C327-parva, GU-C328-puja, GU-C328-arti, GU-C328-prasad, GU-C328-pragtavvu, GU-C328-dhup, GU-C329-rangoli, GU-C329-sangarvu, GU-C329-jhagmagvu, GU-C329-mala, GU-C329-sobhayatra, GU-C330-mandap, GU-C330-ghumvu, GU-C330-jhulvu, GU-C330-bhajan, GU-C330-bhakt, GU-C331-upvas, GU-C331-vrat, GU-C331-prarthana, GU-C331-asirvad, GU-C331-cadhavvu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-LEX-C325-AZADI325-01, GU-LEX-C325-AZADI325-02, GU-LEX-C325-AZADI325-03, GU-LEX-C325-AZADI325-04, GU-LEX-C325-AZADI325-05, GU-LEX-C326-ZANDO326-01, GU-LEX-C326-ZANDO326-02, GU-LEX-C326-ZANDO326-03, GU-LEX-C326-ZANDO326-04, GU-LEX-C326-ZANDO326-05, GU-LEX-C327-UTSAV327-01, GU-LEX-C327-UTSAV327-02, GU-LEX-C327-UTSAV327-03, GU-LEX-C327-UTSAV327-04, GU-LEX-C327-UTSAV327-05, GU-LEX-C328-PUJA328-01, GU-LEX-C328-PUJA328-02, GU-LEX-C328-PUJA328-03, GU-LEX-C328-PUJA328-04, GU-LEX-C328-PUJA328-05, GU-LEX-C329-RANGOLI329-01, GU-LEX-C329-RANGOLI329-02, GU-LEX-C329-RANGOLI329-03, GU-LEX-C329-RANGOLI329-04, GU-LEX-C329-RANGOLI329-05, GU-LEX-C330-GARBO330-01, GU-LEX-C330-GARBO330-02, GU-LEX-C330-GARBO330-03, GU-LEX-C330-GARBO330-04, GU-LEX-C330-GARBO330-05, GU-LEX-C331-UPVAS331-01, GU-LEX-C331-UPVAS331-02, GU-LEX-C331-UPVAS331-03, GU-LEX-C331-UPVAS331-04, GU-LEX-C331-UPVAS331-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GU-LEX-C325-AZADI325-01, GU-LEX-C325-AZADI325-02, GU-LEX-C325-AZADI325-03, GU-LEX-C325-AZADI325-04, GU-LEX-C325-AZADI325-05, GU-LEX-C326-ZANDO326-01, GU-LEX-C326-ZANDO326-02, GU-LEX-C326-ZANDO326-03, GU-LEX-C326-ZANDO326-04, GU-LEX-C326-ZANDO326-05, GU-LEX-C327-UTSAV327-01, GU-LEX-C327-UTSAV327-02, GU-LEX-C327-UTSAV327-03, GU-LEX-C327-UTSAV327-04, GU-LEX-C327-UTSAV327-05, GU-LEX-C328-PUJA328-01, GU-LEX-C328-PUJA328-02, GU-LEX-C328-PUJA328-03, GU-LEX-C328-PUJA328-04, GU-LEX-C328-PUJA328-05, GU-LEX-C329-RANGOLI329-01, GU-LEX-C329-RANGOLI329-02, GU-LEX-C329-RANGOLI329-03, GU-LEX-C329-RANGOLI329-04, GU-LEX-C329-RANGOLI329-05, GU-LEX-C330-GARBO330-01, GU-LEX-C330-GARBO330-02, GU-LEX-C330-GARBO330-03, GU-LEX-C330-GARBO330-04, GU-LEX-C330-GARBO330-05, GU-LEX-C331-UPVAS331-01, GU-LEX-C331-UPVAS331-02, GU-LEX-C331-UPVAS331-03, GU-LEX-C331-UPVAS331-04, GU-LEX-C331-UPVAS331-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C325-ajhadi, GU-C325-gulam, GU-C325-angrej, GU-C325-adolan, GU-C325-balvo, GU-C326-jhando, GU-C326-pharkavvu, GU-C326-santi, GU-C326-sarhad, GU-C326-sthapvu, GU-C327-utsav, GU-C327-ujavvu, GU-C327-parampara, GU-C327-rivaj, GU-C327-parva, GU-C328-puja, GU-C328-arti, GU-C328-prasad, GU-C328-pragtavvu, GU-C328-dhup, GU-C329-rangoli, GU-C329-sangarvu, GU-C329-jhagmagvu, GU-C329-mala, GU-C329-sobhayatra, GU-C330-mandap, GU-C330-ghumvu, GU-C330-jhulvu, GU-C330-bhajan, GU-C330-bhakt, GU-C331-upvas, GU-C331-vrat, GU-C331-prarthana, GU-C331-asirvad, GU-C331-cadhavvu]
+---
+
+# Looking back: from The Fight for Freedom to Fasts and Vows
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C325-AZADI325-01, GU-LEX-C325-AZADI325-02] -->
+
+[PAUSE 3s] Say the Gujarati for freedom and a slave.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C325-AZADI325-01, GU-LEX-C325-AZADI325-02, GU-LEX-C325-AZADI325-03, GU-LEX-C325-AZADI325-04, GU-LEX-C325-AZADI325-05, GU-LEX-C326-ZANDO326-01, GU-LEX-C326-ZANDO326-02, GU-LEX-C326-ZANDO326-03, GU-LEX-C326-ZANDO326-04, GU-LEX-C326-ZANDO326-05, GU-LEX-C327-UTSAV327-01, GU-LEX-C327-UTSAV327-02, GU-LEX-C327-UTSAV327-03, GU-LEX-C327-UTSAV327-04, GU-LEX-C327-UTSAV327-05, GU-LEX-C328-PUJA328-01, GU-LEX-C328-PUJA328-02, GU-LEX-C328-PUJA328-03, GU-LEX-C328-PUJA328-04, GU-LEX-C328-PUJA328-05, GU-LEX-C329-RANGOLI329-01, GU-LEX-C329-RANGOLI329-02, GU-LEX-C329-RANGOLI329-03, GU-LEX-C329-RANGOLI329-04, GU-LEX-C329-RANGOLI329-05, GU-LEX-C330-GARBO330-01, GU-LEX-C330-GARBO330-02, GU-LEX-C330-GARBO330-03, GU-LEX-C330-GARBO330-04, GU-LEX-C330-GARBO330-05, GU-LEX-C331-UPVAS331-01, GU-LEX-C331-UPVAS331-02, GU-LEX-C331-UPVAS331-03, GU-LEX-C331-UPVAS331-04, GU-LEX-C331-UPVAS331-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: freedom, a slave, an Englishman, a campaign, a revolt]
+- [YOU SAY: a flag, to hoist, peace, a border, to found]
+- [YOU SAY: a celebration, to celebrate, a tradition, a custom, a holy day]
+- [YOU SAY: worship, an aarti, a blessed offering, to light, incense]
+- [YOU SAY: a rangoli, to adorn, to sparkle, a garland, a procession]
+- [YOU SAY: a pavilion, to whirl round, to swing, a hymn, a devotee]
+- [YOU SAY: a day of fasting, a vow, a prayer, a blessing, to offer (to a god)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C325-AZADI325-01, GU-LEX-C325-AZADI325-02, GU-LEX-C325-AZADI325-03, GU-LEX-C325-AZADI325-04, GU-LEX-C325-AZADI325-05, GU-LEX-C326-ZANDO326-01, GU-LEX-C326-ZANDO326-02, GU-LEX-C326-ZANDO326-03, GU-LEX-C326-ZANDO326-04, GU-LEX-C326-ZANDO326-05, GU-LEX-C327-UTSAV327-01, GU-LEX-C327-UTSAV327-02, GU-LEX-C327-UTSAV327-03, GU-LEX-C327-UTSAV327-04, GU-LEX-C327-UTSAV327-05, GU-LEX-C328-PUJA328-01, GU-LEX-C328-PUJA328-02, GU-LEX-C328-PUJA328-03, GU-LEX-C328-PUJA328-04, GU-LEX-C328-PUJA328-05, GU-LEX-C329-RANGOLI329-01, GU-LEX-C329-RANGOLI329-02, GU-LEX-C329-RANGOLI329-03, GU-LEX-C329-RANGOLI329-04, GU-LEX-C329-RANGOLI329-05, GU-LEX-C330-GARBO330-01, GU-LEX-C330-GARBO330-02, GU-LEX-C330-GARBO330-03, GU-LEX-C330-GARBO330-04, GU-LEX-C330-GARBO330-05, GU-LEX-C331-UPVAS331-01, GU-LEX-C331-UPVAS331-02, GU-LEX-C331-UPVAS331-03, GU-LEX-C331-UPVAS331-04, GU-LEX-C331-UPVAS331-05] -->
+
+[PAUSE 3s] Freedom? (**આઝાદી**, *ājhādī*.) A slave? (**ગુલામ**, *gulām*.) An Englishman? (**અંગ્રેજ**, *angrej*.) A campaign? (**આંદોલન**, *ā̃dolan*.) A revolt? (**બળવો**, *baḷvo*.) A flag? (**ઝંડો**, *jhanḍo*.) To hoist? (**ફરકાવવું**, *pharkāvvũ*.) Peace? (**શાંતિ**, *śānti*.) A border? (**સરહદ**, *sarhad*.) To found? (**સ્થાપવું**, *sthāpvũ*.) A celebration? (**ઉત્સવ**, *utsav*.) To celebrate? (**ઉજવવું**, *ujavvũ*.) A tradition? (**પરંપરા**, *paramparā*.) A custom? (**રિવાજ**, *rivāj*.) A holy day? (**પર્વ**, *parva*.) Worship? (**પૂજા**, *pūjā*.) An aarti? (**આરતી**, *ārtī*.) A blessed offering? (**પ્રસાદ**, *prasād*.) To light? (**પ્રગટાવવું**, *pragṭāvvũ*.) Incense? (**ધૂપ**, *dhūp*.) A rangoli? (**રંગોળી**, *rangoḷī*.) To adorn? (**શણગારવું**, *śaṇgārvũ*.) To sparkle? (**ઝગમગવું**, *jhagmagvũ*.) A garland? (**માળા**, *māḷā*.) A procession? (**શોભાયાત્રા**, *śobhāyātrā*.) A pavilion? (**મંડપ**, *manḍap*.) To whirl round? (**ઘૂમવું**, *ghūmvũ*.) To swing? (**ઝૂલવું**, *jhūlvũ*.) A hymn? (**ભજન**, *bhajan*.) A devotee? (**ભક્ત**, *bhakt*.) A day of fasting? (**ઉપવાસ**, *upvās*.) A vow? (**વ્રત**, *vrat*.) A prayer? (**પ્રાર્થના**, *prārthanā*.) A blessing? (**આશીર્વાદ**, *āśīrvād*.) To offer (to a god)? (**ચઢાવવું**, *caḍhāvvũ*.)
+`;export{t};

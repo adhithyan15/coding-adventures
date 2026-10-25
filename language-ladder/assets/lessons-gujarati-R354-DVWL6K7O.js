@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-R354-review-347-354
+spine_node: SPINE-GIVE-REASONS
+sequence: 19810
+chapter: 354
+type: review
+headword: (dialogue)
+gloss: a review of the words from The Law to Offices and Officials
+concept_tag: REVIEW
+prerequisites: [GU-C347-kaydo, GU-C347-ullanghan, GU-C347-palan, GU-C347-lagu, GU-C347-uthapvu, GU-C348-nyayadhis, GU-C348-kes, GU-C348-apil, GU-C348-pheslo, GU-C348-phatkarvu, GU-C349-vajbi, GU-C349-bhedbhav, GU-C349-saman, GU-C349-tatasth, GU-C349-vartvu, GU-C350-karar, GU-C350-dastavej, GU-C350-mukt, GU-C350-japt, GU-C350-vasulvu, GU-C351-hakikat, GU-C351-bhram, GU-C351-gersamaj, GU-C351-yatharth, GU-C351-chetravu, GU-C352-sarkar, GU-C352-rajya, GU-C352-satta, GU-C352-praja, GU-C352-ghadvu, GU-C353-nagrik, GU-C353-janta, GU-C353-matdan, GU-C353-umedvar, GU-C353-cutavu, GU-C354-adhikari, GU-C354-mantri, GU-C354-manjuri, GU-C354-parvangi, GU-C354-nimvu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-LEX-C347-KAYDO347-01, GU-LEX-C347-KAYDO347-02, GU-LEX-C347-KAYDO347-03, GU-LEX-C347-KAYDO347-04, GU-LEX-C347-KAYDO347-05, GU-LEX-C348-KES348-01, GU-LEX-C348-KES348-02, GU-LEX-C348-KES348-03, GU-LEX-C348-KES348-04, GU-LEX-C348-KES348-05, GU-LEX-C349-SAMAN349-01, GU-LEX-C349-SAMAN349-02, GU-LEX-C349-SAMAN349-03, GU-LEX-C349-SAMAN349-04, GU-LEX-C349-SAMAN349-05, GU-LEX-C350-KARAR350-01, GU-LEX-C350-KARAR350-02, GU-LEX-C350-KARAR350-03, GU-LEX-C350-KARAR350-04, GU-LEX-C350-KARAR350-05, GU-LEX-C351-HAKIKAT351-01, GU-LEX-C351-HAKIKAT351-02, GU-LEX-C351-HAKIKAT351-03, GU-LEX-C351-HAKIKAT351-04, GU-LEX-C351-HAKIKAT351-05, GU-LEX-C352-SARKAR352-01, GU-LEX-C352-SARKAR352-02, GU-LEX-C352-SARKAR352-03, GU-LEX-C352-SARKAR352-04, GU-LEX-C352-SARKAR352-05, GU-LEX-C353-MATDAN353-01, GU-LEX-C353-MATDAN353-02, GU-LEX-C353-MATDAN353-03, GU-LEX-C353-MATDAN353-04, GU-LEX-C353-MATDAN353-05, GU-LEX-C354-ADHIKARI354-01, GU-LEX-C354-ADHIKARI354-02, GU-LEX-C354-ADHIKARI354-03, GU-LEX-C354-ADHIKARI354-04, GU-LEX-C354-ADHIKARI354-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GU-LEX-C347-KAYDO347-01, GU-LEX-C347-KAYDO347-02, GU-LEX-C347-KAYDO347-03, GU-LEX-C347-KAYDO347-04, GU-LEX-C347-KAYDO347-05, GU-LEX-C348-KES348-01, GU-LEX-C348-KES348-02, GU-LEX-C348-KES348-03, GU-LEX-C348-KES348-04, GU-LEX-C348-KES348-05, GU-LEX-C349-SAMAN349-01, GU-LEX-C349-SAMAN349-02, GU-LEX-C349-SAMAN349-03, GU-LEX-C349-SAMAN349-04, GU-LEX-C349-SAMAN349-05, GU-LEX-C350-KARAR350-01, GU-LEX-C350-KARAR350-02, GU-LEX-C350-KARAR350-03, GU-LEX-C350-KARAR350-04, GU-LEX-C350-KARAR350-05, GU-LEX-C351-HAKIKAT351-01, GU-LEX-C351-HAKIKAT351-02, GU-LEX-C351-HAKIKAT351-03, GU-LEX-C351-HAKIKAT351-04, GU-LEX-C351-HAKIKAT351-05, GU-LEX-C352-SARKAR352-01, GU-LEX-C352-SARKAR352-02, GU-LEX-C352-SARKAR352-03, GU-LEX-C352-SARKAR352-04, GU-LEX-C352-SARKAR352-05, GU-LEX-C353-MATDAN353-01, GU-LEX-C353-MATDAN353-02, GU-LEX-C353-MATDAN353-03, GU-LEX-C353-MATDAN353-04, GU-LEX-C353-MATDAN353-05, GU-LEX-C354-ADHIKARI354-01, GU-LEX-C354-ADHIKARI354-02, GU-LEX-C354-ADHIKARI354-03, GU-LEX-C354-ADHIKARI354-04, GU-LEX-C354-ADHIKARI354-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C347-kaydo, GU-C347-ullanghan, GU-C347-palan, GU-C347-lagu, GU-C347-uthapvu, GU-C348-nyayadhis, GU-C348-kes, GU-C348-apil, GU-C348-pheslo, GU-C348-phatkarvu, GU-C349-vajbi, GU-C349-bhedbhav, GU-C349-saman, GU-C349-tatasth, GU-C349-vartvu, GU-C350-karar, GU-C350-dastavej, GU-C350-mukt, GU-C350-japt, GU-C350-vasulvu, GU-C351-hakikat, GU-C351-bhram, GU-C351-gersamaj, GU-C351-yatharth, GU-C351-chetravu, GU-C352-sarkar, GU-C352-rajya, GU-C352-satta, GU-C352-praja, GU-C352-ghadvu, GU-C353-nagrik, GU-C353-janta, GU-C353-matdan, GU-C353-umedvar, GU-C353-cutavu, GU-C354-adhikari, GU-C354-mantri, GU-C354-manjuri, GU-C354-parvangi, GU-C354-nimvu]
+---
+
+# Looking back: from The Law to Offices and Officials
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C347-KAYDO347-01, GU-LEX-C347-KAYDO347-02] -->
+
+[PAUSE 3s] Say the Gujarati for a law and a violation.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C347-KAYDO347-01, GU-LEX-C347-KAYDO347-02, GU-LEX-C347-KAYDO347-03, GU-LEX-C347-KAYDO347-04, GU-LEX-C347-KAYDO347-05, GU-LEX-C348-KES348-01, GU-LEX-C348-KES348-02, GU-LEX-C348-KES348-03, GU-LEX-C348-KES348-04, GU-LEX-C348-KES348-05, GU-LEX-C349-SAMAN349-01, GU-LEX-C349-SAMAN349-02, GU-LEX-C349-SAMAN349-03, GU-LEX-C349-SAMAN349-04, GU-LEX-C349-SAMAN349-05, GU-LEX-C350-KARAR350-01, GU-LEX-C350-KARAR350-02, GU-LEX-C350-KARAR350-03, GU-LEX-C350-KARAR350-04, GU-LEX-C350-KARAR350-05, GU-LEX-C351-HAKIKAT351-01, GU-LEX-C351-HAKIKAT351-02, GU-LEX-C351-HAKIKAT351-03, GU-LEX-C351-HAKIKAT351-04, GU-LEX-C351-HAKIKAT351-05, GU-LEX-C352-SARKAR352-01, GU-LEX-C352-SARKAR352-02, GU-LEX-C352-SARKAR352-03, GU-LEX-C352-SARKAR352-04, GU-LEX-C352-SARKAR352-05, GU-LEX-C353-MATDAN353-01, GU-LEX-C353-MATDAN353-02, GU-LEX-C353-MATDAN353-03, GU-LEX-C353-MATDAN353-04, GU-LEX-C353-MATDAN353-05, GU-LEX-C354-ADHIKARI354-01, GU-LEX-C354-ADHIKARI354-02, GU-LEX-C354-ADHIKARI354-03, GU-LEX-C354-ADHIKARI354-04, GU-LEX-C354-ADHIKARI354-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a law, a violation, observance, in force, to defy]
+- [YOU SAY: a judge, a court case, an appeal, a ruling, to hit hard]
+- [YOU SAY: reasonable, discrimination, equal, neutral, to behave]
+- [YOU SAY: a contract, a document, free of, seized, to recover a debt]
+- [YOU SAY: a fact, an illusion, a misunderstanding, true to the facts, to be taken in]
+- [YOU SAY: a government, a state (of a country), power to rule, the people of a state, to shape]
+- [YOU SAY: a citizen, the public, voting, a candidate, to be elected]
+- [YOU SAY: an official, a minister, approval, permission, to appoint]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C347-KAYDO347-01, GU-LEX-C347-KAYDO347-02, GU-LEX-C347-KAYDO347-03, GU-LEX-C347-KAYDO347-04, GU-LEX-C347-KAYDO347-05, GU-LEX-C348-KES348-01, GU-LEX-C348-KES348-02, GU-LEX-C348-KES348-03, GU-LEX-C348-KES348-04, GU-LEX-C348-KES348-05, GU-LEX-C349-SAMAN349-01, GU-LEX-C349-SAMAN349-02, GU-LEX-C349-SAMAN349-03, GU-LEX-C349-SAMAN349-04, GU-LEX-C349-SAMAN349-05, GU-LEX-C350-KARAR350-01, GU-LEX-C350-KARAR350-02, GU-LEX-C350-KARAR350-03, GU-LEX-C350-KARAR350-04, GU-LEX-C350-KARAR350-05, GU-LEX-C351-HAKIKAT351-01, GU-LEX-C351-HAKIKAT351-02, GU-LEX-C351-HAKIKAT351-03, GU-LEX-C351-HAKIKAT351-04, GU-LEX-C351-HAKIKAT351-05, GU-LEX-C352-SARKAR352-01, GU-LEX-C352-SARKAR352-02, GU-LEX-C352-SARKAR352-03, GU-LEX-C352-SARKAR352-04, GU-LEX-C352-SARKAR352-05, GU-LEX-C353-MATDAN353-01, GU-LEX-C353-MATDAN353-02, GU-LEX-C353-MATDAN353-03, GU-LEX-C353-MATDAN353-04, GU-LEX-C353-MATDAN353-05, GU-LEX-C354-ADHIKARI354-01, GU-LEX-C354-ADHIKARI354-02, GU-LEX-C354-ADHIKARI354-03, GU-LEX-C354-ADHIKARI354-04, GU-LEX-C354-ADHIKARI354-05] -->
+
+[PAUSE 3s] A law? (**કાયદો**, *kāydo*.) A violation? (**ઉલ્લંઘન**, *ullanghan*.) Observance? (**પાલન**, *pālan*.) In force? (**લાગુ**, *lāgu*.) To defy? (**ઉથાપવું**, *uthāpvũ*.) A judge? (**ન્યાયાધીશ**, *nyāyādhīś*.) A court case? (**કેસ**, *kes*.) An appeal? (**અપીલ**, *apīl*.) A ruling? (**ફેંસલો**, *phẽslo*.) To hit hard? (**ફટકારવું**, *phaṭkārvũ*.) Reasonable? (**વાજબી**, *vājbī*.) Discrimination? (**ભેદભાવ**, *bhedbhāv*.) Equal? (**સમાન**, *samān*.) Neutral? (**તટસ્થ**, *taṭasth*.) To behave? (**વર્તવું**, *vartvũ*.) A contract? (**કરાર**, *karār*.) A document? (**દસ્તાવેજ**, *dastāvej*.) Free of? (**મુક્ત**, *mukt*.) Seized? (**જપ્ત**, *japt*.) To recover a debt? (**વસૂલવું**, *vasūlvũ*.) A fact? (**હકીકત**, *hakīkat*.) An illusion? (**ભ્રમ**, *bhram*.) A misunderstanding? (**ગેરસમજ**, *gersamaj*.) True to the facts? (**યથાર્થ**, *yathārth*.) To be taken in? (**છેતરાવું**, *chetrāvũ*.) A government? (**સરકાર**, *sarkār*.) A state (of a country)? (**રાજ્ય**, *rājya*.) Power to rule? (**સત્તા**, *sattā*.) The people of a state? (**પ્રજા**, *prajā*.) To shape? (**ઘડવું**, *ghaḍvũ*.) A citizen? (**નાગરિક**, *nāgrik*.) The public? (**જનતા**, *jantā*.) Voting? (**મતદાન**, *matdān*.) A candidate? (**ઉમેદવાર**, *umedvār*.) To be elected? (**ચૂંટાવું**, *cū̃ṭāvũ*.) An official? (**અધિકારી**, *adhikārī*.) A minister? (**મંત્રી**, *mantrī*.) Approval? (**મંજૂરી**, *manjūrī*.) Permission? (**પરવાનગી**, *parvāngī*.) To appoint? (**નીમવું**, *nīmvũ*.)
+`;export{t};
