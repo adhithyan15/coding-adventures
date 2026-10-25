@@ -40,6 +40,7 @@ members = [
     "arithmetic",
     "array-runtime",
     "arm-simulator",
+    "cortex-m3-simulator",
     "armv7a-gatelevel",
     "armv7a-simulator",
     "armv7-gatelevel",
