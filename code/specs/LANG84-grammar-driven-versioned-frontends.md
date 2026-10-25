@@ -2058,6 +2058,77 @@ print (1 + 2) * 3         # 9    (a parenthesised atom, not a call)
 - **Divergences from the plan:** none. `subset` became a field of
   `ReleaseProfile`, not a separate `subset_for` function.
 
+**Phase 7c, slice 2 (Python 2 integer literals; four more releases).**
+This slice widens `py2-int-print` to every integer spelling Python 2 gives an
+`int` or `long` value that fits `i64`, and adds four release pairs, one per
+lexical change the two integer subsets can observe.
+
+```python
+print 010, 0x1F                 # refused: multi-item print (slice 1)
+print 010                       # 8   (a leading 0 means octal in Python 2)
+print 0x1F + 0X10L              # 47  (hex; L makes a long, str() drops the L)
+print 0o17 + 0b101              # 20  (2.6 and later only, PEP 3127)
+print 7L / 2                    # 3   (classic division floors on longs too)
+```
+
+- **Literal forms (`py2` pairs).** From each tag's `tok_get`
+  (`Parser/tokenizer.c`) and its number parser (`parsenumber` in
+  `Python/compile.c` at 2.2 and 2.4, `Python/ast.c` at 2.6 and 2.7.18;
+  `PyOS_strtoul`/`PyOS_strtol` and `PyLong_FromString` with base 0):
+
+  | Form | 2.2, 2.4 | 2.6, 2.7.18 | Value |
+  | --- | --- | --- | --- |
+  | decimal `[1-9][0-9]*`, `0` | yes | yes | decimal |
+  | octal `0[0-7]+` (incl. `00`) | yes | yes | base 8 |
+  | hex `0[xX][0-9a-fA-F]+` | yes | yes | base 16 |
+  | `0[oO][0-7]+`, `0[bB][01]+` | no (lexer error) | yes | base 8, base 2 |
+  | any of the above + `l`/`L` | yes | yes | the same value, as a `long` |
+
+  `str()` of a `long` has no `L` (`long_str`; only `repr` adds it), so
+  `print 1L` writes `1`, and in `i64` a `long` behaves exactly like an
+  `int`: the arithmetic is the same, classic `/` floors (`long_classic_div`
+  through `l_divmod`), and a result outside `i64` traps `Trap.Overflow`, the
+  existing stated divergence (CPython keeps the bigger long).
+- **Refused.** A literal whose magnitude exceeds `i64::MAX` stays
+  `Unsupported`, which also sidesteps the one spelling the four releases
+  read differently: at 2.2 a hex or octal literal between `LONG_MAX` and
+  `ULONG_MAX` is a *negative* int (`(long) PyOS_strtoul`), while 2.4 and
+  later make it a positive long (PEP 237). Lexer errors, as the releases'
+  own tokenizers report them: `08`, `0178` (a decimal digit after a leading
+  `0`), `0o8`, `0b2`, `_` separators; also, as narrowings, `0x` with no
+  digits (2.2 and 2.4 lex it and `parsenumber` reads it as the float `0.0`)
+  and a literal followed directly by a name character.
+- **Releases.** Four new pairs, each `partial`, stage `P`, with an evidence
+  row in `pair-evidence.csv` (blob IDs of the files above):
+
+  | Release | Profile | Why |
+  | --- | --- | --- |
+  | 2.4 | `py2` | PEP 237 hex/octal semantics (outside `i64`, so the subset reads it as 2.2 does); adds `@` |
+  | 2.6 | `py2` | PEP 3127 `0o`/`0b` literals; adds `as`/`with` keywords |
+  | 3.5.10 | `py3` | the last 3.x final before PEP 515: `1_000` is an error; adds `@=` |
+  | 3.6.0 | `py3` | the first release with PEP 515 `_` separators |
+
+  The py3 subset's literals stay decimal (`py-int-print` never had hex or
+  octal), so 3.5.10 lexes like 3.0a1 and 3.6.0 like 3.12.3. Their tokenizers
+  also list `<>` (the `barry_as_FLUFL` easter egg), which the parser rejects
+  without the future import, so both pairs lex it and the grammar refuses it.
+- **Compiler.** A new `ReleaseProfile` field, `int_literals`, picks the
+  decoder: `py3` keeps today's decimal-with-`_` decoder (a leading-zero
+  spelling stays refused), and `py2` decodes the table above. Which prefixes
+  a release admits is decided by its lexer; the decoder accepts every
+  Python 2 spelling, because no spelling means different values in two
+  Python 2 releases inside `i64`.
+- **Tests and oracle.** New `py2-int-print` cases for each form, with
+  `.reject@2.2` and `.reject@2.4` for `0o`/`0b`, plus negative cases for the
+  refusals above. `int_underscores` gains `.reject@3.5.10`. There is no host
+  `python2`: the translate-to-Python-3 oracle rewrites `010` to `0o10` and
+  drops the `L` suffix, both exact on the values in the subset. The release
+  sweep reruns, and the matrix gains rows on any new identity-class
+  representative.
+- **Not in this slice:** multi-item and trailing-comma `print` and
+  `print >>` (catchable traps), more releases, and the float subset (waits on
+  LANG83 PR6c).
+
 ### Wire every IIR frontend into lang-aot
 
 Add `Language` variants with release support for Python, JavaScript, Ruby and
