@@ -25,7 +25,7 @@ On Windows amd64 at runtime-source commit
   tests pass. Ruff lint/format checks, compileall and lesson validation pass.
 - The complete Go build-tool suite passes across all fifteen packages,
   including the real PowerShell registry-generator round trip, with no skip
-  flag. Coverage remains 62.5% for the main package; this is not full build-tool
+  flag. Coverage is 84.6% overall and 62.5% for the main package; this is not full build-tool
   qualification. Vet and a temporary-output executable build pass. Its real
   unforced plan evaluates 45 Starlark BUILD files, discovers 5,384 packages and
   passes orphan/build-file checks with the existing 38 pending exemptions.
@@ -44,7 +44,7 @@ On Windows amd64 at runtime-source commit
   the bundled `pwsh` for Go tests; no global environment or source workaround
   was added. Hosted Node 22 and the full native backend matrix remain CI work.
 - Generated React's npm audit reports zero vulnerabilities. Generated Electron
-  reports three existing dependency advisories: one high and two critical in
+  reports three vulnerable dependency packages: one high and two critical in
   `concurrently`, `electron` and `shell-quote`. The emitter/dependency source is
   unchanged from main; this observation is retained for separate dependency
   maintenance. No audit override, forced dependency update or test skip was
