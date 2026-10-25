@@ -247,8 +247,9 @@ board-column width floor repair merged in #18031. All release lanes passed in
 run 40168462613; immutable provenance and 13 assets / 12 checksum entries were
 audited against source `1eee296461f07dd5a1657c7a4822799aa1552df9`.
 Artifact coverage and unsigned native limitations remain unchanged. The next
-release-note repair (#18197) preserves substantive changelog Markdown, not just
-category names; it does not rewrite the immutable v0.5.10 notes.
+release checkpoint, `task-app-v0.5.11` (#18238), ships the merged release-note
+repair (#18197): substantive changelog Markdown, not just category names.
+It is prepared, not yet published, and does not rewrite immutable v0.5.10 notes.
 
 The published `task-app-v0.5.9` patch preserves Qt calendar/timeline text widths
 (#17913), reducing measured Qt style drops from 81 to 78. It also includes Web

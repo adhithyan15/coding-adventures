@@ -419,6 +419,15 @@ Phase 10+ deferrals in `BACKLOG.md` (Gantt dependency arrows, calendar week/day
 views, notes attachment picker, label colors, recurring tasks, automation
 rules). Those are feature reach on platforms that already work. This spec is
 about finishing the platforms.
+### Release preparation — #18238: TaskApp v0.5.11
+
+Ship the merged release-note detail repair as a compatible patch dated
+2026-10-25. Verify generated notes retain the selected section's substantive
+Markdown and exclude Unreleased and older entries. Require all existing web
+and native payload checks, publish only after preparation merges, and audit
+immutable provenance, manifest, assets, and checksums. Preparation is not
+publication; artifact coverage and unsigned-platform limitations are unchanged.
+
 # Release-note detail preservation (#18197)
 
 The next product-scoped release must preserve the selected dated changelog

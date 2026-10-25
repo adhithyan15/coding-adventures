@@ -69,9 +69,11 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18197 — preserve detailed changelog Markdown in release notes.**
-Prioritize this product-scoped SemVer repair under #13543 before further
-fidelity work. The immutable v0.5.10 checkpoint (#18112) is published and audited:
+**Next: #18238 — prepare, publish, and audit v0.5.11.**
+The release-note detail repair #18197 merged in #18198. Ship it as a compatible
+patch under #13543 before further fidelity work. Preparation is not publication:
+require all existing payload checks and audit the immutable release afterward.
+The immutable v0.5.10 checkpoint (#18112) is published and audited:
 13 assets, 12 checksum entries, and 11 manifest payloads from
 `1eee296461f07dd5a1657c7a4822799aa1552df9`. All release lanes passed in
 run 40168462613. Keep the existing artifact matrix and unsigned limitations
