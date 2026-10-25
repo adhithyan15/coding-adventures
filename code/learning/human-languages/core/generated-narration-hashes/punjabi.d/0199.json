@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:26896c37327a6885",
+  "lessonIds": [
+    "PA-C199-information-return",
+    "PA-C199-suchna",
+    "PA-C199-suchna-review",
+    "PA-C199-information-label",
+    "PA-C199-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch199.txt",
+  "json": "punjabi/narration/ch199.json",
+  "textHash": "fnv1a64:27fbca56f12ac9e4",
+  "jsonHash": "fnv1a64:a454b23de532f1cd",
+  "findings": []
+}

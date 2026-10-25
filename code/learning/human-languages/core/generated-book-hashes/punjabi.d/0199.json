@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:3f6f1a18bcbb91c7",
+  "lessonIds": [
+    "PA-C199-information-return",
+    "PA-C199-suchna",
+    "PA-C199-suchna-review",
+    "PA-C199-information-label",
+    "PA-C199-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch199-this-is-information.tex"
+}
