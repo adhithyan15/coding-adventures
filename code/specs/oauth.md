@@ -1505,6 +1505,23 @@ authenticated revocation evidence, and intermediate revocation, generalized
 path validation, TLS, HTTP, OAuth transport, and network authority remain
 unavailable. Concrete HTTPS remains unavailable.
 
+A bounded `x509-authority-information-access` prerequisite now decodes one
+RFC 5280 Authority Information Access certificate extension under the caller's
+existing DER depth, element, length, and OID-arc limits. The extension must be
+non-critical and contain a non-empty, fixed-capacity ordered sequence of
+`AccessDescription` values. Each retained value contains its arbitrary
+canonical access-method OID and one non-empty URI `GeneralName`; unsupported
+location forms fail closed rather than becoming opaque fetch targets. The
+package exposes the standard `id-ad-ocsp` and `id-ad-caIssuers` identifiers as
+data and lets callers select any exact method without embedding provider
+behavior. Success borrows only the validated method and URI values, while
+stable failures retain no OID arcs, URI text, extension bytes, certificate, or
+provider payload. This is structural discovery data only: it does not validate
+RFC 3986 syntax, authorize URI schemes or hosts, select a responder, fetch or
+cache data, bind a locator to authenticated revocation evidence, read a clock,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or grant
+network authority. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
