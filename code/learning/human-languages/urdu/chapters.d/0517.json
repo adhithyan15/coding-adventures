@@ -1,0 +1,21 @@
+{
+  "chapter": 517,
+  "title": "On the Stage",
+  "label": "ch:ur-on-the-stage",
+  "canDo": "I can talk about a play and its audience.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R517-review-510-517",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about a play and its audience.",
+    "assesses": [
+      "UR-LEX-C517-STAGE517-01",
+      "UR-LEX-C517-STAGE517-02",
+      "UR-LEX-C517-STAGE517-03",
+      "UR-LEX-C517-STAGE517-04",
+      "UR-LEX-C517-STAGE517-05"
+    ]
+  }
+}

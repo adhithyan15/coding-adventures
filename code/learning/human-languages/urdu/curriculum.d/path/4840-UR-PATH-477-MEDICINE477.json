@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-477-MEDICINE477",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-477-MEDICINE477"
+  ],
+  "after": []
+}

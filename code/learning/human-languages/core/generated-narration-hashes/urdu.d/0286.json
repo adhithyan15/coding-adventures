@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:881a35e854112d66",
+  "lessonIds": [
+    "UR-C286-be-hosh",
+    "UR-C286-lahuluhan",
+    "UR-C286-ilaj",
+    "UR-C286-kuchalna",
+    "UR-C286-sambhalna-oneself"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch286.txt",
+  "json": "urdu/narration/ch286.json",
+  "textHash": "fnv1a64:fa24a8d0a4a1cd34",
+  "jsonHash": "fnv1a64:c555ee6c1ce53656",
+  "findings": []
+}

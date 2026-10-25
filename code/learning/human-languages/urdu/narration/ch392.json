@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 392,
+  "title": "Stands and Stops",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bbbcad8e83280773",
+  "lessons": [
+    {
+      "id": "UR-C392-istaind",
+      "sequence": 23300,
+      "title": "اسٹینڈ (isṭainḍ) — a stand (for taxis or rickshaws)",
+      "headword": "اسٹینڈ",
+      "romanization": "isṭainḍ",
+      "gloss": "a stand (for taxis or rickshaws)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65ebab75d56f5791",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a rush (of people), then the Urdu for to push in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اسٹینڈ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسٹینڈ — isṭainḍ — \"a stand (for taxis or rickshaws)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "رکشہ اسٹینڈ بازار کے سامنے ہے۔ rikshā isṭainḍ bāzār ke sāmne hai. The rickshaw stand is opposite the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسٹینڈ (isṭainḍ) is borrowed from English stand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isṭainḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isṭainḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isṭainḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isṭainḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rikshā isṭainḍ bāzār ke sāmne hai. — The rickshaw stand is opposite the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rikshā isṭainḍ bāzār ke sāmne hai.* — The rickshaw stand is opposite the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a rush (of people), then the Urdu for to push in, then say isṭainḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a rush (of people), then the Urdu for to push in, then say *isṭainḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اسٹینڈ (isṭainḍ) mean? (\"A stand (for taxis or rickshaws)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C392-istap",
+      "sequence": 23310,
+      "title": "اسٹاپ (isṭāp) — a bus stop",
+      "headword": "اسٹاپ",
+      "romanization": "isṭāp",
+      "gloss": "a bus stop",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa4817b09be9fdff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to push in, then the Urdu for a stand (for taxis or rickshaws)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اسٹاپ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسٹاپ — isṭāp — \"a bus stop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگلا اسٹاپ اسکول کے پاس ہے۔ aglā isṭāp iskūl ke pās hai. The next stop is near the school."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسٹاپ (isṭāp) is borrowed from English stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isṭāp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isṭāp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isṭāp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isṭāp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aglā isṭāp iskūl ke pās hai. — The next stop is near the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aglā isṭāp iskūl ke pās hai.* — The next stop is near the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to push in, then the Urdu for a stand (for taxis or rickshaws), then say isṭāp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to push in, then the Urdu for a stand (for taxis or rickshaws), then say *isṭāp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اسٹاپ (isṭāp) mean? (\"A bus stop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C392-rah",
+      "sequence": 23320,
+      "title": "راہ (rāh) — a path; a way",
+      "headword": "راہ",
+      "romanization": "rāh",
+      "gloss": "a path; a way",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23f7be9e8dabd471",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a stand (for taxis or rickshaws), then the Urdu for a bus stop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: راہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "راہ — rāh — \"a path; a way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ راہ سیدھی دریا تک جاتی ہے۔ yih rāh sīdhī daryā tak jātī hai. This path runs straight to the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "راہ (rāh) is usually traced to Persian rāh, \"a road, a way\"; it is the first half of راہگیر, \"a passer-by\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih rāh sīdhī daryā tak jātī hai. — This path runs straight to the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih rāh sīdhī daryā tak jātī hai.* — This path runs straight to the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a stand (for taxis or rickshaws), then the Urdu for a bus stop, then say rāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a stand (for taxis or rickshaws), then the Urdu for a bus stop, then say *rāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does راہ (rāh) mean? (\"A path; a way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C392-tahalna",
+      "sequence": 23330,
+      "title": "ٹہلنا (ṭahalnā) — to stroll; to walk up and down",
+      "headword": "ٹہلنا",
+      "romanization": "ṭahalnā",
+      "gloss": "to stroll; to walk up and down",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:231fe1b993f73c2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a bus stop, then the Urdu for a path."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ٹہلنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹہلنا — ṭahalnā — \"to stroll; to walk up and down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شام کو ہم دریا کے کنارے ٹہلتے ہیں۔ shām ko ham daryā ke kināre ṭahalte haiṅ. In the evening we stroll along the riverbank."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): وہ پارک میں ٹہلا, voh pārk meṅ ṭahlā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹہلنا (ṭahalnā) is inherited: CDIAL lists the Hindi cousin ṭahalnā, \"to take a walk\", under ṭahall, a form it reconstructs (CDIAL 5453)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭahalnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭahalnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭahalnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭahalnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shām ko ham daryā ke kināre ṭahalte haiṅ. — In the evening we stroll along the riverbank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shām ko ham daryā ke kināre ṭahalte haiṅ.* — In the evening we stroll along the riverbank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a bus stop, then the Urdu for a path, then say ṭahalnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a bus stop, then the Urdu for a path, then say *ṭahalnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ٹہلنا (ṭahalnā) mean? (\"To stroll; to walk up and down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C392-hanpna",
+      "sequence": 23340,
+      "title": "ہانپنا (hāṅpnā) — to pant",
+      "headword": "ہانپنا",
+      "romanization": "hāṅpnā",
+      "gloss": "to pant",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab676d0c8a22286e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a path, then the Urdu for to stroll."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ہانپنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ہانپنا — hāṅpnā — \"to pant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سارا دوڑ کر اسٹاپ پر پہنچی اور ہانپ رہی تھی۔ sārā dauṛ kar isṭāp par pahuṅchī aur hāṅp rahī thī. Sara ran to the stop and was out of breath."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): وہ سیڑھی پر ہانپا, voh sīṛhī par hāṅpā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ہانپنا (hāṅpnā) is inherited from hamph, an imitative form CDIAL reconstructs for panting (CDIAL 13973)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāṅpnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāṅpnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāṅpnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāṅpnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārā dauṛ kar isṭāp par pahuṅchī aur hāṅp rahī thī. — Sara ran to the stop and was out of breath.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārā dauṛ kar isṭāp par pahuṅchī aur hāṅp rahī thī.* — Sara ran to the stop and was out of breath.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a path, then the Urdu for to stroll, then say hāṅpnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a path, then the Urdu for to stroll, then say *hāṅpnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ہانپنا (hāṅpnā) mean? (\"To pant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

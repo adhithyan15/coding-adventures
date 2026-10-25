@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:d17051659a912513",
+  "lessonIds": [
+    "UR-C307-pitna",
+    "UR-C307-jharap",
+    "UR-C307-ghunsa",
+    "UR-C307-thappar",
+    "UR-C307-ainthna",
+    "UR-R307-review-300-307"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch307.txt",
+  "json": "urdu/narration/ch307.json",
+  "textHash": "fnv1a64:1cad8b08053196d4",
+  "jsonHash": "fnv1a64:8d354ec421a025a0",
+  "findings": []
+}

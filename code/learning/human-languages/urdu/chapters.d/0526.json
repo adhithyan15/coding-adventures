@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Before the Deadline",
+  "label": "ch:ur-before-the-deadline",
+  "canDo": "I can talk about time limits and finishing on time.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C526-mukammal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about time limits and finishing on time.",
+    "assesses": [
+      "UR-LEX-C526-MIAD526-03",
+      "UR-LEX-C526-MIAD526-04",
+      "UR-LEX-C526-MIAD526-05"
+    ]
+  }
+}

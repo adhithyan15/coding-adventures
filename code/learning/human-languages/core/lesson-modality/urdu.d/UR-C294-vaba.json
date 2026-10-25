@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C294-vaba",
+    "language": "urdu",
+    "chapter": 294,
+    "sequence": 17940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44c45134648ea0e1"
+  },
+  "findings": []
+}

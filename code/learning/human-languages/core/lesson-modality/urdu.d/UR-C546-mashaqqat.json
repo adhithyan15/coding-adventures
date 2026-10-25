@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C546-mashaqqat",
+    "language": "urdu",
+    "chapter": 546,
+    "sequence": 31660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4005b0b841f19e2"
+  },
+  "findings": []
+}

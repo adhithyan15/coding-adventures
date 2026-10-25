@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:ec542a4026daa8a4",
+  "lessonIds": [
+    "UR-C539-zabardasti",
+    "UR-C539-mukhtar",
+    "UR-C539-naguzir",
+    "UR-C539-salah",
+    "UR-C539-jhukana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch539.txt",
+  "json": "urdu/narration/ch539.json",
+  "textHash": "fnv1a64:0791f93c53b207b4",
+  "jsonHash": "fnv1a64:a3a0f11065b334c7",
+  "findings": []
+}

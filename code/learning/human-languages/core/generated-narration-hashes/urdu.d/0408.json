@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:c3c78d18ffa3d81e",
+  "lessonIds": [
+    "UR-C408-simt",
+    "UR-C408-shimal",
+    "UR-C408-junub",
+    "UR-C408-mashriq",
+    "UR-C408-maghrib"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch408.txt",
+  "json": "urdu/narration/ch408.json",
+  "textHash": "fnv1a64:5dc8da57d19d7c69",
+  "jsonHash": "fnv1a64:123b7d9573d2a2ee",
+  "findings": []
+}

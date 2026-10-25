@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:f8a3cb33c5816df6",
+  "lessonIds": [
+    "UR-C289-sairan",
+    "UR-C289-amla",
+    "UR-C289-bujhna",
+    "UR-C289-pighalna",
+    "UR-C289-harbarana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch289.txt",
+  "json": "urdu/narration/ch289.json",
+  "textHash": "fnv1a64:af396091b536b7b4",
+  "jsonHash": "fnv1a64:75d2aa8fbeaa450b",
+  "findings": []
+}

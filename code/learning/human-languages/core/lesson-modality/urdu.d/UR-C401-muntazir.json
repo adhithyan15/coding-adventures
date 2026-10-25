@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C401-muntazir",
+    "language": "urdu",
+    "chapter": 401,
+    "sequence": 23770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eaf2f29fe5497e08"
+  },
+  "findings": []
+}

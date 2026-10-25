@@ -1,0 +1,11 @@
+{
+  "id": "UR-C420-bajat",
+  "pathSegment": "UR-PATH-420-AAMDANI420",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-420-AAMDANI420",
+      "order": 1
+    }
+  ]
+}

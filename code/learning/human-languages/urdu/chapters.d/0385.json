@@ -1,0 +1,21 @@
+{
+  "chapter": 385,
+  "title": "Choosing What to Study",
+  "label": "ch:ur-choosing-what-to-study",
+  "canDo": "I can say what I will study if I get the chance.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-R385-review-final-385",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can say what I will study if I get the chance.",
+    "assesses": [
+      "UR-LEX-C385-DAKHILA385-01",
+      "UR-LEX-C385-DAKHILA385-02",
+      "UR-LEX-C385-DAKHILA385-03",
+      "UR-LEX-C385-DAKHILA385-04",
+      "UR-LEX-C385-DAKHILA385-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C468-khujana",
+  "pathSegment": "UR-PATH-468-SMELL468",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-468-SMELL468",
+      "order": 3
+    }
+  ]
+}

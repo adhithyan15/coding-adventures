@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C366-ijazat",
+    "language": "urdu",
+    "chapter": 366,
+    "sequence": 21810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35a5ff76a52265d6"
+  },
+  "findings": []
+}

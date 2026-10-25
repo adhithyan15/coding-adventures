@@ -1,0 +1,11 @@
+{
+  "id": "UR-C285-kharash",
+  "pathSegment": "UR-PATH-285-PHISAL285",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-285-PHISAL285",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C525-muattal",
+    "language": "urdu",
+    "chapter": 525,
+    "sequence": 30600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:612390ff0b3040a2"
+  },
+  "findings": []
+}

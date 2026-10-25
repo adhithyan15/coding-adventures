@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:9036a7e0a1d75cf8",
+  "lessonIds": [
+    "UR-C440-jazba",
+    "UR-C440-ehsas",
+    "UR-C440-mahsus-karna",
+    "UR-C440-kaifiyat",
+    "UR-C440-mizaj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch440.txt",
+  "json": "urdu/narration/ch440.json",
+  "textHash": "fnv1a64:b6f69c425816ab74",
+  "jsonHash": "fnv1a64:c5d9ec43837b4ffd",
+  "findings": []
+}

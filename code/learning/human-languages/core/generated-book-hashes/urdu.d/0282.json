@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:036fa0e3933a5cc2",
+  "lessonIds": [
+    "UR-C282-taftish",
+    "UR-C282-suragh",
+    "UR-C282-jasus",
+    "UR-C282-subut",
+    "UR-C282-dhundna"
+  ],
+  "tex": "urdu/book/chapters/ch282-the-investigation.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C375-zabardast",
+    "language": "urdu",
+    "chapter": 375,
+    "sequence": 22280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:053907a90a6c4877"
+  },
+  "findings": []
+}

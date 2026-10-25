@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:a5f496dbf981e821",
+  "lessonIds": [
+    "UR-C501-loha",
+    "UR-C501-pital",
+    "UR-C501-zevar",
+    "UR-C501-pighlana",
+    "UR-C501-marhna",
+    "UR-R501-review-494-501"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch501.txt",
+  "json": "urdu/narration/ch501.json",
+  "textHash": "fnv1a64:d8c0aa6d6c00451f",
+  "jsonHash": "fnv1a64:f7e9519ea10041db",
+  "findings": []
+}

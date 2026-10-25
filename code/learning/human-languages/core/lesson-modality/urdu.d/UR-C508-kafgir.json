@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C508-kafgir",
+    "language": "urdu",
+    "chapter": 508,
+    "sequence": 29750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a31af4e1ad8a1938"
+  },
+  "findings": []
+}

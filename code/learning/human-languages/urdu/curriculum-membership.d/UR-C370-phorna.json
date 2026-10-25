@@ -1,0 +1,11 @@
+{
+  "id": "UR-C370-phorna",
+  "pathSegment": "UR-PATH-370-JALDBAZI370",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-370-JALDBAZI370",
+      "order": 3
+    }
+  ]
+}

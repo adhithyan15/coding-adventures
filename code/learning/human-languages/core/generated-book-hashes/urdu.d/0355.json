@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:6ffdf12fd71cd6b1",
+  "lessonIds": [
+    "UR-C355-tarif",
+    "UR-C355-qusur",
+    "UR-C355-malamat",
+    "UR-C355-sarahna",
+    "UR-C355-jhelna"
+  ],
+  "tex": "urdu/book/chapters/ch355-praise-and-blame.tex"
+}

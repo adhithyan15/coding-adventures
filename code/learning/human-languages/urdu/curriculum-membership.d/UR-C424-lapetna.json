@@ -1,0 +1,11 @@
+{
+  "id": "UR-C424-lapetna",
+  "pathSegment": "UR-PATH-424-MAAL424",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-424-MAAL424",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Getting Better",
+  "label": "ch:ur-getting-better",
+  "canDo": "I can say that someone is getting better.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C481-senkna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can say that someone is getting better.",
+    "assesses": [
+      "UR-LEX-C481-BETTER481-03",
+      "UR-LEX-C481-BETTER481-04",
+      "UR-LEX-C481-BETTER481-05"
+    ]
+  }
+}

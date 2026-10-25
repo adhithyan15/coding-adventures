@@ -1,0 +1,11 @@
+{
+  "id": "UR-C468-itr",
+  "pathSegment": "UR-PATH-468-SMELL468",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-468-SMELL468",
+      "order": 1
+    }
+  ]
+}

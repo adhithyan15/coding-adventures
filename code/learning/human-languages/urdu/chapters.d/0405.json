@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "At the Front Desk",
+  "label": "ch:ur-at-the-front-desk",
+  "canDo": "I can check in at a hotel, order something to the room and leave a tip.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C405-bakhshish",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can check in at a hotel, order something to the room and leave a tip.",
+    "assesses": [
+      "UR-LEX-C405-RAJISTAR405-03",
+      "UR-LEX-C405-RAJISTAR405-04",
+      "UR-LEX-C405-RAJISTAR405-05"
+    ]
+  }
+}

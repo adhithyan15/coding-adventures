@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 445,
+  "title": "Fear",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9eee1c21047a8eca",
+  "lessons": [
+    {
+      "id": "UR-C445-khauf",
+      "sequence": 26250,
+      "title": "خوف (khauf) — dread; fear",
+      "headword": "خوف",
+      "romanization": "khauf",
+      "gloss": "dread; fear",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8104e34392634fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for displeased, then the Urdu for a fit of rage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خوف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خوف — khauf — \"dread; fear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جنگل میں رات کو خوف لگتا ہے۔ jangal meṅ rāt ko khauf lagtā hai. In the forest at night you feel a sense of dread."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خوف (khauf) is usually traced, through Persian, to Arabic khawf, \"fear\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khauf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khauf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khauf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khauf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jangal meṅ rāt ko khauf lagtā hai. — In the forest at night you feel a sense of dread.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jangal meṅ rāt ko khauf lagtā hai.* — In the forest at night you feel a sense of dread.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for displeased, then the Urdu for a fit of rage, then say khauf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for displeased, then the Urdu for a fit of rage, then say *khauf* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خوف (khauf) mean? (\"Dread; fear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C445-darana",
+      "sequence": 26260,
+      "title": "ڈرانا (ḍarānā) — to frighten",
+      "headword": "ڈرانا",
+      "romanization": "ḍarānā",
+      "gloss": "to frighten",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9560fbbff4720c78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a fit of rage, then the Urdu for dread."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ڈرانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ڈرانا — ḍarānā — \"to frighten\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بلی نے چوہے کو ڈرایا۔ billī ne chūhe ko ḍarāyā. The cat frightened the mouse."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے بچوں کو ڈرایا, us ne bachchoṅ ko ḍarāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ڈرانا (ḍarānā) is the causative of ḍarnā, \"to be afraid\", inherited from Sanskrit darati, \"is frightened\" (CDIAL 6190); the noun ڈر, \"fear\", belongs to the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍarānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍarānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍarānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍarānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "billī ne chūhe ko ḍarāyā. — The cat frightened the mouse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *billī ne chūhe ko ḍarāyā.* — The cat frightened the mouse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a fit of rage, then the Urdu for dread, then say ḍarānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a fit of rage, then the Urdu for dread, then say *ḍarānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ڈرانا (ḍarānā) mean? (\"To frighten\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C445-sahamna",
+      "sequence": 26270,
+      "title": "سہمنا (sahamnā) — to cower (in fright)",
+      "headword": "سہمنا",
+      "romanization": "sahamnā",
+      "gloss": "to cower (in fright)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e214c3bca9dec17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for dread, then the Urdu for to frighten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سہمنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سہمنا — sahamnā — \"to cower (in fright)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کتے کو دیکھ کر لڑکی سہم گئی۔ kutte ko dekh kar laṛkī saham gaī. The girl cowered when she saw the dog."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): وہ سہم گئی, voh saham gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سہمنا (sahamnā) is usually traced to Persian sahm, \"fear, dread\", made into an Urdu verb with -nā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahamnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahamnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahamnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahamnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kutte ko dekh kar laṛkī saham gaī. — The girl cowered when she saw the dog.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kutte ko dekh kar laṛkī saham gaī.* — The girl cowered when she saw the dog.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for dread, then the Urdu for to frighten, then say sahamnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for dread, then the Urdu for to frighten, then say *sahamnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سہمنا (sahamnā) mean? (\"To cower (in fright)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C445-dubakna",
+      "sequence": 26280,
+      "title": "دبکنا (dubaknā) — to crouch out of sight",
+      "headword": "دبکنا",
+      "romanization": "dubaknā",
+      "gloss": "to crouch out of sight",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:713aee758d229476",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to frighten, then the Urdu for to cower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دبکنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دبکنا — dubaknā — \"to crouch out of sight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بلی ڈر کر کرسی کے نیچے دبک گئی۔ billī ḍar kar kursī ke nīche dubak gaī. The cat took fright and crouched under the chair."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): وہ دبک گیا, voh dubak gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دبکنا (dubaknā) is inherited: CDIAL lists the Hindi cousin dabaknā, \"to be hidden\", under dabb, \"press\", a form it reconstructs (CDIAL 6173)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dubaknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dubaknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dubaknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dubaknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "billī ḍar kar kursī ke nīche dubak gaī. — The cat took fright and crouched under the chair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *billī ḍar kar kursī ke nīche dubak gaī.* — The cat took fright and crouched under the chair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to frighten, then the Urdu for to cower, then say dubaknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to frighten, then the Urdu for to cower, then say *dubaknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دبکنا (dubaknā) mean? (\"To crouch out of sight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C445-simatna",
+      "sequence": 26290,
+      "title": "سمٹنا (simaṭnā) — to huddle; to shrink into oneself",
+      "headword": "سمٹنا",
+      "romanization": "simaṭnā",
+      "gloss": "to huddle; to shrink into oneself",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6f3573346120e49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to cower, then the Urdu for to crouch out of sight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سمٹنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سمٹنا — simaṭnā — \"to huddle; to shrink into oneself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سردی میں بچے کمبل میں سمٹ گئے۔ sardī meṅ bachche kambal meṅ simaṭ gae. In the cold the children huddled under the blanket."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): وہ کونے میں سمٹ گئی, voh kone meṅ simaṭ gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سمٹنا (simaṭnā) is inherited: CDIAL lists the Hindi cousin simaṭnā, \"to shrink, to be gathered in\", under Sanskrit saṃvēṣṭayati, \"wraps up\" (CDIAL 13026)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "simaṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *simaṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "simaṭnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *simaṭnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sardī meṅ bachche kambal meṅ simaṭ gae. — In the cold the children huddled under the blanket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sardī meṅ bachche kambal meṅ simaṭ gae.* — In the cold the children huddled under the blanket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to cower, then the Urdu for to crouch out of sight, then say simaṭnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to cower, then the Urdu for to crouch out of sight, then say *simaṭnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سمٹنا (simaṭnā) mean? (\"To huddle; to shrink into oneself\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

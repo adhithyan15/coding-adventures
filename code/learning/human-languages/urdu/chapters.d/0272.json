@@ -1,0 +1,24 @@
+{
+  "chapter": 272,
+  "title": "Feelings and Hopes",
+  "label": "ch:ur-feelings-and-hopes",
+  "canDo": "I can say how I feel or felt (maiṅ khush hūṅ, mujhe ḍar lagā), what I want to become (maiṅ ustād bannā chāhtī hūṅ) and what I hope (mujhe ummīd hai ki …).",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R272-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete UR-R272-feelings-and-hopes: say how you feel, what you want to become, and what you hope.",
+    "assesses": [
+      "UR-LEX-C272-DAR-01",
+      "UR-SCRIPT-C272-DDAL-01",
+      "UR-GRAMMAR-C272-FEELING-01",
+      "UR-GRAMMAR-C272-FEELING-02",
+      "UR-LEX-C272-BANNA-01",
+      "UR-LEX-C272-UMMID-01",
+      "UR-GRAMMAR-C272-AMBITION-01",
+      "UR-GRAMMAR-C272-AMBITION-02"
+    ]
+  }
+}

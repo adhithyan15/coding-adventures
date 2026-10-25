@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:1cbd0e99546f863f",
+  "lessonIds": [
+    "UR-C271-ek-tikat-dijiye",
+    "UR-C271-chhutna",
+    "UR-C271-hadsa",
+    "UR-W271-se",
+    "UR-C271-kho-gaya",
+    "UR-R271-at-the-station"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "urdu/narration/ch271.txt",
+  "json": "urdu/narration/ch271.json",
+  "textHash": "fnv1a64:fa5881971d9caf02",
+  "jsonHash": "fnv1a64:79f3ceda6a4f2f9c",
+  "findings": []
+}

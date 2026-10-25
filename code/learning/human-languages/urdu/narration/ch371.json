@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 371,
+  "title": "Danger and Damage",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c67a72245a59418d",
+  "lessons": [
+    {
+      "id": "UR-C371-buhran",
+      "sequence": 22050,
+      "title": "بحران (buhrān) — a crisis",
+      "headword": "بحران",
+      "romanization": "buhrān",
+      "gloss": "a crisis",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ecb5458bee40cd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to smash, then the Urdu for to squash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بحران",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بحران — buhrān — \"a crisis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر بارش نہیں ہوئی تو پانی کا بحران ہو گا۔ agar bārish nahīṅ huī to pānī kā buhrān ho gā. If it does not rain, there will be a water crisis."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بحران (buhrān) is usually traced, through Persian, to Arabic buḥrān, \"the crisis of a fever\", the turning point of an illness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buhrān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buhrān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buhrān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buhrān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar bārish nahīṅ huī to pānī kā buhrān ho gā. — If it does not rain, there will be a water crisis.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar bārish nahīṅ huī to pānī kā buhrān ho gā.* — If it does not rain, there will be a water crisis.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to smash, then the Urdu for to squash, then say buhrān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to smash, then the Urdu for to squash, then say *buhrān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بحران (buhrān) mean? (\"A crisis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C371-zahr",
+      "sequence": 22060,
+      "title": "زہر (zahr) — poison",
+      "headword": "زہر",
+      "romanization": "zahr",
+      "gloss": "poison",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3840c4cf573ea535",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to squash, then the Urdu for a crisis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: زہر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زہر — zahr — \"poison\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر کتے نے زہر کھایا تو وہ مر جائے گا۔ agar kutte ne zahr khāyā to voh mar jāe gā. If the dog eats poison, it will die."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زہر (zahr) is usually traced to Persian zahr, \"poison\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zahr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zahr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zahr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zahr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar kutte ne zahr khāyā to voh mar jāe gā. — If the dog eats poison, it will die.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar kutte ne zahr khāyā to voh mar jāe gā.* — If the dog eats poison, it will die.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to squash, then the Urdu for a crisis, then say zahr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to squash, then the Urdu for a crisis, then say *zahr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does زہر (zahr) mean? (\"Poison\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C371-jan-leva",
+      "sequence": 22070,
+      "title": "جان لیوا (jān-levā) — deadly; fatal",
+      "headword": "جان لیوا",
+      "romanization": "jān-levā",
+      "gloss": "deadly; fatal",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bf6008ae4117e5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a crisis, then the Urdu for poison."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جان لیوا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جان لیوا — jān-levā — \"deadly; fatal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر یہ زہر ہے تو جان لیوا ہو سکتا ہے۔ agar yih zahr hai to jān-levā ho saktā hai. If this is poison, it could be deadly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جان لیوا (jān-levā) is built from jān, \"life\", usually traced to Persian jān, \"life, soul\", and levā, \"taking\", made on لینا, \"to take\". Life-taking."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jān-levā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jān-levā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jān-levā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jān-levā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar yih zahr hai to jān-levā ho saktā hai. — If this is poison, it could be deadly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar yih zahr hai to jān-levā ho saktā hai.* — If this is poison, it could be deadly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a crisis, then the Urdu for poison, then say jān-levā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a crisis, then the Urdu for poison, then say *jān-levā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جان لیوا (jān-levā) mean? (\"Deadly; fatal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C371-risna",
+      "sequence": 22080,
+      "title": "رسنا (risnā) — to seep; to leak (of a liquid)",
+      "headword": "رسنا",
+      "romanization": "risnā",
+      "gloss": "to seep; to leak (of a liquid)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:633aa81b1b213b99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for poison, then the Urdu for deadly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رسنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رسنا — risnā — \"to seep; to leak (of a liquid)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر چھت سے پانی رسا تو کمرہ گیلا ہو گا۔ agar chhat se pānī risā to kamrā gīlā ho gā. If water seeps through the roof, the room will get wet."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ پانی دیوار سے رسا, voh pānī dīvār se risā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رسنا (risnā) is inherited: CDIAL lists the Hindi cousin risnā, \"to leak out, to drip\", under riśyate, a form it reconstructs (CDIAL 10745)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "risnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *risnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "risnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *risnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar chhat se pānī risā to kamrā gīlā ho gā. — If water seeps through the roof, the room will get wet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar chhat se pānī risā to kamrā gīlā ho gā.* — If water seeps through the roof, the room will get wet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for poison, then the Urdu for deadly, then say risnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for poison, then the Urdu for deadly, then say *risnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رسنا (risnā) mean? (\"To seep; to leak (of a liquid)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C371-phatna",
+      "sequence": 22090,
+      "title": "پھٹنا (phaṭnā) — to split open; to burst",
+      "headword": "پھٹنا",
+      "romanization": "phaṭnā",
+      "gloss": "to split open; to burst",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:039e06a62ab4250b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for deadly, then the Urdu for to seep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پھٹنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھٹنا — phaṭnā — \"to split open; to burst\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر پائپ پھٹا تو گھر میں پانی آئے گا۔ agar pāip phaṭā to ghar meṅ pānī āe gā. If the pipe bursts, water will get into the house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ پائپ پھٹ گیا, voh pāip phaṭ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھٹنا (phaṭnā) is inherited: CDIAL lists the Hindi cousin phāṭnā, \"to be split\", under Sanskrit sphāṭayati, \"causes to split\" (CDIAL 13825)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaṭnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaṭnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar pāip phaṭā to ghar meṅ pānī āe gā. — If the pipe bursts, water will get into the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar pāip phaṭā to ghar meṅ pānī āe gā.* — If the pipe bursts, water will get into the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for deadly, then the Urdu for to seep, then say phaṭnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for deadly, then the Urdu for to seep, then say *phaṭnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پھٹنا (phaṭnā) mean? (\"To split open; to burst\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

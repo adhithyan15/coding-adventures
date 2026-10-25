@@ -1,0 +1,11 @@
+{
+  "id": "UR-C385-mauzu",
+  "pathSegment": "UR-PATH-385-DAKHILA385",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-385-DAKHILA385",
+      "order": 2
+    }
+  ]
+}

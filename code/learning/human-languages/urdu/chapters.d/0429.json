@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Damp and Cold",
+  "label": "ch:ur-damp-and-cold",
+  "canDo": "I can talk about damp walls, a cold morning and cold hands.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C429-akarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can talk about damp walls, a cold morning and cold hands.",
+    "assesses": [
+      "UR-LEX-C429-THAND429-03",
+      "UR-LEX-C429-THAND429-04",
+      "UR-LEX-C429-THAND429-05"
+    ]
+  }
+}

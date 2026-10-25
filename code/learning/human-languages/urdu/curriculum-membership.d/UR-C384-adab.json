@@ -1,0 +1,11 @@
+{
+  "id": "UR-C384-adab",
+  "pathSegment": "UR-PATH-384-TARBIYAT384",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-384-TARBIYAT384",
+      "order": 2
+    }
+  ]
+}

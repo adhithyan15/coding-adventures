@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "A Story in a Book",
+  "label": "ch:ur-a-story-in-a-book",
+  "canDo": "I can say what a story is about and who is in it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C329-anjam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can say what a story is about and who is in it.",
+    "assesses": [
+      "UR-LEX-C329-AFSANA329-03",
+      "UR-LEX-C329-AFSANA329-04",
+      "UR-LEX-C329-AFSANA329-05"
+    ]
+  }
+}

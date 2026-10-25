@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "The Curse",
+  "label": "ch:ur-the-curse",
+  "canDo": "I can tell how a curse was laid and what followed.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C326-azab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can tell how a curse was laid and what followed.",
+    "assesses": [
+      "UR-LEX-C326-LANAT326-03",
+      "UR-LEX-C326-LANAT326-04",
+      "UR-LEX-C326-LANAT326-05"
+    ]
+  }
+}

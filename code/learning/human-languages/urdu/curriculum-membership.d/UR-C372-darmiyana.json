@@ -1,0 +1,11 @@
+{
+  "id": "UR-C372-darmiyana",
+  "pathSegment": "UR-PATH-372-JAMNA372",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-372-JAMNA372",
+      "order": 4
+    }
+  ]
+}

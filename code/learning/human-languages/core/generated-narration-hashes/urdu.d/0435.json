@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:35ba0a870f43dd53",
+  "lessonIds": [
+    "UR-C435-khalij",
+    "UR-C435-langar",
+    "UR-C435-jal",
+    "UR-C435-sip",
+    "UR-C435-dubki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch435.txt",
+  "json": "urdu/narration/ch435.json",
+  "textHash": "fnv1a64:9791aeb6c7e17608",
+  "jsonHash": "fnv1a64:f06a41dbe71bde39",
+  "findings": []
+}

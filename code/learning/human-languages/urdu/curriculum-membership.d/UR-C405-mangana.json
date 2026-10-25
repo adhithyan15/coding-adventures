@@ -1,0 +1,11 @@
+{
+  "id": "UR-C405-mangana",
+  "pathSegment": "UR-PATH-405-RAJISTAR405",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-405-RAJISTAR405",
+      "order": 3
+    }
+  ]
+}

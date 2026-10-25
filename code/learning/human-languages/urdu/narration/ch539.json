@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 539,
+  "title": "Free to Choose",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ec542a4026daa8a4",
+  "lessons": [
+    {
+      "id": "UR-C539-zabardasti",
+      "sequence": 31300,
+      "title": "زبردستی (zabardastī) — force (making someone do something)",
+      "headword": "زبردستی",
+      "romanization": "zabardastī",
+      "gloss": "force (making someone do something)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c0098da7bb88bec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to totter, then the Urdu for unshakable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: زبردستی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زبردستی — zabardastī — \"force (making someone do something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر وہ نہیں چاہتا تو زبردستی ٹھیک نہیں۔ agar voh nahīṅ chāhtā to zabardastī ṭhīk nahīṅ. If he doesn't want to, forcing him isn't right."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زبردستی (zabardastī) is built on zabardast, \"having the upper hand\", usually traced to Persian zabardast, from zabar, \"above\", and dast, \"a hand\", with the noun ending -ī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zabardastī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zabardastī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zabardastī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zabardastī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar voh nahīṅ chāhtā to zabardastī ṭhīk nahīṅ. — If he doesn't want to, forcing him isn't right.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar voh nahīṅ chāhtā to zabardastī ṭhīk nahīṅ.* — If he doesn't want to, forcing him isn't right.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to totter, then the Urdu for unshakable, then say zabardastī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to totter, then the Urdu for unshakable, then say *zabardastī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does زبردستی (zabardastī) mean? (\"Force (making someone do something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C539-mukhtar",
+      "sequence": 31310,
+      "title": "مختار (mukhtār) — free to decide; empowered",
+      "headword": "مختار",
+      "romanization": "mukhtār",
+      "gloss": "free to decide; empowered",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b76d992151442229",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for unshakable, then the Urdu for force."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مختار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مختار — mukhtār — \"free to decide; empowered\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ مختار ہیں تو آپ کو کون روکے گا؟ agar āp mukhtār haiṅ to āp ko kaun roke gā? If the choice is yours, who will stop you?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مختار (mukhtār) is usually traced, through Persian, to Arabic mukhtār, \"chosen; free to choose\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhtār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhtār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhtār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhtār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp mukhtār haiṅ to āp ko kaun roke gā? — If the choice is yours, who will stop you?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp mukhtār haiṅ to āp ko kaun roke gā?* — If the choice is yours, who will stop you?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for unshakable, then the Urdu for force, then say mukhtār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for unshakable, then the Urdu for force, then say *mukhtār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مختار (mukhtār) mean? (\"Free to decide; empowered\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C539-naguzir",
+      "sequence": 31320,
+      "title": "ناگزیر (nāguzīr) — unavoidable",
+      "headword": "ناگزیر",
+      "romanization": "nāguzīr",
+      "gloss": "unavoidable",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3c2e69c9574abe2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for force, then the Urdu for free to decide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ناگزیر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ناگزیر — nāguzīr — \"unavoidable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر سفر ناگزیر ہے تو صبح جلدی نکلیے۔ agar safar nāguzīr hai to subah jaldī nikliye. If the journey can't be avoided, set off early in the morning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ناگزیر (nāguzīr) is usually traced to Persian nāguzīr, \"with no way out\", built from nā, \"not\", and guzīr, \"escape\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāguzīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāguzīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāguzīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāguzīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar safar nāguzīr hai to subah jaldī nikliye. — If the journey can't be avoided, set off early in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar safar nāguzīr hai to subah jaldī nikliye.* — If the journey can't be avoided, set off early in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for force, then the Urdu for free to decide, then say nāguzīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for force, then the Urdu for free to decide, then say *nāguzīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ناگزیر (nāguzīr) mean? (\"Unavoidable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C539-salah",
+      "sequence": 31330,
+      "title": "صلاح (salāh) — advice",
+      "headword": "صلاح",
+      "romanization": "salāh",
+      "gloss": "advice",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abb20acb03d11fdd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for free to decide, then the Urdu for unavoidable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صلاح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صلاح — salāh — \"advice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ میری صلاح سنتے تو یہ مشکل نہ ہوتی۔ agar āp merī salāh sunte to yih mushkil na hotī. If you had listened to my advice, this trouble wouldn't have happened."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صلاح (salāh) is usually traced, through Persian, to Arabic ṣalāḥ, \"soundness, what is right\"; the sense \"advice\" came later, and the sources we use do not show how it arose."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "salāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *salāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "salāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *salāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp merī salāh sunte to yih mushkil na hotī. — If you had listened to my advice, this trouble wouldn't have happened.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp merī salāh sunte to yih mushkil na hotī.* — If you had listened to my advice, this trouble wouldn't have happened.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for free to decide, then the Urdu for unavoidable, then say salāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for free to decide, then the Urdu for unavoidable, then say *salāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صلاح (salāh) mean? (\"Advice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C539-jhukana",
+      "sequence": 31340,
+      "title": "جھکانا (jhukānā) — to bow (one's head); to lower",
+      "headword": "جھکانا",
+      "romanization": "jhukānā",
+      "gloss": "to bow (one's head); to lower",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a08c6385e65c0d17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for unavoidable, then the Urdu for a piece of advice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جھکانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھکانا — jhukānā — \"to bow (one's head); to lower\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر وہ شرمندہ ہوتا تو سر جھکاتا۔ agar voh sharmindā hotā to sar jhukātā. If he were ashamed, he would hang his head."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے سر جھکایا, us ne sar jhukāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھکانا (jhukānā) is the causative of jhuknā, \"to bend\", which CDIAL lists under jhukkati, a form it reconstructs (CDIAL 5399)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhukānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhukānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhukānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhukānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar voh sharmindā hotā to sar jhukātā. — If he were ashamed, he would hang his head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar voh sharmindā hotā to sar jhukātā.* — If he were ashamed, he would hang his head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for unavoidable, then the Urdu for a piece of advice, then say jhukānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for unavoidable, then the Urdu for a piece of advice, then say *jhukānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جھکانا (jhukānā) mean? (\"To bow (one's head); to lower\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

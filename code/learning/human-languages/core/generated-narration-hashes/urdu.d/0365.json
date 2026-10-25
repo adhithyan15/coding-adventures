@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:0d70281bec421a5d",
+  "lessonIds": [
+    "UR-C365-halat",
+    "UR-C365-surat-e-hal",
+    "UR-C365-musibat",
+    "UR-C365-tabdili",
+    "UR-C365-phansana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch365.txt",
+  "json": "urdu/narration/ch365.json",
+  "textHash": "fnv1a64:0e8e7e7b891b5480",
+  "jsonHash": "fnv1a64:09bda2f2d1cec312",
+  "findings": []
+}

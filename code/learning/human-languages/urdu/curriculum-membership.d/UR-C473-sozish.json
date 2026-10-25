@@ -1,0 +1,11 @@
+{
+  "id": "UR-C473-sozish",
+  "pathSegment": "UR-PATH-473-ACHE473",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-473-ACHE473",
+      "order": 4
+    }
+  ]
+}

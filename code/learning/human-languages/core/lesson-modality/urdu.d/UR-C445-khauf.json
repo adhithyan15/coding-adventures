@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C445-khauf",
+    "language": "urdu",
+    "chapter": 445,
+    "sequence": 26250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8104e34392634fc"
+  },
+  "findings": []
+}

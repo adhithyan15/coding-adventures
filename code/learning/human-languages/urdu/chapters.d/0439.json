@@ -1,0 +1,21 @@
+{
+  "chapter": 439,
+  "title": "Night in the Fields",
+  "label": "ch:ur-night-in-the-fields",
+  "canDo": "I can describe the fields at night and at work: jackals, crickets, grazing cattle and the plough.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-R439-review-final-439",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can describe the fields at night and at work: jackals, crickets, grazing cattle and the plough.",
+    "assesses": [
+      "UR-LEX-C439-GIDAR439-01",
+      "UR-LEX-C439-GIDAR439-02",
+      "UR-LEX-C439-GIDAR439-03",
+      "UR-LEX-C439-GIDAR439-04",
+      "UR-LEX-C439-GIDAR439-05"
+    ]
+  }
+}

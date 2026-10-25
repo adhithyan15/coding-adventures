@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Hopes and Fears",
+  "label": "ch:ur-hopes-and-fears",
+  "canDo": "I can say what I hope for and what I fear might happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C363-etimad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can say what I hope for and what I fear might happen.",
+    "assesses": [
+      "UR-LEX-C363-ANDESHA363-03",
+      "UR-LEX-C363-ANDESHA363-04",
+      "UR-LEX-C363-ANDESHA363-05"
+    ]
+  }
+}

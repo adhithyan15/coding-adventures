@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 535,
+  "title": "Omens and Stars",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7a753caec0f84ef7",
+  "lessons": [
+    {
+      "id": "UR-C535-shagun",
+      "sequence": 31100,
+      "title": "شگون (shagun) — an omen",
+      "headword": "شگون",
+      "romanization": "shagun",
+      "gloss": "an omen",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8993e27c0084e52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for checkmate, then the Urdu for ludo."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شگون",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شگون — shagun — \"an omen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر صبح بارش ہوئی تو یہ اچھا شگون ہو گا۔ agar subah bārish huī to yih achchhā shagun ho gā. If it rains in the morning, that will be a good omen."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شگون (shagun) is inherited from Sanskrit śakuna, \"a bird; an omen\", under which CDIAL lists the Hindi cousin saun, \"a good omen\" (CDIAL 12245); the fuller form shagun is not among its Hindi rows."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shagun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shagun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shagun, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shagun*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar subah bārish huī to yih achchhā shagun ho gā. — If it rains in the morning, that will be a good omen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar subah bārish huī to yih achchhā shagun ho gā.* — If it rains in the morning, that will be a good omen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for checkmate, then the Urdu for ludo, then say shagun again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for checkmate, then the Urdu for ludo, then say *shagun* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شگون (shagun) mean? (\"An omen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C535-manhus",
+      "sequence": 31110,
+      "title": "منحوس (manhūs) — unlucky; ill-omened",
+      "headword": "منحوس",
+      "romanization": "manhūs",
+      "gloss": "unlucky; ill-omened",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8eaf5f1c2bc2bf4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for ludo, then the Urdu for an omen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: منحوس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منحوس — manhūs — \"unlucky; ill-omened\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر یہ گھر منحوس ہوتا تو ہم یہاں نہ رہتے۔ agar yih ghar manhūs hotā to ham yahāṅ na rahte. If this house were unlucky, we wouldn't live here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منحوس (manhūs) is usually traced, through Persian, to Arabic manḥūs, \"ill-starred, unlucky\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manhūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manhūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manhūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manhūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar yih ghar manhūs hotā to ham yahāṅ na rahte. — If this house were unlucky, we wouldn't live here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar yih ghar manhūs hotā to ham yahāṅ na rahte.* — If this house were unlucky, we wouldn't live here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for ludo, then the Urdu for an omen, then say manhūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for ludo, then the Urdu for an omen, then say *manhūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does منحوس (manhūs) mean? (\"Unlucky; ill-omened\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C535-tona",
+      "sequence": 31120,
+      "title": "ٹونا (ṭonā) — a magic spell",
+      "headword": "ٹونا",
+      "romanization": "ṭonā",
+      "gloss": "a magic spell",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:663a8811b3efbe03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an omen, then the Urdu for ill-omened."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ٹونا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹونا — ṭonā — \"a magic spell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر ٹونا سچ ہوتا تو سب امیر ہوتے۔ agar ṭonā sach hotā to sab amīr hote. If spells were real, everyone would be rich."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹونا (ṭonā) is inherited: CDIAL lists the Hindi cousin ṭonā, \"sorcery\", under ṭōna, a form it reconstructs and perhaps links with śakuna, \"a bird of omen\" (CDIAL 5480)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭonā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭonā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭonā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭonā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar ṭonā sach hotā to sab amīr hote. — If spells were real, everyone would be rich.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar ṭonā sach hotā to sab amīr hote.* — If spells were real, everyone would be rich.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an omen, then the Urdu for ill-omened, then say ṭonā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an omen, then the Urdu for ill-omened, then say *ṭonā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ٹونا (ṭonā) mean? (\"A magic spell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C535-najumi",
+      "sequence": 31130,
+      "title": "نجومی (najūmī) — an astrologer",
+      "headword": "نجومی",
+      "romanization": "najūmī",
+      "gloss": "an astrologer",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76de769a367f5335",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for ill-omened, then the Urdu for a magic spell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نجومی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نجومی — najūmī — \"an astrologer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر نجومی سب جانتا تو وہ خود امیر ہوتا۔ agar najūmī sab jāntā to voh khud amīr hotā. If the astrologer knew everything, he would be rich himself."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نجومی (najūmī) is usually traced, through Persian, to Arabic nujūm, \"stars\", the plural of najm, with the ending -ī, \"one who\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "najūmī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *najūmī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "najūmī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *najūmī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar najūmī sab jāntā to voh khud amīr hotā. — If the astrologer knew everything, he would be rich himself.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar najūmī sab jāntā to voh khud amīr hotā.* — If the astrologer knew everything, he would be rich himself.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for ill-omened, then the Urdu for a magic spell, then say najūmī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for ill-omened, then the Urdu for a magic spell, then say *najūmī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نجومی (najūmī) mean? (\"An astrologer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C535-zaicha",
+      "sequence": 31140,
+      "title": "زائچہ (zāichā) — a horoscope",
+      "headword": "زائچہ",
+      "romanization": "zāichā",
+      "gloss": "a horoscope",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bcfbd74e7ea553f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a magic spell, then the Urdu for an astrologer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: زائچہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زائچہ — zāichā — \"a horoscope\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر نجومی نے زائچہ بنایا تو وہ پیسے مانگے گا۔ agar najūmī ne zāichā banāyā to voh paise māṅge gā. If the astrologer draws up a horoscope, he will ask for money."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زائچہ (zāichā) is usually traced to Persian zāyicha, \"a horoscope\", a chart of the stars at a birth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zāichā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zāichā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zāichā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zāichā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar najūmī ne zāichā banāyā to voh paise māṅge gā. — If the astrologer draws up a horoscope, he will ask for money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar najūmī ne zāichā banāyā to voh paise māṅge gā.* — If the astrologer draws up a horoscope, he will ask for money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a magic spell, then the Urdu for an astrologer, then say zāichā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a magic spell, then the Urdu for an astrologer, then say *zāichā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does زائچہ (zāichā) mean? (\"A horoscope\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

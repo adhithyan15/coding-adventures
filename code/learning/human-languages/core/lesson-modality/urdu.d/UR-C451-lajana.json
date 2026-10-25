@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C451-lajana",
+    "language": "urdu",
+    "chapter": 451,
+    "sequence": 26570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bef7e34972a76d1"
+  },
+  "findings": []
+}

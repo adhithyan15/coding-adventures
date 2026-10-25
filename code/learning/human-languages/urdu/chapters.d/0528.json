@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Offerings and Blessings",
+  "label": "ch:ur-offerings-and-blessings",
+  "canDo": "I can talk about blessings and good deeds.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C528-navazna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about blessings and good deeds.",
+    "assesses": [
+      "UR-LEX-C528-BARKAT528-03",
+      "UR-LEX-C528-BARKAT528-04",
+      "UR-LEX-C528-BARKAT528-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Naming a Feeling",
+  "label": "ch:ur-naming-a-feeling",
+  "canDo": "I can name a feeling and say that I felt it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C440-mizaj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can name a feeling and say that I felt it.",
+    "assesses": [
+      "UR-LEX-C440-FEEL440-03",
+      "UR-LEX-C440-FEEL440-04",
+      "UR-LEX-C440-FEEL440-05"
+    ]
+  }
+}

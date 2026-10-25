@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C457-diyanat",
+    "language": "urdu",
+    "chapter": 457,
+    "sequence": 26900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:445ff89cdf77430b"
+  },
+  "findings": []
+}

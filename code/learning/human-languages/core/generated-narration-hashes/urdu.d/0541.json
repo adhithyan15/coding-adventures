@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:6933a0449a249cc8",
+  "lessonIds": [
+    "UR-C541-zaviya",
+    "UR-C541-halat",
+    "UR-C541-mashrut",
+    "UR-C541-naubat",
+    "UR-C541-bilfarz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch541.txt",
+  "json": "urdu/narration/ch541.json",
+  "textHash": "fnv1a64:227604209c4b3825",
+  "jsonHash": "fnv1a64:8f28982335d85a50",
+  "findings": []
+}

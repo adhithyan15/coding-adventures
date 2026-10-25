@@ -1,0 +1,11 @@
+{
+  "id": "UR-C296-salamat",
+  "pathSegment": "UR-PATH-296-BACHAO296",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-296-BACHAO296",
+      "order": 4
+    }
+  ]
+}

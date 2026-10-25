@@ -1,0 +1,11 @@
+{
+  "id": "UR-C365-surat-e-hal",
+  "pathSegment": "UR-PATH-365-HALAT365",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-365-HALAT365",
+      "order": 1
+    }
+  ]
+}

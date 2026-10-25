@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:153dcb1bd526ecf2",
+  "lessonIds": [
+    "UR-C527-masruf",
+    "UR-C527-farigh",
+    "UR-C527-dastyab",
+    "UR-C527-bahana",
+    "UR-C527-ubna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch527.txt",
+  "json": "urdu/narration/ch527.json",
+  "textHash": "fnv1a64:21266468ecbc4e64",
+  "jsonHash": "fnv1a64:52bea0e0b80d0e28",
+  "findings": []
+}

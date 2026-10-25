@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:4c31e6847246dce1",
+  "lessonIds": [
+    "UR-C280-daku",
+    "UR-C280-daka",
+    "UR-C280-banduq",
+    "UR-C280-bandhna",
+    "UR-C280-lutera"
+  ],
+  "tex": "urdu/book/chapters/ch280-robbers-on-the-road.tex"
+}

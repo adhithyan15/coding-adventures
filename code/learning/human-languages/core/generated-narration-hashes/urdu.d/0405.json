@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:1281e65990267da0",
+  "lessonIds": [
+    "UR-C405-rajistar",
+    "UR-C405-shanakht",
+    "UR-C405-darban",
+    "UR-C405-mangana",
+    "UR-C405-bakhshish"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch405.txt",
+  "json": "urdu/narration/ch405.json",
+  "textHash": "fnv1a64:a70866add51a137a",
+  "jsonHash": "fnv1a64:f1fd1708755bd802",
+  "findings": []
+}

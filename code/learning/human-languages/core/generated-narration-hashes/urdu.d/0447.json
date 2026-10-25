@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:f1ab73439a103654",
+  "lessonIds": [
+    "UR-C447-itminan",
+    "UR-C447-asuda",
+    "UR-C447-qarar",
+    "UR-C447-dilasa",
+    "UR-C447-khushgavar",
+    "UR-R447-review-440-447"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch447.txt",
+  "json": "urdu/narration/ch447.json",
+  "textHash": "fnv1a64:30c0476aba655b46",
+  "jsonHash": "fnv1a64:e820ae6f6b4aaab3",
+  "findings": []
+}

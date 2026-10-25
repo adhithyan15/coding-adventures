@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:36e3a11e9c1c58bc",
+  "lessonIds": [
+    "UR-C311-harana",
+    "UR-C311-pachharna",
+    "UR-C311-fateh",
+    "UR-C311-shahid",
+    "UR-C311-sulah"
+  ],
+  "tex": "urdu/book/chapters/ch311-victory-and-defeat.tex"
+}

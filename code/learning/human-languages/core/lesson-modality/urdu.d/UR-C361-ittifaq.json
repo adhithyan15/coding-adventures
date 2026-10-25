@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C361-ittifaq",
+    "language": "urdu",
+    "chapter": 361,
+    "sequence": 21550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ee47c5482cad1a1"
+  },
+  "findings": []
+}

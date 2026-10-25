@@ -1,0 +1,11 @@
+{
+  "id": "UR-C506-khangalna",
+  "pathSegment": "UR-PATH-506-SAFAI506",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-506-SAFAI506",
+      "order": 4
+    }
+  ]
+}

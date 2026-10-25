@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 418,
+  "title": "Accounts and Instalments",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d8bbe64b99a26b79",
+  "lessons": [
+    {
+      "id": "UR-C418-hisab",
+      "sequence": 24640,
+      "title": "حساب (hisāb) — an account; a reckoning",
+      "headword": "حساب",
+      "romanization": "hisāb",
+      "gloss": "an account; a reckoning",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e721a63bdf15b37d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a cheque, then the Urdu for to withdraw (money)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حساب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حساب — hisāb — \"an account; a reckoning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دکاندار ہر شام اپنا حساب لکھتا ہے۔ dukāndār har shām apnā hisāb likhtā hai. Every evening the shopkeeper writes up his accounts."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حساب (hisāb) is usually traced, through Persian, to Arabic ḥisāb, \"counting, reckoning\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hisāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hisāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hisāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hisāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukāndār har shām apnā hisāb likhtā hai. — Every evening the shopkeeper writes up his accounts.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukāndār har shām apnā hisāb likhtā hai.* — Every evening the shopkeeper writes up his accounts.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a cheque, then the Urdu for to withdraw (money), then say hisāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a cheque, then the Urdu for to withdraw (money), then say *hisāb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حساب (hisāb) mean? (\"An account; a reckoning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C418-sud",
+      "sequence": 24650,
+      "title": "سود (sūd) — interest (on money)",
+      "headword": "سود",
+      "romanization": "sūd",
+      "gloss": "interest (on money)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:338068fb9a70122a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to withdraw (money), then the Urdu for a reckoning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سود",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سود — sūd — \"interest (on money)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بینک قرض پر سود لیتا ہے۔ baink qarz par sūd letā hai. The bank charges interest on a loan."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سود (sūd) is usually traced to Persian sūd, \"profit, gain\"; in Urdu it is the interest on a loan or on savings."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baink qarz par sūd letā hai. — The bank charges interest on a loan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baink qarz par sūd letā hai.* — The bank charges interest on a loan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to withdraw (money), then the Urdu for a reckoning, then say sūd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to withdraw (money), then the Urdu for a reckoning, then say *sūd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سود (sūd) mean? (\"Interest (on money)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C418-qist",
+      "sequence": 24660,
+      "title": "قسط (qist) — an instalment",
+      "headword": "قسط",
+      "romanization": "qist",
+      "gloss": "an instalment",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:413aabdbab7efa98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a reckoning, then the Urdu for interest (on money)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قسط",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قسط — qist — \"an instalment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میں ہر مہینے موٹر سائیکل کی قسط دیتی ہوں۔ maiṅ har mahīne moṭar sāikil kī qist detī hūṅ. Every month I pay an instalment on the motorbike."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قسط (qist) is usually traced, through Persian, to Arabic qisṭ, \"a portion, a share\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qist*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qist, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qist*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ har mahīne moṭar sāikil kī qist detī hūṅ. — Every month I pay an instalment on the motorbike.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṅ har mahīne moṭar sāikil kī qist detī hūṅ.* — Every month I pay an instalment on the motorbike.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a reckoning, then the Urdu for interest (on money), then say qist again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a reckoning, then the Urdu for interest (on money), then say *qist* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قسط (qist) mean? (\"An instalment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C418-adaigi",
+      "sequence": 24670,
+      "title": "ادائیگی (adāigī) — a payment",
+      "headword": "ادائیگی",
+      "romanization": "adāigī",
+      "gloss": "a payment",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39242f990c5f5687",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for interest (on money), then the Urdu for an instalment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ادائیگی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ادائیگی — adāigī — \"a payment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قرض کی ادائیگی اگلے سال تک ہے۔ qarz kī adāigī agle sāl tak hai. The loan has to be paid back by next year."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ادائیگی (adāigī) is built on adā, \"a payment, a carrying out\", usually traced, through Persian, to Arabic adāʾ, \"discharging (a debt)\", with the Persian ending -gī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adāigī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adāigī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adāigī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adāigī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qarz kī adāigī agle sāl tak hai. — The loan has to be paid back by next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qarz kī adāigī agle sāl tak hai.* — The loan has to be paid back by next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for interest (on money), then the Urdu for an instalment, then say adāigī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for interest (on money), then the Urdu for an instalment, then say *adāigī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ادائیگی (adāigī) mean? (\"A payment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C418-ghatana",
+      "sequence": 24680,
+      "title": "گھٹانا (ghaṭānā) — to bring down (a price); to reduce",
+      "headword": "گھٹانا",
+      "romanization": "ghaṭānā",
+      "gloss": "to bring down (a price); to reduce",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d121d8a123d63cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an instalment, then the Urdu for a payment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گھٹانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گھٹانا — ghaṭānā — \"to bring down (a price); to reduce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بینک نے سود گھٹایا۔ baink ne sūd ghaṭāyā. The bank lowered its interest rate."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے قیمت گھٹائی, us ne qīmat ghaṭāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گھٹانا (ghaṭānā) is built on ghaṭnā, \"to decrease\", which CDIAL lists under ghaṭṭati, a form it reconstructs (CDIAL 4415): this is the form for making something smaller."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaṭānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaṭānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaṭānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaṭānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baink ne sūd ghaṭāyā. — The bank lowered its interest rate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baink ne sūd ghaṭāyā.* — The bank lowered its interest rate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an instalment, then the Urdu for a payment, then say ghaṭānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an instalment, then the Urdu for a payment, then say *ghaṭānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گھٹانا (ghaṭānā) mean? (\"To bring down (a price); to reduce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

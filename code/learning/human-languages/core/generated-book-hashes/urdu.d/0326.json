@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:cb8e7c3072bf06b6",
+  "lessonIds": [
+    "UR-C326-lanat",
+    "UR-C326-kosna",
+    "UR-C326-pachhtana",
+    "UR-C326-ruthna",
+    "UR-C326-azab"
+  ],
+  "tex": "urdu/book/chapters/ch326-the-curse.tex"
+}

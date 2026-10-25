@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Illnesses That Spread",
+  "label": "ch:ur-illnesses-that-spread",
+  "canDo": "I can talk about illnesses that spread.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C474-chechak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can talk about illnesses that spread.",
+    "assesses": [
+      "UR-LEX-C474-SPREAD474-03",
+      "UR-LEX-C474-SPREAD474-04",
+      "UR-LEX-C474-SPREAD474-05"
+    ]
+  }
+}

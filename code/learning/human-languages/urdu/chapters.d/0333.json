@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "What It Is For",
+  "label": "ch:ur-what-it-is-for",
+  "canDo": "I can say what something is for and why someone does it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C333-istemal-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can say what something is for and why someone does it.",
+    "assesses": [
+      "UR-LEX-C333-MAQSAD333-03",
+      "UR-LEX-C333-MAQSAD333-04",
+      "UR-LEX-C333-MAQSAD333-05"
+    ]
+  }
+}

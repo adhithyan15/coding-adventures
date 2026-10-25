@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Free to Choose",
+  "label": "ch:ur-free-to-choose",
+  "canDo": "I can talk about free choices and being made to do things.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C539-jhukana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can talk about free choices and being made to do things.",
+    "assesses": [
+      "UR-LEX-C539-MUKHTAR539-03",
+      "UR-LEX-C539-MUKHTAR539-04",
+      "UR-LEX-C539-MUKHTAR539-05"
+    ]
+  }
+}

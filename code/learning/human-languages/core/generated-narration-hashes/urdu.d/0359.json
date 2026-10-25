@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:15cb3e347871e633",
+  "lessonIds": [
+    "UR-C359-bavujud",
+    "UR-C359-alava",
+    "UR-C359-agarche",
+    "UR-C359-albatta",
+    "UR-C359-jhukna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch359.txt",
+  "json": "urdu/narration/ch359.json",
+  "textHash": "fnv1a64:2bbdceb9a1d9c5e0",
+  "jsonHash": "fnv1a64:8ee4b3dded77917d",
+  "findings": []
+}

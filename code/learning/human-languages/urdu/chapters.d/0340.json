@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "In Court",
+  "label": "ch:ur-in-court",
+  "canDo": "I can follow what happens in a court case.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C340-gavahi-dena",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can follow what happens in a court case.",
+    "assesses": [
+      "UR-LEX-C340-FAISLA340-03",
+      "UR-LEX-C340-FAISLA340-04",
+      "UR-LEX-C340-FAISLA340-05"
+    ]
+  }
+}

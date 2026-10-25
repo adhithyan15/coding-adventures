@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:bead3385d5cdebc7",
+  "lessonIds": [
+    "UR-C396-shahrah",
+    "UR-C396-mahsul",
+    "UR-C396-naka",
+    "UR-C396-qafila",
+    "UR-C396-hankna"
+  ],
+  "tex": "urdu/book/chapters/ch396-on-the-highway.tex"
+}

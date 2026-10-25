@@ -1,0 +1,11 @@
+{
+  "id": "UR-C341-thahrana",
+  "pathSegment": "UR-PATH-341-HUKMRAN341",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-341-HUKMRAN341",
+      "order": 4
+    }
+  ]
+}

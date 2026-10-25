@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:99e720e471e1059f",
+  "lessonIds": [
+    "UR-C523-istediyam",
+    "UR-C523-ampayar",
+    "UR-C523-iskor",
+    "UR-C523-nara",
+    "UR-C523-phandna"
+  ],
+  "tex": "urdu/book/chapters/ch523-at-the-stadium.tex"
+}

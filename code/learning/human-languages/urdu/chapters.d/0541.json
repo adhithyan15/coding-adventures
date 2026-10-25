@@ -1,0 +1,19 @@
+{
+  "chapter": 541,
+  "title": "In That Case",
+  "label": "ch:ur-in-that-case",
+  "canDo": "I can say what we will do in each case.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C541-bilfarz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can say what we will do in each case.",
+    "assesses": [
+      "UR-LEX-C541-SURAT541-03",
+      "UR-LEX-C541-SURAT541-04",
+      "UR-LEX-C541-SURAT541-05"
+    ]
+  }
+}

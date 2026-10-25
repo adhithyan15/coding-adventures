@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:a638bb9af52b82a3",
+  "lessonIds": [
+    "UR-C335-khilaf",
+    "UR-C335-himayat-karna",
+    "UR-C335-mukhalafat-karna",
+    "UR-C335-muttafiq",
+    "UR-C335-fariq"
+  ],
+  "tex": "urdu/book/chapters/ch335-taking-sides.tex"
+}

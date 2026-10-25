@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Heat and Cold",
+  "label": "ch:ur-heat-and-cold",
+  "canDo": "I can say what heat or cold will do to things.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C372-darmiyana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can say what heat or cold will do to things.",
+    "assesses": [
+      "UR-LEX-C372-JAMNA372-03",
+      "UR-LEX-C372-JAMNA372-04",
+      "UR-LEX-C372-JAMNA372-05"
+    ]
+  }
+}

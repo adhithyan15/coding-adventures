@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:1e7a67ce7f34da12",
+  "lessonIds": [
+    "UR-C438-chonch",
+    "UR-C438-pankh",
+    "UR-C438-ashiyana",
+    "UR-C438-chugna",
+    "UR-C438-shikar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch438.txt",
+  "json": "urdu/narration/ch438.json",
+  "textHash": "fnv1a64:e109eef8451e35ec",
+  "jsonHash": "fnv1a64:038a3ee50d3147a0",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:037a748f55683612",
+  "lessonIds": [
+    "UR-C526-miad",
+    "UR-C526-muqarrara",
+    "UR-C526-fauri",
+    "UR-C526-vaqfa",
+    "UR-C526-mukammal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch526.txt",
+  "json": "urdu/narration/ch526.json",
+  "textHash": "fnv1a64:ad77139f976d6025",
+  "jsonHash": "fnv1a64:c707dfddd577ac42",
+  "findings": []
+}

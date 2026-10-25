@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Brokers and Property",
+  "label": "ch:ur-brokers-and-property",
+  "canDo": "I can deal with a broker, insure a car and get money back.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C422-lautana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can deal with a broker, insure a car and get money back.",
+    "assesses": [
+      "UR-LEX-C422-DALAL422-03",
+      "UR-LEX-C422-DALAL422-04",
+      "UR-LEX-C422-DALAL422-05"
+    ]
+  }
+}

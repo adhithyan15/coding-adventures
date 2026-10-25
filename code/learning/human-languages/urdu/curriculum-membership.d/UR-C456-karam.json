@@ -1,0 +1,11 @@
+{
+  "id": "UR-C456-karam",
+  "pathSegment": "UR-PATH-456-KIND456",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-456-KIND456",
+      "order": 3
+    }
+  ]
+}

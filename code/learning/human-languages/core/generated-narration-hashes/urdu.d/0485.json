@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:5127a0ab5682d9e9",
+  "lessonIds": [
+    "UR-C485-bachpan",
+    "UR-C485-shararat",
+    "UR-C485-totla",
+    "UR-C485-palna-reared",
+    "UR-C485-pahnana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch485.txt",
+  "json": "urdu/narration/ch485.json",
+  "textHash": "fnv1a64:0011af5e85845bc4",
+  "jsonHash": "fnv1a64:237059e1530ab72a",
+  "findings": []
+}

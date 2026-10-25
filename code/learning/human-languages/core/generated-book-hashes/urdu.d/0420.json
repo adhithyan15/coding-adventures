@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:e7a3a4b85f3f2bf1",
+  "lessonIds": [
+    "UR-C420-amdani",
+    "UR-C420-bajat",
+    "UR-C420-kifayat",
+    "UR-C420-bantna",
+    "UR-C420-bhunana"
+  ],
+  "tex": "urdu/book/chapters/ch420-income-and-budgets.tex"
+}

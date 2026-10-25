@@ -1,0 +1,11 @@
+{
+  "id": "UR-C320-patakha",
+  "pathSegment": "UR-PATH-320-ATISHBAZI320",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-320-ATISHBAZI320",
+      "order": 1
+    }
+  ]
+}

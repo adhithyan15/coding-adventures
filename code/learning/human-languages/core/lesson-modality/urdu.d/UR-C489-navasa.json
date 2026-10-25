@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C489-navasa",
+    "language": "urdu",
+    "chapter": 489,
+    "sequence": 28550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16c614fc80b25e58"
+  },
+  "findings": []
+}
