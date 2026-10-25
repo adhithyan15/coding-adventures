@@ -17767,6 +17767,71 @@ already expose substantive CommonMark parsers but lack the portable facade and
 HTML families; Haskell's similarly named roots do not yet establish Markdown
 semantics. Java, Kotlin, and Dart currently have only document AST foundations.
 
+## Post-#18118 F# renderer selection and prerequisite decomposition (October 24, 2026)
+
+PR #18118 merged the language-neutral GFM fixture at
+`83f1871e3d61e8151b0e9313337f5dc2c842a3e6` on
+`2026-10-24T18:59:25Z`.  It closes only the neutral foundation; no native lane
+inherits adoption credit from that merge.
+
+The next dependency review found that the combined F# CommonMark/HTML owner is
+not one reviewable implementation.  F# already has `document-ast` and a
+substantive `commonmark-parser`, but it lacks both `document-ast-to-html` and
+the thin `commonmark` facade.  Preserve the combined owner as a
+selection-blocked aggregate for its existing downstream references, and split
+it into this sequence:
+
+1. `document-ast-to-html-fsharp-lane-parity`, selected now, adds only the pure
+   native renderer root;
+2. `commonmark-parser-fsharp-652-reconciliation` measures and reconciles all
+   official CommonMark 0.31.2 outputs after the renderer merges; and
+3. `commonmark-fsharp-facade-lane-parity` adds composition only after both
+   prerequisites pass.
+
+The selected renderer has no dependency on the active C# renderer or
+TypeScript GFM adoption and no production-file overlap with either.  Its only
+runtime dependency is the existing F# `document-ast`.  The tranche covers all
+current F# AST variants, raw-node control, URL hardening, deterministic output,
+bounded ownership, native coverage and both platform build fronts.  Parser,
+facade, GFM, fenced-block adoption, external engines and ambient authority stay
+out of scope.
+
+The same audit records three future decompositions without selecting them:
+
+- the measured C# parser gap must become a full-652 harness/failure inventory,
+  sequential block and inline repairs, and a final exact gate rather than one
+  parser replacement;
+- Swift GFM requires a source-preserving fenced-block AST/parser/renderer
+  adoption and a 652-case CommonMark reconciliation before the missing
+  `gfm-parser` root, after which its existing facade owner may proceed; and
+- CommonMark corpus centralization must separate a provenance-pinned canonical
+  fixture/validator foundation from per-language reader and CI migrations.
+  Nine current readers across seven languages contain the same 140,487-byte
+  corpus with SHA-256
+  `d431b29d97b6f73e69d547109cf5081578fac931e72afe95639ebe766c1b2a20`.
+
+Those future records do not block or broaden the selected F# renderer.
+
+### F# renderer publication
+
+Draft PR #18154 opened from reviewed head
+`d6c1de44ada1343b1612be0c80546f09d9160755` over current main
+`e9ea4be4fbdf1379918f401f6e9498f1563d04aa`.  Two independent clean-archive
+first runs passed all 20 tests with 100% line, 99.16% branch and 100% method
+coverage.  The package, dependency-audit, exact build-selection, collision and
+1,531-owner state-graph checks also pass.  This renderer-only PR is the third
+active independent parity PR under the three-PR ceiling; it remains separate
+from the C# renderer and TypeScript GFM adopter and introduces no parser,
+facade or GFM claim.
+
+After the C# renderer merged, reconciling its mainline receipt exposed a fresh
+independent-review finding at `c05fcf8dc9`: per-table alignment-list length and
+array conversion did not bound aggregate work when callers reused the same
+large immutable list across many otherwise-empty tables. A failing repeated-
+alias regression now precedes a single-pass collector that charges at most
+100,000 alignment entries per render, including every alias visit. The updated
+21-test suite passes with 100% line, 99.17% branch and 100% method coverage; a
+new exact-head independent review remains the publication gate.
 ## October 24, 2026: C# security follow-up and preserved audit owners
 
 Keep the operator-authorized ceiling of three dependency-safe parity PRs in

@@ -74,6 +74,23 @@ ADVANCED. When `node` is installed, it checks that each output prints what
 the source prints. Sloppy-mode Annex B hoisting, where upstream itself
 changes behaviour, stays open in CLOC12-gaps.
 
+### Fixed - WHITESPACE_ONLY no longer comments out the program after a `#!` line (#18137)
+
+`#!/usr/bin/env node⏎console.log(1)` printed as
+`#!/usr/bin/env nodeconsole.log(1);`. The hashbang was kept as a token
+while its line break was dropped, so the whole program became part of the
+comment and nothing ran. The hashbang is now dropped like any comment, as
+upstream does at every level (closurec's SIMPLE/ADVANCED already did).
+
+Two shapes are refused instead, because dropping the token would delete
+code or accept an invalid program:
+- a `#!` line ended by U+2028/U+2029, which the lexer runs past (#17887);
+- a `#!` anywhere but the very start of the file, which is a SyntaxError.
+
+`tests/regression_ws_hashbang.rs` pins two shapes to the jar's bytes,
+checks with `node` that each output prints what its source prints, and
+checks that four inputs are refused. Two unit tests cover the rules.
+
 ### Fixed - templates, comments and regexes end where JavaScript ends them (#17886, #17888, #17887)
 
 `` var x = `$` // `; console.log('PWN') `` compiled at SIMPLE to
@@ -112,6 +129,17 @@ where the source prints `"undefined"`), and a dropped `function g` became a
 shapes at SIMPLE and ADVANCED and, when `node` is installed, checks that each
 output prints what the source prints.
 
+### Fixed - ADVANCED inlining no longer lets a nested function capture a caller's binding (#18134)
+
+`var y=1;function t(){return function(){return y}}function g(){var y=2;return t()()}console.log(g())`
+prints `1`. ADVANCED spliced `t` into `g`, so the returned function read
+`g`'s `y`, and the output printed `2`. The fix is in `closure-pass-inline`
+0.32.0: its capture guards now see the free names of nested `function` and
+method bodies.
+
+`tests/regression_inline_nested_capture.rs` checks with `node` that seven
+programs print the same after SIMPLE and ADVANCED as before.
+
 ### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
 
 `console.log(x + x + … + x)` with about 1,000 or more terms used to overflow
@@ -136,6 +164,31 @@ with SIGABRT (exit 134) and gave no diagnostic. Two changes fix this:
 - The issue's 10,000-term reproduction fails cleanly.
 - For six chain shapes, the deepest chain the bound admits compiles at SIMPLE
   and ADVANCED, and one link deeper fails cleanly.
+
+### Changed - refuse `return` and `new.target` outside a function, as upstream does (CCR-075 slice 2, #15860)
+
+closurec used to compile `if(a){return}` and `f(new.target)` at top level.
+The pinned upstream rejects both with `JSC_PARSE_ERROR` ("return must be
+inside function", "new.target must be inside a function"). closurec now
+rejects them identically: the same diagnostic, location and exit status at
+every level, and no output.
+
+Upstream's rule is Closure's own:
+- An arrow counts as a function, so a top-level `()=>new.target` compiles.
+- A class `static {}` block clears the context for `return` only;
+  `new.target` there, or in a field initialiser, follows the enclosing
+  context. So `class A{x=new.target}` is refused at top level, and compiles
+  inside a function.
+- A method's computed key is outside the method, so
+  `class A{[new.target](){}}` is refused at top level.
+
+The check parses only files that contain a `return` or `new` keyword token,
+and walks the tree iteratively. Every refusal is reported in source order,
+interleaved with the slice-1 private-element errors.
+
+The `simple-newtarget` and `simple-try-catch` fixtures now pin the jar's
+refusal. Six unit tests cover the rule. closurec gains a direct path
+dependency on `parser` (already a transitive one) for the parse-tree types.
 
 ### Fixed - outer binding shadowed by a `for`-head `let`/`const` survives (#16008)
 
