@@ -153,9 +153,9 @@ Sits between the parser and the syntax highlighter:
                                                     HTML renderer + sidebar
 ```
 
-Next DOC00 v0 packages: `forme-doc-syntax-highlighter`,
-`forme-doc-sidebar-builder`, `forme-doc-page-shell`,
-`forme-doc-search-*`, `forme-doc-site-emitter`.
+The complete DOC00 v0 cluster now ships. The syntax-highlighter
+stage consumes these decorated blocks and preserves their metadata
+for downstream rendering.
 
 ## TE04 fenced-block compatibility
 
