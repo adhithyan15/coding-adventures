@@ -5,6 +5,37 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — LANG83 conversions on the JIT
+
+- **`int_to_real`, `real_to_int_trunc` and `real_to_int_floor` are
+  `Lowered`.** They were `Refused(INTERPRETER_TIER_ONLY)`, so every function
+  that mixed integers and floats ran on the interpreter tier: Python's
+  `1 + 2.5`, BASIC's `INT` and ALGOL's `entier`. They now compile to new
+  bytecodes, specified in
+  [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md),
+  "Conversions on the JIT":
+  - `I64_TO_F64` reads an integer register (or a folded integer literal) and
+    writes a float register's bits with Rust `as f64` (round to nearest, ties
+    to even).
+  - `F64_TO_I64_TRUNC` / `F64_TO_I64_FLOOR` read a float register (or a
+    folded float literal), apply `trunc()` / `floor()`, then narrow with
+    vm-core's `real_to_i64_checked`.
+- **Both sides are checked.** A float source given to `int_to_real`, an
+  integer source given to a narrowing op, a narrowing destination that is
+  also a float register, or an `int_to_real` into a non-`f64` parameter
+  refuses the function. Bits are never reinterpreted.
+- **Failures match the VM.** A non-finite or out-of-range narrowing writes
+  vm-core's exact `real_to_int: …` text. `error_from_message` returns that
+  text as the same `VMError::Custom`, without the `generic-cir-jit:` prefix.
+- **Tests:**
+  - `int_to_real` on 0, -1, 2⁵³, 2⁵³+1, `i64::MIN` and `i64::MAX`, plus a
+    literal;
+  - trunc and floor on fractions of both signs and on -2⁶³;
+  - NaN, ±∞, 2⁶³, -1e30 and 1e300, checked against the VM's own error;
+  - a mixed int/float function;
+  - eight wrong-class refusals.
+  The declaration test confirms that the JIT compiles all three.
+
 ## [0.10.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **Bytecodes `ADD_F64` / `SUB_F64` / `MUL_F64` / `DIV_F64` / `NEG_F64` /

@@ -82,6 +82,11 @@
 //!   `RET_F64`, on float registers (a float's bit pattern in an i64 slot;
 //!   see `f64_vars` in `compile_to_bytecode`). IEEE-754 binary64, never a
 //!   trap: `1/0` is `+Inf`, `0/0` is `NaN`, `-0` survives.
+//! - **LANG83 conversions**: `int_to_real` → `I64_TO_F64` (integer register
+//!   in, float register out), `real_to_int_trunc` / `real_to_int_floor` →
+//!   `F64_TO_I64_TRUNC` / `F64_TO_I64_FLOOR` (float register in, integer
+//!   register out). A failed narrowing fails exactly as the VM does (see
+//!   [`error_from_message`]).
 //! - **Optional linear memory**: `load_mem`, `store_mem` (when the
 //!   GenericCirJit was constructed with a non-zero tape size).
 //!
@@ -162,6 +167,18 @@ pub(crate) mod opcode {
     /// `SIGNBIT_F64 <dst> <a>` — LANG83 PR6c `f64_signbit`: bit 63 of the
     /// float's pattern as the integer 0 or 1 (an i64 result, not a float).
     pub const SIGNBIT_F64: u8 = 0x58;
+    /// `I64_TO_F64 <dst> <a>` — LANG83 `int_to_real`: the integer register
+    /// `a` converted with Rust `as f64` (round to nearest, ties to even;
+    /// exact for |a| ≤ 2⁵³), its bits stored in the float register `dst`.
+    pub const I64_TO_F64: u8 = 0x59;
+    /// `F64_TO_I64_TRUNC <dst> <a>` — LANG83 `real_to_int_trunc`: the float
+    /// register `a` rounded toward zero, narrowed by vm-core's
+    /// `real_to_i64_checked` into the integer register `dst`. A non-finite or
+    /// out-of-range value writes the VM's exact error text and stops.
+    pub const F64_TO_I64_TRUNC: u8 = 0x5A;
+    /// `F64_TO_I64_FLOOR <dst> <a>` — LANG83 `real_to_int_floor`: like
+    /// `F64_TO_I64_TRUNC`, rounding toward −∞ (ALGOL `entier`).
+    pub const F64_TO_I64_FLOOR: u8 = 0x5B;
     pub const RET_I64:      u8 = 0x60;
     pub const RET_VOID:     u8 = 0x61;
     pub const RET_BOOL:     u8 = 0x62;
@@ -202,6 +219,9 @@ const TRAP_PREFIX: &str = "trap: ";
 /// The error-slot text for `DIV_I64` by zero (the non-LANG83 `div_*` ops).
 pub const DIV_BY_ZERO_MESSAGE: &str = "GenericCirJit: division by zero";
 
+/// Prefix of vm-core's `real_to_i64_checked` errors (`real_to_int: …`).
+const REAL_TO_INT_PREFIX: &str = "real_to_int: ";
+
 /// Turn an error-slot message back into the [`VMError`] the interpreter tier
 /// would have raised for the same failure, so both tiers fail identically:
 ///
@@ -209,6 +229,7 @@ pub const DIV_BY_ZERO_MESSAGE: &str = "GenericCirJit: division by zero";
 /// |-----------------------------------|--------------------------------|
 /// | `trap: <registered trap kind>`    | `Trap { kind }`                |
 /// | [`DIV_BY_ZERO_MESSAGE`]           | `DivisionByZero`               |
+/// | `real_to_int: …` (vm-core's text) | `Custom(<that text>)`          |
 /// | anything else (malformed binary,  | `Custom("generic-cir-jit: …")` |
 /// | fuel cap, bad memory access, …)   |                                |
 ///
@@ -223,6 +244,12 @@ pub fn error_from_message(msg: String) -> VMError {
     }
     if msg == DIV_BY_ZERO_MESSAGE {
         return VMError::DivisionByZero;
+    }
+    // A failed `real_to_int_*` narrowing: the slot holds vm-core's own
+    // `real_to_i64_checked` text, so hand it back as the very same
+    // `VMError::Custom` the interpreter tier raises.
+    if msg.starts_with(REAL_TO_INT_PREFIX) {
+        return VMError::Custom(msg);
     }
     VMError::Custom(format!("generic-cir-jit: {msg}"))
 }
@@ -668,6 +695,36 @@ impl Backend for GenericCirJit {
                     regs[code[pc] as usize] = regs[code[pc + 1] as usize] ^ i64::MIN;
                     pc += 2;
                 }
+                opcode::I64_TO_F64 => {
+                    if pc + 2 > code.len() {
+                        self.set_error("malformed bytecode: truncated I64_TO_F64");
+                        return Value::Null;
+                    }
+                    regs[code[pc] as usize] = (regs[code[pc + 1] as usize] as f64).to_bits() as i64;
+                    pc += 2;
+                }
+                opcode::F64_TO_I64_TRUNC | opcode::F64_TO_I64_FLOOR => {
+                    if pc + 2 > code.len() {
+                        self.set_error("malformed bytecode: truncated F64_TO_I64");
+                        return Value::Null;
+                    }
+                    let x = f64::from_bits(regs[code[pc + 1] as usize] as u64);
+                    let t = if op == opcode::F64_TO_I64_TRUNC { x.trunc() } else { x.floor() };
+                    // vm-core's own check, so the accepted range and the
+                    // error text are the interpreter tier's, byte for byte.
+                    match vm_core::dispatch::real_to_i64_checked(t) {
+                        Ok(n) => regs[code[pc] as usize] = n,
+                        Err(VMError::Custom(msg)) => {
+                            self.set_error(msg);
+                            return Value::Null;
+                        }
+                        Err(other) => {
+                            self.set_error(format!("{other}"));
+                            return Value::Null;
+                        }
+                    }
+                    pc += 2;
+                }
                 opcode::SIGNBIT_F64 => {
                     if pc + 2 > code.len() {
                         self.set_error("malformed bytecode: truncated SIGNBIT_F64");
@@ -1068,7 +1125,12 @@ fn compile_to_bytecode(
         .map(|(name, _)| name.as_str())
         .chain(
             ir.iter()
-                .filter(|i| i.op == "const_f64" || ieee_f64_binop(&i.op).is_some() || i.op == "f64_neg")
+                .filter(|i| {
+                    i.op == "const_f64"
+                        || ieee_f64_binop(&i.op).is_some()
+                        || i.op == "f64_neg"
+                        || i.op == "int_to_real"
+                })
                 .filter_map(|i| i.dest.as_deref()),
         )
         .collect();
@@ -1208,6 +1270,51 @@ fn compile_to_bytecode(
             let a = f64_operand(a, &mut reg_map, &mut next_reg, &mut code)?;
             let didx = lookup_or_alloc_var(dest, &mut reg_map, &mut next_reg)?;
             let opc = if op == "f64_neg" { opcode::NEG_F64 } else { opcode::SIGNBIT_F64 };
+            code.extend_from_slice(&[opc, didx, a]);
+            continue;
+        }
+        // LANG83 conversions — the only instructions that cross between the
+        // two register classes, so each checks BOTH sides:
+        //
+        // | op                  | source must be        | dest is         |
+        // |---------------------|-----------------------|-----------------|
+        // | `int_to_real`       | integer reg / literal | float register  |
+        // | `real_to_int_trunc` | float reg / literal   | integer register|
+        // | `real_to_int_floor` | float reg / literal   | integer register|
+        //
+        // A source of the wrong class (a float register handed to
+        // `int_to_real`, an integer to a narrowing op) refuses the function:
+        // reading float bits as an integer, or an integer as float bits, is
+        // exactly the silent miscompile the `f64_vars` rule exists to stop.
+        if op == "int_to_real" {
+            let dest = instr.dest.as_deref()?;
+            let [a] = instr.srcs.as_slice() else { return None };
+            let a = match a {
+                CIROperand::Var(v) if !f64_vars.contains(v.as_str()) => {
+                    lookup_or_alloc_var(v, &mut reg_map, &mut next_reg)?
+                }
+                CIROperand::Int(_) => resolve_operand(a, &mut reg_map, &mut next_reg, &mut code)?,
+                _ => return None,
+            };
+            let didx = lookup_or_alloc_var(dest, &mut reg_map, &mut next_reg)?;
+            code.extend_from_slice(&[opcode::I64_TO_F64, didx, a]);
+            continue;
+        }
+        if op == "real_to_int_trunc" || op == "real_to_int_floor" {
+            let dest = instr.dest.as_deref()?;
+            // The result is an INTEGER; a name some float op also writes
+            // would be both, so refuse it (as for `f64_signbit`).
+            if f64_vars.contains(dest) {
+                return None;
+            }
+            let [a] = instr.srcs.as_slice() else { return None };
+            let a = f64_operand(a, &mut reg_map, &mut next_reg, &mut code)?;
+            let didx = lookup_or_alloc_var(dest, &mut reg_map, &mut next_reg)?;
+            let opc = if op == "real_to_int_trunc" {
+                opcode::F64_TO_I64_TRUNC
+            } else {
+                opcode::F64_TO_I64_FLOOR
+            };
             code.extend_from_slice(&[opc, didx, a]);
             continue;
         }
@@ -1968,6 +2075,8 @@ mod tests {
         assert!(matches!(j.take_error(), Some(VMError::DivisionByZero)));
         j.set_error("trap: Not.A.Kind");
         assert!(matches!(j.take_error(), Some(VMError::Custom(m)) if m.contains("Not.A.Kind")));
+        j.set_error("real_to_int: operand is not finite");
+        assert!(matches!(j.take_error(), Some(VMError::Custom(m)) if m == "real_to_int: operand is not finite"));
         j.set_error("malformed bytecode: truncated TRAP");
         assert!(matches!(j.take_error(), Some(VMError::Custom(m)) if m.starts_with("generic-cir-jit: ")));
     }
@@ -2223,6 +2332,133 @@ mod tests {
         }
     }
 
+    /// `int_to_real` of an integer parameter, compiled and run (no
+    /// interpreter): Rust `as f64` on every boundary, including the first
+    /// integer that rounds (2⁵³ + 1 → 2⁵³) and both ends of i64.
+    #[test]
+    fn int_to_real_converts_an_integer_register_to_a_float() {
+        let params = [("n".to_string(), "i64".to_string())];
+        let ctx = FunctionContext { name: "f", params: &params, return_type: "f64" };
+        let cir = vec![
+            CIRInstr::new("int_to_real", Some("x"), vec![var("n")], "f64"),
+            CIRInstr::new("ret_f64", None::<&str>, vec![var("x")], "f64"),
+        ];
+        let (j, _) = f64_writer_jit();
+        let bin = j.compile_function(&ctx, &cir).expect("int_to_real of an i64 parameter compiles");
+        let two53 = 1_i64 << 53;
+        for (n, want) in [
+            (0, 0.0),
+            (-1, -1.0),
+            (two53, 9_007_199_254_740_992.0),
+            (two53 + 1, 9_007_199_254_740_992.0),
+            (i64::MIN, -9_223_372_036_854_775_808.0),
+            (i64::MAX, 9_223_372_036_854_775_808.0),
+        ] {
+            let got = j.run(&bin, &[Value::Int(n)]);
+            assert_eq!(got, Value::Float(want), "int_to_real({n})");
+            assert_eq!(got, Value::Float(n as f64), "int_to_real({n}) must be Rust `as f64`");
+        }
+        assert!(j.take_error().is_none());
+        // An integer literal folded into the operand converts too.
+        let lit = vec![
+            CIRInstr::new("int_to_real", Some("x"), vec![CIROperand::Int(-7)], "f64"),
+            CIRInstr::new("ret_f64", None::<&str>, vec![var("x")], "f64"),
+        ];
+        let bin = j.compile(&lit).expect("int_to_real of a propagated integer literal compiles");
+        assert_eq!(j.run(&bin, &[]), Value::Float(-7.0));
+    }
+
+    /// The two narrowing ops, compiled and run: trunc rounds toward zero,
+    /// floor toward −∞, and every failure is the interpreter tier's own
+    /// `VMError::Custom` text (vm-core's `real_to_i64_checked`), never a
+    /// garbage integer.
+    #[test]
+    fn real_to_int_narrows_like_the_vm_and_fails_with_its_error() {
+        let params = [("x".to_string(), "f64".to_string())];
+        let ctx = FunctionContext { name: "f", params: &params, return_type: "i64" };
+        let two63 = 9_223_372_036_854_775_808.0_f64;
+        for (op, cases) in [
+            ("real_to_int_trunc", [(2.7, 2), (-2.7, -2), (-0.5, 0), (5.0, 5), (-two63, i64::MIN)]),
+            ("real_to_int_floor", [(2.7, 2), (-2.7, -3), (-0.5, -1), (-3.0, -3), (-two63, i64::MIN)]),
+        ] {
+            let cir = vec![
+                CIRInstr::new(op, Some("n"), vec![var("x")], "i64"),
+                CIRInstr::new("ret_i64", None::<&str>, vec![var("n")], "i64"),
+            ];
+            let (j, _) = f64_writer_jit();
+            let bin = j.compile_function(&ctx, &cir).unwrap_or_else(|| panic!("{op} of an f64 parameter compiles"));
+            for (x, want) in cases {
+                assert_eq!(j.run(&bin, &[Value::Float(x)]), Value::Int(want), "{op}({x})");
+                assert!(j.take_error().is_none(), "{op}({x}) left an error");
+            }
+            for x in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY, two63, -1e30, 1e300] {
+                j.run(&bin, &[Value::Float(x)]);
+                let rounded = if op == "real_to_int_trunc" { x.trunc() } else { x.floor() };
+                let vm = vm_core::dispatch::real_to_i64_checked(rounded).unwrap_err();
+                let jit = j.take_error().unwrap_or_else(|| panic!("{op}({x}) must fail"));
+                assert_eq!(format!("{jit:?}"), format!("{vm:?}"), "{op}({x}) must fail exactly as the VM does");
+            }
+            // A float literal folded into the operand narrows too.
+            let lit = vec![
+                CIRInstr::new(op, Some("n"), vec![CIROperand::Float(-2.5)], "i64"),
+                CIRInstr::new("ret_i64", None::<&str>, vec![var("n")], "i64"),
+            ];
+            let bin = j.compile(&lit).expect("narrowing a propagated float literal compiles");
+            let want = if op == "real_to_int_trunc" { -2 } else { -3 };
+            assert_eq!(j.run(&bin, &[]), Value::Int(want), "{op}(-2.5 literal)");
+        }
+    }
+
+    /// Integer → float → integer through the JIT, the shape BASIC's `INT`
+    /// and Python's mixed arithmetic produce.
+    #[test]
+    fn conversions_compose_with_ieee_arithmetic() {
+        let params = [("n".to_string(), "i64".to_string())];
+        let ctx = FunctionContext { name: "f", params: &params, return_type: "i64" };
+        let cir = vec![
+            CIRInstr::new("int_to_real", Some("x"), vec![var("n")], "f64"),
+            CIRInstr::new("f64_div", Some("y"), vec![var("x"), CIROperand::Float(2.0)], "f64"),
+            CIRInstr::new("real_to_int_floor", Some("m"), vec![var("y")], "i64"),
+            CIRInstr::new("add_i64", Some("r"), vec![var("m"), var("n")], "i64"),
+            CIRInstr::new("ret_i64", None::<&str>, vec![var("r")], "i64"),
+        ];
+        let (j, _) = f64_writer_jit();
+        let bin = j.compile_function(&ctx, &cir).expect("a mixed int/float function compiles");
+        // floor(-7 / 2) + -7 = -4 + -7
+        assert_eq!(j.run(&bin, &[Value::Int(-7)]), Value::Int(-11));
+        assert_eq!(j.run(&bin, &[Value::Int(9)]), Value::Int(13));
+    }
+
+    /// The conversions cross register classes, so each checks both sides: a
+    /// source of the wrong class, or a destination claimed by both classes,
+    /// refuses the function instead of reinterpreting bits.
+    #[test]
+    fn conversions_refuse_operands_of_the_wrong_class() {
+        let one = || CIRInstr::new("const_i64", Some("n"), vec![CIROperand::Int(1)], "i64");
+        let ret = || CIRInstr::new("ret_void", None::<&str>, vec![], "void");
+        let refused: Vec<(&str, Vec<CIRInstr>)> = vec![
+            ("int_to_real of a float register", vec![fconst("x", 1.0), CIRInstr::new("int_to_real", Some("r"), vec![var("x")], "f64"), ret()]),
+            ("int_to_real of a float literal", vec![CIRInstr::new("int_to_real", Some("r"), vec![CIROperand::Float(1.0)], "f64"), ret()]),
+            ("int_to_real onto its own integer source", vec![one(), CIRInstr::new("int_to_real", Some("n"), vec![var("n")], "f64"), ret()]),
+            ("real_to_int_trunc of an integer register", vec![one(), CIRInstr::new("real_to_int_trunc", Some("r"), vec![var("n")], "i64"), ret()]),
+            ("real_to_int_floor of an integer literal", vec![CIRInstr::new("real_to_int_floor", Some("r"), vec![CIROperand::Int(3)], "i64"), ret()]),
+            ("a narrowing dest that is also a float", vec![fconst("x", 1.5), CIRInstr::new("real_to_int_trunc", Some("x"), vec![var("x")], "i64"), ret()]),
+            ("an int_to_real result read as an integer", vec![one(), CIRInstr::new("int_to_real", Some("r"), vec![var("n")], "f64"), CIRInstr::new("add_i64", Some("y"), vec![var("r"), var("n")], "i64"), ret()]),
+            ("wrong arity", vec![one(), CIRInstr::new("int_to_real", Some("r"), vec![var("n"), var("n")], "f64"), ret()]),
+        ];
+        for (what, cir) in refused {
+            let (j, _) = f64_writer_jit();
+            assert!(j.compile(&cir).is_none(), "{what} must refuse JIT compilation");
+        }
+        // An `int_to_real` destination that is a non-f64 parameter is seeded
+        // as an integer, so it is refused like any float op's (PR6c M1).
+        let params = [("p".to_string(), "i64".to_string())];
+        let ctx = FunctionContext { name: "f", params: &params, return_type: "void" };
+        let (j, _) = f64_writer_jit();
+        let cir = vec![one(), CIRInstr::new("int_to_real", Some("p"), vec![var("n")], "f64"), ret()];
+        assert!(j.compile_function(&ctx, &cir).is_none(), "an int_to_real into an i64 parameter must refuse");
+    }
+
     /// A parameter's float-ness comes from its declared type. A non-`f64`
     /// parameter is seeded as an integer, so a float op or `const_f64` that
     /// writes it must refuse the function: otherwise `f64_add x <- x, 1.0`
@@ -2264,7 +2500,7 @@ mod tests {
 
     #[test]
     fn truncated_ieee_bytecode_sets_the_error_slot() {
-        for tail in [&[opcode::ADD_F64, 0, 0][..], &[opcode::DIV_F64], &[opcode::NEG_F64, 0], &[opcode::SIGNBIT_F64, 0], &[opcode::RET_F64]] {
+        for tail in [&[opcode::ADD_F64, 0, 0][..], &[opcode::DIV_F64], &[opcode::NEG_F64, 0], &[opcode::SIGNBIT_F64, 0], &[opcode::RET_F64], &[opcode::I64_TO_F64, 0], &[opcode::F64_TO_I64_TRUNC, 0], &[opcode::F64_TO_I64_FLOOR]] {
             let (j, _) = f64_writer_jit();
             let mut bin = 0u16.to_le_bytes().to_vec();
             bin.extend_from_slice(tail);
