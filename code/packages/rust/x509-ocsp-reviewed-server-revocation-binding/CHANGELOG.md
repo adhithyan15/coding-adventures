@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Require and semantically validate exact DER `NULL` for the authenticated
+  responder's RFC 6960 `id-pkix-ocsp-nocheck` extension after reviewed-path and
+  responder DNS policy, without allowing certificate or proof substitution.
+- Retain the complete non-copyable reviewed responder proof and expose only
+  payload-free missing or malformed no-check failures, while leaving responder
+  certificates without no-check and intermediate revocation unresolved.
 - Apply the exact retained intermediate's supported critical permitted-and-
   excluded-DNS constraints to the authenticated responder certificate, without
   allowing responder, SAN, intermediate, or path substitution.

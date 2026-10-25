@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/x509-ocsp-reviewed-server-revocation-binding",
   "capabilities": [],
-  "justification": "Pure exact-object composition plus deterministic validity and bounded DNS-constraint checks over public decoded certificate, OCSP, and reviewed trust-anchor evidence at an already-retained observation time. No filesystem, network, process, environment, ambient clock, FFI, secret-key, signing, credential, or external-provider access is required."
+  "justification": "Pure exact-object composition plus deterministic validity, bounded DNS-constraint checks, and exact RFC 6960 no-check extension policy over public decoded certificate, OCSP, and reviewed trust-anchor evidence at an already-retained observation time. No filesystem, network, process, environment, ambient clock, FFI, secret-key, signing, credential, or external-provider access is required."
 }

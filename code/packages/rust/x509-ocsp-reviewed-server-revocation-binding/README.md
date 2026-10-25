@@ -48,17 +48,28 @@ excluded-DNS subset under caller-owned limits; every responder `dNSName` must
 comply. Success retains only count evidence alongside the complete prior proof,
 and failures expose stable payload-free categories.
 
+`validate_x509_ocsp_reviewed_responder_no_check_policy` then consumes that
+complete intermediate-DNS proof and derives the exact authenticated responder
+certificate internally. It requires the structurally unique RFC 6960
+`id-pkix-ocsp-nocheck` extension and validates that its value is exact DER
+`NULL`. The retained path already proves that the exact intermediate signed and
+authorized the responder and that the responder was valid at the exact OCSP
+observation time. A critical instance can reach this semantic gate only when
+the prerequisite certificate-wide policy explicitly recognized its OID;
+RFC 6960 recommends, but does not require, non-critical marking. Missing or
+malformed values fail with stable payload-free categories.
+
 ## Boundary
 
-This crate performs evidence composition, exact-time validity checks, and the
-bounded selected-anchor and exact-intermediate responder DNS policies described
-above only.
+This crate performs evidence composition, exact-time validity checks, the
+bounded selected-anchor and exact-intermediate responder DNS policies, and the
+RFC 6960 responder no-check branch described above only.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS
-intermediate constraints to the responder certificate, check
-responder-certificate or intermediate
-revocation, interpret unsupported OCSP extensions, acquire or cache OCSP data,
+intermediate constraints to the responder certificate, check responder
+certificates that omit `id-pkix-ocsp-nocheck`, check intermediate revocation,
+interpret unsupported OCSP extensions, acquire or cache OCSP data,
 read a clock, implement TLS or HTTP, authorize OAuth transport, open a network
 connection, or access a credential. The reviewed Mozilla root snapshot excludes OS,
 enterprise, user-installed, and local roots. `webpki-roots` remains reviewed
