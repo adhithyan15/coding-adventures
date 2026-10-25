@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "The Martyrs",
+  "label": "ch:gu-the-martyrs",
+  "canDo": "I can say who gave their lives and how they are remembered.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C323-padkarvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can say who gave their lives and how they are remembered.",
+    "assesses": [
+      "GU-LEX-C323-SHAHID323-03",
+      "GU-LEX-C323-SHAHID323-04",
+      "GU-LEX-C323-SHAHID323-05"
+    ]
+  }
+}

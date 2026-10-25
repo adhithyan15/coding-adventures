@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 429,
+  "title": "Safes and Currency",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0f7d82b09037e28c",
+  "lessons": [
+    {
+      "id": "GU-C429-tijori",
+      "sequence": 23840,
+      "title": "તિજોરી (tijorī) — a safe; a strongbox",
+      "headword": "તિજોરી",
+      "romanization": "tijorī",
+      "gloss": "a safe; a strongbox",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0ccd28e9d0f5691",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a moneylender, then the Gujarati for to swindle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: તિજોરી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તિજોરી — tijorī — \"a safe; a strongbox\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દુકાનદાર રોકડ તિજોરીમાં રાખે છે. dukāndār rokaḍ tijorīmā̃ rākhe che. The shopkeeper keeps the cash in a safe."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તિજોરી (tijorī) is usually traced to Portuguese tesouro, \"a treasure, a treasury\": the place where the money is locked away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tijorī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tijorī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tijorī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tijorī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukāndār rokaḍ tijorīmā̃ rākhe che. — The shopkeeper keeps the cash in a safe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukāndār rokaḍ tijorīmā̃ rākhe che.* — The shopkeeper keeps the cash in a safe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a moneylender, then the Gujarati for to swindle, then say tijorī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a moneylender, then the Gujarati for to swindle, then say *tijorī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does તિજોરી (tijorī) mean? (\"A safe; a strongbox\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C429-nana",
+      "sequence": 23850,
+      "title": "નાણાં (nāṇā̃) — money; funds",
+      "headword": "નાણાં",
+      "romanization": "nāṇā̃",
+      "gloss": "money; funds",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:194ba831fca72840",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to swindle, then the Gujarati for a safe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નાણાં",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નાણાં — nāṇā̃ — \"money; funds\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદાએ નવી શાળા માટે નાણાં આપ્યાં. dādāe navī śāḷā māṭe nāṇā̃ āpyā̃. Grandfather gave funds for a new school."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun, used in the plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નાણાં (nāṇā̃) goes back to Sanskrit nāṇaka, \"a coin\"; CDIAL lists the Gujarati word, \"a coin, money\" (CDIAL 7050). The word is plural."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṇā̃",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṇā̃*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṇā̃, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṇā̃*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādāe navī śāḷā māṭe nāṇā̃ āpyā̃. — Grandfather gave funds for a new school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādāe navī śāḷā māṭe nāṇā̃ āpyā̃.* — Grandfather gave funds for a new school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to swindle, then the Gujarati for a safe, then say nāṇā̃ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to swindle, then the Gujarati for a safe, then say *nāṇā̃* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નાણાં (nāṇā̃) mean? (\"Money; funds\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C429-calan",
+      "sequence": 23860,
+      "title": "ચલણ (calaṇ) — a currency",
+      "headword": "ચલણ",
+      "romanization": "calaṇ",
+      "gloss": "a currency",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42f06aa9ed382fbd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a safe, then the Gujarati for funds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચલણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચલણ — calaṇ — \"a currency\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પરદેશમાં ત્યાંનું ચલણ વાપરવું પડે છે. pardeśmā̃ tyā̃nũ calaṇ vāparvũ paḍe che. Abroad you have to use the local currency."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચલણ (calaṇ) is a tadbhava of Sanskrit calana, \"moving, going\"; CDIAL lists the Gujarati word, \"conduct; currency\" (CDIAL 4716): money that goes round."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pardeśmā̃ tyā̃nũ calaṇ vāparvũ paḍe che. — Abroad you have to use the local currency.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pardeśmā̃ tyā̃nũ calaṇ vāparvũ paḍe che.* — Abroad you have to use the local currency.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a safe, then the Gujarati for funds, then say calaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a safe, then the Gujarati for funds, then say *calaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચલણ (calaṇ) mean? (\"A currency\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C429-lutavu",
+      "sequence": 23870,
+      "title": "લૂંટાવું (lū̃ṭāvũ) — to be robbed",
+      "headword": "લૂંટાવું",
+      "romanization": "lū̃ṭāvũ",
+      "gloss": "to be robbed",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90b37627ccbf3af5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for funds, then the Gujarati for a currency."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: લૂંટાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લૂંટાવું — lū̃ṭāvũ — \"to be robbed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "રાત્રે રસ્તામાં વેપારી લૂંટાયો. rātre rastāmā̃ vepārī lū̃ṭāyo. The merchant was robbed on the road at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે વેપારી લૂંટાયો, te vepārī lū̃ṭāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લૂંટાવું (lū̃ṭāvũ) is the intransitive partner of લૂંટવું, \"to rob\", which goes back to luṭṭati, \"plunders\", a form CDIAL reconstructs (CDIAL 11078): who robs, લૂંટવું; who is robbed, લૂંટાવું."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lū̃ṭāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lū̃ṭāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lū̃ṭāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lū̃ṭāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātre rastāmā̃ vepārī lū̃ṭāyo. — The merchant was robbed on the road at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātre rastāmā̃ vepārī lū̃ṭāyo.* — The merchant was robbed on the road at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for funds, then the Gujarati for a currency, then say lū̃ṭāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for funds, then the Gujarati for a currency, then say *lū̃ṭāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does લૂંટાવું (lū̃ṭāvũ) mean? (\"To be robbed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C429-parvadvu",
+      "sequence": 23880,
+      "title": "પરવડવું (parvaḍvũ) — to be affordable; to be within one's means",
+      "headword": "પરવડવું",
+      "romanization": "parvaḍvũ",
+      "gloss": "to be affordable; to be within one's means",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9849653524efe278",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a currency, then the Gujarati for to be robbed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પરવડવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પરવડવું — parvaḍvũ — \"to be affordable; to be within one's means\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આટલી મોંઘી ગાડી મને નહીં પરવડે. āṭlī mõghī gāḍī mane nahī̃ paravḍe. I will not be able to afford such an expensive car."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે ભાડું તેને પરવડ્યું, te bhāḍũ tene parvaḍyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પરવડવું (parvaḍvũ) is a tadbhava of Sanskrit paripatati, \"runs about\"; CDIAL lists the Gujarati verb, \"to be suitable\" (CDIAL 7841): what suits your purse."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parvaḍvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parvaḍvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parvaḍvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parvaḍvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭlī mõghī gāḍī mane nahī̃ paravḍe. — I will not be able to afford such an expensive car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭlī mõghī gāḍī mane nahī̃ paravḍe.* — I will not be able to afford such an expensive car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a currency, then the Gujarati for to be robbed, then say parvaḍvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a currency, then the Gujarati for to be robbed, then say *parvaḍvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પરવડવું (parvaḍvũ) mean? (\"To be affordable; to be within one's means\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C380-tangi",
+  "pathSegment": "GU-PATH-380-PURTU380",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-380-PURTU380",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:4a71344be5de2aca",
+  "lessonIds": [
+    "GU-C422-lari",
+    "GU-C422-pheriyo",
+    "GU-C422-gallo",
+    "GU-C422-kandoi",
+    "GU-C422-khapvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch422.txt",
+  "json": "gujarati/narration/ch422.json",
+  "textHash": "fnv1a64:dfbef5a4b447d403",
+  "jsonHash": "fnv1a64:6f2904c7fdd0513c",
+  "findings": []
+}

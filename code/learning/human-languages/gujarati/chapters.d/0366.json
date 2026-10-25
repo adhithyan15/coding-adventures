@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "On One Condition",
+  "label": "ch:gu-on-one-condition",
+  "canDo": "I can say what will happen, and on what condition.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C366-cahvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can say what will happen, and on what condition.",
+    "assesses": [
+      "GU-LEX-C366-SHARAT366-03",
+      "GU-LEX-C366-SHARAT366-04",
+      "GU-LEX-C366-SHARAT366-05"
+    ]
+  }
+}

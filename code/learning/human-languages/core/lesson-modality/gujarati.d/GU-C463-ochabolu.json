@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C463-ochabolu",
+    "language": "gujarati",
+    "chapter": 463,
+    "sequence": 25830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cfd2e1bc939559d"
+  },
+  "findings": []
+}

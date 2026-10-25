@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:7af2bdb1b8e2f450",
+  "lessonIds": [
+    "GU-C332-dantaktha",
+    "GU-C332-bhagvan",
+    "GU-C332-daitya",
+    "GU-C332-devi",
+    "GU-C332-vardan"
+  ],
+  "tex": "gujarati/book/chapters/ch332-once-upon-a-time.tex"
+}

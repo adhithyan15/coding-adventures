@@ -1,4 +1,13 @@
 # Changelog — iir-to-llvm
+## [0.63.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
+
+- **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /
+  `f64_signbit`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6c): `fadd`/`fsub`/`fmul`/`fdiv double` (no fast-math
+  flags), `fneg double`, and `bitcast double to i64` + `lshr i64 …, 63`.
+  New `lower_f64_ieee`; all six in `SUPPORTED_OPS`.
+- `op_support`: all six `Lowered`. Tests pin the IR and run the edge table
+  on real `clang`.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:7a3469d97897b08a",
+  "lessonIds": [
+    "GU-C360-iman",
+    "GU-C360-lalac",
+    "GU-C360-vaphadar",
+    "GU-C360-dago",
+    "GU-C360-phasavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch360.txt",
+  "json": "gujarati/narration/ch360.json",
+  "textHash": "fnv1a64:d95ed28f77b96edd",
+  "jsonHash": "fnv1a64:eb83c7711a0aa6fe",
+  "findings": []
+}

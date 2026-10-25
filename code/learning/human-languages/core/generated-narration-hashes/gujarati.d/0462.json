@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:993c3ba9ccc3f98d",
+  "lessonIds": [
+    "GU-C462-cancal",
+    "GU-C462-tophani",
+    "GU-C462-capal",
+    "GU-C462-mojilu",
+    "GU-C462-vanthvu",
+    "GU-R462-review-455-462"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch462.txt",
+  "json": "gujarati/narration/ch462.json",
+  "textHash": "fnv1a64:c85b7e0f5ad476e7",
+  "jsonHash": "fnv1a64:f187b5f35a6a96ab",
+  "findings": []
+}

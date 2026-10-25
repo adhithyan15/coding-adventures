@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "You Saved Her Life",
+  "label": "ch:gu-you-saved-her-life",
+  "canDo": "I can thank someone who saved a life.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C307-has",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can thank someone who saved a life.",
+    "assesses": [
+      "GU-LEX-C307-RUNI307-03",
+      "GU-LEX-C307-RUNI307-04",
+      "GU-LEX-C307-RUNI307-05"
+    ]
+  }
+}

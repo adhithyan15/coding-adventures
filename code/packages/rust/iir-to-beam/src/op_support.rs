@@ -11,6 +11,9 @@
 //! for the operation (an inline BIF, or a `call_ext` into `erlang`, `math`,
 //! `lists` or `io`).
 //!
+//! **What is Refused.** The LANG83 PR6c IEEE arithmetic (`f64_add` …
+//! `f64_neg`): see [`NO_IEEE_SPECIALS`].
+//!
 //! Three tests keep the table honest:
 //!
 //! 1. `every_standard_op_is_declared` — every registry entry is declared exactly
@@ -23,7 +26,20 @@
 //! See `code/specs/LANG83-iir-standard-operation-registry.md`.
 
 use interpreter_ir::op_registry::{support_from_table, OpSupport};
-use OpSupport::Lowered;
+use OpSupport::{Lowered, Refused};
+
+/// Why the BEAM backend refuses the LANG83 PR6c IEEE arithmetic.
+///
+/// An Erlang float is always finite: there is no term for `+Infinity`,
+/// `-Infinity` or `NaN`, and `1.0 / 0.0` (or an overflowing `*`) raises
+/// `badarith`. The PR6c contract says `f64_div(1, 0)` *is* `+Infinity` and
+/// never traps, so no BEAM instruction sequence can honour it; refusing at
+/// compile time (`lang-aot` reports `UnsupportedOps`) is the honest answer.
+/// `f64_signbit` needs no special values and is lowered (OTP 27 keeps `-0.0`
+/// distinct from `0.0`).
+pub const NO_IEEE_SPECIALS: &str = "BEAM floats have no +/-Infinity or NaN and Erlang \
+     float arithmetic raises badarith instead of producing them, so the non-trapping IEEE \
+     contract cannot be met (LANG83 PR6c)";
 
 /// This backend's answer for every LANG83 standard operation.
 pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
@@ -73,6 +89,14 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_atan", Lowered),
     ("f64_tan", Lowered),
     ("f64_pow", Lowered),
+    // LANG83 PR6c — BEAM floats are always finite, so the arithmetic cannot
+    // produce ±Infinity or NaN; only the sign-bit test is lowered.
+    ("f64_add", Refused(NO_IEEE_SPECIALS)),
+    ("f64_sub", Refused(NO_IEEE_SPECIALS)),
+    ("f64_mul", Refused(NO_IEEE_SPECIALS)),
+    ("f64_div", Refused(NO_IEEE_SPECIALS)),
+    ("f64_neg", Refused(NO_IEEE_SPECIALS)),
+    ("f64_signbit", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C551-talim",
+  "pathSegment": "GU-PATH-551-TALIM551",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-551-TALIM551",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Notes and Rhythm",
+  "label": "ch:gu-notes-and-rhythm",
+  "canDo": "I can talk about notes, rhythm, ragas and singers.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C526-chedvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about notes, rhythm, ragas and singers.",
+    "assesses": [
+      "GU-LEX-C526-SUR526-03",
+      "GU-LEX-C526-SUR526-04",
+      "GU-LEX-C526-SUR526-05"
+    ]
+  }
+}

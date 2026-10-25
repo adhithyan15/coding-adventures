@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Taxes and Public Money",
+  "label": "ch:gu-taxes-and-public-money",
+  "canDo": "I can talk about taxes and where public money goes.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C355-ughravvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can talk about taxes and where public money goes.",
+    "assesses": [
+      "GU-LEX-C355-VERO355-03",
+      "GU-LEX-C355-VERO355-04",
+      "GU-LEX-C355-VERO355-05"
+    ]
+  }
+}

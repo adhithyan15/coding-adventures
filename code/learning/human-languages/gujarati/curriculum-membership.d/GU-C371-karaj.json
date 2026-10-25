@@ -1,0 +1,11 @@
+{
+  "id": "GU-C371-karaj",
+  "pathSegment": "GU-PATH-371-FAYDO371",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-371-FAYDO371",
+      "order": 3
+    }
+  ]
+}

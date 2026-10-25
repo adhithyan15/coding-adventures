@@ -1,0 +1,11 @@
+{
+  "id": "GU-C323-balidan",
+  "pathSegment": "GU-PATH-323-SHAHID323",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-323-SHAHID323",
+      "order": 1
+    }
+  ]
+}

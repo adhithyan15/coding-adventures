@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:5a58c45ded7bbda1",
+  "lessonIds": [
+    "GU-C418-sosayti",
+    "GU-C418-phlet",
+    "GU-C418-banglo",
+    "GU-C418-taki",
+    "GU-C418-bhadut"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch418.txt",
+  "json": "gujarati/narration/ch418.json",
+  "textHash": "fnv1a64:83cd5087bc6d97a3",
+  "jsonHash": "fnv1a64:7ff0ce2e7392b3e6",
+  "findings": []
+}

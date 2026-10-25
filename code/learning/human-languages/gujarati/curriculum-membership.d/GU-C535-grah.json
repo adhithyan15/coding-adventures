@@ -1,0 +1,11 @@
+{
+  "id": "GU-C535-grah",
+  "pathSegment": "GU-PATH-535-SHUKAN535",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-535-SHUKAN535",
+      "order": 3
+    }
+  ]
+}

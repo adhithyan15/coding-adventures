@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C362-namuno",
+    "language": "gujarati",
+    "chapter": 362,
+    "sequence": 20200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b5833d7bd8ae445"
+  },
+  "findings": []
+}

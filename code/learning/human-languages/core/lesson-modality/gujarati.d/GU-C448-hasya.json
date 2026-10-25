@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C448-hasya",
+    "language": "gujarati",
+    "chapter": 448,
+    "sequence": 25050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:750685ac21d589cc"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "A Dispute",
+  "label": "ch:gu-a-dispute",
+  "canDo": "I can say what two sides disagreed about.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C342-tokvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can say what two sides disagreed about.",
+    "assesses": [
+      "GU-LEX-C342-VIVAD342-03",
+      "GU-LEX-C342-VIVAD342-04",
+      "GU-LEX-C342-VIVAD342-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 324,
+  "title": "An Empire Falls",
+  "label": "ch:gu-an-empire-falls",
+  "canDo": "I can tell how an empire grew and how its last ruler fell.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-R324-review-317-324",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can tell how an empire grew and how its last ruler fell.",
+    "assesses": [
+      "GU-LEX-C324-SAMRAT324-01",
+      "GU-LEX-C324-SAMRAT324-02",
+      "GU-LEX-C324-SAMRAT324-03",
+      "GU-LEX-C324-SAMRAT324-04",
+      "GU-LEX-C324-SAMRAT324-05"
+    ]
+  }
+}

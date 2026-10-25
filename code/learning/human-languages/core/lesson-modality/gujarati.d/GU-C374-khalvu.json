@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C374-khalvu",
+    "language": "gujarati",
+    "chapter": 374,
+    "sequence": 20820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e7d281f259f658a"
+  },
+  "findings": []
+}

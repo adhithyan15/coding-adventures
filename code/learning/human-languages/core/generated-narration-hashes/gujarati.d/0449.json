@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:41f967839bb4f8b6",
+  "lessonIds": [
+    "GU-C449-atur",
+    "GU-C449-utsuk",
+    "GU-C449-utkantha",
+    "GU-C449-rijhvu",
+    "GU-C449-prasann"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch449.txt",
+  "json": "gujarati/narration/ch449.json",
+  "textHash": "fnv1a64:ac182ca6e6cefb7f",
+  "jsonHash": "fnv1a64:ea6232503eeb795d",
+  "findings": []
+}

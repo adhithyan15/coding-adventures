@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C525-pradarsan",
+    "language": "gujarati",
+    "chapter": 525,
+    "sequence": 29270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fce20e982d006d4c"
+  },
+  "findings": []
+}

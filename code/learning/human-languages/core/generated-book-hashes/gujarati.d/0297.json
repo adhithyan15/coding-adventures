@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:0c4ad3c64bdcf2a5",
+  "lessonIds": [
+    "GU-C297-cetavvu",
+    "GU-C297-savdhan",
+    "GU-C297-udhu",
+    "GU-C297-tolu",
+    "GU-C297-dhakko"
+  ],
+  "tex": "gujarati/book/chapters/ch297-warnings-nobody-heeded.tex"
+}

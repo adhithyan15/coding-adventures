@@ -1,0 +1,11 @@
+{
+  "id": "GU-C421-hobalo",
+  "pathSegment": "GU-PATH-421-NOISE421",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-421-NOISE421",
+      "order": 1
+    }
+  ]
+}

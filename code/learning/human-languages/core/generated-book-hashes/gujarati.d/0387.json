@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:6851ed31c2491a31",
+  "lessonIds": [
+    "GU-C387-bahetar",
+    "GU-C387-uttam",
+    "GU-C387-cadiyatu",
+    "GU-C387-saras",
+    "GU-C387-kathalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch387-better-and-worse.tex"
+}

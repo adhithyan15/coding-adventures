@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "East and West",
+  "label": "ch:gu-east-and-west",
+  "canDo": "I can say which way is north, east and west.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C414-hokayantra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can say which way is north, east and west.",
+    "assesses": [
+      "GU-LEX-C414-EAST414-03",
+      "GU-LEX-C414-EAST414-04",
+      "GU-LEX-C414-EAST414-05"
+    ]
+  }
+}

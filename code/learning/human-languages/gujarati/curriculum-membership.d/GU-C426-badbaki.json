@@ -1,0 +1,11 @@
+{
+  "id": "GU-C426-badbaki",
+  "pathSegment": "GU-PATH-426-LAKH426",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-426-LAKH426",
+      "order": 2
+    }
+  ]
+}

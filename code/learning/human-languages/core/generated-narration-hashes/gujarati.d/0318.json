@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:54b940fe962331e9",
+  "lessonIds": [
+    "GU-C318-raja",
+    "GU-C318-rani",
+    "GU-C318-mahel",
+    "GU-C318-darbar",
+    "GU-C318-gadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch318.txt",
+  "json": "gujarati/narration/ch318.json",
+  "textHash": "fnv1a64:4167c095fa980789",
+  "jsonHash": "fnv1a64:e52c7133a461dd22",
+  "findings": []
+}

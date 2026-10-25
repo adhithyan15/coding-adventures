@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:b6274d53a6baa615",
+  "lessonIds": [
+    "GU-C525-silp",
+    "GU-C525-kotarvu",
+    "GU-C525-akar",
+    "GU-C525-madhvu",
+    "GU-C525-pradarsan"
+  ],
+  "tex": "gujarati/book/chapters/ch525-carving-and-shaping.tex"
+}

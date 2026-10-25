@@ -1,0 +1,21 @@
+{
+  "chapter": 524,
+  "title": "Games and Collections",
+  "label": "ch:gu-games-and-collections",
+  "canDo": "I can talk about collecting things and children's games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R524-review-517-524",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about collecting things and children's games.",
+    "assesses": [
+      "GU-LEX-C524-SANGRAH524-01",
+      "GU-LEX-C524-SANGRAH524-02",
+      "GU-LEX-C524-SANGRAH524-03",
+      "GU-LEX-C524-SANGRAH524-04",
+      "GU-LEX-C524-SANGRAH524-05"
+    ]
+  }
+}

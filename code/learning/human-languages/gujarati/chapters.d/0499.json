@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Saying Goodbye",
+  "label": "ch:gu-saying-goodbye",
+  "canDo": "I can talk about a death in the family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C499-arpavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can talk about a death in the family.",
+    "assesses": [
+      "GU-LEX-C499-MARAN499-03",
+      "GU-LEX-C499-MARAN499-04",
+      "GU-LEX-C499-MARAN499-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "A Way Out",
+  "label": "ch:gu-a-way-out",
+  "canDo": "I can suggest what to do if something gets in the way.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C373-nadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can suggest what to do if something gets in the way.",
+    "assesses": [
+      "GU-LEX-C373-UPAY373-03",
+      "GU-LEX-C373-UPAY373-04",
+      "GU-LEX-C373-UPAY373-05"
+    ]
+  }
+}

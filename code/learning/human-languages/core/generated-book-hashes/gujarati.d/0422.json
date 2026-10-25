@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:668c44764ece8d24",
+  "lessonIds": [
+    "GU-C422-lari",
+    "GU-C422-pheriyo",
+    "GU-C422-gallo",
+    "GU-C422-kandoi",
+    "GU-C422-khapvu"
+  ],
+  "tex": "gujarati/book/chapters/ch422-hawkers-and-stalls.tex"
+}

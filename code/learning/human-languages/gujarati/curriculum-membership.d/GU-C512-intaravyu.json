@@ -1,0 +1,11 @@
+{
+  "id": "GU-C512-intaravyu",
+  "pathSegment": "GU-PATH-512-NOKRI512",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-512-NOKRI512",
+      "order": 1
+    }
+  ]
+}

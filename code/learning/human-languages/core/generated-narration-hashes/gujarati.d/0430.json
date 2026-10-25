@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:12d5493db96aecae",
+  "lessonIds": [
+    "GU-C430-trajvu",
+    "GU-C430-man",
+    "GU-C430-padiku",
+    "GU-C430-gharak",
+    "GU-C430-jokhvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch430.txt",
+  "json": "gujarati/narration/ch430.json",
+  "textHash": "fnv1a64:ec8900de6e0e9e80",
+  "jsonHash": "fnv1a64:a27ae0fba469e1fc",
+  "findings": []
+}

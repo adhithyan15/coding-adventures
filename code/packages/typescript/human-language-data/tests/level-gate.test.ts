@@ -406,6 +406,14 @@ describe("the gate that would have caught the A2 claim", () => {
     // -ता counterfactual, realizing all five B1 nodes, plus letter lessons for ऐ
     // and ः) and chapters 288-559 (1,360 headwords, 368 verbs), which moved it
     // from the A2 row of HELD to B1.
+    // Gujarati followed as the seventeenth, with chapters 273-284 (the B1 core:
+    // the noun agent -એ with the verb following its object, the perfect, the
+    // negative future and -વાનો હતો, -તો હતો and the -ઈને form, reasons with
+    // કારણ કે / -ને લીધે / -વું જોઈએ / -વું પડે / એટલે, travel, feelings and
+    // કરતાં / સૌથી, and જો … તો / નહીંતર / the -ત counterfactual, realizing all
+    // five B1 nodes, plus letter lessons for ઝ, ઃ, ઇ, ૌ and ઋ) and chapters
+    // 285-554 (1,350 headwords, 351 verbs), which moved it from the A2 row of
+    // HELD to B1.
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

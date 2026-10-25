@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:76530700cabed04e",
+  "lessonIds": [
+    "GU-C348-nyayadhis",
+    "GU-C348-kes",
+    "GU-C348-apil",
+    "GU-C348-pheslo",
+    "GU-C348-phatkarvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch348.txt",
+  "json": "gujarati/narration/ch348.json",
+  "textHash": "fnv1a64:3b4bac8f4db6b2e9",
+  "jsonHash": "fnv1a64:7134a53a37ca7c71",
+  "findings": []
+}

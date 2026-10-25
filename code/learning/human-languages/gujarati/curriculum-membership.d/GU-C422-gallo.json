@@ -1,0 +1,11 @@
+{
+  "id": "GU-C422-gallo",
+  "pathSegment": "GU-PATH-422-STALL422",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-422-STALL422",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Far from Home",
+  "label": "ch:gu-far-from-home",
+  "canDo": "I can talk about living abroad and missing home.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C407-hijravu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can talk about living abroad and missing home.",
+    "assesses": [
+      "GU-LEX-C407-ABROAD407-03",
+      "GU-LEX-C407-ABROAD407-04",
+      "GU-LEX-C407-ABROAD407-05"
+    ]
+  }
+}

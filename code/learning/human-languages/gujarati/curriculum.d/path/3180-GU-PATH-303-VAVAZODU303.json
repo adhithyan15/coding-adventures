@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-303-VAVAZODU303",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-303-VAVAZODU303"
+  ],
+  "after": []
+}

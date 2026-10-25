@@ -1,0 +1,11 @@
+{
+  "id": "GU-C477-aphro",
+  "pathSegment": "GU-PATH-477-ODKAR477",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-477-ODKAR477",
+      "order": 1
+    }
+  ]
+}

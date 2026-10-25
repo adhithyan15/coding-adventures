@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:6665f2e0fcdd0b14",
+  "lessonIds": [
+    "GU-C458-virah",
+    "GU-C458-ekat",
+    "GU-C458-sunu",
+    "GU-C458-tarasvu",
+    "GU-C458-sabharvu"
+  ],
+  "tex": "gujarati/book/chapters/ch458-missing-someone.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C379-sav",
+    "language": "gujarati",
+    "chapter": 379,
+    "sequence": 21060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a09a244102091226"
+  },
+  "findings": []
+}

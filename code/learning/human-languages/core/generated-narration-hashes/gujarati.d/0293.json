@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:f964eb97c790506c",
+  "lessonIds": [
+    "GU-C293-akasmat",
+    "GU-C293-takkar",
+    "GU-C293-ghayal",
+    "GU-C293-gambhir",
+    "GU-C293-gabhravu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch293.txt",
+  "json": "gujarati/narration/ch293.json",
+  "textHash": "fnv1a64:8d857c1916cb327b",
+  "jsonHash": "fnv1a64:d45b435a1ed4afdd",
+  "findings": []
+}

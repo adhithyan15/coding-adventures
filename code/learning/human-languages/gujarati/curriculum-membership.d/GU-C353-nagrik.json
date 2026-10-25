@@ -1,0 +1,11 @@
+{
+  "id": "GU-C353-nagrik",
+  "pathSegment": "GU-PATH-353-MATDAN353",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-353-MATDAN353",
+      "order": 0
+    }
+  ]
+}

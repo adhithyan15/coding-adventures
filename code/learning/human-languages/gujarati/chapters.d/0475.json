@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Seeing and Hearing",
+  "label": "ch:gu-seeing-and-hearing",
+  "canDo": "I can talk about sight, hearing and touch.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C475-adakvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about sight, hearing and touch.",
+    "assesses": [
+      "GU-LEX-C475-SENSES475-03",
+      "GU-LEX-C475-SENSES475-04",
+      "GU-LEX-C475-SENSES475-05"
+    ]
+  }
+}

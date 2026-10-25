@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C459-pigalvu",
+    "language": "gujarati",
+    "chapter": 459,
+    "sequence": 25650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39ab7caa944bff0c"
+  },
+  "findings": []
+}

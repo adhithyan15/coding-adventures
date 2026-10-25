@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Discoveries",
+  "label": "ch:gu-discoveries",
+  "canDo": "I can say who found something out and how.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C364-ughadvu-uncover",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can say who found something out and how.",
+    "assesses": [
+      "GU-LEX-C364-SHODH364-03",
+      "GU-LEX-C364-SHODH364-04",
+      "GU-LEX-C364-SHODH364-05"
+    ]
+  }
+}

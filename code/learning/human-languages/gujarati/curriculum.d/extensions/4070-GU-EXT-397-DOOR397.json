@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-397-DOOR397",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get through a crowd at the carriage door.",
+  "prerequisites": []
+}

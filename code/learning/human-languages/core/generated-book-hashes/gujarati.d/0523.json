@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:ef597b0d889f1a7a",
+  "lessonIds": [
+    "GU-C523-pharsan",
+    "GU-C523-khaman",
+    "GU-C523-udhiyu",
+    "GU-C523-bhavvu",
+    "GU-C523-bolvu-dip"
+  ],
+  "tex": "gujarati/book/chapters/ch523-a-gujarati-kitchen.tex"
+}

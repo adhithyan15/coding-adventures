@@ -1,0 +1,11 @@
+{
+  "id": "GU-C380-sahej",
+  "pathSegment": "GU-PATH-380-PURTU380",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-380-PURTU380",
+      "order": 3
+    }
+  ]
+}

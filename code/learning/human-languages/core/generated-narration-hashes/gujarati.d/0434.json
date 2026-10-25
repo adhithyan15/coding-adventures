@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:f571284f799481ef",
+  "lessonIds": [
+    "GU-C434-jhaptu",
+    "GU-C434-jharmar",
+    "GU-C434-reinkot",
+    "GU-C434-gheravu",
+    "GU-C434-bhijavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch434.txt",
+  "json": "gujarati/narration/ch434.json",
+  "textHash": "fnv1a64:a57fea2e7b525bbe",
+  "jsonHash": "fnv1a64:d0fff154c8a48993",
+  "findings": []
+}

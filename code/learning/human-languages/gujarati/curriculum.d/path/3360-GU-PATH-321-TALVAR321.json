@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-321-TALVAR321",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-321-TALVAR321"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "A Sensible Head",
+  "label": "ch:gu-a-sensible-head",
+  "canDo": "I can describe a wise and sensible person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C464-gathvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can describe a wise and sensible person.",
+    "assesses": [
+      "GU-LEX-C464-SANU464-03",
+      "GU-LEX-C464-SANU464-04",
+      "GU-LEX-C464-SANU464-05"
+    ]
+  }
+}

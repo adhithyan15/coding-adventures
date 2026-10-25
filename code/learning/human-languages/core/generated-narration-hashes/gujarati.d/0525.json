@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:6bde5799f1ad1146",
+  "lessonIds": [
+    "GU-C525-silp",
+    "GU-C525-kotarvu",
+    "GU-C525-akar",
+    "GU-C525-madhvu",
+    "GU-C525-pradarsan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch525.txt",
+  "json": "gujarati/narration/ch525.json",
+  "textHash": "fnv1a64:7b2de2cf55ff0b3d",
+  "jsonHash": "fnv1a64:9522fa085430934b",
+  "findings": []
+}

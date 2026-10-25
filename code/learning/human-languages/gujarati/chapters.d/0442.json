@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Waves and Nets",
+  "label": "ch:gu-waves-and-nets",
+  "canDo": "I can talk about the sea and boats.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C442-dolvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can talk about the sea and boats.",
+    "assesses": [
+      "GU-LEX-C442-SEA442-03",
+      "GU-LEX-C442-SEA442-04",
+      "GU-LEX-C442-SEA442-05"
+    ]
+  }
+}

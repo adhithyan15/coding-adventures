@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:aaf1e913cc4178e5",
+  "lessonIds": [
+    "GU-C475-andh",
+    "GU-C475-baheru",
+    "GU-C475-mugu",
+    "GU-C475-najar",
+    "GU-C475-adakvu"
+  ],
+  "tex": "gujarati/book/chapters/ch475-seeing-and-hearing.tex"
+}

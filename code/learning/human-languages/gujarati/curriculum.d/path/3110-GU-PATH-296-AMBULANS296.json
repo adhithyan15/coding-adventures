@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-296-AMBULANS296",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-296-AMBULANS296"
+  ],
+  "after": []
+}

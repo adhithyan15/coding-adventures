@@ -2209,6 +2209,7 @@ line "Target" [35, 50, 68, 82]"##,
             vec!["#dcfce7", "#fef3c7"],
             vec!["#dbeafe", "#fef3c7"],
             vec!["#fee2e2"],
+            vec!["#dbeafe", "#fef3c7"],
         ];
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 329,
+  "title": "Lights and Colours",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b63f6594ee7ef97a",
+  "lessons": [
+    {
+      "id": "GU-C329-rangoli",
+      "sequence": 18250,
+      "title": "રંગોળી (rangoḷī) — a rangoli (a coloured floor pattern)",
+      "headword": "રંગોળી",
+      "romanization": "rangoḷī",
+      "gloss": "a rangoli (a coloured floor pattern)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49188e25fa5b4f05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to light, then the Gujarati for incense."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: રંગોળી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રંગોળી — rangoḷī — \"a rangoli (a coloured floor pattern)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દિવાળીમાં મીરાએ આંગણામાં રંગોળી બનાવી. divāḷīmā̃ Mīrāe ā̃gṇāmā̃ rangoḷī banāvī. At Diwali Mira made a rangoli in the courtyard."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રંગોળી (rangoḷī) has a history that is not settled: Monier-Williams records a Sanskrit raṅgavallī, built from raṅga, colour, and vallī, a creeper, but only as the name of a plant used at sacrifices. It is a pattern of coloured powder laid on the floor at a doorway for a festival; it is feminine: રંગોળી બનાવી."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rangoḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rangoḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rangoḷī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rangoḷī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divāḷīmā̃ Mīrāe ā̃gṇāmā̃ rangoḷī banāvī. — At Diwali Mira made a rangoli in the courtyard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divāḷīmā̃ Mīrāe ā̃gṇāmā̃ rangoḷī banāvī.* — At Diwali Mira made a rangoli in the courtyard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to light, then the Gujarati for incense, then say rangoḷī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to light, then the Gujarati for incense, then say *rangoḷī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does રંગોળી (rangoḷī) mean? (\"A rangoli (a coloured floor pattern)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C329-sangarvu",
+      "sequence": 18260,
+      "title": "શણગારવું (śaṇgārvũ) — to adorn",
+      "headword": "શણગારવું",
+      "romanization": "śaṇgārvũ",
+      "gloss": "to adorn",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9451b6bb90a6369",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for incense, then the Gujarati for a rangoli."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: શણગારવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શણગારવું — śaṇgārvũ — \"to adorn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "લોકોએ આખું ગામ શણગાર્યું. lokoe ākhũ gām śaṇgāryũ. People decorated the whole village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ઘર શણગાર્યું, teṇe ghar śaṇgāryũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comes from śṛṅgārayati, \"adorns\", a form CDIAL reconstructs on śṛṅgāra, finery (CDIAL 12593). સજાવવું is to decorate; શણગારવું (śaṇgārvũ) is to dress up richly, a bride or a whole town."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaṇgārvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaṇgārvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaṇgārvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaṇgārvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokoe ākhũ gām śaṇgāryũ. — People decorated the whole village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokoe ākhũ gām śaṇgāryũ.* — People decorated the whole village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for incense, then the Gujarati for a rangoli, then say śaṇgārvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for incense, then the Gujarati for a rangoli, then say *śaṇgārvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does શણગારવું (śaṇgārvũ) mean? (\"To adorn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C329-jhagmagvu",
+      "sequence": 18270,
+      "title": "ઝગમગવું (jhagmagvũ) — to sparkle",
+      "headword": "ઝગમગવું",
+      "romanization": "jhagmagvũ",
+      "gloss": "to sparkle",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16d08dc90cd52963",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a rangoli, then the Gujarati for to adorn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝગમગવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝગમગવું — jhagmagvũ — \"to sparkle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દિવાળીની રાત્રે આખું શહેર દીવાથી ઝગમગતું હતું. divāḷīnī rātre ākhũ śaher dīvāthī jhagmagtũ hatũ. On Diwali night the whole city sparkled with lamps."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે શહેર ઝગમગ્યું, te śaher jhagmagyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝગમગવું (jhagmagvũ) is an imitative word: CDIAL sets the Hindi cousin jagmag, \"glitter\", under jag, \"glitter\", a form it reconstructs (CDIAL 5076), but does not list the Gujarati verb. The doubled sound jhag-mag imitates light that flickers and shines."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhagmagvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhagmagvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhagmagvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhagmagvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divāḷīnī rātre ākhũ śaher dīvāthī jhagmagtũ hatũ. — On Diwali night the whole city sparkled with lamps.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divāḷīnī rātre ākhũ śaher dīvāthī jhagmagtũ hatũ.* — On Diwali night the whole city sparkled with lamps.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a rangoli, then the Gujarati for to adorn, then say jhagmagvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a rangoli, then the Gujarati for to adorn, then say *jhagmagvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝગમગવું (jhagmagvũ) mean? (\"To sparkle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C329-mala",
+      "sequence": 18280,
+      "title": "માળા (māḷā) — a garland",
+      "headword": "માળા",
+      "romanization": "māḷā",
+      "gloss": "a garland",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b71da6e5671539cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to adorn, then the Gujarati for to sparkle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: માળા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "માળા — māḷā — \"a garland\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરાએ ફૂલની માળા બનાવી. Mīrāe phūlnī māḷā banāvī. Mira made a garland of flowers."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "માળા (māḷā) is a tatsama, Sanskrit mālā, \"a wreath, a garland\" (CDIAL 10092). It is feminine: ફૂલની માળા."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māḷā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māḷā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māḷā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māḷā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrāe phūlnī māḷā banāvī. — Mira made a garland of flowers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrāe phūlnī māḷā banāvī.* — Mira made a garland of flowers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to adorn, then the Gujarati for to sparkle, then say māḷā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to adorn, then the Gujarati for to sparkle, then say *māḷā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does માળા (māḷā) mean? (\"A garland\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C329-sobhayatra",
+      "sequence": 18290,
+      "title": "શોભાયાત્રા (śobhāyātrā) — a procession",
+      "headword": "શોભાયાત્રા",
+      "romanization": "śobhāyātrā",
+      "gloss": "a procession",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ee560866aca9619",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to sparkle, then the Gujarati for a garland."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: શોભાયાત્રા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શોભાયાત્રા — śobhāyātrā — \"a procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સાંજે ગામમાં મોટી શોભાયાત્રા નીકળી. sā̃je gāmmā̃ moṭī śobhāyātrā nīkḷī. In the evening a big procession went through the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શોભાયાત્રા (śobhāyātrā) is built from Sanskrit śobhā, \"splendour\", and yātrā, \"a going, a journey\" (Monier-Williams), the word behind યાત્રા: a splendid going through the streets. A procession નીકળે છે, sets out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śobhāyātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śobhāyātrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śobhāyātrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śobhāyātrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃je gāmmā̃ moṭī śobhāyātrā nīkḷī. — In the evening a big procession went through the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃je gāmmā̃ moṭī śobhāyātrā nīkḷī.* — In the evening a big procession went through the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to sparkle, then the Gujarati for a garland, then say śobhāyātrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to sparkle, then the Gujarati for a garland, then say *śobhāyātrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does શોભાયાત્રા (śobhāyātrā) mean? (\"A procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "A Roll of the Dice",
+  "label": "ch:gu-a-roll-of-the-dice",
+  "canDo": "I can talk about dice games and whose turn it is.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C533-khelvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can talk about dice games and whose turn it is.",
+    "assesses": [
+      "GU-LEX-C533-PASO533-03",
+      "GU-LEX-C533-PASO533-04",
+      "GU-LEX-C533-PASO533-05"
+    ]
+  }
+}

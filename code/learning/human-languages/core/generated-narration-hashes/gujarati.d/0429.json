@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:0f7d82b09037e28c",
+  "lessonIds": [
+    "GU-C429-tijori",
+    "GU-C429-nana",
+    "GU-C429-calan",
+    "GU-C429-lutavu",
+    "GU-C429-parvadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch429.txt",
+  "json": "gujarati/narration/ch429.json",
+  "textHash": "fnv1a64:280c824a253e5970",
+  "jsonHash": "fnv1a64:649792b5dfe9a61b",
+  "findings": []
+}

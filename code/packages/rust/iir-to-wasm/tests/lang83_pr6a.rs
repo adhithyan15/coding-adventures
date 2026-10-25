@@ -1,4 +1,5 @@
-//! LANG83 PR6a on real WASM: `write_f64_py` / `write_f64_js`.
+//! LANG83 PR6a on real WASM: `write_f64_py` / `write_f64_js`, plus the PR6c
+//! IEEE ops (`f64_add` … `f64_neg`, `f64_signbit`) whose results they print.
 //!
 //! Lower → encode → run on the in-process `wasm-runtime`. The only host import
 //! the float writer needs is `env.putchar`: the digits are computed inside the
@@ -257,4 +258,78 @@ fn an_integer_operand_is_rejected() {
         IIRInstr::new("ret", None, vec![v("n")], "i64"),
     ];
     assert!(lower_iir_to_wasm(&module(body), &IIRWasmConfig::default()).is_err());
+}
+
+// ── LANG83 PR6c: IEEE arithmetic and the sign bit ──────────────────────────
+
+/// For each `(op, operands)`: compute on float constants, `write_f64_js` the
+/// result, then print its `f64_signbit` as the digit `'0' + bit`, `\n` after
+/// each pair.
+fn ieee(cases: &[(&str, &[f64])]) -> IIRModule {
+    let mut body = vec![
+        IIRInstr::new("const", Some("nl".into()), vec![Operand::Int(10)], "i64"),
+        IIRInstr::new("const", Some("sp".into()), vec![Operand::Int(32)], "i64"),
+        IIRInstr::new("const", Some("zero".into()), vec![Operand::Int(48)], "i64"),
+    ];
+    for (i, (op, xs)) in cases.iter().enumerate() {
+        let srcs: Vec<Operand> = xs
+            .iter()
+            .enumerate()
+            .map(|(k, x)| {
+                let name = format!("c{i}_{k}");
+                body.push(IIRInstr::new("const", Some(name.clone()), vec![Operand::Float(*x)], "f64"));
+                v(&name)
+            })
+            .collect();
+        let (r, s, d) = (format!("r{i}"), format!("s{i}"), format!("d{i}"));
+        body.push(IIRInstr::new(*op, Some(r.clone()), srcs, "f64"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("write_f64_js"), v(&r)], "void"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
+        body.push(IIRInstr::new("f64_signbit", Some(s.clone()), vec![v(&r)], "i64"));
+        body.push(IIRInstr::new("add", Some(d.clone()), vec![v(&s), v("zero")], "i64"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v(&d)], "void"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("nl")], "void"));
+    }
+    body.push(IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"));
+    body.push(IIRInstr::new("ret", None, vec![v("z")], "i64"));
+    module(body)
+}
+
+/// The PR6c edge table on the in-process WASM runtime: nothing traps.
+#[test]
+fn pr6c_ieee_ops_follow_the_edge_table() {
+    let inf = f64::INFINITY;
+    let out = run(&ieee(&[
+        ("f64_div", &[1.0, 0.0]),
+        ("f64_div", &[-1.0, 0.0]),
+        ("f64_mul", &[-1.0, 0.0]),
+        ("f64_mul", &[1e308, 10.0]),
+        ("f64_add", &[0.1, 0.2]),
+        ("f64_sub", &[-0.0, 0.0]),
+        ("f64_neg", &[0.0]),
+        ("f64_neg", &[-inf]),
+    ]));
+    assert_eq!(
+        out,
+        "Infinity 0\n-Infinity 1\n0 1\nInfinity 0\n0.30000000000000004 0\n0 1\n0 1\nInfinity 0\n"
+    );
+    // NaN: printed as NaN; its sign bit is unspecified (0 or 1).
+    let nan = run(&ieee(&[("f64_div", &[0.0, 0.0]), ("f64_sub", &[inf, inf])]));
+    for line in nan.lines() {
+        assert!(line == "NaN 0" || line == "NaN 1", "{nan:?}");
+    }
+}
+
+/// `f64_signbit` is ONE logical shift of the reinterpreted bits, so its
+/// result is an i64 0/1 — never -1 from an arithmetic shift.
+#[test]
+fn pr6c_signbit_is_reinterpret_then_logical_shift() {
+    // i64.reinterpret_f64 (0xBD), i64.const 63 (0x42 0x3F), i64.shr_u (0x88),
+    // counted over every body; the float writer's own helpers are subtracted
+    // out by lowering the same module without the op.
+    let count = |cases: &[(&str, &[f64])]| {
+        let wasm = lower_iir_to_wasm(&ieee(cases), &IIRWasmConfig::default()).unwrap();
+        wasm.code.iter().map(|b| b.code.windows(4).filter(|w| *w == [0xBD, 0x42, 0x3F, 0x88]).count()).sum::<usize>()
+    };
+    assert_eq!(count(&[("f64_neg", &[1.0]), ("f64_neg", &[2.0])]) - count(&[("f64_neg", &[1.0])]), 1);
 }

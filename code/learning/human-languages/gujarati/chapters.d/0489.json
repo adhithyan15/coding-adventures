@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Asking After Someone",
+  "label": "ch:gu-asking-after-someone",
+  "canDo": "I can ask after someone's health and wish them well.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C489-hamdardi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can ask after someone's health and wish them well.",
+    "assesses": [
+      "GU-LEX-C489-KUSHAL489-03",
+      "GU-LEX-C489-KUSHAL489-04",
+      "GU-LEX-C489-KUSHAL489-05"
+    ]
+  }
+}

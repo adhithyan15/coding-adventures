@@ -1475,6 +1475,22 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_direct_style_composition() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER\nORDER\nstyle CUSTOMER,ORDER fill:#dbeafe,stroke:#1d4ed8\nstyle CUSTOMER color:#14532d\n",
+        );
+        let names: Vec<&str> = tokens.iter().filter_map(|token| token.type_name.as_deref()).collect();
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert_eq!(names.iter().filter(|name| **name == "STYLE_KW").count(), 2);
+        assert!(values.contains(&"CUSTOMER"));
+        assert!(values.contains(&"ORDER"));
+        for color in ["#dbeafe", "#1d4ed8", "#14532d"] {
+            assert!(values.contains(&color));
+        }
+    }
+
+    #[test]
     fn tokenizes_er_bracketed_attribute_name_suffix() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nBOOK {\n  string author-ref[name](1)\n}\n",

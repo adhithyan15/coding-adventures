@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C426-badbaki",
+    "language": "gujarati",
+    "chapter": 426,
+    "sequence": 23710,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:903c784c0d05f374"
+  },
+  "findings": []
+}

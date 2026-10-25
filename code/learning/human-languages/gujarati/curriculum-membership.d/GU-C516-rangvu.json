@@ -1,0 +1,11 @@
+{
+  "id": "GU-C516-rangvu",
+  "pathSegment": "GU-PATH-516-CHUNO516",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-516-CHUNO516",
+      "order": 3
+    }
+  ]
+}

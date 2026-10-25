@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C406-sima",
+    "language": "gujarati",
+    "chapter": 406,
+    "sequence": 22670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0717a673fd37dc40"
+  },
+  "findings": []
+}

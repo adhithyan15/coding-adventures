@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-330-GARBO330",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-330-GARBO330"
+  ],
+  "after": []
+}

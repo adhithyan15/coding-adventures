@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:8409343d15904be8",
+  "lessonIds": [
+    "GU-C537-pasandgi",
+    "GU-C537-badle",
+    "GU-C537-manapsand",
+    "GU-C537-vinvu",
+    "GU-C537-rucvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch537.txt",
+  "json": "gujarati/narration/ch537.json",
+  "textHash": "fnv1a64:f8a014598827addb",
+  "jsonHash": "fnv1a64:1a0b2595b640e29c",
+  "findings": []
+}

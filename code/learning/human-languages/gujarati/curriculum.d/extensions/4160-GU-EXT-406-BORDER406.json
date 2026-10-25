@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-406-BORDER406",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get across a border with a visa and my luggage.",
+  "prerequisites": []
+}

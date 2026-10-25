@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Criticism and Pleading",
+  "label": "ch:gu-criticism-and-pleading",
+  "canDo": "I can criticise someone, scold them or plead with them.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C361-vinavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can criticise someone, scold them or plead with them.",
+    "assesses": [
+      "GU-LEX-C361-TIKA361-03",
+      "GU-LEX-C361-TIKA361-04",
+      "GU-LEX-C361-TIKA361-05"
+    ]
+  }
+}

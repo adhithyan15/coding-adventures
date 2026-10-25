@@ -1,0 +1,919 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 500,
+  "title": "What They Left Us",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:f59bcd0357d9b4c5",
+  "lessons": [
+    {
+      "id": "GU-C500-varso",
+      "sequence": 27710,
+      "title": "વારસો (vārso) — an inheritance; a heritage",
+      "headword": "વારસો",
+      "romanization": "vārso",
+      "gloss": "an inheritance; a heritage",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4212aa5962b853b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a prayer meeting after a death, then the Gujarati for to offer with respect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વારસો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વારસો — vārso — \"an inheritance; a heritage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદાએ અમને પુસ્તકોનો વારસો આપ્યો. dādāe amne pustakono vārso āpyo. Grandfather left us a heritage of books."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વારસો (vārso) is usually traced to Arabic wāriṯ, \"heir\", which reached Gujarati through Persian wāris."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādāe amne pustakono vārso āpyo. — Grandfather left us a heritage of books.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādāe amne pustakono vārso āpyo.* — Grandfather left us a heritage of books.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a prayer meeting after a death, then the Gujarati for to offer with respect, then say vārso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a prayer meeting after a death, then the Gujarati for to offer with respect, then say *vārso* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વારસો (vārso) mean? (\"An inheritance; a heritage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C500-vidhva",
+      "sequence": 27720,
+      "title": "વિધવા (vidhvā) — a widow",
+      "headword": "વિધવા",
+      "romanization": "vidhvā",
+      "gloss": "a widow",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9dae4f8e63e60c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to offer with respect, then the Gujarati for an inheritance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વિધવા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિધવા — vidhvā — \"a widow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પતિ ગુજરી ગયા પછી મારી કાકી વિધવા થઈ. pati gujrī gayā pachī mārī kākī vidhvā thaī. My aunt was widowed when her husband passed away."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિધવા (vidhvā) is a tatsama, Sanskrit vidhavā, \"a widow\", as Monier-Williams records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidhvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidhvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidhvā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidhvā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pati gujrī gayā pachī mārī kākī vidhvā thaī. — My aunt was widowed when her husband passed away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pati gujrī gayā pachī mārī kākī vidhvā thaī.* — My aunt was widowed when her husband passed away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to offer with respect, then the Gujarati for an inheritance, then say vidhvā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to offer with respect, then the Gujarati for an inheritance, then say *vidhvā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વિધવા (vidhvā) mean? (\"A widow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C500-anath",
+      "sequence": 27730,
+      "title": "અનાથ (anāth) — an orphan",
+      "headword": "અનાથ",
+      "romanization": "anāth",
+      "gloss": "an orphan",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f341f91b36f5faf7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an inheritance, then the Gujarati for a widow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અનાથ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અનાથ — anāth — \"an orphan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમારા ગામમાં અનાથ બાળકો માટે એક ઘર છે. amārā gāmmā̃ anāth bāḷko māṭe ek ghar che. In our village there is a home for orphaned children."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine or feminine noun, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અનાથ (anāth) is a tatsama, Sanskrit anātha, \"having no master or protector\", as Monier-Williams records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anāth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anāth*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anāth, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anāth*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amārā gāmmā̃ anāth bāḷko māṭe ek ghar che. — In our village there is a home for orphaned children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amārā gāmmā̃ anāth bāḷko māṭe ek ghar che.* — In our village there is a home for orphaned children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an inheritance, then the Gujarati for a widow, then say anāth again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an inheritance, then the Gujarati for a widow, then say *anāth* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અનાથ (anāth) mean? (\"An orphan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C500-dattak",
+      "sequence": 27740,
+      "title": "દત્તક (dattak) — adopted",
+      "headword": "દત્તક",
+      "romanization": "dattak",
+      "gloss": "adopted",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ded0d9aa53faa757",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a widow, then the Gujarati for an orphan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: દત્તક",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દત્તક — dattak — \"adopted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તેમણે એક અનાથ બાળકને દત્તક લીધું. temṇe ek anāth bāḷakne dattak līdhũ. They adopted an orphaned child."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દત્તક (dattak) is a tatsama, Sanskrit dattaka, which Monier-Williams gives, with putra, \"son\", as an adopted son."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dattak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dattak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dattak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dattak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temṇe ek anāth bāḷakne dattak līdhũ. — They adopted an orphaned child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *temṇe ek anāth bāḷakne dattak līdhũ.* — They adopted an orphaned child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a widow, then the Gujarati for an orphan, then say dattak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a widow, then the Gujarati for an orphan, then say *dattak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does દત્તક (dattak) mean? (\"Adopted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C500-tyajvu",
+      "sequence": 27750,
+      "title": "ત્યજવું (tyajvũ) — to abandon; to give up",
+      "headword": "ત્યજવું",
+      "romanization": "tyajvũ",
+      "gloss": "to abandon; to give up",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68511ca729e8d260",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an orphan, then the Gujarati for adopted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ત્યજવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ત્યજવું — tyajvũ — \"to abandon; to give up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તેણે ગુસ્સો ત્યજી દીધો. teṇe gusso tyajī dīdho. He gave up his anger."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ઘર ત્યજ્યું, teṇe ghar tyajyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ત્યજવું (tyajvũ) goes back to Sanskrit tyajati, \"leaves, abandons\", which Monier-Williams records under tyaj."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyajvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyajvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyajvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyajvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teṇe gusso tyajī dīdho. — He gave up his anger.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teṇe gusso tyajī dīdho.* — He gave up his anger.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an orphan, then the Gujarati for adopted, then say tyajvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an orphan, then the Gujarati for adopted, then say *tyajvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ત્યજવું (tyajvũ) mean? (\"To abandon; to give up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R500-review-494-500",
+      "sequence": 27760,
+      "title": "Looking back: from Growing Up, Growing Old to What They Left Us",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Growing Up, Growing Old to What They Left Us",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8189e111a86b847",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for childhood and to grow up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "childhood, to grow up, a teenage boy, elderly, an old people's home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: childhood, to grow up, a teenage boy, elderly, an old people's home]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pregnant, childbirth, a baby-shower ceremony, to come into the world, to give birth to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pregnant, childbirth, a baby-shower ceremony, to come into the world, to give birth to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to suckle, to rock a cradle, a naming ceremony, to welcome with rites, a baby's nappy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to suckle, to rock a cradle, a naming ceremony, to welcome with rites, a baby's nappy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wedding invitation card, the turmeric rite, the groom's wedding party, the groom's procession, to marry off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wedding invitation card, the turmeric rite, the groom's wedding party, the groom's procession, to marry off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a farewell, a bride, unmarried, a dowry, a divorce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a farewell, a bride, unmarried, a dowry, a divorce]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a death, a passing away, to pass away, a prayer meeting after a death, to offer with respect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a death, a passing away, to pass away, a prayer meeting after a death, to offer with respect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an inheritance, a widow, an orphan, adopted, to abandon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an inheritance, a widow, an orphan, adopted, to abandon]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Childhood? (બાળપણ, bāḷpaṇ.) To grow up? (ઉછરવું, ucharvũ.) A teenage boy? (કિશોર, kiśor.) Elderly? (વૃદ્ધ, vṛddh.) An old people's home? (વૃદ્ધાશ્રમ, vṛddhāśram.) Pregnant? (સગર્ભા, sagarbhā.) Childbirth? (પ્રસૂતિ, prasūti.) A baby-shower ceremony? (સીમંત, sīmant.) To come into the world? (અવતરવું, avtarvũ.) To give birth to? (જણવું, jaṇvũ.) To suckle? (ધાવવું, dhāvvũ.) To rock a cradle? (હીંચોળવું, hī̃coḷvũ.) A naming ceremony? (નામકરણ, nāmkaraṇ.) To welcome with rites? (વધાવવું, vadhāvvũ.) A baby's nappy? (બાળોતિયું, bāḷotiyũ.) A wedding invitation card? (કંકોતરી, kankotrī.) The turmeric rite? (પીઠી, pīṭhī.) The groom's wedding party? (જાન, jān.) The groom's procession? (વરઘોડો, varghoḍo.) To marry off? (પરણાવવું, parṇāvvũ.) A farewell? (વિદાય, vidāy.) A bride? (કન્યા, kanyā.) Unmarried? (કુંવારું, kunvārũ.) A dowry? (દહેજ, dahej.) A divorce? (છૂટાછેડા, chūṭācheḍā.) A death? (મરણ, maraṇ.) A passing away? (અવસાન, avsān.) To pass away? (ગુજરવું, gujarvũ.) A prayer meeting after a death? (બેસણું, besṇũ.) To offer with respect? (અર્પવું, arpavũ.) An inheritance? (વારસો, vārso.) A widow? (વિધવા, vidhvā.) An orphan? (અનાથ, anāth.) Adopted? (દત્તક, dattak.) To abandon? (ત્યજવું, tyajvũ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R500-review-final-500",
+      "sequence": 27770,
+      "title": "What They Left Us — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ecc836da9f6a7bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for an inheritance and a widow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an inheritance, a widow, an orphan, adopted, to abandon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an inheritance, a widow, an orphan, adopted, to abandon]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An inheritance? (વારસો, vārso.) A widow? (વિધવા, vidhvā.) An orphan? (અનાથ, anāth.) Adopted? (દત્તક, dattak.) To abandon? (ત્યજવું, tyajvũ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

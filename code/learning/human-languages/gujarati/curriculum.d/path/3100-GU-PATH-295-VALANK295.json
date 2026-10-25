@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-295-VALANK295",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-295-VALANK295"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "The Flag Flies High",
+  "label": "ch:gu-the-flag-flies-high",
+  "canDo": "I can say what happened on the day freedom came.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C326-sthapvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can say what happened on the day freedom came.",
+    "assesses": [
+      "GU-LEX-C326-ZANDO326-03",
+      "GU-LEX-C326-ZANDO326-04",
+      "GU-LEX-C326-ZANDO326-05"
+    ]
+  }
+}

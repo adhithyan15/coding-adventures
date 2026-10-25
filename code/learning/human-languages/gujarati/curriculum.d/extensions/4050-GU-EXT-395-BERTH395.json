@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-395-BERTH395",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find my berth and stow my luggage.",
+  "prerequisites": []
+}

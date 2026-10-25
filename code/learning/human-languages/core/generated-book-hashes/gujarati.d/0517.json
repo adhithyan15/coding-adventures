@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:67d86ae283d6c5da",
+  "lessonIds": [
+    "GU-C517-vayar",
+    "GU-C517-plag",
+    "GU-C517-svic",
+    "GU-C517-balb",
+    "GU-C517-khosvu"
+  ],
+  "tex": "gujarati/book/chapters/ch517-wires-and-switches.tex"
+}

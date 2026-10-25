@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:814a323f21d5678b",
+  "lessonIds": [
+    "GU-C511-majur",
+    "GU-C511-mukadam",
+    "GU-C511-kadiyo",
+    "GU-C511-mistri",
+    "GU-C511-karkun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch511.txt",
+  "json": "gujarati/narration/ch511.json",
+  "textHash": "fnv1a64:041fab7ea726fe52",
+  "jsonHash": "fnv1a64:10192dda55296a1d",
+  "findings": []
+}

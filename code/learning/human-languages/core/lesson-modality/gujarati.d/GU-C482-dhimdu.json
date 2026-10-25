@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C482-dhimdu",
+    "language": "gujarati",
+    "chapter": 482,
+    "sequence": 26800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cdc15be02432e43"
+  },
+  "findings": []
+}

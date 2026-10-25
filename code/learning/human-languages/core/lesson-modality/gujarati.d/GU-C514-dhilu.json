@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C514-dhilu",
+    "language": "gujarati",
+    "chapter": 514,
+    "sequence": 28660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abd7c82d5bd582a8"
+  },
+  "findings": []
+}

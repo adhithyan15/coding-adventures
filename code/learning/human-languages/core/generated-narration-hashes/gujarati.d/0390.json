@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:953d1c63f73bfe6c",
+  "lessonIds": [
+    "GU-C390-pak",
+    "GU-C390-paripakva",
+    "GU-C390-ujjad",
+    "GU-C390-ugadvu",
+    "GU-C390-upajvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch390.txt",
+  "json": "gujarati/narration/ch390.json",
+  "textHash": "fnv1a64:7e5c177a92b659f5",
+  "jsonHash": "fnv1a64:ad3f38582e8d51b1",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:6ae4f1e956cf3169",
+  "lessonIds": [
+    "GU-C352-sarkar",
+    "GU-C352-rajya",
+    "GU-C352-satta",
+    "GU-C352-praja",
+    "GU-C352-ghadvu"
+  ],
+  "tex": "gujarati/book/chapters/ch352-who-governs.tex"
+}

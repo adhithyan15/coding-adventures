@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:00d0f38347a3f8de",
+  "lessonIds": [
+    "GU-C521-melvan",
+    "GU-C521-jamavvu",
+    "GU-C521-valovvu",
+    "GU-C521-ubhravu",
+    "GU-C521-phinvu"
+  ],
+  "tex": "gujarati/book/chapters/ch521-milk-curd-and-butter.tex"
+}
