@@ -1674,6 +1674,45 @@ mod tests {
     }
 
     #[test]
+    fn disconnected_nodes_and_recursive_relationship_share_layout_safely() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        let template = diagram.nodes[0].clone();
+        diagram.nodes = ["DEAD_PARROT", "HERMIT", "RECLUSE", "SOCIALITE"]
+            .into_iter()
+            .map(|id| StructuralNode { id: id.into(), label: id.into(), ..template.clone() })
+            .collect();
+        let template = diagram.relationships[0].clone();
+        diagram.relationships = vec![
+            StructuralRelationship {
+                from: "SOCIALITE".into(),
+                to: "SOCIALITE".into(),
+                label: Some("interacts with".into()),
+                ..template.clone()
+            },
+            StructuralRelationship {
+                from: "RECLUSE".into(),
+                to: "SOCIALITE".into(),
+                label: Some("avoids".into()),
+                ..template
+            },
+        ];
+
+        let layout = layout_structural_diagram(&diagram);
+        let socialite = layout.nodes.iter().find(|node| node.id == "SOCIALITE").expect("SOCIALITE");
+        let recursive = layout
+            .relationships
+            .iter()
+            .find(|relationship| relationship.from_id == "SOCIALITE" && relationship.to_id == "SOCIALITE")
+            .expect("recursive relationship");
+
+        assert_eq!(layout.nodes.len(), 4);
+        assert_eq!(recursive.points.len(), 5);
+        assert!(recursive.points.iter().any(|point| point.x > socialite.x + socialite.width));
+        assert!(recursive.points.iter().any(|point| point.y > socialite.y + socialite.height));
+    }
+
+    #[test]
     fn relationship_labels_resolve_to_backend_neutral_geometry() {
         let mut diagram = two_class_diagram();
         diagram.relationships[0].label = Some("inherits from".into());

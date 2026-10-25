@@ -205,6 +205,14 @@ const ER_KEYWORD_SUBSTRINGS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-keyword-substrings-11.16.1-visual-corpus.json"
 ));
+const ER_DISCONNECTED_TOPOLOGY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-disconnected-topology-11.16.1-corpus.json"
+));
+const ER_DISCONNECTED_TOPOLOGY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-disconnected-topology-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2810,6 +2818,33 @@ fn pinned_er_keyword_substrings_reach_semantic_ir() {
         diagram.nodes[0].compartments[0].entries,
         ["jobId: varchar(12)", "dateCreated: date"]
     );
+}
+
+#[test]
+fn pinned_er_disconnected_topology_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_DISCONNECTED_TOPOLOGY_CORPUS)
+        .expect("ER disconnected topology corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_DISCONNECTED_TOPOLOGY_VISUAL_CORPUS)
+        .expect("ER disconnected topology visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER disconnected topology source"),
+    )
+    .expect("ER disconnected topology fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 4);
+    assert_eq!(diagram.relationships.len(), 2);
+    for expected in ["DEAD_PARROT", "HERMIT", "RECLUSE", "SOCIALITE"] {
+        assert!(diagram.nodes.iter().any(|node| node.id == expected));
+    }
+    assert!(diagram.relationships.iter().any(|relationship| {
+        relationship.from == "SOCIALITE"
+            && relationship.to == "SOCIALITE"
+            && relationship.label.as_deref() == Some("interacts with")
+    }));
 }
 
 #[test]
