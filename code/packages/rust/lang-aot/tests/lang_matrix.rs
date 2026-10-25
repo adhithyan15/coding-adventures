@@ -6694,6 +6694,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - a checked static integer reduction may precede the first of
+    // multiple sign roots when multiplication connects the folded prefix.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(((20 div 3 * sign(leftvalue()) * sign(rightvalue())) mod 5) ^ 2); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -16566,6 +16577,31 @@ fn algol_multiple_sign_product_reductions_run_on_every_available_standard_backen
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but multiple-sign product reductions did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multiple_sign_product_prefix_reductions_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "20 div 3 * sign(leftvalue()) * sign(rightvalue())) mod 5) ^ 2",
+                )
+        })
+        .expect("the ALGOL multiple-sign product prefix-reduction program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multiple-sign product prefix reductions did not complete"
             );
             continue;
         };

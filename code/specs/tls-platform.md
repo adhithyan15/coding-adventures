@@ -476,6 +476,34 @@ validation, trust-root selection, revocation, I/O, socket access, HTTP, or
 OAuth authorization. It is not a TLS connector and does not make concrete
 HTTPS available.
 
+The next package is `tls13-inner-plaintext`. It owns only the authenticated
+cleartext syntax carried inside a protected TLS 1.3 record:
+
+- decoding scans only the caller-supplied authenticated cleartext, from its
+  end toward its beginning, and treats the final nonzero octet as the inner
+  content type;
+- the complete encoded value (`content || type || zero padding`) is bounded by
+  a caller-selected ceiling from 1 through the RFC 8446 maximum of `2^14 + 1`
+  bytes, so a negotiated `record_size_limit` can reduce the boundary;
+- the caller supplies a non-empty, duplicate-free allowlist of protected
+  content types; only `handshake`, `alert`, and `application_data` can enter
+  that policy because RFC 8446 forbids protected ChangeCipherSpec records;
+- empty application data remains representable, while empty handshake and
+  alert content fail closed; and
+- encoding validates the type, content, padding length, complete encoded
+  length, and caller-owned output capacity before mutating the output, then
+  writes only zero-valued padding.
+
+Validated values borrow the content and retain only the padding length, while
+stable errors retain no cleartext bytes, content type value, or lengths. The
+package performs no allocation, AEAD encryption or authentication, decryption,
+nonce or sequence-number management, padding selection, handshake or alert
+processing, version or cipher-suite negotiation, key derivation, entropy or
+clock access, certificate validation, trust-root selection, revocation, I/O,
+socket access, HTTP, or OAuth authorization. Its decoder may be called only on
+cleartext already authenticated by a future AEAD boundary. It is not a TLS
+connector and does not make concrete HTTPS available.
+
 ---
 
 ## Test Strategy
