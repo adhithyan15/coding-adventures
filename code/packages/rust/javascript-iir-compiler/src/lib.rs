@@ -1514,6 +1514,17 @@ fn decode_number(spelling: &str) -> Result<f64, ()> {
     if !separators_well_placed(spelling) || is_legacy_octal_with_fraction(spelling) {
         return Err(());
     }
+    // Rust's `f64` parser also accepts `-0`, `+1`, `inf` and `NaN`. No
+    // edition's NUMBER pattern can produce those, but `compile_ast` takes any
+    // tree, and a signed spelling would be printed through the literal fast
+    // path that assumes "never -0". So a spelling must start like a JavaScript
+    // numeric literal: a digit, or `.` then a digit.
+    let mut chars = spelling.chars();
+    match (chars.next(), chars.next()) {
+        (Some(c), _) if c.is_ascii_digit() => {}
+        (Some('.'), Some(c)) if c.is_ascii_digit() => {}
+        _ => return Err(()),
+    }
     let cleaned: String = spelling.chars().filter(|&c| c != '_').collect();
     for (prefixes, radix) in [(["0x", "0X"], 16), (["0b", "0B"], 2), (["0o", "0O"], 8)] {
         if let Some(digits) = prefixes.iter().find_map(|p| cleaned.strip_prefix(p)) {
@@ -2020,6 +2031,20 @@ fn is_console_log(callee: Expr<'_>) -> Result<bool, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Rust's float parser would give `-0`, `+1`, `inf` and `NaN` a value;
+    /// a forged NUMBER token with one of those spellings is refused instead,
+    /// so the literal fast path's "never -0" assumption holds. Real
+    /// spellings, including a leading `.`, still decode.
+    #[test]
+    fn decode_number_refuses_spellings_no_edition_can_lex() {
+        for forged in ["-0", "+1", "inf", "NaN", "infinity", ".", ".e1", ""] {
+            assert_eq!(decode_number(forged), Err(()), "{forged:?} decoded");
+        }
+        assert_eq!(decode_number(".5"), Ok(0.5));
+        assert_eq!(decode_number("0"), Ok(0.0));
+        assert_eq!(decode_number("1e999"), Ok(f64::INFINITY));
+    }
 
     // ---- CST fixtures ----------------------------------------------------
     //

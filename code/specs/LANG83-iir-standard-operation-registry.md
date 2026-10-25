@@ -845,6 +845,16 @@ the sign bit *set*; AArch64 and WASM produce it clear), so `f64_signbit` of a
 NaN is unspecified, and every writer prints any NaN as `NaN`. A frontend that
 must print a NaN's sign (no current language does) has to test for NaN first.
 
+One frontend leans on NaN signs today. JavaScript's `console.log` writes the
+`-` of `-0` when `f64_signbit x > f64_signbit (f64_add x, 0)` (LANG84 6e).
+For a NaN `x` that is correct only if `f64_add` keeps the NaN operand's sign.
+Every backend's hardware and runtime does that today: x86 SSE, AArch64 with
+default-NaN mode off, LLVM, the JVM, the CLR, wasmtime without NaN
+canonicalisation, and the VM's Rust `f64`. The `infinities_and_nan` matrix
+rows check it on every column that runs `f64_*`. A backend that canonicalises
+NaN results could print `-NaN` for `0/0`. Such a backend needs a dedicated
+negative-zero test op before it can claim JavaScript.
+
 ### Per-backend lowering
 
 | Backend | `f64_add`/`sub`/`mul`/`div` | `f64_neg` | `f64_signbit` |

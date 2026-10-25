@@ -2,6 +2,18 @@
 
 ## 0.6.0 - Unreleased - JavaScript on every backend (LANG84 6e)
 
+### Fixed (6e security review)
+
+- `decode_number` refuses a spelling that does not start with a digit, or
+  with `.` followed by a digit. Rust's `f64` parser also accepts `-0`, `+1`,
+  `inf` and `NaN`, and no edition's NUMBER pattern produces any of those.
+  But a parse tree forged through `compile_ast` could carry `-0`, and it
+  would then be printed through the literal fast path, which assumes the
+  value is never `-0`.
+- `console.log(1e999)` is now refused by BEAM at compile time. The fix is
+  in iir-to-beam: its validator rejects a non-finite `f64` constant. Before,
+  BEAM would build a module that its loader cannot read.
+
 ### Changed
 
 - The module holds LANG83 registry operations only, so every `lang-aot`

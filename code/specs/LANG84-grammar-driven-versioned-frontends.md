@@ -1544,6 +1544,14 @@ Divergences from this spec in 5b/7b slice 2:
      with arithmetic declare the seven IEEE columns, and BEAM refuses them
      at compile time with `UnsupportedOps` naming only `f64_*` arithmetic
      (`javascript_rows_pass_the_lang83_check_on_all_nine_backends`).
+     A literal can still be non-finite: `1e999` is `Infinity`. An Erlang
+     float cannot hold that, so the BEAM validator refuses a non-finite
+     `f64` constant at compile time. It used to accept the constant and
+     leave the failure to the loader. This came from the 6e security review.
+     The same review closed a second gap: `decode_number` now refuses
+     spellings that Rust's float parser would accept but no edition can lex,
+     such as `-0`, `inf` and `NaN`. Those could only arrive in a tree forged
+     through `compile_ast`.
    - **`Trap.ReferenceError` is a built-in `Trap.*` leaf, id 7**, not a
      `LANGUAGE_TRAP_KINDS` entry: an unbound name is not JavaScript's alone
      (Python's `NameError`, a Lisp's unbound variable). `twig_runtime.c`'s
