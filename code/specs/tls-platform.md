@@ -504,6 +504,37 @@ socket access, HTTP, or OAuth authorization. Its decoder may be called only on
 cleartext already authenticated by a future AEAD boundary. It is not a TLS
 connector and does not make concrete HTTPS available.
 
+The next package is `tls13-record-nonce`. It owns only the monotonically
+consumed record sequence and RFC 8446 per-record nonce construction for one
+traffic key in one direction:
+
+- a caller-selected policy fixes the exact static-IV length from 8 through 255
+  bytes and an inclusive resource ceiling of 1 through `u64::MAX` records;
+- a fresh sequence starts at zero, has no reset operation, and yields at most
+  the configured number of records, so callers must create distinct state for
+  reading and writing and fresh state after every key change;
+- reserving a nonce encodes the current 64-bit sequence in network byte order,
+  pads it on the left with zeros to the policy-selected IV length, XORs it with
+  the caller-borrowed static IV, and advances the sequence before returning to
+  the caller that will perform AEAD processing;
+- the maximum configured ceiling deliberately yields sequence values only
+  through `u64::MAX - 1`, conservatively refusing the final theoretical value
+  rather than needing an increment that would wrap; negotiated cipher suites
+  must configure their much lower cryptographic usage limit; and
+- static-IV and output lengths are validated before output or sequence state
+  changes, while exhaustion also leaves both untouched.
+
+The 255-byte IV ceiling is this package's explicit work bound, not a claim that
+RFC 8446 grants every such length to every AEAD. Cipher-suite policy must select
+an IV length permitted by its AEAD and a record limit no greater than that
+algorithm's confidentiality and integrity limits. The package stores no IV,
+key, nonce, plaintext, or ciphertext bytes; stable failures expose only
+categories. It performs no allocation, AEAD encryption or authentication,
+decryption, key derivation, cipher-suite selection, key update, handshake or
+alert processing, certificate validation, trust-root selection, revocation,
+I/O, socket access, HTTP, or OAuth authorization. It is not a TLS connector and
+does not make concrete HTTPS available.
+
 ---
 
 ## Test Strategy
