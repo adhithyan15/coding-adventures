@@ -217,6 +217,10 @@ class FormeSpecMapTests(unittest.TestCase):
                 "Score matching documents with BM25.",
                 "Expandable/collapsible groups.",
                 "Code block decoration + AOT syntax highlighting.",
+                "`-2`, `-3`, etc. suffixes.",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-doc-heading-anchors" / "src" / "slug.ts": (
+                "the second one gets bumped to `-2`",
             ),
             SPECS / "FM01-forme-kernel.md": (
                 "**Status:** Code-ready specification.",
@@ -323,6 +327,7 @@ class FormeSpecMapTests(unittest.TestCase):
             "frequency with a configurable title-hit boost",
             "caller-injected shard fetcher",
             "CSS and browser UI wiring are caller-owned",
+            "not a turnkey site generator",
         ):
             self.assertIn(shipped_boundary, vision)
 
