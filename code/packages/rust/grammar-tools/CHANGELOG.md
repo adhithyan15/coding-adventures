@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - LANG84 E6 automatic insertion (`@asi`)
+
+### Added
+- **`@asi(T, C…)`** ([F11](../../../specs/F11-grammar-token-adjacency-predicates.md)
+  "Automatic insertion") replaces the "not implemented yet" rejection. It
+  parses into the new `GrammarElement::AutoInsert { token, closers }`. The
+  tokenizer reads the whole argument list as one token, because the comma
+  is not a grammar token anywhere else.
+- **Spelling and naming rules.** Arguments are UPPERCASE token names on one
+  line. `T` is not `NEWLINE` or `EOF`. Closers are distinct and exclude `T`.
+  Every malformed spelling has its own message: a missing `(`, an empty
+  list, a lowercase name, a literal, a trailing or doubled comma, a missing
+  `,` or `)`, a forbidden `T`, a repeated closer.
+- **Validation.** `T` and the closers are token references, so the
+  tokens/grammar cross-validator checks them. `@asi` is nullable, and a
+  repetition whose nullable body contains it is an error, as one containing
+  an adjacency predicate already is.
+- **Code generation.** `compile_parser_grammar` emits
+  `GrammarElement::AutoInsert { token: r#"T"#.to_string(), closers: vec![…] }`.
+  The generated `use` line is unchanged, and grammars without `@asi` (all of
+  them today) compile byte-identically.
+
 ## [Unreleased] - LANG84 E1 line-start guards and E8 refusal transitions
 
 ### Added

@@ -240,6 +240,29 @@ pub enum GrammarElement {
     /// is Ruby's `f -1` (a space before the minus, none after it). See
     /// [`AdjacencyPredicate`] for the full list.
     AdjacencyPredicate { predicate: AdjacencyPredicate },
+
+    /// Automatic insertion, written `@asi(T, C…)` in the grammar (F11
+    /// "Automatic insertion", LANG84 extension E6).
+    ///
+    /// Zero-width like a predicate, but on success it *produces* a child: a
+    /// synthetic, empty token of type `token` that stands where a written
+    /// one would have been. It succeeds when a line break precedes the next
+    /// token, when the next token is one of `closers`, or at end of input:
+    ///
+    /// ```text
+    /// statement_end = SEMICOLON | @asi(SEMICOLON, RBRACE) ;
+    ///
+    ///   a = 1 ;  b = 2      written `;`        → SEMICOLON(";")
+    ///   a = 1 ⏎  b = 2      line break before b → SEMICOLON("", synthetic)
+    ///   { a = 1 }           closer `}` next    → SEMICOLON("", synthetic)
+    ///   a = 1 b = 2         none of the three  → fails: "Expected SEMICOLON"
+    /// ```
+    ///
+    /// That is ECMAScript's Automatic Semicolon Insertion (ECMA-262 §12.10),
+    /// with the "offending token" condition supplied by PEG ordering: the
+    /// statement's expression has already consumed all it can before
+    /// `statement_end` is tried.
+    AutoInsert { token: String, closers: Vec<String> },
 }
 
 // ===========================================================================
@@ -458,6 +481,12 @@ fn collect_token_refs(node: &GrammarElement, refs: &mut HashSet<String>) {
         GrammarElement::TokenReference { name } => {
             refs.insert(name.clone());
         }
+        // The inserted token and the closers are token names, so the
+        // tokens/grammar cross-validator checks them like any reference.
+        GrammarElement::AutoInsert { token, closers } => {
+            refs.insert(token.clone());
+            refs.extend(closers.iter().cloned());
+        }
         GrammarElement::RuleReference { .. }
         | GrammarElement::Literal { .. }
         | GrammarElement::AdjacencyPredicate { .. } => {
@@ -495,7 +524,8 @@ fn collect_rule_refs(node: &GrammarElement, refs: &mut HashSet<String>) {
         }
         GrammarElement::TokenReference { .. }
         | GrammarElement::Literal { .. }
-        | GrammarElement::AdjacencyPredicate { .. } => {
+        | GrammarElement::AdjacencyPredicate { .. }
+        | GrammarElement::AutoInsert { .. } => {
             // Leaf nodes that do not contain rule references.
         }
         GrammarElement::Sequence { elements } => {
@@ -580,7 +610,130 @@ enum TokenKind {
     /// `@name` — a token-adjacency predicate (F11). The token's value is the
     /// name without the `@`, which may be empty if nothing followed it.
     At,
+    /// `@asi(T, C…)`: automatic insertion. The tokenizer reads the whole
+    /// argument list, so the value is the comma-joined names, `T` first.
+    Asi,
     Eof,
+}
+
+/// Whether `name` is spelled as a token reference: it starts with an
+/// uppercase ASCII letter and has no lowercase letters (`SEMICOLON`,
+/// `RBRACE`, `INT32`). The same rule [`Parser::parse_element`] uses to tell a
+/// token reference from a rule reference.
+fn is_token_name(name: &str) -> bool {
+    name.chars().next().is_some_and(|c| c.is_ascii_uppercase()) && name == name.to_uppercase()
+}
+
+/// Read the argument list of `@asi( T , C1 , … )` starting at `bytes[at]`
+/// (just after the `asi`), on one line. Returns the names in order and the
+/// index just past the `)`.
+///
+/// Every malformed spelling gets its own message, because each is a
+/// plausible slip when writing a grammar:
+///
+/// ```text
+/// @asi SEMICOLON          missing '('
+/// @asi()                  empty list
+/// @asi(semicolon)         lowercase: a rule name, not a token name
+/// @asi(";")               a literal: write the token name
+/// @asi(SEMICOLON,)        nothing after a ','
+/// @asi(SEMICOLON RBRACE)  missing ','
+/// @asi(SEMICOLON          missing ')'
+/// ```
+fn scan_asi_arguments(
+    bytes: &[u8],
+    at: usize,
+    line_number: usize,
+) -> Result<(Vec<String>, usize), ParserGrammarError> {
+    let error = |message: String| ParserGrammarError { message, line_number };
+    let skip_spaces = |mut i: usize| {
+        while i < bytes.len() && (bytes[i] == b' ' || bytes[i] == b'\t') {
+            i += 1;
+        }
+        i
+    };
+    let mut i = skip_spaces(at);
+    if bytes.get(i) != Some(&b'(') {
+        return Err(error(
+            "'@asi' needs an argument list on the same line: @asi(T) or @asi(T, C1, C2, …)"
+                .to_string(),
+        ));
+    }
+    i += 1;
+    let mut names = Vec::new();
+    loop {
+        i = skip_spaces(i);
+        let start = i;
+        while i < bytes.len() && (bytes[i].is_ascii_alphanumeric() || bytes[i] == b'_') {
+            i += 1;
+        }
+        if start == i {
+            let message = match (bytes.get(i), names.is_empty()) {
+                (Some(b')'), true) => {
+                    "'@asi()' has an empty list; name the token to insert: @asi(T, C…)".to_string()
+                }
+                (Some(b'"'), _) => "'@asi' takes token names, not literals (write SEMICOLON, \
+                                    not \";\")"
+                    .to_string(),
+                (None, _) => "'@asi(' is missing its closing ')'".to_string(),
+                (Some(_), true) => "'@asi(' must be followed by a token name".to_string(),
+                (Some(_), false) => "'@asi' expects a token name after ','".to_string(),
+            };
+            return Err(error(message));
+        }
+        let name = String::from_utf8_lossy(&bytes[start..i]).to_string();
+        if !is_token_name(&name) {
+            return Err(error(format!(
+                "'@asi' argument '{name}' is not a token name (token names are UPPERCASE)"
+            )));
+        }
+        names.push(name);
+        i = skip_spaces(i);
+        match bytes.get(i) {
+            Some(b',') => i += 1,
+            Some(b')') => return Ok((names, i + 1)),
+            None => return Err(error("'@asi(' is missing its closing ')'".to_string())),
+            Some(&other) => {
+                return Err(error(format!(
+                    "'@asi' expects ',' or ')' after '{}', found '{}'",
+                    names[names.len() - 1],
+                    other as char
+                )))
+            }
+        }
+    }
+}
+
+/// Check the names of an `@asi` list and build the element. The scanner has
+/// already checked the spelling; these are the rules about *which* tokens:
+///
+/// - the inserted token is not `NEWLINE` or `EOF`, the structural tokens
+///   whose insertion would change what the stream around them means;
+/// - no closer repeats, and none is the inserted token (a written `T` would
+///   otherwise set off an insertion in front of itself).
+fn auto_insert_element(names: &str, line_number: usize) -> Result<GrammarElement, ParserGrammarError> {
+    let error = |message: String| ParserGrammarError { message, line_number };
+    let mut names = names.split(',').map(str::to_string);
+    let token = names.next().unwrap_or_default();
+    if token == "NEWLINE" || token == "EOF" {
+        return Err(error(format!(
+            "'@asi' cannot insert {token}: it is a structural token, not a separator"
+        )));
+    }
+    let mut closers: Vec<String> = Vec::new();
+    for closer in names {
+        if closer == token {
+            return Err(error(format!(
+                "'@asi({token}, …)' lists {token} as a closer; a written {token} would then \
+                 trigger an insertion in front of itself"
+            )));
+        }
+        if closers.contains(&closer) {
+            return Err(error(format!("'@asi' lists the closer {closer} twice")));
+        }
+        closers.push(closer);
+    }
+    Ok(GrammarElement::AutoInsert { token, closers })
 }
 
 fn tokenize_grammar(source: &str) -> Result<Vec<Token>, ParserGrammarError> {
@@ -681,16 +834,14 @@ fn tokenize_grammar(source: &str) -> Result<Vec<Token>, ParserGrammarError> {
                         j += 1;
                     }
                     let value = String::from_utf8_lossy(&bytes[start..j]).to_string();
-                    // `@asi(T, C…)` is the other half of LANG84 E6. Its
-                    // argument list (with commas) is not even tokenizable
-                    // yet, so say so here rather than fail on the comma.
+                    // `@asi(T, C…)` is the one `@` form with arguments. The
+                    // comma is not a grammar token anywhere else, so the
+                    // whole list is read here and handed on as one token.
                     if value == "asi" {
-                        return Err(ParserGrammarError {
-                            message: "'@asi' (automatic semicolon insertion, LANG84 E6) is \
-                                      not implemented yet; only the adjacency predicates are"
-                                .to_string(),
-                            line_number,
-                        });
+                        let (names, end) = scan_asi_arguments(bytes, j, line_number)?;
+                        tokens.push(Token { kind: TokenKind::Asi, value: names.join(","), line: line_number });
+                        i = end;
+                        continue;
                     }
                     tokens.push(Token { kind: TokenKind::At, value, line: line_number });
                     i = j;
@@ -954,6 +1105,12 @@ impl Parser {
                     )
                 };
                 Err(ParserGrammarError { message, line_number: tok.line })
+            }
+
+            // `@asi(T, C…)` — automatic insertion (F11).
+            TokenKind::Asi => {
+                self.advance();
+                auto_insert_element(&tok.value, tok.line)
             }
 
             // { body } — zero-or-more repetition, with extensions:
@@ -1235,6 +1392,7 @@ pub fn nullable_rules(grammar: &ParserGrammar) -> HashSet<String> {
 fn is_nullable(element: &GrammarElement, nullable: &HashSet<String>) -> bool {
     match element {
         GrammarElement::AdjacencyPredicate { .. }
+        | GrammarElement::AutoInsert { .. }
         | GrammarElement::PositiveLookahead { .. }
         | GrammarElement::NegativeLookahead { .. }
         | GrammarElement::Optional { .. }
@@ -1274,7 +1432,9 @@ fn predicate_rules(grammar: &ParserGrammar) -> HashSet<String> {
 /// rule in `with`.
 fn contains_predicate(element: &GrammarElement, with: &HashSet<String>) -> bool {
     match element {
-        GrammarElement::AdjacencyPredicate { .. } => true,
+        // `@asi` counts too: a repetition of nothing but insertions is as
+        // wrong as a repetition of nothing but gap tests.
+        GrammarElement::AdjacencyPredicate { .. } | GrammarElement::AutoInsert { .. } => true,
         GrammarElement::RuleReference { name } => with.contains(name),
         GrammarElement::TokenReference { .. } | GrammarElement::Literal { .. } => false,
         GrammarElement::Sequence { elements } => elements.iter().any(|e| contains_predicate(e, with)),
@@ -1357,7 +1517,8 @@ fn check_nullable_repetitions(
         GrammarElement::RuleReference { .. }
         | GrammarElement::TokenReference { .. }
         | GrammarElement::Literal { .. }
-        | GrammarElement::AdjacencyPredicate { .. } => {}
+        | GrammarElement::AdjacencyPredicate { .. }
+        | GrammarElement::AutoInsert { .. } => {}
     }
 }
 
@@ -1912,11 +2073,125 @@ primary          = NUMBER ;
         assert!(err.message.contains("Expected a predicate name after '@'"), "{}", err.message);
     }
 
+    // --- `@asi(T, C…)`: automatic insertion (F11) ---
+
+    fn auto_insert(token: &str, closers: &[&str]) -> GrammarElement {
+        GrammarElement::AutoInsert {
+            token: token.to_string(),
+            closers: closers.iter().map(|c| c.to_string()).collect(),
+        }
+    }
+
     #[test]
-    fn test_asi_is_rejected_as_not_yet_implemented() {
-        let err = parse_parser_grammar("end = SEMICOLON | @asi(SEMICOLON, RBRACE) ;").unwrap_err();
-        assert!(err.message.contains("'@asi'"), "{}", err.message);
-        assert!(err.message.contains("not implemented yet"), "{}", err.message);
+    fn test_asi_parses_with_zero_one_and_several_closers() {
+        let g = parse_parser_grammar(
+            "a = SEMICOLON | @asi(SEMICOLON, RBRACE) ;\n\
+             b = @asi( SEMICOLON ) ;\n\
+             c = @asi(SEMI,RBRACE , RPAREN,EOF) NAME ;",
+        )
+        .unwrap();
+        assert_eq!(
+            g.rules[0].body,
+            GrammarElement::Alternation {
+                choices: vec![tok_ref("SEMICOLON"), auto_insert("SEMICOLON", &["RBRACE"])],
+            }
+        );
+        assert_eq!(g.rules[1].body, auto_insert("SEMICOLON", &[]));
+        assert_eq!(
+            g.rules[2].body,
+            GrammarElement::Sequence {
+                elements: vec![auto_insert("SEMI", &["RBRACE", "RPAREN", "EOF"]), tok_ref("NAME")],
+            }
+        );
+    }
+
+    #[test]
+    fn test_asi_works_under_lookahead_and_optional() {
+        let g = parse_parser_grammar("r = [ @asi(SEMI) ] !@asi(SEMI, RBRACE) NAME ;").unwrap();
+        assert_eq!(
+            g.rules[0].body,
+            GrammarElement::Sequence {
+                elements: vec![
+                    GrammarElement::Optional { element: Box::new(auto_insert("SEMI", &[])) },
+                    GrammarElement::NegativeLookahead {
+                        element: Box::new(auto_insert("SEMI", &["RBRACE"])),
+                    },
+                    tok_ref("NAME"),
+                ],
+            }
+        );
+    }
+
+    #[test]
+    fn test_asi_malformed_spellings_each_have_their_own_error() {
+        for (source, expected) in [
+            ("r = @asi SEMI ;", "needs an argument list"),
+            ("r = @asi\n(SEMI) ;", "needs an argument list"),
+            ("r = @asi() ;", "empty list"),
+            ("r = @asi(semi) ;", "'semi' is not a token name"),
+            ("r = @asi(Semi) ;", "'Semi' is not a token name"),
+            ("r = @asi(\";\") ;", "not literals"),
+            ("r = @asi(SEMI,) ;", "token name after ','"),
+            ("r = @asi(SEMI,,RBRACE) ;", "token name after ','"),
+            ("r = @asi(,SEMI) ;", "must be followed by a token name"),
+            ("r = @asi(SEMI RBRACE) ;", "expects ',' or ')' after 'SEMI', found 'R'"),
+            ("r = @asi(SEMI", "missing its closing ')'"),
+            ("r = @asi(SEMI,", "missing its closing ')'"),
+            ("r = @asi(NEWLINE) ;", "cannot insert NEWLINE"),
+            ("r = @asi(EOF, RBRACE) ;", "cannot insert EOF"),
+            ("r = @asi(SEMI, SEMI) ;", "lists SEMI as a closer"),
+            ("r = @asi(SEMI, RBRACE, RBRACE) ;", "closer RBRACE twice"),
+        ] {
+            let err = parse_parser_grammar(source).unwrap_err();
+            assert!(err.message.contains(expected), "{source:?}: {}", err.message);
+        }
+    }
+
+    #[test]
+    fn test_asi_error_reports_its_line() {
+        let err = parse_parser_grammar("a = NAME ;\nb = @asi() ;").unwrap_err();
+        assert_eq!(err.line_number, 2);
+    }
+
+    #[test]
+    fn test_asi_names_are_token_references() {
+        let g = parse_parser_grammar("r = NAME @asi(SEMI, RBRACE) ;").unwrap();
+        let refs = grammar_token_references(&g);
+        for name in ["NAME", "SEMI", "RBRACE"] {
+            assert!(refs.contains(name), "{name} missing from {refs:?}");
+        }
+        assert!(grammar_rule_references(&g).is_empty());
+        // So the cross-validator reports an undefined one.
+        let defined: HashSet<String> = ["NAME", "SEMI"].iter().map(|s| s.to_string()).collect();
+        let issues = validate_parser_grammar(&g, Some(&defined));
+        assert!(
+            issues.iter().any(|i| i.contains("Undefined token reference") && i.contains("RBRACE")),
+            "{issues:?}"
+        );
+    }
+
+    #[test]
+    fn test_asi_is_nullable_and_repeating_it_is_an_error() {
+        let g = parse_parser_grammar(
+            "a = { @asi(SEMI) } NAME ;\n\
+             b = { [ NAME ] end } ;\n\
+             end = @asi(SEMI, RBRACE) ;\n\
+             c = { NAME end } ;",
+        )
+        .unwrap();
+        assert!(nullable_rules(&g).contains("end"));
+        let issues = validate_parser_grammar(&g, None);
+        let repeats: Vec<&String> =
+            issues.iter().filter(|i| i.contains("without consuming a token")).collect();
+        // `a` and `b` repeat a body that can insert without consuming, and
+        // that is an error (no `Warning:`); `c`'s body consumes a NAME.
+        for rule in ["'a'", "'b'"] {
+            assert!(
+                repeats.iter().any(|i| i.contains(rule) && !i.starts_with("Warning")),
+                "{rule}: {repeats:?}"
+            );
+        }
+        assert!(!repeats.iter().any(|i| i.contains("'c'")), "{repeats:?}");
     }
 
     #[test]

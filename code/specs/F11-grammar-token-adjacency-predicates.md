@@ -398,10 +398,11 @@ AutoInsert { token: String, closers: Vec<String> }
 `compile_parser_grammar` emits it as
 
 ```rust
-GrammarElement::AutoInsert { token: "SEMICOLON".to_string(), closers: vec!["RBRACE".to_string()] }
+GrammarElement::AutoInsert { token: r#"SEMICOLON"#.to_string(), closers: vec![r#"RBRACE"#.to_string()] }
 ```
 
-which needs no new `use` line. Grammars without `@asi` regenerate
+with raw string literals, like every other name it emits. That needs no new
+`use` line, and grammars without `@asi` regenerate
 byte-identically.
 
 ## Other grammar-tools ports

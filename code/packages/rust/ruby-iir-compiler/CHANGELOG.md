@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — grammar-tools automatic insertion (E6 `@asi`)
+
+### Changed
+- `tests/cst_contract.rs`'s exhaustive `referenced_tokens` match covers the
+  new `GrammarElement::AutoInsert`, whose inserted token and closers are
+  token names.
+
 ## Unreleased — grammar-tools adjacency predicates (E6)
 
 ### Changed

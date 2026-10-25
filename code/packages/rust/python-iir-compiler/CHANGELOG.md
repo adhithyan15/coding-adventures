@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — grammar-tools automatic insertion (E6 `@asi`)
+
+### Changed
+- `tests/cst_contract.rs`'s exhaustive `referenced_tokens` match covers the
+  new `GrammarElement::AutoInsert`, whose inserted token and closers are
+  token names.
+
 ## Unreleased — LANG84 phase 7c, slice 1: Python 2 (`py2-int-print`)
 
 ### Added
