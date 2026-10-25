@@ -1,4 +1,5 @@
 # Changelog — `aarch64-backend`
+
 ## Unreleased — f64 negation flips the sign bit
 
 ### Fixed
@@ -11,8 +12,9 @@
   The only matrix row that exercised it, `ABS(-42)`, negates twice, and a
   two's-complement negate is its own inverse, so the bug round-tripped to
   the right answer. A folded `Float` operand is now materialised from its own
-  bits. New unit tests pin the emitted sequence and the absence of the integer
-  negate, and a new lang-aot matrix row (`LET X = 2.5` / `PRINT -X` → `-2.5`)
+  bits. New unit tests pin the emitted `EOR` sequence and the absence of the
+  integer `NEG` (the folded-literal path is covered by the matrix row, not a
+  unit test), and a new lang-aot matrix row (`LET X = 2.5` / `PRINT -X` → `-2.5`)
   runs it on every backend.
 
 ## [0.42.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
