@@ -48,7 +48,7 @@ fn referenced_tokens(element: &GrammarElement, out: &mut BTreeSet<String>) {
 #[test]
 fn every_dispatched_name_exists_in_every_claiming_release() {
     let claiming: Vec<_> = supported_releases().iter().filter(|r| profile_for(r).is_some()).collect();
-    assert_eq!(claiming.len(), 7);
+    assert_eq!(claiming.len(), 11);
     for release in claiming {
         let grammar = release_parser_grammar(release).unwrap();
         let rules: BTreeSet<_> = grammar.rules.iter().map(|r| r.name.as_str()).collect();

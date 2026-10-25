@@ -1,5 +1,49 @@
 # Changelog
 
+## Unreleased — LANG84 phase 7c, slice 2: Python 2 literals; 2.4, 2.6, 3.5.10, 3.6.0
+
+### Added
+- **Python 2 integer literals.** A new `ReleaseProfile` field,
+  `int_literals` (`IntLiterals::Decimal` for `py3`, `IntLiterals::Python2`
+  for `py2`), picks the decoder. The `py2` decoder reads every spelling the
+  tags' `tok_get` lexes and `parsenumber` reads: decimal, octal `0[0-7]*`
+  (`010` is 8), hex `0x`, PEP 3127 `0o`/`0b`, and an `l`/`L` long suffix,
+  which changes no value (`str()` of a long has no `L`; a long that fits
+  `i64` does the same arithmetic as an int). The lexer decides which
+  prefixes a release has: `0o17` never reaches the decoder from a 2.2 or
+  2.4 tree. A literal above `i64::MAX` is refused as `Unsupported`, which
+  also avoids the one spelling two Python 2 releases read differently (a hex
+  or octal literal between `LONG_MAX` and `ULONG_MAX` is negative at 2.2
+  and a positive long from 2.4, PEP 237). The decoders are free functions
+  (`decode_decimal`, `decode_python2`, `digits_value`), so a forged token is
+  re-checked by the same code.
+- **Four more profiled releases:** 2.4 and 2.6 (`py2`), 3.5.10 and 3.6.0
+  (`py3`). `profile_for` lists them.
+- **Corpus.** `py2-int-print` grows to 49 cases (24 positive):
+  `octal_literals` and `long_suffix` (formerly `reject_octal` and
+  `reject_long_suffix`), `hex_literals`, `pep3127_literals`
+  (`.reject@2.2`, `.reject@2.4`) and `overflow_long_literal`, plus eight
+  refusals (`08`, `0o8`, `0b2`, `0x`, `1LL`, and hex, octal and long
+  literals above `i64`). `py-int-print`'s `int_underscores` gains
+  `.reject@3.5.10`.
+- **Tests.** `python_2_integer_literals_follow_each_release` (prefixes per
+  release, refusals, and eight spellings of 8 that lower to identical IIR);
+  `the_translation_keeps_every_literal_value`; py2 forged-token checks in
+  `forged_trees_are_refused`. The translate-to-Python-3 oracle now rewrites
+  `0NNN` to `0oNNN` and drops the `L` suffix; it agrees on all 24 positive
+  cases.
+
+### Changed
+- **Release sweep.** `release_classes.csv` now has four classes. Python 3:
+  {3.0a1, 3.5.10} (no PEP 515 `_`), represented by 3.0a1, and {3.6.0,
+  3.12.3, 3.13.16, 3.11.17, 3.16.0a1}, now represented by 3.6.0 (it
+  replaces 3.12.3 as the earliest member). Python 2: {2.2, 2.4} and {2.6,
+  2.7.18}, split by `pep3127_literals`; represented by 2.2 and 2.6.
+- The release lists and counts in `release_subsets`, `release_sweep` and
+  `cst_contract` (11 profiled releases).
+- The decimal decoder's leading-zero message now says "a SyntaxError in
+  Python 3 (Python 2 read them as octal)", since one subset now has octal.
+
 ## Unreleased — LANG84 phase 7c, slice 1: Python 2 (`py2-int-print`)
 
 ### Added

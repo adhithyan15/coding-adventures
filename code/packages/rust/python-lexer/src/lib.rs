@@ -126,11 +126,16 @@ mod tests {
     fn release_tables_list_the_paired_releases_in_inventory_order() {
         // Inventory (date) order: 3.13.16 (2026-09-30) precedes 3.11.17
         // (2026-10-01), so this is not version-sorted, on purpose. 2.7.18
-        // (2020-04-19) comes after 3.0a1 (2007-08-31) for the same reason.
-        // 2.2 and 2.7.18 are the phase 7c slice 1 (Python 2) pairs.
+        // (2020-04-19) comes after 3.0a1 (2007-08-31), and 3.5.10
+        // (2020-09-05) after 3.6.0 (2016-12-23), for the same reason.
+        // 2.2 and 2.7.18 are the phase 7c slice 1 (Python 2) pairs; 2.4,
+        // 2.6, 3.5.10 and 3.6.0 came in slice 2.
         assert_eq!(
             SUPPORTED_RELEASES,
-            ["2.2", "3.0a1", "2.7.18", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"]
+            [
+                "2.2", "2.4", "3.0a1", "2.6", "3.6.0", "2.7.18", "3.5.10", "3.12.3", "3.13.16", "3.11.17",
+                "3.16.0a1"
+            ]
         );
         for release in SUPPORTED_RELEASES {
             let grammar = token_grammar(release).expect("paired release has a table");
@@ -150,28 +155,50 @@ mod tests {
         assert_eq!(class("3.13.16"), class("3.16.0a1"));
         assert_ne!(class("3.11.17"), class("3.13.16"));
         assert_ne!(class("3.0a1"), class("3.11.17"));
-        // Python 2: 2.7.18 adds `@` (decorators, 2.4) and the keywords `as`
-        // and `with` (2.6) to 2.2's table, and neither matches Python 3's.
-        assert_ne!(class("2.2"), class("2.7.18"));
+        // 3.5.10 is 3.0a1 plus `@=` and the barry_as_FLUFL `<>`; 3.6.0 is
+        // 3.5.10 plus PEP 515 `_` separators.
+        assert_ne!(class("3.5.10"), class("3.0a1"));
+        assert_ne!(class("3.6.0"), class("3.5.10"));
+        // Python 2: 2.4 adds `@` (decorators) to 2.2's table; 2.6 adds the
+        // keywords `as` and `with` and the PEP 3127 `0o`/`0b` literals, and
+        // 2.7.18 lexes this slice exactly as 2.6 does. None matches Python 3.
+        assert_ne!(class("2.2"), class("2.4"));
+        assert_ne!(class("2.4"), class("2.6"));
+        assert_eq!(class("2.6"), class("2.7.18"));
         assert_ne!(class("2.7.18"), class("3.0a1"));
     }
 
     #[test]
     fn python_2_pairs_lex_print_as_a_keyword_and_keep_the_old_operators() {
-        for release in ["2.2", "2.7.18"] {
+        for release in ["2.2", "2.4", "2.6", "2.7.18"] {
             let grammar = token_grammar(release).unwrap();
             let tokens = GrammarLexer::new("print 7 / 2 <> 3
 ", &grammar).tokenize().unwrap();
             let kinds: Vec<&str> = tokens.iter().map(|t| t.effective_type_name()).collect();
             assert_eq!(kinds[..6], ["KEYWORD", "INT", "SLASH", "INT", "LEGACY_NOT_EQUALS", "INT"], "{release}");
-            // Octal, long and `_` literals are lexer errors in this slice.
-            for source in ["print 010\n", "print 1L\n", "print 1_0\n", "print 00\n"] {
+            // Every Python 2 integer spelling is one INT token (slice 2);
+            // a decimal digit after a leading `0`, a bare `0x`, `_` and a
+            // second suffix are lexer errors.
+            for source in ["010", "00", "0", "0x1F", "0XffL", "1L", "7l", "0777L"] {
+                let tokens = GrammarLexer::new(source, &grammar).tokenize().unwrap();
+                assert_eq!((tokens[0].effective_type_name(), tokens[0].value.as_str()), ("INT", source), "{release}");
+            }
+            for source in ["08\n", "0178\n", "0x\n", "1_0\n", "1LL\n", "0x1Fg\n", "1if\n"] {
                 assert!(GrammarLexer::new(source, &grammar).tokenize().is_err(), "{release} {source:?}");
             }
         }
-        // `@` is a token from 2.4 on: 2.2 refuses it, 2.7.18 lexes it.
-        let at = |r| GrammarLexer::new("@\n", &token_grammar(r).unwrap()).tokenize().is_ok();
-        assert!(!at("2.2") && at("2.7.18"));
+        // PEP 3127 `0o`/`0b` are tokens from 2.6 on; before that `0o17` is
+        // `0` running into a name, a lexer error here.
+        let lexes = |r, source| GrammarLexer::new(source, &token_grammar(r).unwrap()).tokenize().is_ok();
+        for source in ["0o17\n", "0O17L\n", "0b101\n", "0B1l\n"] {
+            assert!(!lexes("2.2", source) && !lexes("2.4", source), "{source:?}");
+            assert!(lexes("2.6", source) && lexes("2.7.18", source), "{source:?}");
+        }
+        for source in ["0o8\n", "0b2\n", "0o\n", "0b\n"] {
+            assert!(!lexes("2.6", source) && !lexes("2.7.18", source), "{source:?}");
+        }
+        // `@` is a token from 2.4 on: 2.2 refuses it, 2.4 and later lex it.
+        assert!(!lexes("2.2", "@\n") && lexes("2.4", "@\n") && lexes("2.7.18", "@\n"));
     }
 
     #[test]
