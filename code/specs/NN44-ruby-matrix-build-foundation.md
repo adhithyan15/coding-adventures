@@ -1,6 +1,7 @@
 # NN44: Ruby Matrix Build Foundation
 
-Status: specified before implementation; package gates and exact-head CI pending.
+Status: package implementation and local evidence complete; actual repository
+package discovery/build CI and confirmed exact-head merge remain pending.
 
 ## Prerequisite discovered after NN43
 
@@ -50,3 +51,16 @@ NN38 exact-copy workspace's regenerable Cargo target recovered 114 MiB, leaving
 about 374 MB; all source copies and unrelated work were preserved. Recheck disk
 before builds, keep installs/output bounded and avoid new full checkouts or Rust
 builds. The removed target can be regenerated from those retained sources.
+
+Local evidence: 54 tests/124 assertions pass at 100% library line coverage,
+Standard Ruby passes with the Windows-only EndOfLine exception, and the actual
+gem is built/installed in an isolated temporary home. Its independently loaded
+copy produces dot product [[19,22],[43,50]] and reports no neural training.
+The source received mechanical Standard formatting and an ownership-comment
+correction, not arithmetic changes. Tests pin both BUILD fronts and Rake's
+coverage/installed-smoke ownership. Local Bundler used already-installed
+development gems to avoid disk/network expansion.
+
+The standalone smoke helper also records 100% local line coverage under Ruby's
+built-in Coverage API. Temporary artifacts are removed by the mktmpdir block;
+installed-source verification prevents a checkout load path from earning credit.

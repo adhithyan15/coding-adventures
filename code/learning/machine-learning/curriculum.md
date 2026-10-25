@@ -47,6 +47,10 @@ NN43 extends the shared rejection corpus with six literal null weight/bias
 coordinates in single, mixed and later-layer positions. All four native suites
 must reject absence rather than silently turn it into a valid zero parameter.
 
+NN44 makes the existing Ruby matrix foundation package-buildable before Ruby
+neural training begins. A gem-install arithmetic receipt is library-build
+evidence, not a training framework or cross-language checkpoint result.
+
 Every model family below starts with the smallest example that needs its new
 idea.
 
