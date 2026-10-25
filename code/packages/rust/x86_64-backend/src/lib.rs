@@ -1616,6 +1616,38 @@ fn emit_instr(
     }
 
     // neg_<ty> dest = -src
+    //
+    // `neg_f64` is NOT a two's-complement negate. An f64 lives in its stack
+    // slot as raw IEEE-754 bits, and IEEE negation flips only bit 63:
+    //
+    //   value   bits                  `neg rax` (wrong)        `xor` sign bit
+    //   2.5     0x4004_0000_0000_0000 0xBFFC_… = −1.75         0xC004_… = −2.5
+    //   +0.0    0x0000_0000_0000_0000 0x0000_… = +0.0          0x8000_… = −0.0
+    //   NaN     0x7FF8_0000_0000_0000 0x8008_… = −1.1e−308     0xFFF8_… = NaN
+    //
+    // A double negation round-trips either way (two's complement is its own
+    // inverse), which is why `ABS(-42)` never caught the integer encoding.
+    // So: `mov rax,[src]; movabs rcx, 1<<63; xor rax, rcx; mov [dst], rax`.
+    // RAX/RCX are caller-saved scratch, exactly as the integer path uses.
+    if op == "neg_f64" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        match src {
+            // A folded float constant: materialise its own bits. (The shared
+            // `load_operand` loads a Float as 0, which is only safe where the
+            // float op was refused first — not here.)
+            CIROperand::Float(f) => asm.mov_r64_imm64(Reg::Rax, f.to_bits()),
+            CIROperand::Var(_) => load_operand(asm, alloc, Reg::Rax, src),
+            other => return Err(BackendError::MalformedInstr(format!(
+                "neg_f64 operand must be a Var or Float, got {other:?}"))),
+        }
+        asm.mov_r64_imm64(Reg::Rcx, 1u64 << 63);
+        asm.xor_(Reg::Rax, Reg::Rcx);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
     if let Some(ty) = op.strip_prefix("neg_") {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
@@ -3644,6 +3676,40 @@ mod tests {
         ];
         let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
         assert!(body_contains(&bytes, &[0x48, 0xF7, 0xD8]), "neg rax missing");
+    }
+
+    /// `neg_f64` flips the IEEE sign bit (`movabs rcx, 1<<63; xor rax, rcx`)
+    /// and must never emit the integer `neg rax`: 2.5's bits integer-negated
+    /// are −1.75, and +0.0 stays +0.0 instead of becoming −0.0.
+    #[test]
+    fn neg_f64_flips_the_sign_bit_not_twos_complement() {
+        let params = vec![("a".to_string(), "f64".to_string())];
+        let ctx = fn_ctx("nf", &params, "f64");
+        let ir = vec![
+            instr("neg_f64", Some("v"), vec![Op::Var("a".into())]),
+            instr("ret_f64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        let mut movabs = vec![0x48, 0xB9]; // movabs rcx, imm64
+        movabs.extend_from_slice(&(1u64 << 63).to_le_bytes());
+        assert!(body_contains(&bytes, &movabs), "movabs rcx, 1<<63 missing");
+        assert!(body_contains(&bytes, &[0x48, 0x31, 0xC8]), "xor rax, rcx missing");
+        assert!(!body_contains(&bytes, &[0x48, 0xF7, 0xD8]), "neg_f64 must not emit neg rax");
+    }
+
+    /// A folded float constant is materialised from its own bits, not as 0.
+    #[test]
+    fn neg_f64_of_a_float_literal_loads_its_bits() {
+        let ctx = fn_ctx("nfc", &[], "f64");
+        let ir = vec![
+            instr("neg_f64", Some("v"), vec![Op::Float(2.5)]),
+            instr("ret_f64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        let mut movabs = vec![0x48, 0xB8]; // movabs rax, imm64
+        movabs.extend_from_slice(&2.5f64.to_bits().to_le_bytes());
+        assert!(body_contains(&bytes, &movabs), "2.5's bits were not loaded");
+        assert!(body_contains(&bytes, &[0x48, 0x31, 0xC8]), "xor rax, rcx missing");
     }
 
     // ---- Calls ----

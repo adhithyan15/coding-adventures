@@ -9152,6 +9152,21 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // Dartmouth BASIC — negating a non-literal real. `ABS(-42)` above
+    // cannot catch a broken `neg`(f64): it negates twice, and a two's-
+    // complement negate of the raw f64 bits is its own inverse, so the wrong
+    // encoding round-trips to the right answer. 2.5 is asymmetric: an integer
+    // negate of its bits (0x4004…) gives 0xBFFC…, i.e. −1.75, not −2.5. The
+    // native backends lowered `neg_f64` that way until it flipped the sign bit.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET X = 2.5\n20 PRINT -X\n30 END\n",
+        expect: Expect::Stdout("-2.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
+    },
     // Dartmouth BASIC — `SGN` (signum) built-in (LANG-FULL BA-builtins).
     // SGN(X) = 1.0 if X > 0, −1.0 if X < 0, 0.0 if X = 0.  Lowered
     // inline as a 3-way conditional.  SGN(-5) → −1.0, printed as `-1`.
@@ -14419,7 +14434,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Twig, 49, 392),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
-        (Language::DartmouthBasic, 51, 408),
+        (Language::DartmouthBasic, 52, 416),
         (Language::Oct, 12, 96),
         // MacroOct: 9 rows at PREP01 slice 1 (`@include`/`@if`/`@else`/`@end`),
         // plus slice 2's five `@define` rows — object-like, function-like with
