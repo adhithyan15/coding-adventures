@@ -26,9 +26,17 @@ fn shared_nn40_checkpoint_decisions() {
     assert_eq!(root.len(), 2);
     assert_eq!(field(&corpus, "contract"), &J::String("NN40".into()));
     let cases = array(field(&corpus, "cases"));
-    assert_eq!(cases.len(), 49);
+    assert_eq!(cases.len(), 55);
     let mut ids = std::collections::HashSet::new();
     let mut accepted = 0;
+    let null_ids = [
+        "null-weight-cell",
+        "null-weight-cell-mixed",
+        "null-bias-cell",
+        "null-bias-cell-mixed",
+        "null-weight-cell-later-layer",
+        "null-bias-cell-later-layer",
+    ];
     for case in cases {
         let J::Object(fields) = case else {
             panic!("case object")
@@ -41,6 +49,9 @@ fn shared_nn40_checkpoint_decisions() {
         let J::Bool(want) = field(case, "accept") else {
             panic!("accept boolean")
         };
+        if null_ids.contains(&id.as_str()) {
+            assert!(!want, "NN43 numeric null must reject: {id}");
+        }
         let document = serialize(field(case, "checkpoint")).unwrap();
         let result = DenseNetwork::from_json(&document);
         assert_eq!(result.is_ok(), *want, "NN40 {id}: {result:?}");
@@ -61,6 +72,12 @@ fn shared_nn40_checkpoint_decisions() {
         }
     }
     assert_eq!(accepted, 3);
+    for id in null_ids {
+        assert!(
+            ids.iter().any(|found| found.as_str() == id),
+            "missing NN43 {id}"
+        );
+    }
 }
 fn number(value: &J) -> f64 {
     match value {

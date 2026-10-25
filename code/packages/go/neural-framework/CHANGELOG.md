@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extend the shared corpus to 55 cases (3 accept, 52 reject); pin and execute
+  NN43's six null weight/bias cases in single, mixed and later-layer positions.
+
 - Join NN42's required four-native conformance with all twelve directed
   checkpoint exchanges, native baselines and full return receipts through 3002.
 - Select the reusable gate for Go framework/matrix and validator inputs; test,

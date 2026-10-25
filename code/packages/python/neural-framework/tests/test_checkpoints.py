@@ -21,13 +21,24 @@ CORPUS = json.loads(
 def test_corpus_inventory():
     assert set(CORPUS) == {"contract", "cases"}
     assert CORPUS["contract"] == "NN40"
-    assert len(CORPUS["cases"]) == 49
-    assert len({case["id"] for case in CORPUS["cases"]}) == 49
+    assert len(CORPUS["cases"]) == 55
+    assert len({case["id"] for case in CORPUS["cases"]}) == 55
     assert sum(case["accept"] for case in CORPUS["cases"]) == 3
     for case in CORPUS["cases"]:
         assert set(case) == {"id", "accept", "checkpoint"}
         assert isinstance(case["id"], str) and case["id"]
         assert type(case["accept"]) is bool
+    # NN43 pins the shared numeric-null boundary, not merely a larger count.
+    by_id = {case["id"]: case for case in CORPUS["cases"]}
+    for case_id in (
+        "null-weight-cell",
+        "null-weight-cell-mixed",
+        "null-bias-cell",
+        "null-bias-cell-mixed",
+        "null-weight-cell-later-layer",
+        "null-bias-cell-later-layer",
+    ):
+        assert by_id[case_id]["accept"] is False
 
 
 @pytest.mark.parametrize("case", CORPUS["cases"], ids=lambda case: case["id"])

@@ -84,7 +84,7 @@ manual dispatch remains available. See the
 [CI ownership contract](../../specs/neural-framework-ci-gate.md).
 
 NN40 adds one [shared checkpoint corpus](../../specs/fixtures/neural-framework-v1/checkpoints.json):
-49 small documents, with 3 accepted controls and 46 rejected cases. Each native
+originally 49 small documents, with 3 accepted controls and 46 rejected cases. Each native
 package test suite loads the same documents through its public API. For example,
 `step: false` must fail: a truth value is not an optimizer-update count.
 The trace is `JSON document -> native loader -> accept/reject`; accepted models
@@ -92,6 +92,17 @@ must also survive save/reload unchanged. Valid controls prevent a loader that
 rejects everything from passing. This tests parsed-document portability, not
 identical text-parser handling of duplicate keys or nesting limits. See
 [NN40](../../specs/NN40-shared-checkpoint-rejection-corpus.md).
+
+NN43 extends that same corpus to 55 documents: the original 49 plus six explicit
+null numeric coordinates, with 3 accepted controls and 52 rejections. For example,
+`weights: [[null]]` is not `weights: [[0]]`: null means no numeric value was
+supplied, whereas zero is a legitimate parameter. Some decoders can silently
+convert the former to the latter, so each native loader must reject the original
+document. The shared trace also puts null among valid neighbors in rectangular
+arrays and in a connected second layer, ensuring validation is not just a check
+of the first element. Python, TypeScript, Rust and Go load these identical data
+through their public APIs; no production algorithm or checkpoint field changes.
+See [NN43](../../specs/NN43-shared-null-numeric-checkpoints.md).
 
 The next framework milestones add native ports, shared tensor autograd,
 architecture components, and measured increases in model size. See the
