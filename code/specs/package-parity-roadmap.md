@@ -17984,3 +17984,23 @@ controls, nonfinite derived arithmetic, and exhausted work without returning
 partial output. Carry the independent subnormal-distance regression into all
 three runtimes and run each same-language Arc2D suite. Shared Go selector
 changes remain owned by the prepared C#/F# tranche to avoid branch conflicts.
+
+The prepared implementation now replaces recursion in all three lanes with
+bounded left-first traversal, a depth limit of 32, and a shared 65,535-split
+budget. Scaled finite-segment distance arithmetic carries the independent
+.NET review's subnormal-underflow lesson into these lanes before publication.
+All nine corpus cases and native invalid-input, overflow, budget, and
+subnormal regressions pass. TypeScript passes 36 Bezier2D tests at 100% line
+coverage, with a focused selection proving the 95% floor fails closed; Elixir
+passes 16 tests and Lua passes 24. Their real dependent Arc2D suites pass 32,
+9, and 9 tests respectively.
+
+That dependent run also exposed a separate TypeScript Arc2D build-front gap:
+successive directory changes leave its Unix BUILD executing Bezier2D instead
+of Arc2D. The new pending
+`geometry-arc2d-typescript-build-working-directory` owner records the bounded
+repair. It is dependency-ready but ranks behind the already prepared
+three-language and two-language Bezier tranches. This branch uses an explicit
+real Arc2D invocation meanwhile; current-main reconciliation, shared-fixture
+selector integration, hosted platforms, and independent final-head review
+remain required before publication.
