@@ -197,6 +197,14 @@ const ER_MIXED_SPECIAL_TOPOLOGY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-mixed-special-topology-11.16.1-visual-corpus.json"
 ));
+const ER_KEYWORD_SUBSTRINGS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-keyword-substrings-11.16.1-corpus.json"
+));
+const ER_KEYWORD_SUBSTRINGS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-keyword-substrings-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2778,6 +2786,30 @@ fn pinned_er_mixed_special_topology_reaches_semantic_ir() {
         .filter_map(|relationship| relationship.label.as_deref())
         .collect::<Vec<_>>();
     assert_eq!(labels, ["places", "contains", "processes"]);
+}
+
+#[test]
+fn pinned_er_keyword_substrings_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_KEYWORD_SUBSTRINGS_CORPUS)
+        .expect("ER keyword substring corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_KEYWORD_SUBSTRINGS_VISUAL_CORPUS)
+        .expect("ER keyword substring visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER keyword substring source"),
+    )
+    .expect("ER keyword substring fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 1);
+    assert_eq!(diagram.nodes[0].id, "p");
+    assert_eq!(diagram.nodes[0].label, "Photograph");
+    assert_eq!(
+        diagram.nodes[0].compartments[0].entries,
+        ["jobId: varchar(12)", "dateCreated: date"]
+    );
 }
 
 #[test]

@@ -1,6 +1,6 @@
 [package]
 name = "mermaid-lexer"
-version = "0.160.0"
+version = "0.161.0"
 edition = "2021"
 description = "Grammar-driven lexers for Mermaid diagram families"
 

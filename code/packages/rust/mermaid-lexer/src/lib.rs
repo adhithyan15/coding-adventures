@@ -1719,6 +1719,19 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_keyword_substring_in_entity_alias() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\np[Photograph] {\n  varchar(12) jobId\n  date dateCreated\n}\n",
+        );
+
+        assert!(tokens.iter().any(|token| token.value == "Photograph"));
+        assert!(!tokens.iter().any(|token| token.value == "graph"));
+        for expected in ["p", "varchar(12)", "jobId", "dateCreated"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+    }
+
+    #[test]
     fn tokenizes_er_attribute_type_forms() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",

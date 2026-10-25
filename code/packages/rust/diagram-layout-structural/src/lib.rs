@@ -1655,6 +1655,25 @@ mod tests {
     }
 
     #[test]
+    fn entity_alias_keyword_substrings_reserve_label_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "p".into();
+        diagram.nodes[0].label = "Photograph".into();
+        diagram.nodes[0].compartments[0].entries =
+            vec!["jobId: varchar(12)".into(), "dateCreated: date".into()];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes.len(), 1);
+        assert_eq!(layout.nodes[0].header, "Photograph");
+        assert!(layout.nodes[0].width >= 168.0);
+        assert!(layout.nodes[0].height > 0.0);
+    }
+
+    #[test]
     fn relationship_labels_resolve_to_backend_neutral_geometry() {
         let mut diagram = two_class_diagram();
         diagram.relationships[0].label = Some("inherits from".into());
