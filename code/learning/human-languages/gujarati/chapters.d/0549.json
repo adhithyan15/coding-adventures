@@ -1,0 +1,19 @@
+{
+  "chapter": 549,
+  "title": "Goals and Medals",
+  "label": "ch:gu-goals-and-medals",
+  "canDo": "I can talk about football, goals, scores and medals.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C549-candrak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 549: I can talk about football, goals, scores and medals.",
+    "assesses": [
+      "GU-LEX-C549-GOAL549-03",
+      "GU-LEX-C549-GOAL549-04",
+      "GU-LEX-C549-GOAL549-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C428-umadna",
+  "pathSegment": "UR-PATH-428-BOOND428",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-428-BOOND428",
+      "order": 4
+    }
+  ]
+}

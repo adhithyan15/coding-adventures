@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Savings and Deposits",
+  "label": "ch:gu-savings-and-deposits",
+  "canDo": "I can talk about saving and investing money.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C427-phalavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can talk about saving and investing money.",
+    "assesses": [
+      "GU-LEX-C427-SAVE427-03",
+      "GU-LEX-C427-SAVE427-04",
+      "GU-LEX-C427-SAVE427-05"
+    ]
+  }
+}

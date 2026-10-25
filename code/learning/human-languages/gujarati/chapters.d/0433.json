@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Outfits and Bags",
+  "label": "ch:gu-outfits-and-bags",
+  "canDo": "I can talk about what suits me and what shrank.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C433-sankocavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can talk about what suits me and what shrank.",
+    "assesses": [
+      "GU-LEX-C433-OUTFIT433-03",
+      "GU-LEX-C433-OUTFIT433-04",
+      "GU-LEX-C433-OUTFIT433-05"
+    ]
+  }
+}

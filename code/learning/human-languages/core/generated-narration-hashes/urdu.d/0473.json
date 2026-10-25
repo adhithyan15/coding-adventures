@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:d03524582fa918f7",
+  "lessonIds": [
+    "UR-C473-kasakna",
+    "UR-C473-ainthan",
+    "UR-C473-jakarna",
+    "UR-C473-langrana",
+    "UR-C473-sozish"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch473.txt",
+  "json": "urdu/narration/ch473.json",
+  "textHash": "fnv1a64:baf1279d7b4afd98",
+  "jsonHash": "fnv1a64:f2637c821f37eb56",
+  "findings": []
+}

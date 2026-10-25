@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Pavements and Paths",
+  "label": "ch:gu-pavements-and-paths",
+  "canDo": "I can describe a path for walking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C404-tapvu-leap",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can describe a path for walking.",
+    "assesses": [
+      "GU-LEX-C404-PATH404-03",
+      "GU-LEX-C404-PATH404-04",
+      "GU-LEX-C404-PATH404-05"
+    ]
+  }
+}

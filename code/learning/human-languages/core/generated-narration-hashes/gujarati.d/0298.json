@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:63994a34106980bf",
+  "lessonIds": [
+    "GU-C298-mrtyu",
+    "GU-C298-sok",
+    "GU-C298-aghat",
+    "GU-C298-asvasan",
+    "GU-C298-sahevu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch298.txt",
+  "json": "gujarati/narration/ch298.json",
+  "textHash": "fnv1a64:31c74a44aa2c065d",
+  "jsonHash": "fnv1a64:3afa6d4785eb0ffb",
+  "findings": []
+}

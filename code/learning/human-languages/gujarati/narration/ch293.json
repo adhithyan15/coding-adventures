@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 293,
+  "title": "An Accident near the Bridge",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f964eb97c790506c",
+  "lessons": [
+    {
+      "id": "GU-C293-akasmat",
+      "sequence": 16410,
+      "title": "અકસ્માત (akasmāt) — an accident",
+      "headword": "અકસ્માત",
+      "romanization": "akasmāt",
+      "gloss": "an accident",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc2fa0405c02566f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a detective, then the Gujarati for to nab."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અકસ્માત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અકસ્માત — akasmāt — \"an accident\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગઈકાલે સાંજે પુલ પાસે મોટો અકસ્માત થયો. gaīkāle sā̃je pul pāse moṭo akasmāt thayo. Yesterday evening there was a big accident near the bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અકસ્માત (akasmāt) is Sanskrit akasmāt, \"without a why or a wherefore, suddenly\" (Monier-Williams), used in Gujarati as a noun: what happens without warning. It is masculine: અકસ્માત થયો, there was an accident."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akasmāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akasmāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akasmāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akasmāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaīkāle sā̃je pul pāse moṭo akasmāt thayo. — Yesterday evening there was a big accident near the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaīkāle sā̃je pul pāse moṭo akasmāt thayo.* — Yesterday evening there was a big accident near the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a detective, then the Gujarati for to nab, then say akasmāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a detective, then the Gujarati for to nab, then say *akasmāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અકસ્માત (akasmāt) mean? (\"An accident\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C293-takkar",
+      "sequence": 16420,
+      "title": "ટક્કર (ṭakkar) — a collision",
+      "headword": "ટક્કર",
+      "romanization": "ṭakkar",
+      "gloss": "a collision",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d7eb88d491c558b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to nab, then the Gujarati for an accident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટક્કર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટક્કર — ṭakkar — \"a collision\"."
+            },
+            {
+              "kind": "speech",
+              "text": "બસ અને ગાડીની ટક્કર થઈ. bas ane gāḍīnī ṭakkar thaī. A bus and a car collided."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "goes back to ṭakkarā, \"a blow on the head\", and CDIAL lists Gujarati ṭakkar, \"a blow\" (CDIAL 5424). Two vehicles have a ટક્કર: બસ અને ગાડીની ટક્કર થઈ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭakkar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭakkar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭakkar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭakkar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bas ane gāḍīnī ṭakkar thaī. — A bus and a car collided.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bas ane gāḍīnī ṭakkar thaī.* — A bus and a car collided.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to nab, then the Gujarati for an accident, then say ṭakkar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to nab, then the Gujarati for an accident, then say *ṭakkar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટક્કર (ṭakkar) mean? (\"A collision\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C293-ghayal",
+      "sequence": 16430,
+      "title": "ઘાયલ (ghāyal) — injured",
+      "headword": "ઘાયલ",
+      "romanization": "ghāyal",
+      "gloss": "injured",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b6e366b5cec235f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an accident, then the Gujarati for a collision."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઘાયલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘાયલ — ghāyal — \"injured\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ અકસ્માતમાં ત્રણ લોકો ઘાયલ થયા. ā akasmātmā̃ traṇ loko ghāyal thayā. Three people were hurt in this accident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘાયલ (ghāyal) is built on ghāy, a wound, from Sanskrit ghāta, \"a blow\"; CDIAL lists Gujarati ghāyo, a wounded person, under that word (CDIAL 4460). A person ઘાયલ થાય છે, gets hurt."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghāyal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghāyal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghāyal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghāyal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā akasmātmā̃ traṇ loko ghāyal thayā. — Three people were hurt in this accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā akasmātmā̃ traṇ loko ghāyal thayā.* — Three people were hurt in this accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an accident, then the Gujarati for a collision, then say ghāyal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an accident, then the Gujarati for a collision, then say *ghāyal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઘાયલ (ghāyal) mean? (\"Injured\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C293-gambhir",
+      "sequence": 16440,
+      "title": "ગંભીર (gambhīr) — serious",
+      "headword": "ગંભીર",
+      "romanization": "gambhīr",
+      "gloss": "serious",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6630708d20004f2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a collision, then the Gujarati for injured."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગંભીર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગંભીર — gambhīr — \"serious\"."
+            },
+            {
+              "kind": "speech",
+              "text": "એક છોકરાને ગંભીર ઈજા થઈ. ek chokrāne gambhīr ījā thaī. One boy was seriously injured."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગંભીર (gambhīr) is a tatsama, Sanskrit gambhīra, \"deep\" (Monier-Williams). In Gujarati it is a deep, grave matter: ગંભીર ઈજા, a serious injury; ગંભીર માણસ, a serious man."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gambhīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gambhīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gambhīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gambhīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek chokrāne gambhīr ījā thaī. — One boy was seriously injured.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek chokrāne gambhīr ījā thaī.* — One boy was seriously injured.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a collision, then the Gujarati for injured, then say gambhīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a collision, then the Gujarati for injured, then say *gambhīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગંભીર (gambhīr) mean? (\"Serious\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C293-gabhravu",
+      "sequence": 16450,
+      "title": "ગભરાવું (gabhrāvũ) — to panic",
+      "headword": "ગભરાવું",
+      "romanization": "gabhrāvũ",
+      "gloss": "to panic",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f8ca1d730694390",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for injured, then the Gujarati for serious."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગભરાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગભરાવું — gabhrāvũ — \"to panic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અકસ્માત જોઈને ડ્રાઈવર ગભરાઈ ગયો. akasmāt joīne ḍrāīvar gabhrāī gayo. When he saw the accident, the driver panicked."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે ડ્રાઈવર ગભરાઈ ગયો, te ḍrāīvar gabhrāī gayo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગભરાવું (gabhrāvũ) probably comes from ghabbhara, \"confused\", a form CDIAL reconstructs, under which it lists Gujarati ghābhrũ, \"confused\" (CDIAL 4427). It is to lose your head with fright: ગભરાઈ ગયો."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gabhrāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gabhrāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gabhrāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gabhrāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akasmāt joīne ḍrāīvar gabhrāī gayo. — When he saw the accident, the driver panicked.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akasmāt joīne ḍrāīvar gabhrāī gayo.* — When he saw the accident, the driver panicked.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for injured, then the Gujarati for serious, then say gabhrāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for injured, then the Gujarati for serious, then say *gabhrāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગભરાવું (gabhrāvũ) mean? (\"To panic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

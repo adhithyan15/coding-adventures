@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C542-samadhan",
+    "language": "gujarati",
+    "chapter": 542,
+    "sequence": 30100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd26ea5b5dbd94e7"
+  },
+  "findings": []
+}

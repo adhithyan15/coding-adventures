@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:8dee0bf6b9bf77f2",
+  "lessonIds": [
+    "UR-C464-dimagh",
+    "UR-C464-gurda",
+    "UR-C464-meda",
+    "UR-C464-ant",
+    "UR-C464-rag"
+  ],
+  "tex": "urdu/book/chapters/ch464-inside-the-body.tex"
+}

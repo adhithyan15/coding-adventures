@@ -1,0 +1,4 @@
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+host-python2: rejects at 2.6 and 2.7.18; accepts at 2.2 and 2.4
+result: py2-int-print refuses it with a Lex error naming the release
+why: a narrowing: 2.6 and 2.7.18 tok_get require a hex digit after 0x, while 2.2 and 2.4 lex it and parsenumber reads it as 0 (PyOS_strtoul consumes the prefix and finds no digit); every pair refuses it as a lexer error

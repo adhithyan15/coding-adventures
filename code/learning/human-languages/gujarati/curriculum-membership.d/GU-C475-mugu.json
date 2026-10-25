@@ -1,0 +1,11 @@
+{
+  "id": "GU-C475-mugu",
+  "pathSegment": "GU-PATH-475-SENSES475",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-475-SENSES475",
+      "order": 2
+    }
+  ]
+}

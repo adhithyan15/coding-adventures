@@ -1,0 +1,11 @@
+{
+  "id": "UR-C523-phandna",
+  "pathSegment": "UR-PATH-523-STADIUM523",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-523-STADIUM523",
+      "order": 4
+    }
+  ]
+}

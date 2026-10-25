@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:4c41637afd7d2620",
+  "lessonIds": [
+    "UR-C543-tavaqqo",
+    "UR-C543-pesh-goi",
+    "UR-C543-tarna",
+    "UR-C543-ankna",
+    "UR-C543-durust"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch543.txt",
+  "json": "urdu/narration/ch543.json",
+  "textHash": "fnv1a64:123db50c83bf4830",
+  "jsonHash": "fnv1a64:52ea738e75ff229f",
+  "findings": []
+}

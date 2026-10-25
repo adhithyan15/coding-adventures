@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:50c6c633fa8447e1",
+  "lessonIds": [
+    "UR-C507-chakla",
+    "UR-C507-gundhna",
+    "UR-C507-belna",
+    "UR-C507-thapna",
+    "UR-C507-anch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch507.txt",
+  "json": "urdu/narration/ch507.json",
+  "textHash": "fnv1a64:16172b091bd1e3b9",
+  "jsonHash": "fnv1a64:4417a9fb32fdf72d",
+  "findings": []
+}

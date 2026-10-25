@@ -1,0 +1,21 @@
+{
+  "chapter": 532,
+  "title": "Can We Manage It?",
+  "label": "ch:gu-can-we-manage-it",
+  "canDo": "I can say whether we can afford or manage something.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-R532-review-525-532",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can say whether we can afford or manage something.",
+    "assesses": [
+      "GU-LEX-C532-POSAVU532-01",
+      "GU-LEX-C532-POSAVU532-02",
+      "GU-LEX-C532-POSAVU532-03",
+      "GU-LEX-C532-POSAVU532-04",
+      "GU-LEX-C532-POSAVU532-05"
+    ]
+  }
+}

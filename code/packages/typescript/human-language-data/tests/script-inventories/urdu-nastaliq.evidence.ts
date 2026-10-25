@@ -319,6 +319,20 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ط") ?? 0).toBe(0);
     expect(urduMissing.has("ڑ")).toBe(false);
     expect(affected.get("ڑ") ?? 0).toBe(0);
+    // The B1 core's six RECOGNITION-ONLY rows (chapters 264-275): ث ڈ ذ ص ع غ
+    // are read in core headwords (حادثہ ڈر ذرا صبح بعد غلط) and copied in
+    // copy-only letter lessons, so each needs a row for glyph coverage. None
+    // claims a stroke order or a source: no Urdu-scoped stroke-order source has
+    // been verified for them, and a Persian or Arabic row's order is not borrowed.
+    for (const glyph of [..."ثڈذصعغ"]) {
+      const row = scripts["urdu-nastaliq"]!.letters.find((letter) => letter.glyph === glyph);
+      expect(row, glyph).toBeDefined();
+      expect(row!.strokeOrder, glyph).toEqual([]);
+      expect(row!.strokeOrderSource, glyph).toBeUndefined();
+      expect(row!.penLifts, glyph).toBeUndefined();
+      expect(row!.notes, glyph).toMatch(/no Urdu-scoped stroke-order source has been verified/);
+      expect(urduMissing.has(glyph), glyph).toBe(false);
+    }
     // Urdu's ten digit rows (urdu-nastaliq.d/digits/). Only ۰ ۱ ۲ ۳, which
     // Urdu writes in the Persian shapes, cite POH-Db's Persian writers; ۴-۹
     // are recognition rows, because Urdu's ۴, ۶ and ۷ are different shapes.

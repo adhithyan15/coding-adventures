@@ -1,0 +1,6 @@
+# matrix's lock materializes its shim; reference training never builds the addon.
+npm --prefix ../matrix ci --omit=dev --ignore-scripts
+npm ci --ignore-scripts
+npm run build
+npm run test:coverage
+npm run example

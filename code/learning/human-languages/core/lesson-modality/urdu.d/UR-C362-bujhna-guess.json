@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C362-bujhna-guess",
+    "language": "urdu",
+    "chapter": 362,
+    "sequence": 21620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7249ec1f594d3dc9"
+  },
+  "findings": []
+}

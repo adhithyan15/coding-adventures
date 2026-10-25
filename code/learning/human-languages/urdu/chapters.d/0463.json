@@ -1,0 +1,21 @@
+{
+  "chapter": 463,
+  "title": "Talkers and Quiet Ones",
+  "label": "ch:ur-talkers-and-quiet-ones",
+  "canDo": "I can say whether someone talks a lot or keeps quiet.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R463-review-456-463",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can say whether someone talks a lot or keeps quiet.",
+    "assesses": [
+      "UR-LEX-C463-TALK463-01",
+      "UR-LEX-C463-TALK463-02",
+      "UR-LEX-C463-TALK463-03",
+      "UR-LEX-C463-TALK463-04",
+      "UR-LEX-C463-TALK463-05"
+    ]
+  }
+}

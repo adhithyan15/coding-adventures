@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 430,
+  "title": "Scales and Packets",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:12d5493db96aecae",
+  "lessons": [
+    {
+      "id": "GU-C430-trajvu",
+      "sequence": 23890,
+      "title": "ત્રાજવું (trājvũ) — a pair of scales",
+      "headword": "ત્રાજવું",
+      "romanization": "trājvũ",
+      "gloss": "a pair of scales",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa0a74e7d3a16ae1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to be robbed, then the Gujarati for to be affordable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ત્રાજવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ત્રાજવું — trājvũ — \"a pair of scales\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દુકાનદાર ત્રાજવામાં ખાંડ તોલે છે. dukāndār trājvāmā̃ khā̃ḍ tole che. The shopkeeper weighs sugar on the scales."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ત્રાજવું (trājvũ) is usually traced to Persian tarāzū, \"a balance, a pair of scales\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trājvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trājvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trājvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trājvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukāndār trājvāmā̃ khā̃ḍ tole che. — The shopkeeper weighs sugar on the scales.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukāndār trājvāmā̃ khā̃ḍ tole che.* — The shopkeeper weighs sugar on the scales.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to be robbed, then the Gujarati for to be affordable, then say trājvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to be robbed, then the Gujarati for to be affordable, then say *trājvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ત્રાજવું (trājvũ) mean? (\"A pair of scales\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C430-man",
+      "sequence": 23900,
+      "title": "મણ (maṇ) — a maund (an old measure of weight)",
+      "headword": "મણ",
+      "romanization": "maṇ",
+      "gloss": "a maund (an old measure of weight)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:477077a98ab98198",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to be affordable, then the Gujarati for a pair of scales."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મણ — maṇ — \"a maund (an old measure of weight)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વેપારીએ બજારમાં દસ મણ ઘઉં વેચ્યા. vepārīe bajārmā̃ das maṇ ghaũ vecyā. The trader sold ten maunds of wheat in the market."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મણ (maṇ) is a tadbhava of Sanskrit maṇa, \"a measure of grain\"; CDIAL lists the Gujarati word, \"a maund\" (CDIAL 9730). Farmers still sell grain by the maund."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vepārīe bajārmā̃ das maṇ ghaũ vecyā. — The trader sold ten maunds of wheat in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vepārīe bajārmā̃ das maṇ ghaũ vecyā.* — The trader sold ten maunds of wheat in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to be affordable, then the Gujarati for a pair of scales, then say maṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to be affordable, then the Gujarati for a pair of scales, then say *maṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મણ (maṇ) mean? (\"A maund (an old measure of weight)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C430-padiku",
+      "sequence": 23910,
+      "title": "પડીકું (paḍīkũ) — a small packet (wrapped in paper)",
+      "headword": "પડીકું",
+      "romanization": "paḍīkũ",
+      "gloss": "a small packet (wrapped in paper)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ab08cb5ef5c4e4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a pair of scales, then the Gujarati for a maund."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પડીકું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પડીકું — paḍīkũ — \"a small packet (wrapped in paper)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દુકાનદારે ચાનું પડીકું વાળીને આપ્યું. dukāndāre cānũ paḍīkũ vāḷīne āpyũ. The shopkeeper folded up a packet of tea and handed it over."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પડીકું (paḍīkũ) seems to belong with Sanskrit puṭa, \"a fold, a pocket\", under which CDIAL lists a Gujarati word for a packet (CDIAL 8253)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḍīkũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḍīkũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḍīkũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḍīkũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukāndāre cānũ paḍīkũ vāḷīne āpyũ. — The shopkeeper folded up a packet of tea and handed it over.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukāndāre cānũ paḍīkũ vāḷīne āpyũ.* — The shopkeeper folded up a packet of tea and handed it over.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a pair of scales, then the Gujarati for a maund, then say paḍīkũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a pair of scales, then the Gujarati for a maund, then say *paḍīkũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પડીકું (paḍīkũ) mean? (\"A small packet (wrapped in paper)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C430-gharak",
+      "sequence": 23920,
+      "title": "ઘરાક (gharāk) — a customer (everyday); a regular buyer",
+      "headword": "ઘરાક",
+      "romanization": "gharāk",
+      "gloss": "a customer (everyday); a regular buyer",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2f33a80a872f4d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a maund, then the Gujarati for a small packet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઘરાક",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘરાક — gharāk — \"a customer (everyday); a regular buyer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ દુકાનના ઘરાક વરસોથી અહીં આવે છે. ā dukānnā gharāk varsothī ahī̃ āve che. This shop's customers have come here for years."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘરાક (gharāk) is usually traced to Sanskrit grāhaka, \"one who takes\" (Monier-Williams), worn down in speech; ગ્રાહક keeps the learned form of the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā dukānnā gharāk varsothī ahī̃ āve che. — This shop's customers have come here for years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā dukānnā gharāk varsothī ahī̃ āve che.* — This shop's customers have come here for years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a maund, then the Gujarati for a small packet, then say gharāk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a maund, then the Gujarati for a small packet, then say *gharāk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઘરાક (gharāk) mean? (\"A customer (everyday); a regular buyer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C430-jokhvu",
+      "sequence": 23930,
+      "title": "જોખવું (jokhvũ) — to weigh out (goods)",
+      "headword": "જોખવું",
+      "romanization": "jokhvũ",
+      "gloss": "to weigh out (goods)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b92a7db0a7d4044a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a small packet, then the Gujarati for a regular buyer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: જોખવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જોખવું — jokhvũ — \"to weigh out (goods)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દુકાનદારે બે કિલો ચોખા જોખ્યા. dukāndāre be kilo cokhā jokhyā. The shopkeeper weighed out two kilos of rice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ખાંડ જોખી, teṇe khā̃ḍ jokhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જોખવું (jokhvũ) goes back to yōkṣati, a form CDIAL reconstructs; CDIAL lists the Gujarati verb, \"to examine, to weigh\" (CDIAL 10525)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jokhvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jokhvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jokhvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jokhvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukāndāre be kilo cokhā jokhyā. — The shopkeeper weighed out two kilos of rice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukāndāre be kilo cokhā jokhyā.* — The shopkeeper weighed out two kilos of rice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a small packet, then the Gujarati for a regular buyer, then say jokhvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a small packet, then the Gujarati for a regular buyer, then say *jokhvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does જોખવું (jokhvũ) mean? (\"To weigh out (goods)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

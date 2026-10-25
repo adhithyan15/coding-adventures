@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:8aae842004acf9c7",
+  "lessonIds": [
+    "PA-C200-vegetable-return",
+    "PA-C200-sabzi",
+    "PA-C200-sabzi-review",
+    "PA-C200-vegetable-label",
+    "PA-C200-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch200.txt",
+  "json": "punjabi/narration/ch200.json",
+  "textHash": "fnv1a64:7296997503966147",
+  "jsonHash": "fnv1a64:93df792271c01c89",
+  "findings": []
+}

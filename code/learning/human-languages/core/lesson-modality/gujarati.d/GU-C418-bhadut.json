@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C418-bhadut",
+    "language": "gujarati",
+    "chapter": 418,
+    "sequence": 23320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf8dc9854ccf26dd"
+  },
+  "findings": []
+}

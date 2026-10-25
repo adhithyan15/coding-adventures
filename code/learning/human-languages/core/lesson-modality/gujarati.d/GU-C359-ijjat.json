@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C359-ijjat",
+    "language": "gujarati",
+    "chapter": 359,
+    "sequence": 20020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3844b7cddbc12e4f"
+  },
+  "findings": []
+}

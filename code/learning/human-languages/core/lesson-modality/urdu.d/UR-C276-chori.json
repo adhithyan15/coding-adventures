@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C276-chori",
+    "language": "urdu",
+    "chapter": 276,
+    "sequence": 17010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4236199ba4c27f9f"
+  },
+  "findings": []
+}

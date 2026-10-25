@@ -1,0 +1,16 @@
+[package]
+name = "x509-ocsp-responder-id-binding"
+version = "0.1.0"
+edition = "2021"
+description = "Exact OCSP ResponderID-to-certificate binding"
+
+[dependencies]
+ct-compare = { package = "coding_adventures_ct_compare", path = "../ct-compare" }
+sha1 = { package = "coding_adventures_sha1", path = "../sha1" }
+x509-certificate = { path = "../x509-certificate" }
+x509-name = { path = "../x509-name" }
+x509-ocsp-basic-response = { path = "../x509-ocsp-basic-response" }
+x509-ocsp-response-data = { path = "../x509-ocsp-response-data" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }

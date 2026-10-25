@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C492-sasru",
+    "language": "gujarati",
+    "chapter": 492,
+    "sequence": 27310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f9180efe0513741"
+  },
+  "findings": []
+}

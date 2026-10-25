@@ -1,0 +1,11 @@
+{
+  "id": "GU-C403-phantavu",
+  "pathSegment": "GU-PATH-403-HIGHWAY403",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-403-HIGHWAY403",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:8d3a94ee536c5f48",
+  "lessonIds": [
+    "GU-C488-navdavvu",
+    "GU-C488-khavdavvu",
+    "GU-C488-paheravvu",
+    "GU-C488-ramadvu",
+    "GU-C488-pivdavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch488.txt",
+  "json": "gujarati/narration/ch488.json",
+  "textHash": "fnv1a64:3017841926f94b67",
+  "jsonHash": "fnv1a64:f8a4e9fbedabba2b",
+  "findings": []
+}

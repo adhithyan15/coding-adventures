@@ -1,0 +1,11 @@
+{
+  "id": "UR-C406-shamiyana",
+  "pathSegment": "UR-PATH-406-BASERA406",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-406-BASERA406",
+      "order": 3
+    }
+  ]
+}

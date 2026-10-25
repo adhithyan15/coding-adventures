@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C445-tahukvu",
+    "language": "gujarati",
+    "chapter": 445,
+    "sequence": 24690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcfc0b28b29586bf"
+  },
+  "findings": []
+}

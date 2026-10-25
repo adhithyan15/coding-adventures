@@ -1,0 +1,11 @@
+{
+  "id": "GU-C307-hemkhem",
+  "pathSegment": "GU-PATH-307-RUNI307",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-307-RUNI307",
+      "order": 3
+    }
+  ]
+}

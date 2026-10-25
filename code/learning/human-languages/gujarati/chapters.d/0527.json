@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "In the Wrestling Ring",
+  "label": "ch:gu-in-the-wrestling-ring",
+  "canDo": "I can describe a wrestling bout.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C527-hamphavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can describe a wrestling bout.",
+    "assesses": [
+      "GU-LEX-C527-AKHADO527-03",
+      "GU-LEX-C527-AKHADO527-04",
+      "GU-LEX-C527-AKHADO527-05"
+    ]
+  }
+}

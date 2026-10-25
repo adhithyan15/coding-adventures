@@ -1,0 +1,21 @@
+[package]
+name = "x509-ocsp-issuer-bound-responder"
+version = "0.1.0"
+edition = "2021"
+description = "Exact issuer-link binding for an authenticated OCSP responder candidate"
+
+[dependencies]
+x509-ocsp-authenticated-responder = { path = "../x509-ocsp-authenticated-responder" }
+x509-rsa-sha256-issuer-link = { path = "../x509-rsa-sha256-issuer-link" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+rsa-public-operation = { path = "../rsa-public-operation" }
+sha256 = { package = "coding_adventures_sha256", path = "../sha256" }
+x509-certificate = { path = "../x509-certificate" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-ocsp-basic-response = { path = "../x509-ocsp-basic-response" }
+x509-ocsp-responder-certificate-policy = { path = "../x509-ocsp-responder-certificate-policy" }
+x509-ocsp-responder-id-binding = { path = "../x509-ocsp-responder-id-binding" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+x509-time = { path = "../x509-time" }

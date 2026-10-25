@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:c6c5f5c8fd4199d3",
+  "lessonIds": [
+    "GU-C287-bhal",
+    "GU-C287-paglu",
+    "GU-C287-khakhdavvu",
+    "GU-C287-santavu",
+    "GU-C287-todvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch287.txt",
+  "json": "gujarati/narration/ch287.json",
+  "textHash": "fnv1a64:efdb9bc051419953",
+  "jsonHash": "fnv1a64:846d626b4a128595",
+  "findings": []
+}

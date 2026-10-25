@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "What We Value",
+  "label": "ch:gu-what-we-value",
+  "canDo": "I can say what a family or a village values.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C357-apnavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can say what a family or a village values.",
+    "assesses": [
+      "GU-LEX-C357-MULYA357-03",
+      "GU-LEX-C357-MULYA357-04",
+      "GU-LEX-C357-MULYA357-05"
+    ]
+  }
+}

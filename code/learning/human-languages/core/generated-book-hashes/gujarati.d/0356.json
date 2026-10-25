@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:a25a14c4a29e9c8c",
+  "lessonIds": [
+    "GU-C356-bandharan",
+    "GU-C356-svatantra",
+    "GU-C356-samaj",
+    "GU-C356-manya",
+    "GU-C356-jalavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch356-rights-and-the-constitution.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:75003d087dfce844",
+  "lessonIds": [
+    "UR-C409-janib",
+    "UR-C409-rukh",
+    "UR-C409-nazdik",
+    "UR-C409-gosha",
+    "UR-C409-jhankna",
+    "UR-R409-review-402-409"
+  ],
+  "tex": "urdu/book/chapters/ch409-which-way.tex"
+}

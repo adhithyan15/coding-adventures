@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Wedding Plans",
+  "label": "ch:gu-wedding-plans",
+  "canDo": "I can talk about getting ready for a wedding.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C497-parnavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about getting ready for a wedding.",
+    "assesses": [
+      "GU-LEX-C497-KANKOTRI497-03",
+      "GU-LEX-C497-KANKOTRI497-04",
+      "GU-LEX-C497-KANKOTRI497-05"
+    ]
+  }
+}

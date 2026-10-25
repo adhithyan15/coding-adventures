@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:902fa5708deae7de",
+  "lessonIds": [
+    "GU-C396-gard",
+    "GU-C396-phanas",
+    "GU-C396-sakal",
+    "GU-C396-vagvu",
+    "GU-C396-ghant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch396.txt",
+  "json": "gujarati/narration/ch396.json",
+  "textHash": "fnv1a64:00032c2a459d95e3",
+  "jsonHash": "fnv1a64:af5a31b3f0c8cd4b",
+  "findings": []
+}

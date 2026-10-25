@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:d8c799b532e6d30a",
+  "lessonIds": [
+    "GU-C356-bandharan",
+    "GU-C356-svatantra",
+    "GU-C356-samaj",
+    "GU-C356-manya",
+    "GU-C356-jalavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch356.txt",
+  "json": "gujarati/narration/ch356.json",
+  "textHash": "fnv1a64:f1ade108ce4593ca",
+  "jsonHash": "fnv1a64:5d59cf093c29422f",
+  "findings": []
+}

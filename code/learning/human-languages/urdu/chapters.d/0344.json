@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Fair and Unfair",
+  "label": "ch:ur-fair-and-unfair",
+  "canDo": "I can say whether people are treated fairly.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C344-uksana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can say whether people are treated fairly.",
+    "assesses": [
+      "UR-LEX-C344-BARABAR344-03",
+      "UR-LEX-C344-BARABAR344-04",
+      "UR-LEX-C344-BARABAR344-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C468-itr",
+    "language": "urdu",
+    "chapter": 468,
+    "sequence": 27440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99f1ed30ef388513"
+  },
+  "findings": []
+}

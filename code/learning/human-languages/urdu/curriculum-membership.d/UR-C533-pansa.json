@@ -1,0 +1,11 @@
+{
+  "id": "UR-C533-pansa",
+  "pathSegment": "UR-PATH-533-JUA533",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-533-JUA533",
+      "order": 1
+    }
+  ]
+}

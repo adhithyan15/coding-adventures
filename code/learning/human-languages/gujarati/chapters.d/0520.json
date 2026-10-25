@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Spices in Hot Oil",
+  "label": "ch:gu-spices-in-hot-oil",
+  "canDo": "I can describe tempering, frying and roasting spices.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C520-bhujvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can describe tempering, frying and roasting spices.",
+    "assesses": [
+      "GU-LEX-C520-VAGHAR520-03",
+      "GU-LEX-C520-VAGHAR520-04",
+      "GU-LEX-C520-VAGHAR520-05"
+    ]
+  }
+}

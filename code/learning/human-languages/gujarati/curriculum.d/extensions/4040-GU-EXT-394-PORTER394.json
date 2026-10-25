@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-394-PORTER394",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask a porter to carry my luggage.",
+  "prerequisites": []
+}

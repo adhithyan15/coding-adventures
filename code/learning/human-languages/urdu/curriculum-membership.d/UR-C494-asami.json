@@ -1,0 +1,11 @@
+{
+  "id": "UR-C494-asami",
+  "pathSegment": "UR-PATH-494-ROZGAR494",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-494-ROZGAR494",
+      "order": 2
+    }
+  ]
+}

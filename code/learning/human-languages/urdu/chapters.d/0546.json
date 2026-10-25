@@ -1,0 +1,19 @@
+{
+  "chapter": 546,
+  "title": "The Hard Way",
+  "label": "ch:ur-the-hard-way",
+  "canDo": "I can talk about hard work and what makes things easier.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C546-paimana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 546: I can talk about hard work and what makes things easier.",
+    "assesses": [
+      "UR-LEX-C546-MASHAQQAT546-03",
+      "UR-LEX-C546-MASHAQQAT546-04",
+      "UR-LEX-C546-MASHAQQAT546-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C423-jillo",
+  "pathSegment": "GU-PATH-423-TOWN423",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-423-TOWN423",
+      "order": 1
+    }
+  ]
+}

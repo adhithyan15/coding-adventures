@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:81b63945625a01e1",
+  "lessonIds": [
+    "UR-C391-buking",
+    "UR-C391-qatar",
+    "UR-C391-kauntar",
+    "UR-C391-rash",
+    "UR-C391-ghusna"
+  ],
+  "tex": "urdu/book/chapters/ch391-bookings-and-queues.tex"
+}

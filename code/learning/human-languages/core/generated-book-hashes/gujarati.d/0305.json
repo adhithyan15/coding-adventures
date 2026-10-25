@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:a883b3a73017ed99",
+  "lessonIds": [
+    "GU-C305-halvu",
+    "GU-C305-dhaglo",
+    "GU-C305-dhasvu",
+    "GU-C305-datavu",
+    "GU-C305-katmal"
+  ],
+  "tex": "gujarati/book/chapters/ch305-when-the-earth-shook.tex"
+}

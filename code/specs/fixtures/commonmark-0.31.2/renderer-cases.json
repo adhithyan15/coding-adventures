@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "profile": "commonmark-renderer-v1",
+  "limits": {
+    "max_ast_nodes": 256,
+    "max_ast_depth": 32,
+    "max_children": 64,
+    "max_ast_text_bytes": 8192,
+    "max_html_bytes": 32768
+  },
+  "cases": [
+    {
+      "id": "empty-document",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[]},
+      "expected_html": ""
+    },
+    {
+      "id": "headings-all-levels",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"heading","level":1,"children":[{"type":"text","value":"One"}]},{"type":"heading","level":2,"children":[{"type":"text","value":"Two"}]},{"type":"heading","level":3,"children":[{"type":"text","value":"Three"}]},{"type":"heading","level":4,"children":[{"type":"text","value":"Four"}]},{"type":"heading","level":5,"children":[{"type":"text","value":"Five"}]},{"type":"heading","level":6,"children":[{"type":"text","value":"Six"}]}]},
+      "expected_html": "<h1>One</h1>\n<h2>Two</h2>\n<h3>Three</h3>\n<h4>Four</h4>\n<h5>Five</h5>\n<h6>Six</h6>\n"
+    },
+    {
+      "id": "paragraph-escaping-and-breaks",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"paragraph","children":[{"type":"text","value":"5 < 7 & \"quoted\" > 3"},{"type":"soft_break"},{"type":"text","value":"soft"},{"type":"hard_break"},{"type":"text","value":"hard"}]}]},
+      "expected_html": "<p>5 &lt; 7 &amp; &quot;quoted&quot; &gt; 3\nsoft<br />\nhard</p>\n"
+    },
+    {
+      "id": "inline-emphasis-strong-code",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"paragraph","children":[{"type":"text","value":"A "},{"type":"emphasis","children":[{"type":"text","value":"small "},{"type":"strong","children":[{"type":"text","value":"strong"}]}]},{"type":"text","value":" and "},{"type":"code_span","value":"<tag>&"}]}]},
+      "expected_html": "<p>A <em>small <strong>strong</strong></em> and <code>&lt;tag&gt;&amp;</code></p>\n"
+    },
+    {
+      "id": "code-blocks",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"code_block","language":null,"value":"a < b & c\n"},{"type":"code_block","language":"ts\"&","value":"const x = 1;\n"}]},
+      "expected_html": "<pre><code>a &lt; b &amp; c\n</code></pre>\n<pre><code class=\"language-ts&quot;&amp;\">const x = 1;\n</code></pre>\n"
+    },
+    {
+      "id": "nested-blockquote",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"blockquote","children":[{"type":"paragraph","children":[{"type":"text","value":"outer"}]},{"type":"blockquote","children":[{"type":"paragraph","children":[{"type":"text","value":"inner"}]}]}]}]},
+      "expected_html": "<blockquote>\n<p>outer</p>\n<blockquote>\n<p>inner</p>\n</blockquote>\n</blockquote>\n"
+    },
+    {
+      "id": "tight-unordered-list",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"list","ordered":false,"start":null,"tight":true,"children":[{"type":"list_item","children":[{"type":"paragraph","children":[{"type":"text","value":"alpha"}]}]},{"type":"list_item","children":[{"type":"paragraph","children":[{"type":"text","value":"beta"}]}]}]}]},
+      "expected_html": "<ul>\n<li>alpha</li>\n<li>beta</li>\n</ul>\n"
+    },
+    {
+      "id": "loose-ordered-list-start",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"list","ordered":true,"start":3,"tight":false,"children":[{"type":"list_item","children":[{"type":"paragraph","children":[{"type":"text","value":"third"}]}]},{"type":"list_item","children":[{"type":"paragraph","children":[{"type":"text","value":"fourth"}]}]}]}]},
+      "expected_html": "<ol start=\"3\">\n<li>\n<p>third</p>\n</li>\n<li>\n<p>fourth</p>\n</li>\n</ol>\n"
+    },
+    {
+      "id": "thematic-break",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"thematic_break"}]},
+      "expected_html": "<hr />\n"
+    },
+    {
+      "id": "link-image-attributes",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"paragraph","children":[{"type":"link","destination":"https://example.test/?a=1&b=2","title":"\"docs\" & more","children":[{"type":"text","value":"docs & help"}]},{"type":"text","value":" "},{"type":"image","destination":"/image.png?x=1&y=2","title":"A \"picture\"","alt":"A <picture> & more"}]}]},
+      "expected_html": "<p><a href=\"https://example.test/?a=1&amp;b=2\" title=\"&quot;docs&quot; &amp; more\">docs &amp; help</a> <img src=\"/image.png?x=1&amp;y=2\" alt=\"A &lt;picture&gt; &amp; more\" title=\"A &quot;picture&quot;\" /></p>\n"
+    },
+    {
+      "id": "dangerous-destinations",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"paragraph","children":[{"type":"link","destination":"JaVaScRiPt:alert(1)","title":null,"children":[{"type":"text","value":"blocked link"}]},{"type":"text","value":" "},{"type":"image","destination":"data:text/html,evil","title":null,"alt":"blocked image"}]}]},
+      "expected_html": "<p><a href=\"\">blocked link</a> <img src=\"\" alt=\"blocked image\" /></p>\n"
+    },
+    {
+      "id": "url-and-email-autolinks",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"paragraph","children":[{"type":"autolink","destination":"https://example.test/path","isEmail":false},{"type":"text","value":" "},{"type":"autolink","destination":"user@example.test","isEmail":true}]}]},
+      "expected_html": "<p><a href=\"https://example.test/path\">https://example.test/path</a> <a href=\"mailto:user@example.test\">user@example.test</a></p>\n"
+    },
+    {
+      "id": "raw-html-enabled",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"raw_block","format":"html","value":"<aside>raw block</aside>\n"},{"type":"paragraph","children":[{"type":"raw_inline","format":"html","value":"<b>raw</b>"},{"type":"text","value":" safe"}]}]},
+      "expected_html": "<aside>raw block</aside>\n<p><b>raw</b> safe</p>\n"
+    },
+    {
+      "id": "raw-html-suppressed",
+      "suppress_raw_html": true,
+      "ast": {"type":"document","children":[{"type":"raw_block","format":"html","value":"<script>blocked()</script>\n"},{"type":"paragraph","children":[{"type":"raw_inline","format":"html","value":"<img src=x>"},{"type":"text","value":"safe"}]}]},
+      "expected_html": "<p>safe</p>\n"
+    },
+    {
+      "id": "non-html-raw-skipped",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"raw_block","format":"latex","value":"\\section{hidden}\n"},{"type":"paragraph","children":[{"type":"raw_inline","format":"rtf","value":"{\\b hidden}"},{"type":"text","value":"kept"}]}]},
+      "expected_html": "<p>kept</p>\n"
+    },
+    {
+      "id": "mixed-block-order",
+      "suppress_raw_html": false,
+      "ast": {"type":"document","children":[{"type":"heading","level":1,"children":[{"type":"text","value":"Title"}]},{"type":"paragraph","children":[{"type":"text","value":"Body"}]},{"type":"thematic_break"},{"type":"code_block","language":null,"value":"tail\n"}]},
+      "expected_html": "<h1>Title</h1>\n<p>Body</p>\n<hr />\n<pre><code>tail\n</code></pre>\n"
+    }
+  ]
+}

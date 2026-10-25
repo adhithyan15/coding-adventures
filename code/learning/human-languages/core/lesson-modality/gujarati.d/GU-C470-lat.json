@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C470-lat",
+    "language": "gujarati",
+    "chapter": 470,
+    "sequence": 26200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0175042980d55dd9"
+  },
+  "findings": []
+}

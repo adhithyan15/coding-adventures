@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C398-jhatko",
+    "language": "gujarati",
+    "chapter": 398,
+    "sequence": 22280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b3b41a4f6e44503"
+  },
+  "findings": []
+}

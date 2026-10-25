@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C422-kandoi",
+    "language": "gujarati",
+    "chapter": 422,
+    "sequence": 23510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3486446a7dd06abf"
+  },
+  "findings": []
+}

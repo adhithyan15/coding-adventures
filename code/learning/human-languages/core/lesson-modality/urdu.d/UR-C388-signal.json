@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C388-signal",
+    "language": "urdu",
+    "chapter": 388,
+    "sequence": 23100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c3d7f03e783218f"
+  },
+  "findings": []
+}

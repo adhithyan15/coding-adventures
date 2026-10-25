@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:ca824745b22ef07f",
+  "lessonIds": [
+    "GU-C448-hasya",
+    "GU-C448-hasavvu",
+    "GU-C448-smit",
+    "GU-C448-majak",
+    "GU-C448-cidavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch448-laughing-together.tex"
+}

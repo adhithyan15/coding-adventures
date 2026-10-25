@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C523-ampayar",
+    "language": "urdu",
+    "chapter": 523,
+    "sequence": 30490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5921bdd789cb8c6"
+  },
+  "findings": []
+}

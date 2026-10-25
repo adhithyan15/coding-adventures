@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C382-sankalp",
+    "language": "gujarati",
+    "chapter": 382,
+    "sequence": 21210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de68b11b99a06c63"
+  },
+  "findings": []
+}

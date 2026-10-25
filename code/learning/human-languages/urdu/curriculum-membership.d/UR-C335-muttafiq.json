@@ -1,0 +1,11 @@
+{
+  "id": "UR-C335-muttafiq",
+  "pathSegment": "UR-PATH-335-HIMAYAT335",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-335-HIMAYAT335",
+      "order": 3
+    }
+  ]
+}

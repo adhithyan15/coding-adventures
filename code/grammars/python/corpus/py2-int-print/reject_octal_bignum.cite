@@ -1,0 +1,4 @@
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+host-python2: accepts
+result: py2-int-print refuses it with an Unsupported error naming the release
+why: an octal literal above i64::MAX (8**21 = 2**63): 2.2 makes it a negative int and 2.4 and later a positive long; the subset has neither reading yet

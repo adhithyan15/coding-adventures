@@ -1,0 +1,21 @@
+{
+  "chapter": 500,
+  "title": "What They Left Us",
+  "label": "ch:gu-what-they-left-us",
+  "canDo": "I can talk about what a family passes on.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R500-review-final-500",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about what a family passes on.",
+    "assesses": [
+      "GU-LEX-C500-VARSO500-01",
+      "GU-LEX-C500-VARSO500-02",
+      "GU-LEX-C500-VARSO500-03",
+      "GU-LEX-C500-VARSO500-04",
+      "GU-LEX-C500-VARSO500-05"
+    ]
+  }
+}

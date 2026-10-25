@@ -1,0 +1,11 @@
+{
+  "id": "GU-C361-tika",
+  "pathSegment": "GU-PATH-361-TIKA361",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-361-TIKA361",
+      "order": 1
+    }
+  ]
+}

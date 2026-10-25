@@ -171,8 +171,6 @@ content pipeline:
                            page-shell, search-index-builder)
 ```
 
-Next DOC00 v0 packages: `forme-doc-heading-anchors`,
-`forme-doc-toc-extractor`, `forme-doc-code-block-decorator`,
-`forme-doc-syntax-highlighter`, `forme-doc-sidebar-builder`,
-`forme-doc-page-shell`, `forme-doc-search-*`,
-`forme-doc-site-emitter`.
+The complete DOC00 v0 cluster now ships. Its downstream content,
+structure, search, and site-emitter stages consume this package's
+body and metadata outputs.

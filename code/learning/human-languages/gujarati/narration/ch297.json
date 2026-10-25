@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 297,
+  "title": "Warnings Nobody Heeded",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c76967b9185cdc8d",
+  "lessons": [
+    {
+      "id": "GU-C297-cetavvu",
+      "sequence": 16610,
+      "title": "ચેતવવું (cetavvũ) — to warn",
+      "headword": "ચેતવવું",
+      "romanization": "cetavvũ",
+      "gloss": "to warn",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:745df7278711bf3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a stitch, then the Gujarati for a condition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચેતવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચેતવવું — cetavvũ — \"to warn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ચોકીદારે મુસાફરોને ચેતવ્યા કે પુલ નબળો છે. cokīdāre musāphrone cetavyā ke pul nabḷo che. The watchman warned the passengers that the bridge was weak."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે બધાને ચેતવ્યા, teṇe badhāne cetavyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચેતવવું (cetavvũ) goes back to Sanskrit cētáyati, \"makes attentive, observes\" (CDIAL 4906): to make someone notice a danger. The person warned takes ને: મુસાફરોને ચેતવ્યા."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cetavvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cetavvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cetavvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cetavvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cokīdāre musāphrone cetavyā ke pul nabḷo che. — The watchman warned the passengers that the bridge was weak.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cokīdāre musāphrone cetavyā ke pul nabḷo che.* — The watchman warned the passengers that the bridge was weak.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a stitch, then the Gujarati for a condition, then say cetavvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a stitch, then the Gujarati for a condition, then say *cetavvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચેતવવું (cetavvũ) mean? (\"To warn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C297-savdhan",
+      "sequence": 16620,
+      "title": "સાવધાન (sāvdhān) — careful; on guard",
+      "headword": "સાવધાન",
+      "romanization": "sāvdhān",
+      "gloss": "careful; on guard",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9bfbf976677d34a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a condition, then the Gujarati for to warn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સાવધાન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાવધાન — sāvdhān — \"careful; on guard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "રાત્રે આ રસ્તા પર સાવધાન રહો. rātre ā rastā par sāvdhān raho. Be careful on this road at night."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાવધાન (sāvdhān) is a tatsama, Sanskrit sāvadhāna, \"attentive, heedful\" (Monier-Williams). On a sign it is a warning by itself: સાવધાન!, look out!"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāvdhān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāvdhān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāvdhān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāvdhān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātre ā rastā par sāvdhān raho. — Be careful on this road at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātre ā rastā par sāvdhān raho.* — Be careful on this road at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a condition, then the Gujarati for to warn, then say sāvdhān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a condition, then the Gujarati for to warn, then say *sāvdhān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સાવધાન (sāvdhān) mean? (\"Careful; on guard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C297-udhu",
+      "sequence": 16630,
+      "title": "ઊંધું (ū̃dhũ) — upside down",
+      "headword": "ઊંધું",
+      "romanization": "ū̃dhũ",
+      "gloss": "upside down",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eaf07e28bc74aa5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to warn, then the Gujarati for careful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઊંધું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊંધું — ū̃dhũ — \"upside down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અકસ્માત પછી ગાડી ઊંધી પડી હતી. akasmāt pachī gāḍī ū̃dhī paḍī hatī. After the accident the car lay upside down."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊંધું (ū̃dhũ) goes back to Sanskrit avamūrdha, \"head down\", and CDIAL lists the Gujarati word, \"upside down\" (CDIAL 804). It agrees like an adjective: ઊંધી ગાડી, ઊંધું વાસણ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ū̃dhũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ū̃dhũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ū̃dhũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ū̃dhũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akasmāt pachī gāḍī ū̃dhī paḍī hatī. — After the accident the car lay upside down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akasmāt pachī gāḍī ū̃dhī paḍī hatī.* — After the accident the car lay upside down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to warn, then the Gujarati for careful, then say ū̃dhũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to warn, then the Gujarati for careful, then say *ū̃dhũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઊંધું (ū̃dhũ) mean? (\"Upside down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C297-tolu",
+      "sequence": 16640,
+      "title": "ટોળું (ṭoḷũ) — a gathered crowd; a mob",
+      "headword": "ટોળું",
+      "romanization": "ṭoḷũ",
+      "gloss": "a gathered crowd; a mob",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f3c33ab239ab5e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for careful, then the Gujarati for upside down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટોળું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટોળું — ṭoḷũ — \"a gathered crowd; a mob\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અકસ્માત પછી ત્યાં લોકોનું મોટું ટોળું ભેગું થયું. akasmāt pachī tyā̃ lokonũ moṭũ ṭoḷũ bhegũ thayũ. After the accident a big crowd gathered there."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટોળું (ṭoḷũ) comes from ṭōla, \"a division, a party\", a form CDIAL reconstructs; CDIAL lists Gujarati ṭoḷũ there, glossed \"a flock of sheep\" (CDIAL 5483). Today it is mostly a crowd of people that gathers at one spot, where ભીડ is any crowd."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭoḷũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭoḷũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭoḷũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭoḷũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akasmāt pachī tyā̃ lokonũ moṭũ ṭoḷũ bhegũ thayũ. — After the accident a big crowd gathered there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akasmāt pachī tyā̃ lokonũ moṭũ ṭoḷũ bhegũ thayũ.* — After the accident a big crowd gathered there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for careful, then the Gujarati for upside down, then say ṭoḷũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for careful, then the Gujarati for upside down, then say *ṭoḷũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટોળું (ṭoḷũ) mean? (\"A gathered crowd; a mob\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C297-dhakko",
+      "sequence": 16650,
+      "title": "ધક્કો (dhakko) — a push",
+      "headword": "ધક્કો",
+      "romanization": "dhakko",
+      "gloss": "a push",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a8ecc1fe0fac300",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for upside down, then the Gujarati for a gathered crowd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ધક્કો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધક્કો — dhakko — \"a push\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ટોળામાં કોઈએ મને ધક્કો માર્યો. ṭoḷāmā̃ koīe mane dhakko māryo. Someone in the crowd pushed me."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધક્કો (dhakko) comes from dhakk, \"push, strike\", a form CDIAL reconstructs, and CDIAL lists the Gujarati noun beside ધકેલવું, to push (CDIAL 6701). A push is given with મારવું: ધક્કો માર્યો."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhakko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhakko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhakko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhakko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭoḷāmā̃ koīe mane dhakko māryo. — Someone in the crowd pushed me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭoḷāmā̃ koīe mane dhakko māryo.* — Someone in the crowd pushed me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for upside down, then the Gujarati for a gathered crowd, then say dhakko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for upside down, then the Gujarati for a gathered crowd, then say *dhakko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ધક્કો (dhakko) mean? (\"A push\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

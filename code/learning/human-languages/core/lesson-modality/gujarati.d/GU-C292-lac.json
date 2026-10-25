@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C292-lac",
+    "language": "gujarati",
+    "chapter": 292,
+    "sequence": 16370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21feb2ac75f4fc00"
+  },
+  "findings": []
+}

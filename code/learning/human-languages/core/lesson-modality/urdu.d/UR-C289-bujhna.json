@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C289-bujhna",
+    "language": "urdu",
+    "chapter": 289,
+    "sequence": 17680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02c6a3e59d29b0b5"
+  },
+  "findings": []
+}

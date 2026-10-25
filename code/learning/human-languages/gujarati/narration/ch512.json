@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 512,
+  "title": "Looking for a Job",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0b71dcd8389588bb",
+  "lessons": [
+    {
+      "id": "GU-C512-pad",
+      "sequence": 28560,
+      "title": "પદ (pad) — a job post",
+      "headword": "પદ",
+      "romanization": "pad",
+      "gloss": "a job post",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c1f29a82e440f54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a mechanic, then the Gujarati for a clerk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પદ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પદ — pad — \"a job post\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ પદ માટે ઘણી અરજીઓ આવી. ā pad māṭe ghaṇī arjīo āvī. Many applications came in for this post."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પદ (pad) is a tatsama, taken from Sanskrit pada, \"a step, a footing; a position\" (Monier-Williams); in an office it is a post one is appointed to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pad māṭe ghaṇī arjīo āvī. — Many applications came in for this post.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pad māṭe ghaṇī arjīo āvī.* — Many applications came in for this post.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a mechanic, then the Gujarati for a clerk, then say pad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a mechanic, then the Gujarati for a clerk, then say *pad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પદ (pad) mean? (\"A job post\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C512-intaravyu",
+      "sequence": 28570,
+      "title": "ઇન્ટરવ્યૂ (inṭaravyū) — a job interview",
+      "headword": "ઇન્ટરવ્યૂ",
+      "romanization": "inṭaravyū",
+      "gloss": "a job interview",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c6a8bcf245be14f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a clerk, then the Gujarati for a job post."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઇન્ટરવ્યૂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઇન્ટરવ્યૂ — inṭaravyū — \"a job interview\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારો ઇન્ટરવ્યૂ કાલે સવારે છે. māro inṭaravyū kāle savāre che. My interview is tomorrow morning."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઇન્ટરવ્યૂ (inṭaravyū) is borrowed from English interview."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inṭaravyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inṭaravyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inṭaravyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inṭaravyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māro inṭaravyū kāle savāre che. — My interview is tomorrow morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māro inṭaravyū kāle savāre che.* — My interview is tomorrow morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a clerk, then the Gujarati for a job post, then say inṭaravyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a clerk, then the Gujarati for a job post, then say *inṭaravyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઇન્ટરવ્યૂ (inṭaravyū) mean? (\"A job interview\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C512-vetan",
+      "sequence": 28580,
+      "title": "વેતન (vetan) — a wage",
+      "headword": "વેતન",
+      "romanization": "vetan",
+      "gloss": "a wage",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b1e0277245e0209",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a job post, then the Gujarati for a job interview."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વેતન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વેતન — vetan — \"a wage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ કારખાનામાં મજૂરોનું વેતન ઓછું છે. ā kārkhānāmā̃ majūronũ vetan ochũ che. The workers' wages in this factory are low."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વેતન (vetan) is a tatsama, taken from Sanskrit vetana, \"wages, hire, salary\" (Monier-Williams). It is the formal word beside the everyday પગાર."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vetan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vetan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vetan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vetan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kārkhānāmā̃ majūronũ vetan ochũ che. — The workers' wages in this factory are low.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kārkhānāmā̃ majūronũ vetan ochũ che.* — The workers' wages in this factory are low.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a job post, then the Gujarati for a job interview, then say vetan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a job post, then the Gujarati for a job interview, then say *vetan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વેતન (vetan) mean? (\"A wage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C512-karkirdi",
+      "sequence": 28590,
+      "title": "કારકિર્દી (kārkirdī) — a career",
+      "headword": "કારકિર્દી",
+      "romanization": "kārkirdī",
+      "gloss": "a career",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77d06cd8db9a0a5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a job interview, then the Gujarati for a wage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કારકિર્દી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કારકિર્દી — kārkirdī — \"a career\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરાએ સંગીતમાં કારકિર્દી બનાવી. Mīrāe sangītmā̃ kārkirdī banāvī. Mira made a career in music."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કારકિર્દી (kārkirdī) is usually traced to Persian kārkird, \"work done, a record of deeds\", built on kār, \"work\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārkirdī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārkirdī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārkirdī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārkirdī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrāe sangītmā̃ kārkirdī banāvī. — Mira made a career in music.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrāe sangītmā̃ kārkirdī banāvī.* — Mira made a career in music.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a job interview, then the Gujarati for a wage, then say kārkirdī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a job interview, then the Gujarati for a wage, then say *kārkirdī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કારકિર્દી (kārkirdī) mean? (\"A career\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C512-badhti",
+      "sequence": 28600,
+      "title": "બઢતી (baḍhtī) — a promotion (at work)",
+      "headword": "બઢતી",
+      "romanization": "baḍhtī",
+      "gloss": "a promotion (at work)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:504be5d284e8c0ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a wage, then the Gujarati for a career."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બઢતી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બઢતી — baḍhtī — \"a promotion (at work)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અરુણને આ વરસે બઢતી મળી. Aruṇne ā varse baḍhtī maḷī. Arun got a promotion this year."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બઢતી (baḍhtī) is probably borrowed from Hindi baṛhtī, \"an increase\", built on baṛhnā, \"to increase\", which CDIAL lists under Sanskrit várdhatē, \"grows\" (CDIAL 11376). CDIAL gives Gujarati's own verb from the same root, વધવું, there too."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baḍhtī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baḍhtī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baḍhtī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baḍhtī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇne ā varse baḍhtī maḷī. — Arun got a promotion this year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇne ā varse baḍhtī maḷī.* — Arun got a promotion this year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a wage, then the Gujarati for a career, then say baḍhtī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a wage, then the Gujarati for a career, then say *baḍhtī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બઢતી (baḍhtī) mean? (\"A promotion (at work)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

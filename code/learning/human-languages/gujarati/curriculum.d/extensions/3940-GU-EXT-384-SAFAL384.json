@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-384-SAFAL384",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what it will take to succeed.",
+  "prerequisites": []
+}

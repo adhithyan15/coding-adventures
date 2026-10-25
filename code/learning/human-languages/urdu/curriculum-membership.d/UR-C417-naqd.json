@@ -1,0 +1,11 @@
+{
+  "id": "UR-C417-naqd",
+  "pathSegment": "UR-PATH-417-RAQAM417",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-417-RAQAM417",
+      "order": 2
+    }
+  ]
+}

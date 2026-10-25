@@ -1,0 +1,140 @@
+# Python 2.2 (2001-12-21) tokens: py2-int-print lexical slice.
+# @version 1
+# PARTIAL: lexes only the py2-int-print neighbourhood listed below; see code/grammars/python/README.md.
+# source_ref: https://github.com/python/cpython/tree/v2.2
+# source_sha: 2d0f5aa9a14f63854dc1d4633effa7a24b9553a7
+# evidence: Grammar/Grammar blob 6ac0cbc3cd9ed4c52abcfc7a4dd2c94e88f861f9; Grammar/Tokens blob -;
+#   Parser/tokenizer.c blob 324d9b6548c77b7fabe03ace2bf3b5f56b3a3ebb; Lib/keyword.py blob 98dd2ec2cab2a3bc202478beefbd1eafe1b3c9b5
+# basis: reviewed against the tag's own syntax files (LANG84 phase 7c slices 1 and 2). Tokens follow tokenizer.c tok_get (decimal, octal 0[0-7]*, hex 0x, each with an optional l/L suffix) and PyToken_OneChar/TwoChars/ThreeChars (44 operators), and keyword.py kwlist (29, `print` among them); the grammar follows Grammar/Grammar file_input..print_stmt..atom/trailer/arglist.
+
+# ---------------------------------------------------------------------------
+# What this pair lexes, and what it does not, so a reader never has to guess.
+#
+# Lexed: integers in every spelling this release's tokenizer reads as an int
+# or a long (decimal `42`, octal `010` and hex `0x1F`, each with an optional
+# `l`/`L` long suffix), names, this release's keywords (`print` is one: in
+# Python 2 `print` is a statement, not a function), every operator and
+# delimiter its tokenizer knows (including `<>` and the backquote, which
+# Python 3 removed), `#` comments, a `\`-newline continuation, and the
+# indentation engine's NEWLINE/INDENT/DEDENT (newlines inside brackets are
+# suppressed, blank and comment-only lines produce nothing).
+#
+# NOT lexed (a lexer error here; later LANG84 Python slices):
+#   strings and unicode literals      'a' "a" u'a' r'a'
+#   floats and imaginary numbers      1.5 1e3 .5 2j       (`1.5` lexes as INT DOT INT
+#                                                          and fails to parse)
+#   tabs before a comment, form feeds
+#
+# Known narrowings against the release's own tokenizer (each rejects; none
+# accepts a program the release would read differently):
+#   * A number must not run into a name character: `1if`, `1_` and `0x1Fg`
+#     are lexer errors (`\b` closes INT). This release has no `0o`/`0b`
+#     prefix (PEP 3127 is 2.6): it lexes `0o17` as `0` then the name `o17`,
+#     which its parser refuses; here it is a lexer error.
+#   * `0x` with no hex digit is a lexer error here. This release lexes it and
+#     `parsenumber` reads it as 0 (PyOS_strtoul consumes the prefix and finds
+#     no digit); 2.6 made it a tokenizer error.
+#   * `\` must be followed directly by the newline, as CPython requires.
+# ---------------------------------------------------------------------------
+
+mode: indentation
+
+skip:
+  COMMENT           = /#[^\n]*/
+  LINE_CONTINUATION = /\\\n/
+
+# --- integers (tok_get in Parser/tokenizer.c; parsenumber in Python/compile.c) --
+# Python 2 spellings, each with an optional `l`/`L` suffix that makes a long:
+#
+#   decimal  [1-9][0-9]*           1  42  7L
+#   octal    0[0-7]*               0  00  010 (= 8)  0777L
+#   hex      0[xX][0-9a-fA-F]+     0x1F  0XffL
+#
+# A decimal digit after a leading `0` (`08`, `0178`) is the tokenizer's
+# ERRORTOKEN, and here a lexer error. There is no `_` separator (that is PEP
+# 515, Python 3.6). Which value a spelling denotes is the compiler's job
+# (python-iir-compiler int_lower.rs, profile `py2`), which refuses a literal
+# above i64.
+INT = /(?:0[xX][0-9a-fA-F]+|0[0-7]*|[1-9][0-9]*)[lL]?\b/
+
+# --- names -------------------------------------------------------------------
+NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# --- operators and delimiters (44 in this release's tokenizer) --------
+# Longest first: the first matching pattern wins.
+DOUBLE_STAR_EQUALS  = "**="
+LEFT_SHIFT_EQUALS   = "<<="
+RIGHT_SHIFT_EQUALS  = ">>="
+FLOOR_DIV_EQUALS    = "//="
+DOUBLE_STAR         = "**"
+FLOOR_DIV           = "//"
+LEFT_SHIFT          = "<<"
+RIGHT_SHIFT         = ">>"
+EQUALS_EQUALS       = "=="
+NOT_EQUALS          = "!="
+LEGACY_NOT_EQUALS   = "<>"
+LESS_EQUALS         = "<="
+GREATER_EQUALS      = ">="
+PLUS_EQUALS         = "+="
+MINUS_EQUALS        = "-="
+STAR_EQUALS         = "*="
+SLASH_EQUALS        = "/="
+PERCENT_EQUALS      = "%="
+AMP_EQUALS          = "&="
+PIPE_EQUALS         = "|="
+CARET_EQUALS        = "^="
+PLUS                = "+"
+MINUS               = "-"
+STAR                = "*"
+SLASH               = "/"
+PERCENT             = "%"
+EQUALS              = "="
+LESS_THAN           = "<"
+GREATER_THAN        = ">"
+AMP                 = "&"
+PIPE                = "|"
+CARET               = "^"
+TILDE               = "~"
+BACKTICK            = "`"
+LPAREN              = "("
+RPAREN              = ")"
+LBRACKET            = "["
+RBRACKET            = "]"
+LBRACE              = "{"
+RBRACE              = "}"
+COMMA               = ","
+COLON               = ":"
+SEMICOLON           = ";"
+DOT                 = "."
+
+# --- keywords (kwlist of Lib/keyword.py at the tag: 29) ------------------
+keywords:
+  and
+  assert
+  break
+  class
+  continue
+  def
+  del
+  elif
+  else
+  except
+  exec
+  finally
+  for
+  from
+  global
+  if
+  import
+  in
+  is
+  lambda
+  not
+  or
+  pass
+  print
+  raise
+  return
+  try
+  while
+  yield

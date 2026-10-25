@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:498d72e8555f86d3",
+  "lessonIds": [
+    "UR-C421-kaghaz",
+    "UR-C421-kard",
+    "UR-C421-tokan",
+    "UR-C421-fis",
+    "UR-C421-karansi"
+  ],
+  "tex": "urdu/book/chapters/ch421-papers-cards-and-fees.tex"
+}

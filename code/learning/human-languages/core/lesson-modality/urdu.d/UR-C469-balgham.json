@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C469-balgham",
+    "language": "urdu",
+    "chapter": 469,
+    "sequence": 27510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38b0dcf5a01d1d63"
+  },
+  "findings": []
+}

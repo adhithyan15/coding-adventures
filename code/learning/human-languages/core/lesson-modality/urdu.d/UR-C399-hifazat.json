@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C399-hifazat",
+    "language": "urdu",
+    "chapter": 399,
+    "sequence": 23660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:516687095f7ef764"
+  },
+  "findings": []
+}

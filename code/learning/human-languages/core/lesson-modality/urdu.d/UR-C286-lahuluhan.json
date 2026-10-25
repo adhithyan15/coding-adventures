@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C286-lahuluhan",
+    "language": "urdu",
+    "chapter": 286,
+    "sequence": 17520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66d7171f1f5f4a98"
+  },
+  "findings": []
+}

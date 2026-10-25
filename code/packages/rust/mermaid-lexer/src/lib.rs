@@ -246,10 +246,13 @@ pub fn tokenize_mermaid_gitgraph(source: &str) -> Vec<Token> {
 }
 
 pub fn tokenize_mermaid_er(source: &str) -> Vec<Token> {
-    let mut lexer = create_mermaid_er_lexer(source);
-    lexer
-        .tokenize()
+    try_tokenize_mermaid_er(source)
         .unwrap_or_else(|e| panic!("Mermaid ER tokenization failed: {e}"))
+}
+
+pub fn try_tokenize_mermaid_er(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_er_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
 }
 
 pub fn tokenize_mermaid_c4(source: &str) -> Vec<Token> {
@@ -1475,6 +1478,22 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_direct_style_composition() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER\nORDER\nstyle CUSTOMER,ORDER fill:#dbeafe,stroke:#1d4ed8\nstyle CUSTOMER color:#14532d\n",
+        );
+        let names: Vec<&str> = tokens.iter().filter_map(|token| token.type_name.as_deref()).collect();
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert_eq!(names.iter().filter(|name| **name == "STYLE_KW").count(), 2);
+        assert!(values.contains(&"CUSTOMER"));
+        assert!(values.contains(&"ORDER"));
+        for color in ["#dbeafe", "#1d4ed8", "#14532d"] {
+            assert!(values.contains(&color));
+        }
+    }
+
+    #[test]
     fn tokenizes_er_bracketed_attribute_name_suffix() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nBOOK {\n  string author-ref[name](1)\n}\n",
@@ -1543,6 +1562,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_numeric_entities_after_one_cardinality() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\na many to 1 1: label\na many to 1 12: label\n",
+        );
+        let numbers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ == TokenType::Number)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(numbers, ["1", "1", "1", "12"]);
+    }
+
+    #[test]
     fn distinguishes_er_entity_strings_from_general_quoted_text() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\n\"Customer Account\" ||--|| ORDER : \"100% complete\"\n",
@@ -1567,6 +1600,203 @@ mod tests {
                 ("STRING", "100% complete")
             ]
         );
+    }
+
+    #[test]
+    fn tokenizes_er_bare_and_quoted_entity_name_forms() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nDUCK-BILLED_PLATYPUS ||--|| \"Blo@rf?\" : maps\n_foo\n\"a~`!@#$^&*()-=+[]{}|/;:'.?¡⁄™€£‹¢›∞\"\n",
+        );
+        let identifiers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFIER"))
+            .map(|token| token.value.as_str())
+            .collect();
+        let quoted: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ENTITY_STRING"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert!(identifiers.contains(&"DUCK-BILLED_PLATYPUS"));
+        assert!(identifiers.contains(&"_foo"));
+        assert_eq!(quoted, ["Blo@rf?", "a~`!@#$^&*()-=+[]{}|/;:'.?¡⁄™€£‹¢›∞"]);
+    }
+
+    #[test]
+    fn tokenizes_er_duplicate_entity_declarations() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER\nORDER\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER\nORDER\n",
+        );
+        let identifiers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFIER"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(identifiers.iter().filter(|value| **value == "CUSTOMER").count(), 3);
+        assert_eq!(identifiers.iter().filter(|value| **value == "ORDER").count(), 3);
+    }
+
+    #[test]
+    fn tokenizes_er_relationship_label_forms() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nACCOUNT ||--|| PROFILE : \"\"\nPROFILE ||--o{ ORDER : \"contains\"\nORDER }o..|| PRODUCT : assigned\n",
+        );
+        let labels: Vec<&str> = tokens
+            .iter()
+            .filter(|token| {
+                token.type_ == TokenType::String
+                    || token.type_name.as_deref() == Some("ENTITY_STRING")
+            })
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(labels, ["", "contains"]);
+        assert!(tokens.iter().any(|token| token.value == "assigned"));
+    }
+
+    #[test]
+    fn tokenizes_er_cyclical_relationships() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nA ||--|{ B : likes\nB ||--|{ C : likes\nC ||--|{ A : likes\n",
+        );
+        let identifying = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFYING"))
+            .count();
+        let one_or_more = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ONE_OR_MORE"))
+            .count();
+
+        assert_eq!(identifying, 3);
+        assert_eq!(one_or_more, 3);
+        assert_eq!(tokens.iter().filter(|token| token.value == "likes").count(), 3);
+    }
+
+    #[test]
+    fn tokenizes_er_complex_topology() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER }|..|{ DELIVERY-ADDRESS : has\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER ||--o{ INVOICE : \"liable for\"\nDELIVERY-ADDRESS ||--o{ ORDER : receives\nINVOICE ||--|{ ORDER : covers\nORDER ||--|{ ORDER-ITEM : includes\nPRODUCT-CATEGORY ||--|{ PRODUCT : contains\nPRODUCT ||--o{ ORDER-ITEM : \"ordered in\"\n",
+        );
+        let relationships = tokens
+            .iter()
+            .filter(|token| {
+                matches!(
+                    token.type_name.as_deref(),
+                    Some("IDENTIFYING" | "NON_IDENTIFYING")
+                )
+            })
+            .count();
+
+        assert_eq!(relationships, 8);
+        for expected in ["DELIVERY-ADDRESS", "ORDER-ITEM", "PRODUCT-CATEGORY"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+    }
+
+    #[test]
+    fn tokenizes_er_variable_node_width_fixture() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nPRIVATE_FINANCIAL_INSTITUTION {\n  string name\n  int turnover\n}\nPRIVATE_FINANCIAL_INSTITUTION ||..|{ EMPLOYEE : employs\nEMPLOYEE { bool officer_of_firm }\n",
+        );
+
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.value == "PRIVATE_FINANCIAL_INSTITUTION")
+                .count(),
+            2
+        );
+        for expected in ["turnover", "EMPLOYEE", "officer_of_firm", "employs"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+    }
+
+    #[test]
+    fn tokenizes_er_mixed_special_entity_topology() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER ||--o{ 1 : places\n1 ||--|{ u : contains\n1.5\nu ||--|| 2.5 : processes\n2.5 {\n  string id\n  float value\n}\nu {\n  varchar(50) name\n  int count\n}\n",
+        );
+
+        for expected in ["CUSTOMER", "1", "u", "1.5", "2.5", "varchar(50)"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| matches!(
+                    token.type_name.as_deref(),
+                    Some("IDENTIFYING" | "NON_IDENTIFYING")
+                ))
+                .count(),
+            3
+        );
+    }
+
+    #[test]
+    fn tokenizes_er_keyword_substring_in_entity_alias() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\np[Photograph] {\n  varchar(12) jobId\n  date dateCreated\n}\n",
+        );
+
+        assert!(tokens.iter().any(|token| token.value == "Photograph"));
+        assert!(!tokens.iter().any(|token| token.value == "graph"));
+        for expected in ["p", "varchar(12)", "jobId", "dateCreated"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+    }
+
+    #[test]
+    fn tokenizes_er_disconnected_recursive_topology() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nDEAD_PARROT\nHERMIT\nRECLUSE\nSOCIALITE }o--o{ SOCIALITE : \"interacts with\"\nRECLUSE }o--o{ SOCIALITE : avoids\n",
+        );
+
+        for expected in ["DEAD_PARROT", "HERMIT", "RECLUSE", "SOCIALITE", "interacts with"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+        assert_eq!(tokens.iter().filter(|token| token.value == "SOCIALITE").count(), 3);
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_name.as_deref() == Some("IDENTIFYING"))
+                .count(),
+            2
+        );
+    }
+
+    #[test]
+    fn tokenizes_er_attribute_constraint_lists_and_comments() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER {\n  int customer_number PK, FK \"comment1\"\n  datetime customer_status_start_datetime PK,UK, FK\n  datetime customer_status_end_datetime PK , UK \"comment3\"\n  string customer_firstname\n  string customer_lastname \"comment5\"\n}\n",
+        );
+
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| matches!(token.value.as_str(), "PK" | "FK" | "UK"))
+                .count(),
+            7
+        );
+        for expected in ["comment1", "comment3", "comment5"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+    }
+
+    #[test]
+    fn tokenizes_er_key_prefix_attribute_names() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nBOOK {\n  int fk_title FK\n  string pk_author PK\n  string uk_address UK\n  float pk_price PK \"comment\"\n}\n",
+        );
+
+        for expected in ["fk_title", "pk_author", "uk_address", "pk_price"] {
+            assert!(tokens.iter().any(|token| token.value == expected));
+        }
+        assert_eq!(tokens.iter().filter(|token| token.value == "PK").count(), 2);
+        assert_eq!(tokens.iter().filter(|token| token.value == "FK").count(), 1);
+        assert_eq!(tokens.iter().filter(|token| token.value == "UK").count(), 1);
     }
 
     #[test]
@@ -1727,6 +1957,23 @@ mod tests {
 
         assert!(values.contains(&"*title"));
         assert!(values.contains(&"*the_Primary_Key"));
+    }
+
+    #[test]
+    fn tokenizes_er_attribute_name_boundaries() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nENTITY {\n  string name1\n  int value2\n}\n",
+        );
+        let identifiers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFIER"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert!(identifiers.contains(&"name1"));
+        assert!(identifiers.contains(&"value2"));
+        assert!(try_tokenize_mermaid_er("erDiagram\nBOOK {\n  string (author\n}\n").is_err());
+        assert!(try_tokenize_mermaid_er("erDiagram\nBOOK {\n  string )author\n}\n").is_err());
     }
 
     #[test]

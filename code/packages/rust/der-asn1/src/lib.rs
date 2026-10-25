@@ -123,6 +123,16 @@ pub struct Asn1Element<'a> {
     depth: usize,
 }
 
+/// Opaque document-depth authority for decoding a value embedded in a container.
+///
+/// Keeping this token instead of the complete [`Asn1Element`] lets composed
+/// schemas preserve the decoder's depth boundary without retaining unrelated
+/// framing metadata. Only a checked element can create a token.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Asn1ContainerContext {
+    depth: u32,
+}
+
 impl<'a> Asn1Element<'a> {
     pub const fn tag(&self) -> DerTag {
         self.element.tag()
@@ -142,6 +152,14 @@ impl<'a> Asn1Element<'a> {
 
     pub const fn depth(&self) -> usize {
         self.depth
+    }
+
+    /// Capture the authority needed to decode one document embedded in this
+    /// element's value.
+    pub fn container_context(&self) -> Result<Asn1ContainerContext, Asn1Error> {
+        let depth = u32::try_from(self.depth)
+            .map_err(|_| Asn1Error::new(Asn1ErrorKind::DepthLimitExceeded, 0))?;
+        Ok(Asn1ContainerContext { depth })
     }
 
     fn value_offset(&self) -> usize {
@@ -191,6 +209,25 @@ impl Asn1Decoder {
         input: &'a [u8],
     ) -> Result<Asn1Element<'a>, Asn1Error> {
         let depth = self.child_depth(container)?;
+        self.decode_exact_embedded_at_depth(depth, input)
+    }
+
+    /// Decode one exact DER document embedded in a previously checked
+    /// container's value using its compact, opaque depth context.
+    pub fn decode_exact_embedded_context<'a>(
+        &mut self,
+        context: Asn1ContainerContext,
+        input: &'a [u8],
+    ) -> Result<Asn1Element<'a>, Asn1Error> {
+        let depth = self.child_depth_from_context(context)?;
+        self.decode_exact_embedded_at_depth(depth, input)
+    }
+
+    fn decode_exact_embedded_at_depth<'a>(
+        &mut self,
+        depth: usize,
+        input: &'a [u8],
+    ) -> Result<Asn1Element<'a>, Asn1Error> {
         self.require_element_capacity(0)?;
         let element = decode_exact(input, self.limits.der).map_err(Asn1Error::framing)?;
         self.elements_read += 1;
@@ -265,8 +302,15 @@ impl Asn1Decoder {
     }
 
     fn child_depth(&self, element: Asn1Element<'_>) -> Result<usize, Asn1Error> {
-        let child_depth = element
-            .depth
+        self.checked_child_depth(element.depth)
+    }
+
+    fn child_depth_from_context(&self, context: Asn1ContainerContext) -> Result<usize, Asn1Error> {
+        self.checked_child_depth(context.depth as usize)
+    }
+
+    fn checked_child_depth(&self, depth: usize) -> Result<usize, Asn1Error> {
+        let child_depth = depth
             .checked_add(1)
             .ok_or_else(|| Asn1Error::new(Asn1ErrorKind::DepthLimitExceeded, 0))?;
         if child_depth >= self.limits.max_depth {

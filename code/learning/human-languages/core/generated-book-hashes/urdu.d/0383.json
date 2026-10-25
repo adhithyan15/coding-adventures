@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:3f86766175fa71e4",
+  "lessonIds": [
+    "UR-C383-manzuri",
+    "UR-C383-intizam",
+    "UR-C383-qati",
+    "UR-C383-batorna",
+    "UR-C383-fel-hona"
+  ],
+  "tex": "urdu/book/chapters/ch383-getting-the-go-ahead.tex"
+}

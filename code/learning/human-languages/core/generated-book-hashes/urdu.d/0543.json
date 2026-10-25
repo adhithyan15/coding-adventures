@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:c7ebbc42aadeb7df",
+  "lessonIds": [
+    "UR-C543-tavaqqo",
+    "UR-C543-pesh-goi",
+    "UR-C543-tarna",
+    "UR-C543-ankna",
+    "UR-C543-durust"
+  ],
+  "tex": "urdu/book/chapters/ch543-a-good-guess.tex"
+}

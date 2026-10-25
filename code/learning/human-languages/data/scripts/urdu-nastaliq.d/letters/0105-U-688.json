@@ -1,0 +1,18 @@
+{
+  "glyph": "ڈ",
+  "sound": "ḍ",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ڈ",
+    "initial": "ڈ",
+    "medial": "ـڈ",
+    "final": "ـڈ"
+  },
+  "components": [
+    "folded shoulder",
+    "leftward baseline",
+    "small to'e-shaped retroflex mark above"
+  ],
+  "strokeOrder": [],
+  "notes": "Ḍāl is the retroflex ḍ, written as dāl wearing the small mark that ṭe and ṛe wear; it does not join to the following letter. Recognition only: its stroke order is deliberately left empty, because no Urdu-scoped stroke-order source has been verified for it yet (a Persian or Arabic row's order is not borrowed)."
+}

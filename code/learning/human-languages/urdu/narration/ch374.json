@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 374,
+  "title": "Leaning on Others",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f98a322c5c84ebbb",
+  "lessons": [
+    {
+      "id": "UR-C374-sahara",
+      "sequence": 22200,
+      "title": "سہارا (sahārā) — a support; someone to lean on",
+      "headword": "سہارا",
+      "romanization": "sahārā",
+      "gloss": "a support; someone to lean on",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1bb303ec92e2a14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to set (of the sun), then the Urdu for unfinished."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سہارا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سہارا — sahārā — \"a support; someone to lean on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ کا سہارا نہ ہوتا تو میں گر جاتا۔ agar āp kā sahārā na hotā to maiṅ gir jātā. If you had not held me up, I would have fallen."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سہارا (sahārā) is inherited: CDIAL lists the Hindi cousin sahārā, \"help\", under Sanskrit sahakāra, \"assistance\" (CDIAL 13299)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahārā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahārā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp kā sahārā na hotā to maiṅ gir jātā. — If you had not held me up, I would have fallen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp kā sahārā na hotā to maiṅ gir jātā.* — If you had not held me up, I would have fallen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to set (of the sun), then the Urdu for unfinished, then say sahārā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to set (of the sun), then the Urdu for unfinished, then say *sahārā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سہارا (sahārā) mean? (\"A support; someone to lean on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C374-zid",
+      "sequence": 22210,
+      "title": "ضد (zid) — stubbornness; insistence",
+      "headword": "ضد",
+      "romanization": "zid",
+      "gloss": "stubbornness; insistence",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ebfa273a68ef7bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for unfinished, then the Urdu for someone to lean on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ضد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضد — zid — \"stubbornness; insistence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر تم نے ضد کی تو کچھ نہیں ملے گا۔ agar tum ne zid kī to kuchh nahīṅ mile gā. If you are stubborn, you will get nothing."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضد (zid) is usually traced, through Persian, to Arabic ḍidd, \"the opposite\"; Urdu uses it for stubborn insistence, a sense our sources do not trace."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zid, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zid*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum ne zid kī to kuchh nahīṅ mile gā. — If you are stubborn, you will get nothing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum ne zid kī to kuchh nahīṅ mile gā.* — If you are stubborn, you will get nothing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for unfinished, then the Urdu for someone to lean on, then say zid again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for unfinished, then the Urdu for someone to lean on, then say *zid* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ضد (zid) mean? (\"Stubbornness; insistence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C374-ahl",
+      "sequence": 22220,
+      "title": "اہل (ahl) — eligible; qualified",
+      "headword": "اہل",
+      "romanization": "ahl",
+      "gloss": "eligible; qualified",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6464c2553065ff1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for someone to lean on, then the Urdu for stubbornness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اہل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اہل — ahl — \"eligible; qualified\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ اہل ہیں تو درخواست دیجیے۔ agar āp ahl haiṅ to darkhāst dījiye. If you are eligible, please apply."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اہل (ahl) is usually traced, through Persian, to Arabic ahl, \"people; those worthy of something\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp ahl haiṅ to darkhāst dījiye. — If you are eligible, please apply.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp ahl haiṅ to darkhāst dījiye.* — If you are eligible, please apply.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for someone to lean on, then the Urdu for stubbornness, then say ahl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for someone to lean on, then the Urdu for stubbornness, then say *ahl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اہل (ahl) mean? (\"Eligible; qualified\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C374-inhisar",
+      "sequence": 22230,
+      "title": "انحصار (inhisār) — reliance; dependence",
+      "headword": "انحصار",
+      "romanization": "inhisār",
+      "gloss": "reliance; dependence",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:039ce3858ef8d5c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for stubbornness, then the Urdu for eligible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انحصار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انحصار — inhisār — \"reliance; dependence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر انحصار صرف بارش پر ہے تو مشکل ہو گی۔ agar inhisār sirf bārish par hai to mushkil ho gī. If everything depends on the rain alone, things will be hard."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انحصار (inhisār) is usually traced, through Persian, to Arabic inḥiṣār, \"being confined, being limited\", of the same family as منحصر, \"depending\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inhisār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inhisār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inhisār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inhisār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar inhisār sirf bārish par hai to mushkil ho gī. — If everything depends on the rain alone, things will be hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar inhisār sirf bārish par hai to mushkil ho gī.* — If everything depends on the rain alone, things will be hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for stubbornness, then the Urdu for eligible, then say inhisār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for stubbornness, then the Urdu for eligible, then say *inhisār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انحصار (inhisār) mean? (\"Reliance; dependence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C374-israr-karna",
+      "sequence": 22240,
+      "title": "اصرار کرنا (isrār karnā) — to insist",
+      "headword": "اصرار کرنا",
+      "romanization": "isrār karnā",
+      "gloss": "to insist",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4113e9f4ed3fed52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for eligible, then the Urdu for reliance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اصرار کرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اصرار کرنا — isrār karnā — \"to insist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ اصرار کرتے ہیں تو میں آؤں گا۔ agar āp isrār karte haiṅ to maiṅ āūṅ gā. If you insist, I will come."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے آنے پر اصرار کیا, us ne āne par isrār kiyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اصرار کرنا (isrār karnā) is built from isrār, usually traced, through Persian, to Arabic iṣrār, \"persisting\", and کرنا, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isrār karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isrār karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isrār karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isrār karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp isrār karte haiṅ to maiṅ āūṅ gā. — If you insist, I will come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp isrār karte haiṅ to maiṅ āūṅ gā.* — If you insist, I will come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for eligible, then the Urdu for reliance, then say isrār karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for eligible, then the Urdu for reliance, then say *isrār karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اصرار کرنا (isrār karnā) mean? (\"To insist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:63f81770d299c5c5",
+  "lessonIds": [
+    "GU-C456-dubhavu",
+    "GU-C456-mathu",
+    "GU-C456-mahenu",
+    "GU-C456-avganna",
+    "GU-C456-thes"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch456.txt",
+  "json": "gujarati/narration/ch456.json",
+  "textHash": "fnv1a64:d6242ea696656f3b",
+  "jsonHash": "fnv1a64:4a29924ac5813060",
+  "findings": []
+}

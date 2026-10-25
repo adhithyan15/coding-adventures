@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:e7640b07d255bb0d",
+  "lessonIds": [
+    "GU-C455-gamgin",
+    "GU-C455-vyatha",
+    "GU-C455-nisaso",
+    "GU-C455-radavvu",
+    "GU-C455-rudan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch455.txt",
+  "json": "gujarati/narration/ch455.json",
+  "textHash": "fnv1a64:f10f3c04091b845c",
+  "jsonHash": "fnv1a64:a99a7e53fe3cfe5c",
+  "findings": []
+}

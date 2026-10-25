@@ -1,0 +1,11 @@
+{
+  "id": "UR-C333-khatir",
+  "pathSegment": "UR-PATH-333-MAQSAD333",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-333-MAQSAD333",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C313-qurbani",
+  "pathSegment": "UR-PATH-313-TEHRIK313",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-313-TEHRIK313",
+      "order": 3
+    }
+  ]
+}

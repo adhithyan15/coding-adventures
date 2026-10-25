@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "The Author",
+  "label": "ch:gu-the-author",
+  "canDo": "I can say who wrote a book and what it is about.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C336-kalpana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can say who wrote a book and what it is about.",
+    "assesses": [
+      "GU-LEX-C336-LEKHAK336-03",
+      "GU-LEX-C336-LEKHAK336-04",
+      "GU-LEX-C336-LEKHAK336-05"
+    ]
+  }
+}

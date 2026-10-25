@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 498,
+  "title": "Clay and the Kiln",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:00f4c852f4b7ce6d",
+  "lessons": [
+    {
+      "id": "UR-C498-chak",
+      "sequence": 29200,
+      "title": "چاک (chāk) — a potter's wheel",
+      "headword": "چاک",
+      "romanization": "chāk",
+      "gloss": "a potter's wheel",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:779119d0d2c7ad88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to knock in, then the Urdu for to file (metal or wood)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چاک",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چاک — chāk — \"a potter's wheel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کمہار چاک پر مٹی کا برتن بناتا ہے۔ kumhār chāk par miṭṭī kā bartan banātā hai. The potter makes a clay pot on the wheel."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چاک (chāk) is inherited: CDIAL lists the Hindi cousin cāk, \"any kind of wheel\", under Sanskrit cakra, \"a wheel\" (CDIAL 4538)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumhār chāk par miṭṭī kā bartan banātā hai. — The potter makes a clay pot on the wheel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumhār chāk par miṭṭī kā bartan banātā hai.* — The potter makes a clay pot on the wheel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to knock in, then the Urdu for to file (metal or wood), then say chāk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to knock in, then the Urdu for to file (metal or wood), then say *chāk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چاک (chāk) mean? (\"A potter's wheel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C498-sancha",
+      "sequence": 29210,
+      "title": "سانچا (sāṅchā) — a mould",
+      "headword": "سانچا",
+      "romanization": "sāṅchā",
+      "gloss": "a mould",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cec9a636f7f0ca07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to file (metal or wood), then the Urdu for a potter's wheel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سانچا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سانچا — sāṅchā — \"a mould\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس سانچے سے مٹی کے کھلونے بنتے ہیں۔ is sāṅche se miṭṭī ke khilaune bante haiṅ. Clay toys are made in this mould."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سانچا (sāṅchā) is inherited: CDIAL lists the Hindi cousin sā̃cā, \"a mould\", under Sanskrit sañcaka, \"a mould, a figure\" (CDIAL 13096)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāṅchā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāṅchā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāṅchā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāṅchā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is sāṅche se miṭṭī ke khilaune bante haiṅ. — Clay toys are made in this mould.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *is sāṅche se miṭṭī ke khilaune bante haiṅ.* — Clay toys are made in this mould.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to file (metal or wood), then the Urdu for a potter's wheel, then say sāṅchā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to file (metal or wood), then the Urdu for a potter's wheel, then say *sāṅchā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سانچا (sāṅchā) mean? (\"A mould\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C498-ava",
+      "sequence": 29220,
+      "title": "آوا (āvā) — a potter's kiln",
+      "headword": "آوا",
+      "romanization": "āvā",
+      "gloss": "a potter's kiln",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:040d3f368761aeba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a potter's wheel, then the Urdu for a mould."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آوا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آوا — āvā — \"a potter's kiln\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کمہار نے برتن آوے میں رکھے۔ kumhār ne bartan āve meṅ rakhe. The potter put the pots in the kiln."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آوا (āvā) is inherited from Sanskrit āpāka, \"a baking oven, a potter's kiln\" (CDIAL 1202)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumhār ne bartan āve meṅ rakhe. — The potter put the pots in the kiln.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumhār ne bartan āve meṅ rakhe.* — The potter put the pots in the kiln.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a potter's wheel, then the Urdu for a mould, then say āvā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a potter's wheel, then the Urdu for a mould, then say *āvā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آوا (āvā) mean? (\"A potter's kiln\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C498-matka",
+      "sequence": 29230,
+      "title": "مٹکا (maṭkā) — a large clay pot",
+      "headword": "مٹکا",
+      "romanization": "maṭkā",
+      "gloss": "a large clay pot",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b93fde8fbe25957c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a mould, then the Urdu for a potter's kiln."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مٹکا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مٹکا — maṭkā — \"a large clay pot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "گرمیوں میں ہم مٹکے میں پانی رکھتے ہیں۔ garmiyoṅ meṅ ham maṭke meṅ pānī rakhte haiṅ. In summer we keep water in a big clay pot."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مٹکا (maṭkā) is inherited: CDIAL lists the Hindi cousin maṭkā, \"an earthen jar\", under Sanskrit mṛdā, \"earth, clay\" (CDIAL 10291)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṭkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṭkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṭkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṭkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garmiyoṅ meṅ ham maṭke meṅ pānī rakhte haiṅ. — In summer we keep water in a big clay pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garmiyoṅ meṅ ham maṭke meṅ pānī rakhte haiṅ.* — In summer we keep water in a big clay pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a mould, then the Urdu for a potter's kiln, then say maṭkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a mould, then the Urdu for a potter's kiln, then say *maṭkā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مٹکا (maṭkā) mean? (\"A large clay pot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C498-tapana",
+      "sequence": 29240,
+      "title": "تپانا (tapānā) — to heat; to fire (pots)",
+      "headword": "تپانا",
+      "romanization": "tapānā",
+      "gloss": "to heat; to fire (pots)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79e36c94e440a92a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a potter's kiln, then the Urdu for a large clay pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تپانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تپانا — tapānā — \"to heat; to fire (pots)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کمہار برتنوں کو آگ میں تپاتا ہے۔ kumhār bartanoṅ ko āg meṅ tapātā hai. The potter fires his pots in the flames."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے برتن آگ میں تپائے, us ne bartan āg meṅ tapāe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تپانا (tapānā) is the causative of tapnā, \"to be hot\", which goes back to Sanskrit tapyati, \"is hot\" (CDIAL 5684)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumhār bartanoṅ ko āg meṅ tapātā hai. — The potter fires his pots in the flames.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumhār bartanoṅ ko āg meṅ tapātā hai.* — The potter fires his pots in the flames.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a potter's kiln, then the Urdu for a large clay pot, then say tapānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a potter's kiln, then the Urdu for a large clay pot, then say *tapānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تپانا (tapānā) mean? (\"To heat; to fire (pots)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

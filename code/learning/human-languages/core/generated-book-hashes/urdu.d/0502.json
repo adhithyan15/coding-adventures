@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:e18a70f4e8c431f2",
+  "lessonIds": [
+    "UR-C502-kharkharana",
+    "UR-C502-qabza",
+    "UR-C502-nat",
+    "UR-C502-zang",
+    "UR-C502-ispring"
+  ],
+  "tex": "urdu/book/chapters/ch502-rattles-and-rust.tex"
+}

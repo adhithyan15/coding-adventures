@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:a334937a4da26d28",
+  "lessonIds": [
+    "GU-C403-dhorimarg",
+    "GU-C403-mail",
+    "GU-C403-kilomitar",
+    "GU-C403-phantavu",
+    "GU-C403-takravu"
+  ],
+  "tex": "gujarati/book/chapters/ch403-on-the-highway.tex"
+}

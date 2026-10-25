@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C498-chak",
+    "language": "urdu",
+    "chapter": 498,
+    "sequence": 29200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:779119d0d2c7ad88"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C304-hangama",
+  "pathSegment": "UR-PATH-304-FASAD304",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-304-FASAD304",
+      "order": 1
+    }
+  ]
+}

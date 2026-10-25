@@ -1,0 +1,11 @@
+{
+  "id": "GU-C468-gappu",
+  "pathSegment": "GU-PATH-468-JUTHU468",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-468-JUTHU468",
+      "order": 1
+    }
+  ]
+}

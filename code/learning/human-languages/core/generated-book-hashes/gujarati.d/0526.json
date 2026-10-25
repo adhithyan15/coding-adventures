@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:8034ca24bf347cb5",
+  "lessonIds": [
+    "GU-C526-sur",
+    "GU-C526-tal",
+    "GU-C526-gayak",
+    "GU-C526-rag",
+    "GU-C526-chedvu"
+  ],
+  "tex": "gujarati/book/chapters/ch526-notes-and-rhythm.tex"
+}

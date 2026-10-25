@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C295-dand",
+    "language": "gujarati",
+    "chapter": 295,
+    "sequence": 16540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4fc379afc1436331"
+  },
+  "findings": []
+}

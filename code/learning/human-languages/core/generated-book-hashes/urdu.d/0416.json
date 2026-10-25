@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:b3cad3cc4ddc10ae",
+  "lessonIds": [
+    "UR-C416-kura",
+    "UR-C416-nali",
+    "UR-C416-gatar",
+    "UR-C416-badbu",
+    "UR-C416-phailana"
+  ],
+  "tex": "urdu/book/chapters/ch416-rubbish-and-drains.tex"
+}

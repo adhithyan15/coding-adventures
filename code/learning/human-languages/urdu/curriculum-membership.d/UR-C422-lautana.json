@@ -1,0 +1,11 @@
+{
+  "id": "UR-C422-lautana",
+  "pathSegment": "UR-PATH-422-DALAL422",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-422-DALAL422",
+      "order": 4
+    }
+  ]
+}

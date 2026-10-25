@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 335,
+  "title": "Taking Sides",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:20c36f4f60fa4bfa",
+  "lessons": [
+    {
+      "id": "UR-C335-khilaf",
+      "sequence": 20200,
+      "title": "خلاف (khilāf) — against (کے خلاف)",
+      "headword": "خلاف",
+      "romanization": "khilāf",
+      "gloss": "against (کے خلاف)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:191bb30f6601b3f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an altercation, then the Urdu for logic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خلاف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خلاف — khilāf — \"against (کے خلاف)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شہری اس نئے قانون کے خلاف ہیں۔ shahrī is naye qānūn ke khilāf haiṅ. The citizens are against this new law."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خلاف (khilāf) is usually traced, through Persian, to Arabic khilāf, \"opposition, the contrary\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khilāf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khilāf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khilāf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khilāf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahrī is naye qānūn ke khilāf haiṅ. — The citizens are against this new law.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahrī is naye qānūn ke khilāf haiṅ.* — The citizens are against this new law.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an altercation, then the Urdu for logic, then say khilāf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an altercation, then the Urdu for logic, then say *khilāf* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خلاف (khilāf) mean? (\"Against (کے خلاف (khilāf))\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C335-himayat-karna",
+      "sequence": 20210,
+      "title": "حمایت کرنا (himāyat karnā) — to back; to support (an idea, a person)",
+      "headword": "حمایت کرنا",
+      "romanization": "himāyat karnā",
+      "gloss": "to back; to support (an idea, a person)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18e1cadccec9d965",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for logic, then the Urdu for against."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حمایت کرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حمایت کرنا — himāyat karnā — \"to back; to support (an idea, a person)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میں آپ کی رائے کی حمایت کرتا ہوں۔ maiṅ āp kī rāe kī himāyat kartā hūṅ. I support your view."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے سارا کی حمایت کی, us ne sārā kī himāyat kī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حمایت کرنا (himāyat karnā) is built from himāyat, usually traced, through Persian, to Arabic ḥimāya, \"protection\", and کرنا, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "himāyat karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *himāyat karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "himāyat karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *himāyat karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ āp kī rāe kī himāyat kartā hūṅ. — I support your view.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṅ āp kī rāe kī himāyat kartā hūṅ.* — I support your view.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for logic, then the Urdu for against, then say himāyat karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for logic, then the Urdu for against, then say *himāyat karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حمایت کرنا (himāyat karnā) mean? (\"To back; to support (an idea, a person)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C335-mukhalafat-karna",
+      "sequence": 20220,
+      "title": "مخالفت کرنا (mukhālafat karnā) — to oppose",
+      "headword": "مخالفت کرنا",
+      "romanization": "mukhālafat karnā",
+      "gloss": "to oppose",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95cd70dc558ec9e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for against, then the Urdu for to back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مخالفت کرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخالفت کرنا — mukhālafat karnā — \"to oppose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کسان نئے ٹیکس کی مخالفت کرتے ہیں۔ kisān naye ṭaiks kī mukhālafat karte haiṅ. The farmers oppose the new tax."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے قانون کی مخالفت کی, us ne qānūn kī mukhālafat kī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخالفت کرنا (mukhālafat karnā) is built from mukhālafat, usually traced, through Persian, to Arabic mukhālafa, \"opposing\", and کرنا, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhālafat karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhālafat karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhālafat karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhālafat karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kisān naye ṭaiks kī mukhālafat karte haiṅ. — The farmers oppose the new tax.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kisān naye ṭaiks kī mukhālafat karte haiṅ.* — The farmers oppose the new tax.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for against, then the Urdu for to back, then say mukhālafat karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for against, then the Urdu for to back, then say *mukhālafat karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مخالفت کرنا (mukhālafat karnā) mean? (\"To oppose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C335-muttafiq",
+      "sequence": 20230,
+      "title": "متفق (muttafiq) — in agreement",
+      "headword": "متفق",
+      "romanization": "muttafiq",
+      "gloss": "in agreement",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae3d8b853ba9880b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to back, then the Urdu for to oppose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: متفق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متفق — muttafiq — \"in agreement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میں آپ سے متفق ہوں۔ maiṅ āp se muttafiq hūṅ. I agree with you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متفق (muttafiq) is usually traced, through Persian, to Arabic muttafiq, \"agreeing, of one mind\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttafiq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttafiq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttafiq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttafiq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ āp se muttafiq hūṅ. — I agree with you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṅ āp se muttafiq hūṅ.* — I agree with you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to back, then the Urdu for to oppose, then say muttafiq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to back, then the Urdu for to oppose, then say *muttafiq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does متفق (muttafiq) mean? (\"In agreement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C335-fariq",
+      "sequence": 20240,
+      "title": "فریق (farīq) — a side in a dispute",
+      "headword": "فریق",
+      "romanization": "farīq",
+      "gloss": "a side in a dispute",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:604577222ba205e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to oppose, then the Urdu for in agreement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فریق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فریق — farīq — \"a side in a dispute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دونوں فریق ایک دوسرے سے ناراض ہیں۔ donoṅ farīq ek dūsre se nārāz haiṅ. Both sides are angry with each other."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فریق (farīq) is usually traced, through Persian, to Arabic farīq, \"a party, a group\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farīq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farīq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farīq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farīq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "donoṅ farīq ek dūsre se nārāz haiṅ. — Both sides are angry with each other.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *donoṅ farīq ek dūsre se nārāz haiṅ.* — Both sides are angry with each other.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to oppose, then the Urdu for in agreement, then say farīq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to oppose, then the Urdu for in agreement, then say *farīq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فریق (farīq) mean? (\"A side in a dispute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

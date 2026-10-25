@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:35695ae2a90a732d",
+  "lessonIds": [
+    "GU-C364-sodh",
+    "GU-C364-avlokan",
+    "GU-C364-siddh",
+    "GU-C364-rahasya",
+    "GU-C364-ughadvu-uncover"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch364.txt",
+  "json": "gujarati/narration/ch364.json",
+  "textHash": "fnv1a64:2665376b256f2538",
+  "jsonHash": "fnv1a64:a1019b0117031589",
+  "findings": []
+}

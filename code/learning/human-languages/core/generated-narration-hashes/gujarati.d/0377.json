@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:d3b94847dfc6d0b3",
+  "lessonIds": [
+    "GU-C377-dasa",
+    "GU-C377-sthir",
+    "GU-C377-samanya",
+    "GU-C377-badlavu",
+    "GU-C377-vanasvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch377.txt",
+  "json": "gujarati/narration/ch377.json",
+  "textHash": "fnv1a64:03e4e51547ac19b6",
+  "jsonHash": "fnv1a64:cdc27e9ce58b21c0",
+  "findings": []
+}

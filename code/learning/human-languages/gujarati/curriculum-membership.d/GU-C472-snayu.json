@@ -1,0 +1,11 @@
+{
+  "id": "GU-C472-snayu",
+  "pathSegment": "GU-PATH-472-NAS472",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-472-NAS472",
+      "order": 1
+    }
+  ]
+}

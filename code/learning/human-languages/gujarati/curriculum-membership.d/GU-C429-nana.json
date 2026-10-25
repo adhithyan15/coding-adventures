@@ -1,0 +1,11 @@
+{
+  "id": "GU-C429-nana",
+  "pathSegment": "GU-PATH-429-SAFE429",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-429-SAFE429",
+      "order": 1
+    }
+  ]
+}

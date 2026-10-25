@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C267-bad",
+    "language": "urdu",
+    "chapter": 267,
+    "sequence": 16200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:443f0e0a529ac38c"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 543,
+  "title": "A Good Guess",
+  "label": "ch:ur-a-good-guess",
+  "canDo": "I can make guesses and say what follows if they are right.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C543-durust",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 543: I can make guesses and say what follows if they are right.",
+    "assesses": [
+      "UR-LEX-C543-ATKAL543-03",
+      "UR-LEX-C543-ATKAL543-04",
+      "UR-LEX-C543-ATKAL543-05"
+    ]
+  }
+}

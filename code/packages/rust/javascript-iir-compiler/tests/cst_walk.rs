@@ -169,7 +169,13 @@ fn compile_ast_agrees_with_compile_source_on_both_cst_parses() {
         "console.log(8 - 2 + 1, 8 / 2 / 2, 2 * 3 - 4 / 2);",
         "",
     ] {
-        let expected = format!("{:?}", compile_source(source, "m").unwrap());
+        // Since LANG84 phase 6d `compile_source` records the edition it
+        // parsed with; `compile_ast` takes a bare tree and records none.
+        // The provenance differs, the code must not.
+        let mut from_source = compile_source(source, "m").unwrap();
+        assert_eq!(from_source.release.as_deref(), Some("es2020"));
+        from_source.release = None;
+        let expected = format!("{from_source:?}");
         let module = compile_ast(&bounded(source), "m").unwrap();
         assert_eq!(format!("{module:?}"), expected, "bounded: {source:?}");
         // Before LANG84 phase 6a the regex-aware parse read `8 / 2 / 2` as

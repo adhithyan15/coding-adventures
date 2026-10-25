@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Strict and Proud",
+  "label": "ch:gu-strict-and-proud",
+  "canDo": "I can describe a strict or proud person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C465-tevavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can describe a strict or proud person.",
+    "assesses": [
+      "GU-LEX-C465-SAKHAT465-03",
+      "GU-LEX-C465-SAKHAT465-04",
+      "GU-LEX-C465-SAKHAT465-05"
+    ]
+  }
+}

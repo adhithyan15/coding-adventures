@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:ae35bc0658d9a6c7",
+  "lessonIds": [
+    "UR-C513-fursat",
+    "UR-C513-mashghala",
+    "UR-C513-tafrih",
+    "UR-C513-piknik",
+    "UR-C513-album"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch513.txt",
+  "json": "urdu/narration/ch513.json",
+  "textHash": "fnv1a64:0b8f64b19ef3b3f3",
+  "jsonHash": "fnv1a64:8d19d1c0db3cac76",
+  "findings": []
+}

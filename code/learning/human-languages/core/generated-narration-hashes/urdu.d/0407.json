@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:d573c9dcf1aadb29",
+  "lessonIds": [
+    "UR-C407-kharab",
+    "UR-C407-tutna",
+    "UR-C407-shor",
+    "UR-C407-marammat",
+    "UR-C407-hatana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch407.txt",
+  "json": "urdu/narration/ch407.json",
+  "textHash": "fnv1a64:cb6674e4ace3cc53",
+  "jsonHash": "fnv1a64:c20b3e25bd69b862",
+  "findings": []
+}

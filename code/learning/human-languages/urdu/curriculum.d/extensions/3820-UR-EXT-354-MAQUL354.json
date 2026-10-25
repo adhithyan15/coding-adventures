@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-354-MAQUL354",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether a demand is fair.",
+  "prerequisites": []
+}

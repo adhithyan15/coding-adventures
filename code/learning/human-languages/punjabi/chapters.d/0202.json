@@ -1,0 +1,18 @@
+{
+  "chapter": 202,
+  "title": "This Person Is a Traveller",
+  "label": "ch:pa-a2-yatri",
+  "canDo": "I can recognise and use the person noun for a traveller in one bounded identity frame.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C202-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce the traveller noun in one bounded identity frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-LEX-YATRI-202"
+    ],
+    "note": "This twenty-fifth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

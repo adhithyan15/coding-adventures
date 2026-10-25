@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:10c2ba15e0526127",
+  "lessonIds": [
+    "GU-C541-sapath",
+    "GU-C541-vaydo",
+    "GU-C541-bharoso",
+    "GU-C541-chatakbari",
+    "GU-C541-prastav"
+  ],
+  "tex": "gujarati/book/chapters/ch541-promises-and-trust.tex"
+}

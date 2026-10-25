@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C474-cusvu",
+    "language": "gujarati",
+    "chapter": 474,
+    "sequence": 26400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:182ca831728405d6"
+  },
+  "findings": []
+}

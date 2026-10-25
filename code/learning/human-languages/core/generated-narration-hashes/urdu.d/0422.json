@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:8bfe7c8b669bf077",
+  "lessonIds": [
+    "UR-C422-dallal",
+    "UR-C422-jaidad",
+    "UR-C422-bima",
+    "UR-C422-vusul-karna",
+    "UR-C422-lautana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch422.txt",
+  "json": "urdu/narration/ch422.json",
+  "textHash": "fnv1a64:a9d061a9e19f3ea6",
+  "jsonHash": "fnv1a64:bd26cc0684213458",
+  "findings": []
+}

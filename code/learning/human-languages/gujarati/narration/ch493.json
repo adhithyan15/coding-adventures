@@ -1,0 +1,849 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 493,
+  "title": "Many Generations",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:040d784655fe6cb7",
+  "lessons": [
+    {
+      "id": "GU-C493-pedhi",
+      "sequence": 27350,
+      "title": "પેઢી (peḍhī) — a generation",
+      "headword": "પેઢી",
+      "romanization": "peḍhī",
+      "gloss": "a generation",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7528e9961b21608",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a grandson, then the Gujarati for a cousin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પેઢી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પેઢી — peḍhī — \"a generation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમારા કુટુંબની ચાર પેઢી આ ગામમાં રહી છે. amārā kuṭumbnī cār peḍhī ā gāmmā̃ rahī che. Four generations of our family have lived in this village."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પેઢી (peḍhī) is inherited from Sanskrit pīṭha, \"stool, bench\"; CDIAL lists the Gujarati word as \"step of a ladder\" (CDIAL 8222). The sense \"a generation\", one step in a family line, is probably a later use of the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peḍhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peḍhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peḍhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peḍhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amārā kuṭumbnī cār peḍhī ā gāmmā̃ rahī che. — Four generations of our family have lived in this village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amārā kuṭumbnī cār peḍhī ā gāmmā̃ rahī che.* — Four generations of our family have lived in this village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a grandson, then the Gujarati for a cousin, then say peḍhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a grandson, then the Gujarati for a cousin, then say *peḍhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પેઢી (peḍhī) mean? (\"A generation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C493-purvaj",
+      "sequence": 27360,
+      "title": "પૂર્વજ (pūrvaj) — an ancestor",
+      "headword": "પૂર્વજ",
+      "romanization": "pūrvaj",
+      "gloss": "an ancestor",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0171257c794d474c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a cousin, then the Gujarati for a generation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પૂર્વજ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પૂર્વજ — pūrvaj — \"an ancestor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમારા પૂર્વજો ઘણા મહેનતુ હતા. amārā pūrvajo ghaṇā mahenatu hatā. Our ancestors were very hard-working."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પૂર્વજ (pūrvaj) is a tatsama, Sanskrit pūrvaja, \"born before, former\", as Monier-Williams records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrvaj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrvaj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrvaj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrvaj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amārā pūrvajo ghaṇā mahenatu hatā. — Our ancestors were very hard-working.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amārā pūrvajo ghaṇā mahenatu hatā.* — Our ancestors were very hard-working.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a cousin, then the Gujarati for a generation, then say pūrvaj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a cousin, then the Gujarati for a generation, then say *pūrvaj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પૂર્વજ (pūrvaj) mean? (\"An ancestor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C493-bujhurg",
+      "sequence": 27370,
+      "title": "બુઝુર્ગ (bujhurg) — a respected elder",
+      "headword": "બુઝુર્ગ",
+      "romanization": "bujhurg",
+      "gloss": "a respected elder",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b8820a13febe570",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a generation, then the Gujarati for an ancestor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બુઝુર્ગ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બુઝુર્ગ — bujhurg — \"a respected elder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગામના બુઝુર્ગો સાંજે મંદિર પાસે બેસે છે. gāmnā bujhurgo sā̃je mandir pāse bese che. In the evenings the village elders sit near the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine or feminine noun, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બુઝુર્ગ (bujhurg) is usually traced to Persian buzurg, \"great, elder\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bujhurg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bujhurg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bujhurg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bujhurg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāmnā bujhurgo sā̃je mandir pāse bese che. — In the evenings the village elders sit near the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāmnā bujhurgo sā̃je mandir pāse bese che.* — In the evenings the village elders sit near the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a generation, then the Gujarati for an ancestor, then say bujhurg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a generation, then the Gujarati for an ancestor, then say *bujhurg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બુઝુર્ગ (bujhurg) mean? (\"A respected elder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C493-parivar",
+      "sequence": 27380,
+      "title": "પરિવાર (parivār) — a household; family members",
+      "headword": "પરિવાર",
+      "romanization": "parivār",
+      "gloss": "a household; family members",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b34380986ed9322",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an ancestor, then the Gujarati for a respected elder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પરિવાર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પરિવાર — parivār — \"a household; family members\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમારા પરિવારમાં દસ માણસ છે. amārā parivārmā̃ das māṇas che. There are ten people in our household."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પરિવાર (parivār) is a tatsama, Sanskrit parivāra, \"a cover\" and \"the people around someone, a retinue\", as Monier-Williams records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parivār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parivār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parivār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parivār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amārā parivārmā̃ das māṇas che. — There are ten people in our household.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amārā parivārmā̃ das māṇas che.* — There are ten people in our household.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an ancestor, then the Gujarati for a respected elder, then say parivār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an ancestor, then the Gujarati for a respected elder, then say *parivār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પરિવાર (parivār) mean? (\"A household; family members\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C493-santan",
+      "sequence": 27390,
+      "title": "સંતાન (santān) — offspring; a child",
+      "headword": "સંતાન",
+      "romanization": "santān",
+      "gloss": "offspring; a child",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ce29244fd7b34dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a respected elder, then the Gujarati for a household."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સંતાન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંતાન — santān — \"offspring; a child\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તેમને બે સંતાન છે, એક દીકરો અને એક દીકરી. temne be santān che, ek dīkro ane ek dīkrī. They have two children, a son and a daughter."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંતાન (santān) is a tatsama, Sanskrit saṃtāna, \"continued succession\", as Monier-Williams records it: the line that carries a family on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "santān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *santān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "santān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *santān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temne be santān che, ek dīkro ane ek dīkrī. — They have two children, a son and a daughter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *temne be santān che, ek dīkro ane ek dīkrī.* — They have two children, a son and a daughter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a respected elder, then the Gujarati for a household, then say santān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a respected elder, then the Gujarati for a household, then say *santān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સંતાન (santān) mean? (\"Offspring; a child\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R493-review-487-493",
+      "sequence": 27400,
+      "title": "Looking back: from Caring for Grandmother to Many Generations",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Caring for Grandmother to Many Generations",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75f905c821a5ff1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for nursing care and consoling words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nursing care, consoling words, a massage, to massage by pressing, to cover someone with a blanket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nursing care, consoling words, a massage, to massage by pressing, to cover someone with a blanket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bathe someone, to feed, to dress someone, to play with a child, to give someone a drink",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bathe someone, to feed, to dress someone, to play with a child, to give someone a drink]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "faring well, relief from pain, a prayer for someone, to recall, sympathy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: faring well, relief from pain, a prayer for someone, to recall, sympathy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a father-in-law, a husband's younger brother, a husband's sister, a husband's elder brother's wife, married life",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a father-in-law, a husband's younger brother, a husband's sister, a husband's elder brother's wife, married life]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a son-in-law, a wife's brother, a sister's husband, the father-in-law of one's child, the mother-in-law of one's child",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a son-in-law, a wife's brother, a sister's husband, the father-in-law of one's child, the mother-in-law of one's child]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a married woman's parents' home, the in-laws' home, a sister's child, a grandson, a cousin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a married woman's parents' home, the in-laws' home, a sister's child, a grandson, a cousin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a generation, an ancestor, a respected elder, a household, offspring",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a generation, an ancestor, a respected elder, a household, offspring]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nursing care? (ચાકરી, cākrī.) Consoling words? (દિલાસો, dilāso.) A massage? (માલિશ, māliś.) To massage by pressing? (દાબવું, dābvũ.) To cover someone with a blanket? (ઓઢાડવું, oḍhāḍvũ.) To bathe someone? (નવડાવવું, navḍāvvũ.) To feed? (ખવડાવવું, khavḍāvvũ.) To dress someone? (પહેરાવવું, paherāvvũ.) To play with a child? (રમાડવું, ramāḍvũ.) To give someone a drink? (પીવડાવવું, pīvḍāvvũ.) Faring well? (કુશળ, kuśaḷ.) Relief from pain? (શાતા, śātā.) A prayer for someone? (દુઆ, duā.) To recall? (સંભારવું, sambhārvũ.) Sympathy? (હમદર્દી, hamdardī.) A father-in-law? (સસરો, sasro.) A husband's younger brother? (દિયર, diyar.) A husband's sister? (નણંદ, naṇand.) A husband's elder brother's wife? (જેઠાણી, jeṭhāṇī.) Married life? (ઘરસંસાર, gharsansār.) A son-in-law? (જમાઈ, jamāī.) A wife's brother? (સાળો, sāḷo.) A sister's husband? (બનેવી, banevī.) The father-in-law of one's child? (વેવાઈ, vevāī.) The mother-in-law of one's child? (વેવાણ, vevāṇ.) A married woman's parents' home? (પિયર, piyar.) The in-laws' home? (સાસરું, sāsrũ.) A sister's child? (ભાણેજ, bhāṇej.) A grandson? (પૌત્ર, pautra.) A cousin? (પિતરાઈ, pitrāī.) A generation? (પેઢી, peḍhī.) An ancestor? (પૂર્વજ, pūrvaj.) A respected elder? (બુઝુર્ગ, bujhurg.) A household? (પરિવાર, parivār.) Offspring? (સંતાન, santān.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

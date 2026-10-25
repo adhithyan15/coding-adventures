@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:5e2bc71064545be7",
+  "lessonIds": [
+    "GU-C437-thar",
+    "GU-C437-jhakal",
+    "GU-C437-tadh",
+    "GU-C437-thijvu",
+    "GU-C437-thartharvu"
+  ],
+  "tex": "gujarati/book/chapters/ch437-frost-and-the-cold.tex"
+}

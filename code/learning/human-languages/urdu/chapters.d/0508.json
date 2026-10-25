@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Heat in the Pan",
+  "label": "ch:ur-heat-in-the-pan",
+  "canDo": "I can describe frying, roasting and covering food.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C508-kafgir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can describe frying, roasting and covering food.",
+    "assesses": [
+      "UR-LEX-C508-DHAKKAN508-03",
+      "UR-LEX-C508-DHAKKAN508-04",
+      "UR-LEX-C508-DHAKKAN508-05"
+    ]
+  }
+}

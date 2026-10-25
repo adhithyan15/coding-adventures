@@ -1,0 +1,11 @@
+{
+  "id": "GU-C461-udau",
+  "pathSegment": "GU-PATH-461-KRUPAN461",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-461-KRUPAN461",
+      "order": 1
+    }
+  ]
+}

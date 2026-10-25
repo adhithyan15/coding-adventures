@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Mounds, Heaps and Caves",
+  "label": "ch:ur-mounds-heaps-and-caves",
+  "canDo": "I can describe the ground: dunes, heaps, caves and what a storm leaves behind.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C433-ukharna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can describe the ground: dunes, heaps, caves and what a storm leaves behind.",
+    "assesses": [
+      "UR-LEX-C433-TILA433-03",
+      "UR-LEX-C433-TILA433-04",
+      "UR-LEX-C433-TILA433-05"
+    ]
+  }
+}

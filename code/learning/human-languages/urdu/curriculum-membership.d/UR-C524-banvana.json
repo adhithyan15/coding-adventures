@@ -1,0 +1,11 @@
+{
+  "id": "UR-C524-banvana",
+  "pathSegment": "UR-PATH-524-FEHRIST524",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-524-FEHRIST524",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "The Rush at the Door",
+  "label": "ch:gu-the-rush-at-the-door",
+  "canDo": "I can get through a crowd at the carriage door.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C397-bharavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can get through a crowd at the carriage door.",
+    "assesses": [
+      "GU-LEX-C397-DOOR397-03",
+      "GU-LEX-C397-DOOR397-04",
+      "GU-LEX-C397-DOOR397-05"
+    ]
+  }
+}

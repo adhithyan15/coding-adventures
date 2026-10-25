@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C423-sauda",
+    "language": "urdu",
+    "chapter": 423,
+    "sequence": 24890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94b891b37a5dfbf2"
+  },
+  "findings": []
+}

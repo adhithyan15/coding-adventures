@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:1c526f3059860c09",
+  "lessonIds": [
+    "GU-C439-dungar",
+    "GU-C439-sikhar",
+    "GU-C439-khadak",
+    "GU-C439-kakro",
+    "GU-C439-padghavu",
+    "GU-R439-review-433-439"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch439.txt",
+  "json": "gujarati/narration/ch439.json",
+  "textHash": "fnv1a64:a3609a575225e2b5",
+  "jsonHash": "fnv1a64:942f0945df6fde88",
+  "findings": []
+}

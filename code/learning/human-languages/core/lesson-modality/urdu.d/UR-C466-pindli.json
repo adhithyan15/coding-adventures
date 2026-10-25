@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C466-pindli",
+    "language": "urdu",
+    "chapter": 466,
+    "sequence": 27350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78a17039c1f61a0d"
+  },
+  "findings": []
+}

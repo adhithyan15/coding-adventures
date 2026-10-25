@@ -1,0 +1,11 @@
+{
+  "id": "GU-C448-majak",
+  "pathSegment": "GU-PATH-448-HASYA448",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-448-HASYA448",
+      "order": 3
+    }
+  ]
+}

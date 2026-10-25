@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C372-tarakna",
+    "language": "urdu",
+    "chapter": 372,
+    "sequence": 22130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccebed99691e93a4"
+  },
+  "findings": []
+}

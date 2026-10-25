@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:3a4874c32c5a2274",
+  "lessonIds": [
+    "GU-C419-seri",
+    "GU-C419-phaliyu",
+    "GU-C419-mahollo",
+    "GU-C419-rahevasi",
+    "GU-C419-rajhalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch419.txt",
+  "json": "gujarati/narration/ch419.json",
+  "textHash": "fnv1a64:844acc37dff6b4a3",
+  "jsonHash": "fnv1a64:14b90d6694c31624",
+  "findings": []
+}

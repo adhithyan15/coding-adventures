@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 436,
+  "title": "Hot Winds and Mercury",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:822f4d32ed97cc94",
+  "lessons": [
+    {
+      "id": "GU-C436-lu",
+      "sequence": 24200,
+      "title": "લૂ (lū) — a hot summer wind",
+      "headword": "લૂ",
+      "romanization": "lū",
+      "gloss": "a hot summer wind",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d743ffd94ebad09b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a forecast, then the Gujarati for to flash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: લૂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લૂ — lū — \"a hot summer wind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મે મહિનામાં બપોરે ગરમ લૂ ફૂંકાય છે. me mahināmā̃ bapore garam lū phū̃kāy che. In May a hot wind blows in the afternoon."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લૂ (lū) CDIAL lists Hindi lūhar and Sindhi lūha, \"the hot summer wind\", under lūṣā, \"burning\", a form it reconstructs (CDIAL 11099); it gives no Gujarati form, so the link is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me mahināmā̃ bapore garam lū phū̃kāy che. — In May a hot wind blows in the afternoon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me mahināmā̃ bapore garam lū phū̃kāy che.* — In May a hot wind blows in the afternoon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a forecast, then the Gujarati for to flash, then say lū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a forecast, then the Gujarati for to flash, then say *lū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does લૂ (lū) mean? (\"A hot summer wind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C436-bapharo",
+      "sequence": 24210,
+      "title": "બફારો (baphāro) — steamy heat (airless, before rain)",
+      "headword": "બફારો",
+      "romanization": "baphāro",
+      "gloss": "steamy heat (airless, before rain)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e03e158a0d354895",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to flash, then the Gujarati for a hot summer wind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બફારો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બફારો — baphāro — \"steamy heat (airless, before rain)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વરસાદ પહેલાં ઘણો બફારો હતો. varsād pahelā̃ ghaṇo baphāro hato. Before the rain it was very steamy."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બફારો (baphāro) goes back to bāṣpākāra, \"having the form of vapour\", a form CDIAL reconstructs; CDIAL lists the Gujarati word, \"vapour, sultriness\" (CDIAL 9224)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baphāro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baphāro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baphāro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baphāro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varsād pahelā̃ ghaṇo baphāro hato. — Before the rain it was very steamy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varsād pahelā̃ ghaṇo baphāro hato.* — Before the rain it was very steamy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to flash, then the Gujarati for a hot summer wind, then say baphāro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to flash, then the Gujarati for a hot summer wind, then say *baphāro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બફારો (baphāro) mean? (\"Steamy heat (airless, before rain)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C436-paro",
+      "sequence": 24220,
+      "title": "પારો (pāro) — mercury; the temperature (on a thermometer)",
+      "headword": "પારો",
+      "romanization": "pāro",
+      "gloss": "mercury; the temperature (on a thermometer)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cffff83296e86c40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a hot summer wind, then the Gujarati for steamy heat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પારો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પારો — pāro — \"mercury; the temperature (on a thermometer)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આજે પારો ચાળીસ ડિગ્રી પર પહોંચ્યો. āje pāro cāḷīs ḍigrī par pahõcyo. Today the temperature reached forty degrees."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પારો (pāro) is a tadbhava of Sanskrit pārada, \"quicksilver\"; CDIAL lists the Gujarati word (CDIAL 8104). The mercury in a thermometer gave the news its પારો."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āje pāro cāḷīs ḍigrī par pahõcyo. — Today the temperature reached forty degrees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āje pāro cāḷīs ḍigrī par pahõcyo.* — Today the temperature reached forty degrees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a hot summer wind, then the Gujarati for steamy heat, then say pāro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a hot summer wind, then the Gujarati for steamy heat, then say *pāro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પારો (pāro) mean? (\"Mercury; the temperature (on a thermometer)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C436-dajhadvu",
+      "sequence": 24230,
+      "title": "દઝાડવું (dajhāḍvũ) — to scorch; to burn (someone)",
+      "headword": "દઝાડવું",
+      "romanization": "dajhāḍvũ",
+      "gloss": "to scorch; to burn (someone)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7df8d9616f6a0eee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for steamy heat, then the Gujarati for mercury."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: દઝાડવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દઝાડવું — dajhāḍvũ — \"to scorch; to burn (someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "બપોરનો તડકો પગને દઝાડે છે. baporno taḍko pagne dajhāḍe che. The afternoon sun scorches your feet."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે હાથ દઝાડ્યો, teṇe hāth dajhāḍyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દઝાડવું (dajhāḍvũ) is the causative partner of દાઝવું, \"to be burnt\", which CDIAL lists under Sanskrit dahyatē, \"is burnt\" (CDIAL 6248): to make something burn."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dajhāḍvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dajhāḍvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dajhāḍvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dajhāḍvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baporno taḍko pagne dajhāḍe che. — The afternoon sun scorches your feet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baporno taḍko pagne dajhāḍe che.* — The afternoon sun scorches your feet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for steamy heat, then the Gujarati for mercury, then say dajhāḍvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for steamy heat, then the Gujarati for mercury, then say *dajhāḍvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does દઝાડવું (dajhāḍvũ) mean? (\"To scorch; to burn (someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C436-sekavu",
+      "sequence": 24240,
+      "title": "શેકાવું (śekāvũ) — to bake (in the heat); to be roasted",
+      "headword": "શેકાવું",
+      "romanization": "śekāvũ",
+      "gloss": "to bake (in the heat); to be roasted",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f76ca3b318787ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for mercury, then the Gujarati for to scorch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: શેકાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શેકાવું — śekāvũ — \"to bake (in the heat); to be roasted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આવા તડકામાં અમે શેકાઈ ગયા. āvā taḍkāmā̃ ame śekāī gayā. We got roasted in sunshine like this."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે તડકામાં શેકાયો, te taḍkāmā̃ śekāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શેકાવું (śekāvũ) is the intransitive partner of શેકવું, \"to roast\", which goes back to sēkk, \"to heat, to roast\", a form CDIAL reconstructs (CDIAL 13581)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śekāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śekāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śekāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śekāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvā taḍkāmā̃ ame śekāī gayā. — We got roasted in sunshine like this.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvā taḍkāmā̃ ame śekāī gayā.* — We got roasted in sunshine like this.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for mercury, then the Gujarati for to scorch, then say śekāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for mercury, then the Gujarati for to scorch, then say *śekāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does શેકાવું (śekāvũ) mean? (\"To bake (in the heat); to be roasted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

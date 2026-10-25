@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C481-malish-karna",
+    "language": "urdu",
+    "chapter": 481,
+    "sequence": 28120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c69eb52ba239a7d8"
+  },
+  "findings": []
+}

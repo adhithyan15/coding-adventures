@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:03c7617078b0fdcb",
+  "lessonIds": [
+    "UR-C291-hilna",
+    "UR-C291-jhatka",
+    "UR-C291-darar",
+    "UR-C291-dhansna",
+    "UR-C291-dabna",
+    "UR-R291-review-284-291"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch291.txt",
+  "json": "urdu/narration/ch291.json",
+  "textHash": "fnv1a64:0c1e23c4466ea228",
+  "jsonHash": "fnv1a64:d097ef590c07de25",
+  "findings": []
+}

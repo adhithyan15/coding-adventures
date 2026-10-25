@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C350-mukt",
+    "language": "gujarati",
+    "chapter": 350,
+    "sequence": 19580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e11043f6d6a2fb21"
+  },
+  "findings": []
+}

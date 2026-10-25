@@ -1,0 +1,11 @@
+{
+  "id": "UR-C303-iqrar",
+  "pathSegment": "UR-PATH-303-INKAR303",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-303-INKAR303",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:ba28f0aa9519c6fc",
+  "lessonIds": [
+    "GU-C329-rangoli",
+    "GU-C329-sangarvu",
+    "GU-C329-jhagmagvu",
+    "GU-C329-mala",
+    "GU-C329-sobhayatra"
+  ],
+  "tex": "gujarati/book/chapters/ch329-lights-and-colours.tex"
+}

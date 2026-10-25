@@ -1,0 +1,923 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 554,
+  "title": "Dancing All Night",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:d4ff8232656d0ac2",
+  "lessons": [
+    {
+      "id": "GU-C554-ras",
+      "sequence": 30710,
+      "title": "રાસ (rās) — raas (a stick dance)",
+      "headword": "રાસ",
+      "romanization": "rās",
+      "gloss": "raas (a stick dance)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8db97ded7adf25cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to chime, then the Gujarati for to be itching to dance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: રાસ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રાસ — rās — \"raas (a stick dance)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આજે રાત્રે વરસાદ નહીં પડે તો આપણે રાસ રમીશું. jo āje rātre varsād nahī̃ paḍe to āpaṇe rās ramīśũ. If it doesn't rain tonight, we'll dance raas."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રાસ (rās) is a tatsama, taken from Sanskrit rāsa, a country dance of cowherds (Monier-Williams). Gujarati \"plays\" it: રાસ રમવો."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo āje rātre varsād nahī̃ paḍe to āpaṇe rās ramīśũ. — If it doesn't rain tonight, we'll dance raas.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo āje rātre varsād nahī̃ paḍe to āpaṇe rās ramīśũ.* — If it doesn't rain tonight, we'll dance raas.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to chime, then the Gujarati for to be itching to dance, then say rās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to chime, then the Gujarati for to be itching to dance, then say *rās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does રાસ (rās) mean? (\"Raas (a stick dance)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C554-dadiya",
+      "sequence": 30720,
+      "title": "દાંડિયા (dā̃ḍiyā) — dandiya sticks",
+      "headword": "દાંડિયા",
+      "romanization": "dā̃ḍiyā",
+      "gloss": "dandiya sticks",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b0404643f7f3b37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to be itching to dance, then the Gujarati for raas."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: દાંડિયા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દાંડિયા — dā̃ḍiyā — \"dandiya sticks\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તારી પાસે દાંડિયા નહીં હોય તો હું તને મારા આપીશ. jo tārī pāse dā̃ḍiyā nahī̃ hoy to hũ tane mārā āpīś. If you don't have dandiya sticks, I'll give you mine."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun, used in the plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દાંડિયા (dā̃ḍiyā) is built on dā̃ḍo, \"a pole, a stick\", which CDIAL lists under Sanskrit daṇḍá, \"a stick\" (CDIAL 6128); dancers strike them together in the raas."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dā̃ḍiyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dā̃ḍiyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dā̃ḍiyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dā̃ḍiyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tārī pāse dā̃ḍiyā nahī̃ hoy to hũ tane mārā āpīś. — If you don't have dandiya sticks, I'll give you mine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tārī pāse dā̃ḍiyā nahī̃ hoy to hũ tane mārā āpīś.* — If you don't have dandiya sticks, I'll give you mine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to be itching to dance, then the Gujarati for raas, then say dā̃ḍiyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to be itching to dance, then the Gujarati for raas, then say *dā̃ḍiyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does દાંડિયા (dā̃ḍiyā) mean? (\"Dandiya sticks\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C554-ghughro",
+      "sequence": 30730,
+      "title": "ઘૂઘરો (ghūghro) — an ankle bell",
+      "headword": "ઘૂઘરો",
+      "romanization": "ghūghro",
+      "gloss": "an ankle bell",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30c74d5c8660c26c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for raas, then the Gujarati for dandiya sticks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઘૂઘરો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘૂઘરો — ghūghro — \"an ankle bell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તું પગમાં ઘૂઘરા પહેરીશ તો નાચતી વખતે મીઠો અવાજ આવશે. jo tũ pagmā̃ ghūghrā paherīś to nāctī vakhte mīṭho avāj āvśe. If you wear ankle bells, they'll ring sweetly as you dance."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘૂઘરો (ghūghro) comes from ghuṅghura, a form CDIAL reconstructs, and CDIAL lists the Gujarati word, \"a jingling bell\" (CDIAL 4477)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghūghro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghūghro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghūghro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghūghro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tũ pagmā̃ ghūghrā paherīś to nāctī vakhte mīṭho avāj āvśe. — If you wear ankle bells, they'll ring sweetly as you dance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tũ pagmā̃ ghūghrā paherīś to nāctī vakhte mīṭho avāj āvśe.* — If you wear ankle bells, they'll ring sweetly as you dance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for raas, then the Gujarati for dandiya sticks, then say ghūghro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for raas, then the Gujarati for dandiya sticks, then say *ghūghro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઘૂઘરો (ghūghro) mean? (\"An ankle bell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C554-jhumvu",
+      "sequence": 30740,
+      "title": "ઝૂમવું (jhūmvũ) — to sway (to music)",
+      "headword": "ઝૂમવું",
+      "romanization": "jhūmvũ",
+      "gloss": "to sway (to music)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7f98d6eeee3a68f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for dandiya sticks, then the Gujarati for an ankle bell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝૂમવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝૂમવું — jhūmvũ — \"to sway (to music)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો સંગીત સારું હશે તો બધા ઝૂમશે. jo sangīt sārũ haśe to badhā jhūmśe. If the music is good, everyone will sway to it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે ઝૂમ્યો, te jhūmyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝૂમવું (jhūmvũ) is to sway with the music, the body and the head together. CDIAL lists Hindi jhūmnā, \"to shake\", with a query, under a reconstructed kṣumbhati, \"shakes\" (CDIAL 3726); it gives no Gujarati form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhūmvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhūmvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhūmvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhūmvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo sangīt sārũ haśe to badhā jhūmśe. — If the music is good, everyone will sway to it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo sangīt sārũ haśe to badhā jhūmśe.* — If the music is good, everyone will sway to it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for dandiya sticks, then the Gujarati for an ankle bell, then say jhūmvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for dandiya sticks, then the Gujarati for an ankle bell, then say *jhūmvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝૂમવું (jhūmvũ) mean? (\"To sway (to music)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C554-nacavvu",
+      "sequence": 30750,
+      "title": "નચાવવું (nacāvvũ) — to make (someone) dance",
+      "headword": "નચાવવું",
+      "romanization": "nacāvvũ",
+      "gloss": "to make (someone) dance",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87eefb5da888fac4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an ankle bell, then the Gujarati for to sway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નચાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નચાવવું — nacāvvũ — \"to make (someone) dance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તું ઢોલ વગાડીશ તો તું બધાને નચાવીશ. jo tũ ḍhol vagāḍīś to tũ badhāne nacāvīś. If you play the drum, you'll get everyone dancing."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે બધાને નચાવ્યા, teṇe badhāne nacāvyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નચાવવું (nacāvvũ) is built from નાચવું, \"to dance\", with the causative -āv- and a shortened vowel. CDIAL files નાચવું under Sanskrit nṛtyati, \"dances\" (CDIAL 7583)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nacāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nacāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nacāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nacāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tũ ḍhol vagāḍīś to tũ badhāne nacāvīś. — If you play the drum, you'll get everyone dancing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tũ ḍhol vagāḍīś to tũ badhāne nacāvīś.* — If you play the drum, you'll get everyone dancing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an ankle bell, then the Gujarati for to sway, then say nacāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an ankle bell, then the Gujarati for to sway, then say *nacāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નચાવવું (nacāvvũ) mean? (\"To make (someone) dance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R554-review-548-554",
+      "sequence": 30760,
+      "title": "Looking back: from If We Win the Match to Dancing All Night",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from If We Win the Match to Dancing All Night",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e65b1346474e890f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for a team and a captain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a team, a captain, a match-up, a winner, to win it for (a team)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a team, a captain, a match-up, a winner, to win it for (a team)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "football, a goal (in a game), a score, to catch a ball, a medal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: football, a goal (in a game), a score, to catch a ball, a medal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an arrow, a target, to aim at, to pierce (a target), a runner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an arrow, a target, to aim at, to pierce (a target), a runner]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "training, a sports coach, music practice, to make (someone) run, a trophy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: training, a sports coach, music practice, to make (someone) run, a trophy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stage, acting, a spectator, to make ring, to get going",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stage, acting, a spectator, to make ring, to get going]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a kettledrum, a shehnai, to sing out, to chime, to be itching to dance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a kettledrum, a shehnai, to sing out, to chime, to be itching to dance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raas, dandiya sticks, an ankle bell, to sway, to make (someone) dance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: raas, dandiya sticks, an ankle bell, to sway, to make (someone) dance]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A team? (ટીમ, ṭīm.) A captain? (કપ્તાન, kaptān.) A match-up? (મુકાબલો, mukāblo.) A winner? (વિજેતા, vijetā.) To win it for (a team)? (જિતાડવું, jitāḍvũ.) Football? (ફૂટબોલ, phūṭbol.) A goal (in a game)? (ગોલ, gol.) A score? (સ્કોર, skor.) To catch a ball? (ઝીલવું, jhīlvũ.) A medal? (ચંદ્રક, candrak.) An arrow? (તીર, tīr.) A target? (નિશાન, niśān.) To aim at? (તાકવું, tākvũ.) To pierce (a target)? (ભેદવું, bhedvũ.) A runner? (દોડવીર, doḍvīr.) Training? (તાલીમ, tālīm.) A sports coach? (કોચ, koc.) Music practice? (રિયાઝ, riyājh.) To make (someone) run? (દોડાવવું, doḍāvvũ.) A trophy? (ટ્રોફી, ṭrophī.) A stage? (મંચ, manc.) Acting? (અભિનય, abhinay.) A spectator? (દર્શક, darśak.) To make ring? (ગજાવવું, gajāvvũ.) To get going? (જામવું, jāmvũ.) A kettledrum? (નગારું, nagārũ.) A shehnai? (શરણાઈ, śarṇāī.) To sing out? (લલકારવું, lalkārvũ.) To chime? (રણકવું, raṇakvũ.) To be itching to dance? (થનગનવું, thanganvũ.) Raas? (રાસ, rās.) Dandiya sticks? (દાંડિયા, dā̃ḍiyā.) An ankle bell? (ઘૂઘરો, ghūghro.) To sway? (ઝૂમવું, jhūmvũ.) To make (someone) dance? (નચાવવું, nacāvvũ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R554-review-final-554",
+      "sequence": 30770,
+      "title": "Dancing All Night — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c445a83faae59b8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for raas and dandiya sticks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raas, dandiya sticks, an ankle bell, to sway, to make (someone) dance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: raas, dandiya sticks, an ankle bell, to sway, to make (someone) dance]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Raas? (રાસ, rās.) Dandiya sticks? (દાંડિયા, dā̃ḍiyā.) An ankle bell? (ઘૂઘરો, ghūghro.) To sway? (ઝૂમવું, jhūmvũ.) To make (someone) dance? (નચાવવું, nacāvvũ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

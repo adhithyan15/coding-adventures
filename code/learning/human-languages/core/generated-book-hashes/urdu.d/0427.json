@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:7bbf877f822da84c",
+  "lessonIds": [
+    "UR-C427-saiz",
+    "UR-C427-dhila",
+    "UR-C427-poshak",
+    "UR-C427-rumal",
+    "UR-C427-sajna"
+  ],
+  "tex": "urdu/book/chapters/ch427-sizes-and-outfits.tex"
+}

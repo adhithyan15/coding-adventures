@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 511,
+  "title": "Laying the Cloth",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0b107b29576f1b0d",
+  "lessons": [
+    {
+      "id": "UR-C511-tarkib",
+      "sequence": 29870,
+      "title": "ترکیب (tarkīb) — a recipe; a method",
+      "headword": "ترکیب",
+      "romanization": "tarkīb",
+      "gloss": "a recipe; a method",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8861173f9c94c299",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to have (something) ground, then the Urdu for to squeeze out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ترکیب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترکیب — tarkīb — \"a recipe; a method\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ نانی کی ترکیب ہے۔ yih nānī kī tarkīb hai. This is grandmother's recipe."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترکیب (tarkīb) is usually traced, through Persian, to Arabic tarkīb, \"putting together\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkīb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkīb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkīb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkīb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih nānī kī tarkīb hai. — This is grandmother's recipe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih nānī kī tarkīb hai.* — This is grandmother's recipe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to have (something) ground, then the Urdu for to squeeze out, then say tarkīb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to have (something) ground, then the Urdu for to squeeze out, then say *tarkīb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ترکیب (tarkīb) mean? (\"A recipe; a method\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C511-dastarkhvan",
+      "sequence": 29880,
+      "title": "دسترخوان (dastarkhvān) — a cloth spread for a meal",
+      "headword": "دسترخوان",
+      "romanization": "dastarkhvān",
+      "gloss": "a cloth spread for a meal",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a92b8270f221e72d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to squeeze out, then the Urdu for a recipe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دسترخوان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دسترخوان — dastarkhvān — \"a cloth spread for a meal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "امی نے فرش پر دسترخوان بچھایا۔ ammī ne farsh par dastarkhvān bichhāyā. Mum spread the dining cloth on the floor."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دسترخوان (dastarkhvān) is usually traced to Persian dastarkhwān, \"a cloth spread for a meal\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dastarkhvān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dastarkhvān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dastarkhvān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dastarkhvān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammī ne farsh par dastarkhvān bichhāyā. — Mum spread the dining cloth on the floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammī ne farsh par dastarkhvān bichhāyā.* — Mum spread the dining cloth on the floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to squeeze out, then the Urdu for a recipe, then say dastarkhvān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to squeeze out, then the Urdu for a recipe, then say *dastarkhvān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دسترخوان (dastarkhvān) mean? (\"A cloth spread for a meal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C511-pakvana",
+      "sequence": 29890,
+      "title": "پکوانا (pakvānā) — to have (food) cooked",
+      "headword": "پکوانا",
+      "romanization": "pakvānā",
+      "gloss": "to have (food) cooked",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:463060226b53a3a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a recipe, then the Urdu for a cloth spread for a meal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پکوانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پکوانا — pakvānā — \"to have (food) cooked\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ابو نے مہمانوں کے لیے بریانی پکوائی۔ abbū ne mehmānoṅ ke liye biryānī pakvāī. Dad had biryani cooked for the guests."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے حلوہ پکوایا, us ne halvā pakvāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پکوانا (pakvānā) is the second causative of paknā, \"to be cooked\", which CDIAL lists under Sanskrit pakva, \"cooked, ripe\" (CDIAL 7621): to have someone cook."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakvānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakvānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakvānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakvānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abbū ne mehmānoṅ ke liye biryānī pakvāī. — Dad had biryani cooked for the guests.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abbū ne mehmānoṅ ke liye biryānī pakvāī.* — Dad had biryani cooked for the guests.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a recipe, then the Urdu for a cloth spread for a meal, then say pakvānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a recipe, then the Urdu for a cloth spread for a meal, then say *pakvānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پکوانا (pakvānā) mean? (\"To have (food) cooked\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C511-phunkna",
+      "sequence": 29900,
+      "title": "پھونکنا (phūṅknā) — to blow (on)",
+      "headword": "پھونکنا",
+      "romanization": "phūṅknā",
+      "gloss": "to blow (on)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7723dc8e504f14c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a cloth spread for a meal, then the Urdu for to have (food) cooked."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پھونکنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھونکنا — phūṅknā — \"to blow (on)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بچہ گرم دودھ پھونک کر پیتا ہے۔ bachchā garm dūdh phūṅk kar pītā hai. The child blows on hot milk before drinking it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے چولہے کی آگ پھونکی, us ne chūlhe kī āg phūṅkī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھونکنا (phūṅknā) is inherited: CDIAL lists the Hindi cousin phū̃knā, \"to blow\", under phūtka, a form it reconstructs (CDIAL 9102)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phūṅknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phūṅknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phūṅknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phūṅknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bachchā garm dūdh phūṅk kar pītā hai. — The child blows on hot milk before drinking it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bachchā garm dūdh phūṅk kar pītā hai.* — The child blows on hot milk before drinking it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a cloth spread for a meal, then the Urdu for to have (food) cooked, then say phūṅknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a cloth spread for a meal, then the Urdu for to have (food) cooked, then say *phūṅknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پھونکنا (phūṅknā) mean? (\"To blow (on)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C511-chakhana",
+      "sequence": 29910,
+      "title": "چکھانا (chakhānā) — to give (someone) a taste",
+      "headword": "چکھانا",
+      "romanization": "chakhānā",
+      "gloss": "to give (someone) a taste",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41dff4010aa9643b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to have (food) cooked, then the Urdu for to blow (on)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چکھانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چکھانا — chakhānā — \"to give (someone) a taste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "امی نے مہمان کو حلوہ چکھایا۔ ammī ne mehmān ko halvā chakhāyā. Mum gave the guest a taste of the halwa."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے مہمانوں کو حلوہ چکھایا, us ne mehmānoṅ ko halvā chakhāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چکھانا (chakhānā) is the causative of chakhnā, \"to taste\"; CDIAL lists the Hindi cousin cākhnā, \"to taste\", under cakṣati, \"tastes\", a form it reconstructs (CDIAL 4557)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chakhānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chakhānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chakhānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chakhānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammī ne mehmān ko halvā chakhāyā. — Mum gave the guest a taste of the halwa.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammī ne mehmān ko halvā chakhāyā.* — Mum gave the guest a taste of the halwa.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to have (food) cooked, then the Urdu for to blow (on), then say chakhānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to have (food) cooked, then the Urdu for to blow (on), then say *chakhānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چکھانا (chakhānā) mean? (\"To give (someone) a taste\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

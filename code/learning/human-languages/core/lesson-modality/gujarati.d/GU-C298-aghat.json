@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C298-aghat",
+    "language": "gujarati",
+    "chapter": 298,
+    "sequence": 16680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38353067d7f68db6"
+  },
+  "findings": []
+}

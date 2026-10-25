@@ -150,5 +150,9 @@ cargo test -p lang-aot --test lang_matrix python_rows_pass_the_lang83_check_on_a
 # LANG84 phase 7b slice 2: the Python rows (now 53: the corpus on the default
 # 3.13.16 and on the class representatives 3.0a1 and 3.12.3) are exactly the
 # release sweep's boundary set in code/grammars/python/release_classes.csv.
+# LANG84 phase 7c slice 1 adds 19 py2-int-print rows (Python 2: the print
+# statement and classic `/`) on 2.2, its one class's representative: the same
+# five tests cover them (run, LANG83 check, boundary set per subset; the
+# corpus and host-python3 oracle tests read the py-int-print rows only).
 cargo test -p lang-aot --test lang_matrix python_rows_run_their_corpus_case -- --exact
 cargo test -p lang-aot --test lang_matrix trap_kinds_are_read_from_every_columns_stderr -- --exact

@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-422-DALAL422",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with a broker, insure a car and get money back.",
+  "prerequisites": []
+}

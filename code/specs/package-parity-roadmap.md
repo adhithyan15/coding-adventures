@@ -17767,6 +17767,54 @@ already expose substantive CommonMark parsers but lack the portable facade and
 HTML families; Haskell's similarly named roots do not yet establish Markdown
 semantics. Java, Kotlin, and Dart currently have only document AST foundations.
 
+## CommonMark fixture foundation selected locally (October 24, 2026)
+
+The three active parity slots are occupied by the independent C# renderer,
+TypeScript GFM adopter and F# renderer PRs. Work therefore continues locally
+without opening a fourth PR. The next selected item is
+`commonmark-language-neutral-fixture-foundation`, based on current main
+`e9ea4be4fbdf1379918f401f6e9498f1563d04aa`.
+
+Sixteen checked-in corpus copies across seven languages are byte-identical
+to the official CommonMark 0.31.2 artifact: 140,487 bytes with SHA-256
+`d431b29d97b6f73e69d547109cf5081578fac931e72afe95639ebe766c1b2a20`.
+The foundation will pin those upstream bytes once with immutable provenance,
+closed schemas, strict bounded validation and independently authored TE00
+Document-AST-to-HTML vectors. It will not migrate any native reader, change a
+parser or renderer, absorb GFM behavior, or grant a native lane conformance
+credit. The migration aggregate covers all sixteen live CommonMark and GFM
+package readers; per-language migrations remain dependency-ordered children.
+
+Before publication, this local branch must merge the then-current `main`,
+reconcile the lifecycle state supplied by whichever active PR merged first,
+repeat exact-head validation and security review, and confirm that the active
+parity count is below the three-PR ceiling.
+
+The local branch was refreshed without conflict onto main 59908a6127 as merge
+head 5996a15568. Exact-head validation still accepts all 652 official examples
+and 16 renderer vectors; 14 falsification tests pass and the 327-statement,
+170-branch validator retains 100% statement and branch coverage. No hosted slot
+is open yet, so the branch remains local-only and awaits independent final
+security review after the next parity merge.
+
+PR #18143 subsequently merged as `f02a5ccb37f7`, freeing one hosted slot. The
+foundation branch reconciled that mainline advance as `29e01c723c`, retained
+the decomposed foundation/reader ownership and exact C# merge receipt, and
+repeated the focused and complete-checkout gates. The 652 examples, 16 renderer
+vectors, 14 falsification tests, 19 CI-registry tests, 100% validator coverage,
+build-tool tests, repository plan, state graph, lessons, JSON, and diff checks
+remain green. Only independent review of this exact reconciled head remains
+before publication.
+
+That review found the validator had no hosted execution path because this
+specs-and-scripts-only branch intentionally selected no native package. A
+failing workflow regression first proved the omission. Fix `cc5a83443b` wires
+both the direct validator and its complete dedicated suite into the always-run
+repo-wide metadata-contract job. Follow-up review replaced its weak substring
+self-test with the existing external CI-registry guard, which rejects job/step
+conditions and shell control flow and counts each exact executable line. A fresh
+exact-head review remains required before publication.
+
 ## Post-#18118 F# renderer selection and prerequisite decomposition (October 24, 2026)
 
 PR #18118 merged the language-neutral GFM fixture at
@@ -17806,8 +17854,8 @@ The same audit records three future decompositions without selecting them:
   `gfm-parser` root, after which its existing facade owner may proceed; and
 - CommonMark corpus centralization must separate a provenance-pinned canonical
   fixture/validator foundation from per-language reader and CI migrations.
-  Nine current readers across seven languages contain the same 140,487-byte
-  corpus with SHA-256
+  Sixteen live CommonMark and GFM package readers across seven languages contain
+  the same 140,487-byte corpus with SHA-256
   `d431b29d97b6f73e69d547109cf5081578fac931e72afe95639ebe766c1b2a20`.
 
 Those future records do not block or broaden the selected F# renderer.
@@ -17831,7 +17879,47 @@ large immutable list across many otherwise-empty tables. A failing repeated-
 alias regression now precedes a single-pass collector that charges at most
 100,000 alignment entries per render, including every alias visit. The updated
 21-test suite passes with 100% line, 99.17% branch and 100% method coverage; a
-new exact-head independent review remains the publication gate.
+new exact-head independent review remained the publication gate. PR #18154
+subsequently merged reviewed head
+`777f46db5bd428db886e576e518f24ef5f206b74` as
+`75dc311bc4ca9bb836e723ab8ea746a485b37147` at
+`2026-10-25T00:17:09Z` after all final-head checks reached terminal acceptable
+conclusions. That receipt closes only the bounded F# renderer owner.
+
+## TypeScript GFM neutral-conformance adoption
+
+PR #18118 merged `gfm-language-neutral-conformance-fixture` as
+`83f1871e3d61e8151b0e9313337f5dc2c842a3e6`, so
+`gfm-typescript-neutral-conformance-adoption` is the active independent owner.
+Its bounded scope is the public TypeScript `gfm-parser` `parse()` API followed
+by the public `document-ast-to-html` `toHtml()` API over all sixteen committed
+vectors. The reader enumerates the corpus dynamically, compares the complete
+AST and HTML, retains independent source/AST/HTML corruption witnesses,
+preserves package coverage, and routes an exact
+`gfm-extension-v1/cases.json` change to the native package and its ordinary
+dependent closure on all three platform plans.
+
+This owner qualifies no missing language and introduces no production input
+authority. Keep the successor order intact after it lands: reconcile the
+existing C#, F#, and Haskell packages first; add Swift after its CommonMark
+prerequisites; then add Java, Kotlin, and Dart after their parser and renderer
+prerequisites. Those successors remain separate work items even if the same
+fixture exposes implementation differences.
+
+Local adoption evidence exercises all sixteen rows dynamically through those
+two public APIs and passes focused assertions including independent source,
+AST, and HTML corruption witnesses plus bounded strict UTF-8 fixture loading.
+The actual package BUILD passes 764 tests at 89.21% statement and 87.37% branch
+coverage. Exact-path selection and language filtering pass for Linux, macOS,
+and Windows. Linux-focused tests additionally cover missing-reader atomicity,
+dependent propagation, and path lookalikes. The production Go selector builds
+and passes vet; its complete package suite passes apart from the pre-existing
+PowerShell-dependent registry-generator round trip on hosts without `pwsh`. A
+real unforced TypeScript dry run discovers 505 package roots, identifies only
+`typescript/gfm-parser` as directly changed, and retains its 60-package
+prerequisite/dependent closure. These results qualify the TypeScript adoption
+only; hosted CI and final-head security review remain publication gates.
+
 ## October 24, 2026: C# security follow-up and preserved audit owners
 
 Keep the operator-authorized ceiling of three dependency-safe parity PRs in
@@ -17850,3 +17938,12 @@ and the fresh main inventory remains 15 established lanes, 1,536 identities
 and 4,818 slots with no collisions.
 The existing C# document-AST Windows repeat-build gap has a separate pending
 owner; its four directly executed native tests grant no build-front credit.
+
+
+## October 25: serial CommonMark foundation recovery
+
+PR #18147 externally merged its bounded sixteen-case TypeScript adoption as `e0f73e7d56b6a9f2fec1f5ca4ab760d7e7094d89`. The unpublished sixty-seven-case GFM draft remains separate. Existing CommonMark foundation PR #18174 is the sole active recovery under the current one-PR ceiling; Haskell opcode PR #18183 remains untouched serial backlog.
+
+The private operational journal has reconciled all 103 pinned audits and eleven new pending classifications after a full collision-clean inventory: 1,559 identities and 4,846 established-lane slots across fifteen languages at `d6ce5d38efeca48e0aa6d5366102c756b6d508ea`. OCaml remains emerging with five packages. These structural counts grant no native qualification or reviewed exception. Neural-framework delivery retains separate roadmap coordination, and OCSP policy composition remains documentary and blocked from security delivery.
+
+This PR preserves the neutral validator and fixture bytes, recovers the observed Venture-only Node/npm setup failure, and retains the foundation-versus-reader-migration boundary. See the [current validation receipt](fixtures/commonmark-0.31.2/VALIDATION.md).

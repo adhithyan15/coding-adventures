@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "Theory and Practice",
+  "label": "ch:gu-theory-and-practice",
+  "canDo": "I can say whether an idea works in practice.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C365-sakalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can say whether an idea works in practice.",
+    "assesses": [
+      "GU-LEX-C365-SIDDHANT365-03",
+      "GU-LEX-C365-SIDDHANT365-04",
+      "GU-LEX-C365-SIDDHANT365-05"
+    ]
+  }
+}

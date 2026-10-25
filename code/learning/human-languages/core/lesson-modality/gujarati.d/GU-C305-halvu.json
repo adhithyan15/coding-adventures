@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C305-halvu",
+    "language": "gujarati",
+    "chapter": 305,
+    "sequence": 17020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc276ca9c7ce43b6"
+  },
+  "findings": []
+}

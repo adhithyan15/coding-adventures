@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:f78580de0dad348e",
+  "lessonIds": [
+    "UR-C330-safha",
+    "UR-C330-unvan",
+    "UR-C330-qari",
+    "UR-C330-bikna",
+    "UR-C330-tarjuma",
+    "UR-R330-review-324-330",
+    "UR-R330-review-final-330"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch330.txt",
+  "json": "urdu/narration/ch330.json",
+  "textHash": "fnv1a64:b60ecb6a659f2731",
+  "jsonHash": "fnv1a64:fa0e4cafac487b39",
+  "findings": []
+}

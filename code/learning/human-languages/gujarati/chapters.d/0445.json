@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Nests and Night Sounds",
+  "label": "ch:gu-nests-and-night-sounds",
+  "canDo": "I can talk about birds and insects at dawn and at night.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C445-cahekvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can talk about birds and insects at dawn and at night.",
+    "assesses": [
+      "GU-LEX-C445-BIRDS445-03",
+      "GU-LEX-C445-BIRDS445-04",
+      "GU-LEX-C445-BIRDS445-05"
+    ]
+  }
+}

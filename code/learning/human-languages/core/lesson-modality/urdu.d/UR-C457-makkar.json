@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C457-makkar",
+    "language": "urdu",
+    "chapter": 457,
+    "sequence": 26880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b1ac67999b0a53f"
+  },
+  "findings": []
+}

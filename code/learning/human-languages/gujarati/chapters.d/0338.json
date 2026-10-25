@@ -1,0 +1,21 @@
+{
+  "chapter": 338,
+  "title": "A Book Comes Out",
+  "label": "ch:gu-a-book-comes-out",
+  "canDo": "I can say how a book was published and what people thought of it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-R338-review-final-338",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can say how a book was published and what people thought of it.",
+    "assesses": [
+      "GU-LEX-C338-CHAPAV338-01",
+      "GU-LEX-C338-CHAPAV338-02",
+      "GU-LEX-C338-CHAPAV338-03",
+      "GU-LEX-C338-CHAPAV338-04",
+      "GU-LEX-C338-CHAPAV338-05"
+    ]
+  }
+}

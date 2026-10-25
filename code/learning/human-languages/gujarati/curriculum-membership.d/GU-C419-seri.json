@@ -1,0 +1,11 @@
+{
+  "id": "GU-C419-seri",
+  "pathSegment": "GU-PATH-419-STREET419",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-419-STREET419",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C382-sanvarna",
+  "pathSegment": "UR-PATH-382-INAM382",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-382-INAM382",
+      "order": 4
+    }
+  ]
+}

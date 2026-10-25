@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C353-matdan",
+    "language": "gujarati",
+    "chapter": 353,
+    "sequence": 19730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:698ac0b6263d1e88"
+  },
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 309,
+  "title": "An Award for Courage",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cba13fa003ccc291",
+  "lessons": [
+    {
+      "id": "GU-C309-sabha",
+      "sequence": 17230,
+      "title": "સભા (sabhā) — a gathering; an assembly",
+      "headword": "સભા",
+      "romanization": "sabhā",
+      "gloss": "a gathering; an assembly",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae91dcefe86205ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for patience, then the Gujarati for to plead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સભા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સભા — sabhā — \"a gathering; an assembly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સાંજે ગામમાં મોટી સભા થઈ. sā̃je gāmmā̃ moṭī sabhā thaī. In the evening there was a big gathering in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is a tatsama, Sanskrit sabhā, \"an assembly, a meeting place\" (Monier-Williams). A સભા is people gathered to hear and to decide; બેઠક is a smaller meeting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃je gāmmā̃ moṭī sabhā thaī. — In the evening there was a big gathering in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃je gāmmā̃ moṭī sabhā thaī.* — In the evening there was a big gathering in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for patience, then the Gujarati for to plead, then say sabhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for patience, then the Gujarati for to plead, then say *sabhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સભા (sabhā) mean? (\"A gathering; an assembly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C309-sanman",
+      "sequence": 17240,
+      "title": "સન્માન (sanmān) — an honour",
+      "headword": "સન્માન",
+      "romanization": "sanmān",
+      "gloss": "an honour",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b63f7551caa47baa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to plead, then the Gujarati for an assembly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સન્માન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સન્માન — sanmān — \"an honour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સભામાં અરુણનું સન્માન થયું. sabhāmā̃ Aruṇnũ sanmān thayũ. Arun was honoured at the gathering."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સન્માન (sanmān) is a tatsama, Sanskrit sammāna, \"honour, respect, homage\" (Monier-Williams). Someone is honoured with થવું: તેનું સન્માન થયું."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanmān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanmān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanmān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanmān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabhāmā̃ Aruṇnũ sanmān thayũ. — Arun was honoured at the gathering.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabhāmā̃ Aruṇnũ sanmān thayũ.* — Arun was honoured at the gathering.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to plead, then the Gujarati for an assembly, then say sanmān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to plead, then the Gujarati for an assembly, then say *sanmān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સન્માન (sanmān) mean? (\"An honour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C309-inam",
+      "sequence": 17250,
+      "title": "ઇનામ (inām) — a prize; a reward",
+      "headword": "ઇનામ",
+      "romanization": "inām",
+      "gloss": "a prize; a reward",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:674bc8b6317aed4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an assembly, then the Gujarati for an honour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઇનામ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઇનામ — inām — \"a prize; a reward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગામના લોકોએ અરુણને ઇનામ આપ્યું. gāmnā lokoe Aruṇne inām āpyũ. The villagers gave Arun a reward."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઇનામ (inām) is usually traced, through Persian, to Arabic inʿām, \"something bestowed\". It is neuter: ઇનામ આપ્યું, gave a prize; ઇનામ જીત્યું, won one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāmnā lokoe Aruṇne inām āpyũ. — The villagers gave Arun a reward.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāmnā lokoe Aruṇne inām āpyũ.* — The villagers gave Arun a reward.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an assembly, then the Gujarati for an honour, then say inām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an assembly, then the Gujarati for an honour, then say *inām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઇનામ (inām) mean? (\"A prize; a reward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C309-birdavvu",
+      "sequence": 17260,
+      "title": "બિરદાવવું (birdāvvũ) — to applaud; to praise publicly",
+      "headword": "બિરદાવવું",
+      "romanization": "birdāvvũ",
+      "gloss": "to applaud; to praise publicly",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce6e915e6d4b90fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an honour, then the Gujarati for a prize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બિરદાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બિરદાવવું — birdāvvũ — \"to applaud; to praise publicly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "બધાએ અરુણના સાહસને બિરદાવ્યું. badhāe Aruṇnā sāhasne birdāvyũ. Everyone applauded Arun's courage."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે તેને બિરદાવ્યો, teṇe tene birdāvyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is built on birad, praise, from Sanskrit viruda, \"a laudatory poem\", which Monier-Williams also gives as birada. વખાણવું is to praise; બિરદાવવું (birdāvvũ) is to praise in public, before others."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "birdāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *birdāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "birdāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *birdāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badhāe Aruṇnā sāhasne birdāvyũ. — Everyone applauded Arun's courage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badhāe Aruṇnā sāhasne birdāvyũ.* — Everyone applauded Arun's courage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an honour, then the Gujarati for a prize, then say birdāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an honour, then the Gujarati for a prize, then say *birdāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બિરદાવવું (birdāvvũ) mean? (\"To applaud; to praise publicly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C309-garva",
+      "sequence": 17270,
+      "title": "ગર્વ (garva) — pride",
+      "headword": "ગર્વ",
+      "romanization": "garva",
+      "gloss": "pride",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62af053c02a6353b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a prize, then the Gujarati for to applaud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગર્વ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગર્વ — garva — \"pride\"."
+            },
+            {
+              "kind": "speech",
+              "text": "માતાને દીકરા પર ખૂબ ગર્વ હતો. mātāne dīkrā par khūb garva hato. The mother was very proud of her son."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગર્વ (garva) is a tatsama, Sanskrit garva, \"pride, arrogance\" (CDIAL 4064). In Gujarati it is often good pride: દીકરા પર ગર્વ, proud of a son."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garva, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garva*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātāne dīkrā par khūb garva hato. — The mother was very proud of her son.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātāne dīkrā par khūb garva hato.* — The mother was very proud of her son.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a prize, then the Gujarati for to applaud, then say garva again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a prize, then the Gujarati for to applaud, then say *garva* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગર્વ (garva) mean? (\"Pride\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

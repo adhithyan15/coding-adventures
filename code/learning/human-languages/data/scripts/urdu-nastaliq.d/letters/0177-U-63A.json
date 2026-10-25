@@ -1,0 +1,18 @@
+{
+  "glyph": "غ",
+  "sound": "gh",
+  "role": "consonant",
+  "forms": {
+    "isolated": "غ",
+    "initial": "غـ",
+    "medial": "ـغـ",
+    "final": "ـغ"
+  },
+  "components": [
+    "small open head",
+    "trailing bowl",
+    "one dot above"
+  ],
+  "strokeOrder": [],
+  "notes": "Ghain is ain with one dot above; it spells the gh made far back in the throat. Recognition only: its stroke order is deliberately left empty, because no Urdu-scoped stroke-order source has been verified for it yet (a Persian or Arabic row's order is not borrowed)."
+}

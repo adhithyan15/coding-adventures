@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C463-bakvu",
+    "language": "gujarati",
+    "chapter": 463,
+    "sequence": 25850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:430d6e6e2f863b01"
+  },
+  "findings": []
+}

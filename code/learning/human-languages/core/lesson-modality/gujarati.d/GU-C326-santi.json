@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C326-santi",
+    "language": "gujarati",
+    "chapter": 326,
+    "sequence": 18120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12fa11d7d814b14a"
+  },
+  "findings": []
+}

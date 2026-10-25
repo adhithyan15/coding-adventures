@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C299-atkavvu",
+    "language": "gujarati",
+    "chapter": 299,
+    "sequence": 16740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b92f2cdb4e5f5014"
+  },
+  "findings": []
+}

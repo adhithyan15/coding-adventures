@@ -5959,3 +5959,63 @@ fn test_99_real_erl_many_string_literals_do_not_overrun_the_heap() {
     );
     assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "42");
 }
+
+// ===========================================================================
+// LANG83 PR6c: f64_signbit lowered, the IEEE arithmetic refused
+// ===========================================================================
+
+/// `f64_signbit` lowers to `is_lt x, 0.0` then `is_eq_exact x, -0.0`, each
+/// comparing against a literal-table float (`{z,4}{u,idx}`). The two literal
+/// indices must be DIFFERENT entries holding `+0.0` and `-0.0` bit-for-bit:
+/// a pool that interned by value (`0.0 == -0.0`) would hand back one entry
+/// for both and the second test would accept `+0.0` as negative.
+#[test]
+fn pr6c_f64_signbit_compares_against_distinct_zero_literals() {
+    use ir_to_beam::encoder::{etf_new_float, BEAMTag};
+
+    let m = make_module_fn("main", vec![("x", "f64")], "i64", vec![
+        IIRInstr::new("f64_signbit", Some("s".into()), vec![Operand::Var("x".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "i64"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty(), "{:?}", validate_for_beam(&m));
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+
+    let literal_of = |ops: &[ir_to_beam::encoder::BEAMOperand]| -> Vec<u8> {
+        assert_eq!(ops.len(), 4, "test {{f,L}} {{x,src}} {{z,4}} {{u,idx}}: {ops:?}");
+        assert_eq!(ops[1].tag, BEAMTag::X, "first compared operand is the source register");
+        assert_eq!((ops[2].tag, ops[2].value), (BEAMTag::Z, 4), "extended literal tag");
+        beam.literals[ops[3].value as usize].clone()
+    };
+    let lt: Vec<_> = beam.instructions.iter().filter(|i| i.opcode == OP_IS_LT).collect();
+    let eq: Vec<_> = beam.instructions.iter().filter(|i| i.opcode == OP_IS_EQ_EXACT).collect();
+    assert_eq!((lt.len(), eq.len()), (1, 1), "exactly one is_lt and one is_eq_exact");
+    assert_eq!(literal_of(&lt[0].operands), etf_new_float(0.0), "is_lt compares with +0.0");
+    assert_eq!(literal_of(&eq[0].operands), etf_new_float(-0.0), "is_eq_exact compares with -0.0");
+    assert_ne!(etf_new_float(0.0), etf_new_float(-0.0), "the two zeros are distinct terms");
+    // Two `move {i,1}` (negative, negative zero), one `move {i,0}`.
+    let moves_of = |v: u64| beam.instructions.iter()
+        .filter(|i| i.opcode == OP_MOVE && i.operands.first().map(|o| (o.tag, o.value)) == Some((BEAMTag::I, v)))
+        .count();
+    assert_eq!(moves_of(1), 2);
+    assert!(moves_of(0) >= 1);
+    assert_eq!(count_opcode(&beam, OP_CALL_EXT), 0, "a comparison calls nothing");
+}
+
+/// The five PR6c arithmetic ops are refused by validation (and by the
+/// lowering's catch-all), never lowered to `erlang:'+'/2` & co., which would
+/// raise `badarith` where the contract promises `±Infinity`/`NaN`.
+#[test]
+fn pr6c_ieee_arithmetic_is_refused_on_beam() {
+    for (op, arity) in [("f64_add", 2), ("f64_sub", 2), ("f64_mul", 2), ("f64_div", 2), ("f64_neg", 1)] {
+        let srcs: Vec<Operand> = ["a", "b"][..arity].iter().map(|n| Operand::Var((*n).into())).collect();
+        let m = make_module_fn("main", vec![("a", "f64"), ("b", "f64")], "f64", vec![
+            IIRInstr::new(op, Some("r".into()), srcs, "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+        ]);
+        let errs = validate_for_beam(&m);
+        assert!(errs.iter().any(|e| e.contains(op)), "{op}: validation must refuse it: {errs:?}");
+        assert!(lower_iir_to_beam(&m, &cfg()).is_err(), "{op}: lowering must refuse it");
+        assert!(!iir_to_beam::op_support(op).is_lowered(), "{op}: OP_SUPPORT must say Refused");
+    }
+    assert!(iir_to_beam::op_support("f64_signbit").is_lowered());
+}

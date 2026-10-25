@@ -1,0 +1,21 @@
+{
+  "chapter": 462,
+  "title": "A Lively Child",
+  "label": "ch:gu-a-lively-child",
+  "canDo": "I can describe a lively, mischievous child.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R462-review-455-462",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can describe a lively, mischievous child.",
+    "assesses": [
+      "GU-LEX-C462-CANCAL462-01",
+      "GU-LEX-C462-CANCAL462-02",
+      "GU-LEX-C462-CANCAL462-03",
+      "GU-LEX-C462-CANCAL462-04",
+      "GU-LEX-C462-CANCAL462-05"
+    ]
+  }
+}

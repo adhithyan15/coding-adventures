@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C483-janna",
+    "language": "urdu",
+    "chapter": 483,
+    "sequence": 28210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ec9e33f13a42edc"
+  },
+  "findings": []
+}

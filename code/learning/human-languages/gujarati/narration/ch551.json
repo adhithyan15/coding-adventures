@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 551,
+  "title": "Training for the Big Day",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9287daeda9b9001b",
+  "lessons": [
+    {
+      "id": "GU-C551-talim",
+      "sequence": 30560,
+      "title": "તાલીમ (tālīm) — training",
+      "headword": "તાલીમ",
+      "romanization": "tālīm",
+      "gloss": "training",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19eb061b397cf5e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to pierce (a target), then the Gujarati for a runner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: તાલીમ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તાલીમ — tālīm — \"training\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે સારી તાલીમ લેશો તો તમે ઝડપી દોડી શકશો. jo tame sārī tālīm leśo to tame jhaḍpī doḍī śakśo. If you get good training, you'll be able to run fast."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તાલીમ (tālīm) is usually traced to Arabic taʿlīm, \"teaching, instruction\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tālīm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tālīm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tālīm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tālīm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame sārī tālīm leśo to tame jhaḍpī doḍī śakśo. — If you get good training, you'll be able to run fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame sārī tālīm leśo to tame jhaḍpī doḍī śakśo.* — If you get good training, you'll be able to run fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to pierce (a target), then the Gujarati for a runner, then say tālīm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to pierce (a target), then the Gujarati for a runner, then say *tālīm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does તાલીમ (tālīm) mean? (\"Training\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C551-koc",
+      "sequence": 30570,
+      "title": "કોચ (koc) — a sports coach",
+      "headword": "કોચ",
+      "romanization": "koc",
+      "gloss": "a sports coach",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00c4c512ca98eef1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a runner, then the Gujarati for training."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કોચ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કોચ — koc — \"a sports coach\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો કોચ ના કહેશે તો હું મેચમાં નહીં રમું. jo koc nā kaheśe to hũ mecmā̃ nahī̃ ramũ. If the coach says no, I won't play in the match."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine or feminine noun, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કોચ (koc) is borrowed from English coach."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koc",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koc*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koc, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koc*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo koc nā kaheśe to hũ mecmā̃ nahī̃ ramũ. — If the coach says no, I won't play in the match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo koc nā kaheśe to hũ mecmā̃ nahī̃ ramũ.* — If the coach says no, I won't play in the match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a runner, then the Gujarati for training, then say koc again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a runner, then the Gujarati for training, then say *koc* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કોચ (koc) mean? (\"A sports coach\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C551-riyajh",
+      "sequence": 30580,
+      "title": "રિયાઝ (riyājh) — music practice",
+      "headword": "રિયાઝ",
+      "romanization": "riyājh",
+      "gloss": "music practice",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e82fcfdb3473354",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for training, then the Gujarati for a sports coach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: રિયાઝ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રિયાઝ — riyājh — \"music practice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો મીરા રોજ રિયાઝ કરશે તો તેનો સૂર વધારે મીઠો થશે. jo Mīrā roj riyājh karśe to teno sūr vadhāre mīṭho thaśe. If Mira practises every day, her singing will get sweeter."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રિયાઝ (riyājh) is usually traced to Arabic riyāḍa, \"exercise, training\", through Persian riyāz; a musician does it: રિયાઝ કરવો."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "riyājh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *riyājh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "riyājh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *riyājh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo Mīrā roj riyājh karśe to teno sūr vadhāre mīṭho thaśe. — If Mira practises every day, her singing will get sweeter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo Mīrā roj riyājh karśe to teno sūr vadhāre mīṭho thaśe.* — If Mira practises every day, her singing will get sweeter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for training, then the Gujarati for a sports coach, then say riyājh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for training, then the Gujarati for a sports coach, then say *riyājh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does રિયાઝ (riyājh) mean? (\"Music practice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C551-dodavvu",
+      "sequence": 30590,
+      "title": "દોડાવવું (doḍāvvũ) — to make (someone) run",
+      "headword": "દોડાવવું",
+      "romanization": "doḍāvvũ",
+      "gloss": "to make (someone) run",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5ad18b5d85a3a85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a sports coach, then the Gujarati for music practice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: દોડાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દોડાવવું — doḍāvvũ — \"to make (someone) run\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો કોચ અમને રોજ ન દોડાવત તો અમે આટલા ઝડપી ન હોત. jo koc amne roj na doḍāvat to ame āṭlā jhaḍpī na hot. If the coach hadn't made us run every day, we wouldn't be this fast."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે છોકરાઓને દોડાવ્યા, teṇe chokrāone doḍāvyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દોડાવવું (doḍāvvũ) is built from દોડવું, \"to run\", with the causative -āv-. CDIAL files દોડવું under Sanskrit drávati, \"runs\" (CDIAL 6624)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doḍāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doḍāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doḍāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doḍāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo koc amne roj na doḍāvat to ame āṭlā jhaḍpī na hot. — If the coach hadn't made us run every day, we wouldn't be this fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo koc amne roj na doḍāvat to ame āṭlā jhaḍpī na hot.* — If the coach hadn't made us run every day, we wouldn't be this fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a sports coach, then the Gujarati for music practice, then say doḍāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a sports coach, then the Gujarati for music practice, then say *doḍāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does દોડાવવું (doḍāvvũ) mean? (\"To make (someone) run\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C551-trophi",
+      "sequence": 30600,
+      "title": "ટ્રોફી (ṭrophī) — a trophy",
+      "headword": "ટ્રોફી",
+      "romanization": "ṭrophī",
+      "gloss": "a trophy",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09d33068ebfb6780",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for music practice, then the Gujarati for to make (someone) run."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટ્રોફી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટ્રોફી — ṭrophī — \"a trophy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો અમારી ટીમ જીતશે તો શાળાને ટ્રોફી મળશે. jo amārī ṭīm jītśe to śāḷāne ṭrophī maḷśe. If our team wins, the school will get a trophy."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટ્રોફી (ṭrophī) is borrowed from English trophy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭrophī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭrophī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭrophī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭrophī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo amārī ṭīm jītśe to śāḷāne ṭrophī maḷśe. — If our team wins, the school will get a trophy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo amārī ṭīm jītśe to śāḷāne ṭrophī maḷśe.* — If our team wins, the school will get a trophy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for music practice, then the Gujarati for to make (someone) run, then say ṭrophī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for music practice, then the Gujarati for to make (someone) run, then say *ṭrophī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટ્રોફી (ṭrophī) mean? (\"A trophy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

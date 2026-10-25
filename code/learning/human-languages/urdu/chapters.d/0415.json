@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "Street Food",
+  "label": "ch:ur-street-food",
+  "canDo": "I can eat at a roadside stall and say how the food tastes.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C415-parosna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can eat at a roadside stall and say how the food tastes.",
+    "assesses": [
+      "UR-LEX-C415-DHABA415-03",
+      "UR-LEX-C415-DHABA415-04",
+      "UR-LEX-C415-DHABA415-05"
+    ]
+  }
+}

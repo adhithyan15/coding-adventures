@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-409-JANIB409",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "UR-EXT-409-JANIB409"
+  ],
+  "after": []
+}

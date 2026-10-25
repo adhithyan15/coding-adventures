@@ -1,0 +1,11 @@
+{
+  "id": "UR-C502-nat",
+  "pathSegment": "UR-PATH-502-ZANG502",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-502-ZANG502",
+      "order": 2
+    }
+  ]
+}

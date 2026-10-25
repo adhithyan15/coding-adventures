@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C537-badle",
+    "language": "gujarati",
+    "chapter": 537,
+    "sequence": 29850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f178161286cd048d"
+  },
+  "findings": []
+}

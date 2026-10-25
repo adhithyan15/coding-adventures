@@ -1,0 +1,11 @@
+{
+  "id": "UR-C379-lagan",
+  "pathSegment": "UR-PATH-379-MEHNAT379",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-379-MEHNAT379",
+      "order": 2
+    }
+  ]
+}

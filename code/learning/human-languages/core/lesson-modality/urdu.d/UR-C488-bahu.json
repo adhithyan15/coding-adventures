@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C488-bahu",
+    "language": "urdu",
+    "chapter": 488,
+    "sequence": 28480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:438b5422b6a3cb7f"
+  },
+  "findings": []
+}

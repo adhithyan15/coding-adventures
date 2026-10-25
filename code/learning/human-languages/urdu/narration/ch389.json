@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 389,
+  "title": "Dozing on the Train",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1da8953b075e168e",
+  "lessons": [
+    {
+      "id": "UR-C389-savar",
+      "sequence": 23150,
+      "title": "سوار (savār) — on board; riding",
+      "headword": "سوار",
+      "romanization": "savār",
+      "gloss": "on board; riding",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e530adafb55c59a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a berth (on a train), then the Urdu for to gaze (at)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سوار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سوار — savār — \"on board; riding\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ہم صبح گاڑی میں سوار تھے۔ ham subah gāṛī meṅ savār the. We were on board the train in the morning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is usually traced to Persian savār, \"a rider, mounted\"; in Urdu a passenger who has got on a bus or a train is سوار too."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ham subah gāṛī meṅ savār the. — We were on board the train in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ham subah gāṛī meṅ savār the.* — We were on board the train in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a berth (on a train), then the Urdu for to gaze (at), then say savār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a berth (on a train), then the Urdu for to gaze (at), then say *savār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سوار (savār) mean? (\"On board; riding\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C389-gathri",
+      "sequence": 23160,
+      "title": "گٹھری (gaṭhrī) — a bundle (tied in cloth)",
+      "headword": "گٹھری",
+      "romanization": "gaṭhrī",
+      "gloss": "a bundle (tied in cloth)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e6d3bb47d3342d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to gaze (at), then the Urdu for on board."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گٹھری",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گٹھری — gaṭhrī — \"a bundle (tied in cloth)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ایک مسافر کے پاس کپڑوں کی گٹھری تھی۔ ek musāfir ke pās kapṛoṅ kī gaṭhrī thī. One passenger had a bundle of clothes."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گٹھری (gaṭhrī) is inherited: CDIAL lists the Hindi cousin gaṭhṛī, \"a bundle\", under Sanskrit grathna, \"a bunch\" (CDIAL 4348)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṭhrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṭhrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṭhrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṭhrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek musāfir ke pās kapṛoṅ kī gaṭhrī thī. — One passenger had a bundle of clothes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek musāfir ke pās kapṛoṅ kī gaṭhrī thī.* — One passenger had a bundle of clothes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to gaze (at), then the Urdu for on board, then say gaṭhrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to gaze (at), then the Urdu for on board, then say *gaṭhrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گٹھری (gaṭhrī) mean? (\"A bundle (tied in cloth)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C389-sarkana",
+      "sequence": 23170,
+      "title": "سرکانا (sarkānā) — to slide (something) along",
+      "headword": "سرکانا",
+      "romanization": "sarkānā",
+      "gloss": "to slide (something) along",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eba28b8794aecd72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for on board, then the Urdu for a bundle (tied in cloth)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سرکانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرکانا — sarkānā — \"to slide (something) along\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میں نے اپنا تھیلا سیٹ کے نیچے سرکایا۔ maiṅ ne apnā thailā sīṭ ke nīche sarkāyā. I slid my bag under the seat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے گٹھری آگے سرکائی, us ne gaṭhrī āge sarkāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرکانا (sarkānā) is built on saraknā, \"to slide\", which CDIAL lists under Sanskrit sarati, \"runs, glides\" (CDIAL 13250): this is the form for moving something else."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ ne apnā thailā sīṭ ke nīche sarkāyā. — I slid my bag under the seat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṅ ne apnā thailā sīṭ ke nīche sarkāyā.* — I slid my bag under the seat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for on board, then the Urdu for a bundle (tied in cloth), then say sarkānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for on board, then the Urdu for a bundle (tied in cloth), then say *sarkānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سرکانا (sarkānā) mean? (\"To slide (something) along\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C389-jamahi",
+      "sequence": 23180,
+      "title": "جماہی (jamāhī) — a yawn",
+      "headword": "جماہی",
+      "romanization": "jamāhī",
+      "gloss": "a yawn",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b2bb0adf7d6ce96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a bundle (tied in cloth), then the Urdu for to slide (something) along."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جماہی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جماہی — jamāhī — \"a yawn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "رات لمبی تھی اور سارا کو جماہی آئی۔ rāt lambī thī aur sārā ko jamāhī āī. The night was very long and Sara yawned."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جماہی (jamāhī) is inherited: CDIAL lists the Hindi cousin jamhāī, \"a yawn\", under jṛmbhāyita, a form it reconstructs (CDIAL 5266). A yawn comes to you: سارا کو جماہی آئی."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamāhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamāhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamāhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamāhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt lambī thī aur sārā ko jamāhī āī. — The night was very long and Sara yawned.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt lambī thī aur sārā ko jamāhī āī.* — The night was very long and Sara yawned.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a bundle (tied in cloth), then the Urdu for to slide (something) along, then say jamāhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a bundle (tied in cloth), then the Urdu for to slide (something) along, then say *jamāhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جماہی (jamāhī) mean? (\"A yawn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C389-unghna",
+      "sequence": 23190,
+      "title": "اونگھنا (ūṅghnā) — to doze",
+      "headword": "اونگھنا",
+      "romanization": "ūṅghnā",
+      "gloss": "to doze",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed1c8f9579e698be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to slide (something) along, then the Urdu for a yawn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اونگھنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اونگھنا — ūṅghnā — \"to doze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سارا کھڑکی کے پاس بیٹھ کر اونگھ رہی تھی۔ sārā khiṛkī ke pās baiṭh kar ūṅgh rahī thī. Sara sat by the window, dozing."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): وہ گاڑی میں اونگھا, voh gāṛī meṅ ūṅghā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اونگھنا (ūṅghnā) is inherited: CDIAL lists the Hindi cousin ū̃ghnā, \"to be drowsy\", under uṅghati, \"sleeps\", a form it reconstructs (CDIAL 1632)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṅghnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṅghnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṅghnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṅghnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārā khiṛkī ke pās baiṭh kar ūṅgh rahī thī. — Sara sat by the window, dozing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārā khiṛkī ke pās baiṭh kar ūṅgh rahī thī.* — Sara sat by the window, dozing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to slide (something) along, then the Urdu for a yawn, then say ūṅghnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to slide (something) along, then the Urdu for a yawn, then say *ūṅghnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اونگھنا (ūṅghnā) mean? (\"To doze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

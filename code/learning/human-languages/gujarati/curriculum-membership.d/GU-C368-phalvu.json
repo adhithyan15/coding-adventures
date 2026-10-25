@@ -1,0 +1,11 @@
+{
+  "id": "GU-C368-phalvu",
+  "pathSegment": "GU-PATH-368-NASIB368",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-368-NASIB368",
+      "order": 3
+    }
+  ]
+}

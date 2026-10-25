@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C326-pachhtana",
+    "language": "urdu",
+    "chapter": 326,
+    "sequence": 19580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df92e8b12d34ef9d"
+  },
+  "findings": []
+}

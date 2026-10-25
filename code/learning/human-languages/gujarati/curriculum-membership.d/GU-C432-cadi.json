@@ -1,0 +1,11 @@
+{
+  "id": "GU-C432-cadi",
+  "pathSegment": "GU-PATH-432-GOLD432",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-432-GOLD432",
+      "order": 1
+    }
+  ]
+}

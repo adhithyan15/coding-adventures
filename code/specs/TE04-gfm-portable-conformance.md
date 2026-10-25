@@ -108,3 +108,27 @@ closure can be reviewed independently.
 
 This ordering restarts package parity from a shared oracle instead of copying
 the current Rust or TypeScript directory tree blindly.
+
+## TypeScript adoption contract
+
+The backlog owner `gfm-typescript-neutral-conformance-adoption` depends on
+`gfm-language-neutral-conformance-fixture`.  It is complete only when the real
+`@coding-adventures/gfm-parser` package dynamically reads every case in
+`gfm-extension-v1/cases.json`, calls its public `parse()` API, and passes the
+result to the public `@coding-adventures/document-ast-to-html` `toHtml()` API.
+The native test must compare both complete outputs for all sixteen vectors; a
+fixed list of selected case IDs does not qualify.
+
+The reader remains test-only and receives no new production authority.  It
+must prove that independent source, expected-AST, and expected-HTML corruption
+would each be detected, retain the package's ordinary tests and coverage gate,
+and keep the corpus outside the compiled package.  An exact change to the
+committed `cases.json` path must select `typescript/gfm-parser` plus its normal
+dependent closure in each platform build plan.  Schema, prose, nested, backup,
+case-variant, and backslash lookalikes must not silently widen that route.
+
+Passing this owner qualifies only the existing TypeScript lane.  The next
+owners stay ordered as follows: reconcile the present C#, F#, and Haskell
+packages; add Swift after its CommonMark prerequisites; then add Java, Kotlin,
+and Dart after their parser and renderer prerequisites.  None is implied by
+TypeScript's result.

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 521,
+  "title": "Milk, Curd and Butter",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ea4dc29d9b1be549",
+  "lessons": [
+    {
+      "id": "GU-C521-melvan",
+      "sequence": 29020,
+      "title": "મેળવણ (meḷvaṇ) — a curd starter",
+      "headword": "મેળવણ",
+      "romanization": "meḷvaṇ",
+      "gloss": "a curd starter",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e9bc24fa7c5af3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to sprinkle, then the Gujarati for to parch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મેળવણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મેળવણ — meḷvaṇ — \"a curd starter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દહીં માટે દૂધમાં એક ચમચી મેળવણ નાખો. dahī̃ māṭe dūdhmā̃ ek camcī meḷvaṇ nākho. For curd, put a spoonful of starter in the milk."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મેળવણ (meḷvaṇ) is built on મેળવવું, \"to get; to mix in\", with the ending -aṇ: the spoonful of old curd mixed into milk to set it. CDIAL files the family under Sanskrit miláti, \"meets\" (CDIAL 10133)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meḷvaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meḷvaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meḷvaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meḷvaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dahī̃ māṭe dūdhmā̃ ek camcī meḷvaṇ nākho. — For curd, put a spoonful of starter in the milk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dahī̃ māṭe dūdhmā̃ ek camcī meḷvaṇ nākho.* — For curd, put a spoonful of starter in the milk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to sprinkle, then the Gujarati for to parch, then say meḷvaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to sprinkle, then the Gujarati for to parch, then say *meḷvaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મેળવણ (meḷvaṇ) mean? (\"A curd starter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C521-jamavvu",
+      "sequence": 29030,
+      "title": "જમાવવું (jamāvvũ) — to set curd",
+      "headword": "જમાવવું",
+      "romanization": "jamāvvũ",
+      "gloss": "to set curd",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d89a0078160e9c44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to parch, then the Gujarati for a curd starter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: જમાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જમાવવું — jamāvvũ — \"to set curd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદીએ રાત્રે દહીં જમાવ્યું. dādīe rātre dahī̃ jamāvyũ. Grandmother set the curd at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે દહીં જમાવ્યું, teṇe dahī̃ jamāvyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જમાવવું (jamāvvũ) is filed by CDIAL under Sanskrit yamyátē, \"is fixed\", and CDIAL lists the Gujarati verb as \"to collect\" (CDIAL 10428); in the kitchen it is what you do to milk to make curd."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādīe rātre dahī̃ jamāvyũ. — Grandmother set the curd at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādīe rātre dahī̃ jamāvyũ.* — Grandmother set the curd at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to parch, then the Gujarati for a curd starter, then say jamāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to parch, then the Gujarati for a curd starter, then say *jamāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does જમાવવું (jamāvvũ) mean? (\"To set curd\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C521-valovvu",
+      "sequence": 29040,
+      "title": "વલોવવું (valovvũ) — to churn",
+      "headword": "વલોવવું",
+      "romanization": "valovvũ",
+      "gloss": "to churn",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7a94710ce2ff6c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a curd starter, then the Gujarati for to set curd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વલોવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વલોવવું — valovvũ — \"to churn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સવારે દાદીએ દહીં વલોવીને માખણ કાઢ્યું. savāre dādīe dahī̃ valovīne mākhaṇ kāḍhyũ. In the morning my grandmother churned the curd and took out the butter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે દહીં વલોવ્યું, teṇe dahī̃ valovyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વલોવવું (valovvũ) is filed by CDIAL under Sanskrit vilōbhayati, \"perplexes, agitates\", and CDIAL lists the Gujarati verb, \"to churn\" (CDIAL 11913a)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valovvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valovvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valovvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valovvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savāre dādīe dahī̃ valovīne mākhaṇ kāḍhyũ. — In the morning my grandmother churned the curd and took out the butter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savāre dādīe dahī̃ valovīne mākhaṇ kāḍhyũ.* — In the morning my grandmother churned the curd and took out the butter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a curd starter, then the Gujarati for to set curd, then say valovvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a curd starter, then the Gujarati for to set curd, then say *valovvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વલોવવું (valovvũ) mean? (\"To churn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C521-ubhravu",
+      "sequence": 29050,
+      "title": "ઊભરાવું (ūbhrāvũ) — to boil over",
+      "headword": "ઊભરાવું",
+      "romanization": "ūbhrāvũ",
+      "gloss": "to boil over",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87ba8b55c0c304db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to set curd, then the Gujarati for to churn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઊભરાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊભરાવું — ūbhrāvũ — \"to boil over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દૂધ ઊભરાઈ ગયું અને ચૂલો ગંદો થઈ ગયો. dūdh ūbhrāī gayũ ane cūlo gando thaī gayo. The milk boiled over and the stove got dirty."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે દૂધ ઊભરાઈ ગયું, te dūdh ūbhrāī gayũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊભરાવું (ūbhrāvũ) is filed by CDIAL under Sanskrit údbharati, \"raises\", with the Gujarati verb listed as ubhrāvũ, \"to effervesce\" (CDIAL 2038)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūbhrāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūbhrāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūbhrāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūbhrāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūdh ūbhrāī gayũ ane cūlo gando thaī gayo. — The milk boiled over and the stove got dirty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūdh ūbhrāī gayũ ane cūlo gando thaī gayo.* — The milk boiled over and the stove got dirty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to set curd, then the Gujarati for to churn, then say ūbhrāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to set curd, then the Gujarati for to churn, then say *ūbhrāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઊભરાવું (ūbhrāvũ) mean? (\"To boil over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C521-phinvu",
+      "sequence": 29060,
+      "title": "ફીણવું (phīṇvũ) — to whisk (to a froth)",
+      "headword": "ફીણવું",
+      "romanization": "phīṇvũ",
+      "gloss": "to whisk (to a froth)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b8fe1403b150182",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to churn, then the Gujarati for to boil over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ફીણવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફીણવું — phīṇvũ — \"to whisk (to a froth)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરાએ ચમચીથી છાશ ફીણી. Mīrāe camcīthī chāś phīṇī. Mira whisked the buttermilk with a spoon."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે છાશ ફીણી, teṇe chāś phīṇī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફીણવું (phīṇvũ) is built on phīṇ, \"foam\", which CDIAL lists under Sanskrit phḗna, \"foam\" (CDIAL 9108): to beat a liquid until it froths."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phīṇvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phīṇvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phīṇvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phīṇvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrāe camcīthī chāś phīṇī. — Mira whisked the buttermilk with a spoon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrāe camcīthī chāś phīṇī.* — Mira whisked the buttermilk with a spoon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to churn, then the Gujarati for to boil over, then say phīṇvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to churn, then the Gujarati for to boil over, then say *phīṇvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ફીણવું (phīṇvũ) mean? (\"To whisk (to a froth)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:fd665d7fcb314978",
+  "lessonIds": [
+    "UR-C411-dhalan",
+    "UR-C411-lurhakna",
+    "UR-C411-baramada",
+    "UR-C411-tah-khana",
+    "UR-C411-baghal"
+  ],
+  "tex": "urdu/book/chapters/ch411-slopes-verandas-and-cellars.tex"
+}

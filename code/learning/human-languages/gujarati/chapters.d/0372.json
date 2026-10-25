@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Insurance and Guarantees",
+  "label": "ch:gu-insurance-and-guarantees",
+  "canDo": "I can say what is covered if something goes wrong.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C372-avarvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can say what is covered if something goes wrong.",
+    "assesses": [
+      "GU-LEX-C372-VIMO372-03",
+      "GU-LEX-C372-VIMO372-04",
+      "GU-LEX-C372-VIMO372-05"
+    ]
+  }
+}

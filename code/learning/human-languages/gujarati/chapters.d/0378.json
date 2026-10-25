@@ -1,0 +1,21 @@
+{
+  "chapter": 378,
+  "title": "Within Limits",
+  "label": "ch:gu-within-limits",
+  "canDo": "I can say how far is too far.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-R378-review-371-378",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can say how far is too far.",
+    "assesses": [
+      "GU-LEX-C378-HAD378-01",
+      "GU-LEX-C378-HAD378-02",
+      "GU-LEX-C378-HAD378-03",
+      "GU-LEX-C378-HAD378-04",
+      "GU-LEX-C378-HAD378-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:134b4c6999f40299",
+  "lessonIds": [
+    "UR-C366-sirf",
+    "UR-C366-sivae",
+    "UR-C366-ijazat",
+    "UR-C366-hargiz",
+    "UR-C366-mana-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch366.txt",
+  "json": "urdu/narration/ch366.json",
+  "textHash": "fnv1a64:7ce15d769ec79546",
+  "jsonHash": "fnv1a64:71f16998944044f1",
+  "findings": []
+}

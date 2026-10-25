@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "A Sudden Fright",
+  "label": "ch:gu-a-sudden-fright",
+  "canDo": "I can say what frightened me and how.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C453-bhiti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can say what frightened me and how.",
+    "assesses": [
+      "GU-LEX-C453-BIK453-03",
+      "GU-LEX-C453-BIK453-04",
+      "GU-LEX-C453-BIK453-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C325-dain",
+    "language": "urdu",
+    "chapter": 325,
+    "sequence": 19550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a52f43f22ad09e80"
+  },
+  "findings": []
+}

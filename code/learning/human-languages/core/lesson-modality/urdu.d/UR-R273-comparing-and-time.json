@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R273-comparing-and-time",
+    "language": "urdu",
+    "chapter": 273,
+    "sequence": 16600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1fa42ff499efe90"
+  },
+  "findings": []
+}

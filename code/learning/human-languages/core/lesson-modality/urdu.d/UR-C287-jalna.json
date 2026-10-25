@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C287-jalna",
+    "language": "urdu",
+    "chapter": 287,
+    "sequence": 17600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43ce6c06a50e3da6"
+  },
+  "findings": []
+}

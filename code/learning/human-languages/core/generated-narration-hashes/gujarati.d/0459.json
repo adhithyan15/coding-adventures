@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:168f4e0bb1adc51e",
+  "lessonIds": [
+    "GU-C459-komal",
+    "GU-C459-kathor",
+    "GU-C459-krur",
+    "GU-C459-bhalu",
+    "GU-C459-pigalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch459.txt",
+  "json": "gujarati/narration/ch459.json",
+  "textHash": "fnv1a64:1635c1e3aa86ca8e",
+  "jsonHash": "fnv1a64:b105041c492ecb77",
+  "findings": []
+}

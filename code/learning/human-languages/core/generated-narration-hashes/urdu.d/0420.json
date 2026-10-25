@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:a616c6ed1e9e9528",
+  "lessonIds": [
+    "UR-C420-amdani",
+    "UR-C420-bajat",
+    "UR-C420-kifayat",
+    "UR-C420-bantna",
+    "UR-C420-bhunana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch420.txt",
+  "json": "urdu/narration/ch420.json",
+  "textHash": "fnv1a64:ddfc1bdae5c14d8e",
+  "jsonHash": "fnv1a64:276538b4bd191253",
+  "findings": []
+}

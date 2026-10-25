@@ -1,0 +1,21 @@
+{
+  "chapter": 486,
+  "title": "Staying Well",
+  "label": "ch:gu-staying-well",
+  "canDo": "I can say what keeps me healthy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R486-review-479-486",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can say what keeps me healthy.",
+    "assesses": [
+      "GU-LEX-C486-AAROGYA486-01",
+      "GU-LEX-C486-AAROGYA486-02",
+      "GU-LEX-C486-AAROGYA486-03",
+      "GU-LEX-C486-AAROGYA486-04",
+      "GU-LEX-C486-AAROGYA486-05"
+    ]
+  }
+}

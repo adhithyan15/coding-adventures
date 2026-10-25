@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:4220533cdaff96c8",
+  "lessonIds": [
+    "UR-C459-fayyaz",
+    "UR-C459-khud-gharaz",
+    "UR-C459-sakhi",
+    "UR-C459-bakhil",
+    "UR-C459-sadqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch459.txt",
+  "json": "urdu/narration/ch459.json",
+  "textHash": "fnv1a64:ede6fe74a54d9d92",
+  "jsonHash": "fnv1a64:0ca199e832de7fae",
+  "findings": []
+}

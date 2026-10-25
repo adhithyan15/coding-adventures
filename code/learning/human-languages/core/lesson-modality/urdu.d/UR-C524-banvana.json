@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C524-banvana",
+    "language": "urdu",
+    "chapter": 524,
+    "sequence": 30570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93d52347b3059e83"
+  },
+  "findings": []
+}

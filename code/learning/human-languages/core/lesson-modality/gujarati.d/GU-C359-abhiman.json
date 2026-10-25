@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C359-abhiman",
+    "language": "gujarati",
+    "chapter": 359,
+    "sequence": 20050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8754da0da51b59c9"
+  },
+  "findings": []
+}

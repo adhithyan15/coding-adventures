@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-202-A2-YATRI",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-202-A2-YATRI"
+  ],
+  "after": []
+}

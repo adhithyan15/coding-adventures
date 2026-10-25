@@ -1,0 +1,21 @@
+{
+  "chapter": 315,
+  "title": "Ancestors",
+  "label": "ch:ur-ancestors",
+  "canDo": "I can tell the story of a family line.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-R315-review-308-315",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can tell the story of a family line.",
+    "assesses": [
+      "UR-LEX-C315-AJDAD315-01",
+      "UR-LEX-C315-AJDAD315-02",
+      "UR-LEX-C315-AJDAD315-03",
+      "UR-LEX-C315-AJDAD315-04",
+      "UR-LEX-C315-AJDAD315-05"
+    ]
+  }
+}

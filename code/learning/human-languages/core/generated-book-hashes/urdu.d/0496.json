@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:3f55a808dcc1c732",
+  "lessonIds": [
+    "UR-C496-varkshap",
+    "UR-C496-shikanja",
+    "UR-C496-surakh",
+    "UR-C496-chhedna",
+    "UR-C496-regmal"
+  ],
+  "tex": "urdu/book/chapters/ch496-the-workshop.tex"
+}

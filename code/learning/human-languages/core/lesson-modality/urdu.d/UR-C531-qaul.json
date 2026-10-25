@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C531-qaul",
+    "language": "urdu",
+    "chapter": 531,
+    "sequence": 30900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a188d97e5e24f34b"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C473-pindi",
+  "pathSegment": "GU-PATH-473-JANGH473",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-473-JANGH473",
+      "order": 3
+    }
+  ]
+}

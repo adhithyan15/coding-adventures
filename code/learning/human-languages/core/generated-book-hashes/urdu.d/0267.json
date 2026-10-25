@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:8d075ee0c06454a5",
+  "lessonIds": [
+    "UR-C267-bad",
+    "UR-W267-ain",
+    "UR-C267-kha-kar",
+    "UR-C267-pehle-phir",
+    "UR-C267-sara-ka-safar",
+    "UR-R267-a-story-in-order"
+  ],
+  "tex": "urdu/book/chapters/ch267-a-story-in-order.tex"
+}

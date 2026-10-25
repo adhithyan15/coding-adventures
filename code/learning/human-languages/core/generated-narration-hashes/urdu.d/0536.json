@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:cdda4614a85e06a5",
+  "lessonIds": [
+    "UR-C536-mohtat",
+    "UR-C536-chaukanna",
+    "UR-C536-intibah",
+    "UR-C536-ar",
+    "UR-C536-emarjansi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch536.txt",
+  "json": "urdu/narration/ch536.json",
+  "textHash": "fnv1a64:d527982172f4a633",
+  "jsonHash": "fnv1a64:23a4dc6d6cfb156f",
+  "findings": []
+}

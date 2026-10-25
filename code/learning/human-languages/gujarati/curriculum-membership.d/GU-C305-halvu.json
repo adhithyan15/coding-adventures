@@ -1,0 +1,11 @@
+{
+  "id": "GU-C305-halvu",
+  "pathSegment": "GU-PATH-305-BHUKAMP305",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-305-BHUKAMP305",
+      "order": 0
+    }
+  ]
+}

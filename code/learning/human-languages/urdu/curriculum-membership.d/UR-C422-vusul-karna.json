@@ -1,0 +1,11 @@
+{
+  "id": "UR-C422-vusul-karna",
+  "pathSegment": "UR-PATH-422-DALAL422",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-422-DALAL422",
+      "order": 3
+    }
+  ]
+}

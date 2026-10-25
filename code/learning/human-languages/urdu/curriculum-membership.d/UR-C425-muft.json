@@ -1,0 +1,11 @@
+{
+  "id": "UR-C425-muft",
+  "pathSegment": "UR-PATH-425-TARAZU425",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-425-TARAZU425",
+      "order": 1
+    }
+  ]
+}

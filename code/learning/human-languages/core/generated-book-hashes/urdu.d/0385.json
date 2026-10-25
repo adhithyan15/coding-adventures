@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:7973a9da56465b15",
+  "lessonIds": [
+    "UR-C385-vazifa",
+    "UR-C385-farq",
+    "UR-C385-mauzu",
+    "UR-C385-dakhila",
+    "UR-C385-tarjih-dena",
+    "UR-R385-review-379-385",
+    "UR-R385-review-final-385"
+  ],
+  "tex": "urdu/book/chapters/ch385-choosing-what-to-study.tex"
+}

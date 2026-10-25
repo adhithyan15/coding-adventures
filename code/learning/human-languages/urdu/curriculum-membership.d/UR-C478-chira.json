@@ -1,0 +1,11 @@
+{
+  "id": "UR-C478-chira",
+  "pathSegment": "UR-PATH-478-CUT478",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-478-CUT478",
+      "order": 1
+    }
+  ]
+}

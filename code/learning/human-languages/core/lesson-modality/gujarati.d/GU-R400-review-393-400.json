@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R400-review-393-400",
+    "language": "gujarati",
+    "chapter": 400,
+    "sequence": 22400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85ae6f0ab9f1c7ca"
+  },
+  "findings": []
+}

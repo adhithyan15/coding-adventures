@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 333,
+  "output": "urdu/book/chapters/ch333-what-it-is-for.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

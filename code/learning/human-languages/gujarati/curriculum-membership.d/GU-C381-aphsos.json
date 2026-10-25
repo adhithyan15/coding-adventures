@@ -1,0 +1,11 @@
+{
+  "id": "GU-C381-aphsos",
+  "pathSegment": "GU-PATH-381-PASTAVO381",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-381-PASTAVO381",
+      "order": 1
+    }
+  ]
+}

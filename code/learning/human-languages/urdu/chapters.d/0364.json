@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Clearly So",
+  "label": "ch:ur-clearly-so",
+  "canDo": "I can say what is certain to happen if something is done.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C364-ubharna-emerge",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can say what is certain to happen if something is done.",
+    "assesses": [
+      "UR-LEX-C364-ZAHIR364-03",
+      "UR-LEX-C364-ZAHIR364-04",
+      "UR-LEX-C364-ZAHIR364-05"
+    ]
+  }
+}

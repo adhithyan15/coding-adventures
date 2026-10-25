@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:3ad3365c89bd35d5",
+  "lessonIds": [
+    "UR-C348-etiraz",
+    "UR-C348-tanqid",
+    "UR-C348-nuqta-e-nazar",
+    "UR-C348-dhamkana",
+    "UR-C348-phuslana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch348.txt",
+  "json": "urdu/narration/ch348.json",
+  "textHash": "fnv1a64:f65ed17e51f6c005",
+  "jsonHash": "fnv1a64:63aef80a15d82a0a",
+  "findings": []
+}

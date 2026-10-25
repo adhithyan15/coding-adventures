@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:a49b36d0c7e6fa55",
+  "lessonIds": [
+    "GU-C469-vicitra",
+    "GU-C469-tarangi",
+    "GU-C469-jhanun",
+    "GU-C469-sust",
+    "GU-C469-udyam"
+  ],
+  "tex": "gujarati/book/chapters/ch469-habits-and-quirks.tex"
+}

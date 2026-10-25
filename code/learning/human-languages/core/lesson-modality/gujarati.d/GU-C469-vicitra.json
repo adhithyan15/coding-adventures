@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C469-vicitra",
+    "language": "gujarati",
+    "chapter": 469,
+    "sequence": 26120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35a428718479bdbc"
+  },
+  "findings": []
+}
