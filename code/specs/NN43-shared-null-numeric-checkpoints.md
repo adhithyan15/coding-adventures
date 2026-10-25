@@ -1,6 +1,7 @@
 # NN43: Shared Null Numeric Checkpoint Rejections
 
-Status: specified before implementation; direct execution and required CI pending.
+Status: implemented with direct local four-native-suite evidence; actual selected
+required CI and confirmed exact-head merge remain pending.
 
 ## Prioritized reliability boundary
 
@@ -41,3 +42,9 @@ Update lesson, curriculum, current corpus-count documentation and package
 changelogs. Preserve historical NN40/NN41 delivery evidence as historical.
 Independent security review precedes every push. Publish one ready PR and wait
 for exact-head CI/CodeQL/selected conformance and verified merge before completion.
+
+Local evidence: Python 123 tests and TypeScript 120 tests at 100% library
+coverage, Go library 96.9%/CLI 84% plus race/vet/build and native resume, Rust
+10 integration tests and README doctest/fmt/Clippy/release example in the
+documented exact-copy workspace. Existing loaders reject every new case;
+no production loader or training change was needed.

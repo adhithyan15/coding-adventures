@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extend the shared corpus to 55 cases (3 accept, 52 reject); pin and execute
+  NN43's six null weight/bias cases in single, mixed and later-layer positions.
+
 - Extend required native checkpoint exchange to Go: all twelve directed pairs,
   full model receipts at steps 3000/3001/3002, four native lanes and no bindings.
 

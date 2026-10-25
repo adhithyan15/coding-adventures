@@ -129,7 +129,10 @@ SGD training, inspection, and portable save/reload/resume.
   selected required conformance and confirmed exact-head merge in PR #18230.
 - [ ] Expand the shared invalid-checkpoint corpus with literal null numeric
   cells. Go's decoder defaults null float cells to zero; NN41 guards/tests this
-  explicitly, while the shared corpus currently covers other null/shape cases.
+  explicitly, while the prior shared corpus covered other null/shape cases.
+  NN43 adds six explicit documents (55 total, 3 accept/52 reject) with direct
+  local four-native-suite evidence. Actual selected required CI and verified
+  merge still gate completion; no production loader changes were necessary.
 - [ ] Ruby native framework.
 - [ ] C native framework.
 - [ ] C++ native framework.
