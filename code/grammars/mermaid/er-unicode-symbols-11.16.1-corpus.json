@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER Unicode-symbol identifier vertical slice",
+  "fixtures": [
+    {
+      "name": "unicode-symbol-entities-fields-and-role",
+      "source": "erDiagram\n_**testẽζ➕Ø😀㌕ぼ**_ {\n  int _age_\n}\nperson[😀] {\n  string *first*Name\n  string _**last**Name_\n}\na[\"*Customer Account*\"] {\n  **string** ema*i*l\n}\nperson ||--o| a : __hẽ😀__"
+    }
+  ]
+}

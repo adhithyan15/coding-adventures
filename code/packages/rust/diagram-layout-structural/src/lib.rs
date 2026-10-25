@@ -1775,6 +1775,34 @@ mod tests {
     }
 
     #[test]
+    fn unicode_symbol_er_text_reserves_layout_space() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes[0].id = "_**testẽζ➕Ø😀㌕ぼ**_".into();
+        diagram.nodes[0].label = "_**testẽζ➕Ø😀㌕ぼ**_".into();
+        diagram.nodes[0].compartments[0].entries = vec!["_age_: int".into()];
+        diagram.nodes[1].id = "person".into();
+        diagram.nodes[1].label = "😀".into();
+        diagram.nodes[1].compartments[0].entries =
+            vec!["*first*Name: string".into(), "_**last**Name_: string".into()];
+        diagram.relationships[0].from = "person".into();
+        diagram.relationships[0].to = "_**testẽζ➕Ø😀㌕ぼ**_".into();
+        diagram.relationships[0].label = Some("__hẽ😀__".into());
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[1].compartments[0].rows.len(), 2);
+        assert!(layout.nodes[0].width > 180.0);
+        assert_eq!(
+            layout.relationships[0]
+                .label
+                .as_ref()
+                .map(|(_, label)| label.as_str()),
+            Some("__hẽ😀__")
+        );
+    }
+
+    #[test]
     fn numeric_entity_boundaries_layout_distinct_targets() {
         let mut diagram = two_class_diagram();
         diagram.title = None;

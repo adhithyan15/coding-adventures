@@ -1977,6 +1977,32 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_unicode_symbol_identifiers() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\n_**testẽζ➕Ø😀㌕ぼ**_\nperson[😀]\nperson ||--o| a : __hẽ😀__\n",
+        );
+        let identifiers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFIER"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert!(identifiers.contains(&"_**testẽζ➕Ø😀㌕ぼ**_"));
+        assert!(identifiers.contains(&"😀"));
+        assert!(identifiers.contains(&"__hẽ😀__"));
+
+        let compact = tokenize_mermaid_er("erDiagram\nA||--||B:has\n");
+        assert!(compact.iter().any(|token| token.value == "--"));
+        assert_eq!(
+            compact
+                .iter()
+                .filter(|token| token.value == "||")
+                .count(),
+            2
+        );
+    }
+
+    #[test]
     fn tokenizes_er_mixed_relationship_operators() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER 1.-one or more DELIVERY_ADDRESS : mixed left\nCUSTOMER 1-.one or more POSTAL_ADDRESS : mixed right\n",
