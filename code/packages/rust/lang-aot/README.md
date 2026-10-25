@@ -1364,13 +1364,17 @@ has so far and stops with `Trap.Overflow`: a stated divergence, with bignum
 promotion left for later. A zero divisor stops it with `Trap.DivZero`, like
 `ZeroDivisionError`.
 
-Fifty-three `lang_matrix` Python rows declare all eight executable columns:
+One hundred `lang_matrix` Python rows declare all eight executable columns:
 every accepted case of `code/grammars/python/corpus/py-int-print/` on the
 default 3.13.16 (eighteen), and, since phase 7b slice 2, every case each
 IIR-identity class representative of `python-iir-compiler`'s release sweep
-accepts: 3.0a1 (seventeen; it refuses `int_underscores`) and 3.12.3
-(eighteen; its class also holds 3.13.16, 3.11.17 and 3.16.0a1). So they
-prove stage B for all five releases (`release_inventory.py check --matrix`),
+accepts: 3.0a1 (seventeen; it refuses `int_underscores`, and its class also
+holds 3.5.10) and 3.6.0 (eighteen; its class also holds 3.12.3, 3.13.16,
+3.11.17 and 3.16.0a1). Since phase 7c the Python 2 corpus
+(`corpus/py2-int-print/`) runs on its two class representatives: 2.2
+(twenty-three; its class also holds 2.4) and 2.6 (twenty-four, including
+the PEP 3127 `0o`/`0b` case; its class also holds 2.7.18). So they prove
+stage B for all eleven releases (`release_inventory.py check --matrix`),
 and `python_rows_run_their_corpus_case` checks that they are exactly the
 sweep's boundary set in `code/grammars/python/release_classes.csv`. Nine
 cases are `StdoutThenTrap` rows, which check the output written before the
@@ -1388,6 +1392,7 @@ lang-aot prog.py --lang python@3.0a1 --emit=llvm-ir
 
 | Request | Result |
 |---|---|
-| `python`, `python@3.0a1`, `python@3.11.17`, `python@3.12.3`, `python@3.13.16`, `python@3.16.0a1` | compiled on that release (`python` is `3.13.16`) |
+| `python`, `python@3.0a1`, `python@3.5.10`, `python@3.6.0`, `python@3.11.17`, `python@3.12.3`, `python@3.13.16`, `python@3.16.0a1` | compiled on that release (`python` is `3.13.16`) |
+| `python@2.2`, `python@2.4`, `python@2.6`, `python@2.7.18` | compiled on that release as Python 2 (`py2-int-print`: `print 010 / 3`) |
 | `python@3.13` | `UnknownRelease`, nearest inventory IDs suggested |
 | `python@3.12.2` | `ReleaseNotAvailable` (no grammar pair: `grammar_stage none`) |

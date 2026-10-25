@@ -567,14 +567,42 @@
       "version": "python2.2",
       "kind": "grammar",
       "path": "code/grammars/python/python2.2.grammar",
-      "sha256": "d81f011dd8b525e6aacf6564d458d38898c730bbf016fe0d4e362461c0b0b923"
+      "sha256": "51b9fb15f37f83d732ce2ea82d6530141cb15749851ca29d0b5a8f2e459f9599"
     },
     {
       "family": "python",
       "version": "python2.2",
       "kind": "tokens",
       "path": "code/grammars/python/python2.2.tokens",
-      "sha256": "a670da036a195b0156c54382e9ed2d433428f3f8e543d37f45538f325529e449"
+      "sha256": "95fc73ebb23d9a2b7e5bbbb1a918db24e610c3a0c2065c5a5db605b1ac91babc"
+    },
+    {
+      "family": "python",
+      "version": "python2.4",
+      "kind": "grammar",
+      "path": "code/grammars/python/python2.4.grammar",
+      "sha256": "1d5d1cfc0aac116c39a18029e153fffdad7c161b8c467d896400c3189c3c7131"
+    },
+    {
+      "family": "python",
+      "version": "python2.4",
+      "kind": "tokens",
+      "path": "code/grammars/python/python2.4.tokens",
+      "sha256": "9bd92ae03f32e1833e125cb143d08ed5eed8997989a4883673231e1f4e235b8a"
+    },
+    {
+      "family": "python",
+      "version": "python2.6",
+      "kind": "grammar",
+      "path": "code/grammars/python/python2.6.grammar",
+      "sha256": "5501e136266fe44a35a78a18af05d671c0c5e3f4387a6c8170ca370177125ef4"
+    },
+    {
+      "family": "python",
+      "version": "python2.6",
+      "kind": "tokens",
+      "path": "code/grammars/python/python2.6.tokens",
+      "sha256": "1ab2b625a2df216ab033c7ecff27f787f94798e2df365b7dc39f60bb3ae13493"
     },
     {
       "family": "python",
@@ -595,14 +623,14 @@
       "version": "python2.7.18",
       "kind": "grammar",
       "path": "code/grammars/python/python2.7.18.grammar",
-      "sha256": "8835da024b03c8e44795534f80e36f049b0a7fba83099ab48f3ad1656b400d95"
+      "sha256": "c115d06193f4d676c9ff53369dd56ef811a29446c0a4389747e49d54d9c99558"
     },
     {
       "family": "python",
       "version": "python2.7.18",
       "kind": "tokens",
       "path": "code/grammars/python/python2.7.18.tokens",
-      "sha256": "36857dd15247ed3bea7a73bbdcbd26826d003349745e47fd0b8d1a0604d5bebf"
+      "sha256": "35b068281c8d24a5821c0581bdfe29d9bc5336f4a0d130744c5144e8b271d8f9"
     },
     {
       "family": "python",
@@ -718,6 +746,20 @@
     },
     {
       "family": "python",
+      "version": "python3.5.10",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.5.10.grammar",
+      "sha256": "bd8f6b8077cde00f241e245204bc77c0498ef39f36b9d960243a64b81378eb7f"
+    },
+    {
+      "family": "python",
+      "version": "python3.5.10",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.5.10.tokens",
+      "sha256": "b00d567d3b6c05af3b861a6ac7aeeaab3e2a288eaf3c0f5991df65481b0822c1"
+    },
+    {
+      "family": "python",
       "version": "python3.6",
       "kind": "grammar",
       "path": "code/grammars/python/python3.6.grammar",
@@ -729,6 +771,20 @@
       "kind": "tokens",
       "path": "code/grammars/python/python3.6.tokens",
       "sha256": "26a582aaa371308d6bb9b22da81295de3df6daa4cbeeb545c7f8bd9835ad0c50"
+    },
+    {
+      "family": "python",
+      "version": "python3.6.0",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.6.0.grammar",
+      "sha256": "6e46eb88461ca9692a61e0ba9ca44c95022894917d0f0cd176efeadd323c153f"
+    },
+    {
+      "family": "python",
+      "version": "python3.6.0",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.6.0.tokens",
+      "sha256": "afe40e0127834083614b3aa076b3f95291b7541ec53eb422652811d9eb417dd9"
     },
     {
       "family": "python",

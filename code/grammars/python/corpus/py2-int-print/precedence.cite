@@ -1,3 +1,3 @@
-oracle: pinned historical source, CPython v2.2 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
 evidence: Grammar/Grammar arith_expr/term/factor: `* / % //` bind tighter than `+ -`, all left-associative
-result: the subset prints exactly what CPython 2.2 and 2.7.18 print
+result: the subset prints exactly what CPython 2.2, 2.4, 2.6 and 2.7.18 print
