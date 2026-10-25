@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 349,
+  "title": "Fair and Unfair",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:38e92ec7c08c9bd3",
+  "lessons": [
+    {
+      "id": "GU-C349-vajbi",
+      "sequence": 19510,
+      "title": "વાજબી (vājbī) — reasonable; fair",
+      "headword": "વાજબી",
+      "romanization": "vājbī",
+      "gloss": "reasonable; fair",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62c848f18dc8ad95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a ruling, then the Gujarati for to hit hard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વાજબી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વાજબી — vājbī — \"reasonable; fair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દુકાનદારે વાજબી ભાવ માગ્યો. dukāndāre vājbī bhāv māgyo. The shopkeeper asked a fair price."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વાજબી (vājbī) is usually traced to Arabic wājib, \"due, proper\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vājbī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vājbī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vājbī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vājbī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukāndāre vājbī bhāv māgyo. — The shopkeeper asked a fair price.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukāndāre vājbī bhāv māgyo.* — The shopkeeper asked a fair price.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a ruling, then the Gujarati for to hit hard, then say vājbī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a ruling, then the Gujarati for to hit hard, then say *vājbī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વાજબી (vājbī) mean? (\"Reasonable; fair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C349-bhedbhav",
+      "sequence": 19520,
+      "title": "ભેદભાવ (bhedbhāv) — discrimination",
+      "headword": "ભેદભાવ",
+      "romanization": "bhedbhāv",
+      "gloss": "discrimination",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2163ef911b95cc2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to hit hard, then the Gujarati for reasonable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભેદભાવ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભેદભાવ — bhedbhāv — \"discrimination\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શાળામાં છોકરા અને છોકરી વચ્ચે ભેદભાવ ન હોવો જોઈએ. śāḷāmā̃ chokrā ane chokrī vacce bhedbhāv na hovo joīe. There should be no discrimination between boys and girls at school."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભેદભાવ (bhedbhāv) is built from Sanskrit bheda, \"a difference\", and bhāva, \"a state, a feeling\" (Monier-Williams): treating people as different."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhedbhāv",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhedbhāv*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhedbhāv, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhedbhāv*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāḷāmā̃ chokrā ane chokrī vacce bhedbhāv na hovo joīe. — There should be no discrimination between boys and girls at school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāḷāmā̃ chokrā ane chokrī vacce bhedbhāv na hovo joīe.* — There should be no discrimination between boys and girls at school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to hit hard, then the Gujarati for reasonable, then say bhedbhāv again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to hit hard, then the Gujarati for reasonable, then say *bhedbhāv* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભેદભાવ (bhedbhāv) mean? (\"Discrimination\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C349-saman",
+      "sequence": 19530,
+      "title": "સમાન (samān) — equal",
+      "headword": "સમાન",
+      "romanization": "samān",
+      "gloss": "equal",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62dd52943b22d85e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for reasonable, then the Gujarati for discrimination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સમાન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સમાન — samān — \"equal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "કાયદા સામે બધા માણસો સમાન છે. kāydā sāme badhā māṇso samān che. All people are equal before the law."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સમાન (samān) is a tatsama, borrowed from Sanskrit samāna, \"same, alike, equal\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāydā sāme badhā māṇso samān che. — All people are equal before the law.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāydā sāme badhā māṇso samān che.* — All people are equal before the law.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for reasonable, then the Gujarati for discrimination, then say samān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for reasonable, then the Gujarati for discrimination, then say *samān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સમાન (samān) mean? (\"Equal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C349-tatasth",
+      "sequence": 19540,
+      "title": "તટસ્થ (taṭasth) — neutral",
+      "headword": "તટસ્થ",
+      "romanization": "taṭasth",
+      "gloss": "neutral",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:174ebe4ea4916665",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for discrimination, then the Gujarati for equal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: તટસ્થ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તટસ્થ — taṭasth — \"neutral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ વિવાદમાં હું તટસ્થ રહીશ. ā vivādmā̃ hũ taṭasth rahīś. I will stay neutral in this dispute."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તટસ્થ (taṭasth) is a tatsama, borrowed from Sanskrit taṭastha, \"standing on the bank\" (Monier-Williams): one who watches the river from the bank. Gujarati uses it for taking neither side."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭasth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭasth*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭasth, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭasth*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā vivādmā̃ hũ taṭasth rahīś. — I will stay neutral in this dispute.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā vivādmā̃ hũ taṭasth rahīś.* — I will stay neutral in this dispute.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for discrimination, then the Gujarati for equal, then say taṭasth again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for discrimination, then the Gujarati for equal, then say *taṭasth* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does તટસ્થ (taṭasth) mean? (\"Neutral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C349-vartvu",
+      "sequence": 19550,
+      "title": "વર્તવું (vartvũ) — to behave",
+      "headword": "વર્તવું",
+      "romanization": "vartvũ",
+      "gloss": "to behave",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7ab5bd1c8aecdd6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for equal, then the Gujarati for neutral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વર્તવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વર્તવું — vartvũ — \"to behave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તમારે બધા સાથે સમાન રીતે વર્તવું જોઈએ. tamāre badhā sāthe samān rīte vartvũ joīe. You should treat everyone equally."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે મહેમાનો સાથે સારી રીતે વર્ત્યો, te mahemāno sāthe sārī rīte vartyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વર્તવું (vartvũ) goes back to Sanskrit vártatē, \"turns, moves; takes place\" (CDIAL 11352). CDIAL lists no Gujarati form; \"to behave\", to carry oneself, is the sense Gujarati gives it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vartvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vartvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vartvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vartvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamāre badhā sāthe samān rīte vartvũ joīe. — You should treat everyone equally.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamāre badhā sāthe samān rīte vartvũ joīe.* — You should treat everyone equally.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for equal, then the Gujarati for neutral, then say vartvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for equal, then the Gujarati for neutral, then say *vartvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વર્તવું (vartvũ) mean? (\"To behave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -69,7 +69,7 @@ pub use coding_adventures_python_parser::{
 pub use frontend_error::FrontendError;
 pub use int_lower::{DISPATCHED_RULES, DISPATCHED_TOKENS, MAX_IIR_INSTRUCTIONS};
 pub use release_api::{
-    compile_cst, compile_source_at, run_module, run_source_at, RunError, RunOutput, SUBSET,
+    compile_cst, compile_source_at, run_module, run_source_at, RunError, RunOutput, SUBSET, SUBSETS,
 };
 
 /// Bounds for the initial native frontend and its generated VM program.

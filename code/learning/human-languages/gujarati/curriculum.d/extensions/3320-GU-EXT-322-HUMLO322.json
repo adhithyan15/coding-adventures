@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-322-HUMLO322",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell how an attack began and how long the fight went on.",
+  "prerequisites": []
+}

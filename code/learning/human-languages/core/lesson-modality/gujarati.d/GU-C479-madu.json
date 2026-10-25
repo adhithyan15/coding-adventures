@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C479-madu",
+    "language": "gujarati",
+    "chapter": 479,
+    "sequence": 26640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:481c6dc51d3e292f"
+  },
+  "findings": []
+}

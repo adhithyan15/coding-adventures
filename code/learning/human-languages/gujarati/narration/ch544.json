@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 544,
+  "title": "Same or Different",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3d3b438cb8fb79ef",
+  "lessons": [
+    {
+      "id": "GU-C544-pher",
+      "sequence": 30200,
+      "title": "ફેર (pher) — a difference",
+      "headword": "ફેર",
+      "romanization": "pher",
+      "gloss": "a difference",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae97d0cf4dbc475c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for capable, then the Gujarati for special."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ફેર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફેર — pher — \"a difference\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે બંને ગીતો સાંભળશો તો તમે ફેર ઓળખી શકશો. jo tame banne gīto sā̃bhaḷśo to tame pher oḷkhī śakśo. If you listen to both songs, you'll be able to tell the difference."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફેર (pher) is filed by CDIAL under phirati, \"turns\", with a Gujarati pher, \"a turn\" (CDIAL 9078); how the word came to mean a difference is not explained there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pher*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pher, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pher*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame banne gīto sā̃bhaḷśo to tame pher oḷkhī śakśo. — If you listen to both songs, you'll be able to tell the difference.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame banne gīto sā̃bhaḷśo to tame pher oḷkhī śakśo.* — If you listen to both songs, you'll be able to tell the difference.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for capable, then the Gujarati for special, then say pher again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for capable, then the Gujarati for special, then say *pher* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ફેર (pher) mean? (\"A difference\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C544-taphavat",
+      "sequence": 30210,
+      "title": "તફાવત (taphāvat) — a distinction",
+      "headword": "તફાવત",
+      "romanization": "taphāvat",
+      "gloss": "a distinction",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6af42fe0678786b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for special, then the Gujarati for a difference."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: તફાવત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તફાવત — taphāvat — \"a distinction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો બંનેના ભાવમાં મોટો તફાવત હશે તો હું સસ્તું ખરીદીશ. jo bannenā bhāvmā̃ moṭo taphāvat haśe to hũ sastũ kharīdīś. If there's a big difference between the two prices, I'll buy the cheaper one."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તફાવત (taphāvat) is usually traced to Arabic tafāwut, \"a difference, a disparity\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taphāvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taphāvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taphāvat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taphāvat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo bannenā bhāvmā̃ moṭo taphāvat haśe to hũ sastũ kharīdīś. — If there's a big difference between the two prices, I'll buy the cheaper one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo bannenā bhāvmā̃ moṭo taphāvat haśe to hũ sastũ kharīdīś.* — If there's a big difference between the two prices, I'll buy the cheaper one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for special, then the Gujarati for a difference, then say taphāvat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for special, then the Gujarati for a difference, then say *taphāvat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does તફાવત (taphāvat) mean? (\"A distinction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C544-alag",
+      "sequence": 30220,
+      "title": "અલગ (alag) — separate",
+      "headword": "અલગ",
+      "romanization": "alag",
+      "gloss": "separate",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5959ec7e1745410d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a difference, then the Gujarati for a distinction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અલગ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અલગ — alag — \"separate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો બાળકો અલગ ઓરડામાં સૂઈ જશે તો ઘર શાંત રહેશે. jo bāḷko alag orḍāmā̃ sūī jaśe to ghar śānt raheśe. If the children sleep in a separate room, the house will stay quiet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અલગ (alag) is usually linked to Sanskrit alagna, \"unconnected\" (CDIAL 700), under which CDIAL gives a Gujarati aḷgũ, \"not touching\"; this form is not listed there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alag",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alag*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alag, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alag*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo bāḷko alag orḍāmā̃ sūī jaśe to ghar śānt raheśe. — If the children sleep in a separate room, the house will stay quiet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo bāḷko alag orḍāmā̃ sūī jaśe to ghar śānt raheśe.* — If the children sleep in a separate room, the house will stay quiet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a difference, then the Gujarati for a distinction, then say alag again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a difference, then the Gujarati for a distinction, then say *alag* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અલગ (alag) mean? (\"Separate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C544-nakal",
+      "sequence": 30230,
+      "title": "નકલ (nakal) — a copy (an imitation)",
+      "headword": "નકલ",
+      "romanization": "nakal",
+      "gloss": "a copy (an imitation)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5fbf0b658f4aee12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a distinction, then the Gujarati for separate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નકલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નકલ — nakal — \"a copy (an imitation)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આ ચિત્ર નકલ હશે તો તેની કિંમત ઓછી હશે. jo ā citra nakal haśe to tenī kimmat ochī haśe. If this painting is a copy, it will be worth less."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નકલ (nakal) is usually traced to Arabic naql, \"a transcript, a copy\", which reached Gujarati through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo ā citra nakal haśe to tenī kimmat ochī haśe. — If this painting is a copy, it will be worth less.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo ā citra nakal haśe to tenī kimmat ochī haśe.* — If this painting is a copy, it will be worth less.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a distinction, then the Gujarati for separate, then say nakal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a distinction, then the Gujarati for separate, then say *nakal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નકલ (nakal) mean? (\"A copy (an imitation)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C544-barabar",
+      "sequence": 30240,
+      "title": "બરાબર (barābar) — evenly matched",
+      "headword": "બરાબર",
+      "romanization": "barābar",
+      "gloss": "evenly matched",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10c0501f532aa490",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for separate, then the Gujarati for a copy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બરાબર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બરાબર — barābar — \"evenly matched\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો બંને ભાગ બરાબર હશે તો કોઈ ફરિયાદ નહીં કરે. jo banne bhāg barābar haśe to koī phariyād nahī̃ kare. If both parts are equal, nobody will complain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બરાબર (barābar) is usually traced to Persian barābar, \"equal, level\". It is also an everyday \"right, exactly\": બરાબર છે."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barābar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barābar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barābar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barābar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo banne bhāg barābar haśe to koī phariyād nahī̃ kare. — If both parts are equal, nobody will complain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo banne bhāg barābar haśe to koī phariyād nahī̃ kare.* — If both parts are equal, nobody will complain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for separate, then the Gujarati for a copy, then say barābar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for separate, then the Gujarati for a copy, then say *barābar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બરાબર (barābar) mean? (\"Evenly matched\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

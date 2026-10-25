@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:47a5dd542e58d90f",
+  "lessonIds": [
+    "UR-C439-gidar",
+    "UR-C439-jhingur",
+    "UR-C439-maveshi",
+    "UR-C439-charna",
+    "UR-C439-jotna",
+    "UR-R439-review-433-439",
+    "UR-R439-review-final-439"
+  ],
+  "tex": "urdu/book/chapters/ch439-night-in-the-fields.tex"
+}

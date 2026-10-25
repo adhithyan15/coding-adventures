@@ -203,3 +203,7 @@ LANG83 PR6a adds `write_f64_py` / `write_f64_js` (`CALL_BUILTIN_F64`, which
 hands the embedder a `Value::Float`). To support them, `const_f64` compiles to
 the float's bits. Every other use of a float register still refuses the whole
 function, so it runs on the interpreter tier.
+LANG83 PR6c adds `ADD_F64` … `DIV_F64`, `NEG_F64`, `SIGNBIT_F64` and `RET_F64`:
+the destinations of `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` are float
+registers too (holding the bits), the ops compute in Rust `f64` (never a trap),
+and `f64_signbit` writes an ordinary integer register.

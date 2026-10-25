@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:fa8284798de20882",
+  "lessonIds": [
+    "UR-C401-trali",
+    "UR-C401-muntazir",
+    "UR-C401-istiqbal",
+    "UR-C401-guldasta",
+    "UR-C401-hilana",
+    "UR-R401-review-394-401"
+  ],
+  "tex": "urdu/book/chapters/ch401-meeting-the-plane.tex"
+}

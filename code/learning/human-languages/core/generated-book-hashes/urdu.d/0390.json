@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:b94853544e016324",
+  "lessonIds": [
+    "UR-C390-amad",
+    "UR-C390-ravana",
+    "UR-C390-takhir",
+    "UR-C390-mansukh",
+    "UR-C390-utaarna"
+  ],
+  "tex": "urdu/book/chapters/ch390-departures-and-arrivals.tex"
+}

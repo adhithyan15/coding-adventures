@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Drums and Gatherings",
+  "label": "ch:ur-drums-and-gatherings",
+  "canDo": "I can talk about music at weddings and gatherings.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C519-nachana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about music at weddings and gatherings.",
+    "assesses": [
+      "UR-LEX-C519-DHOL519-03",
+      "UR-LEX-C519-DHOL519-04",
+      "UR-LEX-C519-DHOL519-05"
+    ]
+  }
+}

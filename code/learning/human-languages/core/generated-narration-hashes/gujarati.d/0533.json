@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:0a71a0efd4d7a9c8",
+  "lessonIds": [
+    "GU-C533-paso",
+    "GU-C533-copat",
+    "GU-C533-dav",
+    "GU-C533-baji",
+    "GU-C533-khelvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch533.txt",
+  "json": "gujarati/narration/ch533.json",
+  "textHash": "fnv1a64:a0a38292c2aa9d3a",
+  "jsonHash": "fnv1a64:fc16946bb76ae818",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C449-chimatna",
+  "pathSegment": "UR-PATH-449-LOVE449",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-449-LOVE449",
+      "order": 3
+    }
+  ]
+}

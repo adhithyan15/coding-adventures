@@ -1,9 +1,10 @@
 //! The LANG84 release sweep for Python (phase 7b slice 2, "CI bounding"
 //! steps 1–2), on the model of Perl's (phase 4c).
 //!
-//! Five Python releases claim `py-int-print` at stage I (3.0a1, 3.12.3,
-//! 3.13.16, 3.11.17 and 3.16.0a1, in `releases.csv` order, which is date
-//! order) and there are eight executable backends. LANG84 bounds the matrix
+//! Seven Python releases claim `py-int-print` at stage I (3.0a1, 3.6.0,
+//! 3.5.10, 3.12.3, 3.13.16, 3.11.17 and 3.16.0a1, in `releases.csv` order,
+//! which is date order: 3.5.10 shipped after 3.6.0) and there are eight
+//! executable backends. LANG84 bounds the matrix
 //! by **IIR identity**: two releases that produce byte-identical IIR for
 //! every case are indistinguishable to every backend, so running one of them
 //! proves the other.
@@ -18,14 +19,22 @@
 //! ```
 //!
 //! A cell is `rejected` only when the corpus says so: a `.reject@<release>`
-//! override (`int_underscores.reject@3.0a1`: PEP 515's `_` separators arrived
-//! in 3.6, so 3.0a1's pair lexes `1_000_000` as an error) whose category the
+//! override (`int_underscores.reject@3.0a1` and `@3.5.10`: PEP 515's `_`
+//! separators arrived in 3.6, so those pairs lex `1_000_000` as an error;
+//! `pep3127_literals.reject@2.2` and `@2.4`: `0o`/`0b` arrived in 2.6) whose
+//! category the
 //! compile error matches. Any other refusal of a positive case by a claiming
 //! release is a test failure, never a quiet `rejected`, exactly as in stage I.
 //!
 //! `IIRModule::release` is not part of the digest: `interpreter_ir::serialise`
 //! does not write it (it is provenance, not code), and every case is compiled
 //! under the same module name.
+//!
+//! Since phase 7c slice 1 the sweep runs once per subset in
+//! `python_iir_compiler::SUBSETS`: `py-int-print` over its seven Python 3
+//! releases, then `py2-int-print` over 2.2, 2.4, 2.6 and 2.7.18 (phase 7c
+//! slice 2 added 2.4, 2.6, 3.5.10 and 3.6.0). A class is a digest of
+//! one subset's outcome vector, so classes of different subsets never mix.
 //!
 //! The result is `code/grammars/python/release_classes.csv`
 //! (`subset,case,release,class`, one row per positive case and claiming
@@ -47,7 +56,7 @@ use std::fmt::Write as _;
 use coding_adventures_sha256::sha256_hex;
 use common::{claiming_releases, corpus, python_grammars, Case, Outcome};
 use interpreter_ir::serialise::serialise;
-use python_iir_compiler::{compile_source_at, FrontendBudgets, DEFAULT_RELEASE, SUBSET};
+use python_iir_compiler::{compile_source_at, FrontendBudgets, DEFAULT_RELEASE, SUBSETS};
 
 /// What one release does with one positive case.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -77,50 +86,61 @@ fn sweep_cell(case: &Case, release: &str, budgets: &FrontendBudgets) -> Cell {
     }
 }
 
-/// The sweep's result: per claiming release (inventory order), its cells by
-/// case.
+/// One subset's sweep: per claiming release (inventory order), its cells
+/// by case.
 struct Sweep {
+    subset: &'static str,
     cases: Vec<Case>,
     cells: Vec<(String, Vec<Cell>)>,
 }
 
-fn run_sweep() -> Sweep {
+fn run_sweep(subset: &'static str) -> Sweep {
     let budgets = FrontendBudgets::default();
-    let cases: Vec<Case> = corpus().into_iter().filter(Case::is_positive).collect();
-    let cells = claiming_releases()
+    let cases: Vec<Case> = corpus(subset).into_iter().filter(Case::is_positive).collect();
+    let cells = claiming_releases(subset)
         .into_iter()
         .map(|release| {
             let cells = cases.iter().map(|case| sweep_cell(case, &release, &budgets)).collect();
             (release, cells)
         })
         .collect();
-    Sweep { cases, cells }
+    Sweep { subset, cases, cells }
+}
+
+/// Every subset's sweep, in `SUBSETS` order.
+fn run_sweeps() -> Vec<Sweep> {
+    SUBSETS.iter().map(|subset| run_sweep(subset)).collect()
 }
 
 /// The class of one release: a digest of its whole outcome vector.
-fn class_of(cases: &[Case], cells: &[Cell]) -> String {
+fn class_of(subset: &str, cases: &[Case], cells: &[Cell]) -> String {
     let mut outcome = String::new();
     for (case, cell) in cases.iter().zip(cells) {
         let shown = match cell {
             Cell::Iir(digest) => digest.as_str(),
             Cell::Rejected => "rejected",
         };
-        writeln!(outcome, "{SUBSET}/{}={shown}", case.name).unwrap();
+        writeln!(outcome, "{subset}/{}={shown}", case.name).unwrap();
     }
     sha256_hex(outcome.as_bytes())[..16].to_string()
 }
 
-/// `release_classes.csv`, exactly as committed.
-fn render(sweep: &Sweep) -> String {
-    let classes: Vec<String> = sweep.cells.iter().map(|(_, cells)| class_of(&sweep.cases, cells)).collect();
+/// `release_classes.csv`, exactly as committed: every subset's rows, one
+/// subset after another.
+fn render(sweeps: &[Sweep]) -> String {
     let mut csv = String::from("subset,case,release,class\n");
-    for (index, case) in sweep.cases.iter().enumerate() {
-        for ((release, cells), class) in sweep.cells.iter().zip(&classes) {
-            let shown = match cells[index] {
-                Cell::Iir(_) => class.as_str(),
-                Cell::Rejected => "rejected",
-            };
-            writeln!(csv, "{SUBSET},{},{release},{shown}", case.name).unwrap();
+    for sweep in sweeps {
+        let subset = sweep.subset;
+        let classes: Vec<String> =
+            sweep.cells.iter().map(|(_, cells)| class_of(subset, &sweep.cases, cells)).collect();
+        for (index, case) in sweep.cases.iter().enumerate() {
+            for ((release, cells), class) in sweep.cells.iter().zip(&classes) {
+                let shown = match cells[index] {
+                    Cell::Iir(_) => class.as_str(),
+                    Cell::Rejected => "rejected",
+                };
+                writeln!(csv, "{subset},{},{release},{shown}", case.name).unwrap();
+            }
         }
     }
     csv
@@ -130,7 +150,7 @@ fn render(sweep: &Sweep) -> String {
 fn classes(sweep: &Sweep) -> Vec<(String, &str, Vec<&str>)> {
     let mut found: Vec<(String, &str, Vec<&str>)> = Vec::new();
     for (release, cells) in &sweep.cells {
-        let class = class_of(&sweep.cases, cells);
+        let class = class_of(sweep.subset, &sweep.cases, cells);
         match found.iter_mut().find(|(c, _, _)| *c == class) {
             Some((_, _, members)) => members.push(release),
             None => found.push((class, release, vec![release])),
@@ -142,17 +162,21 @@ fn classes(sweep: &Sweep) -> Vec<(String, &str, Vec<&str>)> {
 /// The sweep covers exactly the claiming releases, in inventory order.
 #[test]
 fn the_sweep_covers_every_claiming_release_in_inventory_order() {
-    let sweep = run_sweep();
+    let sweep = run_sweep("py-int-print");
     let swept: Vec<&str> = sweep.cells.iter().map(|(r, _)| r.as_str()).collect();
-    assert_eq!(swept, ["3.0a1", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"]);
+    assert_eq!(swept, ["3.0a1", "3.6.0", "3.5.10", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"]);
     assert_eq!(sweep.cases.len(), 18, "every positive py-int-print case");
+    let sweep = run_sweep("py2-int-print");
+    let swept: Vec<&str> = sweep.cells.iter().map(|(r, _)| r.as_str()).collect();
+    assert_eq!(swept, ["2.2", "2.4", "2.6", "2.7.18"]);
+    assert_eq!(sweep.cases.len(), 24, "every positive py2-int-print case");
 }
 
 /// Steps 1 and 2, compared with the committed `release_classes.csv`.
 #[test]
 fn release_classes_csv_matches_the_sweep() {
-    let sweep = run_sweep();
-    let rendered = render(&sweep);
+    let sweeps = run_sweeps();
+    let rendered = render(&sweeps);
     let path = python_grammars().join("release_classes.csv");
     if std::env::var_os("PYTHON_RELEASE_SWEEP_WRITE").is_some() {
         // Writing and then comparing would always pass, so a write never
@@ -171,8 +195,10 @@ fn release_classes_csv_matches_the_sweep() {
          PYTHON_RELEASE_SWEEP_WRITE=1 cargo test -p python-iir-compiler --test release_sweep",
         path.display()
     );
-    for (class, representative, members) in classes(&sweep) {
-        eprintln!("class {class}: representative {representative}, {} release(s)", members.len());
+    for sweep in &sweeps {
+        for (class, representative, members) in classes(sweep) {
+            eprintln!("{} class {class}: representative {representative}, {} release(s)", sweep.subset, members.len());
+        }
     }
 }
 
@@ -181,7 +207,7 @@ fn release_classes_csv_matches_the_sweep() {
 /// cases they accept.
 #[test]
 fn every_accepting_release_lowers_a_case_to_the_same_iir() {
-    let sweep = run_sweep();
+    for sweep in run_sweeps() {
     for (index, case) in sweep.cases.iter().enumerate() {
         let digests: BTreeMap<&str, Vec<&str>> = sweep.cells.iter().fold(BTreeMap::new(), |mut by, (release, cells)| {
             if let Cell::Iir(digest) = &cells[index] {
@@ -191,6 +217,7 @@ fn every_accepting_release_lowers_a_case_to_the_same_iir() {
         });
         assert_eq!(digests.len(), 1, "{}: {digests:?}", case.name);
     }
+    }
 }
 
 /// The boundary set (LANG84 "CI bounding" step 3), pinned so that a new class
@@ -198,15 +225,20 @@ fn every_accepting_release_lowers_a_case_to_the_same_iir() {
 /// top of the default release's own rows.
 #[test]
 fn the_boundary_releases_are_the_class_representatives() {
-    let sweep = run_sweep();
+    let sweep = run_sweep("py-int-print");
     let classes = classes(&sweep);
     let representatives: Vec<&str> = classes.iter().map(|(_, r, _)| *r).collect();
-    // 3.0a1: refuses `int_underscores` (no PEP 515 separators). 3.12.3: the
-    // first of the four releases that accept the whole corpus; the default
-    // 3.13.16 is in its class but comes after it in releases.csv.
-    assert_eq!(representatives, ["3.0a1", "3.12.3"]);
+    // 3.0a1: refuses `int_underscores` (no PEP 515 separators), and so does
+    // 3.5.10, which joins its class. 3.6.0 (phase 7c slice 2): the first of
+    // the five releases that accept the whole corpus, so it took over from
+    // 3.12.3 as their representative; the default 3.13.16 is in its class
+    // but comes after it in releases.csv.
+    assert_eq!(representatives, ["3.0a1", "3.6.0"]);
     let members: Vec<&[&str]> = classes.iter().map(|(_, _, m)| m.as_slice()).collect();
-    assert_eq!(members, [&["3.0a1"][..], &["3.12.3", "3.13.16", "3.11.17", "3.16.0a1"][..]]);
+    assert_eq!(
+        members,
+        [&["3.0a1", "3.5.10"][..], &["3.6.0", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"][..]]
+    );
     // The default and the newest claiming release are in a class, so a
     // representative row covers them.
     let newest = sweep.cells.last().map(|(r, _)| r.as_str()).unwrap();
@@ -214,4 +246,18 @@ fn the_boundary_releases_are_the_class_representatives() {
         assert!(classes.iter().any(|(_, _, m)| m.contains(&release)), "{release}");
     }
     eprintln!("Python release sweep: {} classes {representatives:?}", classes.len());
+}
+
+/// Python 2: the four pairs share one grammar and one profile, and their
+/// token tables differ outside the subset (`@` from 2.4, `as`/`with` from
+/// 2.6) and in one place inside it: PEP 3127's `0o`/`0b` literals, which
+/// 2.6 and 2.7.18 lex and 2.2 and 2.4 do not (phase 7c slice 2). So there
+/// are two classes, represented in `lang_matrix` by 2.2 and 2.6, the first
+/// of each in `releases.csv`.
+#[test]
+fn python_2_releases_split_on_pep_3127_literals() {
+    let sweep = run_sweep("py2-int-print");
+    let classes = classes(&sweep);
+    let shape: Vec<(&str, Vec<&str>)> = classes.iter().map(|(_, r, m)| (*r, m.clone())).collect();
+    assert_eq!(shape, [("2.2", vec!["2.2", "2.4"]), ("2.6", vec!["2.6", "2.7.18"])]);
 }

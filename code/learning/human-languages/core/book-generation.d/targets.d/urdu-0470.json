@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 470,
+  "output": "urdu/book/chapters/ch470-out-of-breath.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

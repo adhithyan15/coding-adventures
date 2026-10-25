@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:c0aee89ea43b3030",
+  "lessonIds": [
+    "UR-C519-dhol",
+    "UR-C519-saz",
+    "UR-C519-qavvali",
+    "UR-C519-mahfil",
+    "UR-C519-nachana"
+  ],
+  "tex": "urdu/book/chapters/ch519-drums-and-gatherings.tex"
+}

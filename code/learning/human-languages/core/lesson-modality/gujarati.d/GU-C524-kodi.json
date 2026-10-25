@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C524-kodi",
+    "language": "gujarati",
+    "chapter": 524,
+    "sequence": 29190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e42d262a65ee43b2"
+  },
+  "findings": []
+}

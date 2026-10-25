@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 362,
+  "title": "Research",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:5cda2d68e22107b3",
+  "lessons": [
+    {
+      "id": "GU-C362-sansodhan",
+      "sequence": 20170,
+      "title": "સંશોધન (sanśodhan) — research",
+      "headword": "સંશોધન",
+      "romanization": "sanśodhan",
+      "gloss": "research",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84b2243ae4d09776",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to run down, then the Gujarati for to entreat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સંશોધન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંશોધન — sanśodhan — \"research\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરા નવી દવા પર સંશોધન કરે છે. Mīrā navī davā par sanśodhan kare che. Mira is doing research on a new medicine."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંશોધન (sanśodhan) is a tatsama, borrowed from Sanskrit saṃśodhana, \"thoroughly cleansing\" (Monier-Williams); \"research\", sifting a question clean, is its modern sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanśodhan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanśodhan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanśodhan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanśodhan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā navī davā par sanśodhan kare che. — Mira is doing research on a new medicine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā navī davā par sanśodhan kare che.* — Mira is doing research on a new medicine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to run down, then the Gujarati for to entreat, then say sanśodhan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to run down, then the Gujarati for to entreat, then say *sanśodhan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સંશોધન (sanśodhan) mean? (\"Research\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C362-prayog",
+      "sequence": 20180,
+      "title": "પ્રયોગ (prayog) — an experiment",
+      "headword": "પ્રયોગ",
+      "romanization": "prayog",
+      "gloss": "an experiment",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d6cdbd083de7797",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to entreat, then the Gujarati for research."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પ્રયોગ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પ્રયોગ — prayog — \"an experiment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વિદ્યાર્થીઓએ વર્ગમાં પાણી પર એક પ્રયોગ કર્યો. vidyārthīoe vargamā̃ pāṇī par ek prayog karyo. The students did an experiment with water in class."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પ્રયોગ (prayog) is a tatsama, borrowed from Sanskrit prayoga, \"use, application\" (Monier-Williams): an idea put to use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayog",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayog*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayog, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayog*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidyārthīoe vargamā̃ pāṇī par ek prayog karyo. — The students did an experiment with water in class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidyārthīoe vargamā̃ pāṇī par ek prayog karyo.* — The students did an experiment with water in class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to entreat, then the Gujarati for research, then say prayog again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to entreat, then the Gujarati for research, then say *prayog* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પ્રયોગ (prayog) mean? (\"An experiment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C362-paddhati",
+      "sequence": 20190,
+      "title": "પદ્ધતિ (paddhati) — a method",
+      "headword": "પદ્ધતિ",
+      "romanization": "paddhati",
+      "gloss": "a method",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53d63149616f9366",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for research, then the Gujarati for an experiment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પદ્ધતિ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પદ્ધતિ — paddhati — \"a method\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ પદ્ધતિથી કામ ઝડપી બને છે. ā paddhatithī kām jhaḍpī bane che. This method makes the work go faster."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પદ્ધતિ (paddhati) is a tatsama, borrowed from Sanskrit paddhati, \"a path, a way, a course\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paddhati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paddhati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paddhati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paddhati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā paddhatithī kām jhaḍpī bane che. — This method makes the work go faster.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā paddhatithī kām jhaḍpī bane che.* — This method makes the work go faster.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for research, then the Gujarati for an experiment, then say paddhati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for research, then the Gujarati for an experiment, then say *paddhati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પદ્ધતિ (paddhati) mean? (\"A method\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C362-namuno",
+      "sequence": 20200,
+      "title": "નમૂનો (namūno) — a sample",
+      "headword": "નમૂનો",
+      "romanization": "namūno",
+      "gloss": "a sample",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b5833d7bd8ae445",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an experiment, then the Gujarati for a method."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નમૂનો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નમૂનો — namūno — \"a sample\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાક્તરે લોહીનો નમૂનો લીધો. dāktare lohīno namūno līdho. The doctor took a blood sample."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નમૂનો (namūno) is usually traced to Persian namūna, \"a pattern, a sample\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namūno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namūno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namūno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namūno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāktare lohīno namūno līdho. — The doctor took a blood sample.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāktare lohīno namūno līdho.* — The doctor took a blood sample.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an experiment, then the Gujarati for a method, then say namūno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an experiment, then the Gujarati for a method, then say *namūno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નમૂનો (namūno) mean? (\"A sample\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C362-taravvu",
+      "sequence": 20210,
+      "title": "તારવવું (tāravvũ) — to deduce",
+      "headword": "તારવવું",
+      "romanization": "tāravvũ",
+      "gloss": "to deduce",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e1bb414b0d2ab77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a method, then the Gujarati for a sample."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: તારવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તારવવું — tāravvũ — \"to deduce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ પ્રયોગમાંથી મીરાએ એક વાત તારવી. ā prayogmā̃thī Mīrāe ek vāt tārvī. From this experiment Mira drew one conclusion."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે સાચો અર્થ તારવ્યો, teṇe sāco arth tāravyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તારવવું (tāravvũ) is inherited from Sanskrit tāráyati, \"causes to arrive at, leads across\"; CDIAL lists the Gujarati verb, \"to raise, to pluck\" (CDIAL 5796). \"To deduce\", to pluck a conclusion out of the facts, is not among CDIAL's senses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāravvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāravvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāravvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāravvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā prayogmā̃thī Mīrāe ek vāt tārvī. — From this experiment Mira drew one conclusion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā prayogmā̃thī Mīrāe ek vāt tārvī.* — From this experiment Mira drew one conclusion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a method, then the Gujarati for a sample, then say tāravvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a method, then the Gujarati for a sample, then say *tāravvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does તારવવું (tāravvũ) mean? (\"To deduce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R362-review-355-362",
+      "sequence": 20220,
+      "title": "Looking back: from Taxes and Public Money to Research",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Taxes and Public Money to Research",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f1c25e38064c689",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for a tax and a contribution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tax, a contribution, economic, a grant, to collect money",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tax, a contribution, economic, a grant, to collect money]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a constitution, independent, society, valid, to preserve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a constitution, independent, society, valid, to preserve]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a moral value, upbringing, a policy, a social practice, to adopt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a moral value, upbringing, a policy, a social practice, to adopt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "service to others, giving something up, doing good to others, cooperation, to keep up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: service to others, giving something up, doing good to others, cooperation, to keep up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one's good name, dignity, shame, conceit, to bow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one's good name, dignity, shame, conceit, to bow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "integrity, temptation, loyal, a betrayal, to entrap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: integrity, temptation, loyal, a betrayal, to entrap]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "speaking ill of someone, criticism, a telling-off, to run down, to entreat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: speaking ill of someone, criticism, a telling-off, to run down, to entreat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "research, an experiment, a method, a sample, to deduce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: research, an experiment, a method, a sample, to deduce]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A tax? (વેરો, vero.) A contribution? (ફાળો, phāḷo.) Economic? (આર્થિક, ārthik.) A grant? (ગ્રાન્ટ, grānṭ.) To collect money? (ઉઘરાવવું, ughrāvvũ.) A constitution? (બંધારણ, bandhāraṇ.) Independent? (સ્વતંત્ર, svatantra.) Society? (સમાજ, samāj.) Valid? (માન્ય, mānya.) To preserve? (જાળવવું, jāḷavvũ.) A moral value? (મૂલ્ય, mūlya.) Upbringing? (સંસ્કાર, sanskār.) A policy? (નીતિ, nīti.) A social practice? (પ્રથા, prathā.) To adopt? (અપનાવવું, apnāvvũ.) Service to others? (સેવા, sevā.) Giving something up? (ત્યાગ, tyāg.) Doing good to others? (પરોપકાર, paropkār.) Cooperation? (સહકાર, sahkār.) To keep up? (નિભાવવું, nibhāvvũ.) One's good name? (ઇજ્જત, ijjat.) Dignity? (ગૌરવ, gaurav.) Shame? (શરમ, śaram.) Conceit? (અભિમાન, abhimān.) To bow? (નમવું, namvũ.) Integrity? (ઈમાન, īmān.) Temptation? (લાલચ, lālac.) Loyal? (વફાદાર, vaphādār.) A betrayal? (દગો, dago.) To entrap? (ફસાવવું, phasāvvũ.) Speaking ill of someone? (નિંદા, nindā.) Criticism? (ટીકા, ṭīkā.) A telling-off? (ઠપકો, ṭhapko.) To run down? (વગોવવું, vagovvũ.) To entreat? (વીનવવું, vīnavvũ.) Research? (સંશોધન, sanśodhan.) An experiment? (પ્રયોગ, prayog.) A method? (પદ્ધતિ, paddhati.) A sample? (નમૂનો, namūno.) To deduce? (તારવવું, tāravvũ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

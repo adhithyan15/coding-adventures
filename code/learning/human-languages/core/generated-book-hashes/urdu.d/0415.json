@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:c612fd735baf1ddc",
+  "lessonIds": [
+    "UR-C415-dhaba",
+    "UR-C415-thela",
+    "UR-C415-pan",
+    "UR-C415-zaiqa",
+    "UR-C415-parosna"
+  ],
+  "tex": "urdu/book/chapters/ch415-street-food.tex"
+}

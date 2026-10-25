@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 337,
+  "title": "Denial and Confession",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2d85d4cb543e2345",
+  "lessons": [
+    {
+      "id": "UR-C337-tasdiq-karna",
+      "sequence": 20300,
+      "title": "تصدیق کرنا (tasdīq karnā) — to confirm",
+      "headword": "تصدیق کرنا",
+      "romanization": "tasdīq karnā",
+      "gloss": "to confirm",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2f3a88a4636470f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a document, then the Urdu for genuine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تصدیق کرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تصدیق کرنا — tasdīq karnā — \"to confirm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پولیس نے اس خبر کی تصدیق کی۔ polīs ne is khabar kī tasdīq kī. The police confirmed the news."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے خبر کی تصدیق کی, us ne khabar kī tasdīq kī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تصدیق کرنا (tasdīq karnā) is built from tasdīq, usually traced, through Persian, to Arabic taṣdīq, \"declaring something true\", and کرنا, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasdīq karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasdīq karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasdīq karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasdīq karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīs ne is khabar kī tasdīq kī. — The police confirmed the news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīs ne is khabar kī tasdīq kī.* — The police confirmed the news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a document, then the Urdu for genuine, then say tasdīq karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a document, then the Urdu for genuine, then say *tasdīq karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تصدیق کرنا (tasdīq karnā) mean? (\"To confirm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C337-taslim-karna",
+      "sequence": 20310,
+      "title": "تسلیم کرنا (taslīm karnā) — to acknowledge; to admit",
+      "headword": "تسلیم کرنا",
+      "romanization": "taslīm karnā",
+      "gloss": "to acknowledge; to admit",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db32e40bebb14bb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for genuine, then the Urdu for to confirm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تسلیم کرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تسلیم کرنا — taslīm karnā — \"to acknowledge; to admit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آخر اس نے سچ تسلیم کر لیا۔ ākhir us ne sach taslīm kar liyā. In the end he admitted the truth."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے بات تسلیم کی, us ne bāt taslīm kī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تسلیم کرنا (taslīm karnā) is built from taslīm, usually traced, through Persian, to Arabic taslīm, \"handing over; assent\", and کرنا, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taslīm karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taslīm karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taslīm karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taslīm karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākhir us ne sach taslīm kar liyā. — In the end he admitted the truth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākhir us ne sach taslīm kar liyā.* — In the end he admitted the truth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for genuine, then the Urdu for to confirm, then say taslīm karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for genuine, then the Urdu for to confirm, then say *taslīm karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تسلیم کرنا (taslīm karnā) mean? (\"To acknowledge; to admit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C337-jhutlana",
+      "sequence": 20320,
+      "title": "جھٹلانا (jhuṭlānā) — to deny; to give the lie to",
+      "headword": "جھٹلانا",
+      "romanization": "jhuṭlānā",
+      "gloss": "to deny; to give the lie to",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ac621f0cac97500",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to confirm, then the Urdu for to acknowledge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جھٹلانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھٹلانا — jhuṭlānā — \"to deny; to give the lie to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وہ ہر سچی بات کو جھٹلاتا ہے۔ voh har sachchī bāt ko jhuṭlātā hai. He denies everything that is true."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے خبر کو جھٹلایا, us ne khabar ko jhuṭlāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھٹلانا (jhuṭlānā) is built on جھوٹ, \"a lie\", which is inherited: CDIAL lists the Hindi cousin jhūṭhā, \"lying, false\", under jhūṭṭha, a form it reconstructs (CDIAL 5407). To call a thing a lie."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhuṭlānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhuṭlānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhuṭlānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhuṭlānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voh har sachchī bāt ko jhuṭlātā hai. — He denies everything that is true.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voh har sachchī bāt ko jhuṭlātā hai.* — He denies everything that is true.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to confirm, then the Urdu for to acknowledge, then say jhuṭlānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to confirm, then the Urdu for to acknowledge, then say *jhuṭlānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جھٹلانا (jhuṭlānā) mean? (\"To deny; to give the lie to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C337-qabul-karna",
+      "sequence": 20330,
+      "title": "قبول کرنا (qabūl karnā) — to own up to; to accept",
+      "headword": "قبول کرنا",
+      "romanization": "qabūl karnā",
+      "gloss": "to own up to; to accept",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:448cc24bfc4abd49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to acknowledge, then the Urdu for to give the lie to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قبول کرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قبول کرنا — qabūl karnā — \"to own up to; to accept\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے میرا مشورہ قبول نہیں کیا۔ us ne merā mashvarā qabūl nahīṅ kiyā. He did not accept my advice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے مشورہ قبول کیا, us ne mashvarā qabūl kiyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قبول کرنا (qabūl karnā) is built from qabūl, usually traced, through Persian, to Arabic qabūl, \"acceptance\", and کرنا, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qabūl karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qabūl karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qabūl karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qabūl karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us ne merā mashvarā qabūl nahīṅ kiyā. — He did not accept my advice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us ne merā mashvarā qabūl nahīṅ kiyā.* — He did not accept my advice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to acknowledge, then the Urdu for to give the lie to, then say qabūl karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to acknowledge, then the Urdu for to give the lie to, then say *qabūl karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قبول کرنا (qabūl karnā) mean? (\"To own up to; to accept\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C337-ghalat-fahmi",
+      "sequence": 20340,
+      "title": "غلط فہمی (ghalat-fahmī) — a misunderstanding",
+      "headword": "غلط فہمی",
+      "romanization": "ghalat-fahmī",
+      "gloss": "a misunderstanding",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afd94d6ab2f040c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to give the lie to, then the Urdu for to own up to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غلط فہمی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غلط فہمی — ghalat-fahmī — \"a misunderstanding\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ ایک غلط فہمی تھی، کوئی جھوٹ نہیں۔ yih ek ghalat-fahmī thī, koī jhūṭ nahīṅ. It was a misunderstanding, not a lie."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غلط فہمی (ghalat-fahmī) is usually traced to Persian ghalat-fahmī, \"a mistaken understanding\": غلط, \"wrong\", with fahmī, \"understanding\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghalat-fahmī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghalat-fahmī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghalat-fahmī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghalat-fahmī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih ek ghalat-fahmī thī, koī jhūṭ nahīṅ. — It was a misunderstanding, not a lie.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih ek ghalat-fahmī thī, koī jhūṭ nahīṅ.* — It was a misunderstanding, not a lie.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to give the lie to, then the Urdu for to own up to, then say ghalat-fahmī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to give the lie to, then the Urdu for to own up to, then say *ghalat-fahmī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غلط فہمی (ghalat-fahmī) mean? (\"A misunderstanding\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

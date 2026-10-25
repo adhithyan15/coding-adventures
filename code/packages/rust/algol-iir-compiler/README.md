@@ -249,14 +249,21 @@ path receives its own budget.
 Exact whole-number multiplication may scale the sign-rooted integer transform
 through magnitude `2^53`, including composition with exact additive terms, as
 long as every intermediate magnitude stays in that exact binary64 range.
-Fractional factors, oversized products, repeated roots, and variable factors
-remain conservative. Exact whole-number division is also permitted when the
-bounded result is the numerator and every possible transformed integer is
-divisible by the static nonzero divisor. Inexact or variable divisors and a
-bounded denominator remain conservative. Static whole-number factors may
-precede the bounded numerator, including exact divisions among those factors,
-provided multiplication connects the resulting prefix to its root; division
-by that root remains conservative.
+Independently bounded dynamic sign-rooted transforms may multiply under the
+same checked magnitude limit because every factor remains an exact integer.
+They may also add or subtract under a checked complete-sum magnitude limit,
+including independently scaled and offset transforms. Fractional factors,
+oversized products or sums, and variable factors remain conservative. A
+multiple-root product may continue through trailing static `div` or `mod`, or
+through exact whole-number `/` when its conservative common divisor proves
+every quotient integral. Reductions between roots, zero or dynamic divisors,
+and rooted divisors remain conservative. Exact whole-number division is also
+permitted when the bounded result is the numerator and every possible
+transformed integer is divisible by the static nonzero divisor. Inexact or
+variable divisors and a bounded denominator remain conservative. Static
+whole-number factors may precede the bounded numerator, including exact
+divisions among those factors, provided multiplication connects the resulting
+prefix to its root; division by that root remains conservative.
 Variable-free integer `div` and `mod` reductions may likewise be folded
 left-to-right before that multiplying connection. Zero or dynamic divisors,
 oversized folded prefixes, and a non-multiplying connection to the root remain
@@ -297,18 +304,18 @@ Those normalizers may also consume finite fractional static-real inputs when
 their result is an exact integer, including nested call-free conditionals whose
 normalized branches agree. Nonintegral, path-dependent, dynamic, and oversized
 results remain conservative.
-An exact `sign` result is classified as a static factor rather than a second
-runtime sign root, so it may compose directly with the one dynamic root. Two
-dynamic roots, path-dependent signs, and effectful selectors remain
+An exact `sign` result is classified as a static factor rather than another
+runtime sign root. Path-dependent signs and effectful selectors remain
 conservative.
 Checked exact-integer normalizers may also provide a nonnegative exponent for
 the sign-rooted transform when the right-associative exponent chain stays
-within the existing unroll cap. Zero, negative, dynamic, path-dependent,
-effectful, and oversized exponents remain conservative.
-Positive variable-free whole-number powers may raise the exact sign-rooted
+within the existing unroll cap. A zero result classifies the whole power as
+exactly one; negative, dynamic, path-dependent, effectful, and oversized
+exponents remain conservative.
+Nonnegative variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
-exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and
-oversized powers remain conservative.
+exponentiation remains within `2^53`; zero produces exact one, while negative,
+dynamic, deeper, and oversized powers remain conservative.
 Integer `div` by a variable-free nonzero whole number may reduce the exact
 sign-rooted transform, including composition through later powers, remainders,
 and exact real division. The quotient bound uses truncation toward zero; zero,

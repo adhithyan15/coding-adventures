@@ -1,0 +1,11 @@
+{
+  "id": "UR-C342-jamhuriyat",
+  "pathSegment": "UR-PATH-342-VOT342",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-342-VOT342",
+      "order": 2
+    }
+  ]
+}

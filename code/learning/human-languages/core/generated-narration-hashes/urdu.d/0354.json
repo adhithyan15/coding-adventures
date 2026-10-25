@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:44246c98f90b78f0",
+  "lessonIds": [
+    "UR-C354-maqul",
+    "UR-C354-vajib",
+    "UR-C354-jaiz",
+    "UR-C354-vahm",
+    "UR-C354-be-ja",
+    "UR-R354-review-347-354"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch354.txt",
+  "json": "urdu/narration/ch354.json",
+  "textHash": "fnv1a64:61a3324f142cf873",
+  "jsonHash": "fnv1a64:7181ea896e79df4a",
+  "findings": []
+}

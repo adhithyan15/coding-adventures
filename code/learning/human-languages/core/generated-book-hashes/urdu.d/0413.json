@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:198198e7128d4f7f",
+  "lessonIds": [
+    "UR-C413-kothi",
+    "UR-C413-jhonpri",
+    "UR-C413-ahata",
+    "UR-C413-chhappar",
+    "UR-C413-basana"
+  ],
+  "tex": "urdu/book/chapters/ch413-houses-large-and-small.tex"
+}

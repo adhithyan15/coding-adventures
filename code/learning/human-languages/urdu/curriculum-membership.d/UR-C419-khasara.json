@@ -1,0 +1,11 @@
+{
+  "id": "UR-C419-khasara",
+  "pathSegment": "UR-PATH-419-MUNAFA419",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-419-MUNAFA419",
+      "order": 1
+    }
+  ]
+}

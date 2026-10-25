@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Uncles, Steps and Orphans",
+  "label": "ch:ur-uncles-steps-and-orphans",
+  "canDo": "I can talk about uncles, step-parents and orphans.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C490-god-lena",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about uncles, step-parents and orphans.",
+    "assesses": [
+      "UR-LEX-C490-STEP490-03",
+      "UR-LEX-C490-STEP490-04",
+      "UR-LEX-C490-STEP490-05"
+    ]
+  }
+}

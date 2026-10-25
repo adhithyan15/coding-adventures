@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:6a3115ed44167c84",
+  "lessonIds": [
+    "UR-C437-jhari",
+    "UR-C437-saya",
+    "UR-C437-ghana",
+    "UR-C437-kai",
+    "UR-C437-ugna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch437.txt",
+  "json": "urdu/narration/ch437.json",
+  "textHash": "fnv1a64:a3622337ab27fbd7",
+  "jsonHash": "fnv1a64:537cdab29b396ee9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Better and Worse",
+  "label": "ch:gu-better-and-worse",
+  "canDo": "I can say whether things will get better or worse.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C387-kathalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can say whether things will get better or worse.",
+    "assesses": [
+      "GU-LEX-C387-BAHETAR387-03",
+      "GU-LEX-C387-BAHETAR387-04",
+      "GU-LEX-C387-BAHETAR387-05"
+    ]
+  }
+}

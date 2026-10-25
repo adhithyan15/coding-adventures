@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "At the Police Station",
+  "label": "ch:ur-at-the-police-station",
+  "canDo": "I can report a crime at the police station.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C278-bayan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can report a crime at the police station.",
+    "assesses": [
+      "UR-LEX-C278-THANA278-03",
+      "UR-LEX-C278-THANA278-04",
+      "UR-LEX-C278-THANA278-05"
+    ]
+  }
+}

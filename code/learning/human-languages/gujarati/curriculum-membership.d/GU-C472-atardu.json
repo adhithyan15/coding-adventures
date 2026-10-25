@@ -1,0 +1,11 @@
+{
+  "id": "GU-C472-atardu",
+  "pathSegment": "GU-PATH-472-NAS472",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-472-NAS472",
+      "order": 3
+    }
+  ]
+}

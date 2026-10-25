@@ -1,0 +1,11 @@
+{
+  "id": "UR-C345-izzat",
+  "pathSegment": "UR-PATH-345-QADR345",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-345-QADR345",
+      "order": 2
+    }
+  ]
+}

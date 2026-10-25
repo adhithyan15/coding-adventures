@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:643aaf8c2ec51424",
+  "lessonIds": [
+    "GU-C306-svayansevak",
+    "GU-C306-rahat",
+    "GU-C306-chavni",
+    "GU-C306-anaj",
+    "GU-C306-umatvu"
+  ],
+  "tex": "gujarati/book/chapters/ch306-the-relief-camp.tex"
+}

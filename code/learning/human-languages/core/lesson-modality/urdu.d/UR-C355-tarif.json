@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C355-tarif",
+    "language": "urdu",
+    "chapter": 355,
+    "sequence": 21230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c3dcd7305683365"
+  },
+  "findings": []
+}

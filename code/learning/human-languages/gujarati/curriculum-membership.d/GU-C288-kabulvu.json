@@ -1,0 +1,11 @@
+{
+  "id": "GU-C288-kabulvu",
+  "pathSegment": "GU-PATH-288-KABUL288",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-288-KABUL288",
+      "order": 1
+    }
+  ]
+}

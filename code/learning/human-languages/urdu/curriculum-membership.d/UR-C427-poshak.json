@@ -1,0 +1,11 @@
+{
+  "id": "UR-C427-poshak",
+  "pathSegment": "UR-PATH-427-POSHAK427",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-427-POSHAK427",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C517-balb",
+  "pathSegment": "GU-PATH-517-VIJLI517",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-517-VIJLI517",
+      "order": 3
+    }
+  ]
+}

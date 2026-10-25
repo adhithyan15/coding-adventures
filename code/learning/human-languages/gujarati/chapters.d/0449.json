@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Waiting Eagerly",
+  "label": "ch:gu-waiting-eagerly",
+  "canDo": "I can say how eager I am for something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C449-prasann",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can say how eager I am for something.",
+    "assesses": [
+      "GU-LEX-C449-ATUR449-03",
+      "GU-LEX-C449-ATUR449-04",
+      "GU-LEX-C449-ATUR449-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:642cae594859fdda",
+  "lessonIds": [
+    "GU-C348-nyayadhis",
+    "GU-C348-kes",
+    "GU-C348-apil",
+    "GU-C348-pheslo",
+    "GU-C348-phatkarvu"
+  ],
+  "tex": "gujarati/book/chapters/ch348-a-case-in-court.tex"
+}

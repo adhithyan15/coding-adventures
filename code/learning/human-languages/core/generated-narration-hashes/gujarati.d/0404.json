@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:d39fef316fa9a7c2",
+  "lessonIds": [
+    "GU-C404-phutpath",
+    "GU-C404-kedi",
+    "GU-C404-sakdu",
+    "GU-C404-cadhan",
+    "GU-C404-tapvu-leap"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch404.txt",
+  "json": "gujarati/narration/ch404.json",
+  "textHash": "fnv1a64:2d5bbfb2f633c12c",
+  "jsonHash": "fnv1a64:79b6feba78223f5f",
+  "findings": []
+}

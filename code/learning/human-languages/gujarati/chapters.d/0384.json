@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Success",
+  "label": "ch:gu-success",
+  "canDo": "I can say what it will take to succeed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C384-pahocadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can say what it will take to succeed.",
+    "assesses": [
+      "GU-LEX-C384-SAFAL384-03",
+      "GU-LEX-C384-SAFAL384-04",
+      "GU-LEX-C384-SAFAL384-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:65473e0d0c9a378e",
+  "lessonIds": [
+    "UR-C350-ausat",
+    "UR-C350-adad",
+    "UR-C350-tajziya",
+    "UR-C350-sharah",
+    "UR-C350-ubharna"
+  ],
+  "tex": "urdu/book/chapters/ch350-what-the-figures-say.tex"
+}

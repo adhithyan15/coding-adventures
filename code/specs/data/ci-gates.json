@@ -2,6 +2,45 @@
   "schema_version": 1,
   "_comment": "Declarative CI gate registry. See code/specs/ci-gate-registry.md. Every gate needs BOTH a package list and a path list: changes under code/specs, code/fixtures, code/grammars and code/scripts map to ZERO packages (sharedPrefixes in build-tool main.go is empty), so a package-only gate would skip the very staleness check the job exists to perform. scope=job entries must match a job key in .github/workflows/ci.yml; scope=step entries gate a step inside a job.",
   "gates": {
+    "neural-framework-conformance": {
+      "scope": "job",
+      "description": "NN42 four-native-language training and twelve directed checkpoint exchanges.",
+      "packages": [
+        "python/neural-framework",
+        "typescript/neural-framework",
+        "python/matrix",
+        "typescript/matrix",
+        "rust/neural-framework",
+        "rust/matrix",
+        "rust/bounded-json",
+        "go/neural-framework",
+        "go/matrix"
+      ],
+      "paths": [
+        "code/packages/python/neural-framework/**",
+        "code/packages/typescript/neural-framework/**",
+        "code/packages/python/matrix/**",
+        "code/packages/typescript/matrix/**",
+        "code/packages/typescript/matrix-rust-napi/**",
+        "code/packages/rust/neural-framework/**",
+        "code/packages/rust/matrix/**",
+        "code/packages/rust/bounded-json/**",
+        "code/packages/rust/Cargo.toml",
+        "code/packages/go/neural-framework/**",
+        "code/packages/go/matrix/**",
+        "code/scripts/validate_neural_framework_go.py",
+        "code/scripts/tests/test_neural_framework_go.py",
+        "code/scripts/validate_neural_framework_rust.py",
+        "code/scripts/tests/test_neural_framework_rust.py",
+        "code/scripts/tests/test_neural_framework_interchange.py",
+        "code/specs/fixtures/neural-framework-v1/**",
+        "code/scripts/validate_neural_framework_interchange.py",
+        "code/scripts/tests/test_neural_framework_ci_gate.py",
+        "code/specs/data/ci-gates.json",
+        ".github/workflows/ci.yml",
+        ".github/workflows/neural-framework.yml"
+      ]
+    },
     "phy00-phy01-fixture-consumers": {
       "scope": "job",
       "description": "PHY00/PHY01 generated fixtures and their two Dart consumers.",

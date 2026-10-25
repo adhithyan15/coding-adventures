@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-326-ZANDO326",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-326-ZANDO326"
+  ],
+  "after": []
+}

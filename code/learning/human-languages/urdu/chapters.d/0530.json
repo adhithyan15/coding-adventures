@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Yes or No",
+  "label": "ch:ur-yes-or-no",
+  "canDo": "I can talk about agreeing and turning things down.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C530-palatna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can talk about agreeing and turning things down.",
+    "assesses": [
+      "UR-LEX-C530-MARZI530-03",
+      "UR-LEX-C530-MARZI530-04",
+      "UR-LEX-C530-MARZI530-05"
+    ]
+  }
+}

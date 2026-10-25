@@ -1,0 +1,11 @@
+{
+  "id": "UR-C370-masalna",
+  "pathSegment": "UR-PATH-370-JALDBAZI370",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-370-JALDBAZI370",
+      "order": 4
+    }
+  ]
+}

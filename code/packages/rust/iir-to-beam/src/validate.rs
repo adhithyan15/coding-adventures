@@ -139,6 +139,15 @@ const UNSUPPORTED_OPS: &[&str] = &[
     "safepoint",
     // "alloc_closure" — LANG35: accepted; lowered to put_list cons-cell
     // "call_closure"  — LANG35: accepted; lowered to get_list + call_ext apply
+    // LANG83 PR6c: the non-trapping IEEE arithmetic. An Erlang float has no
+    // ±Infinity or NaN and `1.0 / 0.0` raises badarith, so the contract
+    // cannot be met (`op_support::NO_IEEE_SPECIALS`). `f64_signbit` is
+    // lowered and is NOT listed here.
+    "f64_add",
+    "f64_sub",
+    "f64_mul",
+    "f64_div",
+    "f64_neg",
 ];
 
 // ---------------------------------------------------------------------------

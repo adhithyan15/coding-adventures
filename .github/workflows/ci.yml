@@ -112,6 +112,7 @@ jobs:
       # own flag as an `if:` condition. See code/specs/ci-gate-registry.md.
       # On main, ci.yml passes -force, which makes every flag true.
       run_phy00_phy01_fixture_consumers: ${{ steps.detect.outputs.run_phy00_phy01_fixture_consumers }}
+      run_neural_framework_conformance: ${{ steps.detect.outputs.run_neural_framework_conformance }}
       run_d18f_message_conformance: ${{ steps.detect.outputs.run_d18f_message_conformance }}
       run_d18p_channel_conformance: ${{ steps.detect.outputs.run_d18p_channel_conformance }}
       run_d18q_channel_key_grant_conformance: ${{ steps.detect.outputs.run_d18q_channel_key_grant_conformance }}
@@ -645,10 +646,21 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_release_inventory.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
+          # The native GFM reader trusts only the corpus accepted by this
+          # duplicate-key/depth/digest-aware validator. Keep both halves on
+          # the always-run contract path so coordinated fixture edits cannot
+          # bypass the closed TE04 profile.
+          python3 code/scripts/gfm_extension_conformance.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_gfm_extension_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_human_language_hot_files.py'
           # Main's shard weights come from this parser; a report-format drift
           # it no longer recognizes must fail here, not unbalance main.
           python3 -m unittest discover -s code/scripts/tests -p 'test_ci_package_durations.py'
+          # The canonical CommonMark foundation is specs-and-scripts-only, so
+          # no native package build is selected when its corpus changes. Keep
+          # both its bounded validator and falsification suite always running.
+          python3 code/scripts/commonmark_conformance.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_commonmark_conformance.py'
           python3 code/scripts/geometry2d_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_geometry2d_conformance.py'
           python3 code/scripts/bezier2d_flattening_conformance.py
@@ -687,6 +699,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_d18t_durable_epoch_activation_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_onvif_origin_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ci_gate_registry.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_neural_framework_ci_gate.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_lang_windows_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_venture_windows_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_xaml_windows_ci_acceptance.py'
@@ -3596,7 +3609,7 @@ jobs:
         run: gem install bundler
 
       - name: Set up Node.js
-        if: needs.detect.outputs.needs_typescript == 'true'
+        if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
         uses: actions/setup-node@v7
         with:
           node-version: '22'
@@ -3605,7 +3618,7 @@ jobs:
       # ("Cannot read properties of null (reading 'edgesOut')").
       # Keep the independently validated installer fixed across all build OSes.
       - name: Set up npm
-        if: needs.detect.outputs.needs_typescript == 'true'
+        if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
         run: npm install --global npm@11.13.0
 
       - name: Delegate Forme sandbox cgroup v2 root
@@ -5440,6 +5453,15 @@ jobs:
           # goes once its build has reported.
           $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -prune-leaf-targets -language all
 
+  # The registered NN37 gate is reusable, but its verdict belongs to this
+  # workflow's required CI gate rather than an optional independent check.
+  neural-framework-conformance:
+    needs: detect
+    if: needs.detect.outputs.run_neural_framework_conformance == 'true'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/neural-framework.yml
+
   # ── Job 16: CI gate ────────────────────────────────────────────
   #
   # A single, always-present status check that summarizes the result of
@@ -5461,7 +5483,7 @@ jobs:
   # accepts skipped required checks.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
     if: always()
     runs-on: ubuntu-latest
     permissions:
@@ -5479,6 +5501,8 @@ jobs:
           EVENT_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           DETECT_RESULT: ${{ needs.detect.result }}
           CONTRACTS_RESULT: ${{ needs.contracts.result }}
+          NEURAL_FRAMEWORK_REQUIRED: ${{ needs.detect.outputs.run_neural_framework_conformance }}
+          NEURAL_FRAMEWORK_RESULT: ${{ needs['neural-framework-conformance'].result }}
           OCAML_CAPABILITY_RESULT: ${{ needs['ocaml-capability-gate'].result }}
           PHY_RESULT: ${{ needs['phy00-phy01-fixture-consumers'].result }}
           D18F_RESULT: ${{ needs['d18f-message-conformance'].result }}
@@ -5528,6 +5552,12 @@ jobs:
 
           echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
           fail=0
+          # A selected conformance job may not silently skip: missing training
+          # evidence must not become a green required check.
+          case "$NEURAL_FRAMEWORK_REQUIRED:$NEURAL_FRAMEWORK_RESULT" in
+            true:success|false:success|false:skipped) ;;
+            *) echo "::error::neural framework conformance did not pass (required: $NEURAL_FRAMEWORK_REQUIRED, result: $NEURAL_FRAMEWORK_RESULT)"; fail=1 ;;
+          esac
           for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
             case "$r" in
               success|skipped) ;;

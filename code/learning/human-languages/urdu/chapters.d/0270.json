@@ -1,0 +1,21 @@
+{
+  "chapter": 270,
+  "title": "Asking the Way",
+  "label": "ch:ur-asking-the-way",
+  "canDo": "I can ask the way and how far it is (isṭeshan kaise jāte haiṅ? kitnī dūr hai?), and ask or tell someone politely (bāeṅ muṛiye, zarā batāiye).",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-R270-asking-the-way",
+    "kind": "production",
+    "summary": "Complete UR-R270-asking-the-way: ask the way, and ask or tell politely.",
+    "assesses": [
+      "UR-LEX-C270-KITNA-01",
+      "UR-LEX-C270-ZARA-01",
+      "UR-SCRIPT-C270-ZAL-01",
+      "UR-GRAMMAR-C270-DIRECTION-01",
+      "UR-GRAMMAR-C270-DIRECTION-02"
+    ]
+  }
+}

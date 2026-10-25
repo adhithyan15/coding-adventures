@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:de5b082075fc2656",
+  "lessonIds": [
+    "UR-C500-astin",
+    "UR-C500-silvana",
+    "UR-C500-udherna",
+    "UR-C500-rafu-karna",
+    "UR-C500-udharna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch500.txt",
+  "json": "urdu/narration/ch500.json",
+  "textHash": "fnv1a64:34926ad3ddf0b8fc",
+  "jsonHash": "fnv1a64:7b7c971521cdb4dd",
+  "findings": []
+}

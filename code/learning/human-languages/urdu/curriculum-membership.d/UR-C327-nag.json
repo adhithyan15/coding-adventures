@@ -1,0 +1,11 @@
+{
+  "id": "UR-C327-nag",
+  "pathSegment": "UR-PATH-327-KHAZANA327",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-327-KHAZANA327",
+      "order": 2
+    }
+  ]
+}

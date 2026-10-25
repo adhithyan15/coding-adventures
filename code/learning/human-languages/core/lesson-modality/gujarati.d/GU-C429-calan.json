@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C429-calan",
+    "language": "gujarati",
+    "chapter": 429,
+    "sequence": 23860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42f06aa9ed382fbd"
+  },
+  "findings": []
+}

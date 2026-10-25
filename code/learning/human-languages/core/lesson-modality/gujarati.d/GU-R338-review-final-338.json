@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R338-review-final-338",
+    "language": "gujarati",
+    "chapter": 338,
+    "sequence": 18770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d4277fce778b696"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "When Things Go Wrong",
+  "label": "ch:gu-when-things-go-wrong",
+  "canDo": "I can warn what will go wrong if plans fall apart.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C391-bhusavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can warn what will go wrong if plans fall apart.",
+    "assesses": [
+      "GU-LEX-C391-GADBAD391-03",
+      "GU-LEX-C391-GADBAD391-04",
+      "GU-LEX-C391-GADBAD391-05"
+    ]
+  }
+}

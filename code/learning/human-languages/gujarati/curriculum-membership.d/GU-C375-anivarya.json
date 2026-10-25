@@ -1,0 +1,11 @@
+{
+  "id": "GU-C375-anivarya",
+  "pathSegment": "GU-PATH-375-JARURI375",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-375-JARURI375",
+      "order": 1
+    }
+  ]
+}

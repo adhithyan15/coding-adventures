@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:08c83e2b37b5ea57",
+  "lessonIds": [
+    "GU-C460-bholu",
+    "GU-C460-luccu",
+    "GU-C460-calak",
+    "GU-C460-kapat",
+    "GU-C460-phoslavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch460-innocent-or-sly.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C544-ikhtitam",
+  "pathSegment": "UR-PATH-544-AGHAZ544",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-544-AGHAZ544",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:a765beb5a5df3528",
+  "lessonIds": [
+    "GU-C353-nagrik",
+    "GU-C353-janta",
+    "GU-C353-matdan",
+    "GU-C353-umedvar",
+    "GU-C353-cutavu"
+  ],
+  "tex": "gujarati/book/chapters/ch353-citizens-and-votes.tex"
+}

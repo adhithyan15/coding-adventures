@@ -1,0 +1,21 @@
+{
+  "chapter": 424,
+  "title": "At the Bank Counter",
+  "label": "ch:gu-at-the-bank-counter",
+  "canDo": "I can do simple business at a bank counter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-R424-review-417-424",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can do simple business at a bank counter.",
+    "assesses": [
+      "GU-LEX-C424-COUNTER424-01",
+      "GU-LEX-C424-COUNTER424-02",
+      "GU-LEX-C424-COUNTER424-03",
+      "GU-LEX-C424-COUNTER424-04",
+      "GU-LEX-C424-COUNTER424-05"
+    ]
+  }
+}

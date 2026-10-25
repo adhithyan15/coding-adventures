@@ -1,0 +1,21 @@
+{
+  "chapter": 501,
+  "title": "Metal and Jewellery",
+  "label": "ch:ur-metal-and-jewellery",
+  "canDo": "I can talk about metals and what smiths make from them.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R501-review-494-501",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can talk about metals and what smiths make from them.",
+    "assesses": [
+      "UR-LEX-C501-LOHA501-01",
+      "UR-LEX-C501-LOHA501-02",
+      "UR-LEX-C501-LOHA501-03",
+      "UR-LEX-C501-LOHA501-04",
+      "UR-LEX-C501-LOHA501-05"
+    ]
+  }
+}

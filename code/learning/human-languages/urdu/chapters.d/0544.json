@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "A Good Start",
+  "label": "ch:ur-a-good-start",
+  "canDo": "I can talk about how things begin and end.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C544-tartib",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can talk about how things begin and end.",
+    "assesses": [
+      "UR-LEX-C544-AGHAZ544-03",
+      "UR-LEX-C544-AGHAZ544-04",
+      "UR-LEX-C544-AGHAZ544-05"
+    ]
+  }
+}

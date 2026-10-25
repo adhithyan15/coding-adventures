@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C341-iqtidar",
+    "language": "urdu",
+    "chapter": 341,
+    "sequence": 20540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:749dc02e94d123b6"
+  },
+  "findings": []
+}

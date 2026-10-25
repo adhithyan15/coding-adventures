@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:76738310d19f2914",
+  "lessonIds": [
+    "GU-C391-gadbad",
+    "GU-C391-avyavastha",
+    "GU-C391-bhangvu",
+    "GU-C391-veravu",
+    "GU-C391-bhusavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch391.txt",
+  "json": "gujarati/narration/ch391.json",
+  "textHash": "fnv1a64:116f389bc8f98c82",
+  "jsonHash": "fnv1a64:d6a4cff9e7b3ea95",
+  "findings": []
+}

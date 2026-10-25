@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:a370681526d1dba1",
+  "lessonIds": [
+    "GU-C395-barth",
+    "GU-C395-rijharvesan",
+    "GU-C395-bhathu",
+    "GU-C395-thasvu",
+    "GU-C395-besadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch395.txt",
+  "json": "gujarati/narration/ch395.json",
+  "textHash": "fnv1a64:715bdd586c7f9f83",
+  "jsonHash": "fnv1a64:5c115a99c177da36",
+  "findings": []
+}

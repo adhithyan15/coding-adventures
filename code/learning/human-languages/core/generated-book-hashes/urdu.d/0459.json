@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:1e1bd80ca7fc0636",
+  "lessonIds": [
+    "UR-C459-fayyaz",
+    "UR-C459-khud-gharaz",
+    "UR-C459-sakhi",
+    "UR-C459-bakhil",
+    "UR-C459-sadqa"
+  ],
+  "tex": "urdu/book/chapters/ch459-generous-and-mean.tex"
+}

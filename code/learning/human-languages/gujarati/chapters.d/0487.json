@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Caring for Grandmother",
+  "label": "ch:gu-caring-for-grandmother",
+  "canDo": "I can say how we look after a sick relative.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C487-odhadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can say how we look after a sick relative.",
+    "assesses": [
+      "GU-LEX-C487-CAKRI487-03",
+      "GU-LEX-C487-CAKRI487-04",
+      "GU-LEX-C487-CAKRI487-05"
+    ]
+  }
+}

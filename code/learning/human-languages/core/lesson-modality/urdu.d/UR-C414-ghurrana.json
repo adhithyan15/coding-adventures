@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C414-ghurrana",
+    "language": "urdu",
+    "chapter": 414,
+    "sequence": 24460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:790dd41d1a4eb65b"
+  },
+  "findings": []
+}

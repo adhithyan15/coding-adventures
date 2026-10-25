@@ -1,0 +1,11 @@
+{
+  "id": "UR-C347-tanaza",
+  "pathSegment": "UR-PATH-347-MUAMALA347",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-347-MUAMALA347",
+      "order": 2
+    }
+  ]
+}

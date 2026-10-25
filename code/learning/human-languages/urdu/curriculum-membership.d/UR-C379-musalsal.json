@@ -1,0 +1,11 @@
+{
+  "id": "UR-C379-musalsal",
+  "pathSegment": "UR-PATH-379-MEHNAT379",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-379-MEHNAT379",
+      "order": 3
+    }
+  ]
+}

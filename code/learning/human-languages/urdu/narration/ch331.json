@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 331,
+  "title": "What Caused It",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:051cd6af87213cb5",
+  "lessons": [
+    {
+      "id": "UR-C331-sabab",
+      "sequence": 20000,
+      "title": "سبب (sabab) — a cause",
+      "headword": "سبب",
+      "romanization": "sabab",
+      "gloss": "a cause",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cfbe3ea6da6f6e8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a fruit seller, then the Urdu for a greengrocer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سبب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سبب — sabab — \"a cause\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس حادثے کا سبب کیا تھا؟ is hādse kā sabab kyā thā? What was the cause of this accident?"
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سبب (sabab) is usually traced, through Persian, to Arabic sabab, \"a cause, a means\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabab",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabab*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabab, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabab*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is hādse kā sabab kyā thā? — What was the cause of this accident?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *is hādse kā sabab kyā thā?* — What was the cause of this accident?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a fruit seller, then the Urdu for a greengrocer, then say sabab again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a fruit seller, then the Urdu for a greengrocer, then say *sabab* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سبب (sabab) mean? (\"A cause\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C331-bunyad",
+      "sequence": 20010,
+      "title": "بنیاد (bunyād) — a basis; a foundation",
+      "headword": "بنیاد",
+      "romanization": "bunyād",
+      "gloss": "a basis; a foundation",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7260cd17f39560a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a greengrocer, then the Urdu for a cause."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بنیاد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بنیاد — bunyād — \"a basis; a foundation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آپ کی بات کی بنیاد کیا ہے؟ āp kī bāt kī bunyād kyā hai? What is your point based on?"
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بنیاد (bunyād) is usually traced to Persian bunyād, \"a foundation\"; Urdu uses it for the ground an argument stands on as well as for the base of a building."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bunyād",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bunyād*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bunyād, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bunyād*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āp kī bāt kī bunyād kyā hai? — What is your point based on?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āp kī bāt kī bunyād kyā hai?* — What is your point based on?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a greengrocer, then the Urdu for a cause, then say bunyād again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a greengrocer, then the Urdu for a cause, then say *bunyād* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بنیاد (bunyād) mean? (\"A basis; a foundation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C331-zimme-dar",
+      "sequence": 20020,
+      "title": "ذمہ دار (zimme-dār) — responsible",
+      "headword": "ذمہ دار",
+      "romanization": "zimme-dār",
+      "gloss": "responsible",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c9abf020912702d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a cause, then the Urdu for a basis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ذمہ دار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ذمہ دار — zimme-dār — \"responsible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سارا اپنے کام کی ذمہ دار ہے۔ sārā apne kām kī zimme-dār hai. Sara is responsible for her own work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ذمہ دار (zimme-dār) is usually traced to Persian zimmadār, \"answerable, in charge\": zimma, a charge one carries, with -dār, \"holding\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zimme-dār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zimme-dār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zimme-dār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zimme-dār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārā apne kām kī zimme-dār hai. — Sara is responsible for her own work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārā apne kām kī zimme-dār hai.* — Sara is responsible for her own work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a cause, then the Urdu for a basis, then say zimme-dār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a cause, then the Urdu for a basis, then say *zimme-dār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ذمہ دار (zimme-dār) mean? (\"Responsible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C331-jurna",
+      "sequence": 20030,
+      "title": "جڑنا (juṛnā) — to be joined; to be linked",
+      "headword": "جڑنا",
+      "romanization": "juṛnā",
+      "gloss": "to be joined; to be linked",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5d028568cae1458",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a basis, then the Urdu for responsible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جڑنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جڑنا — juṛnā — \"to be joined; to be linked\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ سڑک اس پل سے جڑتی ہے۔ yih saṛak is pul se juṛtī hai. This road links up with this bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ پل سڑک سے جڑ گیا, voh pul saṛak se juṛ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جڑنا (juṛnā) is inherited: CDIAL lists the Hindi cousin juṛnā, \"to be joined\", under yuṭati, a form it reconstructs from its descendants (CDIAL 10496)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih saṛak is pul se juṛtī hai. — This road links up with this bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih saṛak is pul se juṛtī hai.* — This road links up with this bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a basis, then the Urdu for responsible, then say juṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a basis, then the Urdu for responsible, then say *juṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جڑنا (juṛnā) mean? (\"To be joined; to be linked\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C331-vabasta",
+      "sequence": 20040,
+      "title": "وابستہ (vābastā) — connected (with); tied (to)",
+      "headword": "وابستہ",
+      "romanization": "vābastā",
+      "gloss": "connected (with); tied (to)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e86e7812d9fff90b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for responsible, then the Urdu for to be linked."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وابستہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وابستہ — vābastā — \"connected (with); tied (to)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس کا نام اس شہر سے وابستہ ہے۔ us kā nām is shahr se vābastā hai. His name is bound up with this city."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وابستہ (vābastā) is usually traced to Persian vābasta, \"tied back, attached\", built on basta, \"tied\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vābastā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vābastā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vābastā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vābastā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us kā nām is shahr se vābastā hai. — His name is bound up with this city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us kā nām is shahr se vābastā hai.* — His name is bound up with this city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for responsible, then the Urdu for to be linked, then say vābastā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for responsible, then the Urdu for to be linked, then say *vābastā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وابستہ (vābastā) mean? (\"Connected (with); tied (to)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

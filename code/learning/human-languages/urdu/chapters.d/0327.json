@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Buried Treasure",
+  "label": "ch:ur-buried-treasure",
+  "canDo": "I can tell a tale of hidden treasure.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C327-hira",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can tell a tale of hidden treasure.",
+    "assesses": [
+      "UR-LEX-C327-KHAZANA327-03",
+      "UR-LEX-C327-KHAZANA327-04",
+      "UR-LEX-C327-KHAZANA327-05"
+    ]
+  }
+}

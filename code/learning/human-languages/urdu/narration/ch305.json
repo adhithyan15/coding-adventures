@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 305,
+  "title": "The Truth Comes Out",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7d6205df82afea03",
+  "lessons": [
+    {
+      "id": "UR-C305-muamma",
+      "sequence": 18480,
+      "title": "معمہ (muammā) — a mystery; a puzzle",
+      "headword": "معمہ",
+      "romanization": "muammā",
+      "gloss": "a mystery; a puzzle",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:739638a4b6642de7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a police baton, then the Urdu for a curfew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: معمہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معمہ — muammā — \"a mystery; a puzzle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ ایک معمہ تھا۔ yih ek muammā thā. This was a mystery."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معمہ (muammā) is usually traced, through Persian, to Arabic muʿammā, \"a thing made obscure, a riddle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muammā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muammā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muammā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muammā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih ek muammā thā. — This was a mystery.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih ek muammā thā.* — This was a mystery.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a police baton, then the Urdu for a curfew, then say muammā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a police baton, then the Urdu for a curfew, then say *muammā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does معمہ (muammā) mean? (\"A mystery; a puzzle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C305-mukhbir",
+      "sequence": 18490,
+      "title": "مخبر (mukhbir) — an informer",
+      "headword": "مخبر",
+      "romanization": "mukhbir",
+      "gloss": "an informer",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1c8c6ce42313605",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a curfew, then the Urdu for a mystery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مخبر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخبر — mukhbir — \"an informer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مخبر نے پولیس کو سب بتایا۔ mukhbir ne polīs ko sab batāyā. The informer told the police everything."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مخبر (mukhbir) is usually traced, through Persian, to Arabic mukhbir, \"one who informs\", from the family of خبر."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhbir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhbir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhbir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhbir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhbir ne polīs ko sab batāyā. — The informer told the police everything.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhbir ne polīs ko sab batāyā.* — The informer told the police everything.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a curfew, then the Urdu for a mystery, then say mukhbir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a curfew, then the Urdu for a mystery, then say *mukhbir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مخبر (mukhbir) mean? (\"An informer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C305-andaza",
+      "sequence": 18500,
+      "title": "اندازہ (andāzā) — a guess; an estimate",
+      "headword": "اندازہ",
+      "romanization": "andāzā",
+      "gloss": "a guess; an estimate",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d1782b0b68c6652",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a mystery, then the Urdu for an informer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اندازہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اندازہ — andāzā — \"a guess; an estimate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میرا اندازہ غلط تھا۔ merā andāzā ghalat thā. My guess was wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اندازہ (andāzā) is usually traced to Persian andāza, \"a measure\". اندازہ لگانا is to make a guess."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andāzā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andāzā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andāzā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andāzā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā andāzā ghalat thā. — My guess was wrong.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā andāzā ghalat thā.* — My guess was wrong.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a mystery, then the Urdu for an informer, then say andāzā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a mystery, then the Urdu for an informer, then say *andāzā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اندازہ (andāzā) mean? (\"A guess; an estimate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C305-chaunkna",
+      "sequence": 18510,
+      "title": "چونکنا (chaunknā) — to be startled",
+      "headword": "چونکنا",
+      "romanization": "chaunknā",
+      "gloss": "to be startled",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6747c2e150c4865f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an informer, then the Urdu for a guess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چونکنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چونکنا — chaunknā — \"to be startled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خبر سن کر سب چونک گئے۔ khabar sun kar sab chaunk gae. Everyone was startled by the news."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): وہ چونکا, voh chaunkā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چونکنا (chaunknā) is inherited: CDIAL lists the Hindi cousin caũknā, \"a sudden start\", under camakka (CDIAL 4676), the entry that also holds چمکنا."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaunknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaunknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaunknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaunknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khabar sun kar sab chaunk gae. — Everyone was startled by the news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khabar sun kar sab chaunk gae.* — Everyone was startled by the news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an informer, then the Urdu for a guess, then say chaunknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an informer, then the Urdu for a guess, then say *chaunknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چونکنا (chaunknā) mean? (\"To be startled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C305-inkishaf",
+      "sequence": 18520,
+      "title": "انکشاف (inkishāf) — a revelation; a disclosure",
+      "headword": "انکشاف",
+      "romanization": "inkishāf",
+      "gloss": "a revelation; a disclosure",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8fdd2d85b4c170fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a guess, then the Urdu for to be startled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انکشاف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انکشاف — inkishāf — \"a revelation; a disclosure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اخبار میں ایک نیا انکشاف تھا۔ akhbār meṅ ek nayā inkishāf thā. The paper had a new revelation."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انکشاف (inkishāf) is usually traced, through Persian, to Arabic inkishāf, \"a becoming uncovered\": something hidden comes to light."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inkishāf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inkishāf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inkishāf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inkishāf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhbār meṅ ek nayā inkishāf thā. — The paper had a new revelation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhbār meṅ ek nayā inkishāf thā.* — The paper had a new revelation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a guess, then the Urdu for to be startled, then say inkishāf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a guess, then the Urdu for to be startled, then say *inkishāf* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انکشاف (inkishāf) mean? (\"A revelation; a disclosure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

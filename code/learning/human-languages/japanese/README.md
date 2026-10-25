@@ -5,13 +5,11 @@ human-language spine. Every lesson is written for a learner who knows no
 Japanese, takes no more than five minutes, and asks the learner to decode only
 writing that an earlier step has made safe.
 
-The current book is the first **pre-A1 slice**, not a claim of exam readiness.
-Its 100 lessons form a deliberately slow twelve-chapter runway: 47 writing
-lessons teach 47 distinct load-bearing glyphs; the current closure report finds
-47 glyphs shown, 47 taught, zero never taught, and zero script-closure
-violations. The vocabulary layer contains 28 word lessons and seven phrase
-lessons. Those counts come from the canonical lesson ledger and the
-`measureScriptClosure` report, not from a hand-maintained inventory.
+The book began with a deliberately slow twelve-chapter pre-A1 runway and has
+since extended beyond it. The opening lessons teach each load-bearing glyph
+before asking learners to decode a word containing it. A structural practice
+mock is not a claim of exam readiness; qualified review and learner validation
+are separate steps.
 
 ## The opening runway
 
@@ -85,8 +83,8 @@ load-bearing.
 
 ## Read and practise
 
-- [`session-map.md`](./session-map.md) maps one canonical lesson to each of the
-  current 131 five-minute sessions and explains the review rule.
+- [`session-map.md`](./session-map.md) records the opening five-minute sessions
+  and explains the review rule.
 - [`roadmap.md`](./roadmap.md) records the authored chapters and the
   dependency order toward the complete pre-A1-to-C2 destination.
 - [`chapters.json`](./chapters.json) is the authoritative chapter and payoff
@@ -95,6 +93,10 @@ load-bearing.
 - [`assessment-spec.md`](./assessment-spec.md) and
   [`assessment.json`](./assessment.json) define the seven four-skill assessment
   rungs and their writing requirements.
+- [`mocks/pre-a1/mock-1.md`](./mocks/pre-a1/mock-1.md) is the first project-defined
+  pre-A1 practice form. Its recording master and key are confidential examiner
+  material; the form still needs qualified Japanese review and book-only human
+  validation before learner use.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) is a lookup aid,
   never a prerequisite chapter.
 - [`lessons/`](./lessons/) contains the canonical short lessons; the generated

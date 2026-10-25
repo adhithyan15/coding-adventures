@@ -1,0 +1,11 @@
+{
+  "id": "GU-C400-helmet",
+  "pathSegment": "GU-PATH-400-SCOOTER400",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-400-SCOOTER400",
+      "order": 1
+    }
+  ]
+}

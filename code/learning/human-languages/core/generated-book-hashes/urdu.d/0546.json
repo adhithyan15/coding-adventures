@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:e0c4f322c01755fa",
+  "lessonIds": [
+    "UR-C546-mashaqqat",
+    "UR-C546-hath-batana",
+    "UR-C546-asani",
+    "UR-C546-jujhna",
+    "UR-C546-paimana"
+  ],
+  "tex": "urdu/book/chapters/ch546-the-hard-way.tex"
+}

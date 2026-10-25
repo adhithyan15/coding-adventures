@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Courage",
+  "label": "ch:ur-courage",
+  "canDo": "I can say that someone was brave.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C460-dilavar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can say that someone was brave.",
+    "assesses": [
+      "UR-LEX-C460-BRAVE460-03",
+      "UR-LEX-C460-BRAVE460-04",
+      "UR-LEX-C460-BRAVE460-05"
+    ]
+  }
+}

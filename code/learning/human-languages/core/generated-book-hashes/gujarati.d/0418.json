@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:5dcd3db8af39b800",
+  "lessonIds": [
+    "GU-C418-sosayti",
+    "GU-C418-phlet",
+    "GU-C418-banglo",
+    "GU-C418-taki",
+    "GU-C418-bhadut"
+  ],
+  "tex": "gujarati/book/chapters/ch418-societies-and-flats.tex"
+}

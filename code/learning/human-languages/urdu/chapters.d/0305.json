@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "The Truth Comes Out",
+  "label": "ch:ur-the-truth-comes-out",
+  "canDo": "I can say what turned out to be true.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C305-inkishaf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can say what turned out to be true.",
+    "assesses": [
+      "UR-LEX-C305-MUAMMA305-03",
+      "UR-LEX-C305-MUAMMA305-04",
+      "UR-LEX-C305-MUAMMA305-05"
+    ]
+  }
+}

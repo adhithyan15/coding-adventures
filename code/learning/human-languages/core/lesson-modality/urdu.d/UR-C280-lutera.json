@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C280-lutera",
+    "language": "urdu",
+    "chapter": 280,
+    "sequence": 17240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a7233bc3607f5fb"
+  },
+  "findings": []
+}

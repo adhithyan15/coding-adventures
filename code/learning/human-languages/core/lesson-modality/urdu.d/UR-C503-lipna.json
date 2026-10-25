@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C503-lipna",
+    "language": "urdu",
+    "chapter": 503,
+    "sequence": 29500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e67205904d95fbd"
+  },
+  "findings": []
+}

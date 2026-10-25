@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Cuts and Stitches",
+  "label": "ch:ur-cuts-and-stitches",
+  "canDo": "I can say how someone got a small injury.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C478-kuredna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can say how someone got a small injury.",
+    "assesses": [
+      "UR-LEX-C478-CUT478-03",
+      "UR-LEX-C478-CUT478-04",
+      "UR-LEX-C478-CUT478-05"
+    ]
+  }
+}

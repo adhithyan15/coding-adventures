@@ -1,0 +1,14 @@
+[package]
+name = "x509-ocsp-responder-certificate-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Exact-certificate OCSP responder role, algorithm, validity, and purpose policy"
+
+[dependencies]
+x509-certificate = { path = "../x509-certificate" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-key-usage = { path = "../x509-key-usage" }
+x509-time = { path = "../x509-time" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }

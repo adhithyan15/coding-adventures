@@ -1,0 +1,11 @@
+{
+  "id": "GU-C323-padkarvu",
+  "pathSegment": "GU-PATH-323-SHAHID323",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-323-SHAHID323",
+      "order": 4
+    }
+  ]
+}

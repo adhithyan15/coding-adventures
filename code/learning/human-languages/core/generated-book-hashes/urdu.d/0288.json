@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:f93806ee8c502d7c",
+  "lessonIds": [
+    "UR-C288-chiragh",
+    "UR-C288-shola",
+    "UR-C288-dahakna",
+    "UR-C288-raushni",
+    "UR-C288-tapish"
+  ],
+  "tex": "urdu/book/chapters/ch288-the-lamp-that-fell.tex"
+}

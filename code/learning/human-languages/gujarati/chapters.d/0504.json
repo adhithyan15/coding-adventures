@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Clay and the Wheel",
+  "label": "ch:gu-clay-and-the-wheel",
+  "canDo": "I can talk about how a potter shapes clay.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C504-kodiyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about how a potter shapes clay.",
+    "assesses": [
+      "GU-LEX-C504-KUMBHAR504-03",
+      "GU-LEX-C504-KUMBHAR504-04",
+      "GU-LEX-C504-KUMBHAR504-05"
+    ]
+  }
+}

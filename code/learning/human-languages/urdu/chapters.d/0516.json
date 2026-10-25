@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Carving and Calligraphy",
+  "label": "ch:ur-carving-and-calligraphy",
+  "canDo": "I can talk about beautiful writing and carving.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C516-but",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about beautiful writing and carving.",
+    "assesses": [
+      "UR-LEX-C516-KHATTATI516-03",
+      "UR-LEX-C516-KHATTATI516-04",
+      "UR-LEX-C516-KHATTATI516-05"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+host-python2: accepts
+result: py2-int-print refuses it with a Unsupported error naming the release
+why: `print a, b` writes `a b`; refused because CPython 2 flushes a pending softspace as a newline before an uncaught exception (Python/pythonrun.c Py_FlushLine), which needs a trap handler

@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Bookings and Queues",
+  "label": "ch:ur-bookings-and-queues",
+  "canDo": "I can book a ticket and stand my ground in a queue.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C391-ghusna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can book a ticket and stand my ground in a queue.",
+    "assesses": [
+      "UR-LEX-C391-QATAR391-03",
+      "UR-LEX-C391-QATAR391-04",
+      "UR-LEX-C391-QATAR391-05"
+    ]
+  }
+}

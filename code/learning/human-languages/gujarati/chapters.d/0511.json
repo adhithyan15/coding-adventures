@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "People at Work",
+  "label": "ch:gu-people-at-work",
+  "canDo": "I can name the people who work on a building site and in an office.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C511-karkun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can name the people who work on a building site and in an office.",
+    "assesses": [
+      "GU-LEX-C511-MAJUR511-03",
+      "GU-LEX-C511-MAJUR511-04",
+      "GU-LEX-C511-MAJUR511-05"
+    ]
+  }
+}

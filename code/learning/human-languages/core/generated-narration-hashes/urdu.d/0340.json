@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:2423bad2c9d4448f",
+  "lessonIds": [
+    "UR-C340-faisla",
+    "UR-C340-zamanat",
+    "UR-C340-mulzim",
+    "UR-C340-munsif",
+    "UR-C340-gavahi-dena"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch340.txt",
+  "json": "urdu/narration/ch340.json",
+  "textHash": "fnv1a64:a67e434a6c82a1a6",
+  "jsonHash": "fnv1a64:ad349df00215c330",
+  "findings": []
+}

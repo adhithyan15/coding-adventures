@@ -1,0 +1,11 @@
+{
+  "id": "UR-C472-hazma",
+  "pathSegment": "UR-PATH-472-STOMACH472",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-472-STOMACH472",
+      "order": 1
+    }
+  ]
+}

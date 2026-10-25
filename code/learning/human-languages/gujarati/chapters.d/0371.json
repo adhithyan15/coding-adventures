@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Gains and Losses",
+  "label": "ch:gu-gains-and-losses",
+  "canDo": "I can weigh what we gain and what we lose.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C371-khovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can weigh what we gain and what we lose.",
+    "assesses": [
+      "GU-LEX-C371-FAYDO371-03",
+      "GU-LEX-C371-FAYDO371-04",
+      "GU-LEX-C371-FAYDO371-05"
+    ]
+  }
+}

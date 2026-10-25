@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:63266304cdc509d3",
+  "lessonIds": [
+    "GU-C315-udghatan",
+    "GU-C315-prasang",
+    "GU-C315-sthal",
+    "GU-C315-ullekh",
+    "GU-C315-nihalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch315-opening-day.tex"
+}

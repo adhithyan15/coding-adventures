@@ -1,0 +1,11 @@
+{
+  "id": "UR-C525-muattal",
+  "pathSegment": "UR-PATH-525-MOHLAT525",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-525-MOHLAT525",
+      "order": 2
+    }
+  ]
+}

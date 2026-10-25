@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C431-abr",
+    "language": "urdu",
+    "chapter": 431,
+    "sequence": 25300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a84c6ed13021c053"
+  },
+  "findings": []
+}

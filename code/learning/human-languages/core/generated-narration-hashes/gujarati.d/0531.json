@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:edc9574df3516b6f",
+  "lessonIds": [
+    "GU-C531-jhanjhat",
+    "GU-C531-andharyu",
+    "GU-C531-ocintu",
+    "GU-C531-pherphar",
+    "GU-C531-bandobast"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch531.txt",
+  "json": "gujarati/narration/ch531.json",
+  "textHash": "fnv1a64:fd4823fc2c7d658d",
+  "jsonHash": "fnv1a64:fce013170a7bcfc5",
+  "findings": []
+}

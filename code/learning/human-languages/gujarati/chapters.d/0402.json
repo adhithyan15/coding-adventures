@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Carts and Chhakdas",
+  "label": "ch:gu-carts-and-chhakdas",
+  "canDo": "I can talk about the carts and vans on a country road.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C402-hakvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can talk about the carts and vans on a country road.",
+    "assesses": [
+      "GU-LEX-C402-CART402-03",
+      "GU-LEX-C402-CART402-04",
+      "GU-LEX-C402-CART402-05"
+    ]
+  }
+}

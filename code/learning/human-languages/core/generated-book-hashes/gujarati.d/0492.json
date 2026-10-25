@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:8ecd23d5f705df8f",
+  "lessonIds": [
+    "GU-C492-piyar",
+    "GU-C492-sasru",
+    "GU-C492-bhanej",
+    "GU-C492-pautra",
+    "GU-C492-pitrai"
+  ],
+  "tex": "gujarati/book/chapters/ch492-two-homes.tex"
+}

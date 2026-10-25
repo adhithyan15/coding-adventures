@@ -1,0 +1,11 @@
+{
+  "id": "GU-C521-ubhravu",
+  "pathSegment": "GU-PATH-521-VALONU521",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-521-VALONU521",
+      "order": 3
+    }
+  ]
+}

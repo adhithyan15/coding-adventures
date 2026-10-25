@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "The Public Meeting",
+  "label": "ch:ur-the-public-meeting",
+  "canDo": "I can say who decided what at a meeting.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C358-thukrana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can say who decided what at a meeting.",
+    "assesses": [
+      "UR-LEX-C358-JALSA358-03",
+      "UR-LEX-C358-JALSA358-04",
+      "UR-LEX-C358-JALSA358-05"
+    ]
+  }
+}

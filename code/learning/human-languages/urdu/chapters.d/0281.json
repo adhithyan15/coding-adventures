@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "Cheats",
+  "label": "ch:ur-cheats",
+  "canDo": "I can say how someone was cheated and what to do if it happens.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C281-jali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can say how someone was cheated and what to do if it happens.",
+    "assesses": [
+      "UR-LEX-C281-THAG281-03",
+      "UR-LEX-C281-THAG281-04",
+      "UR-LEX-C281-THAG281-05"
+    ]
+  }
+}

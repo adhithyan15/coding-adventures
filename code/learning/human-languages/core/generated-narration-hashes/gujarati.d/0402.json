@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:add434556351cca0",
+  "lessonIds": [
+    "GU-C402-chakdo",
+    "GU-C402-tempo",
+    "GU-C402-gadu",
+    "GU-C402-kandaktar",
+    "GU-C402-hakvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch402.txt",
+  "json": "gujarati/narration/ch402.json",
+  "textHash": "fnv1a64:cbde6dc194ede7a8",
+  "jsonHash": "fnv1a64:13e110f0ada57301",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:5712326c73ecb06b",
+  "lessonIds": [
+    "UR-C497-takhta",
+    "UR-C497-burada",
+    "UR-C497-randa",
+    "UR-C497-thonkna",
+    "UR-C497-retna"
+  ],
+  "tex": "urdu/book/chapters/ch497-the-carpenter-s-bench.tex"
+}

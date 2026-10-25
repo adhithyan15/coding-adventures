@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:99605b8730fe073b",
+  "lessonIds": [
+    "GU-C384-saphal",
+    "GU-C384-unnati",
+    "GU-C384-vikas",
+    "GU-C384-phavvu",
+    "GU-C384-pahocadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch384.txt",
+  "json": "gujarati/narration/ch384.json",
+  "textHash": "fnv1a64:9e068c7b2590f97c",
+  "jsonHash": "fnv1a64:131ec1b571e65555",
+  "findings": []
+}

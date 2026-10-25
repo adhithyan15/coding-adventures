@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:66d115e53417dc33",
+  "lessonIds": [
+    "GU-C505-kapas",
+    "GU-C505-ru",
+    "GU-C505-retiyo",
+    "GU-C505-katvu",
+    "GU-C505-khadi"
+  ],
+  "tex": "gujarati/book/chapters/ch505-cotton-and-the-spinning-wheel.tex"
+}

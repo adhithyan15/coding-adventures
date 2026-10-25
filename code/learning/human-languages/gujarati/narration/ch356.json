@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 356,
+  "title": "Rights and the Constitution",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d8c799b532e6d30a",
+  "lessons": [
+    {
+      "id": "GU-C356-bandharan",
+      "sequence": 19870,
+      "title": "બંધારણ (bandhāraṇ) — a constitution",
+      "headword": "બંધારણ",
+      "romanization": "bandhāraṇ",
+      "gloss": "a constitution",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0362bdcc01eb1d38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a grant, then the Gujarati for to collect money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બંધારણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બંધારણ — bandhāraṇ — \"a constitution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આપણું બંધારણ દરેક નાગરિકને સમાન હક આપે છે. āpṇũ bandhāraṇ darek nāgrikne samān hak āpe che. Our constitution gives every citizen equal rights."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બંધારણ (bandhāraṇ) CDIAL lists Gujarati bandhāraṇ, \"arrangement, construction\", under Sanskrit bandhakaraṇa, \"binding\" (CDIAL 9138); \"a constitution\" is its modern sense, the frame a state is built on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandhāraṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandhāraṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandhāraṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandhāraṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpṇũ bandhāraṇ darek nāgrikne samān hak āpe che. — Our constitution gives every citizen equal rights.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpṇũ bandhāraṇ darek nāgrikne samān hak āpe che.* — Our constitution gives every citizen equal rights.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a grant, then the Gujarati for to collect money, then say bandhāraṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a grant, then the Gujarati for to collect money, then say *bandhāraṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બંધારણ (bandhāraṇ) mean? (\"A constitution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C356-svatantra",
+      "sequence": 19880,
+      "title": "સ્વતંત્ર (svatantra) — independent",
+      "headword": "સ્વતંત્ર",
+      "romanization": "svatantra",
+      "gloss": "independent",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:130e628145887ba7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to collect money, then the Gujarati for a constitution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સ્વતંત્ર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સ્વતંત્ર — svatantra — \"independent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ન્યાયાધીશ સ્વતંત્ર હોવા જોઈએ. nyāyādhīś svatantra hovā joīe. Judges should be independent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સ્વતંત્ર (svatantra) is a tatsama, borrowed from Sanskrit svatantra, \"self-dependence, freedom\" (Monier-Williams): under one's own rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svatantra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svatantra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svatantra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svatantra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyādhīś svatantra hovā joīe. — Judges should be independent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyādhīś svatantra hovā joīe.* — Judges should be independent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to collect money, then the Gujarati for a constitution, then say svatantra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to collect money, then the Gujarati for a constitution, then say *svatantra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સ્વતંત્ર (svatantra) mean? (\"Independent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C356-samaj",
+      "sequence": 19890,
+      "title": "સમાજ (samāj) — society",
+      "headword": "સમાજ",
+      "romanization": "samāj",
+      "gloss": "society",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d86aa16119062b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a constitution, then the Gujarati for independent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સમાજ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સમાજ — samāj — \"society\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સારો સમાજ ગરીબ માણસોની કાળજી લે છે. sāro samāj garīb māṇsonī kāḷjī le che. A good society takes care of its poor."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સમાજ (samāj) is a tatsama, borrowed from Sanskrit samāja, \"a meeting, an assembly\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samāj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samāj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samāj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samāj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāro samāj garīb māṇsonī kāḷjī le che. — A good society takes care of its poor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāro samāj garīb māṇsonī kāḷjī le che.* — A good society takes care of its poor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a constitution, then the Gujarati for independent, then say samāj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a constitution, then the Gujarati for independent, then say *samāj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સમાજ (samāj) mean? (\"Society\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C356-manya",
+      "sequence": 19900,
+      "title": "માન્ય (mānya) — valid; accepted",
+      "headword": "માન્ય",
+      "romanization": "mānya",
+      "gloss": "valid; accepted",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1affced84daeaf5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for independent, then the Gujarati for society."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: માન્ય",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "માન્ય — mānya — \"valid; accepted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ પરવાનો ફક્ત એક વરસ માટે માન્ય છે. ā parvāno phakt ek varas māṭe mānya che. This licence is valid for one year only."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "માન્ય (mānya) is a tatsama, borrowed from Sanskrit mānya, \"to be respected, to be honoured\" (Monier-Williams); Gujarati uses it for what an office accepts as valid."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā parvāno phakt ek varas māṭe mānya che. — This licence is valid for one year only.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā parvāno phakt ek varas māṭe mānya che.* — This licence is valid for one year only.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for independent, then the Gujarati for society, then say mānya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for independent, then the Gujarati for society, then say *mānya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does માન્ય (mānya) mean? (\"Valid; accepted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C356-jalavvu",
+      "sequence": 19910,
+      "title": "જાળવવું (jāḷavvũ) — to preserve",
+      "headword": "જાળવવું",
+      "romanization": "jāḷavvũ",
+      "gloss": "to preserve",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f2062fd4c961f9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for society, then the Gujarati for valid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: જાળવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જાળવવું — jāḷavvũ — \"to preserve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આપણે આપણા હક જાળવવા જોઈએ. āpaṇe āpṇā hak jāḷavvā joīe. We must protect our rights."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે જૂનું ઘર જાળવ્યું, teṇe jūnũ ghar jāḷavyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જાળવવું (jāḷavvũ) CDIAL lists the Gujarati verb, \"to keep unharmed\", under a reconstructed yal, \"endure, stay\" (CDIAL 10430)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāḷavvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāḷavvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāḷavvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāḷavvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpaṇe āpṇā hak jāḷavvā joīe. — We must protect our rights.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpaṇe āpṇā hak jāḷavvā joīe.* — We must protect our rights.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for society, then the Gujarati for valid, then say jāḷavvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for society, then the Gujarati for valid, then say *jāḷavvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does જાળવવું (jāḷavvũ) mean? (\"To preserve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

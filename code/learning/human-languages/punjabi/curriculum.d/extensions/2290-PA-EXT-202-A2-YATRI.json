@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-202-A2-YATRI",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise and use the person noun for a traveller in one bounded identity frame.",
+  "prerequisites": [
+    "PA-EXT-201-A2-CLASS"
+  ]
+}

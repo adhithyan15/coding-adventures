@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C536-pancag",
+    "language": "gujarati",
+    "chapter": 536,
+    "sequence": 29810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d136f23f79ae6774"
+  },
+  "findings": []
+}

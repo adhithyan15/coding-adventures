@@ -1,0 +1,21 @@
+{
+  "chapter": 454,
+  "title": "A Restless Night",
+  "label": "ch:gu-a-restless-night",
+  "canDo": "I can say what keeps me awake with worry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R454-review-447-454",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can say what keeps me awake with worry.",
+    "assesses": [
+      "GU-LEX-C454-UCAT454-01",
+      "GU-LEX-C454-UCAT454-02",
+      "GU-LEX-C454-UCAT454-03",
+      "GU-LEX-C454-UCAT454-04",
+      "GU-LEX-C454-UCAT454-05"
+    ]
+  }
+}

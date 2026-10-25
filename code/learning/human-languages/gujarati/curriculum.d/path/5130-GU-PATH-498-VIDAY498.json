@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-498-VIDAY498",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-498-VIDAY498"
+  ],
+  "after": []
+}

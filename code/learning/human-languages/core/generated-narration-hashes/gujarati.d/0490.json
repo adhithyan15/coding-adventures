@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:f635e28d659536e6",
+  "lessonIds": [
+    "GU-C490-sasro",
+    "GU-C490-diyar",
+    "GU-C490-nanand",
+    "GU-C490-jethani",
+    "GU-C490-gharsansar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch490.txt",
+  "json": "gujarati/narration/ch490.json",
+  "textHash": "fnv1a64:1903156c06e6f0d1",
+  "jsonHash": "fnv1a64:f747172a33c917ff",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:aeeb79d211f7c4fb",
+  "lessonIds": [
+    "UR-C275-munhasir",
+    "UR-C275-par-munhasir-hai",
+    "UR-C275-agar-vaqt-hota",
+    "UR-W275-six-lines",
+    "UR-R275-depends-and-would"
+  ],
+  "tex": "urdu/book/chapters/ch275-it-depends-and-what-would-have-been.tex"
+}

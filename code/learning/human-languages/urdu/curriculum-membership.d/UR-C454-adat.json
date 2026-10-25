@@ -1,0 +1,11 @@
+{
+  "id": "UR-C454-adat",
+  "pathSegment": "UR-PATH-454-CHARACTER454",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-454-CHARACTER454",
+      "order": 2
+    }
+  ]
+}

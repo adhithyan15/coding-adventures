@@ -1,0 +1,11 @@
+{
+  "id": "UR-C384-farakh-dil",
+  "pathSegment": "UR-PATH-384-TARBIYAT384",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-384-TARBIYAT384",
+      "order": 1
+    }
+  ]
+}

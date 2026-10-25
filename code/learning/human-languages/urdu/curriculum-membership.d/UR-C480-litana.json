@@ -1,0 +1,11 @@
+{
+  "id": "UR-C480-litana",
+  "pathSegment": "UR-PATH-480-CARE480",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-480-CARE480",
+      "order": 3
+    }
+  ]
+}

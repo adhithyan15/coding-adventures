@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:e77a89e12e2bd564",
+  "lessonIds": [
+    "GU-C377-dasa",
+    "GU-C377-sthir",
+    "GU-C377-samanya",
+    "GU-C377-badlavu",
+    "GU-C377-vanasvu"
+  ],
+  "tex": "gujarati/book/chapters/ch377-as-things-stand.tex"
+}

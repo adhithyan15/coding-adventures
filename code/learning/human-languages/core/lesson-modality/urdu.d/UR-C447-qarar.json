@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C447-qarar",
+    "language": "urdu",
+    "chapter": 447,
+    "sequence": 26370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f34c0099b25ce70a"
+  },
+  "findings": []
+}

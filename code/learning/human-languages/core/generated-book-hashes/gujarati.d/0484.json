@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:83de6bde07bf6f1c",
+  "lessonIds": [
+    "GU-C484-ilaj",
+    "GU-C484-upcar",
+    "GU-C484-nidan",
+    "GU-C484-matadvu",
+    "GU-C484-injeksan"
+  ],
+  "tex": "gujarati/book/chapters/ch484-finding-a-cure.tex"
+}

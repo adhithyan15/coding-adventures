@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:0b107b29576f1b0d",
+  "lessonIds": [
+    "UR-C511-tarkib",
+    "UR-C511-dastarkhvan",
+    "UR-C511-pakvana",
+    "UR-C511-phunkna",
+    "UR-C511-chakhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch511.txt",
+  "json": "urdu/narration/ch511.json",
+  "textHash": "fnv1a64:9d5c2d3c73069fe5",
+  "jsonHash": "fnv1a64:81788baf85f82170",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+[package]
+name = "edsac-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "Exact 18,095-DFF gate-level simulator for the 1949 EDSAC"
+license = "MIT"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+edsac-simulator = { path = "../edsac-simulator" }
+logic-gates = { path = "../logic-gates" }

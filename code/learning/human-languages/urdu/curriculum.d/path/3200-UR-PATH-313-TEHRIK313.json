@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-313-TEHRIK313",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "UR-EXT-313-TEHRIK313"
+  ],
+  "after": []
+}

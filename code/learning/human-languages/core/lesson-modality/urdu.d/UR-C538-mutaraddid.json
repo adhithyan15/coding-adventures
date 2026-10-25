@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C538-mutaraddid",
+    "language": "urdu",
+    "chapter": 538,
+    "sequence": 31260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc8da62469b56970"
+  },
+  "findings": []
+}

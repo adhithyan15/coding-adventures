@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:6130b6b45c5f550a",
+  "lessonIds": [
+    "UR-C478-chubhna",
+    "UR-C478-chira",
+    "UR-C478-tanka",
+    "UR-C478-pip",
+    "UR-C478-kuredna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch478.txt",
+  "json": "urdu/narration/ch478.json",
+  "textHash": "fnv1a64:98f352aea8dad764",
+  "jsonHash": "fnv1a64:039a899cfc678ce2",
+  "findings": []
+}

@@ -1,8 +1,8 @@
 [package]
 name = "javascript-iir-compiler"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
-description = "Bounded JavaScript parse tree (the generic GrammarASTNode CST from es2020.grammar, walked directly with no typed-AST lift, per LANG84) to InterpreterIR compiler and native vm-core runner"
+description = "Bounded JavaScript parse tree (the generic GrammarASTNode CST from one selected es<edition>.grammar, walked directly with no typed-AST lift, per LANG84) to InterpreterIR compiler and native vm-core runner"
 license = "MIT"
 
 [dependencies]
@@ -19,3 +19,5 @@ vm-core = { path = "../vm-core" }
 # Test oracle only: tests/cst_walk.rs checks the CST number decoding against
 # the typed AST's NumericLiteral values. Never a dependency of the compiler.
 coding-adventures-javascript-ast = { path = "../javascript-ast" }
+# tests/release_sweep.rs: the IIR-identity digest of each (case, release).
+coding_adventures_sha256 = { path = "../sha256" }

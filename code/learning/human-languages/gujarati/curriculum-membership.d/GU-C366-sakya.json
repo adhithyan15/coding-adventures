@@ -1,0 +1,11 @@
+{
+  "id": "GU-C366-sakya",
+  "pathSegment": "GU-PATH-366-SHARAT366",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-366-SHARAT366",
+      "order": 1
+    }
+  ]
+}

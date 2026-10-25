@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Luck and Fate",
+  "label": "ch:gu-luck-and-fate",
+  "canDo": "I can say what luck has to do with it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C368-nivadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can say what luck has to do with it.",
+    "assesses": [
+      "GU-LEX-C368-NASIB368-03",
+      "GU-LEX-C368-NASIB368-04",
+      "GU-LEX-C368-NASIB368-05"
+    ]
+  }
+}

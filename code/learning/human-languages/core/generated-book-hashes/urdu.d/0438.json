@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:07d1bff859438725",
+  "lessonIds": [
+    "UR-C438-chonch",
+    "UR-C438-pankh",
+    "UR-C438-ashiyana",
+    "UR-C438-chugna",
+    "UR-C438-shikar"
+  ],
+  "tex": "urdu/book/chapters/ch438-beaks-and-nests.tex"
+}

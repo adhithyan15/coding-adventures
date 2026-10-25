@@ -1,0 +1,11 @@
+{
+  "id": "UR-C488-susral",
+  "pathSegment": "UR-PATH-488-INLAWS488",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-488-INLAWS488",
+      "order": 1
+    }
+  ]
+}

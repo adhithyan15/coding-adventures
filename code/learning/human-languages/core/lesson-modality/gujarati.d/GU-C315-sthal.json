@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C315-sthal",
+    "language": "gujarati",
+    "chapter": 315,
+    "sequence": 17550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1a0767f2b35f31b"
+  },
+  "findings": []
+}

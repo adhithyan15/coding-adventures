@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:030158bcc7aa1f80",
+  "lessonIds": [
+    "UR-C432-tulu",
+    "UR-C432-ghurub",
+    "UR-C432-ufuq",
+    "UR-C432-shafaq",
+    "UR-C432-ujala",
+    "UR-R432-review-426-432"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch432.txt",
+  "json": "urdu/narration/ch432.json",
+  "textHash": "fnv1a64:399b4a9f3b5daadf",
+  "jsonHash": "fnv1a64:544000875cc1f5b0",
+  "findings": []
+}

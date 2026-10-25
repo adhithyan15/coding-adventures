@@ -1,0 +1,11 @@
+{
+  "id": "GU-C433-jholi",
+  "pathSegment": "GU-PATH-433-OUTFIT433",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-433-OUTFIT433",
+      "order": 1
+    }
+  ]
+}

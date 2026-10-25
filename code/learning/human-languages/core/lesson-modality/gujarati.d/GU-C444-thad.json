@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C444-thad",
+    "language": "gujarati",
+    "chapter": 444,
+    "sequence": 24610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ac4cfff553ab7bd"
+  },
+  "findings": []
+}

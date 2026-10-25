@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C494-bharti-karna",
+    "language": "urdu",
+    "chapter": 494,
+    "sequence": 29040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98f1be2a8a4555fc"
+  },
+  "findings": []
+}

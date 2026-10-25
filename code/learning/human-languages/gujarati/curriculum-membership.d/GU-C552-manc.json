@@ -1,0 +1,11 @@
+{
+  "id": "GU-C552-manc",
+  "pathSegment": "GU-PATH-552-MANCH552",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-552-MANCH552",
+      "order": 0
+    }
+  ]
+}

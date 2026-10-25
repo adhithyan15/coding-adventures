@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C306-dhamaka",
+    "language": "urdu",
+    "chapter": 306,
+    "sequence": 18530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b01509b826810272"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:6c4474cafe0436cf",
+  "lessonIds": [
+    "GU-C425-lon",
+    "GU-C425-hapto",
+    "GU-C425-dalal",
+    "GU-C425-giro",
+    "GU-C425-cukte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch425.txt",
+  "json": "gujarati/narration/ch425.json",
+  "textHash": "fnv1a64:f94b99db41972994",
+  "jsonHash": "fnv1a64:aa4f346cd1f7c7e4",
+  "findings": []
+}

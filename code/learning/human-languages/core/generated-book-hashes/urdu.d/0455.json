@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:57a1dd6b773142a6",
+  "lessonIds": [
+    "UR-C455-khami",
+    "UR-C455-aib",
+    "UR-C455-khudsar",
+    "UR-C455-kahil",
+    "UR-C455-ghafil",
+    "UR-R455-review-448-455"
+  ],
+  "tex": "urdu/book/chapters/ch455-faults-and-flaws.tex"
+}

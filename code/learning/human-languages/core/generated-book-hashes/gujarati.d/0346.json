@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:188eeb57b3fd51d4",
+  "lessonIds": [
+    "GU-C346-dakhlo",
+    "GU-C346-udaharan",
+    "GU-C346-tark",
+    "GU-C346-judu",
+    "GU-C346-sarkhavvu",
+    "GU-R346-review-339-346"
+  ],
+  "tex": "gujarati/book/chapters/ch346-for-example.tex"
+}

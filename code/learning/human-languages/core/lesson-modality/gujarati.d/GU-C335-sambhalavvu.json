@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C335-sambhalavvu",
+    "language": "gujarati",
+    "chapter": 335,
+    "sequence": 18600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce0a1cc398e85ba4"
+  },
+  "findings": []
+}

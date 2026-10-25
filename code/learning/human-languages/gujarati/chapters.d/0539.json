@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Making Up My Mind",
+  "label": "ch:gu-making-up-my-mind",
+  "canDo": "I can say that I have made up my mind.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C539-niscay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can say that I have made up my mind.",
+    "assesses": [
+      "GU-LEX-C539-MAKKAM539-03",
+      "GU-LEX-C539-MAKKAM539-04",
+      "GU-LEX-C539-MAKKAM539-05"
+    ]
+  }
+}

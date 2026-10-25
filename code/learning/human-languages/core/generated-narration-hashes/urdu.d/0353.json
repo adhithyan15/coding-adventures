@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:23d718e36e32bdc5",
+  "lessonIds": [
+    "UR-C353-nazariya",
+    "UR-C353-istisna",
+    "UR-C353-haqiqi",
+    "UR-C353-tikna",
+    "UR-C353-manvana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch353.txt",
+  "json": "urdu/narration/ch353.json",
+  "textHash": "fnv1a64:2f206667232fbd77",
+  "jsonHash": "fnv1a64:e8296d9b00d21af2",
+  "findings": []
+}

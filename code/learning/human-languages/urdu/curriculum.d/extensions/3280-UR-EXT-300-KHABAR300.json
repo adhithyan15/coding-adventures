@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-300-KHABAR300",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what the news reported.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Smells and Itches",
+  "label": "ch:ur-smells-and-itches",
+  "canDo": "I can talk about smells and itches.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C468-kharish",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can talk about smells and itches.",
+    "assesses": [
+      "UR-LEX-C468-SMELL468-03",
+      "UR-LEX-C468-SMELL468-04",
+      "UR-LEX-C468-SMELL468-05"
+    ]
+  }
+}

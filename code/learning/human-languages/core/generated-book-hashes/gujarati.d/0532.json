@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:a7c249791c5c0386",
+  "lessonIds": [
+    "GU-C532-posavu",
+    "GU-C532-gaju",
+    "GU-C532-nabhvu",
+    "GU-C532-anukul",
+    "GU-C532-rajinamu",
+    "GU-R532-review-525-532"
+  ],
+  "tex": "gujarati/book/chapters/ch532-can-we-manage-it.tex"
+}

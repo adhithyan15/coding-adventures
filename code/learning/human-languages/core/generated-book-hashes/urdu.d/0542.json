@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:08e345e2be6c94a1",
+  "lessonIds": [
+    "UR-C542-baharhal",
+    "UR-C542-khair",
+    "UR-C542-bilkhusus",
+    "UR-C542-nukta",
+    "UR-C542-khulasa"
+  ],
+  "tex": "urdu/book/chapters/ch542-anyway.tex"
+}

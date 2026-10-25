@@ -1,0 +1,11 @@
+{
+  "id": "UR-C361-bitna",
+  "pathSegment": "UR-PATH-361-IMKAN361",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-361-IMKAN361",
+      "order": 4
+    }
+  ]
+}

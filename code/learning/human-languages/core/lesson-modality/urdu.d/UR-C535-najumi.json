@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C535-najumi",
+    "language": "urdu",
+    "chapter": 535,
+    "sequence": 31130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76de769a367f5335"
+  },
+  "findings": []
+}

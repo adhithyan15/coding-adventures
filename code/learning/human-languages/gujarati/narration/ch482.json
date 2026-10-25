@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 482,
+  "title": "A Bad Fall",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:691a2a845f5f0141",
+  "lessons": [
+    {
+      "id": "GU-C482-kakhghodi",
+      "sequence": 26790,
+      "title": "કાખઘોડી (kākhghoḍī) — a crutch",
+      "headword": "કાખઘોડી",
+      "romanization": "kākhghoḍī",
+      "gloss": "a crutch",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:189863f4df0d0133",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to ooze, then the Gujarati for to get grazed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કાખઘોડી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાખઘોડી — kākhghoḍī — \"a crutch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પડ્યા પછી દાદા કાખઘોડીથી ચાલે છે. paḍyā pachī dādā kākhghoḍīthī cāle che. Since his fall my grandfather walks with a crutch."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાખઘોડી (kākhghoḍī) is built from kākh, \"armpit\", which CDIAL lists under Sanskrit kakṣa (CDIAL 2588), and ghoḍī, \"a little horse\", from the family of ઘોડો (ghoḍo) (CDIAL 4516): a little horse under the arm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kākhghoḍī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kākhghoḍī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kākhghoḍī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kākhghoḍī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḍyā pachī dādā kākhghoḍīthī cāle che. — Since his fall my grandfather walks with a crutch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḍyā pachī dādā kākhghoḍīthī cāle che.* — Since his fall my grandfather walks with a crutch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to ooze, then the Gujarati for to get grazed, then say kākhghoḍī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to ooze, then the Gujarati for to get grazed, then say *kākhghoḍī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કાખઘોડી (kākhghoḍī) mean? (\"A crutch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C482-dhimdu",
+      "sequence": 26800,
+      "title": "ઢીમડું (ḍhīmḍũ) — a bump (from a knock)",
+      "headword": "ઢીમડું",
+      "romanization": "ḍhīmḍũ",
+      "gloss": "a bump (from a knock)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cdc15be02432e43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to get grazed, then the Gujarati for a crutch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઢીમડું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઢીમડું — ḍhīmḍũ — \"a bump (from a knock)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારા માથા પર મોટું ઢીમડું થયું. mārā māthā par moṭũ ḍhīmḍũ thayũ. A big bump came up on my head."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઢીમડું (ḍhīmḍũ) goes back to a reconstructed ḍhīmma-, \"lump\"; CDIAL lists the Gujarati word, \"big swelling or bump\" (CDIAL 5591)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhīmḍũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhīmḍũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhīmḍũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhīmḍũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārā māthā par moṭũ ḍhīmḍũ thayũ. — A big bump came up on my head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārā māthā par moṭũ ḍhīmḍũ thayũ.* — A big bump came up on my head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to get grazed, then the Gujarati for a crutch, then say ḍhīmḍũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to get grazed, then the Gujarati for a crutch, then say *ḍhīmḍũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઢીમડું (ḍhīmḍũ) mean? (\"A bump (from a knock)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C482-phulvu",
+      "sequence": 26810,
+      "title": "ફૂલવું (phūlvũ) — to swell up; to puff out",
+      "headword": "ફૂલવું",
+      "romanization": "phūlvũ",
+      "gloss": "to swell up; to puff out",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66d464249b21403a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a crutch, then the Gujarati for a bump."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ફૂલવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફૂલવું — phūlvũ — \"to swell up; to puff out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પડ્યા પછી પગની ઘૂંટી ફૂલી ગઈ. paḍyā pachī pagnī ghū̃ṭī phūlī gaī. After the fall my ankle swelled up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે ઘૂંટી ફૂલી ગઈ, te ghū̃ṭī phūlī gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફૂલવું (phūlvũ) is inherited from Sanskrit phullati, \"expands, opens like a flower\"; CDIAL lists the Gujarati verb, \"to swell, blossom\" (CDIAL 9093)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phūlvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phūlvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phūlvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phūlvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḍyā pachī pagnī ghū̃ṭī phūlī gaī. — After the fall my ankle swelled up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḍyā pachī pagnī ghū̃ṭī phūlī gaī.* — After the fall my ankle swelled up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a crutch, then the Gujarati for a bump, then say phūlvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a crutch, then the Gujarati for a bump, then say *phūlvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ફૂલવું (phūlvũ) mean? (\"To swell up; to puff out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C482-cattu",
+      "sequence": 26820,
+      "title": "ચત્તું (cattũ) — flat on one's back",
+      "headword": "ચત્તું",
+      "romanization": "cattũ",
+      "gloss": "flat on one's back",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58dd9237f7e3c1fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a bump, then the Gujarati for to swell up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચત્તું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચત્તું — cattũ — \"flat on one's back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તે ભીની ભોંય પર ચત્તો પડ્યો. te bhīnī bhõy par catto paḍyo. He fell flat on his back on the wet floor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચત્તું (cattũ) goes back to a reconstructed citta-, \"lying on the back\"; CDIAL lists the Gujarati word (CDIAL 4800)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cattũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cattũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cattũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cattũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te bhīnī bhõy par catto paḍyo. — He fell flat on his back on the wet floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te bhīnī bhõy par catto paḍyo.* — He fell flat on his back on the wet floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a bump, then the Gujarati for to swell up, then say cattũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a bump, then the Gujarati for to swell up, then say *cattũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચત્તું (cattũ) mean? (\"Flat on one's back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C482-aphalvu",
+      "sequence": 26830,
+      "title": "અફાળવું (aphāḷvũ) — to bang; to dash against",
+      "headword": "અફાળવું",
+      "romanization": "aphāḷvũ",
+      "gloss": "to bang; to dash against",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:258d08565d2152bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to swell up, then the Gujarati for flat on one's back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અફાળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અફાળવું — aphāḷvũ — \"to bang; to dash against\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અંધારામાં મેં માથું દીવાલ સાથે અફાળ્યું. andhārāmā̃ mẽ māthũ dīvāl sāthe aphāḷyũ. In the dark I banged my head on the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે માથું અફાળ્યું, teṇe māthũ aphāḷyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અફાળવું (aphāḷvũ) is inherited from Sanskrit āsphālayati, \"causes to flap, shakes, throws\"; CDIAL lists the Gujarati verb, \"to dash against\" (CDIAL 1531)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aphāḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aphāḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aphāḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aphāḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andhārāmā̃ mẽ māthũ dīvāl sāthe aphāḷyũ. — In the dark I banged my head on the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andhārāmā̃ mẽ māthũ dīvāl sāthe aphāḷyũ.* — In the dark I banged my head on the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to swell up, then the Gujarati for flat on one's back, then say aphāḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to swell up, then the Gujarati for flat on one's back, then say *aphāḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અફાળવું (aphāḷvũ) mean? (\"To bang; to dash against\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

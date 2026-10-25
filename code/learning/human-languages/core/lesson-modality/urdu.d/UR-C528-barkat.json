@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C528-barkat",
+    "language": "urdu",
+    "chapter": 528,
+    "sequence": 30740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9097128d1e076257"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Claims and Denials",
+  "label": "ch:ur-claims-and-denials",
+  "canDo": "I can report what someone denied and what was admitted.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C303-haqiqat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can report what someone denied and what was admitted.",
+    "assesses": [
+      "UR-LEX-C303-INKAR303-03",
+      "UR-LEX-C303-INKAR303-04",
+      "UR-LEX-C303-INKAR303-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 323,
+  "title": "Old Customs",
+  "label": "ch:ur-old-customs",
+  "canDo": "I can explain an old custom and how it is kept.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-R323-review-316-323",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can explain an old custom and how it is kept.",
+    "assesses": [
+      "UR-LEX-C323-RIVAJ323-01",
+      "UR-LEX-C323-RIVAJ323-02",
+      "UR-LEX-C323-RIVAJ323-03",
+      "UR-LEX-C323-RIVAJ323-04",
+      "UR-LEX-C323-RIVAJ323-05"
+    ]
+  }
+}

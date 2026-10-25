@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:7a423674fbab73bf",
+  "lessonIds": [
+    "GU-C389-nirnay",
+    "GU-C389-marji",
+    "GU-C389-dvidha",
+    "GU-C389-khackavu",
+    "GU-C389-dagvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch389.txt",
+  "json": "gujarati/narration/ch389.json",
+  "textHash": "fnv1a64:f97d97dcbcc8b6c3",
+  "jsonHash": "fnv1a64:9ec95845c1dfcf41",
+  "findings": []
+}

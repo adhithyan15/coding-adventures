@@ -1,0 +1,923 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 385,
+  "title": "Choosing What to Study",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:1bf3a66303f694e0",
+  "lessons": [
+    {
+      "id": "UR-C385-vazifa",
+      "sequence": 22760,
+      "title": "وظیفہ (vazīfā) — a scholarship; a stipend",
+      "headword": "وظیفہ",
+      "romanization": "vazīfā",
+      "gloss": "a scholarship; a stipend",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5dd066a81d7a1c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for pampering, then the Urdu for to learn by rote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وظیفہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وظیفہ — vazīfā — \"a scholarship; a stipend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر مجھے وظیفہ ملا تو میں یونیورسٹی جاؤں گا۔ agar mujhe vazīfā milā to maiṅ yūnīvarsiṭī jāūṅ gā. If I get a scholarship, I will go to university."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وظیفہ (vazīfā) is usually traced, through Persian, to Arabic waẓīfa, \"a duty; an allowance\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vazīfā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vazīfā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vazīfā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vazīfā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar mujhe vazīfā milā to maiṅ yūnīvarsiṭī jāūṅ gā. — If I get a scholarship, I will go to university.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar mujhe vazīfā milā to maiṅ yūnīvarsiṭī jāūṅ gā.* — If I get a scholarship, I will go to university.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for pampering, then the Urdu for to learn by rote, then say vazīfā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for pampering, then the Urdu for to learn by rote, then say *vazīfā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وظیفہ (vazīfā) mean? (\"A scholarship; a stipend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C385-farq",
+      "sequence": 22770,
+      "title": "فرق (farq) — a difference",
+      "headword": "فرق",
+      "romanization": "farq",
+      "gloss": "a difference",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5993e7c563f1e07c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to learn by rote, then the Urdu for a scholarship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فرق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فرق — farq — \"a difference\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر دونوں میں فرق نہیں تو سستا خریدیے۔ agar donoṅ meṅ farq nahīṅ to sastā kharīdiye. If there is no difference between them, buy the cheaper one."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فرق (farq) is usually traced, through Persian, to Arabic farq, \"separating, a parting\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar donoṅ meṅ farq nahīṅ to sastā kharīdiye. — If there is no difference between them, buy the cheaper one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar donoṅ meṅ farq nahīṅ to sastā kharīdiye.* — If there is no difference between them, buy the cheaper one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to learn by rote, then the Urdu for a scholarship, then say farq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to learn by rote, then the Urdu for a scholarship, then say *farq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فرق (farq) mean? (\"A difference\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C385-mauzu",
+      "sequence": 22780,
+      "title": "موضوع (mauzū) — a topic; a subject (of study)",
+      "headword": "موضوع",
+      "romanization": "mauzū",
+      "gloss": "a topic; a subject (of study)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:824991a69c59b277",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a scholarship, then the Urdu for a difference."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: موضوع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "موضوع — mauzū — \"a topic; a subject (of study)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر یہ موضوع مشکل ہے تو دوسرا چنیے۔ agar yih mauzū mushkil hai to dūsrā chuniye. If this topic is hard, choose another."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "موضوع (mauzū) is usually traced, through Persian, to Arabic mawḍūʿ, \"something laid down\": the matter set before you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mauzū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mauzū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mauzū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mauzū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar yih mauzū mushkil hai to dūsrā chuniye. — If this topic is hard, choose another.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar yih mauzū mushkil hai to dūsrā chuniye.* — If this topic is hard, choose another.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a scholarship, then the Urdu for a difference, then say mauzū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a scholarship, then the Urdu for a difference, then say *mauzū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does موضوع (mauzū) mean? (\"A topic; a subject (of study)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C385-dakhila",
+      "sequence": 22790,
+      "title": "داخلہ (dākhilā) — admission (to a school or college)",
+      "headword": "داخلہ",
+      "romanization": "dākhilā",
+      "gloss": "admission (to a school or college)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa2f8982b2a69198",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a difference, then the Urdu for a topic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: داخلہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "داخلہ — dākhilā — \"admission (to a school or college)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر نمبر اچھے ہوئے تو کالج میں داخلہ ملے گا۔ agar nambar achchhe hue to kālij meṅ dākhilā mile gā. If the marks are good, there will be a place at college."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "داخلہ (dākhilā) is usually traced, through Persian, to Arabic dākhil, \"entering, inside\": a way in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dākhilā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dākhilā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dākhilā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dākhilā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar nambar achchhe hue to kālij meṅ dākhilā mile gā. — If the marks are good, there will be a place at college.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar nambar achchhe hue to kālij meṅ dākhilā mile gā.* — If the marks are good, there will be a place at college.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a difference, then the Urdu for a topic, then say dākhilā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a difference, then the Urdu for a topic, then say *dākhilā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does داخلہ (dākhilā) mean? (\"Admission (to a school or college)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C385-tarjih-dena",
+      "sequence": 22800,
+      "title": "ترجیح دینا (tarjīh denā) — to prefer; to give priority to",
+      "headword": "ترجیح دینا",
+      "romanization": "tarjīh denā",
+      "gloss": "to prefer; to give priority to",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80ee647094829182",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a topic, then the Urdu for admission."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ترجیح دینا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترجیح دینا — tarjīh denā — \"to prefer; to give priority to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر انتخاب میرا ہوتا تو میں تاریخ کو ترجیح دیتا۔ agar intikhāb merā hotā to maiṅ tārīkh ko tarjīh detā. If the choice were mine, I would pick history."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے ترجیح دی, us ne tarjīh dī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترجیح دینا (tarjīh denā) is built from tarjīh, usually traced, through Persian, to Arabic tarjīḥ, \"giving more weight (to one side)\", and دینا, \"to give\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarjīh denā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarjīh denā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarjīh denā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarjīh denā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar intikhāb merā hotā to maiṅ tārīkh ko tarjīh detā. — If the choice were mine, I would pick history.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar intikhāb merā hotā to maiṅ tārīkh ko tarjīh detā.* — If the choice were mine, I would pick history.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a topic, then the Urdu for admission, then say tarjīh denā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a topic, then the Urdu for admission, then say *tarjīh denā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ترجیح دینا (tarjīh denā) mean? (\"To prefer; to give priority to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R385-review-379-385",
+      "sequence": 22810,
+      "title": "Looking back: from Effort to Choosing What to Study",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Effort to Choosing What to Study",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7dafc173499d270",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for hard work and enthusiasm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hard work, enthusiasm, dedication, without a break, to go over again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hard work, enthusiasm, dedication, without a break, to go over again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a method, practice, nerve, to occur to, to get down to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a method, practice, nerve, to occur to, to get down to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "successful, a feat, pride, a marvel, well done",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: successful, a feat, pride, a marvel, well done]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a prize, an award, a medal, deserving, to tidy up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a prize, an award, a medal, deserving, to tidy up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "approval, an arrangement, absolute, to rake in, to fail an exam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: approval, an arrangement, absolute, to rake in, to fail an exam]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upbringing, generous, manners, pampering, to learn by rote",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: upbringing, generous, manners, pampering, to learn by rote]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scholarship, a difference, a topic, admission, to prefer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scholarship, a difference, a topic, admission, to prefer]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hard work? (محنت, mehnat.) Enthusiasm? (جوش, josh.) Dedication? (لگن, lagan.) Without a break? (مسلسل, musalsal.) To go over again? (دہرانا, dohrānā.) A method? (طریقہ, tarīqā.) Practice? (مشق, mashq.) Nerve? (ہمت, himmat.) To occur to? (سوجھنا, sūjhnā.) To get down to? (جٹنا, juṭnā.) Successful? (کامیاب, kāmyāb.) A feat? (کارنامہ, kārnāmā.) Pride? (فخر, fakhr.) A marvel? (کمال, kamāl.) Well done? (شاباش, shābāsh.) A prize? (انعام, inām.) An award? (اعزاز, ezāz.) A medal? (تمغہ, tamghā.) Deserving? (مستحق, mustahiq.) To tidy up? (سنوارنا, sanvārnā.) Approval? (منظوری, manzūrī.) An arrangement? (انتظام, intizām.) Absolute? (قطعی, qatī.) To rake in? (بٹورنا, baṭornā.) To fail an exam? (فیل ہونا, fel honā.) Upbringing? (تربیت, tarbiyat.) Generous? (فراخ دل, farākh-dil.) Manners? (آداب, ādāb.) Pampering? (لاڈ, lāḍ.) To learn by rote? (رٹنا, raṭnā.) A scholarship? (وظیفہ, vazīfā.) A difference? (فرق, farq.) A topic? (موضوع, mauzū.) Admission? (داخلہ, dākhilā.) To prefer? (ترجیح دینا, tarjīh denā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R385-review-final-385",
+      "sequence": 22820,
+      "title": "Choosing What to Study — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e7e3dacdf3a5a9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for a scholarship and a difference."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scholarship, a difference, a topic, admission, to prefer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scholarship, a difference, a topic, admission, to prefer]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A scholarship? (وظیفہ, vazīfā.) A difference? (فرق, farq.) A topic? (موضوع, mauzū.) Admission? (داخلہ, dākhilā.) To prefer? (ترجیح دینا, tarjīh denā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

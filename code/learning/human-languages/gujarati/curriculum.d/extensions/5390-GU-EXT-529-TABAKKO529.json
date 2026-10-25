@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-529-TABAKKO529",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what happens if a stage goes well or is left half done.",
+  "prerequisites": []
+}

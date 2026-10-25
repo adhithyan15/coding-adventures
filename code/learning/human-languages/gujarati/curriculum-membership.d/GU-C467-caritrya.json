@@ -1,0 +1,11 @@
+{
+  "id": "GU-C467-caritrya",
+  "pathSegment": "GU-PATH-467-VARTAN467",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-467-VARTAN467",
+      "order": 3
+    }
+  ]
+}

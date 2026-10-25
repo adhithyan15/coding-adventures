@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:3acdb676f57955b6",
+  "lessonIds": [
+    "GU-C516-cuno",
+    "GU-C516-dholvu-whitewash",
+    "GU-C516-rang",
+    "GU-C516-rangvu",
+    "GU-C516-lipvu",
+    "GU-R516-review-509-516"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch516.txt",
+  "json": "gujarati/narration/ch516.json",
+  "textHash": "fnv1a64:073d4e43b78362da",
+  "jsonHash": "fnv1a64:7d5d38a376c1890f",
+  "findings": []
+}

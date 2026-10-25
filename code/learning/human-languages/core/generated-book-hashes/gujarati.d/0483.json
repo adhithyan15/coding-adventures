@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:ab157de5986b1574",
+  "lessonIds": [
+    "GU-C483-vedna",
+    "GU-C483-casko",
+    "GU-C483-khucvu",
+    "GU-C483-tarphadvu",
+    "GU-C483-dah"
+  ],
+  "tex": "gujarati/book/chapters/ch483-where-it-hurts.tex"
+}

@@ -85,7 +85,7 @@ release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_st
 2.1.1c1,2001-07-13?,rc,https://github.com/python/cpython/tree/v2.1.1c1,ee01a5e5199e2fb13496facec18c3de0db35fe8a,2.1,pending,none,-,-,-,-,tag-commit,line
 2.1.1,2001-07-20?,final,https://github.com/python/cpython/tree/v2.1.1,112d20d5274acbb606acfe3594fd10aa10287b52,2.1.1c1,pending,none,-,-,-,-,tag-commit,line
 2.2a3,2001-09-07,alpha,https://github.com/python/cpython/tree/v2.2a3,f7adf2f473966ef33f6079ceb7115cb6cde3b521,2.1,pending,none,-,-,-,-,NEWS,branch-point
-2.2,2001-12-21,final,https://github.com/python/cpython/tree/v2.2,2d0f5aa9a14f63854dc1d4633effa7a24b9553a7,2.2a3,pending,none,-,-,-,-,NEWS,line
+2.2,2001-12-21,final,https://github.com/python/cpython/tree/v2.2,2d0f5aa9a14f63854dc1d4633effa7a24b9553a7,2.2a3,partial,P,py2-int-print,py2-int-print,py2-int-print,py2,NEWS,line
 2.1.2c1,2002-01-10?,rc,https://github.com/python/cpython/tree/v2.1.2c1,5c1b22b093f6adf6113b0063a543988e2e28c005,2.1.1,pending,none,-,-,-,-,tag-commit,line
 2.1.2,2002-01-15?,final,https://github.com/python/cpython/tree/v2.1.2,cadb4c842b99e01fb0d1ab31d5c32e3e94d643db,2.1.2c1,pending,none,-,-,-,-,tag-commit,line
 2.2.1c1,2002-03-18,rc,https://github.com/python/cpython/tree/v2.2.1c1,0832165c43cc059ca2d8de0bef09990f6ebdcae0,2.2,pending,none,-,-,-,-,NEWS,line
@@ -111,7 +111,7 @@ release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_st
 2.4b1,2004-10-15,beta,https://github.com/python/cpython/tree/v2.4b1,2d1a50ca13309d10517d3eac59b90fdfa156b8a2,2.4a3,pending,none,-,-,-,-,NEWS,line
 2.4b2,2004-11-03,beta,https://github.com/python/cpython/tree/v2.4b2,7348bad5b5a8464be1eed04745d77b4f3c8edd76,2.4b1,pending,none,-,-,-,-,NEWS,line
 2.4c1,2004-11-18,rc,https://github.com/python/cpython/tree/v2.4c1,5a2bc5f6164050bc3e106768e9aea31364efd99a,2.4b2,pending,none,-,-,-,-,NEWS,line
-2.4,2004-11-30,final,https://github.com/python/cpython/tree/v2.4,3a833f748fc629d25a5af3faeef91447f4709804,2.4c1,pending,none,-,-,-,-,NEWS,line
+2.4,2004-11-30,final,https://github.com/python/cpython/tree/v2.4,3a833f748fc629d25a5af3faeef91447f4709804,2.4c1,partial,P,py2-int-print,py2-int-print,py2-int-print,py2,NEWS,line
 2.3.5c1,2005-01-26,rc,https://github.com/python/cpython/tree/v2.3.5c1,4ac0fc8c3b11a4b760159f9f87661824b20958aa,2.3.4,pending,none,-,-,-,-,NEWS,line
 2.3.5,2005-02-08,final,https://github.com/python/cpython/tree/v2.3.5,648aa1db46291bd40c37c08329c18676031f301a,2.3.5c1,pending,none,-,-,-,-,NEWS,line
 2.4.1c1,2005-03-10,rc,https://github.com/python/cpython/tree/v2.4.1c1,4f7f6167d108c0fbc588aaaef1f40eb8fb404891,2.4,pending,none,-,-,-,-,NEWS,line
@@ -159,7 +159,7 @@ release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_st
 2.6rc1,2008-09-12,rc,https://github.com/python/cpython/tree/v2.6rc1,f5f9d99974febbff6d4d55ef36bbfa0c71ed0738,2.6b3,pending,none,-,-,-,-,NEWS,line
 3.0rc1,2008-09-17,rc,https://github.com/python/cpython/tree/v3.0rc1,b88548069599f949c5b451ef95be739241711e24,3.0b3,pending,none,-,-,-,-,NEWS,line
 2.6rc2,2008-09-17,rc,https://github.com/python/cpython/tree/v2.6rc2,6af16190f6657fc482d84b4c4e3bdfc2c63d8a42,2.6rc1,pending,none,-,-,-,-,NEWS,line
-2.6,2008-10-01,final,https://github.com/python/cpython/tree/v2.6,5927786e61c62bd6b28031f5f9b851411cf1cb00,2.6rc2,pending,none,-,-,-,-,NEWS,line
+2.6,2008-10-01,final,https://github.com/python/cpython/tree/v2.6,5927786e61c62bd6b28031f5f9b851411cf1cb00,2.6rc2,partial,P,py2-int-print,py2-int-print,py2-int-print,py2,NEWS,line
 3.0rc2,2008-11-05,rc,https://github.com/python/cpython/tree/v3.0rc2,d434e9f672961946e8c2cbe603f23dd275546bb2,3.0rc1,pending,none,-,-,-,-,NEWS,line
 3.0rc3,2008-11-20,rc,https://github.com/python/cpython/tree/v3.0rc3,43baef41fdf4b448d74fbd88ca738b1f4ddc6670,3.0rc2,pending,none,-,-,-,-,NEWS,line
 3.0,2008-12-03,final,https://github.com/python/cpython/tree/v3.0,6046c5e0298c25515ea58abc8ab87f7413e3f743,3.0rc3,pending,none,-,-,-,-,NEWS,line
@@ -340,7 +340,7 @@ release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_st
 3.6.0rc1,2016-12-06,rc,https://github.com/python/cpython/tree/v3.6.0rc1,ad2c2d380e7ebbd31712ceb59e87e84b8a7c131d,3.6.0b4,pending,none,-,-,-,-,NEWS,line
 3.6.0rc2,2016-12-16,rc,https://github.com/python/cpython/tree/v3.6.0rc2,f7b280956df077b90c5983eeabc8accdbb0aeb8d,3.6.0rc1,pending,none,-,-,-,-,NEWS,line
 2.7.13,2016-12-17,final,https://github.com/python/cpython/tree/v2.7.13,9c1426de7521299f70eb5483e7e25d1c2a73dbbd,2.7.13rc1,pending,none,-,-,-,-,NEWS,line
-3.6.0,2016-12-23,final,https://github.com/python/cpython/tree/v3.6.0,5c4568a05a0a62b5947c55f68f9f2ecfb90a4f12,3.6.0rc2,pending,none,-,-,-,-,NEWS,line
+3.6.0,2016-12-23,final,https://github.com/python/cpython/tree/v3.6.0,5c4568a05a0a62b5947c55f68f9f2ecfb90a4f12,3.6.0rc2,partial,P,py-int-print,py-int-print,py-int-print,py3,NEWS,line
 3.4.6rc1,2017-01-02,rc,https://github.com/python/cpython/tree/v3.4.6rc1,d12551fe71ffa19cc57986b06c2097b4b87949a4,3.4.5,pending,none,-,-,-,-,NEWS,line
 3.5.3rc1,2017-01-02,rc,https://github.com/python/cpython/tree/v3.5.3rc1,b32a03430f3632493516b97e9b85b9fb9abb81b3,3.5.2,pending,none,-,-,-,-,NEWS,line
 3.5.3,2017-01-16,final,https://github.com/python/cpython/tree/v3.5.3,51ba5b7d0c194b0c2b1e5d647e70e3538b8dde3e,3.5.3rc1,pending,none,-,-,-,-,NEWS,line
@@ -445,7 +445,7 @@ release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_st
 3.7.7,2020-03-10,final,https://github.com/python/cpython/tree/v3.7.7,d7c567b08f9d7d6aef21b881340a2b72731129db,3.7.7rc1,pending,none,-,-,-,-,NEWS,line
 3.9.0a5,2020-03-23,alpha,https://github.com/python/cpython/tree/v3.9.0a5,dcd4c4f9c9f9fb75ad4c1f138a285fbe19a9cb61,3.9.0a4,pending,none,-,-,-,-,NEWS,line
 2.7.18rc1,2020-04-04,rc,https://github.com/python/cpython/tree/v2.7.18rc1,7a41638b5b183d0b9b27449d502d0a15001134ee,2.7.17,pending,none,-,-,-,-,NEWS,line
-2.7.18,2020-04-19,final,https://github.com/python/cpython/tree/v2.7.18,8d21aa21f2cbc6d50aab3f420bb23be1d081dac4,2.7.18rc1,pending,none,-,-,-,-,NEWS,line
+2.7.18,2020-04-19,final,https://github.com/python/cpython/tree/v2.7.18,8d21aa21f2cbc6d50aab3f420bb23be1d081dac4,2.7.18rc1,partial,P,py2-int-print,py2-int-print,py2-int-print,py2,NEWS,line
 3.9.0a6,2020-04-27,alpha,https://github.com/python/cpython/tree/v3.9.0a6,bc1c8af8ef2563802767404c78c8ec6d6a967897,3.9.0a5,pending,none,-,-,-,-,NEWS,line
 3.8.3rc1,2020-04-29,rc,https://github.com/python/cpython/tree/v3.8.3rc1,802eb676bad7a2558fdf35a8ea5882f5e97c2ad8,3.8.2,pending,none,-,-,-,-,NEWS,line
 3.8.3,2020-05-13,final,https://github.com/python/cpython/tree/v3.8.3,6f8c8320e9eac9bc7a7f653b43506e75916ce8e8,3.8.3rc1,pending,none,-,-,-,-,NEWS,line
@@ -465,7 +465,7 @@ release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_st
 3.7.9,2020-08-15,final,https://github.com/python/cpython/tree/v3.7.9,13c94747c74437e594b7fc242ff7da668e81887c,3.7.8,pending,none,-,-,-,-,NEWS,line
 3.6.12,2020-08-15,final,https://github.com/python/cpython/tree/v3.6.12,c0a9afe2ac1820409e6173bd1893ebee2cf50270,3.6.11,pending,none,-,-,-,-,NEWS,line
 3.5.10rc1,2020-08-19,rc,https://github.com/python/cpython/tree/v3.5.10rc1,e53c98563824cbb2f296f1de1f2185a7b5271cd6,3.5.9,pending,none,-,-,-,-,NEWS,line
-3.5.10,2020-09-05,final,https://github.com/python/cpython/tree/v3.5.10,426b022776672fdf3d71ddd98d89af341c88080f,3.5.10rc1,pending,none,-,-,-,-,NEWS,line
+3.5.10,2020-09-05,final,https://github.com/python/cpython/tree/v3.5.10,426b022776672fdf3d71ddd98d89af341c88080f,3.5.10rc1,partial,P,py-int-print,py-int-print,py-int-print,py3,NEWS,line
 3.8.6rc1,2020-09-07,rc,https://github.com/python/cpython/tree/v3.8.6rc1,08bd63da6e64c49130d244ecf8f246089b9c5d9f,3.8.5,pending,none,-,-,-,-,NEWS,line
 3.9.0rc2,2020-09-16,rc,https://github.com/python/cpython/tree/v3.9.0rc2,2bd31b5fde32194a63ca1e782e2578c6bd2ba759,3.9.0rc1,pending,none,-,-,-,-,NEWS,line
 3.8.6,2020-09-23,final,https://github.com/python/cpython/tree/v3.8.6,db455296be5f792b8c12b7cd7f3962b52e4f44ee,3.8.6rc1,pending,none,-,-,-,-,NEWS,line

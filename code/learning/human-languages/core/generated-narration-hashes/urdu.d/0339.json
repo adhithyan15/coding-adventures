@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:fe4cb9ed5e087c0d",
+  "lessonIds": [
+    "UR-C339-ikhtiyar",
+    "UR-C339-insaf",
+    "UR-C339-munasib",
+    "UR-C339-amal-karna",
+    "UR-C339-ada-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch339.txt",
+  "json": "urdu/narration/ch339.json",
+  "textHash": "fnv1a64:058e8b36208808b1",
+  "jsonHash": "fnv1a64:094273d80d9d6e63",
+  "findings": []
+}
