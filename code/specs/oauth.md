@@ -1326,6 +1326,23 @@ establish trust, check the responder certificate's revocation, fetch or cache
 revocation data, read a clock, perform TLS or HTTP, authorize OAuth transport,
 or grant network authority. Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-authenticated-responder` composition now consumes one
+exact `ResponderID`-to-certificate binding and complete responder-certificate
+policy. It rejects evidence retained from distinct decoded certificate objects
+before cryptographic work, derives and validates the RSA public key from that
+same policy-retained certificate under caller-owned strength and resource
+limits, and uses the repository-owned RSA PKCS #1 v1.5 SHA-256 verifier on the
+exact response retained by the identifier binding. Its non-copyable result
+retains the identifier, certificate-policy, and response-signature evidence so
+the matched response, policy-approved candidate, or verified key cannot be
+silently substituted. This authenticates only one policy-approved delegated
+responder candidate to one response. It does not prove that the target
+certificate's issuer signed or authorized the responder certificate, construct
+or validate a responder path, establish trust, check responder-certificate
+revocation, bind a `CertID` or revocation decision, fetch or cache data, read a
+clock, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS remains unavailable.
+
 A bounded `x509-ocsp-cert-id-binding` prerequisite now binds one exact
 structurally decoded `SingleResponse` to one exact target certificate and one
 exact candidate issuer certificate. It first requires the target certificate's

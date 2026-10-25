@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/x509-ocsp-authenticated-responder",
+  "capabilities": [],
+  "justification": "Pure composition over public decoded OCSP and certificate evidence using repository-owned public-key verification. No filesystem, network, process, environment, ambient clock, secret-key, credential, signing, revocation fetching, HTTP, or TLS access is required."
+}
