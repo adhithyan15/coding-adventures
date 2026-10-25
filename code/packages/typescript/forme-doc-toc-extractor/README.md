@@ -147,7 +147,6 @@ sidebar / page-shell renderers:
                                                     HTML renderer + sidebar widget
 ```
 
-Next DOC00 v0 packages: `forme-doc-code-block-decorator`,
-`forme-doc-syntax-highlighter`, `forme-doc-sidebar-builder`,
-`forme-doc-page-shell`, `forme-doc-search-*`,
-`forme-doc-site-emitter`.
+The complete DOC00 v0 cluster now ships. The page shell consumes
+this package's nested TOC while later content transforms preserve
+the annotated document.

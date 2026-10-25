@@ -136,7 +136,6 @@ between the parser and the TOC / HTML renderer:
                                        (uses heading.id for <h*> id=)
 ```
 
-Next DOC00 v0 packages: `forme-doc-toc-extractor` (consumes the
-`anchors` list this package produces), `forme-doc-code-block-decorator`,
-`forme-doc-syntax-highlighter`, `forme-doc-sidebar-builder`,
-`forme-doc-page-shell`, `forme-doc-search-*`, `forme-doc-site-emitter`.
+The complete DOC00 v0 cluster now ships. The TOC extractor consumes
+this package's anchor list, while the remaining content and site
+stages preserve the annotated document.
