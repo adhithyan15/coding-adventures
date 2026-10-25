@@ -974,8 +974,12 @@ impl<'a> Lowering<'a> {
     /// Decode one `FLOAT` token (`py-float-print`). Only a profile with
     /// floats has them; a caller-supplied tree is re-checked against the
     /// Python 3 float grammar ([`decode_float_text`]) per profile, as
-    /// integers are (C2). A literal that overflows to `inf` is refused
-    /// (module docs, "Floats").
+    /// integers are (C2). The profile allows PEP 515's `_` in a float, so a
+    /// tree forged through `compile_cst` that claims 3.5.10 and carries
+    /// `1_0.5` decodes to 10.5. Only the 3.5.10 lexer refuses that spelling:
+    /// lowering never branches on the release, and no source text 3.5.10 can
+    /// lex decodes to a wrong value. A literal that overflows to `inf` is
+    /// refused (module docs, "Floats").
     fn decode_float(&self, atom: &GrammarASTNode, token: &Token) -> Result<f64, FrontendError> {
         if self.profile.floats == Floats::None {
             return Err(self.unsupported_token(
