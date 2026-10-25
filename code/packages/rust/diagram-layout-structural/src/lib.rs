@@ -1736,6 +1736,28 @@ mod tests {
     }
 
     #[test]
+    fn key_prefix_attribute_names_remain_visible_rows() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "BOOK".into();
+        diagram.nodes[0].label = "BOOK".into();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "fk_title: int [FK]".into(),
+            "pk_author: string [PK]".into(),
+            "uk_address: string [UK]".into(),
+            "pk_price: float [PK] - comment".into(),
+        ];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 4);
+        assert!(layout.nodes[0].width > 240.0);
+        assert!(layout.nodes[0].height > 80.0);
+    }
+
+    #[test]
     fn relationship_labels_resolve_to_backend_neutral_geometry() {
         let mut diagram = two_class_diagram();
         diagram.relationships[0].label = Some("inherits from".into());
