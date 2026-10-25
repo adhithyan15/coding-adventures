@@ -1,6 +1,7 @@
 # NN46: Five Native Dense Framework Conformance
 
-Status: specified before implementation; runtime and exact-head CI pending.
+Status: specified before implementation; local runtime conformance passed;
+publication and exact-head repository CI pending.
 
 ## Prioritized scope
 
@@ -71,3 +72,23 @@ lessons and branch diff. Independent read-only security review is mandatory
 before every push. Publish one ready PR, inspect actual exact-head checks,
 selected nested conformance logs and CodeQL findings, and confirm exact-head
 merge before another item. Queued runners require waiting, not source changes.
+
+## Local evidence
+
+The real runner executed all twenty directed exchanges and return trips:
+55 children, five native lanes, zero bindings, exact final step 3002 and XOR
+loss 0.0002330712337828204. Native suites passed: Python 123 tests and
+TypeScript 120 tests at 100% coverage; Ruby 13 tests/615 assertions at 100%
+library and command coverage plus actual isolated installed-gem training;
+Go numerical/race/vet/build at 96.9% library and 84% command coverage; Rust
+10 integration tests, doctest, fmt/Clippy/release and 99.74% LLVM library line
+coverage in the hash-verified exact-copy minimal workspace. No full local
+monorepo workspace claim is made. Actual CI must prove that workspace and
+normal npm scripts (local TypeScript used explicit installed Node entrypoints).
+
+Seven interchange regressions cover 97% of runner statements; four gate tests
+include the actual fail-closed roll-up shell. Native Ruby/Go/Rust validator
+tests and actual commands pass. Seventeen registry structural tests pass;
+global unrelated-path filesystem inventory tests are not claimed in a sparse
+checkout. Existing native-only validators retain their historical NN38/NN41/
+NN45 receipt scopes; only NN46's actual exchange receipt claims five lanes.

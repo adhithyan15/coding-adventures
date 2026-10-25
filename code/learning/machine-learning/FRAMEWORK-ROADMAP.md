@@ -159,7 +159,9 @@ SGD training, inspection, and portable save/reload/resume.
   shared 55-case corpus. Library and executable line coverage are 100%; native
   XOR loss is 0.00023307123378282036 with full model resumes through 3002.
 - [ ] Required five-native conformance incorporating actual Ruby exchange
-  processes, not a static registry entry (separate following tranche).
+  processes, not a static registry entry (NN46 implemented locally; exact-head
+  CI and merge pending). All twenty directed pairs pass through 3002, with
+  five native lanes, zero bindings and 55 actual child executions.
 - [ ] C native framework.
 - [ ] C++ native framework.
 - [ ] C# native framework.

@@ -49,8 +49,8 @@ python examples/xor.py
 `BUILD` and `BUILD_windows` run Ruff, tests with a 95% coverage floor, and the
 example. Numerical tests use the shared [NN37 fixture](../../../specs/fixtures/neural-framework-v1/dense.json)
 and finite differences for every coordinate in a deep multi-output network.
-For four-native checkpoint exchange, install the TypeScript peer's dependencies,
-Cargo and Go, then run
+For five-native checkpoint exchange, install the TypeScript peer's dependencies,
+Cargo, Go and Ruby, then run
 `python code/scripts/validate_neural_framework_interchange.py` at repository root.
 
 This release implements dense MLP training on native CPU matrices. CNNs,

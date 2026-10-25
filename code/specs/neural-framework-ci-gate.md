@@ -6,7 +6,7 @@ required repository `CI gate`, not merely an independent optional workflow.
 ## Scheduling contract
 
 Register `neural-framework-conformance` as a job-scoped gate. Both affected
-Python/TypeScript/Rust/Go framework or matrix packages and direct changes to their
+Python/TypeScript/Rust/Go/Ruby framework or matrix packages and direct changes to their
 sources, the shared fixture, interchange validator, gate tests, registry, or
 either workflow select it. Unrelated documentation does not select it. Forced
 main builds select it through the existing registry evaluator.
@@ -22,6 +22,15 @@ then tests/vets/builds the framework and runs its native resume validator.
 It executes all twelve directed pairs among four independent native lanes,
 including Go, with full native baseline and return-trip comparisons. Existing
 selection and fail-closed roll-up semantics are unchanged.
+
+NN46 adds Ruby framework/matrix and its native validator/tests as selecting
+inputs. The reusable workflow uses the pinned Ruby 3.4 setup and existing
+matrix-first build helper, including Standard, both native suites, coverage,
+isolated installed-gem training smoke, command coverage and native validator.
+The runner executes five fresh models, ten native baseline resumes and twenty
+directed pairs with return trips: 55 actual children, five native lanes and
+zero binding lanes. Every parameter/prediction/loss and exact step is compared.
+No duplicate automatic workflow or roll-up weakening is introduced.
 
 Use one reusable workflow for native package validation and checkpoint exchange.
 Keep manual dispatch, but let repository CI own automatic PR/main scheduling so
@@ -47,7 +56,7 @@ steps 3001 and 3002. This changes validation coverage, not the training API or
 checkpoint format, and claims no binding lane.
 
 NN40's shared `checkpoints.json` fixture is covered by the existing fixture
-directory selection rule. All four native package suites directly execute its
+directory selection rule. All five native package suites directly execute its
 55 accept/reject cases (NN43 adds six null numeric cells), including accepted
 round-trip controls. No standalone
 workflow or shell-based checkpoint transport is added for malformed inputs.
