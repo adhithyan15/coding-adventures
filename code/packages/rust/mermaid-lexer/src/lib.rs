@@ -1457,6 +1457,24 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_multi_class_composition() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nclassDef warm,cool fill:#fef3c7\nclass CUSTOMER,ORDER warm,cool\nPRODUCT:::warm,cool\nCUSTOMER:::warm ||--o{ ORDER:::cool : allows\n",
+        );
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+        let separators: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("STYLE_SEPARATOR"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        for value in ["warm", "cool", "CUSTOMER", "ORDER", "PRODUCT"] {
+            assert!(values.contains(&value));
+        }
+        assert_eq!(separators, [":::", ":::", ":::"]);
+    }
+
+    #[test]
     fn tokenizes_er_bracketed_attribute_name_suffix() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nBOOK {\n  string author-ref[name](1)\n}\n",

@@ -4,6 +4,8 @@
   "source_corpus": "er-styles-11.16.1-corpus.json",
   "fixtures": [
     "inline-class",
-    "class-and-direct-style"
+    "class-and-direct-style",
+    "multi-class-composition",
+    "relationship-inline-classes"
   ]
 }
