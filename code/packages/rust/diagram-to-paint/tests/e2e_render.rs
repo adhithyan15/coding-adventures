@@ -2204,7 +2204,12 @@ line "Target" [35, 50, 68, 82]"##,
             serde_json::from_str(ER_STYLES_VISUAL_CORPUS).expect("ER style visual corpus JSON");
         assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
         let fixtures = syntax["fixtures"].as_array().expect("ER style fixtures");
-        let expected_fills = [vec!["#dbeafe"], vec!["#dcfce7", "#fef3c7"]];
+        let expected_fills = [
+            vec!["#dbeafe"],
+            vec!["#dcfce7", "#fef3c7"],
+            vec!["#dbeafe", "#fef3c7"],
+            vec!["#fee2e2"],
+        ];
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();

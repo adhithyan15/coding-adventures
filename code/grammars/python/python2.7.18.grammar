@@ -1,0 +1,57 @@
+# Python 2.7.18 (2020-04-19) grammar: py2-int-print subset over the slice's tokens.
+# @version 1
+# PARTIAL: parses only the py2-int-print subset below; everything else is a parse error; see code/grammars/python/README.md.
+# source_ref: https://github.com/python/cpython/tree/v2.7.18
+# source_sha: 8d21aa21f2cbc6d50aab3f420bb23be1d081dac4
+# evidence: Grammar/Grammar blob 4c3f33da32d5ca202b3e5549032e6c09e9784a6f; Grammar/Tokens blob -;
+#   Parser/tokenizer.c blob 89666611940cf84c0a6e88ac7c365b134e9c5a26; Lib/keyword.py blob 69794bda8c879a098a2adaef5e4bcee32f8683c8
+# basis: reviewed against the tag's own syntax files (LANG84 phase 7c slice 1). Tokens follow tokenizer.c tok_get (decimal [1-9][0-9]* or a single 0; octal, hex and `L` suffixes are not lexed) and PyToken_OneChar/TwoChars/ThreeChars (45 operators), and keyword.py kwlist (31, `print` among them); the grammar follows Grammar/Grammar file_input..print_stmt..atom/trailer/arglist.
+
+# ---------------------------------------------------------------------------
+# py2-int-print (LANG84 phase 7c slice 1) as this release's grammar admits
+# it. The release's own rules, from the tag's Grammar/Grammar:
+#
+#   file_input : (NEWLINE | stmt)* ENDMARKER
+#   simple_stmt: small_stmt (';' small_stmt)* [';'] NEWLINE
+#   small_stmt : expr_stmt | print_stmt | ...
+#   print_stmt : 'print' ( [ test (',' test)* [','] ] |
+#                          '>>' test [ (',' test)+ [','] ] )
+#   arith_expr : term (('+'|'-') term)*
+#   term       : factor (('*'|'/'|'%'|'//') factor)*
+#   factor     : ('+'|'-'|'~') factor | power
+#   power      : atom trailer* ['**' factor]
+#   trailer    : '(' [arglist] ')' | ...
+#   atom       : '(' [testlist] ')' | NAME | NUMBER | ...
+#
+# Rule names follow code/grammars/python/python3.12.grammar (LANG84 C8), as
+# py-int-print's pairs do; `print_stmt` is the one rule Python 2 adds
+# (python-iir-compiler PROFILE_RULES lists it for the py2 profile).
+#
+# Narrower than Python on purpose (parse errors here, valid there): the
+# `print >>file` form, every other statement, `**`, `~`, comparisons
+# (including `<>`) and boolean operators, subscripts and attributes, tuples
+# and `()`, keyword and starred arguments, backquotes, and every compound
+# statement.
+# Admitted here and refused by the compiler (`Unsupported`): `print a, b`
+# and `print a,` (softspace; see LANG84 phase 7c slice 1), a bare
+# expression statement, a name, and a call (Python 2's `print` is not a
+# function, so every call is outside the subset).
+# ---------------------------------------------------------------------------
+
+file        = { NEWLINE | statement } ;
+statement   = simple_stmt ;
+simple_stmt = small_stmt { SEMICOLON small_stmt } [ SEMICOLON ] NEWLINE ;
+small_stmt  = print_stmt | expression ;
+print_stmt  = "print" [ expression { COMMA expression } [ COMMA ] ] ;
+
+expression  = arith ;
+arith       = term { ( PLUS | MINUS ) term } ;
+term        = factor { ( STAR | SLASH | FLOOR_DIV | PERCENT ) factor } ;
+factor      = ( PLUS | MINUS ) factor | primary ;
+primary     = atom { suffix } ;
+suffix      = LPAREN [ arguments ] RPAREN ;
+arguments   = argument { COMMA argument } [ COMMA ] ;
+argument    = expression ;
+atom        = INT | NAME | paren_expr ;
+paren_expr  = LPAREN paren_body RPAREN ;
+paren_body  = expression ;

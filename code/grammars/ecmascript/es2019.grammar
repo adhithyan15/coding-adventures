@@ -1,6 +1,9 @@
 # ECMAScript 2019 (ES10) — Parser Grammar
 # @version 1
 # @ecmascript_edition 2019
+# source_ref: https://github.com/tc39/ecma262/tree/es2019
+# source_sha: bc6fd169661d8737d7087bb822ef2a9c7148ac0b
+# PARTIAL: the IIR path claims es-number-log only (LANG84 phase 6d; see releases.csv); this syntactic pair predates LANG84 and is not yet audited clause by clause against the tagged spec text.
 #
 # ECMA-262, 10th Edition — June 2019
 #

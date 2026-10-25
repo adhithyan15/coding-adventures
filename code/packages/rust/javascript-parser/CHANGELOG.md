@@ -30,6 +30,24 @@ All notable changes to the `coding-adventures-javascript-parser` crate will be d
   WHITESPACE_ONLY keeps the source's line break at these points, so a program
   the grammar can't parse no longer loses them.
 
+## 0.66.0 - Unreleased - LANG84 phase 6d: release probes
+
+### Added
+
+- `tests/release_probes.rs`: LANG84 stages G and P for every
+  `releases.csv` row past `grammar_stage none` (es2016 … es2025). Each pair
+  header must cite its row's `source_ref` and `source_sha`; positive,
+  negative and hostile probes of the `es-number-log` neighbourhood run
+  through each edition's compiled tables, and a division chain must lex as
+  three `SLASH` tokens and no `REGEX` on every edition.
+
+### Changed
+
+- `_grammar.rs` regenerated with `grammar-tools generate-rust-compiled-grammars
+  javascript` (then `rustfmt`, the form this file has always been committed
+  in) after the es2016–es2025 `.grammar` headers gained their citation
+  lines. Only `line_number` fields change.
+
 ## 0.65.0 - Unreleased - LANG84 phase 6a: `parse_javascript_cst_bounded`
 
 ### Removed (breaking)

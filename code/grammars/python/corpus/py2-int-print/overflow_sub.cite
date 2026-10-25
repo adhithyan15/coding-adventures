@@ -1,0 +1,3 @@
+oracle: pinned historical source, CPython v2.2 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+evidence: Objects/intobject.c promotes a result outside the C long to a long (int_add/int_sub/int_mul call PyLong_Type's slot; int_neg and i_divmod's DIVMOD_OVERFLOW do the same), so CPython 2 prints the stdout before `trap:` and then -9223372036854775809
+result: the subset traps Trap.Overflow after the same stdout (stated divergence: bignum promotion is later work)

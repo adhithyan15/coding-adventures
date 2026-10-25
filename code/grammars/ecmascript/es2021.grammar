@@ -1,6 +1,9 @@
 # ECMAScript 2021 (ES12) — Parser Grammar
 # @version 1
 # @ecmascript_edition 2021
+# source_ref: https://github.com/tc39/ecma262/tree/es2021
+# source_sha: fc85c50181b2b8d7d75f034800528d87fda6b654
+# PARTIAL: the IIR path claims es-number-log only (LANG84 phase 6d; see releases.csv); this syntactic pair predates LANG84 and is not yet audited clause by clause against the tagged spec text.
 #
 # ECMA-262, 12th Edition — June 2021
 #
