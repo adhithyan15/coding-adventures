@@ -253,8 +253,11 @@ Independently bounded dynamic sign-rooted transforms may multiply under the
 same checked magnitude limit because every factor remains an exact integer.
 They may also add or subtract under a checked complete-sum magnitude limit,
 including independently scaled and offset transforms. Fractional factors,
-oversized products or sums, other non-multiplying roots, and variable factors
-remain conservative. Exact whole-number division is also
+oversized products or sums, and variable factors remain conservative. A
+multiple-root product may continue through trailing static `div` or `mod`, or
+through exact whole-number `/` when its conservative common divisor proves
+every quotient integral. Reductions between roots, zero or dynamic divisors,
+and rooted divisors remain conservative. Exact whole-number division is also
 permitted when the bounded result is the numerator and every possible
 transformed integer is divisible by the static nonzero divisor. Inexact or
 variable divisors and a bounded denominator remain conservative. Static

@@ -46,8 +46,9 @@ with Node/TypeScript dependencies, Cargo and Go installed) executes all twelve
 directed exchanges among Go, Python, TypeScript and Rust through step 3002.
 Selected required CI must pass before recording conformance delivery.
 
-Tests consume the shared paper/seed/XOR fixture and all 49 NN40 checkpoint
+Tests consume the shared paper/seed/XOR fixture and all 55 NN40/NN43 checkpoint
 cases, central finite differences for every parameter/activation, ownership,
-overflow and atomicity boundaries. Library coverage target is at least 95%.
+overflow and atomicity boundaries. The six NN43 numeric-null cases cover single,
+mixed and later-layer coordinates. Library coverage target is at least 95%.
 See [NN41](../../../specs/NN41-native-go-dense-framework.md) and the
 [lesson](../../../learning/machine-learning/native-go-dense-framework.md).

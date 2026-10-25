@@ -933,6 +933,60 @@
           }
         ]
       }
+    },
+    {
+      "id": "null-weight-cell",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense", "version": 1, "step": 0,
+        "layers": [{"activation": "linear", "weights": [[null]], "biases": [0]}]
+      }
+    },
+    {
+      "id": "null-weight-cell-mixed",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense", "version": 1, "step": 0,
+        "layers": [{"activation": "tanh", "weights": [[0.5, -0.5], [1, null], [0.25, 0.75]], "biases": [0, 0]}]
+      }
+    },
+    {
+      "id": "null-bias-cell",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense", "version": 1, "step": 0,
+        "layers": [{"activation": "linear", "weights": [[0.5]], "biases": [null]}]
+      }
+    },
+    {
+      "id": "null-bias-cell-mixed",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense", "version": 1, "step": 0,
+        "layers": [{"activation": "sigmoid", "weights": [[0.5, -0.5, 0.25], [1, 0.75, -1]], "biases": [0, null, 0.5]}]
+      }
+    },
+    {
+      "id": "null-weight-cell-later-layer",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense", "version": 1, "step": 0,
+        "layers": [
+          {"activation": "tanh", "weights": [[0.5, -0.5]], "biases": [0, 0]},
+          {"activation": "linear", "weights": [[1], [null]], "biases": [0]}
+        ]
+      }
+    },
+    {
+      "id": "null-bias-cell-later-layer",
+      "accept": false,
+      "checkpoint": {
+        "format": "coding-adventures-dense", "version": 1, "step": 0,
+        "layers": [
+          {"activation": "relu", "weights": [[0.5, -0.5]], "biases": [0, 0]},
+          {"activation": "linear", "weights": [[1], [2]], "biases": [null]}
+        ]
+      }
     }
   ]
 }

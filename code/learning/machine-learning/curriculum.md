@@ -43,6 +43,10 @@ is evidence for that library, separate from NN42's four-language interchange.
 NN42 extends the required reusable gate to all twelve directed native pairs,
 comparing full states at steps 3000/3001/3002 with zero binding lanes.
 
+NN43 extends the shared rejection corpus with six literal null weight/bias
+coordinates in single, mixed and later-layer positions. All four native suites
+must reject absence rather than silently turn it into a valid zero parameter.
+
 Every model family below starts with the smallest example that needs its new
 idea.
 

@@ -11,9 +11,17 @@ const corpus = JSON.parse(readFileSync(new URL(
 it("pins the shared NN40 corpus inventory", () => {
   expect(Object.keys(corpus).sort()).toEqual(["cases", "contract"]);
   expect(corpus.contract).toBe("NN40");
-  expect(corpus.cases).toHaveLength(49);
-  expect(new Set(corpus.cases.map((c: any) => c.id)).size).toBe(49);
+  expect(corpus.cases).toHaveLength(55);
+  expect(new Set(corpus.cases.map((c: any) => c.id)).size).toBe(55);
   expect(corpus.cases.filter((c: any) => c.accept)).toHaveLength(3);
+  // Pin the NN43 boundary itself; an arbitrary six extra cases cannot pass.
+  for (const id of [
+    "null-weight-cell", "null-weight-cell-mixed",
+    "null-bias-cell", "null-bias-cell-mixed",
+    "null-weight-cell-later-layer", "null-bias-cell-later-layer",
+  ]) {
+    expect(corpus.cases.find((c: any) => c.id === id)?.accept).toBe(false);
+  }
   for (const c of corpus.cases) {
     expect(Object.keys(c).sort()).toEqual(["accept", "checkpoint", "id"]);
     expect(typeof c.id).toBe("string");

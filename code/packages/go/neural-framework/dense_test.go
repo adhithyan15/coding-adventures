@@ -112,10 +112,15 @@ func TestSharedCorpus(t *testing.T) {
 		}
 	}
 	fixture(t, "checkpoints.json", &c)
-	if c.Contract != "NN40" || len(c.Cases) != 49 {
+	if c.Contract != "NN40" || len(c.Cases) != 55 {
 		t.Fatal("inventory")
 	}
 	ids := map[string]bool{}
+	nullCases := map[string]bool{
+		"null-weight-cell": false, "null-weight-cell-mixed": false,
+		"null-bias-cell": false, "null-bias-cell-mixed": false,
+		"null-weight-cell-later-layer": false, "null-bias-cell-later-layer": false,
+	}
 	accepted := 0
 	for _, v := range c.Cases {
 		t.Run(v.ID, func(t *testing.T) {
@@ -123,6 +128,12 @@ func TestSharedCorpus(t *testing.T) {
 				t.Fatal("id")
 			}
 			ids[v.ID] = true
+			if _, required := nullCases[v.ID]; required {
+				if v.Accept {
+					t.Fatal("NN43 numeric null must reject")
+				}
+				nullCases[v.ID] = true
+			}
 			n, e := FromJSON(v.Checkpoint)
 			if (e == nil) != v.Accept {
 				t.Fatalf("decision %v", e)
@@ -143,5 +154,10 @@ func TestSharedCorpus(t *testing.T) {
 	}
 	if accepted != 3 {
 		t.Fatal("controls")
+	}
+	for id, seen := range nullCases {
+		if !seen {
+			t.Fatalf("missing NN43 case %s", id)
+		}
 	}
 }

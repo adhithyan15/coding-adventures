@@ -47,6 +47,7 @@ steps 3001 and 3002. This changes validation coverage, not the training API or
 checkpoint format, and claims no binding lane.
 
 NN40's shared `checkpoints.json` fixture is covered by the existing fixture
-directory selection rule. All three native package suites directly execute its
-49 accept/reject cases, including accepted round-trip controls. No standalone
+directory selection rule. All four native package suites directly execute its
+55 accept/reject cases (NN43 adds six null numeric cells), including accepted
+round-trip controls. No standalone
 workflow or shell-based checkpoint transport is added for malformed inputs.

@@ -1518,7 +1518,11 @@ backend immediately) come before the enabler-dependent items.
   denominator roots, and oversized products remain conservative. Independently
   bounded transforms may also add or subtract under a checked complete-sum
   magnitude limit. Fractional or dynamic terms, other non-multiplying roots,
-  and oversized sums remain conservative.
+  and oversized sums remain conservative. A multiple-root product may continue
+  through trailing static `div` or `mod`, or exact whole-number `/` when its
+  conservative common divisor proves every quotient integral. Reductions
+  between roots, zero or dynamic divisors, and rooted divisors remain
+  conservative.
   Static nonzero whole-number division may reduce that transform when a
   conservative common-divisor proof shows that every possible path value is
   exactly divisible; inexact and dynamic divisors remain conservative.

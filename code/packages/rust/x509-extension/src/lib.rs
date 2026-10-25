@@ -7,8 +7,8 @@
 #![deny(unsafe_code)]
 
 use der_asn1::{
-    decode_boolean, decode_object_identifier, decode_octet_string, Asn1Decoder, Asn1Element,
-    Asn1Error, Asn1ErrorKind, ObjectIdentifier,
+    decode_boolean, decode_object_identifier, decode_octet_string, Asn1ContainerContext,
+    Asn1Decoder, Asn1Element, Asn1Error, Asn1ErrorKind, ObjectIdentifier,
 };
 use std::error::Error;
 use std::fmt;
@@ -102,6 +102,7 @@ impl Error for X509ExtensionError {}
 pub struct X509Extension<'a> {
     extension_id: ObjectIdentifier<'a>,
     critical: bool,
+    extension_value_context: Asn1ContainerContext,
     extension_value: &'a [u8],
 }
 
@@ -116,6 +117,11 @@ impl<'a> X509Extension<'a> {
 
     pub const fn extension_value(self) -> &'a [u8] {
         self.extension_value
+    }
+
+    /// Return compact, opaque authority for depth-preserving nested decoding.
+    pub const fn extension_value_context(self) -> Asn1ContainerContext {
+        self.extension_value_context
     }
 }
 
@@ -196,9 +202,14 @@ pub fn decode_x509_extension<'a>(
         ));
     }
 
+    let extension_value_context = extension_value_element
+        .container_context()
+        .map_err(X509ExtensionError::structure)?;
+
     Ok(X509Extension {
         extension_id,
         critical,
+        extension_value_context,
         extension_value,
     })
 }
