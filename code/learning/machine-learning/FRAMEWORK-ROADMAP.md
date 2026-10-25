@@ -16,19 +16,22 @@ The delivery loop is authorized to implement, publish, repair, and auto-merge
 one item at a time. Before choosing each new item, fetch current main, inspect
 the actual open PR and its current-head CI logs, and revisit this ordering:
 
-1. **P0 — Required conformance ownership.** The initial native frameworks
+1. **P0 — Required conformance ownership completed.** The initial native frameworks
    merged in [PR #18201](https://github.com/adhithyan15/coding-adventures/pull/18201)
    at head `772f2fc2bb7`, with CI, CodeQL, and native checkpoint exchange green.
-   Close the smaller reliability prerequisite next: make the existing exchange
-   workflow a registered dependency of the required repository CI gate, with
-   fail-closed selected-job results and no duplicate automatic runners.
+   [PR #18206](https://github.com/adhithyan15/coding-adventures/pull/18206) then
+   merged exact head `d8ae359c84b`, with required CI, nested native exchange, and
+   CodeQL green. The exchange is now a registered required-gate dependency;
+   selected jobs must succeed, and duplicate automatic runners are removed.
 2. **P1 — Native Rust dense framework.** Implement NN37 training and checkpoint
-   interchange independently over the Rust matrix foundation. The optional C
-   ABI is a separate later item, so native correctness is established first.
+   interchange independently over the Rust matrix foundation, following
+   [NN38](../../specs/NN38-native-rust-dense-framework.md). Reprioritized after
+   #18206 by reliability, prerequisites, portability, and smallest complete
+   deliverable: native library/example/checkpoint resume first, required
+   three-language conformance second. The optional C ABI stays separate.
 3. **P1 — Grow executable conformance with the port roster.** Add a shared
    invalid-input corpus and explicit native/binding evidence as additional
-   lanes appear. Integrate checkpoint interchange into the required repository
-   gate; the first version runs it in a separate workflow.
+   lanes appear. Preserve required-gate ownership as each native port joins.
 4. **P2 — Extend native reach.** Deliver Go and Ruby, then C/C++, managed and
    functional language ports in the order their existing foundations permit.
    Reassess the smallest complete port after every merge.
@@ -78,7 +81,10 @@ SGD training, inspection, and portable save/reload/resume.
 
 - [x] Python and TypeScript reference frameworks and checkpoint interchange
   ([lesson and runnable examples](./portable-dense-framework.md)).
-- [ ] Rust native framework and checkpoint interchange.
+- [ ] Rust native framework: public API, numerical/boundary tests, native XOR
+  example, portable save/reload/resume, package metadata, and real build evidence.
+- [ ] Rust conformance: required CI and actual two-way checkpoint exchange with
+  Python and TypeScript. Depends on the native library; not a binding lane.
 - [ ] Optional Rust dense C ABI and binding consumers.
 - [ ] Go native framework.
 - [ ] Ruby native framework.
