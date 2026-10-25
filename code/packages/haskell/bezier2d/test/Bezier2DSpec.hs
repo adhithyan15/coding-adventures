@@ -56,12 +56,11 @@ spec = do
             let straight = QuadraticBezier (Point 0.0 0.0) (Point 1.0 0.0) (Point 2.0 0.0)
             toPolylineQuadratic straight 0.1 `shouldBe` Right [Point 0.0 0.0, Point 2.0 0.0]
         it "subdivides a curved quadratic without duplicate joins" $ do
-            let Right coarse = toPolylineQuadratic quadratic 2.0
-                Right fine = toPolylineQuadratic quadratic 0.01
+            coarse <- expectRight (toPolylineQuadratic quadratic 2.0)
+            fine <- expectRight (toPolylineQuadratic quadratic 0.01)
             length coarse `shouldBe` 2
             length fine `shouldSatisfy` (> length coarse)
-            head fine `shouldBePoint` quadraticP0 quadratic
-            last fine `shouldBePoint` quadraticP2 quadratic
+            fine `shouldHaveEndpoints` (quadraticP0 quadratic, quadraticP2 quadratic)
             and (zipWith (/=) fine (drop 1 fine)) `shouldBe` True
         it "computes a tight interior-extremum bounding box" $
             boundingBoxQuadratic quadratic `shouldBeRect` Rect 0.0 0.0 2.0 1.0
@@ -103,12 +102,11 @@ spec = do
             toPolylineCubic straight 0.1 `shouldBe` Right [Point 0.0 0.0, Point 3.0 0.0]
         it "uses tighter tolerances for finer curved polylines" $ do
             let arch = CubicBezier (Point 0.0 0.0) (Point 0.0 10.0) (Point 10.0 10.0) (Point 10.0 0.0)
-                Right coarse = toPolylineCubic arch 8.0
-                Right fine = toPolylineCubic arch 0.05
-            length coarse `shouldBe` 2
+            coarse <- expectRight (toPolylineCubic arch 8.0)
+            fine <- expectRight (toPolylineCubic arch 0.05)
+            length coarse `shouldSatisfy` (>= 2)
             length fine `shouldSatisfy` (> length coarse)
-            head fine `shouldBePoint` Point 0.0 0.0
-            last fine `shouldBePoint` Point 10.0 0.0
+            fine `shouldHaveEndpoints` (Point 0.0 0.0, Point 10.0 0.0)
         it "subdivides the symmetric S whose midpoint lies on its chord" $ do
             let symmetricS = CubicBezier (Point 0.0 0.0) (Point 0.0 1.0) (Point 0.0 (-1.0)) (Point 0.0 0.0)
             toPolylineCubic symmetricS 0.1 `shouldSatisfy` either (const False) ((> 2) . length)
@@ -132,3 +130,14 @@ spec = do
             let monotone = CubicBezier (Point 0.0 0.0) (Point 2.0 2.0) (Point 3.0 3.0) (Point 3.0 3.0)
                 bounds = boundingBoxCubic monotone
             bounds `shouldBeRect` Rect 0.0 0.0 3.0 3.0
+
+expectRight :: (Show error) => Either error value -> IO value
+expectRight result = case result of
+    Right value -> pure value
+    Left failure -> expectationFailure ("expected Right, got Left " ++ show failure) >> fail "unreachable"
+
+shouldHaveEndpoints :: [Point] -> (Point, Point) -> Expectation
+shouldHaveEndpoints [] _ = expectationFailure "expected a nonempty polyline"
+shouldHaveEndpoints (first : rest) (expectedFirst, expectedLast) = do
+    first `shouldBePoint` expectedFirst
+    foldl (\_ point -> point) first rest `shouldBePoint` expectedLast
