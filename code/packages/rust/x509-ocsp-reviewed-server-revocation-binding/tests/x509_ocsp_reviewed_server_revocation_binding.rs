@@ -69,6 +69,17 @@ const SHA1_OID: &[u64] = &[1, 3, 14, 3, 2, 26];
 const SERVER_AUTH_OID: &[u64] = &[1, 3, 6, 1, 5, 5, 7, 3, 1];
 const NULL_DER: &[u8] = &[0x05, 0x00];
 const ALLOWED_EXPONENTS: &[u64] = &[65_537];
+const FIXTURE_PROOF_STACK_BYTES: usize = 16 * 1024 * 1024;
+
+fn run_fixture_proof_test(test: fn()) {
+    std::thread::Builder::new()
+        .name("x509-ocsp-reviewed-server-revocation-fixture".into())
+        .stack_size(FIXTURE_PROOF_STACK_BYTES)
+        .spawn(test)
+        .expect("fixture proof thread must start")
+        .join()
+        .expect("fixture proof thread must complete");
+}
 
 fn fixture(hexadecimal: &str) -> Vec<u8> {
     let digits = hexadecimal
@@ -369,6 +380,10 @@ fn public_fixtures_match_the_recorded_capture() {
 
 #[test]
 fn binds_authenticated_ocsp_to_the_same_exact_reviewed_server_path() {
+    run_fixture_proof_test(binds_authenticated_ocsp_to_the_same_exact_reviewed_server_path_inner);
+}
+
+fn binds_authenticated_ocsp_to_the_same_exact_reviewed_server_path_inner() {
     let leaf_encoded = fixture(LEAF_HEX);
     let intermediate_encoded = fixture(INTERMEDIATE_HEX);
     let root_encoded = fixture(ROOT_HEX);
@@ -417,6 +432,10 @@ fn binds_authenticated_ocsp_to_the_same_exact_reviewed_server_path() {
 
 #[test]
 fn rejects_a_byte_equal_distinct_target_before_issuer_comparison() {
+    run_fixture_proof_test(rejects_a_byte_equal_distinct_target_before_issuer_comparison_inner);
+}
+
+fn rejects_a_byte_equal_distinct_target_before_issuer_comparison_inner() {
     let leaf_encoded = fixture(LEAF_HEX);
     let intermediate_encoded = fixture(INTERMEDIATE_HEX);
     let root_encoded = fixture(ROOT_HEX);
@@ -450,6 +469,10 @@ fn rejects_a_byte_equal_distinct_target_before_issuer_comparison() {
 
 #[test]
 fn rejects_a_byte_equal_distinct_issuer_after_matching_target() {
+    run_fixture_proof_test(rejects_a_byte_equal_distinct_issuer_after_matching_target_inner);
+}
+
+fn rejects_a_byte_equal_distinct_issuer_after_matching_target_inner() {
     let leaf_encoded = fixture(LEAF_HEX);
     let intermediate_encoded = fixture(INTERMEDIATE_HEX);
     let root_encoded = fixture(ROOT_HEX);
