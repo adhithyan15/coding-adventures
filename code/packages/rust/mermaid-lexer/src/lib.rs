@@ -1607,6 +1607,21 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_duplicate_entity_declarations() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER\nORDER\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER\nORDER\n",
+        );
+        let identifiers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("IDENTIFIER"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(identifiers.iter().filter(|value| **value == "CUSTOMER").count(), 3);
+        assert_eq!(identifiers.iter().filter(|value| **value == "ORDER").count(), 3);
+    }
+
+    #[test]
     fn tokenizes_er_attribute_type_forms() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
