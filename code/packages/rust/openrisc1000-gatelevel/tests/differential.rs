@@ -183,10 +183,6 @@ fn topology_and_gate_primitives_are_exact() {
                 32 - value.leading_zeros()
             }
         );
-        assert_eq!(
-            gates::sign_extend(value, 8),
-            (value as u8 as i8 as i32) as u32
-        );
     }
     for (left, right) in [(0, 1), (6, 7), (u32::MAX, 2), (0x8000_0000, 3)] {
         assert_eq!(

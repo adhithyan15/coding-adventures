@@ -43,7 +43,8 @@ pub fn bits_to_u64(bits: &[u8]) -> u64 {
 /// Gate equality against a constant. This is also used as the terminal line
 /// selector for instruction sub-decoders and SPR address decoders.
 #[must_use]
-pub fn selected(value: u32, expected: u32, width: usize) -> u8 {
+pub(crate) fn selected(value: u32, expected: u32, width: usize) -> u8 {
+    debug_assert!(width <= 32);
     let value = u32_to_bits(value);
     let expected = u32_to_bits(expected);
     (0..width).fold(1, |line, bit| {
@@ -59,6 +60,9 @@ pub fn selected(value: u32, expected: u32, width: usize) -> u8 {
 /// Six-to-sixty-four one-hot decoder used by primary instruction dispatch.
 #[must_use]
 pub fn decode_primary(opcode: u8) -> [u8; 64] {
+    if opcode > 0x3f {
+        return [0; 64];
+    }
     let inputs: [u8; 6] = std::array::from_fn(|bit| (opcode >> bit) & 1);
     std::array::from_fn(|line| {
         (0..6).fold(1, |selected, bit| {
@@ -270,7 +274,8 @@ pub fn rotate_right_32(mut value: u32, amount: u32) -> u32 {
 }
 
 #[must_use]
-pub fn sign_extend(value: u32, width: usize) -> u32 {
+pub(crate) fn sign_extend(value: u32, width: usize) -> u32 {
+    debug_assert!((1..=32).contains(&width));
     let input = u32_to_bits(value);
     let sign = input[width - 1];
     bits_to_u32(&std::array::from_fn::<_, 32, _>(|bit| {

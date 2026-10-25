@@ -1,5 +1,5 @@
 use openrisc1000_gatelevel::{
-    primary_opcode_is_implemented, ExecutionResult, OpenRisc1000Error,
+    gates, primary_opcode_is_implemented, ExecutionResult, OpenRisc1000Error,
     OpenRisc1000GateLevel as OpenRisc1000Simulator, OpenRisc1000State, MAX_RETAINED_STEPS,
     MEMORY_SIZE, SR_CY, SR_F, SR_FO, SR_OV, SR_SM,
 };
@@ -62,6 +62,12 @@ fn primary_opcode_table_matches_the_orbis32_boundary() {
             implemented.contains(&opcode),
             "classification mismatch for primary opcode {opcode:#04x}"
         );
+    }
+    for opcode in [64_u8, 65, 127, 255] {
+        assert!(!primary_opcode_is_implemented(opcode));
+        assert!(gates::decode_primary(opcode)
+            .into_iter()
+            .all(|line| line == 0));
     }
 }
 
