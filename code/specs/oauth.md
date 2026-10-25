@@ -1415,6 +1415,29 @@ revocation policy, interpret any OCSP extension, fetch or cache data, read a
 clock, perform TLS or HTTP, authorize OAuth transport, or grant network
 authority. Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-reviewed-server-revocation-binding` composition now joins
+that complete authenticated target-revocation evidence to the strongest
+existing constructed reviewed-intermediate server-path evidence. It requires
+both non-copyable inputs to retain the same exact decoded target and
+intermediate issuer objects; byte-equal independent decodes fail closed.
+After those identity checks, it revalidates both exact path certificates at
+the OCSP proof's retained observation time and retains the two fresh validity
+tokens, so earlier server-path validity evidence cannot be mixed with a later
+revocation observation after either certificate expires.
+Success retains the full OCSP target, issuer, delegated responder, signed
+single-status response, freshness and observation-time evidence alongside the
+full target-server policy, constructed two-link RSA SHA-256 path, path-length
+state, exact Mozilla-reviewed root selection, selected-anchor DNS policy, and
+supported intermediate DNS-constraint policy. Stable failures distinguish
+target from issuer mismatch and target from issuer exact-time validity failure
+without retaining response, certificate, key, signature, status, hostname, or
+time payloads. This composition performs no new cryptography or external
+effect. It does not generalize certificate-path
+validation, establish a reviewed responder path, check responder-certificate
+or intermediate revocation, interpret unsupported OCSP extensions, fetch or
+cache data, read a clock, implement TLS or HTTP, authorize OAuth transport, or
+grant network authority. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
