@@ -20735,9 +20735,10 @@
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
-      "branch": null,
+      "branch": "codex/parity-bezier-haskell-swift-flattening-20261025",
       "pr_number": null,
-      "notes": "Resolve Either/throwing API for deterministic failure before source changes. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases; run native Bezier2D and Arc2D tests. Haskell Arc2D lacks a BUILD front and needs explicit cabal test all."
+      "notes": "Resolve Either/throwing API for deterministic failure before source changes. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases; run native Bezier2D and Arc2D tests. Haskell Arc2D lacks a BUILD front and needs explicit cabal test all.",
+      "selection_notes": "Selected from current main after the independent TypeScript Arc2D build repair reached its local review gate and all three publication slots remained occupied. The ready C#/F# tranche stays first in the publication queue, while Python/Ruby/Perl and TypeScript/Elixir/Lua remain sequenced behind the shared selector integration. Haskell/Swift is the highest independent implementation owner because it advances two non-Rust lanes, depends only on the already-merged neutral contract, and has no changed-path overlap with the active or prepared tranches. Keep scope to deterministic safe flattening APIs, all nine neutral fixture cases, native Bezier2D and Arc2D regressions, package docs/changelogs, and lifecycle receipts; Go/Rust, the aggregate owner, and build-selector integration remain separate."
     },
     {
       "id": "geometry-bezier2d-flattening-typescript-elixir-lua",

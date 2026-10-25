@@ -17967,3 +17967,21 @@ with production-only MSBuild instrumentation, run tests from that graph, and
 enforce the 95% library line target on Unix and Windows. Package APIs, AST
 nodes, parser behavior, renderer behavior, and the wider .NET fleet remain out
 of scope.
+
+## October 25, 2026: Haskell and Swift Bezier flattening selection
+
+All three publication slots remain occupied, the TypeScript Arc2D build-front
+repair has reached its local exact-head review gate, and the prepared C#/F#
+Bezier tranche remains first in the publication queue. Reprioritization now
+selects `geometry-bezier2d-flattening-haskell-swift`: it advances two non-Rust
+lanes, depends only on the merged neutral contract, and does not overlap any
+active or prepared implementation branch.
+
+Both selected lanes still use midpoint-only flatness and unbounded recursion.
+This owner will define deterministic Haskell `Either` and Swift throwing APIs,
+enforce finite positive tolerance plus the pinned depth/subdivision budgets,
+measure every control point against the finite endpoint segment, and consume
+all nine neutral cases dynamically. Native Bezier2D tests and downstream Arc2D
+tests must pass; Haskell Arc2D has no BUILD front, so its Cabal suite must be run
+explicitly. Go/Rust adoption, aggregate completion, and shared build-selector
+integration remain separate owners.
