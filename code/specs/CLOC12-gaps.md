@@ -328,6 +328,27 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Why it failed:** Upstream emits a `;` after the last `}` of a try/catch statement, mirroring its function-decl normalisation. closurec correctly dropped inner `;`s per gap-030 rule A but never emitted the trailing `;`.
 - **Resolution:** Extended the CLI token state machine. `brace_stack` was refactored from `Vec<bool>` to `Vec<BlockKind>` with three variants: `Function`, `TryChain`, `Other`. A new flag `next_block_is_try_chain` is armed by the `try`/`catch`/`finally` keywords; the next `{` consumes it and pushes `BlockKind::TryChain` onto the stack. When a `}` pops a `TryChain` kind, the emitter peeks the next non-trivia token: if it's `catch` or `finally`, the chain continues and no `;` is emitted; otherwise the chain has ended and a synthetic `;` is appended. 6 inline tests pin the behavior including nested try/catch, try/catch/finally chains, function-decl inside try-block (no interference between Function and TryChain), and ES2019 optional catch binding (`try{a;}catch{b;}`).
 
+### #18137 — WHITESPACE_ONLY drops the hashbang
+
+- **The bug.** `HASHBANG` is a token, not trivia, so the re-stitcher kept
+  it while dropping the newline after it. `#!/usr/bin/env node⏎f()` printed
+  as `#!/usr/bin/env nodef();`, and the program became part of the comment.
+- **Upstream (v20260915).** Drops the hashbang at every level:
+  `#!/usr/bin/env node⏎console.log(1)` → `console.log(1);`.
+- **Resolution.** `is_trivia` lists `HASHBANG`, so WHITESPACE_ONLY drops it
+  like a line comment. `check_hashbangs` first refuses the two lexer shapes
+  where dropping the token would delete code or accept an invalid program:
+  - a HASHBANG containing U+2028/U+2029. The `.tokens` rule
+    `^#![^\n\r]*` runs past those line terminators, so the token holds
+    real code. That is the open part of #17887.
+  - a HASHBANG that is not at offset 0. The `^` anchor matches at every
+    token start, but `#!` anywhere else is a SyntaxError (upstream reports
+    a parse error).
+  SIMPLE/ADVANCED still delete the code after a U+2028 hashbang until the
+  lexer is fixed (#17887).
+- **Tests.** Two unit tests, and `closurec/tests/regression_ws_hashbang.rs`
+  (node-backed, plus four refused inputs).
+
 ### gap-034 — class declaration trailing `;` after `}`
 
 - **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_class` flipped IGNORED → PASS. **The byte-identity harness now reports 25/25 PASS across the expanded seed set.**
