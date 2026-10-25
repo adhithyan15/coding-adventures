@@ -1328,6 +1328,23 @@ a constructed path, interpret extensions or status, decide freshness or
 revocation, fetch or cache data, read a clock, or grant TLS, HTTP, OAuth
 transport, or network authority. Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-revocation-policy` follow-up now consumes that exact
+non-copyable `CertID` binding and one explicit validated caller-owned time. It
+derives status, `thisUpdate`, and `nextUpdate` only from the exact retained
+`SingleResponse`, rejects every currently unsupported `singleExtensions`
+collection, and applies the shared repository-owned fail-closed revocation
+policy. Only `good` inside the ordered half-open freshness interval
+`thisUpdate <= observation_time < nextUpdate` succeeds. The distinct
+non-copyable result retains the complete target, issuer, and response binding
+plus the exact observation time, preventing detached status or freshness
+values from being attached to another certificate. This composition does not
+authenticate the OCSP signature,
+authorize or bind a responder, interpret outer response extensions, prove the
+candidate issuer signed the target, bind the result to a constructed path,
+fetch or cache revocation data, read a clock, implement nonce policy, establish
+trust, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
