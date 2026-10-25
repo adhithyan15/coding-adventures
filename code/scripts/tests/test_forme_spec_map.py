@@ -15,6 +15,19 @@ TYPESCRIPT_PACKAGES = REPO_ROOT / "code" / "packages" / "typescript"
 TYPESCRIPT_PROGRAMS = REPO_ROOT / "code" / "programs" / "typescript"
 TYPESCRIPT_SITES = REPO_ROOT / "code" / "sites"
 FORME_STABLE_PACKAGE_VERSION = "1.0.0"
+DOC00_PACKAGE_NAMES = {
+    "forme-doc-code-block-decorator",
+    "forme-doc-frontmatter",
+    "forme-doc-heading-anchors",
+    "forme-doc-page-shell",
+    "forme-doc-search-client-js",
+    "forme-doc-search-index-builder",
+    "forme-doc-search-tokenizer",
+    "forme-doc-sidebar-builder",
+    "forme-doc-site-emitter",
+    "forme-doc-syntax-highlighter",
+    "forme-doc-toc-extractor",
+}
 
 NUMBERED_SPECS = {
     "FM01": "FM01-forme-kernel.md",
@@ -193,6 +206,10 @@ class FormeSpecMapTests(unittest.TestCase):
 
     def test_completed_forme_surfaces_do_not_claim_deferred_delivery(self) -> None:
         stale_claims = {
+            SPECS / "DOC00-docs-vision.md": (
+                "**Status:** v0 vision document.  Per-package specs and\n> implementations follow.",
+                "Two remaining decisions to confirm during implementation:",
+            ),
             SPECS / "FM01-forme-kernel.md": (
                 "**Status:** Code-ready specification.",
                 "| Interactivity shape | Placeholder active for compatibility |",
@@ -224,6 +241,15 @@ class FormeSpecMapTests(unittest.TestCase):
             TYPESCRIPT_PACKAGES / "forme-manifest" / "README.md": (
                 "v0.1.0 — implements FM02",
                 "Not yet implemented (will land with `forme-plugin-host`):",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-aot-page-bundle-emitter" / "README.md": (
+                "Downstream (planned):",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-doc-page-shell" / "README.md": (
+                "Remaining DOC00 v0 packages:",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-doc-search-index-builder" / "README.md": (
+                "Remaining DOC00 v0 packages:",
             ),
             TYPESCRIPT_PACKAGES / "forme-load-assets-fs" / "README.md": (
                 "capability-backed storage adapter is still pending",
@@ -275,6 +301,13 @@ class FormeSpecMapTests(unittest.TestCase):
             for claim in claims:
                 with self.subTest(path=path.relative_to(REPO_ROOT), claim=claim):
                     self.assertNotIn(claim, text)
+
+    def test_doc00_v0_package_inventory_is_complete(self) -> None:
+        actual = {
+            path.parent.name
+            for path in TYPESCRIPT_PACKAGES.glob("forme-doc-*/package.json")
+        }
+        self.assertEqual(actual, DOC00_PACKAGE_NAMES)
 
     def test_roadmap_links_every_canonical_numbered_spec(self) -> None:
         roadmap = (SPECS / "FM00-forme-completion-roadmap.md").read_text(
@@ -349,6 +382,10 @@ class FormeSpecMapTests(unittest.TestCase):
         )
         self.assertIn(
             "| 74 | FM-B075 | done | Reconcile plugin-manifest kernel-kind recognition |",
+            roadmap,
+        )
+        self.assertIn(
+            "| 75 | FM-B076 | done | Reconcile shipped AOT and DOC00 completion surfaces |",
             roadmap,
         )
 
