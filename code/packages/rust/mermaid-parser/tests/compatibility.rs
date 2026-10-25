@@ -181,6 +181,14 @@ const ER_FRONTMATTER_TITLE_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-frontmatter-title-11.16.1-visual-corpus.json"
 ));
+const ER_VARIABLE_NODE_WIDTHS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-variable-node-widths-11.16.1-corpus.json"
+));
+const ER_VARIABLE_NODE_WIDTHS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-variable-node-widths-11.16.1-visual-corpus.json"
+));
 const ER_ATTRIBUTE_FORMS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-corpus.json"
@@ -2707,6 +2715,29 @@ fn pinned_er_frontmatter_title_reaches_semantic_ir() {
     assert_eq!(diagram.title.as_deref(), Some("simple ER diagram"));
     assert_eq!(diagram.nodes.len(), 3);
     assert_eq!(diagram.relationships.len(), 2);
+}
+
+#[test]
+fn pinned_er_variable_node_widths_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_VARIABLE_NODE_WIDTHS_CORPUS)
+        .expect("ER variable node widths corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_VARIABLE_NODE_WIDTHS_VISUAL_CORPUS)
+        .expect("ER variable node widths visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER variable node widths source"),
+    )
+    .expect("ER variable node widths fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 2);
+    assert_eq!(diagram.relationships.len(), 1);
+    assert_eq!(diagram.nodes[0].id, "PRIVATE_FINANCIAL_INSTITUTION");
+    assert_eq!(diagram.nodes[0].compartments[0].entries, ["name: string", "turnover: int"]);
+    assert_eq!(diagram.nodes[1].id, "EMPLOYEE");
+    assert_eq!(diagram.nodes[1].compartments[0].entries, ["officer_of_firm: bool"]);
 }
 
 #[test]

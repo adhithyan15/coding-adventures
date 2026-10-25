@@ -1608,6 +1608,19 @@ mod tests {
     }
 
     #[test]
+    fn long_entity_and_attribute_names_reserve_distinct_node_widths() {
+        let mut diagram = two_class_diagram();
+        diagram.nodes[0].label = "PRIVATE_FINANCIAL_INSTITUTION".into();
+        diagram.nodes[0].compartments[0].entries =
+            vec!["officer_of_firm: bool".into()];
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert!(layout.nodes[0].width > layout.nodes[1].width);
+        assert!(layout.nodes[1].x >= layout.nodes[0].x + layout.nodes[0].width + COL_GAP);
+    }
+
+    #[test]
     fn relationship_labels_resolve_to_backend_neutral_geometry() {
         let mut diagram = two_class_diagram();
         diagram.relationships[0].label = Some("inherits from".into());
