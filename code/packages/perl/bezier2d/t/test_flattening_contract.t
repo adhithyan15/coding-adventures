@@ -62,4 +62,7 @@ my $result;
 like dies { $result = $overflow->polyline(0.1) }, qr/finite/, 'rejects nonfinite derived geometry';
 is $result, undef, 'derived-geometry failure returns no partial result';
 
+my $subnormal = new_quad(new_point(0, 0), new_point(0, 1e-200), new_point(1e-200, 0));
+like dies { $subnormal->polyline(5e-324) }, qr/budget/, 'subnormal geometry cannot underflow into a chord';
+
 done_testing;

@@ -76,4 +76,12 @@ class TestSafeFlatteningContract < Minitest::Test
     assert_match(/finite/, error.message)
     assert_nil result
   end
+
+  def test_subnormal_geometry_cannot_underflow_into_a_chord
+    curve = Bezier2D::QuadraticBezier.new(
+      Point.new(0, 0), Point.new(0, 1e-200), Point.new(1e-200, 0)
+    )
+    error = assert_raises(RuntimeError) { curve.polyline(5e-324) }
+    assert_match(/budget/, error.message)
+  end
 end

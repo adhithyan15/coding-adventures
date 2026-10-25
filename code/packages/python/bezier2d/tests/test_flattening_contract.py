@@ -66,3 +66,9 @@ def test_nonfinite_derived_geometry_fails_without_a_result():
     with pytest.raises(RuntimeError, match="finite"):
         result = curve.to_polyline(0.1)
     assert result is None
+
+
+def test_subnormal_geometry_cannot_underflow_into_a_chord():
+    curve = QuadraticBezier(Point(0, 0), Point(0, 1e-200), Point(1e-200, 0))
+    with pytest.raises(RuntimeError, match="budget"):
+        curve.to_polyline(5e-324)
