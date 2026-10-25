@@ -54,10 +54,10 @@ spec = do
             evaluateQuadratic right 0.5 `shouldBePoint` evaluateQuadratic quadratic (amount + (1.0 - amount) * 0.5)
         it "flattens a straight quadratic to its endpoints" $ do
             let straight = QuadraticBezier (Point 0.0 0.0) (Point 1.0 0.0) (Point 2.0 0.0)
-            toPolylineQuadratic straight 0.1 `shouldBe` [Point 0.0 0.0, Point 2.0 0.0]
+            toPolylineQuadratic straight 0.1 `shouldBe` Right [Point 0.0 0.0, Point 2.0 0.0]
         it "subdivides a curved quadratic without duplicate joins" $ do
-            let coarse = toPolylineQuadratic quadratic 2.0
-                fine = toPolylineQuadratic quadratic 0.01
+            let Right coarse = toPolylineQuadratic quadratic 2.0
+                Right fine = toPolylineQuadratic quadratic 0.01
             length coarse `shouldBe` 2
             length fine `shouldSatisfy` (> length coarse)
             head fine `shouldBePoint` quadraticP0 quadratic
@@ -100,15 +100,18 @@ spec = do
             evaluateCubic right 0.5 `shouldBePoint` evaluateCubic cubic (amount + (1.0 - amount) * 0.5)
         it "flattens a straight cubic to its endpoints" $ do
             let straight = CubicBezier (Point 0.0 0.0) (Point 1.0 0.0) (Point 2.0 0.0) (Point 3.0 0.0)
-            toPolylineCubic straight 0.1 `shouldBe` [Point 0.0 0.0, Point 3.0 0.0]
+            toPolylineCubic straight 0.1 `shouldBe` Right [Point 0.0 0.0, Point 3.0 0.0]
         it "uses tighter tolerances for finer curved polylines" $ do
             let arch = CubicBezier (Point 0.0 0.0) (Point 0.0 10.0) (Point 10.0 10.0) (Point 10.0 0.0)
-                coarse = toPolylineCubic arch 8.0
-                fine = toPolylineCubic arch 0.05
+                Right coarse = toPolylineCubic arch 8.0
+                Right fine = toPolylineCubic arch 0.05
             length coarse `shouldBe` 2
             length fine `shouldSatisfy` (> length coarse)
             head fine `shouldBePoint` Point 0.0 0.0
             last fine `shouldBePoint` Point 10.0 0.0
+        it "subdivides the symmetric S whose midpoint lies on its chord" $ do
+            let symmetricS = CubicBezier (Point 0.0 0.0) (Point 0.0 1.0) (Point 0.0 (-1.0)) (Point 0.0 0.0)
+            toPolylineCubic symmetricS 0.1 `shouldSatisfy` either (const False) ((> 2) . length)
         it "computes exact symmetric arch bounds through a linear derivative root" $ do
             let arch = CubicBezier (Point 0.0 0.0) (Point 0.0 10.0) (Point 10.0 10.0) (Point 10.0 0.0)
             boundingBoxCubic arch `shouldBeRect` Rect 0.0 0.0 10.0 7.5
