@@ -191,6 +191,15 @@ XAML app. The host buffers up to 4096 timing samples and appends them on normal
 process exit; no log files are written on the click path. Unset the variable to
 disable instrumentation. A failed export does not fail the application.
 
+For longer selection workloads, also set `MOSAIC_PROFILE_INTERACTIONS_ONLY=1`.
+Only `interaction-handler` and `interaction-next-render` then reserve samples;
+excluded phases create no scope and read no component diagnostics. The same
+4096-sample bound applies to pending and completed scopes together. Any other
+value (or an unset variable) retains full-phase profiling. Settings are read
+once at process startup. This mode omits internal dispatch/persistence timings
+and reduces instrumentation overhead: compare runs using the same mode, and
+do not present filtered and full-phase measurements as equivalent baselines.
+
 Samples contain only a phase, elapsed milliseconds and current-thread managed
 allocated bytes. Phases separate FFI dispatch, snapshot persistence and property
 application. Generated single-root UserControl hosts also time event handling

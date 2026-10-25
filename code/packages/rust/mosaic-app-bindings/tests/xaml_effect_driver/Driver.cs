@@ -496,23 +496,41 @@ internal static class Driver
                 }
                 break;
             case "profile-bounded":
+            case "profile-interactions":
+                if (probeCase == "profile-interactions")
+                {
+                    var excluded = new ProjectionProbe();
+                    for (var i = 0; i < 5000; i++)
+                        Check(MosaicRuntimeHost.BeginProfile("apply-props-set", excluded) is null,
+                            "excluded phase creates no scope");
+                    Check(MosaicRuntimeHost.BeginProfile("Interaction-handler", excluded) is null,
+                        "phase filtering is ordinal and exact");
+                    Check(excluded.Reads == 0, "excluded phases never inspect component diagnostics");
+                }
                 var scopes = new List<IDisposable>();
                 for (var i = 0; i < 5000; i++)
                 {
-                    var scope = MosaicRuntimeHost.BeginProfile("probe");
+                    var phase = probeCase == "profile-interactions"
+                        ? (i % 2 == 0 ? "interaction-handler" : "interaction-next-render") : "probe";
+                    var scope = MosaicRuntimeHost.BeginProfile(phase);
                     if (scope is not null) scopes.Add(scope);
                 }
                 Check(scopes.Count == 4096, "pending profiling scopes are bounded before disposal");
                 foreach (var scope in scopes) CheckScope(scope);
                 break;
             case "profile-validate":
+            case "profile-interactions-validate":
                 var lines = System.IO.File.ReadAllLines(Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH")!);
                 Check(lines.Length == 4096, "profiling sample count is bounded");
+                var profileIndex = 0;
                 foreach (var line in lines)
                 {
                     using var document = System.Text.Json.JsonDocument.Parse(line);
                     var sample = document.RootElement;
-                    if (sample.GetProperty("phase").GetString() != "probe"
+                    var expectedPhase = probeCase == "profile-interactions-validate"
+                        ? (profileIndex % 2 == 0 ? "interaction-handler" : "interaction-next-render") : "probe";
+                    profileIndex++;
+                    if (sample.GetProperty("phase").GetString() != expectedPhase
                         || sample.GetProperty("milliseconds").GetDouble() < 0
                         || sample.GetProperty("bytes").GetInt64() < 0)
                         failures++;
