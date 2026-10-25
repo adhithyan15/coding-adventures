@@ -125,6 +125,14 @@ const ER_NUMERIC_CARDINALITY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-numeric-cardinality-11.16.1-visual-corpus.json"
 ));
+const ER_NUMERIC_ENTITY_BOUNDARIES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-numeric-entity-boundaries-11.16.1-corpus.json"
+));
+const ER_NUMERIC_ENTITY_BOUNDARIES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-numeric-entity-boundaries-11.16.1-visual-corpus.json"
+));
 const ER_QUOTED_ENTITY_VALIDATION_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-quoted-entity-validation-11.16.1-corpus.json"
@@ -2544,6 +2552,35 @@ fn pinned_er_numeric_cardinality_disambiguates_numeric_entities() {
     assert_eq!(diagram.relationships[1].from_mult.as_deref(), Some("0..*"));
     assert_eq!(diagram.relationships[1].to_mult.as_deref(), Some("1"));
     assert!(diagram.nodes.iter().any(|node| node.id == "1"));
+}
+
+#[test]
+fn pinned_er_numeric_entity_boundaries_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_NUMERIC_ENTITY_BOUNDARIES_CORPUS)
+        .expect("ER numeric entity boundary corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_NUMERIC_ENTITY_BOUNDARIES_VISUAL_CORPUS)
+        .expect("ER numeric entity boundary visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER numeric entity boundary source"),
+    )
+    .expect("ER numeric entity boundary fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 3);
+    for id in ["a", "1", "12"] {
+        assert!(diagram.nodes.iter().any(|node| node.id == id));
+    }
+    assert_eq!(diagram.relationships.len(), 2);
+    assert_eq!(diagram.relationships[0].to, "1");
+    assert_eq!(diagram.relationships[1].to, "12");
+    for relationship in &diagram.relationships {
+        assert_eq!(relationship.from_mult.as_deref(), Some("0..*"));
+        assert_eq!(relationship.to_mult.as_deref(), Some("1"));
+        assert_eq!(relationship.label.as_deref(), Some("label"));
+    }
 }
 
 #[test]
