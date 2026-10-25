@@ -1564,6 +1564,28 @@ trust roots, check revocation, perform I/O, open a socket, authorize HTTP or
 OAuth transport, or replace `tls-platform`. Concrete HTTPS remains
 unavailable.
 
+An allocation-free `tls13-inner-plaintext` prerequisite now specifies the
+authenticated cleartext syntax inside a protected TLS 1.3 record. Its decoder
+first bounds the complete caller-supplied cleartext, scans backward only within
+that slice for the final nonzero content-type octet, and returns borrowed
+content plus the zero-padding length. Its encoder validates the entire
+`content || type || zero padding` length and caller-owned output capacity before
+writing. A caller-selected ceiling from 1 through `2^14 + 1` carries negotiated
+record-size policy, and a non-empty, duplicate-free allowlist keeps protected
+content authorization data-driven. Only `handshake`, `alert`, and
+`application_data` may be allowed: protected ChangeCipherSpec is forbidden.
+Empty application data remains representable while empty handshake and alert
+content fail closed. Stable failures retain no cleartext bytes, content type
+value, or lengths.
+
+This slice may receive only cleartext already authenticated by a future AEAD
+boundary. It does not encrypt, decrypt, authenticate, select padding, manage
+nonces or record sequence numbers, process handshake or alert messages,
+negotiate versions or cipher suites, derive keys, read entropy or a clock,
+validate certificates, select trust roots, check revocation, perform I/O, open
+a socket, authorize HTTP or OAuth transport, or replace `tls-platform`.
+Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

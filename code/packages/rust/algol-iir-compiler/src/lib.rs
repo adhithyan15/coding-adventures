@@ -5015,14 +5015,48 @@ impl Compiler {
                     }
                 }
                 if rooted.len() > 1 {
+                    let first_rooted_index = rooted.first()?.0;
                     let last_rooted_index = rooted.last()?.0;
+                    if first_rooted_index > 0
+                        && !matches!(
+                            sequence.get(first_rooted_index - 1),
+                            Some(Piece::Op(op)) if op == "*"
+                        )
+                    {
+                        return None;
+                    }
                     if sequence.iter().enumerate().any(|(index, piece)| {
                         !index.is_multiple_of(2)
+                            && index > first_rooted_index
                             && index < last_rooted_index
                             && !matches!(piece, Piece::Op(op) if op == "*")
                     }) {
                         return None;
                     }
+                    let prefix_units = if first_rooted_index > 0 {
+                        let mut prefix_value: Option<i64> = None;
+                        for (index, operator, _, signed_units) in &static_terms {
+                            if *index >= first_rooted_index {
+                                continue;
+                            }
+                            prefix_value = Some(match (prefix_value, *operator) {
+                                (None, None) => *signed_units,
+                                (Some(lhs), Some("*")) => lhs.checked_mul(*signed_units)?,
+                                (Some(lhs), Some("/")) => {
+                                    if *signed_units == 0 || lhs % *signed_units != 0 {
+                                        return None;
+                                    }
+                                    lhs.checked_div(*signed_units)?
+                                }
+                                (Some(lhs), Some("div")) => lhs.checked_div(*signed_units)?,
+                                (Some(lhs), Some("mod")) => lhs.checked_rem(*signed_units)?,
+                                _ => return None,
+                            });
+                        }
+                        Some(prefix_value?.unsigned_abs())
+                    } else {
+                        None
+                    };
                     let mut roots = rooted.iter().map(|(_, proof)| *proof);
                     let mut proof = roots.next()?;
                     if !self.is_selector_call_safe_runtime_real_root(proof.operand) {
@@ -5038,7 +5072,17 @@ impl Compiler {
                             return None;
                         }
                     }
+                    if let Some(units) = prefix_units {
+                        proof.magnitude = proof.magnitude.checked_mul(units)?;
+                        proof.value_gcd = proof.value_gcd.checked_mul(units)?;
+                        if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                            return None;
+                        }
+                    }
                     for (index, operator, units, _) in static_terms {
+                        if index < first_rooted_index {
+                            continue;
+                        }
                         if index <= last_rooted_index || operator == Some("*") {
                             proof.magnitude = proof.magnitude.checked_mul(units)?;
                             proof.value_gcd = proof.value_gcd.checked_mul(units)?;
@@ -15801,6 +15845,43 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "inexact, inter-root, zero, and rooted divisors must remain outside the proof",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_multiple_sign_products_accept_checked_static_prefix_reductions() {
+        for source in [
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(12 div 5 * sign(left()) * sign(right())); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(19 mod 5 * sign(left()) * sign(right()) * 3); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(12 / 3 * sign(left()) * sign(right())); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((20 div 3 * sign(left()) * sign(right())) mod 5) ^ 2); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a checked static prefix preserves an exact multiple-sign product for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_multiple_sign_product_prefixes_reject_unproven_reductions() {
+        for source in [
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(12 div 0 * sign(left()) * sign(right())); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(12 / 5 * sign(left()) * sign(right())); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(12 div sign(left()) * sign(right())); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(12 div 5 * sign(left()) div 2 * sign(right())); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "zero, inexact, rooted, and inter-root prefix reductions must remain outside the proof",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
