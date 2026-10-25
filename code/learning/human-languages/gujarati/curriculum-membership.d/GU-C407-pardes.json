@@ -1,0 +1,11 @@
+{
+  "id": "GU-C407-pardes",
+  "pathSegment": "GU-PATH-407-ABROAD407",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-407-ABROAD407",
+      "order": 0
+    }
+  ]
+}

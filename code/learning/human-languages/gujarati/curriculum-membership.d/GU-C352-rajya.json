@@ -1,0 +1,11 @@
+{
+  "id": "GU-C352-rajya",
+  "pathSegment": "GU-PATH-352-SARKAR352",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-352-SARKAR352",
+      "order": 1
+    }
+  ]
+}

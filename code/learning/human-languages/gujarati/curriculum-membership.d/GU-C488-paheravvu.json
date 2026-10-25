@@ -1,0 +1,11 @@
+{
+  "id": "GU-C488-paheravvu",
+  "pathSegment": "GU-PATH-488-NAVDAV488",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-488-NAVDAV488",
+      "order": 2
+    }
+  ]
+}

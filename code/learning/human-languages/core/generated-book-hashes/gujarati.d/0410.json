@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:1e55d5909c356091",
+  "lessonIds": [
+    "GU-C410-bathrum",
+    "GU-C410-sandas",
+    "GU-C410-gijhar",
+    "GU-C410-ulecvu",
+    "GU-C410-nicovvu"
+  ],
+  "tex": "gujarati/book/chapters/ch410-bathrooms-and-hot-water.tex"
+}

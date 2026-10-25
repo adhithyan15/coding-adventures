@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C440-naher",
+    "language": "gujarati",
+    "chapter": 440,
+    "sequence": 24440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:119fee3a18a0ecaf"
+  },
+  "findings": []
+}

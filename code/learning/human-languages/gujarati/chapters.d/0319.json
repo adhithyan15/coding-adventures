@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "The Old Fort",
+  "label": "ch:gu-the-old-fort",
+  "canDo": "I can describe an old fort and what remains of it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C319-vasvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can describe an old fort and what remains of it.",
+    "assesses": [
+      "GU-LEX-C319-KILLO319-03",
+      "GU-LEX-C319-KILLO319-04",
+      "GU-LEX-C319-KILLO319-05"
+    ]
+  }
+}

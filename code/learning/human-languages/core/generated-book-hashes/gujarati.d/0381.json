@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:e8ed1845f93f31c6",
+  "lessonIds": [
+    "GU-C381-pastavu",
+    "GU-C381-aphsos",
+    "GU-C381-kas",
+    "GU-C381-jhurvu",
+    "GU-C381-moko"
+  ],
+  "tex": "gujarati/book/chapters/ch381-if-only.tex"
+}

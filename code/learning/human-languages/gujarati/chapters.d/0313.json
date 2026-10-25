@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "A Rumour Spreads",
+  "label": "ch:gu-a-rumour-spreads",
+  "canDo": "I can tell a rumour from the truth.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C313-khabar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can tell a rumour from the truth.",
+    "assesses": [
+      "GU-LEX-C313-AFVA313-03",
+      "GU-LEX-C313-AFVA313-04",
+      "GU-LEX-C313-AFVA313-05"
+    ]
+  }
+}

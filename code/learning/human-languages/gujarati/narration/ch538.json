@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 538,
+  "title": "In Two Minds",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:63905146e8531d67",
+  "lessons": [
+    {
+      "id": "GU-C538-vimasan",
+      "sequence": 29890,
+      "title": "વિમાસણ (vimāsaṇ) — a quandary",
+      "headword": "વિમાસણ",
+      "romanization": "vimāsaṇ",
+      "gloss": "a quandary",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02c654d31848d5f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to pick out, then the Gujarati for to appeal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વિમાસણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિમાસણ — vimāsaṇ — \"a quandary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે વિમાસણમાં પડશો તો મને ફોન કરો. jo tame vimāsaṇmā̃ paḍśo to mane phon karo. If you find yourself in a quandary, phone me."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિમાસણ (vimāsaṇ) is being caught between choices and uneasy about what will come; one \"falls\" into it: વિમાસણમાં પડવું. CDIAL lists the Gujarati word, with the sense \"fearful anticipation\", under Sanskrit vimarśana, \"investigation\" (CDIAL 11820)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimāsaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimāsaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimāsaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimāsaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame vimāsaṇmā̃ paḍśo to mane phon karo. — If you find yourself in a quandary, phone me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame vimāsaṇmā̃ paḍśo to mane phon karo.* — If you find yourself in a quandary, phone me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to pick out, then the Gujarati for to appeal, then say vimāsaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to pick out, then the Gujarati for to appeal, then say *vimāsaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વિમાસણ (vimāsaṇ) mean? (\"A quandary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C538-dhacupcu",
+      "sequence": 29900,
+      "title": "ઢચુપચુ (ḍhacupcu) — undecided (in two minds)",
+      "headword": "ઢચુપચુ",
+      "romanization": "ḍhacupcu",
+      "gloss": "undecided (in two minds)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15f71298978a5a2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to appeal, then the Gujarati for a quandary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઢચુપચુ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઢચુપચુ — ḍhacupcu — \"undecided (in two minds)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે ઢચુપચુ રહેશો તો કોઈ તમારો વિશ્વાસ નહીં કરે. jo tame ḍhacupcu raheśo to koī tamāro viśvās nahī̃ kare. If you stay undecided, nobody will trust you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઢચુપચુ (ḍhacupcu) is an expressive, jingling word, its sound swinging like the mind it describes. No dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhacupcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhacupcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhacupcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhacupcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame ḍhacupcu raheśo to koī tamāro viśvās nahī̃ kare. — If you stay undecided, nobody will trust you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame ḍhacupcu raheśo to koī tamāro viśvās nahī̃ kare.* — If you stay undecided, nobody will trust you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to appeal, then the Gujarati for a quandary, then say ḍhacupcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to appeal, then the Gujarati for a quandary, then say *ḍhacupcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઢચુપચુ (ḍhacupcu) mean? (\"Undecided (in two minds)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C538-gadamthal",
+      "sequence": 29910,
+      "title": "ગડમથલ (gaḍamthal) — inner turmoil",
+      "headword": "ગડમથલ",
+      "romanization": "gaḍamthal",
+      "gloss": "inner turmoil",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e21a111e8e39947",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a quandary, then the Gujarati for undecided."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગડમથલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગડમથલ — gaḍamthal — \"inner turmoil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો હું તેને સાચું કહેત તો મારી ગડમથલ ઓછી થાત. jo hũ tene sācũ kahet to mārī gaḍamthal ochī thāt. If I had told him the truth, my inner turmoil would have been less."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગડમથલ (gaḍamthal) is an expressive word for the churning of a mind that cannot settle. No dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaḍamthal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaḍamthal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaḍamthal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaḍamthal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo hũ tene sācũ kahet to mārī gaḍamthal ochī thāt. — If I had told him the truth, my inner turmoil would have been less.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo hũ tene sācũ kahet to mārī gaḍamthal ochī thāt.* — If I had told him the truth, my inner turmoil would have been less.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a quandary, then the Gujarati for undecided, then say gaḍamthal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a quandary, then the Gujarati for undecided, then say *gaḍamthal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગડમથલ (gaḍamthal) mean? (\"Inner turmoil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C538-gholvu",
+      "sequence": 29920,
+      "title": "ઘોળવું (ghoḷvũ) — to mull over",
+      "headword": "ઘોળવું",
+      "romanization": "ghoḷvũ",
+      "gloss": "to mull over",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:707142c4f00f3dff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for undecided, then the Gujarati for inner turmoil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઘોળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘોળવું — ghoḷvũ — \"to mull over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે આ વાત બે દિવસ ઘોળશો તો તમને જવાબ મળશે. jo tame ā vāt be divas ghoḷśo to tamne javāb maḷśe. If you mull this over for two days, you'll find the answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે વાત ઘોળી, teṇe vāt ghoḷī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘોળવું (ghoḷvũ) is filed by CDIAL under Sanskrit ghōlayati, \"stirs, mixes\", and CDIAL lists the Gujarati verb, \"to shake about; to ponder on\" (CDIAL 4526): a thought stirred round and round."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghoḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghoḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghoḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghoḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame ā vāt be divas ghoḷśo to tamne javāb maḷśe. — If you mull this over for two days, you'll find the answer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame ā vāt be divas ghoḷśo to tamne javāb maḷśe.* — If you mull this over for two days, you'll find the answer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for undecided, then the Gujarati for inner turmoil, then say ghoḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for undecided, then the Gujarati for inner turmoil, then say *ghoḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઘોળવું (ghoḷvũ) mean? (\"To mull over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C538-nivedo",
+      "sequence": 29930,
+      "title": "નિવેડો (niveḍo) — a settlement (of a matter)",
+      "headword": "નિવેડો",
+      "romanization": "niveḍo",
+      "gloss": "a settlement (of a matter)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb3d0f440989f0ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for inner turmoil, then the Gujarati for to mull over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નિવેડો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નિવેડો — niveḍo — \"a settlement (of a matter)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આપણે બેસીને વાત કરીશું તો નિવેડો આવશે. jo āpaṇe besīne vāt karīśũ to niveḍo āvśe. If we sit down and talk, the matter will be settled."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નિવેડો (niveḍo) is how a matter ends once it is decided; a settlement \"comes\": નિવેડો આવશે. CDIAL records the Gujarati noun, \"a settlement, a decision\", under a reconstructed nirvarati, \"restrains\" (CDIAL 7392)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niveḍo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niveḍo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niveḍo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niveḍo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo āpaṇe besīne vāt karīśũ to niveḍo āvśe. — If we sit down and talk, the matter will be settled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo āpaṇe besīne vāt karīśũ to niveḍo āvśe.* — If we sit down and talk, the matter will be settled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for inner turmoil, then the Gujarati for to mull over, then say niveḍo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for inner turmoil, then the Gujarati for to mull over, then say *niveḍo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નિવેડો (niveḍo) mean? (\"A settlement (of a matter)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

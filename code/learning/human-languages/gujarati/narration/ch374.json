@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 374,
+  "title": "Obstacles",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f5dfa5d84bb1cfad",
+  "lessons": [
+    {
+      "id": "GU-C374-avrodh",
+      "sequence": 20790,
+      "title": "અવરોધ (avrodh) — an obstruction",
+      "headword": "અવરોધ",
+      "romanization": "avrodh",
+      "gloss": "an obstruction",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff420dab08a80263",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a difficulty, then the Gujarati for to get in the way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અવરોધ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અવરોધ — avrodh — \"an obstruction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો રસ્તામાં કોઈ અવરોધ હશે તો આપણે બીજા રસ્તે જઈશું. jo rastāmā̃ koī avrodh haśe to āpaṇe bījā raste jaīśũ. If there is something blocking the road, we will take another way."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અવરોધ (avrodh) is a tatsama, borrowed from Sanskrit avarodha, \"hindrance, blockade\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avrodh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avrodh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avrodh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avrodh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo rastāmā̃ koī avrodh haśe to āpaṇe bījā raste jaīśũ. — If there is something blocking the road, we will take another way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo rastāmā̃ koī avrodh haśe to āpaṇe bījā raste jaīśũ.* — If there is something blocking the road, we will take another way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a difficulty, then the Gujarati for to get in the way, then say avrodh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a difficulty, then the Gujarati for to get in the way, then say *avrodh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અવરોધ (avrodh) mean? (\"An obstruction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C374-vighna",
+      "sequence": 20800,
+      "title": "વિઘ્ન (vighna) — a hindrance",
+      "headword": "વિઘ્ન",
+      "romanization": "vighna",
+      "gloss": "a hindrance",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b985618a3881755",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to get in the way, then the Gujarati for an obstruction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વિઘ્ન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિઘ્ન — vighna — \"a hindrance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો કોઈ વિઘ્ન આવશે તો અમે લગ્ન મુલતવી રાખીશું. jo koī vighna āvśe to ame lagna mulatvī rākhīśũ. If some hitch comes up, we will put off the wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિઘ્ન (vighna) is a tatsama, borrowed from Sanskrit vighna, \"a breaker; an obstacle\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vighna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vighna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vighna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vighna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo koī vighna āvśe to ame lagna mulatvī rākhīśũ. — If some hitch comes up, we will put off the wedding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo koī vighna āvśe to ame lagna mulatvī rākhīśũ.* — If some hitch comes up, we will put off the wedding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to get in the way, then the Gujarati for an obstruction, then say vighna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to get in the way, then the Gujarati for an obstruction, then say *vighna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વિઘ્ન (vighna) mean? (\"A hindrance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C374-musibat",
+      "sequence": 20810,
+      "title": "મુસીબત (musībat) — trouble",
+      "headword": "મુસીબત",
+      "romanization": "musībat",
+      "gloss": "trouble",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fb16223209d2c99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an obstruction, then the Gujarati for a hindrance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મુસીબત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મુસીબત — musībat — \"trouble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે મોડું કરશો તો મુસીબતમાં પડશો. jo tame moḍũ karśo to musībatmā̃ paḍśo. If you are late, you will land in trouble."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મુસીબત (musībat) is usually traced to Arabic muṣība, \"a misfortune\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musībat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musībat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musībat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musībat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame moḍũ karśo to musībatmā̃ paḍśo. — If you are late, you will land in trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame moḍũ karśo to musībatmā̃ paḍśo.* — If you are late, you will land in trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an obstruction, then the Gujarati for a hindrance, then say musībat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an obstruction, then the Gujarati for a hindrance, then say *musībat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મુસીબત (musībat) mean? (\"Trouble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C374-khalvu",
+      "sequence": 20820,
+      "title": "ખાળવું (khāḷvũ) — to keep in check",
+      "headword": "ખાળવું",
+      "romanization": "khāḷvũ",
+      "gloss": "to keep in check",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e7d281f259f658a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a hindrance, then the Gujarati for trouble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ખાળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખાળવું — khāḷvũ — \"to keep in check\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આપણે નદીનું પાણી ખાળીશું તો ગામ બચી જશે. jo āpaṇe nadīnũ pāṇī khāḷīśũ to gām bacī jaśe. If we hold back the river water, the village will be saved."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે આંસુ ખાળ્યાં, teṇe ā̃su khāḷyā̃."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખાળવું (khāḷvũ) is inherited from Sanskrit skhālayati, \"causes to falter, stops\"; CDIAL lists the Gujarati verb, \"to hinder, to stop\" (CDIAL 13664)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo āpaṇe nadīnũ pāṇī khāḷīśũ to gām bacī jaśe. — If we hold back the river water, the village will be saved.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo āpaṇe nadīnũ pāṇī khāḷīśũ to gām bacī jaśe.* — If we hold back the river water, the village will be saved.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a hindrance, then the Gujarati for trouble, then say khāḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a hindrance, then the Gujarati for trouble, then say *khāḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ખાળવું (khāḷvũ) mean? (\"To keep in check\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C374-nivarvu",
+      "sequence": 20830,
+      "title": "નિવારવું (nivārvũ) — to avert",
+      "headword": "નિવારવું",
+      "romanization": "nivārvũ",
+      "gloss": "to avert",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7407b142b48114c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for trouble, then the Gujarati for to keep in check."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નિવારવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નિવારવું — nivārvũ — \"to avert\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આપણે હાથ ધોઈશું તો ઘણા રોગ નિવારી શકીશું. jo āpaṇe hāth dhoīśũ to ghaṇā rog nivārī śakīśũ. If we wash our hands, we can prevent many illnesses."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે મોટી આપત્તિ નિવારી, teṇe moṭī āpatti nivārī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નિવારવું (nivārvũ) is inherited from Sanskrit nivārayati, \"wards off, restrains\"; CDIAL lists the Gujarati verb, \"to turn back, to avert\" (CDIAL 7419)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivārvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivārvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivārvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivārvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo āpaṇe hāth dhoīśũ to ghaṇā rog nivārī śakīśũ. — If we wash our hands, we can prevent many illnesses.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo āpaṇe hāth dhoīśũ to ghaṇā rog nivārī śakīśũ.* — If we wash our hands, we can prevent many illnesses.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for trouble, then the Gujarati for to keep in check, then say nivārvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for trouble, then the Gujarati for to keep in check, then say *nivārvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નિવારવું (nivārvũ) mean? (\"To avert\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

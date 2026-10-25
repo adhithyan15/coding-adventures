@@ -1,0 +1,5 @@
+tests/diff/simple-try-catch/input/a.js:30:2: ERROR - [JSC_PARSE_ERROR] Parse error. return must be inside function
+  30|   return;
+        ^
+
+1 error(s), 0 warning(s)

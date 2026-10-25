@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:765f94e62be6f5ed",
+  "lessonIds": [
+    "GU-C538-vimasan",
+    "GU-C538-dhacupcu",
+    "GU-C538-gadamthal",
+    "GU-C538-gholvu",
+    "GU-C538-nivedo"
+  ],
+  "tex": "gujarati/book/chapters/ch538-in-two-minds.tex"
+}

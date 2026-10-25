@@ -1,0 +1,11 @@
+{
+  "id": "GU-C525-akar",
+  "pathSegment": "GU-PATH-525-SHILP525",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-525-SHILP525",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "Surrounded",
+  "label": "ch:gu-surrounded",
+  "canDo": "I can tell how the police surrounded a house and freed a captive.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C291-chodavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can tell how the police surrounded a house and freed a captive.",
+    "assesses": [
+      "GU-LEX-C291-GHERVU291-03",
+      "GU-LEX-C291-GHERVU291-04",
+      "GU-LEX-C291-GHERVU291-05"
+    ]
+  }
+}

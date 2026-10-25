@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:cddb913164ca4444",
+  "lessonIds": [
+    "GU-C481-kapavu",
+    "GU-C481-rujhavu",
+    "GU-C481-ghavavu",
+    "GU-C481-jharvu",
+    "GU-C481-cholavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch481.txt",
+  "json": "gujarati/narration/ch481.json",
+  "textHash": "fnv1a64:ed17b9afcbb5c40c",
+  "jsonHash": "fnv1a64:b6b354356b8834ba",
+  "findings": []
+}

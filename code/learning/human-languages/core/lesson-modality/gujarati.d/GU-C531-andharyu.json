@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C531-andharyu",
+    "language": "gujarati",
+    "chapter": 531,
+    "sequence": 29540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14eeecb88e5eb2cf"
+  },
+  "findings": []
+}

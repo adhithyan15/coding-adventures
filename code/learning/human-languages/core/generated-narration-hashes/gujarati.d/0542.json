@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:3c6d32f35b753412",
+  "lessonIds": [
+    "GU-C542-samadhan",
+    "GU-C542-vataghat",
+    "GU-C542-madhyasthi",
+    "GU-C542-bhalaman",
+    "GU-C542-vinanti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch542.txt",
+  "json": "gujarati/narration/ch542.json",
+  "textHash": "fnv1a64:62150b4f01676204",
+  "jsonHash": "fnv1a64:16746b4020256d31",
+  "findings": []
+}

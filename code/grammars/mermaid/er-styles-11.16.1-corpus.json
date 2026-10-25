@@ -10,6 +10,14 @@
     {
       "name": "class-and-direct-style",
       "source": "erDiagram\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER {\n  string id PK\n}\nORDER {\n  int id PK\n}\nclassDef base fill:#dcfce7,stroke:#166534,color:#14532d,stroke-width:2px\nclass CUSTOMER,ORDER base\nstyle ORDER fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px"
+    },
+    {
+      "name": "multi-class-composition",
+      "source": "erDiagram\nCUSTOMER\nORDER\nPRODUCT\nclassDef base fill:#dbeafe,stroke:#1d4ed8\nclassDef accent color:#14532d,stroke-width:4px\nclassDef warm,cool fill:#fef3c7,stroke:#b45309\nclass CUSTOMER,ORDER base,accent\nclass CUSTOMER warm\nPRODUCT:::warm,cool"
+    },
+    {
+      "name": "relationship-inline-classes",
+      "source": "erDiagram\nclassDef linked fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d\nCUSTOMER:::linked ||--o{ ORDER:::linked : allows"
     }
   ]
 }

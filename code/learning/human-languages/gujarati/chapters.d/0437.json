@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Frost and the Cold",
+  "label": "ch:gu-frost-and-the-cold",
+  "canDo": "I can talk about a cold winter night.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C437-thartharvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can talk about a cold winter night.",
+    "assesses": [
+      "GU-LEX-C437-COLD437-03",
+      "GU-LEX-C437-COLD437-04",
+      "GU-LEX-C437-COLD437-05"
+    ]
+  }
+}

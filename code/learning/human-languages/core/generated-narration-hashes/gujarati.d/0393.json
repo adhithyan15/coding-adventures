@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:f9d125b7da563cbe",
+  "lessonIds": [
+    "GU-C393-enjin",
+    "GU-C393-lain",
+    "GU-C393-janksan",
+    "GU-C393-siti",
+    "GU-C393-jodvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch393.txt",
+  "json": "gujarati/narration/ch393.json",
+  "textHash": "fnv1a64:1edb3de63e1b5cc7",
+  "jsonHash": "fnv1a64:a6d141adf92b8403",
+  "findings": []
+}

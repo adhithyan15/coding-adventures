@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Dawn and Dusk",
+  "label": "ch:gu-dawn-and-dusk",
+  "canDo": "I can talk about the light at dawn and at dusk.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C438-tamtamvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can talk about the light at dawn and at dusk.",
+    "assesses": [
+      "GU-LEX-C438-DUSK438-03",
+      "GU-LEX-C438-DUSK438-04",
+      "GU-LEX-C438-DUSK438-05"
+    ]
+  }
+}

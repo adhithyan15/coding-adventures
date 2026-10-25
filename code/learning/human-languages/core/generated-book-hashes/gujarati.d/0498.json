@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:da36bec8b9edc9a6",
+  "lessonIds": [
+    "GU-C498-viday",
+    "GU-C498-kanya",
+    "GU-C498-kunvaru",
+    "GU-C498-dahej",
+    "GU-C498-chutacheda"
+  ],
+  "tex": "gujarati/book/chapters/ch498-the-bride-leaves-home.tex"
+}

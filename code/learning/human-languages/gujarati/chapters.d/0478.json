@@ -1,0 +1,21 @@
+{
+  "chapter": 478,
+  "title": "A Cough That Lingers",
+  "label": "ch:gu-a-cough-that-lingers",
+  "canDo": "I can describe a cough and a sore throat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R478-review-471-478",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can describe a cough and a sore throat.",
+    "assesses": [
+      "GU-LEX-C478-KAPH478-01",
+      "GU-LEX-C478-KAPH478-02",
+      "GU-LEX-C478-KAPH478-03",
+      "GU-LEX-C478-KAPH478-04",
+      "GU-LEX-C478-KAPH478-05"
+    ]
+  }
+}

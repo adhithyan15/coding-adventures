@@ -1,0 +1,11 @@
+{
+  "id": "GU-C285-pakadvu",
+  "pathSegment": "GU-PATH-285-CHOR285",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-285-CHOR285",
+      "order": 3
+    }
+  ]
+}

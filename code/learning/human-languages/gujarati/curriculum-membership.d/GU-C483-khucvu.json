@@ -1,0 +1,11 @@
+{
+  "id": "GU-C483-khucvu",
+  "pathSegment": "GU-PATH-483-VEDNA483",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-483-VEDNA483",
+      "order": 2
+    }
+  ]
+}

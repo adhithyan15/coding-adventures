@@ -1,0 +1,11 @@
+{
+  "id": "GU-C503-rando",
+  "pathSegment": "GU-PATH-503-RANDO503",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-503-RANDO503",
+      "order": 0
+    }
+  ]
+}

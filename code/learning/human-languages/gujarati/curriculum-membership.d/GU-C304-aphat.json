@@ -1,0 +1,11 @@
+{
+  "id": "GU-C304-aphat",
+  "pathSegment": "GU-PATH-304-PUR304",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-304-PUR304",
+      "order": 3
+    }
+  ]
+}

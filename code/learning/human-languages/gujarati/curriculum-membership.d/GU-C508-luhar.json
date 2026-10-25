@@ -1,0 +1,11 @@
+{
+  "id": "GU-C508-luhar",
+  "pathSegment": "GU-PATH-508-LUHAR508",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-508-LUHAR508",
+      "order": 1
+    }
+  ]
+}

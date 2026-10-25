@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:6000491de58d71a7",
+  "lessonIds": [
+    "GU-C407-pardes",
+    "GU-C407-vatan",
+    "GU-C407-dolar",
+    "GU-C407-pagpala",
+    "GU-C407-hijravu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch407.txt",
+  "json": "gujarati/narration/ch407.json",
+  "textHash": "fnv1a64:c54450870c989ce2",
+  "jsonHash": "fnv1a64:da8537da61da30b8",
+  "findings": []
+}

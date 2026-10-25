@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C483-vedna",
+    "language": "gujarati",
+    "chapter": 483,
+    "sequence": 26840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a14feb46b97cc115"
+  },
+  "findings": []
+}

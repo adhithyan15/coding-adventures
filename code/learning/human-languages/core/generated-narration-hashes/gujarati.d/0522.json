@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:c4ee38e0ec9a55cc",
+  "lessonIds": [
+    "GU-C522-khayni",
+    "GU-C522-khadvu",
+    "GU-C522-chinvu",
+    "GU-C522-palaalvu",
+    "GU-C522-dalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch522.txt",
+  "json": "gujarati/narration/ch522.json",
+  "textHash": "fnv1a64:a2e6882d288c4088",
+  "jsonHash": "fnv1a64:bcb9501773e66ab7",
+  "findings": []
+}

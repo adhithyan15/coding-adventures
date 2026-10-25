@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-420-HOUSE420",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a simple country house.",
+  "prerequisites": []
+}

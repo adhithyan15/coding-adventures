@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C506-tanvu",
+    "language": "gujarati",
+    "chapter": 506,
+    "sequence": 28280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f21ab6ebb8d957a"
+  },
+  "findings": []
+}

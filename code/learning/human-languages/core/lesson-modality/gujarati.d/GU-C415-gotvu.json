@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C415-gotvu",
+    "language": "gujarati",
+    "chapter": 415,
+    "sequence": 23160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e13141a625817522"
+  },
+  "findings": []
+}

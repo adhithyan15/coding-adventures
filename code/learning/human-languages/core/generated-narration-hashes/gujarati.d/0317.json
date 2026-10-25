@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:6073f0a8518a67c8",
+  "lessonIds": [
+    "GU-C317-itihas",
+    "GU-C317-sadi",
+    "GU-C317-pracin",
+    "GU-C317-bhutkal",
+    "GU-C317-janmavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch317.txt",
+  "json": "gujarati/narration/ch317.json",
+  "textHash": "fnv1a64:2568b17cbf4d0d43",
+  "jsonHash": "fnv1a64:2fa497c852709835",
+  "findings": []
+}

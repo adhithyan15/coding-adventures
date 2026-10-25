@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:d3db4eb19b5c6bb9",
+  "lessonIds": [
+    "GU-C383-prayatna",
+    "GU-C383-kosis",
+    "GU-C383-utsah",
+    "GU-C383-madvu",
+    "GU-C383-jhujhvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch383.txt",
+  "json": "gujarati/narration/ch383.json",
+  "textHash": "fnv1a64:519fc2be12a7e8b4",
+  "jsonHash": "fnv1a64:f6017e1b6b4c8169",
+  "findings": []
+}

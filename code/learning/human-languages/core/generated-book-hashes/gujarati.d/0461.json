@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:b5cc8d8f4027fbac",
+  "lessonIds": [
+    "GU-C461-krpan",
+    "GU-C461-udau",
+    "GU-C461-kangal",
+    "GU-C461-sakhavat",
+    "GU-C461-dan"
+  ],
+  "tex": "gujarati/book/chapters/ch461-saving-and-spending.tex"
+}

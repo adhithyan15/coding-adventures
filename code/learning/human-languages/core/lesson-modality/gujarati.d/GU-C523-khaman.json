@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C523-khaman",
+    "language": "gujarati",
+    "chapter": 523,
+    "sequence": 29130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74b1e7803e6c2f3a"
+  },
+  "findings": []
+}

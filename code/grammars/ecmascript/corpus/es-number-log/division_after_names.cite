@@ -1,0 +1,3 @@
+oracle: node v22.22.0 (V8), host interpreter
+command: node division_after_names.js
+recorded: 2026-10-24, stdout byte for byte

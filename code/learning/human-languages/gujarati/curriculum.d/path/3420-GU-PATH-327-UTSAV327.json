@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-327-UTSAV327",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-327-UTSAV327"
+  ],
+  "after": []
+}

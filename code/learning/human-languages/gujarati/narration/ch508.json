@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 508,
+  "title": "The Blacksmith's Fire",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:25d58ad689cedec8",
+  "lessons": [
+    {
+      "id": "GU-C508-lokhand",
+      "sequence": 28350,
+      "title": "લોખંડ (lokhanḍ) — iron",
+      "headword": "લોખંડ",
+      "romanization": "lokhanḍ",
+      "gloss": "iron",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:548fa139f103037a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a patch (on cloth), then the Gujarati for embroidery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: લોખંડ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લોખંડ — lokhanḍ — \"iron\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ દરવાજો લોખંડનો છે. ā darvājo lokhanḍno che. This gate is made of iron."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લોખંડ (lokhanḍ) comes from lōhōpaskara, \"iron tools\", a form CDIAL builds from lōhá, \"iron\", and upaskara, \"tool\"; CDIAL lists the Gujarati word as \"tools, iron, ironware\" (CDIAL 11171)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokhanḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokhanḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokhanḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokhanḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā darvājo lokhanḍno che. — This gate is made of iron.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā darvājo lokhanḍno che.* — This gate is made of iron.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a patch (on cloth), then the Gujarati for embroidery, then say lokhanḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a patch (on cloth), then the Gujarati for embroidery, then say *lokhanḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does લોખંડ (lokhanḍ) mean? (\"Iron\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C508-luhar",
+      "sequence": 28360,
+      "title": "લુહાર (luhār) — a blacksmith",
+      "headword": "લુહાર",
+      "romanization": "luhār",
+      "gloss": "a blacksmith",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4db47c5e139ff308",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for embroidery, then the Gujarati for iron."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: લુહાર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લુહાર — luhār — \"a blacksmith\"."
+            },
+            {
+              "kind": "speech",
+              "text": "લુહાર લોખંડમાંથી ઓજારો બનાવે છે. luhār lokhanḍmā̃thī ojāro banāve che. The blacksmith makes tools out of iron."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લુહાર (luhār) goes back to Sanskrit lōhakāra, \"an iron-worker\", built from lōha, \"iron\", and kāra, \"maker\"; CDIAL gives the Gujarati form as lavār (CDIAL 11159)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luhār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luhār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luhār lokhanḍmā̃thī ojāro banāve che. — The blacksmith makes tools out of iron.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luhār lokhanḍmā̃thī ojāro banāve che.* — The blacksmith makes tools out of iron.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for embroidery, then the Gujarati for iron, then say luhār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for embroidery, then the Gujarati for iron, then say *luhār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does લુહાર (luhār) mean? (\"A blacksmith\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C508-bhaththi",
+      "sequence": 28370,
+      "title": "ભઠ્ઠી (bhaṭhṭhī) — a furnace",
+      "headword": "ભઠ્ઠી",
+      "romanization": "bhaṭhṭhī",
+      "gloss": "a furnace",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54454dd7328f5caf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for iron, then the Gujarati for a blacksmith."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભઠ્ઠી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભઠ્ઠી — bhaṭhṭhī — \"a furnace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "લુહારની ભઠ્ઠીમાં આગ સળગે છે. luhārnī bhaṭhṭhīmā̃ āg saḷge che. A fire burns in the blacksmith's furnace."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભઠ્ઠી (bhaṭhṭhī) is a furnace or a kiln. CDIAL lists Panjabi bhaṭṭhī, \"a furnace\", and Hindi bhaṭṭhā, \"a kiln\", under Sanskrit bhráṣṭra, \"a frying pan, a gridiron\" (CDIAL 9656); it gives no Gujarati form for this word, so its exact history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaṭhṭhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaṭhṭhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaṭhṭhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaṭhṭhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luhārnī bhaṭhṭhīmā̃ āg saḷge che. — A fire burns in the blacksmith's furnace.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luhārnī bhaṭhṭhīmā̃ āg saḷge che.* — A fire burns in the blacksmith's furnace.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for iron, then the Gujarati for a blacksmith, then say bhaṭhṭhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for iron, then the Gujarati for a blacksmith, then say *bhaṭhṭhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભઠ્ઠી (bhaṭhṭhī) mean? (\"A furnace\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C508-tapavvu",
+      "sequence": 28380,
+      "title": "તપાવવું (tapāvvũ) — to heat (something)",
+      "headword": "તપાવવું",
+      "romanization": "tapāvvũ",
+      "gloss": "to heat (something)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08700a8c0b3b65c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a blacksmith, then the Gujarati for a furnace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: તપાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તપાવવું — tapāvvũ — \"to heat (something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "લુહારે ભઠ્ઠીમાં લોખંડ તપાવ્યું. luhāre bhaṭhṭhīmā̃ lokhanḍ tapāvyũ. The blacksmith heated the iron in the furnace."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે લોખંડ તપાવ્યું, teṇe lokhanḍ tapāvyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તપાવવું (tapāvvũ) is built from તપવું, \"to be hot\", with the causative -āv-: to make something hot. CDIAL files the family under Sanskrit tapyati, \"is hot\" (CDIAL 5684)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luhāre bhaṭhṭhīmā̃ lokhanḍ tapāvyũ. — The blacksmith heated the iron in the furnace.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luhāre bhaṭhṭhīmā̃ lokhanḍ tapāvyũ.* — The blacksmith heated the iron in the furnace.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a blacksmith, then the Gujarati for a furnace, then say tapāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a blacksmith, then the Gujarati for a furnace, then say *tapāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does તપાવવું (tapāvvũ) mean? (\"To heat (something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C508-eran",
+      "sequence": 28390,
+      "title": "એરણ (eraṇ) — an anvil",
+      "headword": "એરણ",
+      "romanization": "eraṇ",
+      "gloss": "an anvil",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18093bf83e4a6c21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a furnace, then the Gujarati for to heat (something)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: એરણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "એરણ — eraṇ — \"an anvil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "લુહાર એરણ પર ગરમ લોખંડ મૂકે છે. luhār eraṇ par garam lokhanḍ mūke che. The blacksmith puts the hot iron on the anvil."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "એરણ (eraṇ) is inherited from Sanskrit adhikaraṇī, \"an anvil\", and CDIAL lists the Gujarati word (CDIAL 252)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luhār eraṇ par garam lokhanḍ mūke che. — The blacksmith puts the hot iron on the anvil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luhār eraṇ par garam lokhanḍ mūke che.* — The blacksmith puts the hot iron on the anvil.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a furnace, then the Gujarati for to heat (something), then say eraṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a furnace, then the Gujarati for to heat (something), then say *eraṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does એરણ (eraṇ) mean? (\"An anvil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R508-review-501-508",
+      "sequence": 28400,
+      "title": "Looking back: from The Craftsman's Bench to The Blacksmith's Fire",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from The Craftsman's Bench to The Blacksmith's Fire",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7f0c2fefaf767a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for wood and a craftsman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wood, a craftsman, a tool of a trade, to know how, a profession",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wood, a craftsman, a tool of a trade, to know how, a profession]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a saw, to hollow out, a hammer, a nail, to hammer in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a saw, to hollow out, a hammer, a nail, to hammer in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a carpenter's plane, to smooth, glue, a crack, to split (wood)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a carpenter's plane, to smooth, glue, a crack, to split (wood)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a potter, a potter's wheel, mud plaster, to knead clay, a clay lamp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a potter, a potter's wheel, mud plaster, to knead clay, a clay lamp]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cotton plant, raw cotton, a spinning wheel, to spin (thread), khadi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cotton plant, raw cotton, a spinning wheel, to spin (thread), khadi]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a weaver, a strand, a weave, to stretch tight, to wind round",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a weaver, a strand, a weave, to stretch tight, to wind round]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to thread (a needle), a pearl, to mend (a tear), a patch (on cloth), embroidery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to thread (a needle), a pearl, to mend (a tear), a patch (on cloth), embroidery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iron, a blacksmith, a furnace, to heat (something), an anvil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: iron, a blacksmith, a furnace, to heat (something), an anvil]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Wood? (લાકડું, lākḍũ.) A craftsman? (કારીગર, kārīgar.) A tool of a trade? (ઓજાર, ojār.) To know how? (આવડવું, āvaḍvũ.) A profession? (વ્યવસાય, vyavsāy.) A saw? (કરવત, karvat.) To hollow out? (કોરવું, korvũ.) A hammer? (હથોડી, hathoḍī.) A nail? (મેખ, mekh.) To hammer in? (ઠોકવું, ṭhokvũ.) A carpenter's plane? (રંદો, rando.) To smooth? (મઠારવું, maṭhārvũ.) Glue? (ગુંદર, gundar.) A crack? (તિરાડ, tirāḍ.) To split (wood)? (ચીરવું, cīrvũ.) A potter? (કુંભાર, kumbhār.) A potter's wheel? (ચાકડો, cākḍo.) Mud plaster? (ગારો, gāro.) To knead clay? (ગૂંદવું, gū̃dvũ.) A clay lamp? (કોડિયું, koḍiyũ.) The cotton plant? (કપાસ, kapās.) Raw cotton? (રૂ, rū.) A spinning wheel? (રેંટિયો, rẽṭiyo.) To spin (thread)? (કાંતવું, kā̃tvũ.) Khadi? (ખાદી, khādī.) A weaver? (વણકર, vaṇkar.) A strand? (તાંતણો, tā̃tṇo.) A weave? (વણાટ, vaṇāṭ.) To stretch tight? (તાણવું, tāṇvũ.) To wind round? (વીંટવું, vī̃ṭvũ.) To thread (a needle)? (પરોવવું, parovvũ.) A pearl? (મોતી, motī.) To mend (a tear)? (સાંધવું, sā̃dhvũ.) A patch (on cloth)? (થીંગડું, thī̃gḍũ.) Embroidery? (ભરતકામ, bharatkām.) Iron? (લોખંડ, lokhanḍ.) A blacksmith? (લુહાર, luhār.) A furnace? (ભઠ્ઠી, bhaṭhṭhī.) To heat (something)? (તપાવવું, tapāvvũ.) An anvil? (એરણ, eraṇ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

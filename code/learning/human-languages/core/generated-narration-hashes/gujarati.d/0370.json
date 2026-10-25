@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:95f62f1b0f3c4fe3",
+  "lessonIds": [
+    "GU-C370-khatro",
+    "GU-C370-hani",
+    "GU-C370-apatti",
+    "GU-C370-bagadvu-spoil",
+    "GU-C370-vethvu",
+    "GU-R370-review-363-370"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch370.txt",
+  "json": "gujarati/narration/ch370.json",
+  "textHash": "fnv1a64:95926f57d329cefc",
+  "jsonHash": "fnv1a64:eb492b1b78aa8ffc",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "The Attack at Dawn",
+  "label": "ch:gu-the-attack-at-dawn",
+  "canDo": "I can tell how an attack began and how long the fight went on.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C322-jhajhumvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can tell how an attack began and how long the fight went on.",
+    "assesses": [
+      "GU-LEX-C322-HUMLO322-03",
+      "GU-LEX-C322-HUMLO322-04",
+      "GU-LEX-C322-HUMLO322-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:5b571aa5ebdd41d4",
+  "lessonIds": [
+    "GU-C425-lon",
+    "GU-C425-hapto",
+    "GU-C425-dalal",
+    "GU-C425-giro",
+    "GU-C425-cukte"
+  ],
+  "tex": "gujarati/book/chapters/ch425-loans-and-instalments.tex"
+}

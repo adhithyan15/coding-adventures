@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 520,
+  "title": "Spices in Hot Oil",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8d3f8bb3531fd12b",
+  "lessons": [
+    {
+      "id": "GU-C520-vagharvu",
+      "sequence": 28970,
+      "title": "વઘારવું (vaghārvũ) — to temper (with hot spiced oil)",
+      "headword": "વઘારવું",
+      "romanization": "vaghārvũ",
+      "gloss": "to temper (with hot spiced oil)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dfffaee8019fab5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for steam, then the Gujarati for to let cool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વઘારવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વઘારવું — vaghārvũ — \"to temper (with hot spiced oil)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "માતાએ રાઈ અને જીરાથી દાળ વઘારી. mātāe rāī ane jīrāthī dāḷ vaghārī. Mother tempered the dal with mustard seed and cumin."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે દાળ વઘારી, teṇe dāḷ vaghārī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વઘારવું (vaghārvũ) is inherited from Sanskrit vyághārayati, \"sprinkles over\", and CDIAL lists the Gujarati verb, \"to season\" (CDIAL 12191): hot oil with spices is poured over the dish."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaghārvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaghārvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaghārvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaghārvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātāe rāī ane jīrāthī dāḷ vaghārī. — Mother tempered the dal with mustard seed and cumin.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātāe rāī ane jīrāthī dāḷ vaghārī.* — Mother tempered the dal with mustard seed and cumin.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for steam, then the Gujarati for to let cool, then say vaghārvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for steam, then the Gujarati for to let cool, then say *vaghārvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વઘારવું (vaghārvũ) mean? (\"To temper (with hot spiced oil)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C520-satalvu",
+      "sequence": 28980,
+      "title": "સાંતળવું (sā̃taḷvũ) — to sauté",
+      "headword": "સાંતળવું",
+      "romanization": "sā̃taḷvũ",
+      "gloss": "to sauté",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c0020bd627e07f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to let cool, then the Gujarati for to temper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સાંતળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાંતળવું — sā̃taḷvũ — \"to sauté\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરાએ તેલમાં ડુંગળી સાંતળી. Mīrāe telmā̃ ḍungḷī sā̃tḷī. Mira sautéed the onion in oil."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ડુંગળી સાંતળી, teṇe ḍungḷī sā̃tḷī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાંતળવું (sā̃taḷvũ) comes from saṁtalati, a form CDIAL reconstructs, and CDIAL lists the Gujarati verb, \"to fry in ghee or oil\" (CDIAL 12883)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃taḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃taḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃taḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃taḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrāe telmā̃ ḍungḷī sā̃tḷī. — Mira sautéed the onion in oil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrāe telmā̃ ḍungḷī sā̃tḷī.* — Mira sautéed the onion in oil.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to let cool, then the Gujarati for to temper, then say sā̃taḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to let cool, then the Gujarati for to temper, then say *sā̃taḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સાંતળવું (sā̃taḷvũ) mean? (\"To sauté\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C520-capti",
+      "sequence": 28990,
+      "title": "ચપટી (capṭī) — a pinch (of something)",
+      "headword": "ચપટી",
+      "romanization": "capṭī",
+      "gloss": "a pinch (of something)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e39283b4986827b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to temper, then the Gujarati for to sauté."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચપટી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચપટી — capṭī — \"a pinch (of something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શાકમાં એક ચપટી હળદર નાખો. śākmā̃ ek capṭī haḷdar nākho. Put a pinch of turmeric in the vegetables."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચપટી (capṭī) is as much as fits between finger and thumb. No dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "capṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *capṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "capṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *capṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śākmā̃ ek capṭī haḷdar nākho. — Put a pinch of turmeric in the vegetables.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śākmā̃ ek capṭī haḷdar nākho.* — Put a pinch of turmeric in the vegetables.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to temper, then the Gujarati for to sauté, then say capṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to temper, then the Gujarati for to sauté, then say *capṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચપટી (capṭī) mean? (\"A pinch (of something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C520-chatvu",
+      "sequence": 29000,
+      "title": "છાંટવું (chā̃ṭvũ) — to sprinkle (a liquid)",
+      "headword": "છાંટવું",
+      "romanization": "chā̃ṭvũ",
+      "gloss": "to sprinkle (a liquid)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1e0ed18a9c52352",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to sauté, then the Gujarati for a pinch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: છાંટવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છાંટવું — chā̃ṭvũ — \"to sprinkle (a liquid)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરાએ ગરમ તવા પર થોડું પાણી છાંટ્યું. Mīrāe garam tavā par thoḍũ pāṇī chā̃ṭyũ. Mira sprinkled a little water on the hot griddle."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે પાણી છાંટ્યું, teṇe pāṇī chā̃ṭyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છાંટવું (chā̃ṭvũ) goes back to a reconstructed chaṇṭ, \"scatter\", and CDIAL lists the Gujarati verb, \"to sprinkle\" (CDIAL 4970)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chā̃ṭvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chā̃ṭvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chā̃ṭvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chā̃ṭvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrāe garam tavā par thoḍũ pāṇī chā̃ṭyũ. — Mira sprinkled a little water on the hot griddle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrāe garam tavā par thoḍũ pāṇī chā̃ṭyũ.* — Mira sprinkled a little water on the hot griddle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to sauté, then the Gujarati for a pinch, then say chā̃ṭvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to sauté, then the Gujarati for a pinch, then say *chā̃ṭvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does છાંટવું (chā̃ṭvũ) mean? (\"To sprinkle (a liquid)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C520-bhujvu",
+      "sequence": 29010,
+      "title": "ભૂંજવું (bhū̃jvũ) — to parch (in a dry pan)",
+      "headword": "ભૂંજવું",
+      "romanization": "bhū̃jvũ",
+      "gloss": "to parch (in a dry pan)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98698a0a25d5885c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a pinch, then the Gujarati for to sprinkle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભૂંજવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભૂંજવું — bhū̃jvũ — \"to parch (in a dry pan)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદીએ તવા પર ચણા ભૂંજ્યા. dādīe tavā par caṇā bhū̃jyā. Grandmother parched chickpeas on the griddle."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ચણા ભૂંજ્યા, teṇe caṇā bhū̃jyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભૂંજવું (bhū̃jvũ) comes from bhṛñjati, \"roasts\", a form CDIAL reconstructs, and CDIAL lists the Gujarati verb, \"to roast\" (CDIAL 9586); it is said of grain roasted without oil."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhū̃jvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhū̃jvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhū̃jvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhū̃jvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādīe tavā par caṇā bhū̃jyā. — Grandmother parched chickpeas on the griddle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādīe tavā par caṇā bhū̃jyā.* — Grandmother parched chickpeas on the griddle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a pinch, then the Gujarati for to sprinkle, then say bhū̃jvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a pinch, then the Gujarati for to sprinkle, then say *bhū̃jvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભૂંજવું (bhū̃jvũ) mean? (\"To parch (in a dry pan)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

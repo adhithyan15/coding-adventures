@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:63673b85442de363",
+  "lessonIds": [
+    "GU-C517-vayar",
+    "GU-C517-plag",
+    "GU-C517-svic",
+    "GU-C517-balb",
+    "GU-C517-khosvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch517.txt",
+  "json": "gujarati/narration/ch517.json",
+  "textHash": "fnv1a64:123254bde1f62d86",
+  "jsonHash": "fnv1a64:73a88ff69c74381e",
+  "findings": []
+}

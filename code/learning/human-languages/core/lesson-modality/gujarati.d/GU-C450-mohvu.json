@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C450-mohvu",
+    "language": "gujarati",
+    "chapter": 450,
+    "sequence": 25180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09196ce56b92d0b4"
+  },
+  "findings": []
+}

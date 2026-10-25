@@ -1,0 +1,11 @@
+{
+  "id": "GU-C321-hathiyar",
+  "pathSegment": "GU-PATH-321-TALVAR321",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-321-TALVAR321",
+      "order": 2
+    }
+  ]
+}

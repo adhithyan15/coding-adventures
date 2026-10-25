@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:af9c92e182893fa7",
+  "lessonIds": [
+    "GU-C464-sanu",
+    "GU-C464-vivek",
+    "GU-C464-dahyu",
+    "GU-C464-thavku",
+    "GU-C464-gathvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch464.txt",
+  "json": "gujarati/narration/ch464.json",
+  "textHash": "fnv1a64:f5b89b60a26a227e",
+  "jsonHash": "fnv1a64:5685f7b0d8b51210",
+  "findings": []
+}

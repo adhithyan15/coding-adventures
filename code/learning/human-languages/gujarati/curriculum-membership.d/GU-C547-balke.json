@@ -1,0 +1,11 @@
+{
+  "id": "GU-C547-balke",
+  "pathSegment": "GU-PATH-547-CHATA547",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-547-CHATA547",
+      "order": 3
+    }
+  ]
+}

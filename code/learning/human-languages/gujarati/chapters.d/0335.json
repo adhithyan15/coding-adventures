@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "The Wise Old Man",
+  "label": "ch:gu-the-wise-old-man",
+  "canDo": "I can say what lesson an old story teaches.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C335-sambhalavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can say what lesson an old story teaches.",
+    "assesses": [
+      "GU-LEX-C335-SADHU335-03",
+      "GU-LEX-C335-SADHU335-04",
+      "GU-LEX-C335-SADHU335-05"
+    ]
+  }
+}

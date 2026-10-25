@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Fair and Unfair",
+  "label": "ch:gu-fair-and-unfair",
+  "canDo": "I can say whether people are treated fairly.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C349-vartvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say whether people are treated fairly.",
+    "assesses": [
+      "GU-LEX-C349-SAMAN349-03",
+      "GU-LEX-C349-SAMAN349-04",
+      "GU-LEX-C349-SAMAN349-05"
+    ]
+  }
+}

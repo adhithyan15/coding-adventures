@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "A Gujarati Kitchen",
+  "label": "ch:gu-a-gujarati-kitchen",
+  "canDo": "I can talk about Gujarati snacks and dishes I like.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C523-bolvu-dip",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about Gujarati snacks and dishes I like.",
+    "assesses": [
+      "GU-LEX-C523-FARSAN523-03",
+      "GU-LEX-C523-FARSAN523-04",
+      "GU-LEX-C523-FARSAN523-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:c8cda66b2171e8ba",
+  "lessonIds": [
+    "GU-C469-vicitra",
+    "GU-C469-tarangi",
+    "GU-C469-jhanun",
+    "GU-C469-sust",
+    "GU-C469-udyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch469.txt",
+  "json": "gujarati/narration/ch469.json",
+  "textHash": "fnv1a64:3f21f55cdb948d6b",
+  "jsonHash": "fnv1a64:dbb6b7909ab5c5c9",
+  "findings": []
+}

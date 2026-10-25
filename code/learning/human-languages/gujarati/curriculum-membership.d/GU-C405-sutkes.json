@@ -1,0 +1,11 @@
+{
+  "id": "GU-C405-sutkes",
+  "pathSegment": "GU-PATH-405-FLIGHT405",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-405-FLIGHT405",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C405-paylat",
+  "pathSegment": "GU-PATH-405-FLIGHT405",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-405-FLIGHT405",
+      "order": 1
+    }
+  ]
+}

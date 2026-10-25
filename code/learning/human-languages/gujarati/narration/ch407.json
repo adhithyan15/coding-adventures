@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 407,
+  "title": "Far from Home",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6000491de58d71a7",
+  "lessons": [
+    {
+      "id": "GU-C407-pardes",
+      "sequence": 22710,
+      "title": "પરદેશ (pardeś) — abroad; a foreign country",
+      "headword": "પરદેશ",
+      "romanization": "pardeś",
+      "gloss": "abroad; a foreign country",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4834f0c1757b6f8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an official fee, then the Gujarati for to empty out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પરદેશ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પરદેશ — pardeś — \"abroad; a foreign country\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારો ભાઈ ત્રણ વરસથી પરદેશમાં રહે છે. māro bhāī traṇ varasthī pardeśmā̃ rahe che. My brother has lived abroad for three years."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પરદેશ (pardeś) comes from Sanskrit paradeśa, \"another or a foreign country\" (Monier-Williams): any land that is not your own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pardeś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pardeś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pardeś, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pardeś*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māro bhāī traṇ varasthī pardeśmā̃ rahe che. — My brother has lived abroad for three years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māro bhāī traṇ varasthī pardeśmā̃ rahe che.* — My brother has lived abroad for three years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an official fee, then the Gujarati for to empty out, then say pardeś again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an official fee, then the Gujarati for to empty out, then say *pardeś* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પરદેશ (pardeś) mean? (\"Abroad; a foreign country\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C407-vatan",
+      "sequence": 22720,
+      "title": "વતન (vatan) — a homeland; one's home town",
+      "headword": "વતન",
+      "romanization": "vatan",
+      "gloss": "a homeland; one's home town",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4a4c2cf833b9299",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to empty out, then the Gujarati for abroad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વતન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વતન — vatan — \"a homeland; one's home town\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દિવાળીમાં બધા વતન પાછા આવે છે. divāḷīmā̃ badhā vatan pāchā āve che. At Diwali everyone comes back to their home town."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વતન (vatan) is usually traced to Arabic waṭan, \"a homeland, a dwelling place\", which came through Persian: the place you belong to, wherever you live now."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vatan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vatan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vatan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vatan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divāḷīmā̃ badhā vatan pāchā āve che. — At Diwali everyone comes back to their home town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divāḷīmā̃ badhā vatan pāchā āve che.* — At Diwali everyone comes back to their home town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to empty out, then the Gujarati for abroad, then say vatan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to empty out, then the Gujarati for abroad, then say *vatan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વતન (vatan) mean? (\"A homeland; one's home town\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C407-dolar",
+      "sequence": 22730,
+      "title": "ડોલર (ḍolar) — a dollar",
+      "headword": "ડોલર",
+      "romanization": "ḍolar",
+      "gloss": "a dollar",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:771e1e0ff676fa8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for abroad, then the Gujarati for a homeland."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ડોલર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડોલર — ḍolar — \"a dollar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "એક ડોલરના કેટલા રૂપિયા મળે છે? ek ḍolarnā keṭlā rūpiyā maḷe che? How many rupees do you get for a dollar?"
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડોલર (ḍolar) is borrowed from English dollar."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍolar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍolar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍolar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍolar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek ḍolarnā keṭlā rūpiyā maḷe che? — How many rupees do you get for a dollar?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek ḍolarnā keṭlā rūpiyā maḷe che?* — How many rupees do you get for a dollar?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for abroad, then the Gujarati for a homeland, then say ḍolar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for abroad, then the Gujarati for a homeland, then say *ḍolar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ડોલર (ḍolar) mean? (\"A dollar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C407-pagpala",
+      "sequence": 22740,
+      "title": "પગપાળા (pagpāḷā) — on foot",
+      "headword": "પગપાળા",
+      "romanization": "pagpāḷā",
+      "gloss": "on foot",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af70e66f198b1e8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a homeland, then the Gujarati for a dollar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પગપાળા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પગપાળા — pagpāḷā — \"on foot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમે સ્ટેશન સુધી પગપાળા ગયા. ame sṭeśan sudhī pagpāḷā gayā. We went to the station on foot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પગપાળા (pagpāḷā) is built from પગ, a foot, and pāḷũ, \"on foot\", which CDIAL lists for Gujarati under pādala, \"belonging to the feet\", a form it reconstructs (CDIAL 8066)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pagpāḷā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pagpāḷā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pagpāḷā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pagpāḷā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame sṭeśan sudhī pagpāḷā gayā. — We went to the station on foot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame sṭeśan sudhī pagpāḷā gayā.* — We went to the station on foot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a homeland, then the Gujarati for a dollar, then say pagpāḷā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a homeland, then the Gujarati for a dollar, then say *pagpāḷā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પગપાળા (pagpāḷā) mean? (\"On foot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C407-hijravu",
+      "sequence": 22750,
+      "title": "હિજરાવું (hijrāvũ) — to pine for home; to grieve inwardly",
+      "headword": "હિજરાવું",
+      "romanization": "hijrāvũ",
+      "gloss": "to pine for home; to grieve inwardly",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3311823792100da1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a dollar, then the Gujarati for on foot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: હિજરાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હિજરાવું — hijrāvũ — \"to pine for home; to grieve inwardly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પરદેશમાં દાદી વતન માટે હિજરાતી હતી. pardeśmā̃ dādī vatan māṭe hijrātī hatī. Abroad, grandmother used to pine for her home town."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): તે ઘણી હિજરાઈ, te ghaṇī hijrāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હિજરાવું (hijrāvũ) is usually traced to Persian hijrān, \"separation\", a word of Arabic origin: the ache of being far from people and places you love."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hijrāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hijrāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hijrāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hijrāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pardeśmā̃ dādī vatan māṭe hijrātī hatī. — Abroad, grandmother used to pine for her home town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pardeśmā̃ dādī vatan māṭe hijrātī hatī.* — Abroad, grandmother used to pine for her home town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a dollar, then the Gujarati for on foot, then say hijrāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a dollar, then the Gujarati for on foot, then say *hijrāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does હિજરાવું (hijrāvũ) mean? (\"To pine for home; to grieve inwardly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

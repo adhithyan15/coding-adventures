@@ -1,0 +1,11 @@
+{
+  "id": "GU-C362-namuno",
+  "pathSegment": "GU-PATH-362-SANSHODHAN362",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-362-SANSHODHAN362",
+      "order": 3
+    }
+  ]
+}

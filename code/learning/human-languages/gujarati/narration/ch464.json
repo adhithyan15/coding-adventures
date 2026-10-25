@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 464,
+  "title": "A Sensible Head",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:af9c92e182893fa7",
+  "lessons": [
+    {
+      "id": "GU-C464-sanu",
+      "sequence": 25870,
+      "title": "શાણું (śāṇũ) — wise; discreet",
+      "headword": "શાણું",
+      "romanization": "śāṇũ",
+      "gloss": "wise; discreet",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37537e289fdce8e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to babble, then the Gujarati for cheerful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: શાણું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શાણું — śāṇũ — \"wise; discreet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શાણો માણસ ગુસ્સામાં કંઈ બોલતો નથી. śāṇo māṇas gussāmā̃ kãī bolto nathī. A wise man says nothing in anger."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શાણું (śāṇũ) goes back to a reconstructed sajāna-, \"clever\"; CDIAL lists the Gujarati word, \"wise, discreet, courteous\" (CDIAL 13088)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāṇũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāṇũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāṇũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāṇũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāṇo māṇas gussāmā̃ kãī bolto nathī. — A wise man says nothing in anger.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāṇo māṇas gussāmā̃ kãī bolto nathī.* — A wise man says nothing in anger.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to babble, then the Gujarati for cheerful, then say śāṇũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to babble, then the Gujarati for cheerful, then say *śāṇũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does શાણું (śāṇũ) mean? (\"Wise; discreet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C464-vivek",
+      "sequence": 25880,
+      "title": "વિવેક (vivek) — good sense; courtesy",
+      "headword": "વિવેક",
+      "romanization": "vivek",
+      "gloss": "good sense; courtesy",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49fb3aa9af45cf93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for cheerful, then the Gujarati for discreet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વિવેક",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિવેક — vivek — \"good sense; courtesy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મહેમાન સાથે વિવેકથી બોલો. mahemān sāthe vivekthī bolo. Speak to guests with courtesy."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિવેક (vivek) is a tatsama, Sanskrit viveka, \"discrimination, consideration\", as Monier-Williams records it; Gujarati uses it for good sense and good manners."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivek",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivek*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivek, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivek*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahemān sāthe vivekthī bolo. — Speak to guests with courtesy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahemān sāthe vivekthī bolo.* — Speak to guests with courtesy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for cheerful, then the Gujarati for discreet, then say vivek again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for cheerful, then the Gujarati for discreet, then say *vivek* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વિવેક (vivek) mean? (\"Good sense; courtesy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C464-dahyu",
+      "sequence": 25890,
+      "title": "ડાહ્યું (ḍāhyũ) — well-behaved; sensible",
+      "headword": "ડાહ્યું",
+      "romanization": "ḍāhyũ",
+      "gloss": "well-behaved; sensible",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35f184f3dd3ac133",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for discreet, then the Gujarati for good sense."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ડાહ્યું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડાહ્યું — ḍāhyũ — \"well-behaved; sensible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ડાહ્યું બાળક મહેમાનો સામે શાંત બેઠું. ḍāhyũ bāḷak mahemāno sāme śānt beṭhũ. The well-behaved child sat quietly in front of the guests."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડાહ્યું (ḍāhyũ) goes back to Sanskrit dāsa, \"a knowing man\", a word of the old word lists; CDIAL lists the Gujarati word, \"wise\" (CDIAL 6317)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāhyũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāhyũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāhyũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāhyũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāhyũ bāḷak mahemāno sāme śānt beṭhũ. — The well-behaved child sat quietly in front of the guests.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāhyũ bāḷak mahemāno sāme śānt beṭhũ.* — The well-behaved child sat quietly in front of the guests.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for discreet, then the Gujarati for good sense, then say ḍāhyũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for discreet, then the Gujarati for good sense, then say *ḍāhyũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ડાહ્યું (ḍāhyũ) mean? (\"Well-behaved; sensible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C464-thavku",
+      "sequence": 25900,
+      "title": "ઠાવકું (ṭhāvkũ) — composed; sober",
+      "headword": "ઠાવકું",
+      "romanization": "ṭhāvkũ",
+      "gloss": "composed; sober",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ce71e4d4644c44e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for good sense, then the Gujarati for well-behaved."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઠાવકું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઠાવકું — ṭhāvkũ — \"composed; sober\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આટલી નાની ઉંમરે પણ મીરા ઘણી ઠાવકી છે. āṭlī nānī ummre paṇ Mīrā ghaṇī ṭhāvkī che. Even at so young an age Mira is very composed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઠાવકું (ṭhāvkũ) is inherited: CDIAL lists the Gujarati word, \"steady, firm, discreet\", under Sanskrit sthātavya, \"to be stood in\" (CDIAL 13751): someone who stands firm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhāvkũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhāvkũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhāvkũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhāvkũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭlī nānī ummre paṇ Mīrā ghaṇī ṭhāvkī che. — Even at so young an age Mira is very composed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭlī nānī ummre paṇ Mīrā ghaṇī ṭhāvkī che.* — Even at so young an age Mira is very composed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for good sense, then the Gujarati for well-behaved, then say ṭhāvkũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for good sense, then the Gujarati for well-behaved, then say *ṭhāvkũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઠાવકું (ṭhāvkũ) mean? (\"Composed; sober\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C464-gathvu",
+      "sequence": 25910,
+      "title": "ગાંઠવું (gā̃ṭhvũ) — to heed; to pay attention to (someone)",
+      "headword": "ગાંઠવું",
+      "romanization": "gā̃ṭhvũ",
+      "gloss": "to heed; to pay attention to (someone)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f4c0281f02e96d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for well-behaved, then the Gujarati for composed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગાંઠવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગાંઠવું — gā̃ṭhvũ — \"to heed; to pay attention to (someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તોફાની દીકરો કોઈનું ગાંઠતો નથી. tophānī dīkro koīnũ gā̃ṭhto nathī. The naughty son heeds no one."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે કોઈનું ન ગાંઠ્યું, teṇe koīnũ na gā̃ṭhyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગાંઠવું (gā̃ṭhvũ) is inherited from Sanskrit granthayati, \"ties\"; CDIAL lists the Gujarati verb, \"to tie\" (CDIAL 4353), and Gujarati also uses it, mostly with a negative, for heeding someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gā̃ṭhvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gā̃ṭhvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gā̃ṭhvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gā̃ṭhvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tophānī dīkro koīnũ gā̃ṭhto nathī. — The naughty son heeds no one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tophānī dīkro koīnũ gā̃ṭhto nathī.* — The naughty son heeds no one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for well-behaved, then the Gujarati for composed, then say gā̃ṭhvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for well-behaved, then the Gujarati for composed, then say *gā̃ṭhvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગાંઠવું (gā̃ṭhvũ) mean? (\"To heed; to pay attention to (someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

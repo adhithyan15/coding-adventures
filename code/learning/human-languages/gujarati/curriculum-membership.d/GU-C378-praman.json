@@ -1,0 +1,11 @@
+{
+  "id": "GU-C378-praman",
+  "pathSegment": "GU-PATH-378-HAD378",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-378-HAD378",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Signs and Omens",
+  "label": "ch:gu-signs-and-omens",
+  "canDo": "I can talk about omens, signs and superstitions.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C535-kalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can talk about omens, signs and superstitions.",
+    "assesses": [
+      "GU-LEX-C535-SHUKAN535-03",
+      "GU-LEX-C535-SHUKAN535-04",
+      "GU-LEX-C535-SHUKAN535-05"
+    ]
+  }
+}

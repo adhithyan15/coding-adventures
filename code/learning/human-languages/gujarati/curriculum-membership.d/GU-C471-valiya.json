@@ -1,0 +1,11 @@
+{
+  "id": "GU-C471-valiya",
+  "pathSegment": "GU-PATH-471-VAN471",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-471-VAN471",
+      "order": 3
+    }
+  ]
+}

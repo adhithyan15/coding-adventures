@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:869bee4ce5685aac",
+  "lessonIds": [
+    "GU-C472-nas",
+    "GU-C472-snayu",
+    "GU-C472-khopri",
+    "GU-C472-atardu",
+    "GU-C472-hojri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch472.txt",
+  "json": "gujarati/narration/ch472.json",
+  "textHash": "fnv1a64:8dc00d3e2b3f1270",
+  "jsonHash": "fnv1a64:6ba559bd7bab2d7a",
+  "findings": []
+}

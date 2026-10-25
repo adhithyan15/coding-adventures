@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:a75d1924c6d8b75e",
+  "lessonIds": [
+    "GU-C535-sukan",
+    "GU-C535-vahem",
+    "GU-C535-sanket",
+    "GU-C535-grah",
+    "GU-C535-kalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch535.txt",
+  "json": "gujarati/narration/ch535.json",
+  "textHash": "fnv1a64:0f74d8b67276942d",
+  "jsonHash": "fnv1a64:c48888bae9bbf999",
+  "findings": []
+}

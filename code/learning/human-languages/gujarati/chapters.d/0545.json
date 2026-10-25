@@ -1,0 +1,19 @@
+{
+  "chapter": 545,
+  "title": "Easy or Complicated",
+  "label": "ch:gu-easy-or-complicated",
+  "canDo": "I can say whether a way of doing something is easy or complicated.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C545-yukti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can say whether a way of doing something is easy or complicated.",
+    "assesses": [
+      "GU-LEX-C545-AASAN545-03",
+      "GU-LEX-C545-AASAN545-04",
+      "GU-LEX-C545-AASAN545-05"
+    ]
+  }
+}

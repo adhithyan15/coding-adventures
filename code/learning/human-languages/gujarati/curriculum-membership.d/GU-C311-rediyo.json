@@ -1,0 +1,11 @@
+{
+  "id": "GU-C311-rediyo",
+  "pathSegment": "GU-PATH-311-SAMACHAR311",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-311-SAMACHAR311",
+      "order": 3
+    }
+  ]
+}

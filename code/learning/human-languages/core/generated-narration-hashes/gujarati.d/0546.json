@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:aabac9f09d601c41",
+  "lessonIds": [
+    "GU-C546-vagar",
+    "GU-C546-vina",
+    "GU-C546-sivay",
+    "GU-C546-uprat",
+    "GU-C546-kadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch546.txt",
+  "json": "gujarati/narration/ch546.json",
+  "textHash": "fnv1a64:6225ba3af6ba186a",
+  "jsonHash": "fnv1a64:7450f631068054b0",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Once Upon a Time",
+  "label": "ch:gu-once-upon-a-time",
+  "canDo": "I can retell the start of an old legend.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C332-vardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can retell the start of an old legend.",
+    "assesses": [
+      "GU-LEX-C332-DANTKATHA332-03",
+      "GU-LEX-C332-DANTKATHA332-04",
+      "GU-LEX-C332-DANTKATHA332-05"
+    ]
+  }
+}

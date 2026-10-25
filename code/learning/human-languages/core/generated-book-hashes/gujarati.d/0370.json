@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:aa735594e5122ae5",
+  "lessonIds": [
+    "GU-C370-khatro",
+    "GU-C370-hani",
+    "GU-C370-apatti",
+    "GU-C370-bagadvu-spoil",
+    "GU-C370-vethvu",
+    "GU-R370-review-363-370"
+  ],
+  "tex": "gujarati/book/chapters/ch370-danger-and-harm.tex"
+}

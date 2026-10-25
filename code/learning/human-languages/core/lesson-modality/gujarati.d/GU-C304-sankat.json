@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C304-sankat",
+    "language": "gujarati",
+    "chapter": 304,
+    "sequence": 17010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b3cac7266545005"
+  },
+  "findings": []
+}

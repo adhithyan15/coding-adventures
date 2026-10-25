@@ -1,0 +1,11 @@
+{
+  "id": "GU-C550-bhedvu",
+  "pathSegment": "GU-PATH-550-NISHAN550",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-550-NISHAN550",
+      "order": 3
+    }
+  ]
+}

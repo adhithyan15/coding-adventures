@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:40432b4a539aeb96",
+  "lessonIds": [
+    "GU-C553-nagaru",
+    "GU-C553-sarnai",
+    "GU-C553-lalkarvu",
+    "GU-C553-ranakvu",
+    "GU-C553-thanganvu"
+  ],
+  "tex": "gujarati/book/chapters/ch553-drums-and-pipes.tex"
+}

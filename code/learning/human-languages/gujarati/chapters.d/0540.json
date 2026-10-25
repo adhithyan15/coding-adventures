@@ -1,0 +1,21 @@
+{
+  "chapter": 540,
+  "title": "Free or Bound",
+  "label": "ch:gu-free-or-bound",
+  "canDo": "I can talk about being forced or bound by a promise.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-R540-review-533-540",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can talk about being forced or bound by a promise.",
+    "assesses": [
+      "GU-LEX-C540-BALJABRI540-01",
+      "GU-LEX-C540-BALJABRI540-02",
+      "GU-LEX-C540-BALJABRI540-03",
+      "GU-LEX-C540-BALJABRI540-04",
+      "GU-LEX-C540-BALJABRI540-05"
+    ]
+  }
+}

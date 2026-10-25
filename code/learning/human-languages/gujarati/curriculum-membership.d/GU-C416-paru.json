@@ -1,0 +1,11 @@
+{
+  "id": "GU-C416-paru",
+  "pathSegment": "GU-PATH-416-AREA416",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-416-AREA416",
+      "order": 2
+    }
+  ]
+}
