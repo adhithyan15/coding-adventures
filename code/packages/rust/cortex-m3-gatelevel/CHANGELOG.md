@@ -10,4 +10,4 @@
   instruction subfamily.
 - Cover IT state, low-power/event latches, BASEPRI/FAULTMASK, wide Thumb data
   and memory operations, table branches, and exclusive-monitor lifecycles.
-- Reach 92.13% combined Rust line coverage (2,288 of 2,468 lines).
+- Reach 92.12% combined Rust line coverage (2,323 of 2,506 lines).

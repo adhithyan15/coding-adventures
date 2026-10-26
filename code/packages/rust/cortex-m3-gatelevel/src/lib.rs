@@ -312,8 +312,17 @@ impl CortexM3GateLevel {
         Ok(trace)
     }
 
-    fn step_in_preallocated(&mut self, memory: Vec<u8>) -> Result<StepTrace, CortexM3Error> {
-        let trace = engine::step_state(self.state_in_preallocated(memory))?;
+    fn step_in_preallocated(
+        &mut self,
+        state_memory: Vec<u8>,
+        before_memory: Vec<u8>,
+        validation_memory: &mut Vec<u8>,
+    ) -> Result<StepTrace, CortexM3Error> {
+        let trace = engine::step_state_preallocated(
+            self.state_in_preallocated(state_memory),
+            before_memory,
+            validation_memory,
+        )?;
         self.commit_transition(&trace.state_after);
         Ok(trace)
     }
@@ -322,7 +331,8 @@ impl CortexM3GateLevel {
     pub fn run(&mut self, max_steps: usize) -> Result<ExecutionResult, CortexM3Error> {
         check_retention(max_steps)?;
         let allocation_count = max_steps
-            .checked_add(2)
+            .checked_mul(2)
+            .and_then(|count| count.checked_add(3))
             .ok_or(CortexM3Error::AllocationFailed)?;
         let mut state_memories = Vec::new();
         state_memories
@@ -341,15 +351,21 @@ impl CortexM3GateLevel {
                 .pop()
                 .expect("rollback memory was preallocated"),
         );
+        let mut validation_memory = state_memories
+            .pop()
+            .expect("IT validation scratch memory was preallocated");
         let mut traces = Vec::new();
         traces
             .try_reserve_exact(max_steps)
             .map_err(|_| CortexM3Error::AllocationFailed)?;
         for _ in 0..max_steps {
-            let memory = state_memories
+            let state_memory = state_memories
                 .pop()
-                .expect("one trace memory was preallocated per allowed step");
-            match self.step_in_preallocated(memory) {
+                .expect("one after-state memory was preallocated per allowed step");
+            let before_memory = state_memories
+                .pop()
+                .expect("one before-state memory was preallocated per allowed step");
+            match self.step_in_preallocated(state_memory, before_memory, &mut validation_memory) {
                 Ok(trace) => {
                     let stopped = trace.state_after.halted || trace.state_after.sleeping;
                     traces.push(trace);

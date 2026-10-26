@@ -30,4 +30,4 @@ IT, CBZ/CBNZ, wide moves and memory transfers, division, bit operations,
 table branches, exclusive transfers, barriers, low-power/event behavior,
 BASEPRI, FAULTMASK, and special-register views. Release differential tests
 compare every implemented decode subfamily with the functional oracle. The
-completion baseline is 92.13% combined Rust line coverage (2,288/2,468).
+completion baseline is 92.12% combined Rust line coverage (2,323/2,506).

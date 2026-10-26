@@ -246,14 +246,30 @@ pub struct ExecutionResult {
     pub final_state: CortexM3State,
 }
 
-pub(crate) fn step_state(mut state: CortexM3State) -> Result<StepTrace, CortexM3Error> {
+pub(crate) fn step_state(state: CortexM3State) -> Result<StepTrace, CortexM3Error> {
     if state.halted {
         return Err(CortexM3Error::Halted);
     }
     if state.sleeping {
         return Err(CortexM3Error::Sleeping);
     }
-    let before = try_clone_state(&state)?;
+    let before_memory = try_memory_buffer(state.memory.len())?;
+    let mut validation_memory = try_memory_buffer(state.memory.len())?;
+    step_state_preallocated(state, before_memory, &mut validation_memory)
+}
+
+pub(crate) fn step_state_preallocated(
+    mut state: CortexM3State,
+    before_memory: Vec<u8>,
+    validation_memory: &mut Vec<u8>,
+) -> Result<StepTrace, CortexM3Error> {
+    if state.halted {
+        return Err(CortexM3Error::Halted);
+    }
+    if state.sleeping {
+        return Err(CortexM3Error::Sleeping);
+    }
+    let before = clone_state_into(&state, before_memory);
     let pc = state.pc;
     let first = fetch16(&state, pc)?;
     let width = instruction_width(first);
@@ -287,8 +303,10 @@ pub(crate) fn step_state(mut state: CortexM3State) -> Result<StepTrace, CortexM3
             }
             mnemonic
         } else {
-            let mut validation = try_clone_state(&state)?;
-            if let Err(error) = execute_decoded(&mut validation, first, second, class, pc) {
+            let mut validation = clone_state_into(&state, core::mem::take(validation_memory));
+            let validation_result = execute_decoded(&mut validation, first, second, class, pc);
+            *validation_memory = core::mem::take(&mut validation.memory);
+            if let Err(error) = validation_result {
                 let conditional_undefined =
                     class == InstructionClass::ConditionalBranch && field16(first, 8, 4) == 14;
                 if !conditional_undefined
@@ -376,13 +394,19 @@ fn suppresses_flags_in_it(first: u16, class: InstructionClass) -> bool {
     }
 }
 
-fn try_clone_state(state: &CortexM3State) -> Result<CortexM3State, CortexM3Error> {
+fn try_memory_buffer(len: usize) -> Result<Vec<u8>, CortexM3Error> {
     let mut memory = Vec::new();
     memory
-        .try_reserve_exact(state.memory.len())
+        .try_reserve_exact(len)
         .map_err(|_| CortexM3Error::AllocationFailed)?;
+    memory.resize(len, 0);
+    Ok(memory)
+}
+
+fn clone_state_into(state: &CortexM3State, mut memory: Vec<u8>) -> CortexM3State {
+    memory.clear();
     memory.extend_from_slice(&state.memory);
-    Ok(CortexM3State {
+    CortexM3State {
         registers: state.registers,
         msp: state.msp,
         psp: state.psp,
@@ -404,7 +428,7 @@ fn try_clone_state(state: &CortexM3State) -> Result<CortexM3State, CortexM3Error
         exclusive_address: state.exclusive_address,
         loaded_origin: state.loaded_origin,
         loaded_len: state.loaded_len,
-    })
+    }
 }
 
 pub(crate) fn validate_program(program: &[u8], origin: u32) -> Result<(), CortexM3Error> {
@@ -1272,12 +1296,7 @@ fn execute_miscellaneous(
     raw: u16,
     pc: u32,
 ) -> Result<&'static str, CortexM3Error> {
-    if gates::selected(
-        gates::bit_and_32(u32::from(raw), 0xf500),
-        0xb100,
-        16,
-    ) == 1
-    {
+    if gates::selected(gates::bit_and_32(u32::from(raw), 0xf500), 0xb100, 16) == 1 {
         let rn = field16(raw, 0, 3) as usize;
         let nonzero = line16(raw, 11, 1, 1);
         let immediate = gates::bit_or_32(
