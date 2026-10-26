@@ -59,6 +59,10 @@ separately connects Ruby to required interchange: twenty
 directed native pairs with full baselines and return trips through step 3002.
 This is actual process execution, not a packaging or static registry claim.
 
+NN47 builds the [bounded C JSON prerequisite](./bounded-c-json-foundation.md)
+before native C dense training: typed values, explicit ownership and resource
+envelopes. Parsing JSON is not checkpoint-schema acceptance or training evidence.
+
 Every model family below starts with the smallest example that needs its new
 idea.
 
