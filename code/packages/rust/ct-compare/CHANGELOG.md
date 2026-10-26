@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- Harden equal-length slice and fixed-array comparison so every loop iteration
+  retains volatile reads of both inputs and the accumulator plus a volatile
+  accumulator write, preventing the optimizer from eliding later work after an
+  earlier difference.
+- Add a release-optimized LLVM-IR regression gate that verifies every loop
+  cycle crosses the volatile equality operations and every loop exit remains
+  independent of their values.
+- Scope the guarantee to compiler-observable full scans; hardware side-channel
+  resistance remains explicitly out of scope.
+
 ## 0.1.0 — 2026-04-20
 
 - Initial release.
