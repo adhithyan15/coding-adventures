@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.0] — 2026-10-26
+
+### Fixed
+
+- Made stable Q outputs of all 560 data/address-register, PC, and SR DFFs plus
+  the HALT DFF the sole architectural state authority. Historical public fields
+  remain synchronized compatibility observers.
+- Routed fetch, partial register writes, flag evaluation, snapshots, restores,
+  steps, runs, results, halt decisions, and fault rollback through owned DFF
+  state.
+- Added a concrete, independently checked physical-storage inventory and
+  deliberate observer-divergence regressions across the complete lifecycle.
+
 ## [0.2.0] — 2026-08-28
 
 ### Completed
