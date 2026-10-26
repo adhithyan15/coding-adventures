@@ -66,6 +66,9 @@ final class HashFunctionsTests: XCTestCase {
     }
 
     func testAllUpstreamSipHash24Vectors() throws {
+        // `vectors_sip64` from the authors' reference repository at immutable
+        // revision 32d067603b93b47828700880649198e0bfbbcffa:
+        // https://github.com/veorq/SipHash/blob/32d067603b93b47828700880649198e0bfbbcffa/vectors.h
         let expected: [UInt64] = [
             0x726F_DB47_DD0E_0E31, 0x74F8_39C5_93DC_67FD,
             0x0D6C_8009_D9A9_4F5A, 0x8567_6696_D7FB_7E2D,
