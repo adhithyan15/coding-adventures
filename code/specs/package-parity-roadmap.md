@@ -18238,7 +18238,8 @@ selection require a later slot-opening reprioritization and independent review.
 Python gradient-descent PR #18324 completed every required check and merged
 from exact reviewed head `d34af356d621175dd8cc307d953ecb7a99d1b79a` as
 `1bb58a0d7ed8d818d622e69890234d96b6e26b3a` at
-`2026-10-26T15:37:25Z`. The receipt is exact current origin/main, and its clean
+`2026-10-26T15:37:25Z`. The receipt was exact current origin/main at selection
+time, and its clean
 completed worktree and local branch were removed. The only live parity PRs are
 now #18293 and #18355.
 
@@ -18256,3 +18257,10 @@ canonical changelog filename correction; production code, public API, BUILD
 fronts, dependencies, and caller-owned terminal authority remain unchanged.
 Fresh focused validation and independent review of the final local head are
 required before publication.
+
+Before publication, unrelated PA-RISC PR #18342 advanced origin/main to
+`de088e2ddfacd2372fab3677d38b969eea602c00` without touching the parity state,
+roadmap, or PaintVmAscii scope. The still-unpublished four-commit series was
+rebased onto that exact tip. Range comparison confirms all four commits are
+patch-identical to the previously validated series; the lifecycle receipt now
+records `de088e2ddfacd2372fab3677d38b969eea602c00` as the exact reconciled base.
