@@ -295,6 +295,7 @@ exist.
 | PR-5 | UI48 environment observer for the React, HTML and Web Component backends | **real**: ENV1–ENV4 are done on all 5 native backends. #14003 | feature | M |
 | PR-6 | Adopt `HostNavigationSplit` in notes, note-type-editor and spice-workbench; UI29-6 still says "draft" | **real**. #15481 follow-up | feature | S |
 | PR-7 | Qt releases cover macOS only (`engram_release.py:527`) | **real**. #14223 | feature | M–L |
+| PR-8 | Three editors, one consumer each: `Notes` (Trestle), `DraftEditor` (Journal), `NoteEditor` (Engram) | **real**. Fit-audit [`mosaic-editor-convergence-audit-v1.md`](mosaic-editor-convergence-audit-v1.md) (PROPOSED): converge on `DraftEditor`. Work items E1–E7 in its §6 | decision + feature | S–M each |
 
 ## Design to native (DN)
 
