@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:d8b3371af830449b",
+  "lessonIds": [
+    "SA-C480-dasati",
+    "SA-C480-visam",
+    "SA-C480-ksatam",
+    "SA-C480-asthibhangah",
+    "SA-C480-sravati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch480.txt",
+  "json": "sanskrit/narration/ch480.json",
+  "textHash": "fnv1a64:15b3a5024a73b329",
+  "jsonHash": "fnv1a64:75dd5e1d95d98cf6",
+  "findings": []
+}

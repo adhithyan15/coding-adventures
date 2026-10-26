@@ -1,0 +1,11 @@
+{
+  "id": "SA-C499-pitrsvasa",
+  "pathSegment": "SA-PATH-499-SVASR499",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-499-SVASR499",
+      "order": 0
+    }
+  ]
+}

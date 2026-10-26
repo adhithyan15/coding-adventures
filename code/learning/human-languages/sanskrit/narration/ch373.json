@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 373,
+  "title": "Permission First",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9a31e6977be02919",
+  "lessons": [
+    {
+      "id": "SA-C373-anumatih",
+      "sequence": 21690,
+      "title": "अनुमतिः (anumatiḥ) — permission",
+      "headword": "अनुमतिः",
+      "romanization": "anumatiḥ",
+      "gloss": "permission",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a5aff7f5225d97b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for holds up, then the Sanskrit for removes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुमतिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुमतिः — anumatiḥ — \"permission\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि पिता अनुमतिं ददाति, तर्हि अहं गमिष्यामि। yadi pitā anumatiṃ dadāti, tarhi ahaṃ gamiṣyāmi. If father gives permission, I will go."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुमतिः (anumatiḥ) is built on anu, \"after\", and the root √man, \"to think\"; MW gives anu-mati \"assent, permission, approbation\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumatiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumatiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumatiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumatiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi pitā anumatiṃ dadāti, tarhi ahaṃ gamiṣyāmi. — If father gives permission, I will go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi pitā anumatiṃ dadāti, tarhi ahaṃ gamiṣyāmi.* — If father gives permission, I will go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for holds up, then the Sanskrit for removes, then say anumatiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for holds up, then the Sanskrit for removes, then say *anumatiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुमतिः (anumatiḥ) mean? (\"Permission\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C373-nisedhati",
+      "sequence": 21700,
+      "title": "निषेधति (niṣedhati) — forbids",
+      "headword": "निषेधति",
+      "romanization": "niṣedhati",
+      "gloss": "forbids",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0daad7013640f90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for removes, then the Sanskrit for permission."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निषेधति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निषेधति — niṣedhati — \"forbids\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वैद्यः निषेधति, तर्हि सः मिष्टान्नं न खादति। yadi vaidyaḥ niṣedhati, tarhi saḥ miṣṭānnaṃ na khādati. If the doctor forbids it, he does not eat sweets."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः मिष्टान्नं निषिद्धवान्, saḥ miṣṭānnaṃ niṣiddhavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निषेधति (niṣedhati) is built on ni and the root √sidh, \"to keep off\"; MW gives ni-√ṣidh \"to keep off, to prevent, to prohibit\" and ni-ṣiddha \"forbidden\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣedhati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣedhati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣedhati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣedhati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi vaidyaḥ niṣedhati, tarhi saḥ miṣṭānnaṃ na khādati. — If the doctor forbids it, he does not eat sweets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi vaidyaḥ niṣedhati, tarhi saḥ miṣṭānnaṃ na khādati.* — If the doctor forbids it, he does not eat sweets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for removes, then the Sanskrit for permission, then say niṣedhati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for removes, then the Sanskrit for permission, then say *niṣedhati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निषेधति (niṣedhati) mean? (\"Forbids\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C373-pratibandhah",
+      "sequence": 21710,
+      "title": "प्रतिबन्धः (pratibandhaḥ) — a restriction; an impediment",
+      "headword": "प्रतिबन्धः",
+      "romanization": "pratibandhaḥ",
+      "gloss": "a restriction; an impediment",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6276975466ad2bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for permission, then the Sanskrit for forbids."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रतिबन्धः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिबन्धः — pratibandhaḥ — \"a restriction; an impediment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि प्रतिबन्धः अस्ति, तर्हि कः अपि न प्रविशतु। yadi pratibandhaḥ asti, tarhi kaḥ api na praviśatu. If there is a restriction, let no one go in."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिबन्धः (pratibandhaḥ) is built on prati and the root √bandh, \"to bind\"; MW gives prati-bandha \"an obstacle, a hindrance, an impediment\", and \"a restriction\" is how modern Sanskrit uses it (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratibandhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratibandhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratibandhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratibandhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi pratibandhaḥ asti, tarhi kaḥ api na praviśatu. — If there is a restriction, let no one go in.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi pratibandhaḥ asti, tarhi kaḥ api na praviśatu.* — If there is a restriction, let no one go in.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for permission, then the Sanskrit for forbids, then say pratibandhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for permission, then the Sanskrit for forbids, then say *pratibandhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रतिबन्धः (pratibandhaḥ) mean? (\"A restriction; an impediment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C373-apavadah",
+      "sequence": 21720,
+      "title": "अपवादः (apavādaḥ) — an exception",
+      "headword": "अपवादः",
+      "romanization": "apavādaḥ",
+      "gloss": "an exception",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f49988fcb518242b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for forbids, then the Sanskrit for a restriction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अपवादः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अपवादः — apavādaḥ — \"an exception\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि नियमः अस्ति, तर्हि अपवादः अपि भवति। yadi niyamaḥ asti, tarhi apavādaḥ api bhavati. If there is a rule, there is also an exception."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अपवादः (apavādaḥ) is built on apa, \"away\", and the root √vad, \"to speak\"; MW gives apa-vāda \"a special rule setting aside a general one, an exception\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apavādaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apavādaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apavādaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apavādaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi niyamaḥ asti, tarhi apavādaḥ api bhavati. — If there is a rule, there is also an exception.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi niyamaḥ asti, tarhi apavādaḥ api bhavati.* — If there is a rule, there is also an exception.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for forbids, then the Sanskrit for a restriction, then say apavādaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for forbids, then the Sanskrit for a restriction, then say *apavādaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अपवादः (apavādaḥ) mean? (\"An exception\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C373-anivaryah",
+      "sequence": 21730,
+      "title": "अनिवार्यः (anivāryaḥ) — compulsory; unavoidable",
+      "headword": "अनिवार्यः",
+      "romanization": "anivāryaḥ",
+      "gloss": "compulsory; unavoidable",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70f9dda783aefe26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a restriction, then the Sanskrit for an exception."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनिवार्यः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनिवार्यः — anivāryaḥ — \"compulsory; unavoidable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि परीक्षा अनिवार्या अस्ति, तर्हि अहं पठिष्यामि। yadi parīkṣā anivāryā asti, tarhi ahaṃ paṭhiṣyāmi. If the exam is compulsory, I will study."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनिवार्यः (anivāryaḥ) is built from a-, \"not\", and nivārya, \"to be warded off\"; MW gives a-nivārya \"not to be warded off, unavoidable\", and \"compulsory\" is its modern sense (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anivāryaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anivāryaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anivāryaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anivāryaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi parīkṣā anivāryā asti, tarhi ahaṃ paṭhiṣyāmi. — If the exam is compulsory, I will study.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi parīkṣā anivāryā asti, tarhi ahaṃ paṭhiṣyāmi.* — If the exam is compulsory, I will study.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a restriction, then the Sanskrit for an exception, then say anivāryaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a restriction, then the Sanskrit for an exception, then say *anivāryaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनिवार्यः (anivāryaḥ) mean? (\"Compulsory; unavoidable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

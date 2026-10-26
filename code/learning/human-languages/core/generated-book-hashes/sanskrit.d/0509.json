@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:237795098a70e00b",
+  "lessonIds": [
+    "SA-C509-jarjarah",
+    "SA-C509-slathah",
+    "SA-C509-randhram",
+    "SA-C509-syandate",
+    "SA-C509-jirnoddharah",
+    "SA-R509-review-502-509"
+  ],
+  "tex": "sanskrit/book/chapters/ch509-something-needs-mending.tex"
+}

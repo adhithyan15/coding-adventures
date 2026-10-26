@@ -170,6 +170,10 @@ fn the_sweep_covers_every_claiming_release_in_inventory_order() {
     let swept: Vec<&str> = sweep.cells.iter().map(|(r, _)| r.as_str()).collect();
     assert_eq!(swept, ["2.2", "2.4", "2.6", "2.7.18"]);
     assert_eq!(sweep.cases.len(), 24, "every positive py2-int-print case");
+    let sweep = run_sweep("py-float-print");
+    let swept: Vec<&str> = sweep.cells.iter().map(|(r, _)| r.as_str()).collect();
+    assert_eq!(swept, ["3.6.0", "3.5.10", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"]);
+    assert_eq!(sweep.cases.len(), 13, "every positive py-float-print case");
 }
 
 /// Steps 1 and 2, compared with the committed `release_classes.csv`.
@@ -246,6 +250,22 @@ fn the_boundary_releases_are_the_class_representatives() {
         assert!(classes.iter().any(|(_, _, m)| m.contains(&release)), "{release}");
     }
     eprintln!("Python release sweep: {} classes {representatives:?}", classes.len());
+}
+
+/// `py-float-print` (phase 7c slice 3): the six `py3` releases share one
+/// grammar and one profile, and their token tables differ inside the subset
+/// in one place, PEP 515's `_` (3.5.10 lexes `1_000.5` as an error). So
+/// there are two classes, represented by 3.6.0 (first in `releases.csv`,
+/// which is date order) and 3.5.10; the default 3.13.16 is in 3.6.0's.
+#[test]
+fn python_float_releases_split_on_pep_515_separators() {
+    let sweep = run_sweep("py-float-print");
+    let classes = classes(&sweep);
+    let shape: Vec<(&str, Vec<&str>)> = classes.iter().map(|(_, r, m)| (*r, m.clone())).collect();
+    assert_eq!(
+        shape,
+        [("3.6.0", vec!["3.6.0", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"]), ("3.5.10", vec!["3.5.10"])]
+    );
 }
 
 /// Python 2: the four pairs share one grammar and one profile, and their

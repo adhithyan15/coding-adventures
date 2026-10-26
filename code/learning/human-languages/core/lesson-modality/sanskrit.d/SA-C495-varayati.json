@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C495-varayati",
+    "language": "sanskrit",
+    "chapter": 495,
+    "sequence": 28440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6a47ca1f59b570a"
+  },
+  "findings": []
+}

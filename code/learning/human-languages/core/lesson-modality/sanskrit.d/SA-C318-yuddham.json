@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C318-yuddham",
+    "language": "sanskrit",
+    "chapter": 318,
+    "sequence": 18660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a04787a4af0a98a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:fe4de8dcc6ea96de",
+  "lessonIds": [
+    "SA-C424-paryatati",
+    "SA-C424-darsaniyah",
+    "SA-C424-ramaniyah",
+    "SA-C424-drsyam",
+    "SA-C424-viharati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch424.txt",
+  "json": "sanskrit/narration/ch424.json",
+  "textHash": "fnv1a64:e5f76cd8e84b11c1",
+  "jsonHash": "fnv1a64:b3e200297920fa2e",
+  "findings": []
+}

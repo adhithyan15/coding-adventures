@@ -1,0 +1,11 @@
+{
+  "id": "SA-R279-advice-and-what-follows",
+  "pathSegment": "SA-PATH-279-REASONS279",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-279-REASONS279",
+      "order": 3
+    }
+  ]
+}

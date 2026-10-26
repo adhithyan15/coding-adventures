@@ -1,0 +1,11 @@
+{
+  "id": "SA-C536-sampadyate",
+  "pathSegment": "SA-PATH-536-ADRSTA536",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-536-ADRSTA536",
+      "order": 4
+    }
+  ]
+}

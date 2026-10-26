@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:6d3fef6e87904d76",
+  "lessonIds": [
+    "SA-C417-pulinam",
+    "SA-C417-phenah",
+    "SA-C417-budbudah",
+    "SA-C417-sthalam",
+    "SA-C417-vela",
+    "SA-R417-review-410-417"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch417.txt",
+  "json": "sanskrit/narration/ch417.json",
+  "textHash": "fnv1a64:e93df9c89eb73063",
+  "jsonHash": "fnv1a64:f8dc6c465fc945fd",
+  "findings": []
+}

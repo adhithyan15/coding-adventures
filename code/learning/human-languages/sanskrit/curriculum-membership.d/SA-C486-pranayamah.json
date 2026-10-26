@@ -1,0 +1,11 @@
+{
+  "id": "SA-C486-pranayamah",
+  "pathSegment": "SA-PATH-486-UPAVASA486",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-486-UPAVASA486",
+      "order": 1
+    }
+  ]
+}

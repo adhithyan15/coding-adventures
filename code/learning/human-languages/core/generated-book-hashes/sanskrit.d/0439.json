@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:75b0273b100f4deb",
+  "lessonIds": [
+    "SA-C439-pavanah",
+    "SA-C439-prabhanjanah",
+    "SA-C439-prabalah",
+    "SA-C439-andolayati",
+    "SA-C439-mandanilah"
+  ],
+  "tex": "sanskrit/book/chapters/ch439-winds-and-storms.tex"
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 532,
+  "title": "Choosing a Gift",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:04dd8645d86a73d8",
+  "lessons": [
+    {
+      "id": "SA-C532-upayanam",
+      "sequence": 30530,
+      "title": "उपायनम् (upāyanam) — a present",
+      "headword": "उपायनम्",
+      "romanization": "upāyanam",
+      "gloss": "a present",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76bb7f14368c516a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a prayer, then the Sanskrit for a desire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपायनम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपायनम् — upāyanam — \"a present\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि मित्रम् आगच्छति, तर्हि अहं तस्मै उपायनं ददामि। yadi mitram āgacchati, tarhi ahaṃ tasmai upāyanaṃ dadāmi. If my friend comes, I will give him a present."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपायनम् (upāyanam) is built on upa, ā and the root √i, \"to go\": a coming near; MW gives upāyana also as an offer, a present, a gift (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upāyanam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upāyanam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upāyanam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upāyanam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi mitram āgacchati, tarhi ahaṃ tasmai upāyanaṃ dadāmi. — If my friend comes, I will give him a present.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi mitram āgacchati, tarhi ahaṃ tasmai upāyanaṃ dadāmi.* — If my friend comes, I will give him a present.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a prayer, then the Sanskrit for a desire, then say upāyanam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a prayer, then the Sanskrit for a desire, then say *upāyanam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपायनम् (upāyanam) mean? (\"A present\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C532-gucchah",
+      "sequence": 30540,
+      "title": "गुच्छः (gucchaḥ) — a bunch of flowers",
+      "headword": "गुच्छः",
+      "romanization": "gucchaḥ",
+      "gloss": "a bunch of flowers",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:698a5b6d946a21f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a desire, then the Sanskrit for a present."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गुच्छः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुच्छः — gucchaḥ — \"a bunch of flowers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि पुष्पाणि सुन्दराणि सन्ति, तर्हि एकं गुच्छं क्रीणामि। yadi puṣpāṇi sundarāṇi santi, tarhi ekaṃ gucchaṃ krīṇāmi. If the flowers are pretty, I'll buy a bunch."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुच्छः (gucchaḥ) is the word MW gives for a bush and for a bunch of flowers, a cluster of blossoms, the same as gutsa; MW gives no further derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gucchaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gucchaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gucchaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gucchaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi puṣpāṇi sundarāṇi santi, tarhi ekaṃ gucchaṃ krīṇāmi. — If the flowers are pretty, I'll buy a bunch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi puṣpāṇi sundarāṇi santi, tarhi ekaṃ gucchaṃ krīṇāmi.* — If the flowers are pretty, I'll buy a bunch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a desire, then the Sanskrit for a present, then say gucchaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a desire, then the Sanskrit for a present, then say *gucchaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गुच्छः (gucchaḥ) mean? (\"A bunch of flowers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C532-dukulam",
+      "sequence": 30550,
+      "title": "दुकूलम् (dukūlam) — fine cloth",
+      "headword": "दुकूलम्",
+      "romanization": "dukūlam",
+      "gloss": "fine cloth",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:380e5e8f7f844add",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a present, then the Sanskrit for a bunch of flowers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुकूलम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुकूलम् — dukūlam — \"fine cloth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि मात्रे दुकूलं रोचते, तर्हि अहं तत् क्रीणामि। yadi mātre dukūlaṃ rocate, tarhi ahaṃ tat krīṇāmi. If my mother likes the fine cloth, I'll buy it."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुकूलम् (dukūlam) is the word MW gives for a plant and for the very fine cloth made from its inner bark; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukūlam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukūlam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukūlam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukūlam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi mātre dukūlaṃ rocate, tarhi ahaṃ tat krīṇāmi. — If my mother likes the fine cloth, I'll buy it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi mātre dukūlaṃ rocate, tarhi ahaṃ tat krīṇāmi.* — If my mother likes the fine cloth, I'll buy it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a present, then the Sanskrit for a bunch of flowers, then say dukūlam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a present, then the Sanskrit for a bunch of flowers, then say *dukūlam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुकूलम् (dukūlam) mean? (\"Fine cloth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C532-mekhala",
+      "sequence": 30560,
+      "title": "मेखला (mekhalā) — a girdle",
+      "headword": "मेखला",
+      "romanization": "mekhalā",
+      "gloss": "a girdle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c28f7f67880c532",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a bunch of flowers, then the Sanskrit for fine cloth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मेखला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेखला — mekhalā — \"a girdle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि एषा मेखला सुन्दरी अस्ति, तर्हि ताम् अहं क्रीणामि। yadi eṣā mekhalā sundarī asti, tarhi tām ahaṃ krīṇāmi. If this girdle is pretty, I'll buy it."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेखला (mekhalā) is the word MW records for a girdle, a belt; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mekhalā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mekhalā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mekhalā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mekhalā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi eṣā mekhalā sundarī asti, tarhi tām ahaṃ krīṇāmi. — If this girdle is pretty, I'll buy it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi eṣā mekhalā sundarī asti, tarhi tām ahaṃ krīṇāmi.* — If this girdle is pretty, I'll buy it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a bunch of flowers, then the Sanskrit for fine cloth, then say mekhalā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a bunch of flowers, then the Sanskrit for fine cloth, then say *mekhalā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मेखला (mekhalā) mean? (\"A girdle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C532-upaharati",
+      "sequence": 30570,
+      "title": "उपहरति (upaharati) — presents; offers",
+      "headword": "उपहरति",
+      "romanization": "upaharati",
+      "gloss": "presents; offers",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ea7549416687793",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for fine cloth, then the Sanskrit for a girdle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपहरति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपहरति — upaharati — \"presents; offers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि गुरुः आगच्छति, तर्हि शिष्यः तस्मै फलानि उपहरति। yadi guruḥ āgacchati, tarhi śiṣyaḥ tasmai phalāni upaharati. If the teacher comes, the pupil offers him fruit."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः गुरवे पुष्पाणि उपहृतवान्, saḥ gurave puṣpāṇi upahṛtavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपहरति (upaharati) is built on upa, \"near\", and the root √hṛ, \"to carry\", which also gives harati; MW gives upahṛ as to bring near, to offer, to present (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upaharati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upaharati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upaharati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upaharati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi guruḥ āgacchati, tarhi śiṣyaḥ tasmai phalāni upaharati. — If the teacher comes, the pupil offers him fruit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi guruḥ āgacchati, tarhi śiṣyaḥ tasmai phalāni upaharati.* — If the teacher comes, the pupil offers him fruit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for fine cloth, then the Sanskrit for a girdle, then say upaharati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for fine cloth, then the Sanskrit for a girdle, then say *upaharati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपहरति (upaharati) mean? (\"Presents; offers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

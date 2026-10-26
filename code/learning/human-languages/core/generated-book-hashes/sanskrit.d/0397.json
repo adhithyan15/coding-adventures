@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:2272a4edea7c5341",
+  "lessonIds": [
+    "SA-C397-jvalayati",
+    "SA-C397-dipasikha",
+    "SA-C397-karpurah",
+    "SA-C397-stotram",
+    "SA-C397-stauti"
+  ],
+  "tex": "sanskrit/book/chapters/ch397-lamps-and-hymns.tex"
+}

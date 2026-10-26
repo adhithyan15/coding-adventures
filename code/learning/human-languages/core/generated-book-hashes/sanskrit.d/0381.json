@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:bba5e3e60cb33d32",
+  "lessonIds": [
+    "SA-C381-samanyatah",
+    "SA-C381-visesatah",
+    "SA-C381-sarvatha",
+    "SA-C381-bahusah",
+    "SA-C381-sanksipati"
+  ],
+  "tex": "sanskrit/book/chapters/ch381-usually-and-especially.tex"
+}

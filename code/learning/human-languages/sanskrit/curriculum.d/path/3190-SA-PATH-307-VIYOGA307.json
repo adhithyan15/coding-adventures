@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-307-VIYOGA307",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "SA-EXT-307-VIYOGA307"
+  ],
+  "after": []
+}

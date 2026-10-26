@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C387-vikasah",
+    "language": "sanskrit",
+    "chapter": 387,
+    "sequence": 22420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0464a1f71e1bf88b"
+  },
+  "findings": []
+}

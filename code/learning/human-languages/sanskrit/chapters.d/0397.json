@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Lamps and Hymns",
+  "label": "ch:sa-lamps-and-hymns",
+  "canDo": "I can say what is lit and sung at evening worship.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C397-stauti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can say what is lit and sung at evening worship.",
+    "assesses": [
+      "SA-LEX-C397-DIPA397-03",
+      "SA-LEX-C397-DIPA397-04",
+      "SA-LEX-C397-DIPA397-05"
+    ]
+  }
+}

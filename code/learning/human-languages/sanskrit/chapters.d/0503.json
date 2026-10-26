@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "People at Work",
+  "label": "ch:sa-people-at-work",
+  "canDo": "I can talk about the people I work with and what they are good at.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C503-niyunkte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about the people I work with and what they are good at.",
+    "assesses": [
+      "SA-LEX-C503-SAHAKARI503-03",
+      "SA-LEX-C503-SAHAKARI503-04",
+      "SA-LEX-C503-SAHAKARI503-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:b3220b6d90b0c969",
+  "lessonIds": [
+    "SA-C358-acarah",
+    "SA-C358-silam",
+    "SA-C358-sajjanah",
+    "SA-C358-sanmargah",
+    "SA-C358-adriyate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch358.txt",
+  "json": "sanskrit/narration/ch358.json",
+  "textHash": "fnv1a64:34788b1e63da17dc",
+  "jsonHash": "fnv1a64:16f3b82545d2ab9b",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:9a89af15d7ab98a8",
+  "lessonIds": [
+    "SA-C348-sosanam",
+    "SA-C348-nyayyah",
+    "SA-C348-vidhih",
+    "SA-C348-paksapatah",
+    "SA-C348-ullanghayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch348-fair-and-unfair.tex"
+}

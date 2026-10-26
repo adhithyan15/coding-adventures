@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:c1dede0357388629",
+  "lessonIds": [
+    "SA-C337-vanavasah",
+    "SA-C337-pratijna",
+    "SA-C337-paduka",
+    "SA-C337-pratijanite",
+    "SA-C337-mrgaya"
+  ],
+  "tex": "sanskrit/book/chapters/ch337-exile-in-the-forest.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C510-punjah",
+    "language": "sanskrit",
+    "chapter": 510,
+    "sequence": 29440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3fab7547d65ea8b"
+  },
+  "findings": []
+}

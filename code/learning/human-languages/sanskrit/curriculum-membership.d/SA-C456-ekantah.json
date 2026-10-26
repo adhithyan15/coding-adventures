@@ -1,0 +1,11 @@
+{
+  "id": "SA-C456-ekantah",
+  "pathSegment": "SA-PATH-456-SAMA456",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-456-SAMA456",
+      "order": 4
+    }
+  ]
+}

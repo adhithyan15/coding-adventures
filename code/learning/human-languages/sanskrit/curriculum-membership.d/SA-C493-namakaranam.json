@@ -1,0 +1,11 @@
+{
+  "id": "SA-C493-namakaranam",
+  "pathSegment": "SA-PATH-493-SAMSKARA493",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-493-SAMSKARA493",
+      "order": 1
+    }
+  ]
+}

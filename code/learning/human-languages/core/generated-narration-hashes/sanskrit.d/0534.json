@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:4cbda3b33d20b58b",
+  "lessonIds": [
+    "SA-C534-madhyasthah",
+    "SA-C534-samvid",
+    "SA-C534-angikaroti",
+    "SA-C534-pratyakhyati",
+    "SA-C534-sammatih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch534.txt",
+  "json": "sanskrit/narration/ch534.json",
+  "textHash": "fnv1a64:3de1f03d478bcc7f",
+  "jsonHash": "fnv1a64:084b8d6f10881329",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:ebfef911378cf70a",
+  "lessonIds": [
+    "SA-C341-prayojanam",
+    "SA-C341-uddesyam",
+    "SA-C341-upayogah",
+    "SA-C341-prerayati",
+    "SA-C341-karayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch341.txt",
+  "json": "sanskrit/narration/ch341.json",
+  "textHash": "fnv1a64:658a5648d98051fc",
+  "jsonHash": "fnv1a64:f789d62fc63f6879",
+  "findings": []
+}

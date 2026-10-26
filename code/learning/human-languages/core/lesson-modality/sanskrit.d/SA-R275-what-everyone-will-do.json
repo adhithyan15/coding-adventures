@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R275-what-everyone-will-do",
+    "language": "sanskrit",
+    "chapter": 275,
+    "sequence": 16220,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d764100f19771521"
+  },
+  "findings": []
+}

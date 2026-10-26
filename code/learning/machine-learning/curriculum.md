@@ -68,7 +68,9 @@ opaque ownership, full-network gradients and atomic candidate updates above the
 native matrix/math foundations. Its public typed checkpoint loader rejects all
 shared invalid cases, and native serialized resumes match complete uninterrupted
 baselines through 3002. Native training and installed-library evidence do not
-imply six-native interchange; that integration remains a separate tranche.
+imply six-native interchange. NN49's separate [six-native conformance trace](./six-native-dense-conformance.md)
+connects C through thirty directed pairs and return trips (78 real children),
+comparing complete states through 3002; exact-head CI/merge remains pending.
 
 Every model family below starts with the smallest example that needs its new
 idea.

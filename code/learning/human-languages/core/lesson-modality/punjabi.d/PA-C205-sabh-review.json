@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C205-sabh-review",
+    "language": "punjabi",
+    "chapter": 205,
+    "sequence": 11140,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e0f9728e17bdde1d"
+  },
+  "findings": []
+}

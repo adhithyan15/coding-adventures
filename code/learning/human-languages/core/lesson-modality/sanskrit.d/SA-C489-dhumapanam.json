@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C489-dhumapanam",
+    "language": "sanskrit",
+    "chapter": 489,
+    "sequence": 28120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7ca3c72cbc833d5"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Respect and Contempt",
+  "label": "ch:sa-respect-and-contempt",
+  "canDo": "I can say whether someone was respected or slighted.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C459-manah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can say whether someone was respected or slighted.",
+    "assesses": [
+      "SA-LEX-C459-ADARA459-03",
+      "SA-LEX-C459-ADARA459-04",
+      "SA-LEX-C459-ADARA459-05"
+    ]
+  }
+}

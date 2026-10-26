@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:2076fa8429b86a93",
+  "lessonIds": [
+    "SA-C471-mastiskah",
+    "SA-C471-kapalam",
+    "SA-C471-smasru",
+    "SA-C471-paksma",
+    "SA-C471-mundayati",
+    "SA-R471-review-464-471"
+  ],
+  "tex": "sanskrit/book/chapters/ch471-head-and-face.tex"
+}

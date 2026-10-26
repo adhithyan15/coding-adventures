@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C326-dipavalih",
+    "language": "sanskrit",
+    "chapter": 326,
+    "sequence": 19050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37023922f7784b26"
+  },
+  "findings": []
+}

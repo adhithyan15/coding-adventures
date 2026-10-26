@@ -1,0 +1,11 @@
+{
+  "id": "SA-C287-vegah",
+  "pathSegment": "SA-PATH-287-ANUDHAVANA287",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-287-ANUDHAVANA287",
+      "order": 1
+    }
+  ]
+}

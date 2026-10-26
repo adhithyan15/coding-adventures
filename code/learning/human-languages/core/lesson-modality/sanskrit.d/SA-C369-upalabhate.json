@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C369-upalabhate",
+    "language": "sanskrit",
+    "chapter": 369,
+    "sequence": 21510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3223fb31b4121f87"
+  },
+  "findings": []
+}

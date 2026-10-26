@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 355,
+  "output": "sanskrit/book/chapters/ch355-the-assembly.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

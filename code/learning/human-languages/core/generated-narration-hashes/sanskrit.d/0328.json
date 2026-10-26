@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:b0dac61b665e31ce",
+  "lessonIds": [
+    "SA-C328-vratam",
+    "SA-C328-upavasah",
+    "SA-C328-naivedyam",
+    "SA-C328-arpayati",
+    "SA-C328-prasadah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch328.txt",
+  "json": "sanskrit/narration/ch328.json",
+  "textHash": "fnv1a64:a740560619794b82",
+  "jsonHash": "fnv1a64:bfd05d9013058882",
+  "findings": []
+}

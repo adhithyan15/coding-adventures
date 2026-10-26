@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 534,
+  "title": "Coming to Terms",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4cbda3b33d20b58b",
+  "lessons": [
+    {
+      "id": "SA-C534-madhyasthah",
+      "sequence": 30640,
+      "title": "मध्यस्थः (madhyasthaḥ) — a go-between",
+      "headword": "मध्यस्थः",
+      "romanization": "madhyasthaḥ",
+      "gloss": "a go-between",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e035329c25d878ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for moves out of the way, then the Sanskrit for trouble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मध्यस्थः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मध्यस्थः — madhyasthaḥ — \"a go-between\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि विवादः अस्ति, तर्हि मध्यस्थः समाधानं ददातु। yadi vivādaḥ asti, tarhi madhyasthaḥ samādhānaṃ dadātu. If there is a dispute, let a go-between offer a way out."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मध्यस्थः (madhyasthaḥ) is built from madhya, \"the middle\", and stha, \"standing\", from the root √sthā; MW gives madhyastha as standing between two parties, a mediator, and as impartial (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhyasthaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhyasthaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhyasthaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhyasthaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi vivādaḥ asti, tarhi madhyasthaḥ samādhānaṃ dadātu. — If there is a dispute, let a go-between offer a way out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi vivādaḥ asti, tarhi madhyasthaḥ samādhānaṃ dadātu.* — If there is a dispute, let a go-between offer a way out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for moves out of the way, then the Sanskrit for trouble, then say madhyasthaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for moves out of the way, then the Sanskrit for trouble, then say *madhyasthaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मध्यस्थः (madhyasthaḥ) mean? (\"A go-between\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C534-samvid",
+      "sequence": 30650,
+      "title": "संविद् (saṃvid) — an agreement",
+      "headword": "संविद्",
+      "romanization": "saṃvid",
+      "gloss": "an agreement",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:921fac1aa1c92524",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for trouble, then the Sanskrit for a go-between."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संविद्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संविद् — saṃvid — \"an agreement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् तेन सह संविदं करोति, तर्हि कार्यं भविष्यति। yadi bhavān tena saha saṃvidaṃ karoti, tarhi kāryaṃ bhaviṣyati. If you come to an agreement with him, the work will get done."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संविद् (saṃvid) is built on sam, \"together\", and the root √vid, \"to know\": a knowing together; MW gives saṃvid as consciousness, and as a mutual understanding, an agreement (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃvid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃvid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃvid, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃvid*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān tena saha saṃvidaṃ karoti, tarhi kāryaṃ bhaviṣyati. — If you come to an agreement with him, the work will get done.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān tena saha saṃvidaṃ karoti, tarhi kāryaṃ bhaviṣyati.* — If you come to an agreement with him, the work will get done.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for trouble, then the Sanskrit for a go-between, then say saṃvid again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for trouble, then the Sanskrit for a go-between, then say *saṃvid* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संविद् (saṃvid) mean? (\"An agreement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C534-angikaroti",
+      "sequence": 30660,
+      "title": "अंगीकरोति (aṅgīkaroti) — agrees to",
+      "headword": "अंगीकरोति",
+      "romanization": "aṅgīkaroti",
+      "gloss": "agrees to",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d1da8ff26627077",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a go-between, then the Sanskrit for an agreement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अंगीकरोति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंगीकरोति — aṅgīkaroti — \"agrees to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः मम योजनाम् अंगीकरोति, तर्हि वयं श्वः आरभामहे। yadi saḥ mama yojanām aṅgīkaroti, tarhi vayaṃ śvaḥ ārabhāmahe. If he agrees to my plan, we will start tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः योजनाम् अंगीकृतवान्, saḥ yojanām aṅgīkṛtavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंगीकरोति (aṅgīkaroti) is built from aṅga, \"a limb, a part\", in the form aṅgī, and the root √kṛ, \"to make\": to make a thing part of oneself; MW gives aṅgīkṛ as to take the side of, to agree to (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgīkaroti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgīkaroti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgīkaroti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgīkaroti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saḥ mama yojanām aṅgīkaroti, tarhi vayaṃ śvaḥ ārabhāmahe. — If he agrees to my plan, we will start tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saḥ mama yojanām aṅgīkaroti, tarhi vayaṃ śvaḥ ārabhāmahe.* — If he agrees to my plan, we will start tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a go-between, then the Sanskrit for an agreement, then say aṅgīkaroti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a go-between, then the Sanskrit for an agreement, then say *aṅgīkaroti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अंगीकरोति (aṅgīkaroti) mean? (\"Agrees to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C534-pratyakhyati",
+      "sequence": 30670,
+      "title": "प्रत्याख्याति (pratyākhyāti) — turns down",
+      "headword": "प्रत्याख्याति",
+      "romanization": "pratyākhyāti",
+      "gloss": "turns down",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:939c898226d5f54e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an agreement, then the Sanskrit for agrees to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रत्याख्याति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रत्याख्याति — pratyākhyāti — \"turns down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि मूल्यम् उचितं न अस्ति, तर्हि अहं तत् प्रत्याख्यामि। yadi mūlyam ucitaṃ na asti, tarhi ahaṃ tat pratyākhyāmi. If the price is not fair, I turn it down."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः निमन्त्रणं प्रत्याख्यातवान्, saḥ nimantraṇaṃ pratyākhyātavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रत्याख्याति (pratyākhyāti) is built on prati, \"back\", ā and the root √khyā, \"to tell\"; MW gives pratyākhyā as to refuse, to reject, to deny (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyākhyāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyākhyāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyākhyāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyākhyāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi mūlyam ucitaṃ na asti, tarhi ahaṃ tat pratyākhyāmi. — If the price is not fair, I turn it down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi mūlyam ucitaṃ na asti, tarhi ahaṃ tat pratyākhyāmi.* — If the price is not fair, I turn it down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an agreement, then the Sanskrit for agrees to, then say pratyākhyāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an agreement, then the Sanskrit for agrees to, then say *pratyākhyāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रत्याख्याति (pratyākhyāti) mean? (\"Turns down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C534-sammatih",
+      "sequence": 30680,
+      "title": "सम्मतिः (sammatiḥ) — consent; approval",
+      "headword": "सम्मतिः",
+      "romanization": "sammatiḥ",
+      "gloss": "consent; approval",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b344182705c8b1a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for agrees to, then the Sanskrit for turns down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सम्मतिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्मतिः — sammatiḥ — \"consent; approval\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि पितुः सम्मतिः अस्ति, तर्हि अहं गमिष्यामि। yadi pituḥ sammatiḥ asti, tarhi ahaṃ gamiṣyāmi. If my father agrees, I will go."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्मतिः (sammatiḥ) is built on sam, \"together\", and mati, \"thought\", from the root √man, \"to think\": a thinking alike; MW gives sammati as agreement, approval (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sammatiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sammatiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sammatiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sammatiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi pituḥ sammatiḥ asti, tarhi ahaṃ gamiṣyāmi. — If my father agrees, I will go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi pituḥ sammatiḥ asti, tarhi ahaṃ gamiṣyāmi.* — If my father agrees, I will go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for agrees to, then the Sanskrit for turns down, then say sammatiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for agrees to, then the Sanskrit for turns down, then say *sammatiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सम्मतिः (sammatiḥ) mean? (\"Consent; approval\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

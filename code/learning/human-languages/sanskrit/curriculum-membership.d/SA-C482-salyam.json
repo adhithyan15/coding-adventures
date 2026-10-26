@@ -1,0 +1,11 @@
+{
+  "id": "SA-C482-salyam",
+  "pathSegment": "SA-PATH-482-CIKITSA482",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-482-CIKITSA482",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C295-cetana",
+    "language": "sanskrit",
+    "chapter": 295,
+    "sequence": 17460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b082f9947292396"
+  },
+  "findings": []
+}

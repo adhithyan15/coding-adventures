@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:9578a431c28ec69d",
+  "lessonIds": [
+    "SA-C497-kanyadanam",
+    "SA-C497-panigrahanam",
+    "SA-C497-vedi",
+    "SA-C497-juhoti",
+    "SA-C497-saubhagyam"
+  ],
+  "tex": "sanskrit/book/chapters/ch497-wedding-rites.tex"
+}

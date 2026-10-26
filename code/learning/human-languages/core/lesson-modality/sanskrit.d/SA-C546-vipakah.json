@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C546-vipakah",
+    "language": "sanskrit",
+    "chapter": 546,
+    "sequence": 31290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfb2a8b11f9e90c9"
+  },
+  "findings": []
+}

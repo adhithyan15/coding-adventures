@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:2185c7f898ba5638",
+  "lessonIds": [
+    "SA-C438-atapah",
+    "SA-C438-nidaghah",
+    "SA-C438-prakharah",
+    "SA-C438-svedah",
+    "SA-C438-dipyate"
+  ],
+  "tex": "sanskrit/book/chapters/ch438-summer-heat.tex"
+}

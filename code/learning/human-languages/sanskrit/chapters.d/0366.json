@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Reaching a Conclusion",
+  "label": "ch:sa-reaching-a-conclusion",
+  "canDo": "I can say what a study found and what it settled.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C366-niscinoti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can say what a study found and what it settled.",
+    "assesses": [
+      "SA-LEX-C366-NISHKARSHA366-03",
+      "SA-LEX-C366-NISHKARSHA366-04",
+      "SA-LEX-C366-NISHKARSHA366-05"
+    ]
+  }
+}

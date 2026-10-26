@@ -1,0 +1,11 @@
+{
+  "id": "SA-C306-saranarthi",
+  "pathSegment": "SA-PATH-306-SHIBIRA306",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-306-SHIBIRA306",
+      "order": 3
+    }
+  ]
+}

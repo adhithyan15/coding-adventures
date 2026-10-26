@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-343-VADA343",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who spoke in a debate and who listened.",
+  "prerequisites": []
+}

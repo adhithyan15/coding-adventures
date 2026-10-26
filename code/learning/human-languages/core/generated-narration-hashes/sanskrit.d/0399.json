@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:45b23f8881b1db8b",
+  "lessonIds": [
+    "SA-C399-hradah",
+    "SA-C399-snapayati",
+    "SA-C399-divyah",
+    "SA-C399-toranam",
+    "SA-C399-pataka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch399.txt",
+  "json": "sanskrit/narration/ch399.json",
+  "textHash": "fnv1a64:376ffb8f4dc781c6",
+  "jsonHash": "fnv1a64:f92175eb1009ba44",
+  "findings": []
+}

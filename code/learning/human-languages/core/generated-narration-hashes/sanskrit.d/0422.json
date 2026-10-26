@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:5bb1cd17e1244a04",
+  "lessonIds": [
+    "SA-C422-prakarah",
+    "SA-C422-gopuram",
+    "SA-C422-parikha",
+    "SA-C422-suranga",
+    "SA-C422-khatam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch422.txt",
+  "json": "sanskrit/narration/ch422.json",
+  "textHash": "fnv1a64:9b14eedcdc24aaa7",
+  "jsonHash": "fnv1a64:96c84a849e29fc8f",
+  "findings": []
+}

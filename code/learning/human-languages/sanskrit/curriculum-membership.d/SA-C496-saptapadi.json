@@ -1,0 +1,11 @@
+{
+  "id": "SA-C496-saptapadi",
+  "pathSegment": "SA-PATH-496-VIVAHA496",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-496-VIVAHA496",
+      "order": 4
+    }
+  ]
+}

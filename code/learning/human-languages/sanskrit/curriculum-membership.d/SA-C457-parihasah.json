@@ -1,0 +1,11 @@
+{
+  "id": "SA-C457-parihasah",
+  "pathSegment": "SA-PATH-457-HASA457",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-457-HASA457",
+      "order": 2
+    }
+  ]
+}

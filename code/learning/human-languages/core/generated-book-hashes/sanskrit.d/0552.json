@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:4a6930763cdd7c19",
+  "lessonIds": [
+    "SA-C552-parisilayati",
+    "SA-C552-dinacarya",
+    "SA-C552-prayasah",
+    "SA-C552-prayunkte",
+    "SA-C552-upakarakah"
+  ],
+  "tex": "sanskrit/book/chapters/ch552-trying-it-out.tex"
+}

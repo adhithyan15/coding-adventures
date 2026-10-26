@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-342-ADHARA342",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what a view rests on and what follows from it.",
+  "prerequisites": []
+}

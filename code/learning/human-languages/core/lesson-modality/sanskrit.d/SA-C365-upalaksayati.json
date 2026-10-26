@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C365-upalaksayati",
+    "language": "sanskrit",
+    "chapter": 365,
+    "sequence": 21320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:062a9f5a7b65199f"
+  },
+  "findings": []
+}

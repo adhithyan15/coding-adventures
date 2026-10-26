@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-517-CATURANGA517",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-517-CATURANGA517"
+  ],
+  "after": []
+}

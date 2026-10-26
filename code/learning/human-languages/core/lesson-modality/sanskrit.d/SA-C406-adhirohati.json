@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C406-adhirohati",
+    "language": "sanskrit",
+    "chapter": 406,
+    "sequence": 23610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4aac8902f5a42679"
+  },
+  "findings": []
+}

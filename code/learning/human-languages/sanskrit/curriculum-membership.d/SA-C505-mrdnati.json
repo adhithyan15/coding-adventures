@@ -1,0 +1,11 @@
+{
+  "id": "SA-C505-mrdnati",
+  "pathSegment": "SA-PATH-505-MRD505",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-505-MRD505",
+      "order": 2
+    }
+  ]
+}

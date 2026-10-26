@@ -1,0 +1,11 @@
+{
+  "id": "SA-C539-samraksati",
+  "pathSegment": "SA-PATH-539-AVAHITA539",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-539-AVAHITA539",
+      "order": 4
+    }
+  ]
+}

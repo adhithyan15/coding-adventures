@@ -1,0 +1,19 @@
+{
+  "chapter": 546,
+  "title": "How It Turned Out",
+  "label": "ch:sa-how-it-turned-out",
+  "canDo": "I can say how something turned out.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C546-vipakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 546: I can say how something turned out.",
+    "assesses": [
+      "SA-LEX-C546-VIPAKA546-03",
+      "SA-LEX-C546-VIPAKA546-04",
+      "SA-LEX-C546-VIPAKA546-05"
+    ]
+  }
+}
