@@ -1865,13 +1865,13 @@ fn handle_call(
         None => None,
     };
 
-    // Step 5: Build and push the callee frame.
-    let callee_params = ctx.module_fns[callee_idx].params.clone();
-    let callee_reg_count = ctx.module_fns[callee_idx].register_count;
-    let mut callee_frame = VMFrame::for_function(
-        &fn_name, &callee_params, callee_reg_count, ret_dest,
-    );
-    for (i, val) in args.into_iter().enumerate().take(callee_params.len()) {
+    // Step 5: Build and push the callee frame.  `for_function` gives every
+    // parameter its own slot (or refuses a function with more parameters than
+    // a frame holds), so the positional argument writes stay in bounds.
+    let callee = &ctx.module_fns[callee_idx];
+    let n_params = callee.params.len();
+    let mut callee_frame = VMFrame::for_function(callee, ret_dest)?;
+    for (i, val) in args.into_iter().enumerate().take(n_params) {
         callee_frame.registers[i] = val;
     }
 

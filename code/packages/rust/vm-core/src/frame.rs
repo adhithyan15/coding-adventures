@@ -55,10 +55,32 @@
 //! check only fires for a register no instruction `dest` names — one a
 //! language opcode handler builds on the fly.
 //!
+//! # Parameters are positional
+//!
+//! A function's parameters occupy register slots `0..params.len()` by
+//! *position* — the dispatcher writes argument `i` straight into
+//! `registers[i]` — whatever their names.  So a function with parameters
+//! `(a, a)` uses two slots even though it has one distinct parameter name,
+//! and the first register a body instruction creates is slot 2, not slot 1:
+//!
+//! ```text
+//!   params (a, a)      slot 0  slot 1   ← both arguments, by position
+//!   name_to_reg        a → 1            ← the later duplicate wins the name
+//!   next new register  slot 2           ← `next_reg`, never `name_to_reg.len()`
+//! ```
+//!
+//! Counting registers therefore means `params.len()` plus the distinct
+//! `dest` names that are not parameters — never just distinct names, which
+//! under-counts a function with duplicate parameter names.
+//!
+//! # The `register_count` hint
+//!
 //! A function's `register_count` is only a pre-allocation hint and is not
-//! trusted: [`VMFrame::new`] clamps it to the limit, so a module declaring
-//! `register_count = usize::MAX` cannot make the VM allocate (and abort)
-//! before the first instruction.
+//! trusted.  [`VMFrame::for_function`] pre-allocates at most what the
+//! function could ever use — `params.len() + instructions.len()`, and never
+//! more than the limit — so neither `register_count = usize::MAX` (which
+//! would abort on allocation) nor a tiny recursive function claiming 65,536
+//! registers can make each frame allocate far more than it needs.
 
 use std::collections::{HashMap, HashSet};
 use interpreter_ir::IIRFunction;
@@ -89,18 +111,23 @@ pub struct VMFrame {
     ///
     /// `None` for the root frame (no caller exists).
     pub return_dest: Option<usize>,
+
+    /// The index the next new register name gets.
+    ///
+    /// Starts at `params.len()`: parameters own slots `0..params.len()` by
+    /// position, even when two share a name, so `name_to_reg.len()` would
+    /// hand out a slot that still holds an argument.  It is also the number
+    /// of registers in use, which is what the frame limit bounds.
+    next_reg: usize,
 }
 
 impl VMFrame {
-    /// Create a blank frame for the named function with `register_count`
-    /// pre-allocated slots, all initialised to `Value::Null`.
+    /// Create a blank frame (no parameters) for the named function with
+    /// `register_count` pre-allocated slots, all initialised to `Value::Null`.
     ///
-    /// `register_count` is a hint from the frontend, so it is clamped to
-    /// [`Self::MAX_FRAME_REGISTERS`]: a larger value can only be a frontend
-    /// over-reporting (the load-time check has already refused any function
-    /// that really uses more), and trusting it would let a hand-built module
-    /// with `register_count = usize::MAX` abort the process on allocation.
-    /// The file still grows on demand in [`Self::assign`].
+    /// `register_count` is clamped to [`Self::MAX_FRAME_REGISTERS`], so an
+    /// absurd value cannot abort the process on allocation.  The file still
+    /// grows on demand in [`Self::assign`].
     pub fn new(fn_name: impl Into<String>, register_count: usize, return_dest: Option<usize>) -> Self {
         VMFrame {
             fn_name: fn_name.into(),
@@ -108,29 +135,56 @@ impl VMFrame {
             registers: vec![Value::Null; register_count.min(Self::MAX_FRAME_REGISTERS)],
             name_to_reg: HashMap::new(),
             return_dest,
+            next_reg: 0,
         }
     }
 
-    /// Build a frame from a function's parameter list, mapping param names to
-    /// the first N register slots in declaration order.
-    pub fn for_function(
-        fn_name: impl Into<String>,
-        params: &[(String, String)],
-        register_count: usize,
-        return_dest: Option<usize>,
-    ) -> Self {
-        // A function always needs at least one register slot per parameter: the
-        // dispatcher places the call arguments directly at indices `0..params.len()`.
-        // A frontend may under-report `register_count` (e.g. a hoisted `LAMBDA` body
-        // whose only register is its parameter reports `0`), so size the register
-        // file to cover the parameters regardless — mirroring how `assign` grows the
-        // file for under-reported *locals*. Without this a lambda call indexes past
-        // the end of `registers` and panics.
-        let mut frame = VMFrame::new(fn_name, register_count.max(params.len()), return_dest);
-        for (idx, (param_name, _)) in params.iter().enumerate() {
+    /// Build the frame for a call to `function`: parameter `i` owns register
+    /// slot `i` (the caller then writes argument `i` into `registers[i]`).
+    ///
+    /// The register file is pre-allocated to the frontend's `register_count`
+    /// hint, bounded on both sides:
+    ///
+    /// ```text
+    ///   at most   params + instructions   (all the function could ever name)
+    ///   at most   MAX_FRAME_REGISTERS
+    ///   at least  params                  (argument slots are written by index)
+    /// ```
+    ///
+    /// The lower bound matters because a frontend may under-report — a hoisted
+    /// McCarthy `LAMBDA` body whose only register is its parameter reports
+    /// `0` — and the dispatcher's `registers[i] = arg` would otherwise index
+    /// past the end and panic.  The upper bounds stop an over-reported hint
+    /// from pre-allocating memory the function can never use, on every call.
+    ///
+    /// # Errors
+    ///
+    /// [`VMError::RegisterLimitExceeded`] if the function has more parameters
+    /// than a frame has registers.  [`VMCore::execute`](crate::core::VMCore::execute)
+    /// refuses such a module before it runs; this is the backstop that keeps
+    /// every argument write in bounds (a function added to the module while
+    /// it runs never passed that check).
+    pub fn for_function(function: &IIRFunction, return_dest: Option<usize>) -> Result<Self, VMError> {
+        let n_params = function.params.len();
+        if n_params > Self::MAX_FRAME_REGISTERS {
+            return Err(VMError::RegisterLimitExceeded {
+                function: function.name.clone(),
+                registers: n_params,
+                limit: Self::MAX_FRAME_REGISTERS,
+            });
+        }
+        let could_ever_use = n_params.saturating_add(function.instructions.len());
+        let prealloc = function
+            .register_count
+            .min(could_ever_use)
+            .min(Self::MAX_FRAME_REGISTERS)
+            .max(n_params);
+        let mut frame = VMFrame::new(function.name.clone(), prealloc, return_dest);
+        for (idx, (param_name, _)) in function.params.iter().enumerate() {
             frame.name_to_reg.insert(param_name.clone(), idx);
         }
-        frame
+        frame.next_reg = n_params;
+        Ok(frame)
     }
 
     // ------------------------------------------------------------------
@@ -158,41 +212,51 @@ impl VMFrame {
 
     /// Refuse a function that needs more registers than a frame can hold.
     ///
-    /// The registers a function's frame can ever name are its parameters plus
-    /// the `dest` of its instructions — every handler that creates a register
-    /// does so through [`Self::assign`] or the `call` return slot, both keyed
-    /// by an instruction's `dest`.  So the distinct names in that set are an
-    /// exact, static count of the frame's named registers.
+    /// A frame's registers are:
     ///
-    /// Counting them needs a hash set, but almost every function is far below
-    /// the limit, so a cheap upper bound comes first:
+    /// - one slot per **parameter, by position** — `params.len()` of them,
+    ///   even if two parameters share a name (see the module docs); plus
+    /// - one slot per distinct instruction `dest` that is **not** a
+    ///   parameter name (a `dest` naming a parameter reuses its slot).
+    ///
+    /// Every handler that creates a register does so through
+    /// [`Self::assign`] or the `call` return slot, both keyed by an
+    /// instruction's `dest`, so this is an exact, static count — the same
+    /// number the frame's `next_reg` reaches at run time.  Counting distinct
+    /// names alone would under-count duplicate parameters and let a function
+    /// whose argument slots do not fit pass.
+    ///
+    /// Counting needs hash sets, but almost every function is far below the
+    /// limit, so a cheap upper bound comes first:
     ///
     /// ```text
     ///   params + (instructions with a dest)  ≤ limit  →  Ok, no allocation
-    ///   otherwise                                    →  count distinct names
+    ///   otherwise                                    →  count exactly
     /// ```
-    ///
-    /// Only a function that really could be over the limit pays for the set.
     ///
     /// # Errors
     ///
-    /// [`VMError::RegisterLimitExceeded`] naming the function, its distinct
-    /// register count and the limit.
+    /// [`VMError::RegisterLimitExceeded`] naming the function, its register
+    /// count and the limit.
     pub fn check_register_limit(function: &IIRFunction) -> Result<(), VMError> {
+        let n_params = function.params.len();
         let dests = function.instructions.iter().filter(|i| i.dest.is_some()).count();
-        if function.params.len().saturating_add(dests) <= Self::MAX_FRAME_REGISTERS {
+        if n_params.saturating_add(dests) <= Self::MAX_FRAME_REGISTERS {
             return Ok(());
         }
-        let names: HashSet<&str> = function
-            .params
+        let param_names: HashSet<&str> =
+            function.params.iter().map(|(name, _)| name.as_str()).collect();
+        let locals: HashSet<&str> = function
+            .instructions
             .iter()
-            .map(|(name, _)| name.as_str())
-            .chain(function.instructions.iter().filter_map(|i| i.dest.as_deref()))
+            .filter_map(|i| i.dest.as_deref())
+            .filter(|name| !param_names.contains(name))
             .collect();
-        if names.len() > Self::MAX_FRAME_REGISTERS {
+        let registers = n_params.saturating_add(locals.len());
+        if registers > Self::MAX_FRAME_REGISTERS {
             return Err(VMError::RegisterLimitExceeded {
                 function: function.name.clone(),
-                registers: names.len(),
+                registers,
                 limit: Self::MAX_FRAME_REGISTERS,
             });
         }
@@ -214,7 +278,10 @@ impl VMFrame {
         if let Some(&idx) = self.name_to_reg.get(name) {
             return Ok(idx);
         }
-        let next_idx = self.name_to_reg.len();
+        // `next_reg`, not `name_to_reg.len()`: with duplicate parameter names
+        // the map is shorter than the parameter slots, and its length would
+        // be a slot that still holds an argument.
+        let next_idx = self.next_reg;
         if next_idx >= Self::MAX_FRAME_REGISTERS {
             return Err(VMError::RegisterLimitExceeded {
                 function: self.fn_name.clone(),
@@ -223,6 +290,7 @@ impl VMFrame {
             });
         }
         self.name_to_reg.insert(name.to_string(), next_idx);
+        self.next_reg = next_idx + 1;
         Ok(next_idx)
     }
 
@@ -261,13 +329,19 @@ mod tests {
         assert!(frame.registers.iter().all(|v| *v == Value::Null));
     }
 
+    /// A function with the given parameter names, a `register_count` hint
+    /// and an empty body (just `ret_void`).
+    fn fn_with_params(names: &[&str], register_count: usize) -> IIRFunction {
+        let params = names.iter().map(|n| (n.to_string(), "any".to_string())).collect();
+        let mut f = IIRFunction::new("f", params, "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]);
+        f.register_count = register_count;
+        f
+    }
+
     #[test]
     fn for_function_maps_params() {
-        let params = vec![
-            ("a".to_string(), "u8".to_string()),
-            ("b".to_string(), "u8".to_string()),
-        ];
-        let mut frame = VMFrame::for_function("add", &params, 8, None);
+        let f = fn_with_params(&["a", "b"], 8);
+        let mut frame = VMFrame::for_function(&f, None).unwrap();
         frame.registers[0] = Value::Int(10);
         frame.registers[1] = Value::Int(20);
         assert_eq!(frame.resolve("a"), Some(&Value::Int(10)));
@@ -281,10 +355,10 @@ mod tests {
     /// `registers[i] = arg` writes index past the end and panics (McCarthy W15b).
     #[test]
     fn for_function_sizes_registers_to_cover_params_when_count_underreports() {
-        let params = vec![("x".to_string(), "any".to_string())];
-        let mut frame = VMFrame::for_function("lambda_0", &params, 0, None);
+        let f = fn_with_params(&["x"], 0);
+        let mut frame = VMFrame::for_function(&f, None).unwrap();
         assert!(
-            frame.registers.len() >= params.len(),
+            frame.registers.len() >= f.params.len(),
             "register file must cover the parameters even when register_count under-reports",
         );
         // The dispatcher writes the argument directly by index — must not panic.
@@ -356,6 +430,56 @@ mod tests {
         assert!(frame.resolve("one_too_many").is_none());
     }
 
+    /// Duplicate parameter names still own one positional slot each, so the
+    /// first new register goes *after* them.  Handing out
+    /// `name_to_reg.len()` (= 1 here) would overwrite the second argument.
+    #[test]
+    fn a_new_register_never_reuses_a_duplicate_parameter_slot() {
+        let f = fn_with_params(&["a", "a"], 0);
+        let mut frame = VMFrame::for_function(&f, None).unwrap();
+        frame.registers[0] = Value::Int(10);
+        frame.registers[1] = Value::Int(20);
+        frame.assign("x", Value::Int(99)).unwrap();
+        assert_eq!(frame.name_to_reg["x"], 2);
+        assert_eq!(frame.registers[0], Value::Int(10));
+        assert_eq!(frame.registers[1], Value::Int(20), "argument 2 must survive");
+        assert_eq!(frame.resolve("x"), Some(&Value::Int(99)));
+    }
+
+    /// More parameters than a frame has registers — all with one name, so
+    /// only one *distinct* name — is a typed error, not a frame too small for
+    /// its argument writes (which used to panic with index out of bounds).
+    #[test]
+    fn for_function_refuses_more_positional_params_than_the_limit() {
+        let names = vec!["a"; VMFrame::MAX_FRAME_REGISTERS + 1];
+        let f = fn_with_params(&names, 0);
+        match VMFrame::for_function(&f, None) {
+            Err(VMError::RegisterLimitExceeded { registers, limit, .. }) => {
+                assert_eq!(registers, VMFrame::MAX_FRAME_REGISTERS + 1);
+                assert_eq!(limit, VMFrame::MAX_FRAME_REGISTERS);
+            }
+            other => panic!("expected RegisterLimitExceeded, got {other:?}"),
+        }
+    }
+
+    /// Exactly the limit of parameters fits, with a slot for each argument.
+    #[test]
+    fn for_function_accepts_params_exactly_at_the_limit() {
+        let names = vec!["a"; VMFrame::MAX_FRAME_REGISTERS];
+        let frame = VMFrame::for_function(&fn_with_params(&names, 0), None).unwrap();
+        assert_eq!(frame.registers.len(), VMFrame::MAX_FRAME_REGISTERS);
+    }
+
+    /// An over-reported `register_count` cannot pre-allocate more than the
+    /// function could ever name (`params + instructions`).
+    #[test]
+    fn for_function_bounds_the_hint_by_what_the_function_can_use() {
+        let f = fn_with_params(&["n"], VMFrame::MAX_FRAME_REGISTERS);
+        let frame = VMFrame::for_function(&f, None).unwrap();
+        // 1 parameter + 1 instruction (`ret_void`).
+        assert_eq!(frame.registers.len(), 2);
+    }
+
     #[test]
     fn register_index_is_stable_for_a_known_name() {
         let mut frame = VMFrame::new("f", 0, None);
@@ -387,6 +511,35 @@ mod tests {
             err.to_string(),
             "function \"over\" needs 65537 registers, more than the 65536 a vm-core frame can hold"
         );
+    }
+
+    /// Parameters count by position: 65,537 parameters that all share one
+    /// name are 65,537 registers, not one.
+    #[test]
+    fn check_counts_duplicate_parameters_by_position() {
+        let names = vec!["a"; VMFrame::MAX_FRAME_REGISTERS + 1];
+        let f = fn_with_params(&names, 0);
+        assert!(matches!(
+            VMFrame::check_register_limit(&f),
+            Err(VMError::RegisterLimitExceeded { registers: 65_537, .. })
+        ));
+    }
+
+    /// A `dest` that names a parameter reuses the parameter's slot, so it is
+    /// not counted twice.
+    #[test]
+    fn check_does_not_double_count_a_dest_that_is_a_parameter() {
+        let mut f = function_with_registers("p", VMFrame::MAX_FRAME_REGISTERS);
+        f.params = vec![("r0".into(), "any".into())];
+        // 65,536 dests r0..r65535, but r0 is the parameter: 1 + 65,535 locals
+        // = 65,536 (the upper bound, 65,537, sends this down the exact path).
+        assert!(VMFrame::check_register_limit(&f).is_ok());
+        f.params.push(("extra".into(), "any".into()));
+        // 2 params + 65,535 locals = 65,537.
+        assert!(matches!(
+            VMFrame::check_register_limit(&f),
+            Err(VMError::RegisterLimitExceeded { registers: 65_537, .. })
+        ));
     }
 
     /// Parameters are registers too, and count toward the limit.

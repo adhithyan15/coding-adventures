@@ -402,12 +402,12 @@ impl VMCore {
         // frame, naming it, before any output or side effect happens.
         check_register_limits(module)?;
 
-        let params = module.functions[fn_idx].params.clone();
-        let reg_count = module.functions[fn_idx].register_count;
-
-        // Build the root frame.
-        let mut root_frame = VMFrame::for_function(fn_name, &params, reg_count, None);
-        for (i, arg) in args.iter().enumerate().take(params.len()) {
+        // Build the root frame.  `for_function` sizes the register file to
+        // at least one slot per parameter, so the argument writes are in
+        // bounds.
+        let entry = &module.functions[fn_idx];
+        let mut root_frame = VMFrame::for_function(entry, None)?;
+        for (i, arg) in args.iter().enumerate().take(entry.params.len()) {
             root_frame.registers[i] = arg.clone();
         }
 
@@ -487,11 +487,9 @@ impl VMCore {
         // Same load-time register-limit check as `execute`.
         check_register_limits(module)?;
 
-        let params = module.functions[fn_idx].params.clone();
-        let reg_count = module.functions[fn_idx].register_count;
-
-        let mut root_frame = VMFrame::for_function(fn_name, &params, reg_count, None);
-        for (i, arg) in args.iter().enumerate().take(params.len()) {
+        let entry = &module.functions[fn_idx];
+        let mut root_frame = VMFrame::for_function(entry, None)?;
+        for (i, arg) in args.iter().enumerate().take(entry.params.len()) {
             root_frame.registers[i] = arg.clone();
         }
 
@@ -770,6 +768,79 @@ mod tests {
             "got {err:?}"
         );
         assert_eq!(vm.metrics_instrs(), 0);
+    }
+
+    /// 65,537 parameters that all share the name `a` are 65,537 positional
+    /// argument slots.  The distinct-name count used to let this through, and
+    /// writing the 65,537th argument panicked (index out of bounds).  Now it
+    /// is the typed error, before anything runs.
+    #[test]
+    fn execute_refuses_duplicate_named_params_past_the_limit_without_panicking() {
+        let n = VMFrame::MAX_FRAME_REGISTERS + 1;
+        let params = vec![("a".to_string(), "any".to_string()); n];
+        let main = IIRFunction::new(
+            "main", params, "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "any")],
+        );
+        let mut module = module_of(vec![main]);
+        let args = vec![Value::Int(1); n];
+        let mut vm = VMCore::new();
+        let err = vm.execute(&mut module, "main", &args).unwrap_err();
+        assert!(
+            matches!(&err, VMError::RegisterLimitExceeded { function, registers, .. }
+                if function == "main" && *registers == n),
+            "got {err:?}"
+        );
+        assert_eq!(vm.metrics_instrs(), 0);
+    }
+
+    /// The same through `call`: `main` calls `g` with 65,537 arguments, and
+    /// `g` declares 65,537 parameters all named `a`.  The module is refused
+    /// (naming `g`) instead of the call handler panicking on the 65,537th
+    /// argument write.
+    #[test]
+    fn execute_refuses_a_callee_with_duplicate_named_params_past_the_limit() {
+        let n = VMFrame::MAX_FRAME_REGISTERS + 1;
+        let mut srcs = vec![Operand::Var("g".into())];
+        srcs.extend((0..n).map(|_| Operand::Int(1)));
+        let main = IIRFunction::new(
+            "main", vec![], "any",
+            vec![
+                IIRInstr::new("call", Some("x".into()), srcs, "any"),
+                IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any"),
+            ],
+        );
+        let g = IIRFunction::new(
+            "g", vec![("a".to_string(), "any".to_string()); n], "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "any")],
+        );
+        let mut module = module_of(vec![main, g]);
+        let err = VMCore::new().execute(&mut module, "main", &[]).unwrap_err();
+        assert!(
+            matches!(&err, VMError::RegisterLimitExceeded { function, .. } if function == "g"),
+            "got {err:?}"
+        );
+    }
+
+    /// Duplicate parameter names below the limit still run, and a local does
+    /// not overwrite the second argument: `f(a, a) { x = 5; ret a }` called
+    /// with (10, 20) returns 20 (the later `a` wins the name).
+    #[test]
+    fn duplicate_named_params_keep_every_argument_slot() {
+        let f = IIRFunction::new(
+            "main",
+            vec![("a".into(), "any".into()), ("a".into(), "any".into())],
+            "any",
+            vec![
+                IIRInstr::new("const", Some("x".into()), vec![Operand::Int(5)], "any"),
+                IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "any"),
+            ],
+        );
+        let mut module = module_of(vec![f]);
+        let result = VMCore::new()
+            .execute(&mut module, "main", &[Value::Int(10), Value::Int(20)])
+            .unwrap();
+        assert_eq!(result, Some(Value::Int(20)));
     }
 
     /// `execute_traced` applies the same load-time check.

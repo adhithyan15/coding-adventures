@@ -114,9 +114,12 @@ resource bound — it caps one frame's register file, and therefore the memory a
 deep call stack can pin — and the same 2¹⁶ bounds the `load_reg`/`store_reg`
 index range (`0..=65_535`).
 
-A function's registers are its parameters plus the `dest` of its
-instructions, so the count is static. Exceeding the limit is a typed error,
-never a silent drop:
+A function's registers are its **parameters, by position** — parameter `i`
+owns slot `i` even when two parameters share a name — plus the distinct
+`dest` names of its instructions that are not parameter names (a `dest`
+naming a parameter reuses its slot). The count is static, and new registers
+are numbered from `params.len()`. Exceeding the limit is a typed error,
+never a silent drop or a panic:
 
 1. **Load time.** Before running anything, `execute` counts the distinct
    register names of every function in the module. A function over the limit
@@ -126,8 +129,18 @@ never a silent drop:
    the same error, for a register a language opcode handler creates
    dynamically.
 
-`register_count` is a pre-allocation hint only; the VM clamps it to the limit
-rather than trusting it.
+`register_count` is a pre-allocation hint only. The VM pre-allocates it
+bounded by what the function can ever name (`params + instructions`) and by
+the limit, and never below `params.len()`.
+
+**Memory bound.** The limit caps the memory one frame can pin, not one
+program: a deep call stack holds up to `max_frames` frames (default 512 in
+the Rust vm-core), each up to 65,536 slots of roughly 24 bytes plus its
+name map, i.e. about 768 MiB of register files in the worst case. A
+`register_count` hint can no longer reach that on its own, but a function
+can still grow a frame to the limit with one `store_reg 65535` (by-index
+writes resize the file); hosts that need a tighter bound should lower
+`max_frames` or the instruction budget.
 
 > History: the Rust vm-core originally dropped the 65,537th register
 > silently, so the program failed later with a misleading

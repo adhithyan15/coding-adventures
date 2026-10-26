@@ -17,9 +17,10 @@
     a vm-core frame can hold`.
   - **Load-time check.** `VMCore::execute` and `execute_traced` run the new
     `core::check_register_limits(module)` before pushing the root frame: each
-    function's distinct register names (parameters plus instruction `dest`s)
-    are counted, and the whole module is refused before any instruction —
-    or output — runs. A cheap upper bound (`params + dests`) skips the hash
+    function's registers are counted — **`params.len()` (parameters own
+    slots `0..params.len()` by position, even when names repeat) plus the
+    distinct instruction `dest`s that are not parameter names** — and the
+    whole module is refused before any instruction or output runs. A cheap upper bound (`params + dests`) skips the hash
     set for every function that is obviously within the limit. Per-function
     check: `VMFrame::check_register_limit(&IIRFunction)`.
   - **Run-time backstop.** `VMFrame::assign` now returns
@@ -27,15 +28,34 @@
     `VMFrame::register_index` (also used for the `call` return slot, which
     used to bypass the cap entirely) fails the same way for a register a
     custom opcode handler invents at run time.
-- `VMFrame::new` clamps the untrusted `register_count` pre-allocation hint
-  to the limit, so a hand-built module declaring `usize::MAX` registers no
-  longer aborts on allocation (the serialiser already capped decoded
-  modules; this covers modules built in memory).
+- **`VMFrame::for_function(&IIRFunction, return_dest) -> Result`** (was
+  `(name, params, register_count, return_dest) -> Self`): refuses a function
+  with more parameters than a frame holds, so every positional argument
+  write is in bounds (a backstop for functions that bypassed the load-time
+  check). It pre-allocates the untrusted `register_count` hint bounded by
+  `params + instructions` (all the function can ever name) and the limit,
+  and never below `params.len()`. A hand-built module declaring
+  `usize::MAX` no longer aborts on allocation, and a tiny recursive
+  function claiming 65,536 registers no longer pre-allocates them in every
+  frame. `VMFrame::new` also clamps its count to the limit.
+- **Fix (pre-existing): a new register no longer overwrites a duplicate-named
+  parameter's argument.** New registers were numbered `name_to_reg.len()`,
+  which is less than `params.len()` when two parameters share a name, so in
+  `f(a, a)` the first local got slot 1 and clobbered the second argument.
+  Frames now keep a separate `next_reg` counter starting at `params.len()`.
+- Security review: the first draft of this change counted *distinct names*
+  only, so 65,537 parameters all named `a` passed the check and then
+  panicked writing the 65,537th argument into a clamped register file (via
+  `execute` or `call`). Fixed by the positional count and the
+  `for_function` backstop above; regression tests cover both paths.
 - Tests: a function with exactly 65,536 registers runs and returns its last
   register; 65,537 is refused with the typed error and zero instructions
   executed (via `execute`, `execute_traced`, and a module whose *callee* is
-  over the limit); frame-level tests for the 65,537th `assign`, parameter
-  counting, distinct-name counting and the `register_count` clamp.
+  over the limit); 65,537 duplicate-named parameters refused with the typed
+  error and no panic (entry point and callee); `f(a, a)` keeps both
+  arguments next to a local; frame-level tests for the 65,537th `assign`,
+  positional parameter counting, a `dest` naming a parameter not counted
+  twice, distinct-name counting, and the `register_count` bounds.
 
 ## [0.31.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 

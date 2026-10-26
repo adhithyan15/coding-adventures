@@ -90,16 +90,19 @@ that the ALGOL 60 `real` frontend now emits; integer programs are untouched.
 
 One frame per active function call.  Holds a flat `registers: Vec<Value>` and a
 `name_to_reg: HashMap<String, usize>` that maps variable names to register
-indices.  `assign()` grows the register file on demand, and `for_function()`
-sizes it to at least the parameter count (`max(register_count, params.len())`) so
-the dispatcher can place call arguments at indices `0..params.len()` even when a
-frontend under-reports `register_count` (e.g. a hoisted McCarthy `LAMBDA` body).
+indices.  `assign()` grows the register file on demand, and
+`for_function(&IIRFunction, return_dest)` pre-allocates the `register_count` hint
+bounded by `params + instructions` and the frame limit, and never below the
+parameter count, so the dispatcher can place call arguments at indices
+`0..params.len()` even when a frontend under-reports `register_count` (e.g. a
+hoisted McCarthy `LAMBDA` body). Parameters own those slots **by position**, even
+when two share a name; new registers are numbered from `params.len()`.
 
 **Register limit.** A frame holds at most `VMFrame::MAX_FRAME_REGISTERS`
 (2¹⁶ = 65,536) distinct registers — the same bound as the `load_reg`/`store_reg`
 index range and twig-vm's `MAX_REGISTERS_PER_FRAME`. A function's registers are
-its parameters plus its instructions' `dest` names, so the count is known before
-the program runs: `VMCore::execute` (and `execute_traced`) check every function
+`params.len()` positional parameter slots plus the distinct `dest` names that are
+not parameters, so the count is known before the program runs: `VMCore::execute` (and `execute_traced`) check every function
 in the module first and refuse the module with
 `VMError::RegisterLimitExceeded { function, registers, limit }` —
 `function "main" needs 65537 registers, more than the 65536 a vm-core frame can
@@ -107,7 +110,7 @@ hold` — before any instruction executes. `assign()` returns the same error as 
 run-time backstop (for a register a custom opcode invents on the fly). Earlier
 versions dropped the 65,537th register silently and failed later with a
 misleading `undefined variable`. `register_count` is only a pre-allocation hint
-and is clamped to the limit, so an absurd value cannot abort the process.
+and is clamped (see above), so an absurd value cannot abort the process.
 
 ### `VMCore` — the execution API
 
