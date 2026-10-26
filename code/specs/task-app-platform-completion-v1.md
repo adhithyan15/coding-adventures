@@ -1,5 +1,18 @@
 # TaskApp platform completion v1
 
+## Selected fidelity slice: Qt timeline label floor (#18305)
+
+Preserve the existing 150-pixel `tl-name` width and `flex-shrink: 0` intent
+on the outer Qt text box using `Layout.minimumWidth`. Reuse the conservative
+static-width bridge: conflicting min/max widths, flex basis/shorthand, and
+geometry/shrink state overrides remain excluded. Keep flex-shrink diagnostics
+and all artifact/platform limitations unchanged. Add emitter regression tests
+and a package-expanded assertion for both TaskApp themes.
+
+The v0.5.12 checkpoint is published and audited via run 40269564825:
+immutable source d75d061afe34c7f3764636dbf879181eb4dceb33, 13 assets,
+12 verified checksum entries, and 11 manifest payloads (#18264).
+
 Epic: [#13517](https://github.com/adhithyan15/coding-adventures/issues/13517)
 
 > **Superseded in part — 2026-09-02.** The *measurement* here stands. The
