@@ -939,9 +939,7 @@ cold launches against one state file:
   `Modifier.testTag(<part>)` and SwiftUI gives them
   `.accessibilityIdentifier(<part>)`, so one set of names serves both. A
   second mount of a component suffixes every part with `-m<N>`, so row
-  matchers use a prefix, as JournalUiTest already does. Journal's timeline
-  rows were `record-list-title`; since they became Cards they are
-  `timeline-entry-open`, matched by accessible name (`Open {title}`).
+  matchers use a prefix (`record-list-title`), as JournalUiTest already does.
 - **Launch 2 is a new process.** Recomposing in the same process would read
   the engine's memory, not the state file; only a new process shows that the
   snapshot was written where the platform keeps app data and read back.
@@ -1037,8 +1035,7 @@ cold launches against one state file:
   again. A real terminate gives the new process launch 2 needs inside one
   test method. Nodes are found with `descendants(matching: .any)
   .matching(identifier:)`, and rows with a predicate
-  `identifier BEGINSWITH 'timeline-entry-open'` (`record-list-title` before
-  the timeline became Cards). Text goes in with `tap()` and
+  `identifier BEGINSWITH 'record-list-title'`. Text goes in with `tap()` and
   `typeText`, which needs only the focus the tap gives.
 - **A known start.** The gate leaves its own state in the app's container,
   so the step runs `xcrun simctl uninstall <udid> <bundle id>` first, and

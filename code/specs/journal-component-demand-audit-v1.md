@@ -188,12 +188,16 @@ Day One parity items from #14416 with no current home:
 
 ## Card as the timeline row — the first real consumer (2026-10-26)
 
-Mosaic backlog item 4. Journal's timeline rows are now drawn by
-`mosaic-pkg-card`'s `Card`, which until now had no consumer at all: Engram
-depends on `mosaic-pkg-card-browser`, not on `Card`. Product program §5 says
-to adopt a package as-is, record where it does not fit, and generalize only
-against that evidence. This section is that record. `Card` itself is
-unchanged.
+Mosaic backlog item 4 asked for Journal's timeline rows to be drawn by
+`mosaic-pkg-card`'s `Card`, which has no consumer at all: Engram depends on
+`mosaic-pkg-card-browser`, not on `Card`. Product program §5 says to adopt a
+package as-is, record where it does not fit, and generalize only against
+that evidence. This section is that record.
+
+**Outcome: designed, prototyped and compiled for every backend, but not
+adopted.** It is blocked by M7 below. The prototype is on the local branch
+`wip/journal-timeline-on-card-impl`, which is not pushed. `Card`, Journal and
+`journal-mosaic-app` are unchanged on `main`.
 
 ### What was measured first
 
@@ -220,7 +224,7 @@ UI29 §2.1 ("only XAML and HTML render them") and with EM-8. XAML is one of
 the two because #14717 was fixed. §2 is kept as written, for the same reason
 its earlier correction was.
 
-### The design
+### The design (prototyped)
 
 The kernel rule for this case is UI29 §2.1: "until children pass-through is
 specified for `HostButton`, give the button a `label` and put richer content
@@ -273,27 +277,38 @@ Why each choice:
   row styles: recalled entries open from their title, timeline entries from
   "Open".
 
-**Per backend.** The Card renders on all eight backends. On the five native
-backends the package stays native-complete (zero capability degradations).
-Card's own stylesheet adds style drops, listed under M2 below and pinned in
-`journal-app`'s gate. The native UI tests (Compose desktop, Android, iPadOS)
-used to find a row by `record-list-title` and its text. They now find it by
-`timeline-entry-open` and its accessible name: Compose `contentDescription`,
-the XCUITest `label`. The web tests find it by `aria-label`.
+**Per backend, as measured on the prototype.**
+
+- The Card renders on all eight backends, and the package stays
+  native-complete on the five native ones (zero capability degradations).
+- Card's own stylesheet adds style drops (M2). The prototype pins them in
+  `journal-app`'s gate, matched only on Card's parts.
+- What passed locally:
+  - `journal-app`'s `cargo test`;
+  - `journal-mosaic-app`'s tests and its wasm test;
+  - the web host's 19 Vitest tests, `tsc -b` and `vite build`;
+  - the SwiftUI emit and `swift build`;
+  - the Flutter emit and `flutter analyze`.
+- The native UI tests would find a row by `timeline-entry-open` and its
+  accessible name (the Compose `contentDescription`, the XCUITest `label`),
+  where they now use `record-list-title` and its text.
+- **Compose's `JournalUiTest` fails** (M7).
 
 ### Misfits — where Card does not fit Journal
 
-Each misfit is evidence for generalizing `Card`. None was fixed here.
+Each misfit is evidence for generalizing `Card`, or for the platform under
+it. None was fixed here.
 
 - **M1. Card cannot be the activation target.** `Card` deliberately has no
   emits, and its `.mil` says interaction belongs to "an actionable
   container". On six of eight backends that container drops the card (see
-  above). That is a kernel gap (EM-8, #15921), not a gap in `Card`. Journal's
-  workaround is a labelled button beside the card, plus an `open-label` row
-  field. **Retire both when EM-8 lands:** the row becomes one button wrapping
+  above). That is a kernel gap (EM-8, #15921), not a gap in `Card`. The
+  prototype's workaround is a labelled button beside the card, plus an
+  `open-label` row field. **Retire both when EM-8 lands:** the row becomes one button wrapping
   the card, and "On this day" can follow.
-- **M2. Card's stylesheet does not survive native lowering.** These drops are
-  measured by `journal-app`'s gate, in both themes:
+- **M2. Card's stylesheet does not survive native lowering.** These drops were
+  measured by `journal-app`'s native gate, run on the prototype in both
+  themes:
 
   | Property | Card part | Dropped on |
   | --- | --- | --- |
@@ -317,7 +332,7 @@ Each misfit is evidence for generalizing `Card`. None was fixed here.
   card, so it sits beside the button. The audit's earlier "a `date`/`meta`
   slot would fit better" (§2) holds in the other direction too: `footer` is
   carrying tags or a date, so a status marker has no room.
-- **M5. No selected state.** The open entry is shown by Journal's wrapper
+- **M5. No selected state.** The open entry is shown by the prototype's wrapper
   around the card. The card's own surface does not change. A `selected` or
   `variant` enum slot (UI49) is the existing mechanism for this.
 - **M6. The palette is not Journal's, and a caller cannot change it.** Card's
@@ -325,6 +340,32 @@ Each misfit is evidence for generalizing `Card`. None was fixed here.
   `#111827` pane, and its corners are square where Journal's are 4px. A call
   site cannot restyle a dependency's parts (X-5), so the fix is platform-neutral
   tokens (UI90), not per-app overrides.
+
+- **M7. Too tall for a pane that cannot scroll. This one blocks
+  adoption.** The measurements are from Compose renders of Journal's
+  declared 1100×760 window (`JournalScreenshots`), on `main` and on the
+  prototype:
+  - the pane's controls end about 500px down, which leaves about 260px for
+    the timeline;
+  - a `RecordList` row with a two-line excerpt is about 124px;
+  - the same entry as a Card, plus its Open button's line, is about 220px.
+    The card's 12px padding and 8px gaps are fixed (M6), its empty footer
+    still takes space (M3), and the button needs a line of its own (M1);
+  - so the pane shows two entries on `main` and one with Cards.
+
+  Nothing scrolls the pane on any native backend: there is no `HostScroll`
+  in Journal's layout (JO-5). So the second entry cannot be reached except
+  through search, and `JournalUiTest.kt:121` fails, because
+  "Open Drafted on Compose" exists but is not displayed. This is not Card's
+  fault alone. `main` already loses its third entry the same way, which is
+  the bug TaskApp fixed with `HostScroll` (#14734). But Card makes it
+  happen at two entries, so adopting it as-is would be a regression on every
+  native backend. **Order to unblock:**
+  1. JO-5. A scrolling pane, with the Compose UI test reading rows below the
+     fold through semantics, as the Android test already does. The reason is
+     that `performScrollTo()` hangs (EM-11).
+  2. Then the prototype can land as it is.
+  3. EM-8, or a compact Card, would then win the density back.
 
 What fits: the three text regions are what a journal entry card needs, and
 their order (title, excerpt, metadata) is Day One's. Having no emits was the

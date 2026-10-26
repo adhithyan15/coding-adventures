@@ -38,7 +38,7 @@ for a **target**:
 
 | slot | type | value |
 | --- | --- | --- |
-| `timeline-rows` | `list<list<text>>` | rows `[key, heading, title, subtitle, meta, badge, open-label]`, newest day first. The first six are `RecordList`'s; the package draws them as Cards (see *Timeline rows on Card*) |
+| `timeline-rows` | `list<list<text>>` | `RecordList` rows `[key, heading, title, subtitle, meta, badge]`, newest day first |
 | `selected-key` | `text` | the target entry's id, `""` for `New` |
 | `timeline-empty` | `bool` | no entries yet (drives the empty state) |
 | `draft-title` | `text` | |
@@ -57,11 +57,6 @@ Row fields:
   came from the body.
 - `meta` — `""` for now: no time of day yet (see *Time zones*).
 - `badge` — `★` for a starred entry.
-- `open-label` — `Open {title}`, the accessible name of the row's *Open*
-  button (added for *Timeline rows on Card*). It is never empty, because the
-  title never is. Rows are append-only, so `RecordList` ignores it. Every
-  row list (`timeline-rows`, search hits and `on-this-day-rows`) carries all
-  seven fields, so the layout can index `row[6]` in any of them.
 
 ## Events
 
@@ -128,39 +123,39 @@ The package's tests enforce the contract from both sides:
 - the app's start props are exactly the slots;
 - every declared emit is routed, and an undeclared one is rejected.
 
-## Timeline rows on Card
+## Timeline rows on Card (proposed, blocked)
 
-Mosaic backlog item 4. It makes `mosaic-pkg-card` a real consumer, product
-program §5. The design, the probes behind it and the misfits are recorded in
+Mosaic backlog item 4 asks for `mosaic-pkg-card` to get a real consumer
+(product program §5) by drawing the timeline's rows as Cards. It was
+designed and prototyped on 2026-10-26, and it is **not adopted**: the timeline
+is still a `RecordList`, and nothing in this crate or the package changed.
+The probes, the design and seven misfits are recorded in
 [`journal-component-demand-audit-v1.md`](journal-component-demand-audit-v1.md),
-"Card as the timeline row". In short:
+"Card as the timeline row". The prototype is kept on the local branch
+`wip/journal-timeline-on-card-impl`, which is not pushed.
 
-- **The package.** `journal-app` depends on `mosaic-pkg-card = "0.2.0"`, and
-  the timeline's `RecordList` mount is replaced by a `For` over
-  `timeline-rows`. Each row is:
-  - the day heading (`row[1]`, a `Text` with the heading role), when set;
+The design, for when it is unblocked:
+
+- **The package** depends on `mosaic-pkg-card = "0.2.0"` and replaces the
+  timeline's `RecordList` mount with a `For` over `timeline-rows`. Each row
+  is:
+  - the day heading (`row[1]`, a `Text` with the heading role);
   - a `Card` (`title` ← `row[2]`, `body-text` ← `row[3]`, `footer` ←
     `row[4]`);
   - an *Open* button (`a11y-label` ← `row[6]`, `selected` when
-    `row[0] == selected-key`, `onClick` → `onSelectEntry`);
-  - beside the button, `row[5]` (the `★`), when set.
+    `row[0] == selected-key`, `onClick` → `onSelectEntry`), with `row[5]`
+    (the `★`) beside it.
 
-  The open entry's row uses `-selected` parts, as `RecordList` does.
-  Search results are timeline rows, so they change too. "On this day" stays a
-  `RecordList`.
-- **Why a button beside the card, and not around it.** A `HostButton`'s
-  children are dropped on six of eight backends (UI29 §2.1, EM-8). When that
-  lands, the row becomes one button wrapping the card, and `open-label`
-  retires.
-- **This crate.** Only the row type changes: `[String; 6]` becomes
-  `[String; 7]`, with `open-label` last. Selection, events and persistence
-  are unchanged. `onSelectEntry`'s index is still the row's index.
-- **Tests.**
-  - `package_compiles` requires that the timeline is drawn through `Card`,
-    and that `Card` resolves to `mosaic-pkg-card`.
-  - The native gate pins Card's measured style drops (misfit M2).
-  - The web and native UI tests open an entry by its *Open* button's
-    accessible name.
+  The open entry's row gets `-selected` parts.
+- **This crate** would append a seventh row field, `open-label` =
+  `Open {title}`, to every row list, because a layout expression cannot join
+  strings. `RecordList` ignores it.
+- **It is blocked** by misfit M7. In the declared 1100×760 window, a Card row
+  plus its Open button is about 1.8× as tall as a `RecordList` row (measured
+  on Compose: about 220px against 124px). The pane does not scroll on any
+  native backend (JO-5), so Compose's `JournalUiTest` cannot see the second
+  entry. Fix JO-5 first. Then either EM-8, which retires the Open button's
+  extra line, or a denser Card variant.
 
 ## Native hosts (J5a)
 
