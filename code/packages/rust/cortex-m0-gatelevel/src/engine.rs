@@ -1,0 +1,1473 @@
+//! Independent Armv6-M gate transition engine.
+
+use core::fmt;
+use logic_gates::gates::{and_gate, not_gate, or_gate, xor_gate};
+
+use crate::gates;
+
+/// Owned teaching-memory size.
+pub const MEMORY_SIZE: usize = 65_536;
+/// Conservative budget for retained complete-state trace snapshots.
+pub const MAX_RETAINED_BYTES: usize = 8 * 1_024 * 1_024;
+/// Maximum complete-state traces retained by a bounded run.
+pub const MAX_RETAINED_STEPS: usize = MAX_RETAINED_BYTES / (2 * MEMORY_SIZE);
+/// Stack-pointer register number.
+pub const SP: u8 = 13;
+/// Link-register number.
+pub const LR: u8 = 14;
+/// Program-counter register number.
+pub const PC: u8 = 15;
+
+const APSR_N: u32 = 1 << 31;
+const APSR_Z: u32 = 1 << 30;
+const APSR_C: u32 = 1 << 29;
+const APSR_V: u32 = 1 << 28;
+const APSR_MASK: u32 = APSR_N | APSR_Z | APSR_C | APSR_V;
+
+fn field16(value: u16, offset: usize, width: usize) -> u16 {
+    gates::field(u32::from(value), offset, width) as u16
+}
+
+fn line16(value: u16, offset: usize, width: usize, expected: u16) -> u8 {
+    gates::selected(
+        u32::from(field16(value, offset, width)),
+        u32::from(expected),
+        width,
+    )
+}
+
+/// Broad Armv6-M decode family.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum InstructionClass {
+    ShiftAddSubtract,
+    Immediate,
+    DataProcessing,
+    SpecialData,
+    LiteralLoad,
+    RegisterMemory,
+    ImmediateMemory,
+    StackMemory,
+    AddressGeneration,
+    Miscellaneous,
+    MultipleMemory,
+    ConditionalBranch,
+    UnconditionalBranch,
+    BranchLink,
+    Barrier,
+    SpecialRegister,
+}
+
+/// Complete restorable state at an instruction boundary.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CortexM0State {
+    /// R0-R12.
+    pub registers: [u32; 13],
+    pub msp: u32,
+    pub psp: u32,
+    pub lr: u32,
+    pub pc: u32,
+    /// Only N/Z/C/V are stored here.
+    pub apsr: u32,
+    pub ipsr: u8,
+    pub primask: bool,
+    /// nPRIV is bit 0 and SPSEL is bit 1.
+    pub control: u8,
+    pub handler_mode: bool,
+    pub memory: Vec<u8>,
+    pub halted: bool,
+    pub sleeping: bool,
+    pub event_registered: bool,
+    pub loaded_origin: u32,
+    pub loaded_len: usize,
+}
+
+impl Default for CortexM0State {
+    fn default() -> Self {
+        Self {
+            registers: [0; 13],
+            msp: MEMORY_SIZE as u32,
+            psp: MEMORY_SIZE as u32,
+            lr: 0,
+            pc: 0,
+            apsr: 0,
+            ipsr: 0,
+            primask: false,
+            control: 0,
+            handler_mode: false,
+            memory: vec![0; MEMORY_SIZE],
+            halted: false,
+            sleeping: false,
+            event_registered: false,
+            loaded_origin: 0,
+            loaded_len: 0,
+        }
+    }
+}
+
+/// Typed lifecycle, decode, and execution failures.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum CortexM0Error {
+    EmptyProgram,
+    MisalignedProgram { origin: u32 },
+    ProgramOutOfRange { origin: u32, len: usize },
+    InvalidState { reason: &'static str },
+    InvalidRegister { index: u8 },
+    Halted,
+    Sleeping,
+    MisalignedFetch { pc: u32 },
+    FetchOutsideProgram { pc: u32, width: usize },
+    MisalignedData { address: u32, width: usize },
+    DataOutOfRange { address: u32, width: usize },
+    InvalidThumbTarget { target: u32 },
+    UnknownInstruction16 { raw: u16, pc: u32 },
+    UnknownInstruction32 { first: u16, second: u16, pc: u32 },
+    UnsupportedBreakpoint { immediate: u8, pc: u32 },
+    SupervisorCall { immediate: u8, pc: u32 },
+    RetentionLimitExceeded { requested: usize, limit: usize },
+    StepLimitExceeded { limit: usize },
+    AllocationFailed,
+}
+
+impl fmt::Display for CortexM0Error {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::EmptyProgram => formatter.write_str("program is empty"),
+            Self::MisalignedProgram { origin } => {
+                write!(
+                    formatter,
+                    "program origin {origin:#010x} is not halfword aligned"
+                )
+            }
+            Self::ProgramOutOfRange { origin, len } => write!(
+                formatter,
+                "program of {len} bytes at {origin:#010x} exceeds memory"
+            ),
+            Self::InvalidState { reason } => write!(formatter, "invalid state: {reason}"),
+            Self::InvalidRegister { index } => write!(formatter, "invalid register r{index}"),
+            Self::Halted => formatter.write_str("processor is halted"),
+            Self::Sleeping => formatter.write_str("processor is sleeping"),
+            Self::MisalignedFetch { pc } => write!(formatter, "misaligned fetch at {pc:#010x}"),
+            Self::FetchOutsideProgram { pc, width } => {
+                write!(
+                    formatter,
+                    "{width}-byte fetch at {pc:#010x} is outside the program"
+                )
+            }
+            Self::MisalignedData { address, width } => {
+                write!(
+                    formatter,
+                    "{width}-byte access at {address:#010x} is misaligned"
+                )
+            }
+            Self::DataOutOfRange { address, width } => {
+                write!(
+                    formatter,
+                    "{width}-byte access at {address:#010x} is out of range"
+                )
+            }
+            Self::InvalidThumbTarget { target } => {
+                write!(
+                    formatter,
+                    "branch target {target:#010x} does not select Thumb state"
+                )
+            }
+            Self::UnknownInstruction16 { raw, pc } => {
+                write!(formatter, "unknown instruction {raw:#06x} at {pc:#010x}")
+            }
+            Self::UnknownInstruction32 { first, second, pc } => write!(
+                formatter,
+                "unknown instruction {first:#06x} {second:#06x} at {pc:#010x}"
+            ),
+            Self::UnsupportedBreakpoint { immediate, pc } => write!(
+                formatter,
+                "BKPT #{immediate} at {pc:#010x} requires a debugger"
+            ),
+            Self::SupervisorCall { immediate, pc } => {
+                write!(
+                    formatter,
+                    "SVC #{immediate} at {pc:#010x} requires exception entry"
+                )
+            }
+            Self::RetentionLimitExceeded { requested, limit } => write!(
+                formatter,
+                "requested {requested} traces exceeds retention limit {limit}"
+            ),
+            Self::StepLimitExceeded { limit } => {
+                write!(formatter, "step limit {limit} exhausted")
+            }
+            Self::AllocationFailed => formatter.write_str("trace allocation failed"),
+        }
+    }
+}
+
+impl std::error::Error for CortexM0Error {}
+
+/// One committed architectural transition.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct StepTrace {
+    pub pc_before: u32,
+    pub pc_after: u32,
+    pub raw: [u8; 4],
+    pub width: usize,
+    pub mnemonic: &'static str,
+    pub state_before: CortexM0State,
+    pub state_after: CortexM0State,
+}
+
+/// Successful bounded execution.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ExecutionResult {
+    pub stopped: bool,
+    pub steps: usize,
+    pub traces: Vec<StepTrace>,
+    pub final_state: CortexM0State,
+}
+
+pub(crate) fn step_state(mut state: CortexM0State) -> Result<StepTrace, CortexM0Error> {
+    if state.halted {
+        return Err(CortexM0Error::Halted);
+    }
+    if state.sleeping {
+        return Err(CortexM0Error::Sleeping);
+    }
+    let before = try_clone_state(&state)?;
+    let pc = state.pc;
+    let first = fetch16(&state, pc)?;
+    let width = instruction_width(first);
+    let second = if width == 4 {
+        Some(
+            fetch16(&state, crate::gates::add_32(pc, 2, 0).0).map_err(|error| match error {
+                CortexM0Error::FetchOutsideProgram { .. } => {
+                    CortexM0Error::FetchOutsideProgram { pc, width: 4 }
+                }
+                other => other,
+            })?,
+        )
+    } else {
+        None
+    };
+    let class = classify_at(first, second, pc)?;
+    state.pc = crate::gates::add_32(pc, width as u32, 0).0;
+    let mnemonic = execute_decoded(&mut state, first, second, class, pc)?;
+    let mut raw = [0; 4];
+    raw[..2].copy_from_slice(&first.to_le_bytes());
+    if let Some(second) = second {
+        raw[2..].copy_from_slice(&second.to_le_bytes());
+    }
+    Ok(StepTrace {
+        pc_before: pc,
+        pc_after: state.pc,
+        raw,
+        width,
+        mnemonic,
+        state_before: before,
+        state_after: state,
+    })
+}
+
+fn try_clone_state(state: &CortexM0State) -> Result<CortexM0State, CortexM0Error> {
+    let mut memory = Vec::new();
+    memory
+        .try_reserve_exact(state.memory.len())
+        .map_err(|_| CortexM0Error::AllocationFailed)?;
+    memory.extend_from_slice(&state.memory);
+    Ok(CortexM0State {
+        registers: state.registers,
+        msp: state.msp,
+        psp: state.psp,
+        lr: state.lr,
+        pc: state.pc,
+        apsr: state.apsr,
+        ipsr: state.ipsr,
+        primask: state.primask,
+        control: state.control,
+        handler_mode: state.handler_mode,
+        memory,
+        halted: state.halted,
+        sleeping: state.sleeping,
+        event_registered: state.event_registered,
+        loaded_origin: state.loaded_origin,
+        loaded_len: state.loaded_len,
+    })
+}
+
+pub(crate) fn validate_program(program: &[u8], origin: u32) -> Result<(), CortexM0Error> {
+    if program.is_empty() {
+        return Err(CortexM0Error::EmptyProgram);
+    }
+    if origin & 1 != 0 {
+        return Err(CortexM0Error::MisalignedProgram { origin });
+    }
+    if usize::try_from(origin)
+        .ok()
+        .and_then(|start| start.checked_add(program.len()))
+        .is_none_or(|end| end > MEMORY_SIZE)
+    {
+        return Err(CortexM0Error::ProgramOutOfRange {
+            origin,
+            len: program.len(),
+        });
+    }
+    Ok(())
+}
+
+pub(crate) fn validate_state(state: &CortexM0State) -> Result<(), CortexM0Error> {
+    if state.memory.len() != MEMORY_SIZE {
+        return Err(CortexM0Error::InvalidState {
+            reason: "memory must be exactly 64 KiB",
+        });
+    }
+    if state.pc & 1 != 0 || state.msp & 3 != 0 || state.psp & 3 != 0 {
+        return Err(CortexM0Error::InvalidState {
+            reason: "PC or stack pointer alignment is invalid",
+        });
+    }
+    if state.apsr & !APSR_MASK != 0 || state.control & !3 != 0 || state.ipsr > 63 {
+        return Err(CortexM0Error::InvalidState {
+            reason: "reserved status bits are set",
+        });
+    }
+    if state.handler_mode != (state.ipsr != 0) {
+        return Err(CortexM0Error::InvalidState {
+            reason: "mode and IPSR disagree",
+        });
+    }
+    if state.loaded_len == 0 {
+        if state.loaded_origin != 0 {
+            return Err(CortexM0Error::InvalidState {
+                reason: "empty image must use origin zero",
+            });
+        }
+    } else if state.loaded_origin & 1 != 0
+        || usize::try_from(state.loaded_origin)
+            .ok()
+            .and_then(|start| start.checked_add(state.loaded_len))
+            .is_none_or(|end| end > MEMORY_SIZE)
+    {
+        return Err(CortexM0Error::InvalidState {
+            reason: "installed image range is invalid",
+        });
+    }
+    Ok(())
+}
+
+fn active_sp(state: &CortexM0State) -> u32 {
+    let select = and_gate(
+        not_gate(u8::from(state.handler_mode)),
+        gates::u8_to_bits(state.control)[1],
+    );
+    gates::select_32(state.msp, state.psp, select)
+}
+
+fn set_active_sp(state: &mut CortexM0State, value: u32) {
+    if and_gate(
+        not_gate(u8::from(state.handler_mode)),
+        gates::u8_to_bits(state.control)[1],
+    ) == 1
+    {
+        state.psp = value;
+    } else {
+        state.msp = value;
+    }
+}
+
+pub(crate) fn read_register(state: &CortexM0State, index: u8) -> Result<u32, CortexM0Error> {
+    match index {
+        0..=12 => Ok(state.registers[index as usize]),
+        SP => Ok(active_sp(state)),
+        LR => Ok(state.lr),
+        PC => Ok(state.pc),
+        _ => Err(CortexM0Error::InvalidRegister { index }),
+    }
+}
+
+pub(crate) fn write_register(
+    state: &mut CortexM0State,
+    index: u8,
+    value: u32,
+) -> Result<(), CortexM0Error> {
+    match index {
+        0..=12 => state.registers[index as usize] = value,
+        SP => set_active_sp(state, gates::bit_and_32(value, gates::bit_not_32(3))),
+        LR => state.lr = value,
+        PC => state.pc = gates::bit_and_32(value, gates::bit_not_32(1)),
+        _ => return Err(CortexM0Error::InvalidRegister { index }),
+    }
+    Ok(())
+}
+
+pub(crate) fn checked_range(
+    address: u32,
+    width: usize,
+) -> Result<std::ops::Range<usize>, CortexM0Error> {
+    if !matches!(width, 1 | 2 | 4) {
+        return Err(CortexM0Error::DataOutOfRange { address, width });
+    }
+    if width > 1 && address & (width as u32 - 1) != 0 {
+        return Err(CortexM0Error::MisalignedData { address, width });
+    }
+    let start = address as usize;
+    let Some(end) = start.checked_add(width) else {
+        return Err(CortexM0Error::DataOutOfRange { address, width });
+    };
+    if end > MEMORY_SIZE {
+        return Err(CortexM0Error::DataOutOfRange { address, width });
+    }
+    Ok(start..end)
+}
+
+pub(crate) fn read_memory(
+    state: &CortexM0State,
+    address: u32,
+    width: usize,
+) -> Result<u32, CortexM0Error> {
+    let range = checked_range(address, width)?;
+    let mut bytes = [0; 4];
+    bytes[..width].copy_from_slice(&state.memory[range]);
+    Ok(u32::from_le_bytes(bytes))
+}
+
+pub(crate) fn write_memory(
+    state: &mut CortexM0State,
+    address: u32,
+    width: usize,
+    value: u32,
+) -> Result<(), CortexM0Error> {
+    let range = checked_range(address, width)?;
+    state.memory[range].copy_from_slice(&value.to_le_bytes()[..width]);
+    Ok(())
+}
+
+fn fetch16(state: &CortexM0State, pc: u32) -> Result<u16, CortexM0Error> {
+    if gates::u32_to_bits(pc)[0] == 1 {
+        return Err(CortexM0Error::MisalignedFetch { pc });
+    }
+    if state.loaded_len < 2 {
+        return Err(CortexM0Error::FetchOutsideProgram { pc, width: 2 });
+    }
+    let relative = pc.checked_sub(state.loaded_origin);
+    if relative.is_none_or(|offset| offset > state.loaded_len.saturating_sub(2) as u32) {
+        return Err(CortexM0Error::FetchOutsideProgram { pc, width: 2 });
+    }
+    let start = pc as usize;
+    Ok(u16::from_le_bytes([
+        state.memory[start],
+        state.memory[start + 1],
+    ]))
+}
+
+pub(crate) fn instruction_width(first: u16) -> usize {
+    let prefix = field16(first, 11, 5);
+    if [0b11101, 0b11110, 0b11111]
+        .into_iter()
+        .fold(0, |signal, expected| {
+            or_gate(signal, gates::selected(u32::from(prefix), expected, 5))
+        })
+        == 1
+    {
+        4
+    } else {
+        2
+    }
+}
+
+/// Classify an encoded instruction without executing it.
+pub fn classify(first: u16, second: Option<u16>) -> Result<InstructionClass, CortexM0Error> {
+    classify_at(first, second, 0)
+}
+
+pub(crate) fn classify_at(
+    first: u16,
+    second: Option<u16>,
+    pc: u32,
+) -> Result<InstructionClass, CortexM0Error> {
+    if instruction_width(first) == 4 {
+        let Some(second) = second else {
+            return Err(CortexM0Error::FetchOutsideProgram { pc, width: 4 });
+        };
+        if and_gate(
+            and_gate(line16(first, 11, 5, 0b11110), line16(second, 14, 2, 0b11)),
+            line16(second, 12, 1, 1),
+        ) == 1
+        {
+            return Ok(InstructionClass::BranchLink);
+        }
+        let barrier = [0x8f4f, 0x8f5f, 0x8f6f]
+            .into_iter()
+            .fold(0, |signal, word| {
+                or_gate(signal, line16(second, 0, 16, word))
+            });
+        if and_gate(line16(first, 0, 16, 0xf3bf), barrier) == 1 {
+            return Ok(InstructionClass::Barrier);
+        }
+        let mrs = and_gate(line16(first, 0, 16, 0xf3ef), line16(second, 12, 4, 8));
+        let msr = and_gate(line16(first, 4, 12, 0xf38), line16(second, 8, 8, 0x88));
+        if or_gate(mrs, msr) == 1 {
+            return Ok(InstructionClass::SpecialRegister);
+        }
+        return Err(CortexM0Error::UnknownInstruction32 { first, second, pc });
+    }
+    if line16(first, 13, 3, 0) == 1 {
+        return Ok(InstructionClass::ShiftAddSubtract);
+    }
+    if line16(first, 13, 3, 1) == 1 {
+        return Ok(InstructionClass::Immediate);
+    }
+    if line16(first, 10, 6, 0b01_0000) == 1 {
+        return Ok(InstructionClass::DataProcessing);
+    }
+    if line16(first, 10, 6, 0b01_0001) == 1 {
+        return Ok(InstructionClass::SpecialData);
+    }
+    if line16(first, 11, 5, 0b01001) == 1 {
+        return Ok(InstructionClass::LiteralLoad);
+    }
+    if line16(first, 12, 4, 0b0101) == 1 {
+        return Ok(InstructionClass::RegisterMemory);
+    }
+    if [0b0110, 0b0111, 0b1000]
+        .into_iter()
+        .fold(0, |signal, prefix| {
+            or_gate(signal, line16(first, 12, 4, prefix))
+        })
+        == 1
+    {
+        return Ok(InstructionClass::ImmediateMemory);
+    }
+    if line16(first, 12, 4, 0b1001) == 1 {
+        return Ok(InstructionClass::StackMemory);
+    }
+    if line16(first, 12, 4, 0b1010) == 1 {
+        return Ok(InstructionClass::AddressGeneration);
+    }
+    if line16(first, 12, 4, 0b1011) == 1 {
+        return Ok(InstructionClass::Miscellaneous);
+    }
+    if line16(first, 12, 4, 0b1100) == 1 {
+        return Ok(InstructionClass::MultipleMemory);
+    }
+    if line16(first, 12, 4, 0b1101) == 1 {
+        return Ok(InstructionClass::ConditionalBranch);
+    }
+    if line16(first, 11, 5, 0b11100) == 1 {
+        return Ok(InstructionClass::UnconditionalBranch);
+    }
+    Err(CortexM0Error::UnknownInstruction16 { raw: first, pc })
+}
+
+fn execute_decoded(
+    state: &mut CortexM0State,
+    first: u16,
+    second: Option<u16>,
+    class: InstructionClass,
+    pc: u32,
+) -> Result<&'static str, CortexM0Error> {
+    match class {
+        InstructionClass::ShiftAddSubtract => execute_shift_add_sub(state, first),
+        InstructionClass::Immediate => execute_immediate(state, first),
+        InstructionClass::DataProcessing => execute_data_processing(state, first),
+        InstructionClass::SpecialData => execute_special(state, first, pc),
+        InstructionClass::LiteralLoad => execute_literal_load(state, first, pc),
+        InstructionClass::RegisterMemory => execute_register_memory(state, first),
+        InstructionClass::ImmediateMemory => execute_immediate_memory(state, first),
+        InstructionClass::StackMemory => execute_stack_memory(state, first),
+        InstructionClass::AddressGeneration => execute_address_generation(state, first, pc),
+        InstructionClass::Miscellaneous => execute_miscellaneous(state, first, pc),
+        InstructionClass::MultipleMemory => execute_multiple_memory(state, first),
+        InstructionClass::ConditionalBranch => execute_conditional(state, first, pc),
+        InstructionClass::UnconditionalBranch => execute_unconditional(state, first, pc),
+        InstructionClass::BranchLink => execute_bl(state, first, second.expect("classified"), pc),
+        InstructionClass::Barrier => execute_barrier(second.expect("classified")),
+        InstructionClass::SpecialRegister => {
+            execute_special_register(state, first, second.expect("classified"), pc)
+        }
+    }
+}
+
+fn flag(state: &CortexM0State, mask: u32) -> bool {
+    gates::bit_and_32(state.apsr, mask) != 0
+}
+
+fn set_flag(state: &mut CortexM0State, mask: u32, value: bool) {
+    let cleared = gates::bit_and_32(state.apsr, gates::bit_not_32(mask));
+    let asserted = gates::bit_or_32(cleared, mask);
+    state.apsr = gates::select_32(cleared, asserted, u8::from(value));
+}
+
+fn set_nz(state: &mut CortexM0State, value: u32) {
+    set_flag(state, APSR_N, gates::u32_to_bits(value)[31] == 1);
+    set_flag(state, APSR_Z, gates::is_zero_32(value) == 1);
+}
+
+fn add_with_carry(state: &mut CortexM0State, left: u32, right: u32, carry: bool) -> u32 {
+    let (result, carry_out, overflow) = gates::add_32(left, right, u8::from(carry));
+    set_nz(state, result);
+    set_flag(state, APSR_C, carry_out == 1);
+    set_flag(state, APSR_V, overflow == 1);
+    result
+}
+
+fn subtract(state: &mut CortexM0State, left: u32, right: u32, borrow: bool) -> u32 {
+    let (result, borrowed, overflow) = gates::sub_32(left, right, u8::from(borrow));
+    set_nz(state, result);
+    set_flag(state, APSR_C, borrowed == 0);
+    set_flag(state, APSR_V, overflow == 1);
+    result
+}
+
+fn shift_immediate(value: u32, kind: u8, encoded: u32, carry: bool) -> (u32, bool) {
+    match kind {
+        0 if encoded == 0 => (value, carry),
+        0 => (
+            gates::shift_left_32(value, encoded),
+            gates::u32_to_bits(value)[(32 - encoded) as usize] == 1,
+        ),
+        1 => {
+            let amount = if encoded == 0 { 32 } else { encoded };
+            (
+                if amount == 32 {
+                    0
+                } else {
+                    gates::shift_right_32(value, amount)
+                },
+                gates::u32_to_bits(value)[(amount - 1) as usize] == 1,
+            )
+        }
+        _ => {
+            let amount = if encoded == 0 { 32 } else { encoded };
+            let result = if amount >= 32 {
+                gates::select_32(0, u32::MAX, gates::u32_to_bits(value)[31])
+            } else {
+                gates::shift_arithmetic_right_32(value, amount)
+            };
+            (
+                result,
+                gates::u32_to_bits(value)[(amount.min(32) - 1) as usize] == 1,
+            )
+        }
+    }
+}
+
+fn shift_register(value: u32, kind: u8, amount: u32, carry: bool) -> (u32, bool) {
+    if amount == 0 {
+        return (value, carry);
+    }
+    match kind {
+        0 if amount < 32 => (
+            gates::shift_left_32(value, amount),
+            gates::u32_to_bits(value)[(32 - amount) as usize] == 1,
+        ),
+        0 if amount == 32 => (0, gates::u32_to_bits(value)[0] == 1),
+        0 => (0, false),
+        1 if amount < 32 => (
+            gates::shift_right_32(value, amount),
+            gates::u32_to_bits(value)[(amount - 1) as usize] == 1,
+        ),
+        1 if amount == 32 => (0, gates::u32_to_bits(value)[31] == 1),
+        1 => (0, false),
+        2 => {
+            let result = if amount >= 32 {
+                gates::select_32(0, u32::MAX, gates::u32_to_bits(value)[31])
+            } else {
+                gates::shift_arithmetic_right_32(value, amount)
+            };
+            (
+                result,
+                gates::u32_to_bits(value)[(amount.min(32) - 1) as usize] == 1,
+            )
+        }
+        _ => {
+            let rotation = gates::bit_and_32(amount, 31);
+            let result = gates::rotate_right_32(value, rotation);
+            (result, gates::u32_to_bits(result)[31] == 1)
+        }
+    }
+}
+
+fn execute_shift_add_sub(
+    state: &mut CortexM0State,
+    raw: u16,
+) -> Result<&'static str, CortexM0Error> {
+    let operation = field16(raw, 11, 2);
+    if operation < 3 {
+        let amount = u32::from(field16(raw, 6, 5));
+        let rm = field16(raw, 3, 3) as usize;
+        let rd = field16(raw, 0, 3) as usize;
+        let (result, carry) = shift_immediate(
+            state.registers[rm],
+            operation as u8,
+            amount,
+            flag(state, APSR_C),
+        );
+        state.registers[rd] = result;
+        set_nz(state, result);
+        set_flag(state, APSR_C, carry);
+        return Ok(["lsls", "lsrs", "asrs"][operation as usize]);
+    }
+    let op = field16(raw, 9, 2);
+    let operand = field16(raw, 6, 3) as usize;
+    let rn = field16(raw, 3, 3) as usize;
+    let rd = field16(raw, 0, 3) as usize;
+    let right = if op < 2 {
+        state.registers[operand]
+    } else {
+        operand as u32
+    };
+    let result = if op & 1 == 0 {
+        add_with_carry(state, state.registers[rn], right, false)
+    } else {
+        subtract(state, state.registers[rn], right, false)
+    };
+    state.registers[rd] = result;
+    Ok(if op & 1 == 0 { "adds" } else { "subs" })
+}
+
+fn execute_immediate(state: &mut CortexM0State, raw: u16) -> Result<&'static str, CortexM0Error> {
+    let operation = field16(raw, 11, 2);
+    let register = field16(raw, 8, 3) as usize;
+    let immediate = u32::from(field16(raw, 0, 8));
+    match operation {
+        0 => {
+            state.registers[register] = immediate;
+            set_nz(state, immediate);
+            Ok("movs")
+        }
+        1 => {
+            subtract(state, state.registers[register], immediate, false);
+            Ok("cmp")
+        }
+        2 => {
+            state.registers[register] =
+                add_with_carry(state, state.registers[register], immediate, false);
+            Ok("adds")
+        }
+        _ => {
+            state.registers[register] =
+                subtract(state, state.registers[register], immediate, false);
+            Ok("subs")
+        }
+    }
+}
+
+fn execute_data_processing(
+    state: &mut CortexM0State,
+    raw: u16,
+) -> Result<&'static str, CortexM0Error> {
+    let operation = field16(raw, 6, 4) as u8;
+    let rm = field16(raw, 3, 3) as usize;
+    let rdn = field16(raw, 0, 3) as usize;
+    let left = state.registers[rdn];
+    let right = state.registers[rm];
+    Ok(match operation {
+        0 => {
+            state.registers[rdn] = gates::bit_and_32(left, right);
+            set_nz(state, state.registers[rdn]);
+            "ands"
+        }
+        1 => {
+            state.registers[rdn] = gates::bit_xor_32(left, right);
+            set_nz(state, state.registers[rdn]);
+            "eors"
+        }
+        2..=4 | 7 => {
+            let kind = match operation {
+                2 => 0,
+                3 => 1,
+                4 => 2,
+                _ => 3,
+            };
+            let (result, carry) = shift_register(
+                left,
+                kind,
+                gates::bit_and_32(right, 0xff),
+                flag(state, APSR_C),
+            );
+            state.registers[rdn] = result;
+            set_nz(state, result);
+            set_flag(state, APSR_C, carry);
+            ["lsls", "lsrs", "asrs", "rors"][kind as usize]
+        }
+        5 => {
+            state.registers[rdn] = add_with_carry(state, left, right, flag(state, APSR_C));
+            "adcs"
+        }
+        6 => {
+            state.registers[rdn] = subtract(state, left, right, !flag(state, APSR_C));
+            "sbcs"
+        }
+        8 => {
+            set_nz(state, gates::bit_and_32(left, right));
+            "tst"
+        }
+        9 => {
+            state.registers[rdn] = subtract(state, 0, right, false);
+            "rsbs"
+        }
+        10 => {
+            subtract(state, left, right, false);
+            "cmp"
+        }
+        11 => {
+            add_with_carry(state, left, right, false);
+            "cmn"
+        }
+        12 => {
+            state.registers[rdn] = gates::bit_or_32(left, right);
+            set_nz(state, state.registers[rdn]);
+            "orrs"
+        }
+        13 => {
+            state.registers[rdn] = gates::multiply_32(left, right);
+            set_nz(state, state.registers[rdn]);
+            "muls"
+        }
+        14 => {
+            state.registers[rdn] = gates::bit_and_32(left, gates::bit_not_32(right));
+            set_nz(state, state.registers[rdn]);
+            "bics"
+        }
+        _ => {
+            state.registers[rdn] = gates::bit_not_32(right);
+            set_nz(state, state.registers[rdn]);
+            "mvns"
+        }
+    })
+}
+
+fn branch_exchange(state: &mut CortexM0State, target: u32) -> Result<(), CortexM0Error> {
+    if gates::bit_and_32(target, 1) == 0 {
+        return Err(CortexM0Error::InvalidThumbTarget { target });
+    }
+    state.pc = gates::bit_and_32(target, gates::bit_not_32(1));
+    Ok(())
+}
+
+fn branch_write_pc(state: &mut CortexM0State, target: u32) {
+    state.pc = gates::bit_and_32(target, gates::bit_not_32(1));
+}
+
+fn execute_special(
+    state: &mut CortexM0State,
+    raw: u16,
+    instruction_pc: u32,
+) -> Result<&'static str, CortexM0Error> {
+    let operation = field16(raw, 8, 2);
+    let rm = field16(raw, 3, 4) as u8;
+    let rd = gates::bit_or_32(
+        gates::shift_left_32(u32::from(field16(raw, 7, 1)), 3),
+        u32::from(field16(raw, 0, 3)),
+    ) as u8;
+    if operation == 3 {
+        if field16(raw, 0, 3) != 0 || matches!(rm, SP | PC) {
+            return Err(CortexM0Error::UnknownInstruction16 {
+                raw,
+                pc: instruction_pc,
+            });
+        }
+        let target = read_register(state, rm)?;
+        if line16(raw, 7, 1, 1) == 1 {
+            state.lr = gates::bit_or_32(state.pc, 1);
+        }
+        branch_exchange(state, target)?;
+        return Ok(if line16(raw, 7, 1, 1) == 1 {
+            "blx"
+        } else {
+            "bx"
+        });
+    }
+    let left = if rd == PC {
+        gates::add_32(instruction_pc, 4, 0).0
+    } else {
+        read_register(state, rd)?
+    };
+    let right = if rm == PC {
+        gates::add_32(instruction_pc, 4, 0).0
+    } else {
+        read_register(state, rm)?
+    };
+    match operation {
+        0 => {
+            let result = gates::add_32(left, right, 0).0;
+            if rd == PC {
+                branch_write_pc(state, result);
+            } else {
+                write_register(state, rd, result)?;
+            }
+            Ok("add")
+        }
+        1 => {
+            subtract(state, left, right, false);
+            Ok("cmp")
+        }
+        _ => {
+            if rd == PC {
+                branch_write_pc(state, right);
+            } else {
+                write_register(state, rd, right)?;
+            }
+            Ok("mov")
+        }
+    }
+}
+
+fn execute_literal_load(
+    state: &mut CortexM0State,
+    raw: u16,
+    instruction_pc: u32,
+) -> Result<&'static str, CortexM0Error> {
+    let rt = field16(raw, 8, 3) as usize;
+    let visible = gates::bit_and_32(gates::add_32(instruction_pc, 4, 0).0, gates::bit_not_32(3));
+    let offset = gates::shift_left_32(u32::from(field16(raw, 0, 8)), 2);
+    let address = gates::add_32(visible, offset, 0).0;
+    state.registers[rt] = read_memory(state, address, 4)?;
+    Ok("ldr")
+}
+
+fn execute_register_memory(
+    state: &mut CortexM0State,
+    raw: u16,
+) -> Result<&'static str, CortexM0Error> {
+    let operation = field16(raw, 9, 3);
+    let rm = field16(raw, 6, 3) as usize;
+    let rn = field16(raw, 3, 3) as usize;
+    let rt = field16(raw, 0, 3) as usize;
+    let address = gates::add_32(state.registers[rn], state.registers[rm], 0).0;
+    Ok(match operation {
+        0 => {
+            write_memory(state, address, 4, state.registers[rt])?;
+            "str"
+        }
+        1 => {
+            write_memory(state, address, 2, state.registers[rt])?;
+            "strh"
+        }
+        2 => {
+            write_memory(state, address, 1, state.registers[rt])?;
+            "strb"
+        }
+        3 => {
+            state.registers[rt] = gates::sign_extend(read_memory(state, address, 1)?, 8);
+            "ldrsb"
+        }
+        4 => {
+            state.registers[rt] = read_memory(state, address, 4)?;
+            "ldr"
+        }
+        5 => {
+            state.registers[rt] = read_memory(state, address, 2)?;
+            "ldrh"
+        }
+        6 => {
+            state.registers[rt] = read_memory(state, address, 1)?;
+            "ldrb"
+        }
+        _ => {
+            state.registers[rt] = gates::sign_extend(read_memory(state, address, 2)?, 16);
+            "ldrsh"
+        }
+    })
+}
+
+fn execute_immediate_memory(
+    state: &mut CortexM0State,
+    raw: u16,
+) -> Result<&'static str, CortexM0Error> {
+    let operation = field16(raw, 11, 5);
+    let immediate = u32::from(field16(raw, 6, 5));
+    let rn = field16(raw, 3, 3) as usize;
+    let rt = field16(raw, 0, 3) as usize;
+    let (scale, load, width, mnemonic): (u32, bool, usize, &str) = match operation {
+        0b01100 => (4, false, 4, "str"),
+        0b01101 => (4, true, 4, "ldr"),
+        0b01110 => (1, false, 1, "strb"),
+        0b01111 => (1, true, 1, "ldrb"),
+        0b10000 => (2, false, 2, "strh"),
+        _ => (2, true, 2, "ldrh"),
+    };
+    let scaled = gates::shift_left_32(immediate, scale.trailing_zeros());
+    let address = gates::add_32(state.registers[rn], scaled, 0).0;
+    if load {
+        state.registers[rt] = read_memory(state, address, width)?;
+    } else {
+        write_memory(state, address, width, state.registers[rt])?;
+    }
+    Ok(mnemonic)
+}
+
+fn execute_stack_memory(
+    state: &mut CortexM0State,
+    raw: u16,
+) -> Result<&'static str, CortexM0Error> {
+    let load = line16(raw, 11, 1, 1) == 1;
+    let rt = field16(raw, 8, 3) as usize;
+    let address = gates::add_32(
+        active_sp(state),
+        gates::shift_left_32(u32::from(field16(raw, 0, 8)), 2),
+        0,
+    )
+    .0;
+    if load {
+        state.registers[rt] = read_memory(state, address, 4)?;
+        Ok("ldr")
+    } else {
+        write_memory(state, address, 4, state.registers[rt])?;
+        Ok("str")
+    }
+}
+
+fn execute_address_generation(
+    state: &mut CortexM0State,
+    raw: u16,
+    instruction_pc: u32,
+) -> Result<&'static str, CortexM0Error> {
+    let rd = field16(raw, 8, 3) as usize;
+    let immediate = gates::shift_left_32(u32::from(field16(raw, 0, 8)), 2);
+    if line16(raw, 11, 1, 0) == 1 {
+        let visible =
+            gates::bit_and_32(gates::add_32(instruction_pc, 4, 0).0, gates::bit_not_32(3));
+        state.registers[rd] = gates::add_32(visible, immediate, 0).0;
+        Ok("adr")
+    } else {
+        state.registers[rd] = gates::add_32(active_sp(state), immediate, 0).0;
+        Ok("add")
+    }
+}
+
+fn execute_miscellaneous(
+    state: &mut CortexM0State,
+    raw: u16,
+    pc: u32,
+) -> Result<&'static str, CortexM0Error> {
+    if line16(raw, 8, 8, 0xb0) == 1 {
+        let offset = gates::shift_left_32(u32::from(field16(raw, 0, 7)), 2);
+        let value = if line16(raw, 7, 1, 1) == 1 {
+            gates::sub_32(active_sp(state), offset, 0).0
+        } else {
+            gates::add_32(active_sp(state), offset, 0).0
+        };
+        set_active_sp(state, value);
+        return Ok(if line16(raw, 7, 1, 1) == 1 {
+            "sub"
+        } else {
+            "add"
+        });
+    }
+    if line16(raw, 8, 8, 0xb2) == 1 {
+        let operation = field16(raw, 6, 2);
+        let rm = field16(raw, 3, 3) as usize;
+        let rd = field16(raw, 0, 3) as usize;
+        let value = state.registers[rm];
+        state.registers[rd] = match operation {
+            0 => gates::sign_extend(gates::bit_and_32(value, 0xffff), 16),
+            1 => gates::sign_extend(gates::bit_and_32(value, 0xff), 8),
+            2 => gates::bit_and_32(value, 0xffff),
+            _ => gates::bit_and_32(value, 0xff),
+        };
+        return Ok(["sxth", "sxtb", "uxth", "uxtb"][operation as usize]);
+    }
+    if line16(raw, 9, 7, 0x5a) == 1 {
+        let mask = field16(raw, 0, 8);
+        let include_lr = line16(raw, 8, 1, 1) == 1;
+        if mask == 0 && !include_lr {
+            return Err(CortexM0Error::UnknownInstruction16 { raw, pc });
+        }
+        let count = gates::add_32(gates::popcount_8(mask as u8), u32::from(include_lr), 0).0;
+        let start = gates::sub_32(active_sp(state), gates::shift_left_32(count, 2), 0).0;
+        let mut address = start;
+        for register in 0..8 {
+            if line16(mask, register, 1, 1) == 1 {
+                write_memory(state, address, 4, state.registers[register])?;
+                address = gates::add_32(address, 4, 0).0;
+            }
+        }
+        if include_lr {
+            write_memory(state, address, 4, state.lr)?;
+        }
+        set_active_sp(state, start);
+        return Ok("push");
+    }
+    if line16(raw, 9, 7, 0x5e) == 1 {
+        let mask = field16(raw, 0, 8);
+        let include_pc = line16(raw, 8, 1, 1) == 1;
+        if mask == 0 && !include_pc {
+            return Err(CortexM0Error::UnknownInstruction16 { raw, pc });
+        }
+        let mut address = active_sp(state);
+        for register in 0..8 {
+            if line16(mask, register, 1, 1) == 1 {
+                state.registers[register] = read_memory(state, address, 4)?;
+                address = gates::add_32(address, 4, 0).0;
+            }
+        }
+        if include_pc {
+            let target = read_memory(state, address, 4)?;
+            address = gates::add_32(address, 4, 0).0;
+            branch_exchange(state, target)?;
+        }
+        set_active_sp(state, address);
+        return Ok("pop");
+    }
+    if line16(raw, 8, 8, 0xba) == 1 {
+        let operation = field16(raw, 6, 2);
+        if operation == 2 {
+            return Err(CortexM0Error::UnknownInstruction16 { raw, pc });
+        }
+        let rm = field16(raw, 3, 3) as usize;
+        let rd = field16(raw, 0, 3) as usize;
+        let value = state.registers[rm];
+        state.registers[rd] = match operation {
+            0 => gates::reverse_bytes(value),
+            1 => gates::reverse_halfwords(value),
+            _ => gates::sign_extend(
+                gates::bit_and_32(gates::reverse_halfwords(value), 0xffff),
+                16,
+            ),
+        };
+        return Ok(match operation {
+            0 => "rev",
+            1 => "rev16",
+            _ => "revsh",
+        });
+    }
+    if matches!(raw, 0xb662 | 0xb672) {
+        if or_gate(
+            not_gate(gates::u8_to_bits(state.control)[0]),
+            u8::from(state.handler_mode),
+        ) == 1
+        {
+            state.primask = raw == 0xb672;
+        }
+        return Ok(if raw == 0xb672 { "cpsid" } else { "cpsie" });
+    }
+    if line16(raw, 8, 8, 0xbe) == 1 {
+        let immediate = field16(raw, 0, 8) as u8;
+        if immediate == 0 {
+            state.halted = true;
+            return Ok("bkpt 0");
+        }
+        return Err(CortexM0Error::UnsupportedBreakpoint { immediate, pc });
+    }
+    if line16(raw, 8, 8, 0xbf) == 1 && line16(raw, 0, 4, 0) == 1 {
+        return match field16(raw, 4, 4) {
+            0x0 => Ok("nop"),
+            0x1 => Ok("yield"),
+            0x2 => {
+                if state.event_registered {
+                    state.event_registered = false;
+                } else {
+                    state.sleeping = true;
+                }
+                Ok("wfe")
+            }
+            0x3 => {
+                state.sleeping = true;
+                Ok("wfi")
+            }
+            0x4 => {
+                state.event_registered = true;
+                Ok("sev")
+            }
+            _ => Ok("nop"),
+        };
+    }
+    Err(CortexM0Error::UnknownInstruction16 { raw, pc })
+}
+
+fn execute_multiple_memory(
+    state: &mut CortexM0State,
+    raw: u16,
+) -> Result<&'static str, CortexM0Error> {
+    let load = line16(raw, 11, 1, 1) == 1;
+    let rn = field16(raw, 8, 3) as usize;
+    let mask = field16(raw, 0, 8);
+    if mask == 0 {
+        return Err(CortexM0Error::UnknownInstruction16 {
+            raw,
+            pc: gates::sub_32(state.pc, 2, 0).0,
+        });
+    }
+    let base_selected = line16(mask, rn, 1, 1);
+    let lower_selected = (0..rn).fold(0, |signal, register| {
+        or_gate(signal, line16(mask, register, 1, 1))
+    });
+    if !load && and_gate(base_selected, lower_selected) == 1 {
+        return Err(CortexM0Error::UnknownInstruction16 {
+            raw,
+            pc: gates::sub_32(state.pc, 2, 0).0,
+        });
+    }
+    let mut address = state.registers[rn];
+    for register in 0..8 {
+        if line16(mask, register, 1, 1) == 1 {
+            if load {
+                state.registers[register] = read_memory(state, address, 4)?;
+            } else {
+                write_memory(state, address, 4, state.registers[register])?;
+            }
+            address = gates::add_32(address, 4, 0).0;
+        }
+    }
+    if !load || base_selected == 0 {
+        state.registers[rn] = address;
+    }
+    Ok(if load { "ldm" } else { "stm" })
+}
+
+fn condition_holds(state: &CortexM0State, condition: u8) -> bool {
+    let n = u8::from(flag(state, APSR_N));
+    let z = u8::from(flag(state, APSR_Z));
+    let c = u8::from(flag(state, APSR_C));
+    let v = u8::from(flag(state, APSR_V));
+    let signal = match condition {
+        0 => z,
+        1 => not_gate(z),
+        2 => c,
+        3 => not_gate(c),
+        4 => n,
+        5 => not_gate(n),
+        6 => v,
+        7 => not_gate(v),
+        8 => and_gate(c, not_gate(z)),
+        9 => or_gate(not_gate(c), z),
+        10 => not_gate(xor_gate(n, v)),
+        11 => xor_gate(n, v),
+        12 => and_gate(not_gate(z), not_gate(xor_gate(n, v))),
+        _ => or_gate(z, xor_gate(n, v)),
+    };
+    signal == 1
+}
+
+fn condition_mnemonic(condition: u8) -> &'static str {
+    [
+        "beq", "bne", "bcs", "bcc", "bmi", "bpl", "bvs", "bvc", "bhi", "bls", "bge", "blt", "bgt",
+        "ble",
+    ][condition as usize]
+}
+
+fn sign_extend(value: u32, bits: u32) -> u32 {
+    gates::sign_extend(value, bits as usize)
+}
+
+fn execute_conditional(
+    state: &mut CortexM0State,
+    raw: u16,
+    pc: u32,
+) -> Result<&'static str, CortexM0Error> {
+    let condition = field16(raw, 8, 4) as u8;
+    if condition == 15 {
+        return Err(CortexM0Error::SupervisorCall {
+            immediate: field16(raw, 0, 8) as u8,
+            pc,
+        });
+    }
+    if condition == 14 {
+        return Err(CortexM0Error::UnknownInstruction16 { raw, pc });
+    }
+    if condition_holds(state, condition) {
+        let offset = gates::shift_left_32(gates::sign_extend(u32::from(field16(raw, 0, 8)), 8), 1);
+        state.pc = gates::add_32(gates::add_32(pc, 4, 0).0, offset, 0).0;
+    }
+    Ok(condition_mnemonic(condition))
+}
+
+fn execute_unconditional(
+    state: &mut CortexM0State,
+    raw: u16,
+    pc: u32,
+) -> Result<&'static str, CortexM0Error> {
+    let offset = gates::shift_left_32(sign_extend(u32::from(field16(raw, 0, 11)), 11), 1);
+    state.pc = gates::add_32(gates::add_32(pc, 4, 0).0, offset, 0).0;
+    Ok("b")
+}
+
+fn execute_bl(
+    state: &mut CortexM0State,
+    first: u16,
+    second: u16,
+    pc: u32,
+) -> Result<&'static str, CortexM0Error> {
+    let s = u32::from(field16(first, 10, 1));
+    let j1 = u32::from(field16(second, 13, 1));
+    let j2 = u32::from(field16(second, 11, 1));
+    let i1 = u32::from(not_gate(xor_gate(j1 as u8, s as u8)));
+    let i2 = u32::from(not_gate(xor_gate(j2 as u8, s as u8)));
+    let immediate = [
+        gates::shift_left_32(s, 24),
+        gates::shift_left_32(i1, 23),
+        gates::shift_left_32(i2, 22),
+        gates::shift_left_32(u32::from(field16(first, 0, 10)), 12),
+        gates::shift_left_32(u32::from(field16(second, 0, 11)), 1),
+    ]
+    .into_iter()
+    .fold(0, gates::bit_or_32);
+    state.lr = gates::bit_or_32(gates::add_32(pc, 4, 0).0, 1);
+    state.pc = gates::add_32(gates::add_32(pc, 4, 0).0, sign_extend(immediate, 25), 0).0;
+    Ok("bl")
+}
+
+fn execute_barrier(second: u16) -> Result<&'static str, CortexM0Error> {
+    Ok(match second {
+        0x8f4f => "dsb",
+        0x8f5f => "dmb",
+        _ => "isb",
+    })
+}
+
+fn read_special(state: &CortexM0State, sysm: u8) -> Option<u32> {
+    match sysm {
+        0 => Some(state.apsr),
+        1 => Some(gates::bit_or_32(state.apsr, u32::from(state.ipsr))),
+        2 => Some(state.apsr),
+        3 => Some(gates::bit_or_32(state.apsr, u32::from(state.ipsr))),
+        5 => Some(u32::from(state.ipsr)),
+        6 => Some(0),
+        7 => Some(u32::from(state.ipsr)),
+        8 => Some(state.msp),
+        9 => Some(state.psp),
+        16 => Some(u32::from(state.primask)),
+        20 => Some(u32::from(state.control)),
+        _ => None,
+    }
+}
+
+fn execute_special_register(
+    state: &mut CortexM0State,
+    first: u16,
+    second: u16,
+    pc: u32,
+) -> Result<&'static str, CortexM0Error> {
+    let sysm = field16(second, 0, 8) as u8;
+    if first == 0xf3ef {
+        let rd = field16(second, 8, 4) as u8;
+        if rd > 12 {
+            return Err(CortexM0Error::UnknownInstruction32 { first, second, pc });
+        }
+        let Some(mut value) = read_special(state, sysm) else {
+            return Err(CortexM0Error::UnknownInstruction32 { first, second, pc });
+        };
+        if gates::bit_and_32(u32::from(state.control), 1) != 0
+            && !state.handler_mode
+            && !matches!(sysm, 0 | 20)
+        {
+            value = 0;
+        }
+        state.registers[rd as usize] = value;
+        return Ok("mrs");
+    }
+    let rn = field16(first, 0, 4) as u8;
+    if rn > 12 || !matches!(sysm, 0..=3 | 5..=9 | 16 | 20) {
+        return Err(CortexM0Error::UnknownInstruction32 { first, second, pc });
+    }
+    let value = state.registers[rn as usize];
+    if matches!(sysm, 0..=3) {
+        state.apsr = gates::bit_and_32(value, APSR_MASK);
+        return Ok("msr");
+    }
+    if matches!(sysm, 5..=7)
+        || (gates::bit_and_32(u32::from(state.control), 1) != 0 && !state.handler_mode)
+    {
+        return Ok("msr");
+    }
+    match sysm {
+        8 => state.msp = gates::bit_and_32(value, gates::bit_not_32(3)),
+        9 => state.psp = gates::bit_and_32(value, gates::bit_not_32(3)),
+        16 => state.primask = gates::bit_and_32(value, 1) != 0,
+        _ => {
+            let requested = gates::bit_and_32(value, 3) as u8;
+            state.control = if state.handler_mode {
+                gates::bit_or_32(
+                    gates::bit_and_32(u32::from(state.control), 2),
+                    gates::bit_and_32(u32::from(requested), 1),
+                ) as u8
+            } else {
+                requested
+            };
+        }
+    }
+    Ok("msr")
+}
+
+/// Little-endian instruction encoding helpers for tests and downstream users.
+pub mod encoding {
+    #[must_use]
+    pub const fn halfword(value: u16) -> [u8; 2] {
+        value.to_le_bytes()
+    }
+
+    #[must_use]
+    pub fn program(halfwords: &[u16]) -> Vec<u8> {
+        halfwords
+            .iter()
+            .flat_map(|word| word.to_le_bytes())
+            .collect()
+    }
+
+    #[must_use]
+    pub const fn movs(rd: u16, immediate: u16) -> u16 {
+        0x2000 | ((rd & 7) << 8) | (immediate & 0xff)
+    }
+
+    #[must_use]
+    pub const fn adds_imm(rd: u16, immediate: u16) -> u16 {
+        0x3000 | ((rd & 7) << 8) | (immediate & 0xff)
+    }
+
+    #[must_use]
+    pub const fn subs_imm(rd: u16, immediate: u16) -> u16 {
+        0x3800 | ((rd & 7) << 8) | (immediate & 0xff)
+    }
+
+    #[must_use]
+    pub const fn str_imm(rt: u16, rn: u16, words: u16) -> u16 {
+        0x6000 | ((words & 0x1f) << 6) | ((rn & 7) << 3) | (rt & 7)
+    }
+
+    #[must_use]
+    pub const fn ldr_imm(rt: u16, rn: u16, words: u16) -> u16 {
+        0x6800 | ((words & 0x1f) << 6) | ((rn & 7) << 3) | (rt & 7)
+    }
+
+    #[must_use]
+    pub const fn b_cond(condition: u16, halfwords: i8) -> u16 {
+        0xd000 | ((condition & 0xf) << 8) | halfwords as u8 as u16
+    }
+
+    #[must_use]
+    pub const fn branch(halfwords: i16) -> u16 {
+        0xe000 | ((halfwords as u16) & 0x7ff)
+    }
+
+    #[must_use]
+    pub const fn bkpt(immediate: u8) -> u16 {
+        0xbe00 | immediate as u16
+    }
+
+    #[must_use]
+    pub const fn nop() -> u16 {
+        0xbf00
+    }
+
+    #[must_use]
+    pub fn bl(offset_bytes: i32) -> [u16; 2] {
+        let immediate = offset_bytes as u32 & 0x01ff_fffe;
+        let s = (immediate >> 24) & 1;
+        let i1 = (immediate >> 23) & 1;
+        let i2 = (immediate >> 22) & 1;
+        let j1 = (!(i1 ^ s)) & 1;
+        let j2 = (!(i2 ^ s)) & 1;
+        [
+            0xf000 | ((s as u16) << 10) | ((immediate >> 12) as u16 & 0x03ff),
+            0xd000 | ((j1 as u16) << 13) | ((j2 as u16) << 11) | (immediate as u16 & 0x07ff),
+        ]
+    }
+
+    #[must_use]
+    pub const fn mrs(rd: u16, sysm: u8) -> [u16; 2] {
+        [0xf3ef, 0x8000 | ((rd & 0xf) << 8) | sysm as u16]
+    }
+
+    #[must_use]
+    pub const fn msr(rn: u16, sysm: u8) -> [u16; 2] {
+        [0xf380 | (rn & 0xf), 0x8800 | sysm as u16]
+    }
+}
