@@ -16,11 +16,18 @@ This is a repository-owned ISA-level teaching topology. It is not Arm's
 proprietary ARM7TDMI netlist, a transistor model, or a cycle-accurate pipeline,
 bus, cache, EmbeddedICE, or SoC simulation.
 
-Completion evidence is 51 release tests, including full inherited functional
+Completion evidence is 57 release tests, including full inherited functional
 contracts, independent ARM/Thumb full-state and exact-trace differentials,
-exhaustive condition lines, arithmetic/shift/multiply boundaries, a typed
-mid-commit rollback seam, and compiler-checked hostile source mutations. The
-measured release line coverage is 90.74% (2,077/2,289).
+every typed fault and completion-matrix class, exhaustive condition lines,
+arithmetic/shift/multiply boundaries, a typed mid-commit rollback seam, and
+compiler-checked hostile source mutations. Parsed exact source-to-sink locks
+cover decode, condition, arithmetic, flags, banks, memory, control, stable-Q
+storage, and public lifecycle routes. Host arithmetic/decode, oracle
+substitution, dead anchors, direct Q/memory writes, post-gate overwrite, and
+post-commit overwrite are all rejected after their isolated full-crate
+mutations type-check. Two-way uncommitted-candidate divergence tests prove
+that only stable Q can authorize behavior. The measured release line coverage
+is 90.91% (2,090/2,299).
 
 ```rust
 use arm7tdmi_gatelevel::{Arm7TdmiGateLevel, InstructionSet};

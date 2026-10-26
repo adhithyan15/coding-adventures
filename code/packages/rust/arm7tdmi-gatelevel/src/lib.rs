@@ -18,10 +18,12 @@ pub use engine::{
 use state::{clock_bit, clock_bits, read_bits, DffMemory};
 
 #[cfg(test)]
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::cell::Cell;
 
 #[cfg(test)]
-static FAIL_MID_COMMIT: AtomicBool = AtomicBool::new(false);
+thread_local! {
+    static FAIL_MID_COMMIT: Cell<bool> = const { Cell::new(false) };
+}
 
 const PHYSICAL_GPR_COUNT: usize = 31;
 const STATUS_REGISTER_COUNT: usize = 6;
@@ -182,7 +184,7 @@ impl Arm7TdmiGateLevel {
 
     fn commit_transition(&mut self, next: &Arm7TdmiState) -> Result<(), Arm7TdmiError> {
         #[cfg(test)]
-        if FAIL_MID_COMMIT.swap(false, Ordering::SeqCst) {
+        if FAIL_MID_COMMIT.replace(false) {
             let before = self.get_state();
             clock_bits(
                 &mut self.registers[0],
@@ -317,8 +319,33 @@ mod tests {
         cpu.load(&0xe3a0_0001u32.to_le_bytes(), 0, InstructionSet::Arm)
             .unwrap();
         let before = cpu.get_state();
-        FAIL_MID_COMMIT.store(true, Ordering::SeqCst);
+        FAIL_MID_COMMIT.set(true);
         assert_eq!(cpu.step(), Err(Arm7TdmiError::CommitFailed));
         assert_eq!(cpu.get_state(), before);
+    }
+
+    #[test]
+    fn stable_q_wins_both_candidate_divergence_directions() {
+        let mut cpu = Arm7TdmiGateLevel::new();
+        cpu.load(&0xe280_0001u32.to_le_bytes(), 0, InstructionSet::Arm)
+            .unwrap();
+
+        // A disposable candidate may diverge arbitrarily, but until its state
+        // is explicitly committed it is only an observer of the entry Q image.
+        let mut candidate = cpu.engine().unwrap();
+        candidate.write_register(0, 99).unwrap();
+        assert_eq!(candidate.read_register(0).unwrap(), 99);
+        assert_eq!(cpu.read_register(0).unwrap(), 0);
+
+        // Conversely, a candidate captured before a Q transition stays stale.
+        // Public observation and the next execution must rebuild from Q, not
+        // consult that old host copy.
+        let stale_candidate = cpu.engine().unwrap();
+        clock_bits(&mut cpu.registers[0], 41);
+        assert_eq!(stale_candidate.read_register(0).unwrap(), 0);
+        assert_eq!(cpu.read_register(0).unwrap(), 41);
+        let trace = cpu.step().unwrap();
+        assert_eq!(trace.state_after.registers.common_r0_r7[0], 42);
+        assert_eq!(cpu.read_register(0).unwrap(), 42);
     }
 }

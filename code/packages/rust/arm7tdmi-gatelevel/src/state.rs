@@ -1,7 +1,6 @@
 //! Stable-Q architectural storage clocked through repository D flip-flops.
 
 use logic_gates::sequential::{register, FlipFlopState};
-use std::collections::BTreeSet;
 
 fn stable_state(q: u8) -> FlipFlopState {
     FlipFlopState {
@@ -36,17 +35,12 @@ pub(crate) fn read_bits(bits: &[u8]) -> u64 {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub(crate) struct DffMemory {
     q: Vec<u8>,
-    // This is derived host metadata, not architectural storage. It keeps reset
-    // proportional to changed bytes while every selected byte is still
-    // clocked through the repository DFF primitive.
-    nonzero_addresses: BTreeSet<usize>,
 }
 
 impl DffMemory {
     pub(crate) fn new(byte_len: usize) -> Self {
         Self {
             q: vec![0; byte_len],
-            nonzero_addresses: BTreeSet::new(),
         }
     }
 
@@ -72,10 +66,5 @@ impl DffMemory {
             .iter()
             .enumerate()
             .fold(0, |byte, (bit, q)| byte | (q << bit));
-        if crate::gates::is_zero_8(self.q[address]) == 1 {
-            self.nonzero_addresses.remove(&address);
-        } else {
-            self.nonzero_addresses.insert(address);
-        }
     }
 }

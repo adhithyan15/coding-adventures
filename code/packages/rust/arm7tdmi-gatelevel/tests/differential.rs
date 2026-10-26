@@ -1,9 +1,28 @@
 use arm7tdmi_gatelevel::{
-    Arm7TdmiGateLevel, Arm7TdmiState as GateState, InstructionSet as GateSet, FLIP_FLOP_COUNT,
+    Arm7TdmiError as GateError, Arm7TdmiGateLevel, Arm7TdmiState as GateState,
+    InstructionSet as GateSet, Mode as GateMode, CPSR_T as GATE_CPSR_T, FLIP_FLOP_COUNT,
+    MAX_RETAINED_STEPS,
 };
 use arm7tdmi_simulator::{
-    Arm7TdmiSimulator, Arm7TdmiState as FunctionalState, InstructionSet as FunctionalSet,
+    Arm7TdmiError as FunctionalError, Arm7TdmiSimulator, Arm7TdmiState as FunctionalState,
+    InstructionSet as FunctionalSet, Mode as FunctionalMode, CPSR_T as FUNCTIONAL_CPSR_T,
 };
+use std::fmt::Debug;
+
+fn assert_same_error<G: Debug, F: Debug, GE: Debug, FE: Debug>(
+    gate: Result<G, GE>,
+    functional: Result<F, FE>,
+    label: &str,
+) {
+    match (gate, functional) {
+        (Err(gate), Err(functional)) => {
+            assert_eq!(format!("{gate:?}"), format!("{functional:?}"), "{label}")
+        }
+        (Ok(_), Ok(_)) => panic!("{label}: both implementations unexpectedly succeeded"),
+        (Ok(_), Err(_)) => panic!("{label}: gate unexpectedly succeeded"),
+        (Err(_), Ok(_)) => panic!("{label}: functional oracle unexpectedly succeeded"),
+    }
+}
 
 fn assert_state_eq(gate: &GateState, functional: &FunctionalState, label: &str) {
     assert_eq!(
@@ -248,4 +267,341 @@ fn every_thumb_family_has_a_full_state_and_trace_differential() {
     for raw in cases {
         compare_thumb(raw, "thumb-family");
     }
+}
+
+#[test]
+fn every_reachable_typed_fault_is_atomic_and_matches_the_oracle() {
+    let mut gate = Arm7TdmiGateLevel::new();
+    let mut functional = Arm7TdmiSimulator::new();
+    for (program, origin, gate_set, functional_set, label) in [
+        (
+            &[][..],
+            0,
+            GateSet::Arm,
+            FunctionalSet::Arm,
+            "empty program",
+        ),
+        (
+            &[0; 4][..],
+            2,
+            GateSet::Arm,
+            FunctionalSet::Arm,
+            "misaligned program",
+        ),
+        (
+            &[0; 8][..],
+            0xfffc,
+            GateSet::Arm,
+            FunctionalSet::Arm,
+            "program out of range",
+        ),
+    ] {
+        let gate_before = gate.get_state();
+        let functional_before = functional.get_state();
+        assert_same_error(
+            gate.load(program, origin, gate_set),
+            functional.load(program, origin, functional_set),
+            label,
+        );
+        assert_state_eq(&gate.get_state(), &functional.get_state(), label);
+        assert_eq!(gate.get_state(), gate_before, "{label}: gate atomicity");
+        assert_eq!(
+            functional.get_state(),
+            functional_before,
+            "{label}: oracle atomicity"
+        );
+    }
+
+    let mut gate_invalid = gate.get_state();
+    let mut functional_invalid = functional.get_state();
+    gate_invalid.memory.pop();
+    functional_invalid.memory.pop();
+    assert_same_error(
+        gate.restore(gate_invalid),
+        functional.restore(functional_invalid),
+        "invalid state",
+    );
+    assert_same_error(
+        gate.read_register(16),
+        functional.read_register(16),
+        "invalid register",
+    );
+
+    let (mut gate, mut functional) = seed_pair_arm(0xe14f_0000); // MRS r0,SPSR in User mode.
+    let mut gate_user = gate.get_state();
+    let mut functional_user = functional.get_state();
+    gate_user.cpsr = GateMode::User as u32;
+    functional_user.cpsr = FunctionalMode::User as u32;
+    gate.restore(gate_user).unwrap();
+    functional.restore(functional_user).unwrap();
+    let gate_before = gate.get_state();
+    let functional_before = functional.get_state();
+    assert_same_error(gate.step(), functional.step(), "unavailable SPSR");
+    assert_state_eq(
+        &gate.get_state(),
+        &functional.get_state(),
+        "unavailable SPSR",
+    );
+    assert_eq!(gate.get_state(), gate_before);
+    assert_eq!(functional.get_state(), functional_before);
+
+    for (raw, label) in [
+        (0xffff_ffff, "unknown instruction"),
+        (0xee00_0010, "unsupported instruction"),
+        (0xef00_0001, "unsupported exception"),
+    ] {
+        compare_arm(raw, label);
+    }
+
+    for (register_zero, label) in [(2, "misaligned target"), (0x1_0000, "target out of range")] {
+        let (mut gate, mut functional) = seed_pair_arm(0xe12f_ff10); // BX r0.
+        gate.write_register(0, register_zero).unwrap();
+        functional.write_register(0, register_zero).unwrap();
+        let gate_before = gate.get_state();
+        let functional_before = functional.get_state();
+        assert_same_error(gate.step(), functional.step(), label);
+        assert_state_eq(&gate.get_state(), &functional.get_state(), label);
+        assert_eq!(gate.get_state(), gate_before, "{label}: gate atomicity");
+        assert_eq!(
+            functional.get_state(),
+            functional_before,
+            "{label}: oracle atomicity"
+        );
+    }
+
+    for (address, label) in [(1, "misaligned data"), (0x1_0000, "data out of range")] {
+        let (mut gate, mut functional) = seed_pair_arm(0xe591_0000); // LDR r0,[r1].
+        gate.write_register(1, address).unwrap();
+        functional.write_register(1, address).unwrap();
+        let gate_before = gate.get_state();
+        let functional_before = functional.get_state();
+        assert_same_error(gate.step(), functional.step(), label);
+        assert_state_eq(&gate.get_state(), &functional.get_state(), label);
+        assert_eq!(gate.get_state(), gate_before, "{label}: gate atomicity");
+        assert_eq!(
+            functional.get_state(),
+            functional_before,
+            "{label}: oracle atomicity"
+        );
+    }
+
+    let mut gate = Arm7TdmiGateLevel::new();
+    let mut functional = Arm7TdmiSimulator::new();
+    gate.load(&0xe1a0_0000u32.to_le_bytes(), 0, GateSet::Arm)
+        .unwrap();
+    functional
+        .load(&0xe1a0_0000u32.to_le_bytes(), 0, FunctionalSet::Arm)
+        .unwrap();
+    gate.step().unwrap();
+    functional.step().unwrap();
+    assert_same_error(gate.step(), functional.step(), "fetch outside program");
+
+    let (mut gate, mut functional) = seed_pair_arm(0xef00_0000);
+    gate.step().unwrap();
+    functional.step().unwrap();
+    assert_same_error(gate.step(), functional.step(), "halted");
+
+    let (mut gate, mut functional) = seed_pair_arm(0xe1a0_0000);
+    assert_same_error(gate.run(1), functional.run(1), "step limit");
+    assert_same_error(
+        gate.run(MAX_RETAINED_STEPS + 1),
+        functional.run(MAX_RETAINED_STEPS + 1),
+        "retention limit",
+    );
+}
+
+#[test]
+fn every_declared_fault_shape_matches_the_functional_contract() {
+    let gate = [
+        GateError::EmptyProgram,
+        GateError::MisalignedProgram {
+            origin: 2,
+            alignment: 4,
+        },
+        GateError::ProgramOutOfRange {
+            origin: 0xfffc,
+            length: 8,
+        },
+        GateError::InvalidState { reason: "test" },
+        GateError::InvalidRegister { register: 16 },
+        GateError::ReservedMode { mode: 0 },
+        GateError::UnavailableSavedStatus {
+            mode: GateMode::User,
+        },
+        GateError::PrivilegedInstruction { raw: 0, pc: 0 },
+        GateError::UnpredictableInstruction { raw: 0, pc: 0 },
+        GateError::UnknownInstruction {
+            raw: 0,
+            width: 4,
+            pc: 0,
+        },
+        GateError::UnsupportedInstruction {
+            raw: 0,
+            width: 4,
+            pc: 0,
+        },
+        GateError::UnsupportedException {
+            immediate: 1,
+            pc: 0,
+        },
+        GateError::MisalignedFetch {
+            pc: 2,
+            alignment: 4,
+        },
+        GateError::FetchOutsideProgram { pc: 4, width: 4 },
+        GateError::MisalignedData {
+            address: 1,
+            width: 4,
+        },
+        GateError::DataOutOfRange {
+            address: 0x1_0000,
+            width: 4,
+        },
+        GateError::MisalignedTarget {
+            target: 2,
+            instruction_set: GateSet::Arm,
+        },
+        GateError::TargetOutOfRange {
+            target: 0x1_0000,
+            instruction_set: GateSet::Arm,
+        },
+        GateError::Halted,
+        GateError::RetentionLimitExceeded {
+            requested: 65,
+            limit: 64,
+        },
+        GateError::StepLimitExceeded { limit: 1 },
+    ];
+    let functional = [
+        FunctionalError::EmptyProgram,
+        FunctionalError::MisalignedProgram {
+            origin: 2,
+            alignment: 4,
+        },
+        FunctionalError::ProgramOutOfRange {
+            origin: 0xfffc,
+            length: 8,
+        },
+        FunctionalError::InvalidState { reason: "test" },
+        FunctionalError::InvalidRegister { register: 16 },
+        FunctionalError::ReservedMode { mode: 0 },
+        FunctionalError::UnavailableSavedStatus {
+            mode: FunctionalMode::User,
+        },
+        FunctionalError::PrivilegedInstruction { raw: 0, pc: 0 },
+        FunctionalError::UnpredictableInstruction { raw: 0, pc: 0 },
+        FunctionalError::UnknownInstruction {
+            raw: 0,
+            width: 4,
+            pc: 0,
+        },
+        FunctionalError::UnsupportedInstruction {
+            raw: 0,
+            width: 4,
+            pc: 0,
+        },
+        FunctionalError::UnsupportedException {
+            immediate: 1,
+            pc: 0,
+        },
+        FunctionalError::MisalignedFetch {
+            pc: 2,
+            alignment: 4,
+        },
+        FunctionalError::FetchOutsideProgram { pc: 4, width: 4 },
+        FunctionalError::MisalignedData {
+            address: 1,
+            width: 4,
+        },
+        FunctionalError::DataOutOfRange {
+            address: 0x1_0000,
+            width: 4,
+        },
+        FunctionalError::MisalignedTarget {
+            target: 2,
+            instruction_set: FunctionalSet::Arm,
+        },
+        FunctionalError::TargetOutOfRange {
+            target: 0x1_0000,
+            instruction_set: FunctionalSet::Arm,
+        },
+        FunctionalError::Halted,
+        FunctionalError::RetentionLimitExceeded {
+            requested: 65,
+            limit: 64,
+        },
+        FunctionalError::StepLimitExceeded { limit: 1 },
+    ];
+    for (gate, functional) in gate.into_iter().zip(functional) {
+        assert_eq!(format!("{gate:?}"), format!("{functional:?}"));
+        assert_eq!(gate.to_string(), functional.to_string());
+    }
+    assert!(!GateError::CommitFailed.to_string().is_empty());
+}
+
+#[test]
+fn functional_completion_matrix_covers_modes_exchange_and_lifecycle() {
+    // Every bank/mode path is exercised through the public API and compared
+    // after a transition, complementing the family/opcode matrix above.
+    for (gate_mode, functional_mode) in [
+        (GateMode::User, FunctionalMode::User),
+        (GateMode::Fiq, FunctionalMode::Fiq),
+        (GateMode::Irq, FunctionalMode::Irq),
+        (GateMode::Supervisor, FunctionalMode::Supervisor),
+        (GateMode::Abort, FunctionalMode::Abort),
+        (GateMode::Undefined, FunctionalMode::Undefined),
+        (GateMode::System, FunctionalMode::System),
+    ] {
+        let (mut gate, mut functional) = seed_pair_arm(0xe1a0_0000);
+        let mut gate_state = gate.get_state();
+        let mut functional_state = functional.get_state();
+        gate_state.cpsr = gate_mode as u32;
+        functional_state.cpsr = functional_mode as u32;
+        gate.restore(gate_state).unwrap();
+        functional.restore(functional_state).unwrap();
+        for register in 0..15 {
+            let value = 0x1000 + register as u32;
+            gate.write_register(register, value).unwrap();
+            functional.write_register(register, value).unwrap();
+        }
+        let gate_trace = gate.step().unwrap();
+        let functional_trace = functional.step().unwrap();
+        assert_eq!(gate_trace.mnemonic, functional_trace.mnemonic);
+        assert_state_eq(&gate.get_state(), &functional.get_state(), "mode matrix");
+    }
+
+    // ARM -> Thumb exchange and mixed-width continuation.
+    let mut gate = Arm7TdmiGateLevel::new();
+    let mut functional = Arm7TdmiSimulator::new();
+    let mut program = 0xe12f_ff10u32.to_le_bytes().to_vec(); // BX r0.
+    program.extend_from_slice(&0x2001u16.to_le_bytes()); // MOVS r0,#1.
+    program.extend_from_slice(&[0; 2]); // ARM image transport remains word-sized.
+    gate.load(&program, 0, GateSet::Arm).unwrap();
+    functional.load(&program, 0, FunctionalSet::Arm).unwrap();
+    gate.write_register(0, 5).unwrap();
+    functional.write_register(0, 5).unwrap();
+    for label in ["exchange", "thumb continuation"] {
+        let gate_trace = gate.step().unwrap();
+        let functional_trace = functional.step().unwrap();
+        assert_eq!(gate_trace.mnemonic, functional_trace.mnemonic, "{label}");
+        assert_state_eq(&gate.get_state(), &functional.get_state(), label);
+    }
+    assert_eq!(gate.get_state().cpsr & GATE_CPSR_T, GATE_CPSR_T);
+    assert_eq!(
+        functional.get_state().cpsr & FUNCTIONAL_CPSR_T,
+        FUNCTIONAL_CPSR_T
+    );
+
+    let halt = 0xef00_0000u32.to_le_bytes();
+    let mut gate = Arm7TdmiGateLevel::new();
+    let mut functional = Arm7TdmiSimulator::new();
+    let gate_result = gate.execute(&halt, 0, GateSet::Arm, 1).unwrap();
+    let functional_result = functional.execute(&halt, 0, FunctionalSet::Arm, 1).unwrap();
+    assert_eq!(gate_result.steps, functional_result.steps);
+    assert_eq!(gate_result.halted, functional_result.halted);
+    assert_state_eq(
+        &gate.get_state(),
+        &functional.get_state(),
+        "execute lifecycle",
+    );
 }
