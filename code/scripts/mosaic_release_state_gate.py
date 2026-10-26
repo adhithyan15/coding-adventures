@@ -565,7 +565,7 @@ def verify_state(fixture: GateFixture, state_path: Path) -> dict[str, Any]:
     """Prove the new build kept ``fixture``'s state. Returns the decoded payload.
 
     The checks run in the order a person debugging a failure would want them:
-    first "is there a file", then "did the host give up on it", then the
+    first "did the host give up on it", then "is there a file", then the
     envelope, then the data. The first failure is the one reported.
 
     Returning the payload lets an app with checks the pointer language cannot

@@ -75,6 +75,8 @@ A fixture is a committed JSON file, conventionally
 Unknown top-level or expectation keys are rejected, so a typo such as
 `expectation` fails loudly instead of disabling a check.
 
+A fixture file must be a regular, non-symlinked file of at most 4 MiB.
+
 ### Why `acceptedLiveVersions` is a list
 
 TaskApp's original gate required the live `version` to equal the fixture's.
