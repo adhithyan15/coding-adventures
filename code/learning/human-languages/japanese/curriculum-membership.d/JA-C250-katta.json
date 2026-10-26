@@ -1,0 +1,11 @@
+{
+  "id": "JA-C250-katta",
+  "pathSegment": "JA-PATH-250-PAST250",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-250-PAST250",
+      "order": 1
+    }
+  ]
+}
