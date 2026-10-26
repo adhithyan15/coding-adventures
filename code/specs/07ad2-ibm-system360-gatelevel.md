@@ -155,4 +155,4 @@ decoders, secondary decoding, oracle dispatch, inactive storage access, gate
 binding shadows, and post-selection overwrites. Passing the behavioral oracle
 alone remains insufficient.
 Rustfmt, strict Clippy, rustdoc, lesson validation, and the
-package BUILD are green. Package line coverage is 93.82% (1,912/2,038).
+package BUILD are green. Package line coverage is 93.78% (1,916/2,043).
