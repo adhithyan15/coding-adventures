@@ -274,7 +274,7 @@ builds the archive in an isolated temporary target directory containing spaces.
 
 Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, Macsyma, Perl,
-and Python** to native executables through the shared LANG VM chain.
+Python and JavaScript** to native executables through the shared LANG VM chain.
 
 The language matrix compares text output using LF line endings, accepting the
 equivalent CRLF produced by Windows text runtimes. It preserves lone carriage
@@ -1429,3 +1429,46 @@ lang-aot prog.py --lang python@3.0a1 --emit=llvm-ir
 | `python@2.2`, `python@2.4`, `python@2.6`, `python@2.7.18` | compiled on that release as Python 2 (`py2-int-print`: `print 010 / 3`) |
 | `python@3.13` | `UnknownRelease`, nearest inventory IDs suggested |
 | `python@3.12.2` | `ReleaseNotAvailable` (no grammar pair: `grammar_stage none`) |
+
+## JavaScript on every backend (LANG84 phase 6e)
+
+`--lang javascript` (or `js`, or a `.js` file) compiles the `es-number-log`
+subset: `console.log` of up to three numbers, with number literals (decimal,
+radix, separators where the edition has them), parentheses, unary `-`,
+`+ - * /` and top-level `let`/`const`. It goes through
+`javascript_iir_compiler::compile_source_at`, which walks the CST that the
+generic `GrammarLexer`/`GrammarParser` build from one edition's
+`es<edition>.tokens`/`.grammar`, and emits only LANG83 registry ops:
+
+| JavaScript | IIR |
+|---|---|
+| number literal | `const` (`f64`) |
+| `a + b`, `a - b`, `a * b`, `a / b`, `-a` | `f64_add`, `f64_sub`, `f64_mul`, `f64_div`, `f64_neg` (PR6c, IEEE, never a trap) |
+| `console.log(a, b)` | `write_f64_js a`, `putchar 32`, `write_f64_js b`, `putchar 10` |
+| `-0` | `putchar 45` behind `cmp_gt (f64_signbit x) (f64_signbit (x + 0))` |
+| reading an undeclared name, or a `let` before its declaration | `trap "Trap.ReferenceError"` |
+
+No backend has JavaScript code. `1 / 0` is `Infinity` and `0 * -1` prints
+`-0` on every IEEE column. BEAM floats cannot hold an infinity or a NaN, so
+BEAM refuses the `f64_*` arithmetic at compile time with `UnsupportedOps`,
+which LANG84 stage B allows; a module without arithmetic (a literal, or a
+binding of one, is never `-0`, so it needs no sign test) runs on BEAM too.
+
+Thirty-eight `lang_matrix` rows run every accepted case of
+`code/grammars/ecmascript/corpus/es-number-log/` on es2016 and es2021, the two
+IIR-identity class representatives of `javascript-iir-compiler`'s release
+sweep, and on the default es2020: the 11 literal-only rows on all eight
+columns, the 27 with arithmetic on the seven IEEE columns. They prove stage B
+for es2016–es2025 (`release_inventory.py check --matrix`), agree with host
+node v22, and every row's `main` compiles to JIT bytecode and runs compiled
+to the same output.
+
+```sh
+lang-aot prog.js --lang javascript@es2016 --emit=llvm-ir
+```
+
+| Request | Result |
+|---|---|
+| `javascript`, `js@es2016` … `js@es2025` | compiled on that edition (`javascript` is `es2020`) |
+| `js@es20` | `UnknownRelease`, nearest inventory IDs suggested |
+| `js@es5`, `js@es2015` | `ReleaseNotAvailable` (no F10 table yet / no pinned source) |
