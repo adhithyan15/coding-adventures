@@ -31,7 +31,29 @@ right after the word that holds it: 月 (月日), 年 (年じゅう), 出 (言�
 (日本人), 中 (日本中) and 今 (今まで), with one reading each. Still untaught: the
 potential, passive, causative, volitional, imperative, -ば, -ながら, -たり,
 -なくて, -なければ, -ては / -ても, keigo beyond -ます / です, and every katakana
-but コ, ヒ and ー. The B1 vocabulary comes next.
+but コ, ヒ and ー.
+
+**The B1 vocabulary, chapters 262-533** ([`lessons/`](./lessons/),
+`JA-C262-*` to `JA-R533-*`), adds 1,360 headwords, 439 of them verbs, one word
+per lesson, with 52 reviews across five tranches:
+
+- 262-316: narrating (news and accidents, the police, disasters, life events,
+  festivals, folk tales, letters and memory);
+- 317-371: reasons, then conditions from 344 (opinions, rules and manners,
+  society and saving, then plans, appointments, risks and money);
+- 372-425: travel (stations, roads, hotels, sightseeing, regions and problems
+  on the road);
+- 426-479: experience (feelings, character, the body and health, work, sport,
+  the arts and family life);
+- 480-533: experience, then conditions from 507 (school, nature, the
+  household and shopping, then chance, cause and wishes).
+
+Examples use only the words and grammar taught before them, in the core's
+polite frame. Every word cites JMdict or KANJIDIC2, and a Sino-Japanese word
+gives each kanji's Middle Chinese. The first words of chapters 262-269
+practise the core's last grammar points again, and 月 年 出 人 中 今 each come
+back twice in chapters 270-296. With the core, Japanese teaches 2,593
+headwords and 725 verbs at or below B1 and attains B1 on the level gate.
 
 ## The opening runway
 

@@ -406,6 +406,13 @@ describe("the gate that would have caught the A2 claim", () => {
     // -ता counterfactual, realizing all five B1 nodes, plus letter lessons for ऐ
     // and ः) and chapters 288-559 (1,360 headwords, 368 verbs), which moved it
     // from the A2 row of HELD to B1.
+    // Japanese followed as the twentieth, with chapters 250-261 (the B1 core:
+    // the plain past -た and its sound changes, the plain negative -ない, -て and
+    // -てから, -ています, と おもいます, から / ので after a plain clause, -た
+    // ほうが いい, travel, -かった, -た ことが ある, より / いちばん, and もし …
+    // -たら / に よります / -たら … でしょう, realizing all five B1 nodes, plus
+    // six copy-only kanji 月 年 出 人 中 今) and chapters 262-533 (1,360
+    // headwords, 439 verbs), which moved it from the A2 row of HELD to B1.
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }
