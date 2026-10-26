@@ -66,22 +66,43 @@ already public.
 This queue is re-costed after every merge or discovery. Dates indicate the
 architecture/core introduction era, not a claim about a particular chip.
 
+Cortex-M4 is complete locally and awaiting publication. Its checked Armv7E-M
+boundary explicitly classifies all 20 inherited Cortex-M3 instruction
+families, differentially witnesses inherited integer, privilege, IT, memory,
+exclusive, branch, power, and lifecycle state, and covers the bounded DSP and
+optional FPv4-SP extension. All 30 release tests, strict Clippy/rustdoc, and
+92.81% line coverage (994/1071) are green. Cortex-M7 and Cortex-M23 are
+merged, while Cortex-M33 is already in review.
+
 | Order | Target | Public basis | Planned boundary |
 |---:|---|---|---|
-| 1 | Arm Cortex-M4 | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
-| 2 | Arm Cortex-M7 | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
-| 3 | Arm Cortex-M23 | Armv8-M manuals | Bounded baseline/security-state cell complete locally; exclusive encodings and exceptions remain follow-up work. |
-| 4 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
+| 1 | Arm Cortex-M4 (in publication) | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
+| 2 | Arm Cortex-M7 (merged) | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
+| 3 | Arm Cortex-M23 (merged) | Armv8-M manuals | Bounded baseline/security-state cell complete; exclusive encodings and exceptions remain follow-up work. |
+| 4 | Arm Cortex-M33 (in review) | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
-| 7 | IBM System/370 | published Principles of Operation | Local functional cell complete: owned checked state and lifecycle, the complete modeled System/360 surface through a private adapter, and source-backed MVCL/CLCL/CLM/STCM/ICM semantics, including one-byte zero-mask validation for CLM/ICM and the architecturally exception-free zero-mask STCM. Fourteen tests, strict checks, and 98.78% line coverage (568/575) are green; gate partner follows only after merge. |
+| 7 | IBM System/370 | published Principles of Operation | Functional merged in PR #18336. P0 source-correctness repair complete locally: destructive-overlap `MVCL` suppresses storage movement, preserves both lengths and low 24-bit addresses, and clears the ignored high byte of both address registers for condition-code-3 completion. The gate partner remains blocked until this repair merges. |
 | 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
-| 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
+| 9 | PA-RISC 1.1 | published architecture manuals | Local functional complete: checked bounded integer core, big-endian transport, both IA queues, PSW nibble carry/borrow state, delayed control, nullification, calls/returns, complete traces, typed atomic lifecycle, three allocation-seam unit tests, 19 integration tests, one doctest, and 92.80% line coverage (580/625). Gate work remains evidence/scope pending. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
-| 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
+| 12 | ARM7TDMI | published ARMv4T manuals | Complete locally: bounded ARMv4T ARM/Thumb integer core; all 31 physical GPRs and five SPSRs; pipeline-visible PC, bank/state exchange, checked memory and full-span control targets; exact transactional traces/lifecycle; 39 release tests; and 88.30% line coverage (1,389/1,573). Gate partner and SoC composition remain queued. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
+| 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; independent implementation review is next. |
+
+CDP1802 is complete locally from its independently reviewed specification.
+The functional cell covers the complete register matrix, instruction table,
+reset/inhibit lifecycle, flags, ports, DMA, and interrupt response. Its
+explicit bus operations make it a high-value bridge from CPU execution toward
+the requested SoC data-movement simulations. A different reviewer's exact-head
+implementation PASS is the remaining publication gate. Educational-gate and
+source-backed SoC compositions remain separate bounded follow-ups.
+The local evidence is 31 release integration tests plus one doctest, including
+256-byte independent decode and execution sweeps, exhaustive 256x256x2 ALU
+relations, strict Clippy/rustdoc, lessons validation, affected BUILD, and
+87.76% line coverage (832/948).
 
 ## Discovered follow-up work
 
@@ -89,6 +110,7 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
+| P1 complete locally | AArch64 gate 32-bit carry authority | The 32-bit ADD/SUB flag path now takes carry and overflow directly from exact-width ripple networks; host sum comparisons are gone. Width-edge tests, all seven topology/datapath tests, six lifecycle suites, all 836 Python differential vectors, strict checks, and 97.79% line coverage pass. Follow-up audits still need to cost host decode and fetch assembly separately. |
 | P1 complete locally | PowerPC 601 conditional-branch authority | The host-language BO/CTR/CR predicate is replaced by explicit gate ALU, 32:1 CR mux, polarity, bypass-mux, and final-AND networks. Exhaustive tests cover every BO value and CR selector, both selected-bit polarities, and CTR zero/nonzero boundaries against an independent truth table. Three gate/topology suites, three lifecycle suites, all 239 differential vectors, strict checks, and 94.58% line coverage pass. The counted GPR/LR/CTR/XER/CR/CIA, memory, and HALT storage banks remain private stable-Q authority with no public host-state mirrors. |
 | P1 queued | PowerPC 601 CR/XER update authority | Replace host `Ordering`/Boolean control in CR-field, CR0, CA, and SO propagation with explicit relation wires, masks, muxes, and gates while preserving the public lifecycle. |
 | P1 queued | PowerPC 601 shift/count/divide authority | Replace host slice moves, iterator leading-zero counting, and conditional restoring-divide selection with fixed gate/mux networks, then audit multiply accumulation and record-form updates as one bounded datapath family at a time. |
@@ -108,6 +130,11 @@ architecture/core introduction era, not a claim about a particular chip.
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
   composition boundary, but it precedes declaring full Armv7-M ISA coverage.
+- Extend PA-RISC 1.1 problem-state coverage in bounded cells: extract/deposit
+  and variable shifts, unit operations, indexed/short/modifying memory forms,
+  decimal correction, multiply/divide, MOVB/MOVIB, and remaining arithmetic
+  completers. Privileged spaces/control registers, traps, MMU/TLB, caches,
+  coprocessors/FPU, and implementation timing remain separate system cells.
 - Build reusable SoC primitives after the initial missing-core wave: clock and
   reset domains, address-decoded buses, arbitration/backpressure, interrupt
   routing, DMA movement, timers, memory-mapped peripherals, and deterministic

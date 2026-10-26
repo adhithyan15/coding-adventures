@@ -38,6 +38,11 @@ The following rulings are binding. LANG84 turns them into a checkable contract:
    each release once its grammar lands.
 5. **There is no portable runtime.** Frontends emit LANG83 registry operations,
    and every backend lowers those operations to its own instructions.
+6. **The IIR names no source language.** Registry ops, builtins and trap kinds
+   are low-level and language-neutral. The IIR compiler turns a language's
+   rules into those ops, as Python's `repr` layout and Lisp truthiness both
+   are; when the code is long it is a function the compiler emits into its
+   own module. See LANG83 "PR7 — language neutrality".
 
 ## Pipeline
 
@@ -134,10 +139,22 @@ A frontend on the IIR path MUST NOT contain any of the following:
   order or compare release IDs (`if version >= "2.7"`). It branches only on CST
   shape and `ReleaseProfile` fields. A CI grep check enforces this, with an
   allow-list limited to the release-resolution module.
-- **Portable-runtime helpers** (LANG83). No IIR helper functions that implement
-  language semantics and are compiled like user code. No language-named
-  builtins that duplicate a registry op: `rb_int_div` becomes `i64_div_floor`
-  and `rb_puts_int` becomes `print_i64`.
+- **Portable-runtime helpers** (LANG83). No shared library of IIR helper
+  functions, and no helper that stands in for an operation a backend should
+  lower. No language-named builtins that duplicate a registry op:
+  `rb_int_div` becomes `i64_div_floor` and `rb_puts_int` becomes
+  `print_i64`. A function the compiler emits into its own module to express
+  its language's rule from registry ops is allowed; Dartmouth BASIC's print
+  helpers are an example. This is what C2 "Language-specific IIR" requires
+  (amended by LANG83 PR7).
+- **Language-specific IIR.** A frontend MUST NOT emit, and MUST NOT ask
+  LANG83 to add, an op, builtin or trap kind that carries one language's
+  semantics. That covers a language's name (`write_f64_py`), its layout
+  rule (Python `repr`, JavaScript `Number::toString`), its coercion (Lisp
+  truthiness) and its error class (`ReferenceError`). The IIR is low-level
+  and neutral, and the **IIR compiler** translates language semantics into
+  neutral ops. LANG83 "PR7 — language neutrality" holds the audit of
+  existing violations and the plan that removes them.
 
 ### C3. Allowed hooks
 
@@ -255,8 +272,15 @@ Error categories (one `FrontendError` enum per frontend, mapped into
    frontend's own tests MUST run `lang_aot::check_module_for` for all nine
    backends on the subset corpus. A `Refused` result is acceptable at stage
    B(S) only as a compile-time refusal (see [Status stages](#status-stages)).
-4. Trap kinds come only from `interpreter_ir::exception_kind`. Language kinds
-   are added there by the PR that first emits them (LANG83).
+4. Trap kinds come only from `interpreter_ir::exception_kind`, and they are
+   neutral: a language's error class is mapped onto the kind that names
+   its condition (`NameError` and `ReferenceError` both become
+   `Trap.Unbound`). LANG83 PR7d retires the `LANGUAGE_TRAP_KINDS` table.
+5. Rule 2's "new operation" must be language-neutral (C2 "Language-specific
+   IIR"). A frontend that needs a language's formatting, coercion or
+   equality asks LANG83 for the neutral primitives underneath it, such as
+   `f64_class`/`f64_digits`/`f64_exp10` for float output. It then emits the
+   language rule itself.
 
 ### C8. CST contract per release
 
