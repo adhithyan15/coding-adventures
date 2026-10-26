@@ -1,0 +1,11 @@
+{
+  "id": "SA-C470-svasiti",
+  "pathSegment": "SA-PATH-470-PHUPPHUSA470",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-470-PHUPPHUSA470",
+      "order": 4
+    }
+  ]
+}

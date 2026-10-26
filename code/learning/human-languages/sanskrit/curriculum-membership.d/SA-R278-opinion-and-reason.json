@@ -1,0 +1,11 @@
+{
+  "id": "SA-R278-opinion-and-reason",
+  "pathSegment": "SA-PATH-278-REASONS278",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-278-REASONS278",
+      "order": 5
+    }
+  ]
+}

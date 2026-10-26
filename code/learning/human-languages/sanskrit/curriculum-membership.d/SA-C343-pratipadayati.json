@@ -1,0 +1,11 @@
+{
+  "id": "SA-C343-pratipadayati",
+  "pathSegment": "SA-PATH-343-VADA343",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-343-VADA343",
+      "order": 4
+    }
+  ]
+}

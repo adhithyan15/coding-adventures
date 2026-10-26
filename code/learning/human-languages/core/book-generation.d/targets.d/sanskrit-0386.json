@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 386,
+  "output": "sanskrit/book/chapters/ch386-success.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

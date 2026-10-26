@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 350,
+  "output": "sanskrit/book/chapters/ch350-release.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

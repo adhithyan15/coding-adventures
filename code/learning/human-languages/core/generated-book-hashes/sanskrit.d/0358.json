@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:7490e26ada9d2922",
+  "lessonIds": [
+    "SA-C358-acarah",
+    "SA-C358-silam",
+    "SA-C358-sajjanah",
+    "SA-C358-sanmargah",
+    "SA-C358-adriyate"
+  ],
+  "tex": "sanskrit/book/chapters/ch358-good-conduct.tex"
+}

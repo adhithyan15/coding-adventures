@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "Can It Be Done?",
+  "label": "ch:sa-can-it-be-done",
+  "canDo": "I can say whether a plan is possible and what we imagine might happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C389-yatharthah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can say whether a plan is possible and what we imagine might happen.",
+    "assesses": [
+      "SA-LEX-C389-SHAKYA389-03",
+      "SA-LEX-C389-SHAKYA389-04",
+      "SA-LEX-C389-SHAKYA389-05"
+    ]
+  }
+}

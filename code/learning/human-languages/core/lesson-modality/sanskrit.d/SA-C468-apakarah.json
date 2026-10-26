@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C468-apakarah",
+    "language": "sanskrit",
+    "chapter": 468,
+    "sequence": 27040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16bdfbc21471753a"
+  },
+  "findings": []
+}

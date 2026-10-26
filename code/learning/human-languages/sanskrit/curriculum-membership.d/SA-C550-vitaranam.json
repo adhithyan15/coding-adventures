@@ -1,0 +1,11 @@
+{
+  "id": "SA-C550-vitaranam",
+  "pathSegment": "SA-PATH-550-AMSA550",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-550-AMSA550",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 300,
+  "output": "sanskrit/book/chapters/ch300-when-the-ground-shook.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Distress and Comfort",
+  "label": "ch:sa-distress-and-comfort",
+  "canDo": "I can say how someone was comforted.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C451-santapah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can say how someone was comforted.",
+    "assesses": [
+      "SA-LEX-C451-ANUNAYA451-03",
+      "SA-LEX-C451-ANUNAYA451-04",
+      "SA-LEX-C451-ANUNAYA451-05"
+    ]
+  }
+}

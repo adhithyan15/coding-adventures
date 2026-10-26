@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C511-pakah",
+    "language": "sanskrit",
+    "chapter": 511,
+    "sequence": 29490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9beeacf573e25098"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Old Coins and Storehouses",
+  "label": "ch:sa-old-coins-and-storehouses",
+  "canDo": "I can talk about the money of former times.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C435-bhandagaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can talk about the money of former times.",
+    "assesses": [
+      "SA-LEX-C435-DINARA435-03",
+      "SA-LEX-C435-DINARA435-04",
+      "SA-LEX-C435-DINARA435-05"
+    ]
+  }
+}

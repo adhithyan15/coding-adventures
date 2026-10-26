@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 502,
+  "output": "sanskrit/book/chapters/ch502-in-the-workshop.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

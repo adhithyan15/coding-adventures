@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C358-acarah",
+    "language": "sanskrit",
+    "chapter": 358,
+    "sequence": 20920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:049dff3feac13862"
+  },
+  "findings": []
+}

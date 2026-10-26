@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:18b609b6af23d2c5",
+  "lessonIds": [
+    "SA-C322-purvajah",
+    "SA-C322-vamsah",
+    "SA-C322-kulam",
+    "SA-C322-samsthapayati",
+    "SA-C322-pravartayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch322.txt",
+  "json": "sanskrit/narration/ch322.json",
+  "textHash": "fnv1a64:5ed2c029dbe4c102",
+  "jsonHash": "fnv1a64:ca453671d9a19dae",
+  "findings": []
+}

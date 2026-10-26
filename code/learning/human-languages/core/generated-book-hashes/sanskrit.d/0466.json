@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:7e050721a9ba8fce",
+  "lessonIds": [
+    "SA-C466-medha",
+    "SA-C466-muhyati",
+    "SA-C466-unmadah",
+    "SA-C466-balisah",
+    "SA-C466-bodhah"
+  ],
+  "tex": "sanskrit/book/chapters/ch466-sense-and-folly.tex"
+}

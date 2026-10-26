@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:74410e018657a3e0",
+  "lessonIds": [
+    "SA-C309-vrttantah",
+    "SA-C309-prasarayati",
+    "SA-C309-akarnayati",
+    "SA-C309-mukhyah",
+    "SA-C309-vartaharah",
+    "SA-R309-review-302-309"
+  ],
+  "tex": "sanskrit/book/chapters/ch309-the-morning-news.tex"
+}

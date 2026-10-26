@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:a9f8fa09f79b6df8",
+  "lessonIds": [
+    "SA-C310-ghatana",
+    "SA-C310-apatati",
+    "SA-C310-vivaranam",
+    "SA-C310-prakasayati",
+    "SA-C310-visesah"
+  ],
+  "tex": "sanskrit/book/chapters/ch310-what-happened-today.tex"
+}

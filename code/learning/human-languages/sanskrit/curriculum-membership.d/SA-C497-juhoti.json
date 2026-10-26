@@ -1,0 +1,11 @@
+{
+  "id": "SA-C497-juhoti",
+  "pathSegment": "SA-PATH-497-KANYADANA497",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-497-KANYADANA497",
+      "order": 3
+    }
+  ]
+}

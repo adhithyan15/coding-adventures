@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:0d81991942b616b8",
+  "lessonIds": [
+    "SA-C530-bhojyam",
+    "SA-C530-peyam",
+    "SA-C530-laddukah",
+    "SA-C530-panakam",
+    "SA-C530-paryusitah"
+  ],
+  "tex": "sanskrit/book/chapters/ch530-planning-a-feast.tex"
+}

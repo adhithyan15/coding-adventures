@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:3ff064ed4dc10e39",
+  "lessonIds": [
+    "SA-C322-purvajah",
+    "SA-C322-vamsah",
+    "SA-C322-kulam",
+    "SA-C322-samsthapayati",
+    "SA-C322-pravartayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch322-ancestors.tex"
+}

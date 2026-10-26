@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Bad Weather",
+  "label": "ch:sa-bad-weather",
+  "canDo": "I can say whether the weather is fit for travel.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C441-avrnoti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can say whether the weather is fit for travel.",
+    "assesses": [
+      "SA-LEX-C441-DURDINA441-03",
+      "SA-LEX-C441-DURDINA441-04",
+      "SA-LEX-C441-DURDINA441-05"
+    ]
+  }
+}

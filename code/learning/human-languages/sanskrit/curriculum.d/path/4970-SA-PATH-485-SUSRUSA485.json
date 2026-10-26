@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-485-SUSRUSA485",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-485-SUSRUSA485"
+  ],
+  "after": []
+}

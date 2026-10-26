@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:1c55f551e7150c20",
+  "lessonIds": [
+    "SA-C387-unnatih",
+    "SA-C387-vikasah",
+    "SA-C387-durgatih",
+    "SA-C387-samskaroti",
+    "SA-C387-vrddhih"
+  ],
+  "tex": "sanskrit/book/chapters/ch387-getting-better.tex"
+}

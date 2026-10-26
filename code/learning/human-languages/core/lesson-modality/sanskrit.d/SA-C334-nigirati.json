@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C334-nigirati",
+    "language": "sanskrit",
+    "chapter": 334,
+    "sequence": 19500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:640ea31727d0f27b"
+  },
+  "findings": []
+}

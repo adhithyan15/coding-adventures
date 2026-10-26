@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:2d9d5aa1467cfbac",
+  "lessonIds": [
+    "SA-C471-mastiskah",
+    "SA-C471-kapalam",
+    "SA-C471-smasru",
+    "SA-C471-paksma",
+    "SA-C471-mundayati",
+    "SA-R471-review-464-471"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch471.txt",
+  "json": "sanskrit/narration/ch471.json",
+  "textHash": "fnv1a64:9a199bb98cb81f3a",
+  "jsonHash": "fnv1a64:5ea1e1664c34d310",
+  "findings": []
+}

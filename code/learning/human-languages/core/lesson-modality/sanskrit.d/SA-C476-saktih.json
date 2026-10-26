@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C476-saktih",
+    "language": "sanskrit",
+    "chapter": 476,
+    "sequence": 27430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50feb7a9f1424320"
+  },
+  "findings": []
+}

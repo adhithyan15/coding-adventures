@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-355-SANSAD355",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "SA-EXT-355-SANSAD355"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C328-arpayati",
+  "pathSegment": "SA-PATH-328-VRATA328",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-328-VRATA328",
+      "order": 3
+    }
+  ]
+}

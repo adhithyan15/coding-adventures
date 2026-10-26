@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Water for the Traveller",
+  "label": "ch:sa-water-for-the-traveller",
+  "canDo": "I can say where a thirsty traveller is given water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C420-tarpayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can say where a thirsty traveller is given water.",
+    "assesses": [
+      "SA-LEX-C420-PRAPA420-03",
+      "SA-LEX-C420-PRAPA420-04",
+      "SA-LEX-C420-PRAPA420-05"
+    ]
+  }
+}

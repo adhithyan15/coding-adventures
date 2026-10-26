@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "Brothers and Sisters",
+  "label": "ch:sa-brothers-and-sisters",
+  "canDo": "I can say who is older and who is younger.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C498-yamalau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can say who is older and who is younger.",
+    "assesses": [
+      "SA-LEX-C498-AGRAJA498-03",
+      "SA-LEX-C498-AGRAJA498-04",
+      "SA-LEX-C498-AGRAJA498-05"
+    ]
+  }
+}

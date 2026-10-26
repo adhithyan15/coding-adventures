@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "A Change of Plan",
+  "label": "ch:sa-a-change-of-plan",
+  "canDo": "I can say what changes if something goes wrong.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C529-tvara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can say what changes if something goes wrong.",
+    "assesses": [
+      "SA-LEX-C529-PARIVARTANA529-03",
+      "SA-LEX-C529-PARIVARTANA529-04",
+      "SA-LEX-C529-PARIVARTANA529-05"
+    ]
+  }
+}

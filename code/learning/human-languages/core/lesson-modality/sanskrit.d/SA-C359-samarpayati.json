@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C359-samarpayati",
+    "language": "sanskrit",
+    "chapter": 359,
+    "sequence": 21010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57347d884fae0cd0"
+  },
+  "findings": []
+}

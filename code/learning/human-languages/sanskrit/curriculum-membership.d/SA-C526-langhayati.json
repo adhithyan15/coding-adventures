@@ -1,0 +1,11 @@
+{
+  "id": "SA-C526-langhayati",
+  "pathSegment": "SA-PATH-526-ABHYASYATI526",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-526-ABHYASYATI526",
+      "order": 3
+    }
+  ]
+}

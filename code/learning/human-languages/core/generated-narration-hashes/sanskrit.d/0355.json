@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:68d7e45cc855964e",
+  "lessonIds": [
+    "SA-C355-samsad",
+    "SA-C355-sadasyah",
+    "SA-C355-pratinidhih",
+    "SA-C355-adhyaksah",
+    "SA-C355-mantrayate",
+    "SA-R355-review-348-355"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch355.txt",
+  "json": "sanskrit/narration/ch355.json",
+  "textHash": "fnv1a64:830d77b447772e63",
+  "jsonHash": "fnv1a64:09da0afefdad48cd",
+  "findings": []
+}

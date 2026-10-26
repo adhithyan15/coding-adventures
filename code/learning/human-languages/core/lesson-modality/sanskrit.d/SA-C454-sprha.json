@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C454-sprha",
+    "language": "sanskrit",
+    "chapter": 454,
+    "sequence": 26340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc45cb5d251606dc"
+  },
+  "findings": []
+}

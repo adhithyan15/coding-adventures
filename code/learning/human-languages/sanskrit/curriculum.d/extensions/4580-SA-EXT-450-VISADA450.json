@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-450-VISADA450",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone was sad and why.",
+  "prerequisites": []
+}

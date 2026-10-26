@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:2e462c5e01ce821e",
+  "lessonIds": [
+    "SA-C400-parikramati",
+    "SA-C400-japamala",
+    "SA-C400-rudraksah",
+    "SA-C400-rathayatra",
+    "SA-C400-aharati"
+  ],
+  "tex": "sanskrit/book/chapters/ch400-round-the-shrine.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C276-ghatate",
+  "pathSegment": "SA-PATH-276-NARRATE276",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-276-NARRATE276",
+      "order": 2
+    }
+  ]
+}

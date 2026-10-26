@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:dd2d70ad8afe9022",
+  "lessonIds": [
+    "SA-C522-padanyasah",
+    "SA-C522-avartate",
+    "SA-C522-kinkini",
+    "SA-C522-anukaroti",
+    "SA-C522-karatalika"
+  ],
+  "tex": "sanskrit/book/chapters/ch522-a-song-to-dance-to.tex"
+}

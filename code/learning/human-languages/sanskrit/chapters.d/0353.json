@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Who Governs",
+  "label": "ch:sa-who-governs",
+  "canDo": "I can say who rules a country and what orders they give.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C353-adesah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say who rules a country and what orders they give.",
+    "assesses": [
+      "SA-LEX-C353-SHASANA353-03",
+      "SA-LEX-C353-SHASANA353-04",
+      "SA-LEX-C353-SHASANA353-05"
+    ]
+  }
+}

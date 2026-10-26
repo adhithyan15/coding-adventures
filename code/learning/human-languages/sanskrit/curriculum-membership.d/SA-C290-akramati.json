@@ -1,0 +1,11 @@
+{
+  "id": "SA-C290-akramati",
+  "pathSegment": "SA-PATH-290-DASYU290",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-290-DASYU290",
+      "order": 2
+    }
+  ]
+}

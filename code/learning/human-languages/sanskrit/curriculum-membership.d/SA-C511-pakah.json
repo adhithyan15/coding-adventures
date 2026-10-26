@@ -1,0 +1,11 @@
+{
+  "id": "SA-C511-pakah",
+  "pathSegment": "SA-PATH-511-KASTHA511",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-511-KASTHA511",
+      "order": 3
+    }
+  ]
+}

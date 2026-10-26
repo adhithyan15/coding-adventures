@@ -1,0 +1,11 @@
+{
+  "id": "SA-C547-patanam",
+  "pathSegment": "SA-PATH-547-UTTHANA547",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-547-UTTHANA547",
+      "order": 2
+    }
+  ]
+}

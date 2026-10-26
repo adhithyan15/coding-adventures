@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:2f7b5dbba1407faa",
+  "lessonIds": [
+    "SA-C297-indhanam",
+    "SA-C297-ghatah",
+    "SA-C297-dhara",
+    "SA-C297-nirvapayati",
+    "SA-C297-samyati"
+  ],
+  "tex": "sanskrit/book/chapters/ch297-putting-the-fire-out.tex"
+}

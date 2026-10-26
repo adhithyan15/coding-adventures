@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:2cc00954d581a203",
+  "lessonIds": [
+    "SA-C318-sena",
+    "SA-C318-yodhah",
+    "SA-C318-yuddham",
+    "SA-C318-prayati",
+    "SA-C318-yudhyate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch318.txt",
+  "json": "sanskrit/narration/ch318.json",
+  "textHash": "fnv1a64:5b1377d2e4149ba6",
+  "jsonHash": "fnv1a64:c6758494fceb4cd2",
+  "findings": []
+}

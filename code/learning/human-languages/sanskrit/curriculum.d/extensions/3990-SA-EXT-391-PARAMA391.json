@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-391-PARAMA391",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether things will get better or worse.",
+  "prerequisites": []
+}

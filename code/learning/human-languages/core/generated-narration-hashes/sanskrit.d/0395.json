@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:1b268c892a64098e",
+  "lessonIds": [
+    "SA-C395-sarthah",
+    "SA-C395-sarthavahah",
+    "SA-C395-anuyati",
+    "SA-C395-aprcchate",
+    "SA-C395-parivrajakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch395.txt",
+  "json": "sanskrit/narration/ch395.json",
+  "textHash": "fnv1a64:339f19c6748e35d6",
+  "jsonHash": "fnv1a64:ee6f4793065d4778",
+  "findings": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 321,
+  "output": "sanskrit/book/chapters/ch321-a-coronation.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

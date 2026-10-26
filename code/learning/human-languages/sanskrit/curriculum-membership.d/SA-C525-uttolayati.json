@@ -1,0 +1,11 @@
+{
+  "id": "SA-C525-uttolayati",
+  "pathSegment": "SA-PATH-525-MALLA525",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-525-MALLA525",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Talkers and Quiet Ones",
+  "label": "ch:sa-talkers-and-quiet-ones",
+  "canDo": "I can say whether someone talks a lot or keeps quiet.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C464-pralapah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can say whether someone talks a lot or keeps quiet.",
+    "assesses": [
+      "SA-LEX-C464-VACALA464-03",
+      "SA-LEX-C464-VACALA464-04",
+      "SA-LEX-C464-VACALA464-05"
+    ]
+  }
+}

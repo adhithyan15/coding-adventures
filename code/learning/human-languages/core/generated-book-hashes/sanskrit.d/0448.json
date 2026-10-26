@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:434538c3b2b7ec3e",
+  "lessonIds": [
+    "SA-C448-bhavah",
+    "SA-C448-anutapah",
+    "SA-C448-hrsyati",
+    "SA-C448-ullasah",
+    "SA-C448-khedah"
+  ],
+  "tex": "sanskrit/book/chapters/ch448-naming-a-feeling.tex"
+}

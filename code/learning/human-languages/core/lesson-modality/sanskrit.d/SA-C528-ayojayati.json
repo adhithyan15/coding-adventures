@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C528-ayojayati",
+    "language": "sanskrit",
+    "chapter": 528,
+    "sequence": 30330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc987d1fa477ba8d"
+  },
+  "findings": []
+}

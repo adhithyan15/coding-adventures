@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:3c3dde3286e2fea9",
+  "lessonIds": [
+    "SA-C541-dolayate",
+    "SA-C541-vimrsati",
+    "SA-C541-dvidha",
+    "SA-C541-aparah",
+    "SA-C541-vibhinnah",
+    "SA-R541-review-534-541"
+  ],
+  "tex": "sanskrit/book/chapters/ch541-two-ways-to-go.tex"
+}

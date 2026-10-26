@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C440-kantha",
+    "language": "sanskrit",
+    "chapter": 440,
+    "sequence": 25360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cc2128d9debbafb"
+  },
+  "findings": []
+}
