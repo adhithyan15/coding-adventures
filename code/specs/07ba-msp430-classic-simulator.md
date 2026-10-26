@@ -7,8 +7,9 @@ This specification defines a checked instruction-level model of the original
 **MSP430F2274**. It is intentionally not an MSP430X, MSP430Xv2, or complete
 MSP430F2274 microcontroller model.
 
-**Status:** spec-only, awaiting independent review. No implementation may begin
-until this commit has been reviewed as a specification-only cell.
+**Status:** independently reviewed specification; implementation authorized.
+The exact reviewed spec-only head was
+`4e750ba3abfc7e3a2dc794c7fc2aefe81bc0554f`.
 
 The public primary sources are:
 
