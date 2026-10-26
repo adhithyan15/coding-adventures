@@ -74,7 +74,8 @@ commands passed full fresh/resume/baseline equality through step 3002; native
 XOR loss then was `0.00023289821085910149`. GCC gcov measured 97.56% of 246 library
 lines, 96.99% branches executed, 78.06% taken at least once (not 100% coverage).
 Native command gcov measured 90.91% of 44 lines, 85.54% branches executed,
-54.82% taken; Python validator line coverage was 100% of 47 statements. LLVM
+54.82% taken; Python validator line coverage was 98.59% of 71 statements after
+17 receipt falsifications (only its missed-rejection sentinel was unrun). LLVM
 ASan passed 236 library checks and the full native command suite. Its separate
 variant omits replacement allocation hooks because Windows ASan owns those
 symbols; normal GCC/Clang still run all 93 real fault positions. The installed

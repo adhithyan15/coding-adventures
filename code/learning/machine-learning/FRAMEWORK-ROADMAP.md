@@ -226,7 +226,11 @@ SGD training, inspection, and portable save/reload/resume.
   passed locally; the separate UBSan attempt could not link its runtime.
 - [ ] C++ native framework (NN51): independent bounded dense API/training and
   strict copied V1 checkpoints above native matrix/math/bounded-json. Specified
-  before implementation; seven-native exchange remains a separate tranche.
+  before implementation; native-local GCC/Clang, ASan, coverage, actual full-state
+  resume and installed-consumer validation pass. Scoped Windows CI ownership is
+  implemented; independent final review, publication and actual CI/merge remain
+  pending. See the [teaching trace](./native-cpp-dense-framework.md).
+  Seven-native exchange remains a separate tranche.
 - [ ] C# native framework.
 - [ ] F# native framework.
 - [ ] Java native framework.

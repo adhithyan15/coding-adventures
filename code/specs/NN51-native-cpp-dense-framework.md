@@ -8,10 +8,17 @@ fronts exist locally. GCC/LLVM Clang each passed 237 library checks and actual
 fresh/resume/baseline command validation through step 3002. Both tested 93 real
 allocation-failure positions; ASan's separate variant passed 236 checks without
 the incompatible replacement hooks, plus actual command tests. Local coverage:
-97.56% library lines, 90.91% command lines, 100% Python validator statements.
+97.56% library lines, 90.91% command lines, 98.59% Python validator statements
+after 17 receipt falsifications (70/71, missed-rejection sentinel unrun).
 Installed CMake consumer compiled/linked/ran. These are Windows-local results,
-not actual Linux/macOS/MSVC CI or seven-native exchange. CI selection audit,
-teaching/curriculum, independent final review and publication remain pending.
+not actual Linux/macOS/MSVC CI or seven-native exchange. Production planner
+execution confirmed Windows was missing for cpp/neural-framework; a narrow
+training owner now retains the existing runner/bootstrap/required BUILD roll-up
+with real cl+clang-cl numerical/schema/command validation. Seven production
+planner/ownership tests cover the change. OCaml planner identity is refreshed
+without changing its scheduling, pins or mutation-rejection checks. Teaching,
+curriculum and capabilities are recorded. Independent final review, publication
+and actual CI/merge remain pending.
 
 ## Selection after NN50
 
