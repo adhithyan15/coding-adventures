@@ -409,7 +409,7 @@ void __twig_write_f64_js(int64_t bits) {
 }
 
 /* The closed LANG83 trap-kind table, indexed by stable id
- * (`interpreter_ir::exception_kind::trap_kind_id`): built-in kinds are 1..=6
+ * (`interpreter_ir::exception_kind::trap_kind_id`): built-in kinds are 1..=7
  * in `ALL_TRAP_KINDS` order. Append-only; a Rust test
  * (`twig-aot` `runtime_trap_kind_table_matches_exception_kind`) pins this
  * array to the Rust table so the two cannot drift. Language kinds (ids from
@@ -421,6 +421,7 @@ static const char *const TWIG_TRAP_KINDS[] = {
     "Trap.ConvRange", /* 4 */
     "Trap.Overflow",  /* 5 */
     "Trap.User",      /* 6 */
+    "Trap.ReferenceError", /* 7 (LANG84 6e) */
 };
 
 /* __twig_trap — LANG83 `trap kind` (and the defined traps of `i64_div_floor`

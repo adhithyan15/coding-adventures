@@ -94,14 +94,60 @@
 //!
 //! Each binding lives in an IIR register named `js.<name>`. A `.` can never
 //! appear in a JavaScript IdentifierName, so that namespace cannot meet the
-//! compiler's temporaries (`js0`, `js1`, ...) or the runner's builtins
-//! (`js_console_log`, ...). The table below is the whole register namespace:
+//! compiler's temporaries and branch labels (`js0`, `js1`, ...). The table
+//! below is the whole register namespace:
 //!
-//! | Spelling        | Owner                 | Third character |
-//! | --------------- | --------------------- | --------------- |
-//! | `js<digits>`    | compiler temporaries  | a digit         |
-//! | `js_<name>`     | runner builtins       | `_`             |
-//! | `js.<name>`     | user `let` / `const`  | `.`             |
+//! | Spelling        | Owner                              | Third character |
+//! | --------------- | ---------------------------------- | --------------- |
+//! | `js<digits>`    | compiler temporaries and labels    | a digit         |
+//! | `js_<name>`     | reserved (the pre-6e runner builtins) | `_`          |
+//! | `js.<name>`     | user `let` / `const`               | `.`             |
+//!
+//! # Every backend runs the IIR (LANG84 phase 6e)
+//!
+//! The module holds LANG83 registry operations only, so the eight
+//! executable backends of `lang-aot` (and `vm-core`, which [`run_module`]
+//! drives) run it with no JavaScript-specific code:
+//!
+//! | JavaScript                  | IIR                                                  |
+//! | --------------------------- | ---------------------------------------------------- |
+//! | number literal `2.5`        | `const r, 2.5` (`f64`)                               |
+//! | `-a`                        | `f64_neg r, a`                                       |
+//! | `a + b`, `-`, `*`, `/`      | `f64_add` / `f64_sub` / `f64_mul` / `f64_div`        |
+//! | `console.log(a, b)`         | `a` and `b` evaluated first, then: print `a`, `putchar 32`, print `b`, `putchar 10` |
+//! | print `x`                   | `-0` test (below), then `write_f64_js x`             |
+//! | ReferenceError (TDZ or undeclared) | `trap "Trap.ReferenceError"`                  |
+//!
+//! The `f64_*` ops are IEEE-754 and never trap, so `1 / 0` is `Infinity`
+//! and `0 * -1` is `-0` on every backend. BEAM, whose floats cannot hold
+//! an infinity or a NaN, refuses them at compile time (`UnsupportedOps`),
+//! which LANG84 stage B allows; a module without arithmetic runs there too.
+//!
+//! ## Printing `-0`
+//!
+//! `console.log` formats a number with `util.inspect`, which prints the
+//! sign of zero (`-0`). `write_f64_js` is `String(x)`, which does not
+//! (`String(-0)` is `"0"`), so the compiler writes the `-` itself when the
+//! value is negative zero. No registry op compares floats on every backend
+//! (the JIT keeps float registers away from `cmp_*`, and BEAM's `cmp_eq`
+//! is exact), so the test reads only sign bits, as integers:
+//!
+//! ```text
+//!   s    = f64_signbit x            x         s   x + 0    t   s > t
+//!   t    = f64_signbit (x + 0)      -0        1   +0       0   yes  ← only here
+//!   if s > t: putchar '-'           -2.5      1   -2.5     1   no
+//!   write_f64_js x                  +0, 7     0   +0, 7    0   no
+//! ```
+//!
+//! IEEE addition rounds `-0 + +0` to `+0` and leaves every other non-NaN
+//! value unchanged, so `s > t` holds for `-0` alone. A NaN is printed
+//! `NaN`; its sign is not observable (LANG83 PR6c), and the eight IEEE
+//! backends return the NaN operand of `x + 0` unchanged, so no `-` appears.
+//!
+//! A literal is never `-0` (JavaScript has no negative literals: `-0` is
+//! `f64_neg` applied to `0`), so a literal, or a binding initialized
+//! straight from one, is printed with `write_f64_js` alone. That keeps the
+//! IIR of `console.log(42)` free of `f64_add`, so BEAM runs it.
 //!
 //! # Editions (LANG84 phase 6d)
 //!
@@ -136,18 +182,26 @@ use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
-use vm_core::{value::Value, VMCore};
+use vm_core::{float_format::FloatLayout, value::Value, VMCore};
 
 /// Bound source read and parse work for the first native interpreter pilot.
 pub const MAX_SOURCE_BYTES: usize = 64 * 1024;
 const MAX_AST_NODES: usize = 16_384;
 const MAX_EXPRESSION_DEPTH: usize = 64;
 
-/// Runner builtin raised by reading a name that no declaration binds.
-const NOT_DEFINED_BUILTIN: &str = "js_reference_error_not_defined";
-/// Runner builtin raised by reading a lexical binding inside its temporal dead
-/// zone: after the script starts but before its declaration has executed.
-const BEFORE_INITIALIZATION_BUILTIN: &str = "js_reference_error_before_initialization";
+/// The LANG83 trap kind a ReferenceError stops the program with: reading a
+/// name that no declaration binds, or a lexical binding inside its temporal
+/// dead zone (after the script starts, before its declaration has executed).
+const REFERENCE_ERROR_TRAP: &str = interpreter_ir::exception_kind::TRAP_REFERENCE_ERROR;
+
+/// The bytes `console.log` writes with LANG83 `putchar`: a space between
+/// arguments, a newline after the last, and the sign of `-0`.
+const SPACE_BYTE: i64 = b' ' as i64;
+const NEWLINE_BYTE: i64 = b'\n' as i64;
+const MINUS_BYTE: i64 = b'-' as i64;
+
+/// The most bytes [`run_module`] collects before it stops the program.
+const MAX_OUTPUT_BYTES: usize = 1_000_000;
 
 /// Names the native runner's global object is defined to hold.
 ///
@@ -265,6 +319,26 @@ pub fn compile_source_at(
     release: Option<&str>,
     module_name: &str,
 ) -> Result<IIRModule, FrontendError> {
+    compile_source_parts(source, release, module_name).map(|compiled| compiled.module)
+}
+
+/// A compiled module plus what only the compiler knows about it.
+struct Compiled {
+    module: IIRModule,
+    /// The V8 wording of the ReferenceError the program stops on, if it
+    /// stops on one. The IIR only says `trap "Trap.ReferenceError"`; the
+    /// name is not an operand any backend could print. The code is
+    /// straight-line, so the first trap the compiler emitted is the one that
+    /// fires, and [`run_source`] puts this message on the error it returns.
+    reference_error: Option<String>,
+}
+
+/// [`compile_source_at`], keeping the [`Compiled::reference_error`] message.
+fn compile_source_parts(
+    source: &str,
+    release: Option<&str>,
+    module_name: &str,
+) -> Result<Compiled, FrontendError> {
     let (release, edition) = resolve_release(release)?;
     if source.len() > MAX_SOURCE_BYTES {
         return Err(FrontendError::Budget {
@@ -282,10 +356,10 @@ pub fn compile_source_at(
     // `check_cst` rejects.
     let cst = parse_javascript_cst_bounded(source, edition)
         .map_err(|message| FrontendError::from_parse(release, message))?;
-    let mut module =
-        compile_ast(&cst, module_name).map_err(|message| FrontendError::from_compile(release, message))?;
-    module.release = Some(release.to_string());
-    Ok(module)
+    let mut compiled = compile_ast_parts(&cst, module_name)
+        .map_err(|message| FrontendError::from_compile(release, message))?;
+    compiled.module.release = Some(release.to_string());
+    Ok(compiled)
 }
 
 /// Compile a JavaScript parse tree (a `program` CST) directly to InterpreterIR.
@@ -312,6 +386,11 @@ pub fn compile_source_at(
 /// depth-bounded: a malformed or hostile tree yields an error, never a panic
 /// or a stack overflow.
 pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule, String> {
+    compile_ast_parts(ast, module_name).map(|compiled| compiled.module)
+}
+
+/// [`compile_ast`], keeping the [`Compiled::reference_error`] message.
+fn compile_ast_parts(ast: &GrammarASTNode, module_name: &str) -> Result<Compiled, String> {
     let items = check_cst(ast)?;
     // Every item costs at least one node, so a longer body can never fit the
     // budget. Checking first also bounds the declaration pre-pass below.
@@ -349,20 +428,38 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule,
             }
         }
     }
-    compiler.emit("ret_void", None, vec![], "void");
+    // A script that runs off its end exits 0. `main` returns a real `i64`,
+    // not `ret_void`, because every AOT entry point reads an integer back:
+    // native and LLVM turn it into the exit status, and the CLR launcher and
+    // BEAM print it (a void `main` reads as `[]` on BEAM). This is the LANG84
+    // 4a/5a lesson that Python and Ruby already follow.
+    //
+    // Pushed directly, not through `emit`: after a ReferenceError's trap the
+    // rest of the body is dropped (see `Compiler::emit`), but the function
+    // still ends the way every LANG83 trap test's does, with its `ret`.
+    let exit = compiler.register();
+    compiler
+        .instructions
+        .push(IIRInstr::new("const", Some(exit.clone()), vec![Operand::Int(0)], "i64"));
+    compiler
+        .instructions
+        .push(IIRInstr::new("ret", None, vec![Operand::Var(exit)], "i64"));
     let mut module = IIRModule::new(module_name, "javascript");
     module.entry_point = Some("main".into());
     module.add_or_replace(IIRFunction::new(
         "main",
         vec![],
-        "void",
+        "i64",
         compiler.instructions,
     ));
     let errors = module.validate();
     if !errors.is_empty() {
         return Err(format!("invalid JavaScript IIR: {}", errors.join("; ")));
     }
-    Ok(module)
+    Ok(Compiled {
+        module,
+        reference_error: compiler.reference_error,
+    })
 }
 
 // Pass 1: the script's LexicallyDeclaredNames. ECMAScript makes a repeated
@@ -1427,6 +1524,17 @@ fn decode_number(spelling: &str) -> Result<f64, ()> {
     if !separators_well_placed(spelling) || is_legacy_octal_with_fraction(spelling) {
         return Err(());
     }
+    // Rust's `f64` parser also accepts `-0`, `+1`, `inf` and `NaN`. No
+    // edition's NUMBER pattern can produce those, but `compile_ast` takes any
+    // tree, and a signed spelling would be printed through the literal fast
+    // path that assumes "never -0". So a spelling must start like a JavaScript
+    // numeric literal: a digit, or `.` then a digit.
+    let mut chars = spelling.chars();
+    match (chars.next(), chars.next()) {
+        (Some(c), _) if c.is_ascii_digit() => {}
+        (Some('.'), Some(c)) if c.is_ascii_digit() => {}
+        _ => return Err(()),
+    }
     let cleaned: String = spelling.chars().filter(|&c| c != '_').collect();
     for (prefixes, radix) in [(["0x", "0X"], 16), (["0b", "0B"], 2), (["0o", "0O"], 8)] {
         if let Some(digits) = prefixes.iter().find_map(|p| cleaned.strip_prefix(p)) {
@@ -1524,12 +1632,13 @@ impl std::error::Error for JavaScriptRunError {}
 
 /// Execute source on this repository's Rust VM and collect console output.
 pub fn run_source(source: &str) -> Result<String, JavaScriptRunError> {
-    let module =
-        compile_source(source, "javascript-script").map_err(|message| JavaScriptRunError {
+    let compiled = compile_source_parts(source, None, "javascript-script").map_err(|error| {
+        JavaScriptRunError {
             output: String::new(),
-            message,
-        })?;
-    run_module(module)
+            message: error.message(),
+        }
+    })?;
+    run_compiled(compiled)
 }
 
 /// Compile `source` for one edition and run it on `vm-core`.
@@ -1537,87 +1646,78 @@ pub fn run_source(source: &str) -> Result<String, JavaScriptRunError> {
 /// A compile failure is reported as its typed [`FrontendError`] text
 /// (`JavaScript es2017: …`), with no output, since nothing ran.
 pub fn run_source_at(source: &str, release: Option<&str>) -> Result<String, JavaScriptRunError> {
-    let module =
-        compile_source_at(source, release, "javascript-script").map_err(|error| {
-            JavaScriptRunError {
-                output: String::new(),
-                message: error.to_string(),
+    let compiled = compile_source_parts(source, release, "javascript-script").map_err(|error| {
+        JavaScriptRunError {
+            output: String::new(),
+            message: error.to_string(),
+        }
+    })?;
+    run_compiled(compiled)
+}
+
+/// Run a module the compiler just built. A `Trap.ReferenceError` is reported
+/// with the message the compiler recorded for it (V8's wording, naming the
+/// binding), not the bare `trap: Trap.ReferenceError` of [`run_module`].
+fn run_compiled(compiled: Compiled) -> Result<String, JavaScriptRunError> {
+    let Compiled {
+        module,
+        reference_error,
+    } = compiled;
+    run_module(module).map_err(|mut error| {
+        if error.message == format!("trap: {REFERENCE_ERROR_TRAP}") {
+            if let Some(message) = reference_error {
+                error.message = message;
             }
-        })?;
-    run_module(module)
+        }
+        error
+    })
 }
 
 /// Run a compiled module on `vm-core` and collect its console output.
+///
+/// The module speaks LANG83 only, so the runner registers just the two
+/// output builtins it calls, both writing into one bounded buffer in call
+/// order:
+///
+/// | builtin        | writes                                           |
+/// | -------------- | ------------------------------------------------ |
+/// | `write_f64_js` | `String(x)` of one float (`vm_core::float_format`) |
+/// | `putchar`      | one byte: a space, a newline, or the `-` of `-0` |
+///
+/// A trap (`Trap.ReferenceError`) or any other VM error keeps the output
+/// written before it, exactly as node keeps the lines `console.log` already
+/// wrote before an uncaught exception.
 pub fn run_module(mut module: IIRModule) -> Result<String, JavaScriptRunError> {
-    let output = Arc::new(Mutex::new(String::new()));
-    let captured = Arc::clone(&output);
+    let output = Arc::new(Mutex::new(Vec::<u8>::new()));
     let mut vm = VMCore::new();
     vm.max_instructions = Some(100_000);
-    vm.builtins_mut().register("js_console_log", move |args| {
-        let rendered = match args {
-            [] => String::new(),
-            [Value::Float(number)] => {
-                format_js_number(*number).map_err(vm_core::errors::VMError::Custom)?
-            }
-            [Value::Float(first), Value::Float(second)] => {
-                let first = format_js_number(*first).map_err(vm_core::errors::VMError::Custom)?;
-                let second = format_js_number(*second).map_err(vm_core::errors::VMError::Custom)?;
-                format!("{first} {second}")
-            }
-            [Value::Float(first), Value::Float(second), Value::Float(third)] => {
-                // Build a complete line before locking or changing the sink.
-                // A display failure in any argument leaves earlier calls intact.
-                let first = format_js_number(*first).map_err(vm_core::errors::VMError::Custom)?;
-                let second = format_js_number(*second).map_err(vm_core::errors::VMError::Custom)?;
-                let third = format_js_number(*third).map_err(vm_core::errors::VMError::Custom)?;
-                format!("{first} {second} {third}")
-            }
-            _ => {
-                return Err(vm_core::errors::VMError::Custom(
-                    "js_console_log expects zero, one, two, or three JavaScript Numbers".into(),
-                ))
-            }
-        };
-        let mut sink = captured.lock().map_err(|_| {
-            vm_core::errors::VMError::Custom("JavaScript console lock poisoned".into())
-        })?;
-        let appended_bytes = rendered.len() + 1;
-        if sink
-            .len()
-            .checked_add(appended_bytes)
-            .is_none_or(|length| length > 1_000_000)
-        {
+    let captured = Arc::clone(&output);
+    vm.builtins_mut().register("write_f64_js", move |args| {
+        let [Value::Float(number)] = args else {
             return Err(vm_core::errors::VMError::Custom(
-                "JavaScript console output limit exceeded".into(),
+                "write_f64_js expects one JavaScript Number".into(),
             ));
-        }
-        sink.push_str(&rendered);
-        sink.push('\n');
-        Ok(Value::Null)
+        };
+        let text = vm_core::float_format::format_f64(*number, FloatLayout::JavaScript);
+        append_output(&captured, text.as_bytes())
     });
-    // ReferenceErrors are decided by the compiler (see `compile_reference`);
-    // these builtins only raise them, carrying the JavaScript name as a string
-    // operand. Messages follow V8's wording. Output from earlier completed
-    // `console.log` calls stays in the sink, as for every other VM error.
-    vm.builtins_mut().register(NOT_DEFINED_BUILTIN, |args| {
-        raise_reference_error(args, |name| {
-            format!("ReferenceError: {name} is not defined")
-        })
+    let captured = Arc::clone(&output);
+    vm.builtins_mut().register("putchar", move |args| {
+        let [Value::Int(byte)] = args else {
+            return Err(vm_core::errors::VMError::Custom(
+                "putchar expects one byte".into(),
+            ));
+        };
+        append_output(&captured, &[(*byte & 0xFF) as u8])
     });
-    vm.builtins_mut()
-        .register(BEFORE_INITIALIZATION_BUILTIN, |args| {
-            raise_reference_error(args, |name| {
-                format!("ReferenceError: Cannot access '{name}' before initialization")
-            })
-        });
     let execution = vm.execute(&mut module, "main", &[]);
     let result = output
         .lock()
+        .map(|bytes| String::from_utf8_lossy(&bytes).into_owned())
         .map_err(|_| JavaScriptRunError {
             output: String::new(),
             message: "JavaScript console lock poisoned".into(),
-        })?
-        .clone();
+        })?;
     match execution {
         Ok(_) => Ok(result),
         Err(error) => Err(JavaScriptRunError {
@@ -1627,35 +1727,25 @@ pub fn run_module(mut module: IIRModule) -> Result<String, JavaScriptRunError> {
     }
 }
 
-// Shared body of the two ReferenceError builtins: always an error, never a
-// value. A malformed call (not exactly one string name) is still an error,
-// just a less informative one.
-fn raise_reference_error(
-    args: &[Value],
-    render: impl Fn(&str) -> String,
-) -> Result<Value, vm_core::errors::VMError> {
-    match args {
-        [Value::Str(name)] => Err(vm_core::errors::VMError::Custom(render(name))),
-        _ => Err(vm_core::errors::VMError::Custom(
-            "JavaScript ReferenceError builtin expects one binding name".into(),
-        )),
+// Append to the runner's output buffer, refusing to grow it past
+// MAX_OUTPUT_BYTES. A source is at most 64 KiB and the VM stops after 100,000
+// instructions, so a program cannot get near the limit today; it stays as a
+// backstop for whoever raises those budgets.
+fn append_output(sink: &Mutex<Vec<u8>>, bytes: &[u8]) -> Result<Value, vm_core::errors::VMError> {
+    let mut sink = sink
+        .lock()
+        .map_err(|_| vm_core::errors::VMError::Custom("JavaScript console lock poisoned".into()))?;
+    if sink
+        .len()
+        .checked_add(bytes.len())
+        .is_none_or(|length| length > MAX_OUTPUT_BYTES)
+    {
+        return Err(vm_core::errors::VMError::Custom(
+            "JavaScript console output limit exceeded".into(),
+        ));
     }
-}
-
-fn format_js_number(number: f64) -> Result<String, String> {
-    if number.is_nan() {
-        Ok("NaN".into())
-    } else if number == f64::INFINITY {
-        Ok("Infinity".into())
-    } else if number == f64::NEG_INFINITY {
-        Ok("-Infinity".into())
-    } else if number == 0.0 && number.is_sign_negative() {
-        Ok("-0".into())
-    } else if number != 0.0 && !(1e-6..1e21).contains(&number.abs()) {
-        Err("JavaScript number display outside the native pilot's supported range".into())
-    } else {
-        Ok(number.to_string())
-    }
+    sink.extend_from_slice(bytes);
+    Ok(Value::Null)
 }
 
 #[derive(Default)]
@@ -1667,6 +1757,14 @@ struct Compiler {
     /// The subset whose declaration has already been lowered. A name in
     /// `lexical_names` but not here is in its temporal dead zone.
     initialized: HashSet<String>,
+    /// Registers known, at compile time, never to hold `-0`: a numeric
+    /// literal's, and a binding initialized straight from one. Printing one
+    /// needs no sign test (see "Printing `-0`" in the module docs).
+    never_negative_zero: HashSet<String>,
+    /// Set when lowering emits a ReferenceError's trap: V8's message for it.
+    /// Every instruction after that trap is unreachable (there is no control
+    /// flow to jump over it), so [`Compiler::emit`] drops them.
+    reference_error: Option<String>,
 }
 
 /// IIR register holding the JavaScript binding `name`; see the module docs
@@ -1675,29 +1773,55 @@ fn binding_register(name: &str) -> String {
     format!("js.{name}")
 }
 
+/// Is `register` one of the compiler's own `js<digits>` temporaries?
+fn is_temporary(register: &str) -> bool {
+    register
+        .strip_prefix("js")
+        .is_some_and(|digits| !digits.is_empty() && digits.bytes().all(|b| b.is_ascii_digit()))
+}
+
 impl Compiler {
+    // Append one instruction, unless the program has already stopped on a
+    // ReferenceError: the code after an unconditional trap can never run.
+    // Lowering itself carries on, so a later item that is outside the
+    // subset is still a compile error, as it was when the error was a VM
+    // builtin.
     fn emit(&mut self, op: &str, dest: Option<String>, srcs: Vec<Operand>, type_hint: &str) {
-        self.instructions
-            .push(IIRInstr::new(op, dest, srcs, type_hint));
+        if self.reference_error.is_none() {
+            self.instructions
+                .push(IIRInstr::new(op, dest, srcs, type_hint));
+        }
     }
 
+    // A fresh `js<n>` name, for a temporary or a branch label.
     fn register(&mut self) -> String {
         let result = format!("js{}", self.next_register);
         self.next_register += 1;
         result
     }
 
+    // `console.log(a, b, c)`: evaluate every argument first, left to right,
+    // then write the line. A ReferenceError in `c` therefore stops the
+    // program before any of the line is written, as in JavaScript.
+    //
+    //   <a> <b> <c>  print a  putchar 32  print b  putchar 32  print c  putchar 10
     fn compile_statement(&mut self, expr: Expr<'_>) -> Result<(), String> {
         if let Shape::Call { callee, arguments } = classify(expr)? {
             if is_console_log(callee)? {
                 if arguments.len() > 3 {
                     return Err("native console.log pilot requires at most three arguments".into());
                 }
-                let mut operands = vec![Operand::Var("js_console_log".into())];
+                let mut values = Vec::with_capacity(arguments.len());
                 for argument in arguments {
-                    operands.push(self.compile_number(argument)?);
+                    values.push(self.compile_number(argument)?);
                 }
-                self.emit("call_builtin", None, operands, "void");
+                for (index, value) in values.iter().enumerate() {
+                    if index > 0 {
+                        self.emit_byte(SPACE_BYTE);
+                    }
+                    self.emit_console_number(value);
+                }
+                self.emit_byte(NEWLINE_BYTE);
                 return Ok(());
             }
         }
@@ -1705,11 +1829,106 @@ impl Compiler {
         Ok(())
     }
 
-    // `let NAME = INIT;` evaluates INIT, then copies the result into the
-    // binding's own register. Only after that is NAME readable.
+    // `putchar <byte>`: the byte goes through a register, the shape every
+    // backend's `putchar` lowering takes.
+    fn emit_byte(&mut self, byte: i64) {
+        let register = self.register();
+        self.emit("const", Some(register.clone()), vec![Operand::Int(byte)], "i64");
+        self.emit(
+            "call_builtin",
+            None,
+            vec![Operand::Var("putchar".into()), Operand::Var(register)],
+            "void",
+        );
+    }
+
+    // Print one number as `console.log` does: `write_f64_js`, preceded by a
+    // `-` when the value is negative zero (module docs, "Printing `-0`"):
+    //
+    //   const      z <- 0.0
+    //   f64_add    y <- x, z
+    //   f64_signbit s <- x
+    //   f64_signbit t <- y
+    //   cmp_gt     c <- s, t           c is 1 for -0 only
+    //   jmp_if_false c, skip
+    //   putchar    '-'
+    //   label      skip
+    //   write_f64_js x
+    fn emit_console_number(&mut self, value: &Operand) {
+        let needs_sign_test = match value {
+            Operand::Var(register) => !self.never_negative_zero.contains(register),
+            _ => true,
+        };
+        if needs_sign_test {
+            let zero = self.register();
+            self.emit("const", Some(zero.clone()), vec![Operand::Float(0.0)], "f64");
+            let sum = self.register();
+            self.emit(
+                "f64_add",
+                Some(sum.clone()),
+                vec![value.clone(), Operand::Var(zero)],
+                "f64",
+            );
+            let sign = self.register();
+            self.emit("f64_signbit", Some(sign.clone()), vec![value.clone()], "i64");
+            let sum_sign = self.register();
+            self.emit("f64_signbit", Some(sum_sign.clone()), vec![Operand::Var(sum)], "i64");
+            let negative_zero = self.register();
+            self.emit(
+                "cmp_gt",
+                Some(negative_zero.clone()),
+                vec![Operand::Var(sign), Operand::Var(sum_sign)],
+                "i64",
+            );
+            let skip = self.register();
+            self.emit(
+                "jmp_if_false",
+                None,
+                vec![Operand::Var(negative_zero), Operand::Var(skip.clone())],
+                "void",
+            );
+            self.emit_byte(MINUS_BYTE);
+            self.emit("label", None, vec![Operand::Var(skip)], "void");
+        }
+        self.emit(
+            "call_builtin",
+            None,
+            vec![Operand::Var("write_f64_js".into()), value.clone()],
+            "void",
+        );
+    }
+
+    // `let NAME = INIT;` evaluates INIT, then puts the result in the
+    // binding's own register `js.NAME`. Only after that is NAME readable.
+    //
+    // When INIT's value is the temporary its last instruction just wrote
+    // (`const`, `f64_*`), that instruction is renamed to write `js.NAME`
+    // directly instead of adding a `mov`: the JIT keeps float registers away
+    // from `mov`, so a `mov` would send the whole script to the interpreter
+    // tier. `let y = x;` reads an existing binding and still copies it.
     fn compile_lexical_binding(&mut self, name: &str, init: Expr<'_>) -> Result<(), String> {
         let value = self.compile_number(init)?;
-        self.emit("mov", Some(binding_register(name)), vec![value], "f64");
+        let register = binding_register(name);
+        let Operand::Var(source) = &value else {
+            return Err("JavaScript initializer did not lower to a register".into());
+        };
+        let renamed = match self.instructions.last_mut() {
+            Some(last)
+                if self.reference_error.is_none()
+                    && is_temporary(source)
+                    && last.dest.as_deref() == Some(source.as_str()) =>
+            {
+                last.dest = Some(register.clone());
+                true
+            }
+            _ => false,
+        };
+        if !renamed {
+            self.emit("mov", Some(register.clone()), vec![value.clone()], "f64");
+        }
+        if self.never_negative_zero.contains(source) {
+            self.never_negative_zero.insert(register);
+        }
         self.initialized.insert(name.to_string());
         Ok(())
     }
@@ -1721,12 +1940,12 @@ impl Compiler {
     //   ----------------------------   -------------------------------------
     //   declared and initialized       read register `js.NAME`
     //   a runner global (NaN, Math…)   compile error: not implemented yet
-    //   declared later in the script   call js_reference_error_before_initialization
-    //   declared nowhere               call js_reference_error_not_defined
+    //   declared later in the script   trap Trap.ReferenceError  (TDZ)
+    //   declared nowhere               trap Trap.ReferenceError
     //
-    // The error builtins never return. Their call still names a destination
-    // register so the enclosing expression lowers normally; the VM stops
-    // before anything could read it.
+    // The trap never returns, so nothing after it is emitted. The read still
+    // yields a fresh (never written) register so the enclosing expression
+    // lowers normally; no instruction that could read it survives.
     fn compile_reference(&mut self, name: &str) -> Result<Operand, String> {
         check_identifier_spelling(name)?;
         if self.initialized.contains(name) {
@@ -1737,19 +1956,19 @@ impl Compiler {
                 "unsupported JavaScript global `{name}` in native VM pilot"
             ));
         }
-        let builtin = if self.lexical_names.contains(name) {
-            BEFORE_INITIALIZATION_BUILTIN
+        let message = if self.lexical_names.contains(name) {
+            format!("ReferenceError: Cannot access '{name}' before initialization")
         } else {
-            NOT_DEFINED_BUILTIN
+            format!("ReferenceError: {name} is not defined")
         };
-        let dest = self.register();
         self.emit(
-            "call_builtin",
-            Some(dest.clone()),
-            vec![Operand::Var(builtin.into()), Operand::Str(name.into())],
-            "f64",
+            "trap",
+            None,
+            vec![Operand::Str(REFERENCE_ERROR_TRAP.into())],
+            "void",
         );
-        Ok(Operand::Var(dest))
+        self.reference_error.get_or_insert(message);
+        Ok(Operand::Var(self.register()))
     }
 
     // Lower a numeric expression. Recursion here is bounded: the budget pass
@@ -1766,6 +1985,7 @@ impl Compiler {
                     vec![Operand::Float(value)],
                     "f64",
                 );
+                self.never_negative_zero.insert(dest.clone());
                 Ok(Operand::Var(dest))
             }
             Shape::Unary {
@@ -1774,15 +1994,17 @@ impl Compiler {
             } => {
                 let source = self.compile_number(argument)?;
                 let dest = self.register();
-                self.emit("neg", Some(dest.clone()), vec![source], "f64");
+                self.emit("f64_neg", Some(dest.clone()), vec![source], "f64");
                 Ok(Operand::Var(dest))
             }
             Shape::Binary { op, left, right } => {
+                // LANG83 PR6c: IEEE-754 binary64, never a trap. `1 / 0` is
+                // Infinity and `0 / 0` NaN on every backend that lowers them.
                 let op = match op {
-                    BinaryOp::Add => "add",
-                    BinaryOp::Sub => "sub",
-                    BinaryOp::Mul => "mul",
-                    BinaryOp::Div => "div",
+                    BinaryOp::Add => "f64_add",
+                    BinaryOp::Sub => "f64_sub",
+                    BinaryOp::Mul => "f64_mul",
+                    BinaryOp::Div => "f64_div",
                     BinaryOp::Other => {
                         return Err(
                             "unsupported JavaScript numeric operator in native VM pilot".into()
@@ -1819,6 +2041,20 @@ fn is_console_log(callee: Expr<'_>) -> Result<bool, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Rust's float parser would give `-0`, `+1`, `inf` and `NaN` a value;
+    /// a forged NUMBER token with one of those spellings is refused instead,
+    /// so the literal fast path's "never -0" assumption holds. Real
+    /// spellings, including a leading `.`, still decode.
+    #[test]
+    fn decode_number_refuses_spellings_no_edition_can_lex() {
+        for forged in ["-0", "+1", "inf", "NaN", "infinity", ".", ".e1", ""] {
+            assert_eq!(decode_number(forged), Err(()), "{forged:?} decoded");
+        }
+        assert_eq!(decode_number(".5"), Ok(0.5));
+        assert_eq!(decode_number("0"), Ok(0.0));
+        assert_eq!(decode_number("1e999"), Ok(f64::INFINITY));
+    }
 
     // ---- CST fixtures ----------------------------------------------------
     //
@@ -1908,7 +2144,7 @@ mod tests {
             module.functions[0]
                 .instructions
                 .iter()
-                .filter(|i| i.op == "div")
+                .filter(|i| i.op == "f64_div")
                 .count(),
             4
         );
@@ -1929,14 +2165,15 @@ mod tests {
             let error = run_source(source).unwrap_err();
             assert!(error.output.is_empty(), "{source}");
         }
-        for source in [
-            "console.log(7); console.log(1e21 / 1, 8 / 2, 9 / 3);",
-            "console.log(7); console.log(8 / 2, 1e21 / 1, 9 / 3);",
-            "console.log(7); console.log(8 / 2, 9 / 3, 1e21 / 1);",
+        // Before 6e the runner refused to display numbers outside
+        // 1e-6..1e21; `write_f64_js` is `String(x)`, so they print as node
+        // prints them.
+        for (source, expected) in [
+            ("console.log(7); console.log(1e21 / 1, 8 / 2, 9 / 3);", "7\n1e+21 4 3\n"),
+            ("console.log(7); console.log(8 / 2, 1e21 / 1, 9 / 3);", "7\n4 1e+21 3\n"),
+            ("console.log(7); console.log(8 / 2, 9 / 3, 1e21 / 1);", "7\n4 3 1e+21\n"),
         ] {
-            let error = run_source(source).unwrap_err();
-            assert_eq!(error.output, "7\n", "{source}");
-            assert!(error.message.contains("number display outside"));
+            assert_eq!(run_source(source).unwrap(), expected, "{source}");
         }
     }
 
@@ -1982,12 +2219,10 @@ mod tests {
             .iter()
             .filter(|instruction| instruction.op == "call_builtin")
             .collect();
+        // An empty line is one `putchar 10`.
         assert_eq!(calls.len(), 1);
-        assert_eq!(
-            calls[0].srcs.len(),
-            1,
-            "only the builtin name is an operand"
-        );
+        assert_eq!(calls[0].srcs[0], Operand::Var("putchar".into()));
+        assert_eq!(module.functions[0].instructions[0].srcs, vec![Operand::Int(10)]);
         assert_eq!(
             run_source("console.log(); console.log(7);").unwrap(),
             "\n7\n"
@@ -1998,12 +2233,17 @@ mod tests {
     fn two_numeric_arguments_lower_in_order_and_print_with_one_space() {
         let ast = cst("console.log(1 + 2, 3 / 2);");
         let module = compile_ast(&ast, "two-log").unwrap();
-        let call = module.functions[0]
+        let builtins: Vec<_> = module.functions[0]
             .instructions
             .iter()
-            .find(|instruction| instruction.op == "call_builtin")
-            .unwrap();
-        assert_eq!(call.srcs.len(), 3);
+            .filter(|instruction| instruction.op == "call_builtin")
+            .filter_map(|instruction| instruction.srcs[0].as_var())
+            .collect();
+        // Each sum may be -0, so each gets a guarded `-` before its digits.
+        assert_eq!(
+            builtins,
+            ["putchar", "write_f64_js", "putchar", "putchar", "write_f64_js", "putchar"]
+        );
         assert_eq!(
             run_source("console.log(); console.log(1 + 2, 3 / 2); console.log(4);").unwrap(),
             "\n3 1.5\n4\n"
@@ -2015,22 +2255,24 @@ mod tests {
         let ast = cst("console.log(11, 22, 33);");
         let module = compile_ast(&ast, "three-log").unwrap();
         let instructions = &module.functions[0].instructions;
-        let call = instructions
+        let writes: Vec<_> = instructions
             .iter()
-            .find(|instruction| instruction.op == "call_builtin")
-            .unwrap();
-        assert_eq!(call.srcs.len(), 4);
-        assert_eq!(call.srcs[0], Operand::Var("js_console_log".into()));
+            .filter(|i| i.op == "call_builtin" && i.srcs[0] == Operand::Var("write_f64_js".into()))
+            .collect();
+        assert_eq!(writes.len(), 3);
         for (index, number) in [11.0, 22.0, 33.0].into_iter().enumerate() {
-            // Each source argument's constant must precede the call and feed
-            // the corresponding operand, not merely produce the right arity.
+            // Each source argument's constant must come first (every argument
+            // is evaluated before the line is written) and feed its own
+            // `write_f64_js`, in source order.
             assert_eq!(instructions[index].op, "const");
             assert_eq!(instructions[index].srcs, vec![Operand::Float(number)]);
             assert_eq!(
-                call.srcs[index + 1],
+                writes[index].srcs[1],
                 Operand::Var(instructions[index].dest.clone().unwrap())
             );
         }
+        // Literals are never -0, so no sign test is emitted for them.
+        assert!(instructions.iter().all(|i| i.op != "f64_signbit"));
         assert_eq!(
             run_source("console.log(); console.log(7); console.log(1, 2); console.log(1 + 2, 3 / 2, -(4 * 2));").unwrap(),
             "\n7\n1 2\n3 1.5 -8\n"
@@ -2050,16 +2292,28 @@ mod tests {
     }
 
     #[test]
-    fn three_argument_display_failure_appends_none_of_the_failed_call() {
+    fn numbers_outside_the_pre_6e_display_range_print_as_node_prints_them() {
+        for (source, expected) in [
+            ("console.log(); console.log(7); console.log(1e21, 2, 3);", "\n7\n1e+21 2 3\n"),
+            ("console.log(); console.log(7); console.log(1, 1e21, 3);", "\n7\n1 1e+21 3\n"),
+            ("console.log(); console.log(7); console.log(1, 2, 1e21);", "\n7\n1 2 1e+21\n"),
+            ("console.log(); console.log(7); console.log(1, 2, 0.0000001);", "\n7\n1 2 1e-7\n"),
+            ("console.log(-1e300 * 1e10, 2 / 3e-200);", "-Infinity 6.666666666666667e+199\n"),
+        ] {
+            assert_eq!(run_source(source).unwrap(), expected, "{source}");
+        }
+    }
+
+    #[test]
+    fn a_reference_error_in_a_late_argument_writes_none_of_the_line() {
         for source in [
-            "console.log(); console.log(7); console.log(1e21, 2, 3);",
-            "console.log(); console.log(7); console.log(1, 1e21, 3);",
-            "console.log(); console.log(7); console.log(1, 2, 1e21);",
-            "console.log(); console.log(7); console.log(1, 2, 0.0000001);",
+            "console.log(); console.log(7); console.log(q, 2, 3);",
+            "console.log(); console.log(7); console.log(1, q, 3);",
+            "console.log(); console.log(7); console.log(1, 2, q);",
         ] {
             let error = run_source(source).unwrap_err();
             assert_eq!(error.output, "\n7\n", "{source}");
-            assert!(error.message.contains("number display outside"), "{error}");
+            assert_eq!(error.message, "ReferenceError: q is not defined");
         }
     }
 
@@ -2093,13 +2347,13 @@ mod tests {
     }
 
     #[test]
-    fn two_argument_display_failure_keeps_only_prior_completed_output() {
-        let error = run_source("console.log(7); console.log(1e21, 2);").unwrap_err();
+    fn two_argument_failure_keeps_only_prior_completed_output() {
+        let error = run_source("console.log(7); console.log(x, 2); let x = 1;").unwrap_err();
         assert_eq!(error.output, "7\n");
-        assert!(error.message.contains("number display outside"));
-        let error = run_source("console.log(7); console.log(1, 1e21);").unwrap_err();
+        assert!(error.message.contains("Cannot access 'x'"));
+        let error = run_source("console.log(7); console.log(1, y);").unwrap_err();
         assert_eq!(error.output, "7\n");
-        assert!(error.message.contains("number display outside"));
+        assert!(error.message.contains("y is not defined"));
         let error = run_source("console.log(7); console.log(1, 2, 3, 4);").unwrap_err();
         assert!(error.output.is_empty());
         assert!(error.message.contains("requires"));
@@ -2118,9 +2372,9 @@ mod tests {
 
     #[test]
     fn empty_console_output_survives_later_vm_error_but_compile_errors_emit_nothing() {
-        let error = run_source("console.log(); console.log(1e21);").unwrap_err();
+        let error = run_source("console.log(); console.log(z);").unwrap_err();
         assert_eq!(error.output, "\n");
-        assert!(error.message.contains("number display outside"));
+        assert!(error.message.contains("z is not defined"));
         let error = run_source("console.log(); console.log(1, 2, 3, 4);").unwrap_err();
         assert!(error.output.is_empty());
         assert!(error.message.contains("requires"));
@@ -2128,9 +2382,9 @@ mod tests {
 
     #[test]
     fn retains_completed_console_output_before_vm_error() {
-        let error = run_source("console.log(7); console.log(1e21);").unwrap_err();
+        let error = run_source("console.log(7); console.log(z);").unwrap_err();
         assert_eq!(error.output, "7\n");
-        assert!(error.message.contains("number display outside"));
+        assert!(error.message.contains("z is not defined"));
 
         // `let x = 1;` joined the subset in 0.2.0; a statement form that is
         // still outside it keeps this compile-error probe meaningful.
@@ -2143,7 +2397,10 @@ mod tests {
     fn unsupported_semantics_are_rejected() {
         assert!(compile_source("console.log('a' + 'b');", "bad").is_err());
         assert!(compile_source("var x = 1;", "bad").is_err());
-        assert!(run_source("console.log(1e21);").is_err());
+        // `**` and `%` are outside the subset; 1e21 no longer is (6e).
+        assert!(compile_source("console.log(2 ** 3);", "bad").is_err());
+        assert!(compile_source("console.log(5 % 2);", "bad").is_err());
+        assert_eq!(run_source("console.log(1e21);").unwrap(), "1e+21\n");
         assert!(compile_source(&" ".repeat(MAX_SOURCE_BYTES + 1), "too-large").is_err());
         let ast = cst(&"1;".repeat(MAX_AST_NODES + 1));
         assert!(compile_ast(&ast, "too-many-nodes").is_err());
@@ -2188,7 +2445,7 @@ mod tests {
     #[test]
     fn user_names_cannot_meet_temporaries_or_builtins() {
         // `js0` is also the compiler's first temporary and `js_console_log`
-        // the console builtin; user bindings live under `js.` instead.
+        // the pre-6e console builtin; user bindings live under `js.` instead.
         assert_runs(
             "let js0 = 5; const js_console_log = 6; let $ = 1; let _ = 2; \
              console.log(js0, js_console_log, js0 + $ + _);",
@@ -2196,9 +2453,11 @@ mod tests {
         );
         let module = compile_source("let js0 = 5; console.log(js0);", "namespace").unwrap();
         let instructions = &module.functions[0].instructions;
-        let mov = instructions.iter().find(|i| i.op == "mov").unwrap();
-        assert_eq!(mov.dest.as_deref(), Some("js.js0"));
-        assert_eq!(mov.srcs, vec![Operand::Var("js0".into())]);
+        // The literal's `const` writes the binding's register directly.
+        assert_eq!(instructions[0].op, "const");
+        assert_eq!(instructions[0].dest.as_deref(), Some("js.js0"));
+        assert_eq!(instructions[0].srcs, vec![Operand::Float(5.0)]);
+        assert!(instructions.iter().all(|i| i.op != "mov"));
         let call = instructions
             .iter()
             .find(|i| i.op == "call_builtin")
@@ -2206,10 +2465,33 @@ mod tests {
         assert_eq!(
             call.srcs,
             vec![
-                Operand::Var("js_console_log".into()),
+                Operand::Var("write_f64_js".into()),
                 Operand::Var("js.js0".into())
             ]
         );
+    }
+
+    #[test]
+    fn bindings_take_their_value_without_a_copy_unless_they_alias_one() {
+        let ops = |source: &str| -> Vec<(String, Option<String>)> {
+            compile_source(source, "bindings").unwrap().functions[0]
+                .instructions
+                .iter()
+                .map(|i| (i.op.clone(), i.dest.clone()))
+                .collect()
+        };
+        // `x * 3`'s `f64_mul` writes `js.y` itself.
+        let lowered = ops("let x = 2; const y = x * 3;");
+        assert_eq!(lowered[0], ("const".into(), Some("js.x".into())));
+        assert_eq!(lowered[2], ("f64_mul".into(), Some("js.y".into())));
+        assert!(lowered.iter().all(|(op, _)| op != "mov"));
+        // `let y = x;` names an existing binding: renaming would move `x`,
+        // so it copies. A literal's "never -0" fact follows the copy.
+        let lowered = ops("let x = 2; let y = x; console.log(y);");
+        assert_eq!(lowered[1], ("mov".into(), Some("js.y".into())));
+        assert!(lowered.iter().all(|(op, _)| op != "f64_signbit"));
+        assert_runs("let x = -0; let y = x; console.log(x, y);", "-0 -0\n");
+        assert_runs("let x = 2; let y = x; console.log(y, x);", "2 2\n");
     }
 
     #[test]
@@ -2253,17 +2535,32 @@ mod tests {
             run_source("let a = 1; console.log(a); console.log(a, b); let b = 2;").unwrap_err();
         assert_eq!(error.output, "1\n");
         assert!(error.message.contains("Cannot access 'b'"), "{error}");
-        // The IIR raises at the read site and never reaches the late `mov`.
-        let module = compile_source("console.log(a); let a = 2;", "tdz").unwrap();
+        // The IIR traps at the read site; everything after it is dropped,
+        // since nothing can jump past an unconditional trap.
+        let module = compile_source("console.log(a); let a = 2; console.log(a);", "tdz").unwrap();
         let instructions = &module.functions[0].instructions;
-        assert_eq!(instructions[0].op, "call_builtin");
+        assert_eq!(instructions.len(), 3, "{instructions:?}");
+        assert_eq!(instructions[0].op, "trap");
         assert_eq!(
             instructions[0].srcs,
-            vec![
-                Operand::Var(BEFORE_INITIALIZATION_BUILTIN.into()),
-                Operand::Str("a".into())
-            ]
+            vec![Operand::Str("Trap.ReferenceError".into())]
         );
+        // `main` still ends with its exit status: `const 0`, `ret`.
+        assert_eq!((instructions[1].op.as_str(), instructions[2].op.as_str()), ("const", "ret"));
+        // `run_module` sees only the IIR, which does not name the binding.
+        let error = run_module(compile_source("console.log(8); a; let a = 1;", "tdz").unwrap()).unwrap_err();
+        assert_eq!((error.output.as_str(), error.message.as_str()), ("8\n", "trap: Trap.ReferenceError"));
+        // The trap kind is in LANG83's closed table, with its stable id.
+        assert_eq!(interpreter_ir::exception_kind::trap_kind_id(REFERENCE_ERROR_TRAP), Some(7));
+    }
+
+    #[test]
+    fn a_compile_error_after_a_reference_error_still_wins() {
+        // The trap drops the code after it, but lowering carries on, so a
+        // later construct outside the subset is still refused up front.
+        let error = run_source("console.log(1); z; console.log('a');").unwrap_err();
+        assert!(error.output.is_empty());
+        assert!(error.message.contains("unsupported"), "{error}");
     }
 
     #[test]
@@ -2351,7 +2648,37 @@ mod tests {
             .iter()
             .map(|i| i.op.as_str())
             .collect();
-        assert_eq!(ops, ["const", "mov", "neg", "call_builtin", "ret_void"]);
+        assert_eq!(
+            ops,
+            [
+                // let x = 2  (the literal writes js.x itself)
+                "const",
+                // -x
+                "f64_neg",
+                // x: a literal's binding is never -0, so no sign test
+                "call_builtin",
+                // ' '
+                "const",
+                "call_builtin",
+                // -x may be -0: the sign test, then its digits
+                "const",
+                "f64_add",
+                "f64_signbit",
+                "f64_signbit",
+                "cmp_gt",
+                "jmp_if_false",
+                "const",
+                "call_builtin",
+                "label",
+                "call_builtin",
+                // '\n'
+                "const",
+                "call_builtin",
+                // exit status 0
+                "const",
+                "ret",
+            ]
+        );
 
         // A caller may also place the declaration directly under
         // `source_element`, without the `statement` wrapper.
@@ -2426,17 +2753,76 @@ mod tests {
     }
 
     #[test]
-    fn reference_error_builtins_reject_malformed_calls() {
-        let render = |name: &str| format!("ReferenceError: {name} is not defined");
-        for args in [
-            vec![],
-            vec![Value::Float(1.0)],
-            vec![Value::Str("a".into()); 2],
-        ] {
-            let error = raise_reference_error(&args, render).unwrap_err();
-            assert!(error.to_string().contains("expects one binding name"));
-        }
-        let error = raise_reference_error(&[Value::Str("a".into())], render).unwrap_err();
-        assert_eq!(error.to_string(), "ReferenceError: a is not defined");
+    fn runner_builtins_reject_malformed_calls_and_bound_the_output() {
+        let call = |builtin: &str, argument: Operand| {
+            let mut module = IIRModule::new("malformed", "javascript");
+            module.add_or_replace(IIRFunction::new(
+                "main",
+                vec![],
+                "void",
+                vec![
+                    IIRInstr::new("const", Some("v".into()), vec![argument], "any"),
+                    IIRInstr::new(
+                        "call_builtin",
+                        None,
+                        vec![Operand::Var(builtin.into()), Operand::Var("v".into())],
+                        "void",
+                    ),
+                    IIRInstr::new("ret_void", None, vec![], "void"),
+                ],
+            ));
+            run_module(module)
+        };
+        let error = call("write_f64_js", Operand::Int(1)).unwrap_err();
+        assert!(error.message.contains("one JavaScript Number"), "{error}");
+        let error = call("putchar", Operand::Float(1.0)).unwrap_err();
+        assert!(error.message.contains("one byte"), "{error}");
+        assert_eq!(call("putchar", Operand::Int(0x141)).unwrap(), "A");
+
+        let sink = Mutex::new(vec![b'x'; MAX_OUTPUT_BYTES - 1]);
+        assert!(append_output(&sink, b"y").is_ok());
+        let error = append_output(&sink, b"z").unwrap_err();
+        assert!(error.to_string().contains("output limit"));
+        assert_eq!(sink.lock().unwrap().len(), MAX_OUTPUT_BYTES);
     }
+
+    #[test]
+    fn the_module_holds_only_lang83_registry_operations() {
+        // Every op a backend lowers or refuses by name, plus the ungated
+        // `const`, the branch and `ret` (LANG84 C2: no JavaScript-named
+        // builtin survives).
+        let source = "let a = 1 / 0; const b = -a * 0; console.log(a, b - 1, 2); \
+                      console.log(); z;";
+        let module = compile_source(source, "registry").unwrap();
+        for instruction in &module.functions[0].instructions {
+            match interpreter_ir::op_registry::registry_name(instruction) {
+                Some(name) => assert!(
+                    [
+                        "f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg", "f64_signbit",
+                        "cmp_gt", "write_f64_js", "putchar", "trap",
+                    ]
+                    .contains(&name),
+                    "{instruction:?}"
+                ),
+                None => assert!(
+                    ["const", "jmp_if_false", "label", "ret"].contains(&instruction.op.as_str()),
+                    "{instruction:?}"
+                ),
+            }
+        }
+    }
+
+    #[test]
+    fn negative_zero_is_told_apart_from_zero_by_sign_bits_alone() {
+        assert_runs("console.log(-0, 0 * -1, 5 - 5);", "-0 -0 0\n");
+        assert_runs("console.log(-0 + -0, -0 + 0, 0 - 0); console.log(-(-0));", "-0 0 0\n0\n");
+        assert_runs("const n = -2.5; console.log(n, -n, n * 0);", "-2.5 2.5 -0\n");
+        assert_runs("console.log(1 / -0, -(1 / 0), 0 / 0); console.log(-(0 / 0));", "-Infinity -Infinity NaN\nNaN\n");
+        assert_runs("console.log(-5e-324, 5e-324 * -1);", "-5e-324 -5e-324\n");
+        // A literal can never be -0: no sign test, so no `f64_add` (BEAM runs
+        // such a module).
+        let module = compile_source("let x = 5.; console.log(0, x, 0x1F);", "literal").unwrap();
+        assert!(module.functions[0].instructions.iter().all(|i| i.op != "f64_add"));
+    }
+
 }
