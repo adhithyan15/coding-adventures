@@ -130,7 +130,7 @@ does not gate it).
 | | `f64_div_floor` `f64_mod_floor` `f64_is_nan` | Op | Later | Python float `//` `%` (`fmod`, then a sign fix-up; `b == 0` → `Trap.DivZero`). Deferred to PR6b: WASM has no `fmod` instruction, so it needs its own exact remainder routine. `f64_is_nan` is superseded by PR7's `f64_class`. |
 | Conversions | `int_to_real` | Op | Exists | Exact `i64 → f64`. |
 | | `real_to_int_trunc` `real_to_int_floor` | Op | Exists | Non-finite or out-of-range → `Trap.ConvRange`. |
-| | `f64_class` `f64_digits` `f64_exp10` | Op | PR7b | Class (`0` zero, `1` finite, `2` infinite, `3` NaN), shortest round-trip significand and leading-digit exponent. Each compiler builds its language's layout from these; see "PR7 — language neutrality". |
+| | `f64_class` `f64_digits` `f64_exp10` | Op | PR7b | Class (`0` zero, `1` finite, `2` infinite, `3` NaN), shortest round-trip significand and leading-digit exponent. Each compiler builds its language's layout from these; see "PR7 — language neutrality". Lowered on all nine backends (BEAM: classes 0 and 1 only, its floats being finite). |
 | | `i64_to_str`, `f64_to_str_py` `_js` `_rb` `_pl` | Op | Later | **Withdrawn by PR7** (`i64_to_str` stays): a layout is a language rule, so it belongs in a compiler-emitted helper. One op per *layout*, not a flags operand; every backend uses one internal shortest-digits core. The oracle is host `python3` / `node`. Rust `format!("{:e}")` gives the same digit *length* but rounds an exact tie up, not to even (see "PR6a"). |
 | Output | `print_i64` | Builtin | Exists | Decimal value **plus `\n`**. Kept: BASIC, Oct, ALGOL and Ruby `puts` depend on it. |
 | | `putchar` | Builtin | Exists | Low byte of the argument. |
@@ -1068,17 +1068,67 @@ conformance cases test only the values, never how often the search runs.
 | Backend | `f64_class` | `f64_digits` / `f64_exp10` |
 | --- | --- | --- |
 | x86-64 / AArch64 | inline bit test on the raw pattern in a GPR (exponent field all ones → 2 or 3, all zero with zero fraction → 0) | `__iir_f64_digits(bits)` / `__iir_f64_exp10(bits)` in the native runtime: the C core, minus the layout |
-| LLVM | inline `bitcast` + integer compares | the existing `@__iir_f64_digits` core, returning `D` and `k − 1` through two `linkonce_odr` wrappers |
-| WASM | inline `i64.reinterpret_f64` + compares | the existing in-module core, two exported wrappers |
-| JVM | `Double.doubleToRawLongBits` + compares | the existing `BigDecimal` search: `unscaledValue().longValue()` and `len − 1 − scale()` |
-| CLR | `BitConverter.DoubleToInt64Bits` + compares | the existing `"R"` parse, minus the layout |
-| BEAM | finite only, so `0` when `X == 0.0`, else `1`. Classes 2 and 3 cannot occur; the validator already refuses non-finite constants. | `float_to_list(abs(X), [short])`, split and trimmed as today, returning `D` or `e10` |
+| LLVM | inline `bitcast` + integer compares | the existing `@__iir_f64_digits` core, returning `D` and `k − 1` through two `linkonce_odr` wrappers (`@__iir_f64_shortest_digits` / `@__iir_f64_shortest_exp10`) |
+| WASM | inline `i64.reinterpret_f64` + compares | the existing in-module core, two in-module `(f64) -> i64` wrappers |
+| JVM | `Double.doubleToRawLongBits` + compares | the existing `BigDecimal` search, now its own method `__iir_f64_shortest`: `unscaledValue().longValue()` and `len − 1 − scale()` |
+| CLR | `BitConverter.DoubleToInt64Bits` + compares | the existing `"R"` parse, minus the layout, now its own method `__iir_f64_shortest(float64, int32&)` |
+| BEAM | finite only, so `0` for `±0.0` (two `is_eq_exact` tests against the literal-table zeros), else `1`. Classes 2 and 3 cannot occur; the validator already refuses non-finite constants. | the writer's `float_to_list(X, [short])` parse, now its own function `'__iir_f64_shortest'(X) -> [Neg, E \| D]`, returning `D` (`list_to_integer`) or `e10`, or `0` when no digits survive |
 | VM | Rust `f64::classify` | `vm_core::float_format::shortest_digits(x) -> (u64, i32)`, split out of `python_repr` / `js_to_string` |
 | JIT | new `CLASS_F64` bytecode, float register → integer register, shaped like `SIGNBIT_F64` | new `DIGITS_F64` / `EXP10_F64` bytecodes that call the same Rust core. After PR7e the JIT needs no `CALL_BUILTIN_F64` for output, because the layout helper is integer code. Where the JIT refuses a helper's `call`, that function falls back to the interpreter, as it does today. |
 
 On BEAM all three are lowerable, unlike the PR6c arithmetic. A JavaScript
 module whose numbers are all literals already reaches BEAM, and it keeps
 doing so.
+
+**What PR7b landed, and where it diverged from the plan above.** All three
+ops are registered (`introduced_by: "LANG83 PR7b"`, family `Float`, integer
+result like `f64_signbit`) and lowered on all nine backends. Every backend's
+PR6a digit core now serves both the writers and the new ops, and the
+writers' output is byte-identical (every PR6a table and model test passes
+unchanged).
+
+- *Shared cores.* Where the PR6a digits lived inside the writer, they moved
+  into a helper of their own that the writer and the ops call: JVM
+  `__iir_f64_shortest(D)Ljava/math/BigDecimal;`, CLR
+  `string __iir_f64_shortest(float64, int32&)` (the exponent comes back
+  through the managed pointer), BEAM `'__iir_f64_shortest'/1` returning
+  `[Neg, E | D]`. LLVM and WASM split their module-local code into a
+  computation part (big integers, core, the two wrappers) and an output part
+  (layout, `putchar`), so a module that asks for digits but prints no float
+  carries no output code and, on WASM, imports no `env.putchar`. The native
+  runtime adds `__iir_f64_digits` / `__iir_f64_exp10` beside the writers.
+  VM: `vm_core::float_format::shortest_digits` now returns `(u64, i32)`; the
+  string form is private.
+- *WASM wrappers* are in-module functions, not exports (nothing outside the
+  module calls them).
+- *BEAM* parses the signed value (as the writer always has) rather than
+  `abs(X)`: the sign is peeled off before the digits, so `D` and `e10` are the
+  same.
+- *JIT* opcodes: `CLASS_F64` 0x5D, `DIGITS_F64` 0x5E, `EXP10_F64` 0x5F, so
+  that 0x59–0x5C stay free for an in-flight branch's int⇄float bytecodes.
+- *`f64_class` on the integer side* is branch-free everywhere it has
+  compares that yield 0/1: `(m ≠ 0) + (m ≥ 0x7FF0…0) + (m > 0x7FF0…0)` on the
+  magnitude `m` (x86-64 `setcc`, AArch64 `cset`, LLVM `icmp`/`zext`, WASM,
+  CLR `cgt.un`), and on the JVM `lcmp(m, 0) + lcmp(m, 0x7FF0…0) + 1`.
+- *JVM wide model.* `lang-aot`'s JVM scalar concretizer now treats every
+  registry Op with an `f64` operand as wide-model evidence (next to the
+  `i64` ones), so a module whose only real is a literal propagated into
+  `f64_digits` (up to 10^17) is not narrowed to `int`.
+- *Conformance.* PR6a has one 90-value table with a Python and a JavaScript
+  column; PR7b's `FLOAT_DIGITS_TABLE` gives `(class, D, e10)` for the same
+  values, generated by host `python3` and re-derived by
+  `float_digits_table_matches_host_python3`. The cases are one per op over
+  the 87 finite values (all nine backends) plus one case for `±Infinity` and
+  NaN (the eight IEEE backends), each value printed with `write_i64`. Each
+  table case reuses one result variable for every row, because the JIT's
+  256-register file cannot hold 87 results plus the literals constant
+  propagation materialises. The gate `pr7b_ops_are_lowered_on_every_backend`
+  pins the matrix, requires the four cases on every executable column whose
+  toolchain is present (WASM, VM, JIT, LLVM, native x86-64 and JVM locally),
+  and checks that BEAM compiles the finite cases and refuses the non-finite
+  one. CLR, BEAM and AArch64 are structural locally, as in PR6a: the CLR IL
+  model and the BEAM opcode-and-BIF model now follow calls between the
+  helpers and run the three ops over the table in every host layout.
 
 ### The layouts, as compiler-emitted helpers
 
@@ -1144,7 +1194,8 @@ computed `x` lowers on BEAM too.
 Ruby `Float#to_s` (fixed when `-4 <= e < 16`, else `1.0e+16`) becomes a
 third helper in the Ruby compiler when Ruby gains floats. No backend changes.
 
-**Conformance.** PR6a's two 90-value tables stay the oracle. The PR7b
+**Conformance.** PR6a's 90-value table (its Python and JavaScript
+columns) stays the oracle. The PR7b
 `op_conformance` cases print `f64_class`, `f64_digits` and `f64_exp10` of
 each table value with `write_i64`, against expectations generated from host
 `python3` (`repr` split at the digits). Each frontend's `lang_matrix` rows
@@ -1193,7 +1244,8 @@ anything still emits it.
    `write_f64_*` and the new ops share it; the output is unchanged.
    `op_conformance` gains the class/digits/exponent tables. JIT: the
    three bytecodes. CLR and BEAM are structural locally and executed in
-   CI, as in PR6a.
+   CI, as in PR6a. *Landed;* see "What PR7b landed" under "The neutral
+   float primitives".
 3. **PR7c-js — javascript-iir-compiler emits its helper.** `console.log`
    calls the helper; the `-0` test becomes the class test; BEAM accepts
    computed values. All 38 `lang_matrix` JavaScript rows stay
