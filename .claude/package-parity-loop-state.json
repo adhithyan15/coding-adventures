@@ -16349,6 +16349,20 @@
       "notes": "Add real BUILD_windows fronts for barcode-layout-1d and itf, preserve their exact Cabal closure and tests: True project metadata, and cover Windows-front precedence without absorbing the complete barcode-1d facade."
     },
     {
+      "id": "haskell-itf-stack-ghc-9-14-containers-bound-reconciliation",
+      "title": "Reconcile Haskell ITF stack containers bounds for GHC 9.14",
+      "status": "pending",
+      "depends_on": [
+        "itf-existing-lanes-v1-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "discovered_at": "2026-10-26T16:52:26Z",
+      "discovery_revision": "2fe55e3311bc8e755e2f18f2116543d5fd3710a3",
+      "discovery_notes": "Focused native validation of the Haskell ITF Windows-front preparation ran the unchanged barcode-layout-1d project with Cabal 3.16.1.0 and default GHC 9.14.1. Dependency solving failed before compilation because barcode-layout-1d requires containers >=0.6 && <0.8 while GHC 9.14.1 provides installed containers-0.8; the same upper bound appears in both library and test stanzas of barcode-layout-1d and itf. Re-running the complete closures with GHC 9.6.7 passed 29 paint-instructions, 27 barcode-layout-1d, 25 SHA-256, allocation-budget, and 19 ITF examples with zero failures. This is package-bound compatibility work, not a Windows command-routing defect.",
+      "notes": "Audit the containers APIs actually used by Haskell barcode-layout-1d and itf, then reconcile their library and test-suite upper bounds so Cabal can solve under GHC 9.14.1 with containers-0.8 while preserving GHC 9.6.7 compatibility, existing behavior, public APIs, fixtures, and test coverage. Do not change the Windows-front mechanics or select this owner as part of the current build-front tranche."
+    },
+    {
       "id": "haskell-barcode-1d-symbology-windows-build-front-coverage",
       "title": "Add Windows build fronts for Haskell 1D barcode symbologies",
       "status": "pending",

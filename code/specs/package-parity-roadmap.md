@@ -18243,3 +18243,23 @@ of `itf-existing-lanes-v1-conformance`. Its scope is metadata only: add
 schema-valid empty manifests plus package/archive inclusion for those six
 lanes, with no behavior, public API, or build-front changes. It is deliberately
 not selected or absorbed into this Windows-front preparation.
+
+### Separate GHC 9.14 package-bound follow-up
+
+Native validation exposed an independent package-compatibility gap rather than
+a Windows-front defect. Running the unchanged `barcode-layout-1d` Cabal project
+with Cabal 3.16.1.0 and default GHC 9.14.1 fails during dependency solving:
+the package requires `containers >=0.6 && <0.8`, while that compiler supplies
+installed `containers-0.8`. The same upper bound appears in the library and
+test stanzas of both `barcode-layout-1d` and `itf`. No package source compiled
+under that default toolchain.
+
+The complete closures pass under GHC 9.6.7: 29 paint-instructions examples,
+27 barcode-layout-1d examples, 25 SHA-256 examples plus its allocation-budget
+suite, and 19 ITF examples all finish with zero failures. Record
+`haskell-itf-stack-ghc-9-14-containers-bound-reconciliation` as a separate
+pending child of merged `itf-existing-lanes-v1-conformance`. Its bounded scope
+is to audit the used `containers` API and reconcile all four constraints for
+GHC 9.14.1/`containers-0.8` while retaining GHC 9.6.7 compatibility and exact
+package behavior. It does not depend on, modify, or become selected with the
+Windows-front mechanics.
