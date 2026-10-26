@@ -20,7 +20,9 @@ All notable changes to this package will be documented in this file.
   rejected.
 - Lock the crate's file-backed `executor` module binding and reject attributed,
   aliased, duplicate, or inline oracle-backed routing modules that leave the
-  reviewed executor source dead.
+  reviewed executor source dead. Top-level delimiter-aware module discovery
+  also rejects macro-discarded declarations paired with macro-generated live
+  `executor` or `gates` modules.
 
 ## [0.1.0] - 2026-10-24
 

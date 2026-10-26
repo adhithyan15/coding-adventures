@@ -107,6 +107,33 @@ fn matching_delimiter(
     Err(format!("unclosed {opening} delimiter"))
 }
 
+fn top_level_module_sites(tokens: &[String], name: &str) -> Vec<usize> {
+    let mut curly = 0_usize;
+    let mut round = 0_usize;
+    let mut square = 0_usize;
+    let mut sites = Vec::new();
+    for index in 0..tokens.len().saturating_sub(2) {
+        if curly == 0
+            && round == 0
+            && square == 0
+            && tokens[index] == "mod"
+            && tokens[index + 1] == name
+        {
+            sites.push(index);
+        }
+        match tokens[index].as_str() {
+            "{" => curly += 1,
+            "}" => curly = curly.saturating_sub(1),
+            "(" => round += 1,
+            ")" => round = round.saturating_sub(1),
+            "[" => square += 1,
+            "]" => square = square.saturating_sub(1),
+            _ => {}
+        }
+    }
+    sites
+}
+
 fn top_level_opcode_arms(body: &[String]) -> Result<Vec<MatchArmTokens>, String> {
     let mut curly_depth = 0;
     let mut match_open = None;
@@ -288,17 +315,11 @@ fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> R
     }
 
     let validator_tokens = rust_tokens(validator);
-    let executor_modules: Vec<_> = validator_tokens
-        .windows(3)
-        .enumerate()
-        .filter_map(|(index, tokens)| {
-            (tokens[0] == "mod" && tokens[1] == "executor").then_some((index, &tokens[2]))
-        })
-        .collect();
+    let executor_modules = top_level_module_sites(&validator_tokens, "executor");
     if executor_modules.len() != 1
-        || executor_modules[0].1 != ";"
-        || executor_modules[0].0 == 0
-        || validator_tokens[executor_modules[0].0 - 1] != ";"
+        || validator_tokens[executor_modules[0] + 2] != ";"
+        || executor_modules[0] == 0
+        || validator_tokens[executor_modules[0] - 1] != ";"
         || validator_tokens
             .windows(2)
             .any(|tokens| tokens == ["as", "executor"])
@@ -307,16 +328,14 @@ fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> R
             "validator executor-module binding is shadowed, attributed, or aliased".to_owned(),
         );
     }
-    let gate_modules: Vec<_> = validator_tokens
-        .windows(4)
-        .enumerate()
-        .filter_map(|(index, tokens)| (tokens == ["pub", "mod", "gates", ";"]).then_some(index))
-        .collect();
+    let gate_modules = top_level_module_sites(&validator_tokens, "gates");
     if gate_modules.len() != 1
+        || validator_tokens[gate_modules[0] + 2] != ";"
+        || gate_modules[0] == 0
+        || validator_tokens[gate_modules[0] - 1] != "pub"
         || validator_tokens
             .windows(2)
             .any(|tokens| tokens == ["as", "gates"])
-        || gate_modules[0] > 0 && validator_tokens[gate_modules[0] - 1] == "]"
     {
         return Err("validator gate-module binding is shadowed or attributed".to_owned());
     }
@@ -941,4 +960,52 @@ mod executor {
         1,
     );
     assert!(verify_branch_structure(networks, executor, &aliased_executor).is_err());
+
+    let macro_generated_oracle_executor = validator.replacen(
+        "mod executor;",
+        r#"macro_rules! discard_routing_items {
+    ($($discarded:item)*) => {};
+}
+discard_routing_items! {
+    type RoutingSeparator = ();
+    mod executor;
+}
+macro_rules! define_oracle_executor {
+    ($name:ident) => {
+        mod $name {
+            use super::{StepTrace, System360Error, System360Simulator, System360State};
+
+            pub(crate) fn execute(
+                before: &System360State,
+                _trace: &StepTrace,
+            ) -> Result<System360State, System360Error> {
+                let mut oracle = System360Simulator::new();
+                oracle.restore(before.clone())?;
+                let _ = oracle.step()?;
+                Ok(oracle.get_state())
+            }
+        }
+    };
+}
+define_oracle_executor!(executor);"#,
+        1,
+    );
+    assert!(verify_branch_structure(networks, executor, &macro_generated_oracle_executor).is_err());
+
+    let macro_generated_gates = validator.replacen(
+        "pub mod gates;",
+        r#"macro_rules! discard_gate_items {
+    ($($discarded:item)*) => {};
+}
+discard_gate_items! {
+    type GateRoutingSeparator = ();
+    pub mod gates;
+}
+macro_rules! define_gate_module {
+    ($name:ident) => { pub mod $name {} };
+}
+define_gate_module!(gates);"#,
+        1,
+    );
+    assert!(verify_branch_structure(networks, executor, &macro_generated_gates).is_err());
 }
