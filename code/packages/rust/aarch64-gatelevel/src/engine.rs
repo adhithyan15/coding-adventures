@@ -44,27 +44,45 @@ fn gate_boolean(left: u64, right: u64, gate: fn(u8, u8) -> u8) -> u64 {
     word64(&std::array::from_fn(|bit| gate(left[bit], right[bit])))
 }
 
+fn gate_add_width_with_carry(left: u64, right: u64, carry_in: u8, width: usize) -> (u64, u8) {
+    let left_bits = bits64(left);
+    let right_bits = bits64(right);
+    let output = ripple_carry_adder_with_carry(&left_bits[..width], &right_bits[..width], carry_in);
+    let sum = output
+        .sum
+        .iter()
+        .enumerate()
+        .fold(0, |value, (bit, q)| value | (u64::from(*q) << bit));
+    (sum, output.carry_out)
+}
+
 fn gate_add_with_carry(left: u64, right: u64, carry_in: u8) -> (u64, u8) {
-    let output = ripple_carry_adder_with_carry(&bits64(left), &bits64(right), carry_in);
-    let sum: [u8; 64] = output.sum.try_into().expect("64-bit ripple result");
-    (word64(&sum), output.carry_out)
+    gate_add_width_with_carry(left, right, carry_in, 64)
 }
 
 fn gate_add(left: u64, right: u64) -> u64 {
     gate_add_with_carry(left, right, 0).0
 }
 
-fn gate_subtract_full(left: u64, right: u64) -> (u64, u8, u8) {
+fn gate_subtract_width_full(left: u64, right: u64, width: usize) -> (u64, u8, u8) {
     let left_bits = bits64(left);
     let right_bits = bits64(right);
-    let inverted: [u8; 64] = std::array::from_fn(|bit| not_gate(right_bits[bit]));
-    let output = ripple_carry_adder_with_carry(&left_bits, &inverted, 1);
-    let difference: [u8; 64] = output.sum.try_into().expect("64-bit ripple result");
+    let inverted: Vec<u8> = right_bits[..width].iter().copied().map(not_gate).collect();
+    let output = ripple_carry_adder_with_carry(&left_bits[..width], &inverted, 1);
     let overflow = and_gate(
-        xor_gate(left_bits[63], right_bits[63]),
-        xor_gate(left_bits[63], difference[63]),
+        xor_gate(left_bits[width - 1], right_bits[width - 1]),
+        xor_gate(left_bits[width - 1], output.sum[width - 1]),
     );
-    (word64(&difference), output.carry_out, overflow)
+    let difference = output
+        .sum
+        .iter()
+        .enumerate()
+        .fold(0, |value, (bit, q)| value | (u64::from(*q) << bit));
+    (difference, output.carry_out, overflow)
+}
+
+fn gate_subtract_full(left: u64, right: u64) -> (u64, u8, u8) {
+    gate_subtract_width_full(left, right, 64)
 }
 
 fn gate_equal(left: u64, right: u64, width: usize) -> bool {
@@ -84,15 +102,9 @@ fn arithmetic_flags(a: u64, b: u64, sf: u32, subtract: bool) -> (u64, u8) {
     let a = a & mask;
     let b = b & mask;
     let (result, carry, overflow) = if subtract {
-        let (result, carry, overflow) = gate_subtract_full(a, b);
-        (result & mask, carry, overflow)
+        gate_subtract_width_full(a, b, width)
     } else {
-        let (result, carry64) = gate_add_with_carry(a, b, 0);
-        let carry = if sf == 0 {
-            u8::from(gate_add(a, b) > u64::from(u32::MAX))
-        } else {
-            carry64
-        };
+        let (result, carry) = gate_add_width_with_carry(a, b, 0, width);
         let sign = width - 1;
         let a_bits = bits64(a);
         let b_bits = bits64(b);
@@ -101,7 +113,7 @@ fn arithmetic_flags(a: u64, b: u64, sf: u32, subtract: bool) -> (u64, u8) {
             xnor_gate(a_bits[sign], b_bits[sign]),
             xor_gate(a_bits[sign], result_bits[sign]),
         );
-        (result & mask, carry, overflow)
+        (result, carry, overflow)
     };
     let result_bits = bits64(result);
     let n = result_bits[width - 1];
@@ -864,8 +876,20 @@ mod tests {
         assert_eq!(gate_subtract_full(0, 1).0, u64::MAX);
         assert_eq!(arithmetic_flags(u64::MAX, 1, 1, false), (0, 0b0110));
         assert_eq!(
+            arithmetic_flags(u64::from(u32::MAX), 1, 0, false),
+            (0, 0b0110)
+        );
+        assert_eq!(
+            arithmetic_flags(0x7fff_ffff, 1, 0, false),
+            (0x8000_0000, 0b1001)
+        );
+        assert_eq!(
             arithmetic_flags(0, 1, 0, true),
             (u64::from(u32::MAX), 0b1000)
+        );
+        assert_eq!(
+            arithmetic_flags(0x8000_0000, 1, 0, true),
+            (0x7fff_ffff, 0b0011)
         );
     }
 }
