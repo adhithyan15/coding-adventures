@@ -468,13 +468,30 @@ How it behaves:
       `target`, `table-cell-role`);
     - a `For`'s `as:`/`index:`;
     - at a call site, a value bound to a `one-of` slot of the component it
-      mounts.
+      mounts, but only if it is one of that slot's declared values. Any
+      other bare NAME there is an identifier. `tone: tone` forwards the
+      caller's own `tone`, and `tone: authToken` is
+      `UndeclaredExpressionIdentifier`. If a declared value is also the
+      name of one of the caller's slots or loop bindings, the declared
+      value wins.
     A bare NAME that names one of the component's own slots is rewritten to
     `slot: <name>`, so it takes the call site's binding or the default.
     Before, it showed the consumer's slot of the same name.
   - The mount slot may be read only by the mount. A read anywhere else,
     whether as a prop, as a bare NAME, or inside an expression, is
     `ChildMountSlotReferenced { package, component, slot }`.
+- **`one-of` values are strings in the callee.** A call-site value that is
+  one of a `one-of` slot's declared values (`tone: loud`) is substituted as
+  the string `"loud"`. A `KEYWORD_LITERAL_PROPS` position is the
+  exception: there it is substituted as the bare enum value. It never
+  becomes an identifier. Before, `content: slot: tone` showed React
+  `{loud}`, and `( tone == "calm" )` became `( loud == "calm" )`, an
+  undeclared identifier (unbound-slot-semantics-v1 P14).
+  - After substitution, expressions that have become constant are
+    evaluated, because TypeScript rejects a comparison between two
+    different string literals (TS2367). This covers `==`/`!=` on two
+    literals of one kind, numeric `<`/`<=`/`>`/`>=`, `!` of a boolean, and
+    `&&`/`||` with a boolean literal on the left.
 - **Bindings.** Only call-site props that name a declared slot or emit
   become bindings. Inside a `For`, a bare name that matches the loop's
   binding is the loop variable and is not rewritten (UI29 §3.4, "For
