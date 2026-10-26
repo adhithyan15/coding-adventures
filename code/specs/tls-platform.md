@@ -572,6 +572,30 @@ I/O, open sockets, authorize HTTP or OAuth, or make concrete HTTPS available.
 The RFC 8446 CCM suites remain unsupported until separately reviewed
 repository-owned AEAD implementations and record limits are available.
 
+The next package is `tls13-hkdf-label`. It owns only the allocation-free RFC
+8446 section 7.1 serialization of the public information passed to
+`HKDF-Expand`:
+
+- a validated value binds one `uint16` requested output length, one caller
+  label from 1 through 249 bytes, and one context from 0 through 255 bytes;
+- encoding always prepends the exact six bytes `"tls13 "`, so the encoded
+  label length is 7 through 255 bytes and cannot escape the TLS 1.3 namespace;
+- the wire value is exactly the two-byte network-order output length, one-byte
+  prefixed-label length and bytes, and one-byte context length and bytes;
+- the complete encoding is bounded by 514 bytes; and
+- output capacity and every input bound are checked before caller-owned output
+  is modified, while stable errors retain no caller bytes or lengths.
+
+The package intentionally has no secret input and invokes no cryptography. It
+does not call HKDF, select a hash, inspect or harden the generic repository
+HKDF implementation, derive traffic keys or IVs, select a cipher suite, manage
+nonces, protect records, update keys, process a handshake, validate
+certificates, establish trust, check revocation, perform I/O, authorize HTTP or
+OAuth, or make concrete HTTPS available. A later secret-bearing composition
+must consume one selected cipher-suite value and reviewed repository-owned HKDF
+execution when applying the RFC 8446 section 7.3 `"key"` and `"iv"` labels
+with empty context.
+
 ---
 
 ## Test Strategy
