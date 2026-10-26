@@ -1,0 +1,11 @@
+{
+  "id": "JA-C251-ikanai",
+  "pathSegment": "JA-PATH-251-FUTURE251",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-251-FUTURE251",
+      "order": 1
+    }
+  ]
+}

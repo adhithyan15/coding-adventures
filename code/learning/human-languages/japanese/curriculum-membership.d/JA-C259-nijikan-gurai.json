@@ -1,0 +1,11 @@
+{
+  "id": "JA-C259-nijikan-gurai",
+  "pathSegment": "JA-PATH-259-EXPERIENCE259",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-259-EXPERIENCE259",
+      "order": 3
+    }
+  ]
+}

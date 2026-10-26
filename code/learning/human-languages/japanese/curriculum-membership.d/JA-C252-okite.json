@@ -1,0 +1,11 @@
+{
+  "id": "JA-C252-okite",
+  "pathSegment": "JA-PATH-252-NARRATE252",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-252-NARRATE252",
+      "order": 0
+    }
+  ]
+}

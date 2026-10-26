@@ -1,0 +1,604 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 255,
+  "title": "Advice, and So",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:8f0067a760e6f9b8",
+  "lessons": [
+    {
+      "id": "JA-C255-itta-hou-ga-ii",
+      "sequence": 15260,
+      "title": "いった ほうが いいです (itta hō ga ii desu) — you had better",
+      "headword": "いった ほうが いいです",
+      "romanization": "itta hō ga ii desu",
+      "gloss": "you had better go — -ta hō ga ii desu for advice, -nai hō ga ii desu for advice against",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4efe58c5bb7a464",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say, plainly, \"I rested\" and \"I won't drink\". (yasunda, nomanai.) Then say \"medicine\". (kusuri.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -た ほうが いいです",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やすんだ ほうが いいです。 yasunda hō ga ii desu. — \"You had better rest.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ほう (hō) is \"side, way\": \"the side of having rested is good\". The plain past goes before it even when the advice is about now or later."
+            },
+            {
+              "kind": "speech",
+              "text": "くすりを のんだ ほうが いいです。 kusuri o nonda hō ga ii desu. — \"You had better take some medicine.\""
+            },
+            {
+              "kind": "speech",
+              "text": "びょういんに いった ほうが いいです。 byōin ni itta hō ga ii desu. — \"You had better go to the hospital.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -ない ほうが いいです",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Advice against takes the plain \"not\":"
+            },
+            {
+              "kind": "speech",
+              "text": "おさけを のまない ほうが いいです。 osake o nomanai hō ga ii desu. — \"You had better not drink alcohol.\""
+            },
+            {
+              "kind": "speech",
+              "text": "あぶないから、いかない ほうが いいです。 abunai kara, ikanai hō ga ii desu. — \"It is dangerous, so you had better not go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This is advice. Saying that something must be done needs another form, which comes later."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You had better not drink alcohol\" — osake o nomanai hō ga ii desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You had better not drink alcohol\" — *osake o nomanai hō ga ii desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You had better not drink coffee\" — kōhī o nomanai hō ga ii desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You had better not drink coffee\" — *kōhī o nomanai hō ga ii desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You had better not drink cold water\" — tsumetai mizu o nomanai hō ga ii desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You had better not drink cold water\" — *tsumetai mizu o nomanai hō ga ii desu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C255-itta-hou-ga-ii-say",
+              "prompt": "Say that someone had better go to the hospital.",
+              "assesses": [
+                "JA-GRAMMAR-C255-SHOULD-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "byōin ni itta hō ga ii desu",
+                "びょういんに いった ほうが いいです。",
+                "byouin ni itta hou ga ii desu"
+              ],
+              "feedback": {
+                "correct": "itta hō ga ii desu: the plain past, then hō ga ii desu.",
+                "incorrect": "The plain past itta, then hō ga ii desu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"You had better rest\"? (やすんだ ほうが いいです.) \"You had better not go\"? (いかない ほうが いいです.) Which form goes before ほうが for advice for? (The plain past.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C255-dakara",
+      "sequence": 15270,
+      "title": "だから (dakara) — so; that is why",
+      "headword": "だから",
+      "romanization": "dakara",
+      "gloss": "so; that is why",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7139884526ac6cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"it is cold, so I won't go\". (samui kara, ikimasen.) Then \"you had better not go\". (ikanai hō ga ii desu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: だから",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だから — dakara — \"so\", \"that is why\". It opens a new sentence with the result, after a sentence that gave the reason:"
+            },
+            {
+              "kind": "speech",
+              "text": "あめが ふっています。 ame ga futte imasu. — \"It is raining.\""
+            },
+            {
+              "kind": "speech",
+              "text": "だから、いきません。 dakara, ikimasen. — \"So I won't go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is plain, the word for a friend; the next lesson gives its polite partner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だから (dakara) is a native Japanese word (wago), inherited rather than borrowed from Chinese: だ (da), the plain form of です, and から (kara), \"because\". JMdict lists it as a conjunction, \"so; therefore\", written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dakara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dakara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"So I won't go\" — dakara, ikimasen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"So I won't go\" — *dakara, ikimasen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"So I will rest\" — dakara, yasumimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"So I will rest\" — *dakara, yasumimasu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C255-dakara-say",
+              "prompt": "Say the Japanese for 'so, that is why', to a friend.",
+              "assesses": [
+                "JA-LEX-C255-DAKARA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "dakara",
+                "だから"
+              ],
+              "feedback": {
+                "correct": "Right: dakara opens the result.",
+                "incorrect": "'So', to a friend, is dakara."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"So\", opening a sentence, to a friend? (だから, dakara.) Which comes first, the reason or だから? (The reason, in the sentence before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C255-desu-kara",
+      "sequence": 15280,
+      "title": "ですから / それで (desu kara / sore de) — so, and so",
+      "headword": "ですから / それで",
+      "romanization": "desu kara / sore de",
+      "gloss": "so, and so — desu kara, the polite dakara, and sore de for what came of it",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7eff6205cad2d0da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"so I won't go\", to a friend. (dakara, ikimasen.) Then say \"a holiday\". (yasumi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ですから",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To a teacher, in a shop or at work, だから (dakara) becomes ですから (desu kara), with です in place of だ:"
+            },
+            {
+              "kind": "speech",
+              "text": "あしたは やすみです。 ashita wa yasumi desu. — \"Tomorrow is a holiday.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ですから、みせは しまっています。 desu kara, mise wa shimatte imasu. — \"So the shop is closed.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: それで",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "それで (sore de) is \"and so\": it tells what came of something that happened. It looks back at an event, where だから (dakara) and ですから also give advice and decisions."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃが とまりました。 densha ga tomarimashita. — \"The train stopped.\""
+            },
+            {
+              "kind": "speech",
+              "text": "それで、おくれました。 sore de, okuremashita. — \"And so I was late.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"And so I was late\" — sore de, okuremashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"And so I was late\" — *sore de, okuremashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"And so I went home\" — sore de, kaerimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"And so I went home\" — *sore de, kaerimashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"And so I walked\" — sore de, arukimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"And so I walked\" — *sore de, arukimashita*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C255-desu-kara-say",
+              "prompt": "Say that the train stopped, and so you were late.",
+              "assesses": [
+                "JA-GRAMMAR-C255-SO-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "densha ga tomarimashita; sore de, okuremashita",
+                "でんしゃが とまりました。それで、おくれました。",
+                "densha ga tomarimashita, sorede okuremashita"
+              ],
+              "feedback": {
+                "correct": "sore de tells what came of the stopped train.",
+                "incorrect": "After the event, sore de, then okuremashita."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"So\", politely? (ですから.) \"So\", to a friend? (だから (dakara).) \"And so\", for what came of an event? (それで.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R255-advice-and-so",
+      "sequence": 15290,
+      "title": "Review — advice, and so",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "advice, and what follows from it",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e1f122103368781",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"you had better rest\". (yasunda hō ga ii desu.) Then \"so I won't go\", to a friend. (dakara, ikimasen.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "You had better take some medicine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: You had better take some medicine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "You had better not drink cold water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: You had better not drink cold water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It is raining. So I won't go. — to a friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It is raining. So I won't go. — to a friend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The train stopped. And so I was late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The train stopped. And so I was late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I think you had better go to the hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I think you had better go to the hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I asked my teacher's opinion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I asked my teacher's opinion.]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R255-advice-and-so-say",
+              "prompt": "Say, politely, that it is raining, so the person had better not go.",
+              "assesses": [
+                "JA-GRAMMAR-C255-SHOULD-02",
+                "JA-GRAMMAR-C255-SO-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ame ga futte imasu; desu kara, ikanai hō ga ii desu",
+                "あめが ふっています。ですから、いかない ほうが いいです。",
+                "ame ga futte imasu, desu kara ikanai hō ga ii desu"
+              ],
+              "feedback": {
+                "correct": "desu kara for the polite 'so'; ikanai hō ga ii desu for the advice.",
+                "incorrect": "Politely, so is desu kara; advice against is ikanai hō ga ii desu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Advice for? (-た ほうが いいです.) Advice against? (-ない ほうが いいです.) \"So\", to a friend and politely? (だから (dakara), ですから.) \"And so\", for what came of it? (それで.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

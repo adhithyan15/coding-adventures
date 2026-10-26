@@ -1,0 +1,650 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 251,
+  "title": "Tomorrow, and What I Will Not Do",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:ffbc11acee3eb531",
+  "lessons": [
+    {
+      "id": "JA-C251-ashita-iku",
+      "sequence": 15030,
+      "title": "あした いく (ashita iku) — the future, with a time word",
+      "headword": "あした いく",
+      "romanization": "ashita iku",
+      "gloss": "will go tomorrow — the future, said with the non-past and a time word",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b73780c5140a4306",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"tomorrow\" and \"next week\". (ashita, raishū.) Then say \"I go\", politely. (ikimasu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: no future form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あした いきます。 ashita ikimasu. — \"I will go tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Japanese has no separate form for the future. いきます (ikimasu) is \"I go\" and also \"I will go\"; the time word says which."
+            },
+            {
+              "kind": "speech",
+              "text": "あした やまに いきます。 ashita yama ni ikimasu. — \"I will go to the mountains tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "らいしゅう はたらきます。 raishū hatarakimasu. — \"I will work next week.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With まいにち (mainichi), \"every day\", the same verb is what you do as a habit:"
+            },
+            {
+              "kind": "speech",
+              "text": "まいにち はたらきます。 mainichi hatarakimasu. — \"I work every day.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the plain future",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To a friend, the dictionary form does the same job:"
+            },
+            {
+              "kind": "speech",
+              "text": "えいがを みる。 eiga o miru. — \"I will see a film.\""
+            },
+            {
+              "kind": "speech",
+              "text": "あした えいがを みる。 ashita eiga o miru. — \"I will see a film tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That plain form is the one you already put before つもり (tsumori), \"a plan\", and it goes before でしょう (deshō), \"probably\", too:"
+            },
+            {
+              "kind": "speech",
+              "text": "らいねん うみに いく つもりです。 rainen umi ni iku tsumori desu. — \"I plan to go to the sea next year.\""
+            },
+            {
+              "kind": "speech",
+              "text": "あした あめが ふるでしょう。 ashita ame ga furu deshō. — \"It will probably rain tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It will probably rain tomorrow\" — ashita ame ga furu deshō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It will probably rain tomorrow\" — *ashita ame ga furu deshō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It will probably snow tomorrow\" — ashita yuki ga furu deshō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It will probably snow tomorrow\" — *ashita yuki ga furu deshō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It will probably rain next week\" — raishū ame ga furu deshō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It will probably rain next week\" — *raishū ame ga furu deshō*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C251-ashita-iku-say",
+              "prompt": "Say, politely, that you will go to the sea tomorrow.",
+              "assesses": [
+                "JA-GRAMMAR-C251-FUTURE-01",
+                "JA-GRAMMAR-C251-FUTURE-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ashita umi ni ikimasu",
+                "あした うみに いきます。",
+                "あした うみに いきます"
+              ],
+              "feedback": {
+                "correct": "ikimasu with ashita: the time word makes it the future.",
+                "incorrect": "Keep ikimasu and put ashita in front: ashita umi ni ikimasu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I will go tomorrow\", politely? (あした いきます.) To a friend? (あした いく (ashita iku).) What tells the listener it is the future? (The time word, あした.) \"It will probably rain\"? (あめが ふるでしょう.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C251-ikanai",
+      "sequence": 15040,
+      "title": "いかない / たべない (ikanai / tabenai) — the plain \"not\"",
+      "headword": "いかない / たべない",
+      "romanization": "ikanai / tabenai",
+      "gloss": "do not go, do not eat — the plain negative -ない, and its past -なかった",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a2432f65b96b7bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say, to a friend, \"I will go tomorrow\". (ashita iku.) Then say \"I will not go\", politely. (ikimasen.) This lesson gives the plain \"not\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ない",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A friend asks whether you are going tomorrow. The plain answer:"
+            },
+            {
+              "kind": "speech",
+              "text": "いかない。 ikanai. — \"I won't go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "あした いかない。 ashita ikanai. — \"I won't go tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "いかない (ikanai) is いきません (ikimasen) without the politeness. A verb that drops る for た drops it for ない too: たべる (taberu) has たべない (tabenai)."
+            },
+            {
+              "kind": "speech",
+              "text": "にくは たべない。 niku wa tabenai. — \"I do not eat meat.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The other verbs take the sound of their last kana in the a row: いく has いかない, のむ (nomu) has のまない (nomanai), まつ (matsu) has またない (matanai). A verb in う takes わ: かう (kau) has かわない (kawanai)."
+            },
+            {
+              "kind": "speech",
+              "text": "コーヒーは のまない。 kōhī wa nomanai. — \"I do not drink coffee.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Three are short: する has しない (shinai), くる has こない (konai), and ある (aru), \"there is\", has plain ない (nai)."
+            },
+            {
+              "kind": "speech",
+              "text": "じかんが ない。 jikan ga nai. — \"I have no time.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -なかった",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For \"did not\", the last い of ない becomes かった: いかなかった (ikanakatta), たべなかった (tabenakatta). It is ませんでした without the politeness."
+            },
+            {
+              "kind": "speech",
+              "text": "きのう いかなかった。 kinō ikanakatta. — \"I did not go yesterday.\""
+            },
+            {
+              "kind": "speech",
+              "text": "あさごはんを たべなかった。 asagohan o tabenakatta. — \"I did not eat breakfast.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Like the plain past, the plain \"not\" has a second job that later lessons give it: it goes in front of the word that keeps a sentence polite."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I do not drink coffee\" — kōhī wa nomanai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I do not drink coffee\" — *kōhī wa nomanai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I do not drink tea\" — ocha wa nomanai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I do not drink tea\" — *ocha wa nomanai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I do not drink water\" — mizu wa nomanai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I do not drink water\" — *mizu wa nomanai*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C251-ikanai-say",
+              "prompt": "Say, as you would to a friend, that you did not eat breakfast.",
+              "assesses": [
+                "JA-GRAMMAR-C251-NAI-01",
+                "JA-GRAMMAR-C251-NAI-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "asagohan o tabenakatta",
+                "あさごはんを たべなかった。",
+                "あさごはんを たべなかった",
+                "asagohan tabenakatta"
+              ],
+              "feedback": {
+                "correct": "tabenakatta: tabenai, with its last i turned into katta.",
+                "incorrect": "Start from tabenai and turn the last i into katta: tabenakatta."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I won't go\"? (いかない, ikanai.) \"I won't buy it\"? (かわない, kawanai.) \"I won't do it\"? (しない, shinai.) \"He won't come\"? (こない, konai.) \"I did not go\"? (いかなかった, ikanakatta.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C251-naru",
+      "sequence": 15050,
+      "title": "なる (naru) — to become; to get",
+      "headword": "なる",
+      "romanization": "naru",
+      "gloss": "to become; to get",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dc7ef5413c9e7bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"I will not go\", to a friend. (ikanai.) Then say \"cold\" and \"a teacher\". (samui, sensei.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なる — naru — \"to become\", \"to get\". Polite なります, narimasu; a godan verb. Past (polite): あには せんせいに なりました, ani wa sensei ni narimashita."
+            },
+            {
+              "kind": "speech",
+              "text": "After a noun it takes に:"
+            },
+            {
+              "kind": "speech",
+              "text": "あには せんせいに なりました。 ani wa sensei ni narimashita. — \"My elder brother became a teacher.\""
+            },
+            {
+              "kind": "speech",
+              "text": "After an i-adjective it takes the -く form you know from はやく: さむい becomes さむく."
+            },
+            {
+              "kind": "speech",
+              "text": "さむく なりました。 samuku narimashita. — \"It got cold.\""
+            },
+            {
+              "kind": "speech",
+              "text": "そらが くらく なりました。 sora ga kuraku narimashita. — \"The sky got dark.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なる (naru) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict marks it as usually written in kana, as here, and gives \"to become\" and \"to get\" as its first senses (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It got cold\" — samuku narimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It got cold\" — *samuku narimashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It got hot\" — atsuku narimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It got hot\" — *atsuku narimashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It got dark\" — kuraku narimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It got dark\" — *kuraku narimashita*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C251-naru-say",
+              "prompt": "Say the Japanese for 'to become'.",
+              "assesses": [
+                "JA-LEX-C251-NARU-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "naru",
+                "なる"
+              ],
+              "feedback": {
+                "correct": "Right: naru is 'to become', polite narimasu.",
+                "incorrect": "'To become' is naru."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"To become\"? (なる, naru.) After a noun, which particle? (に: せんせいに なりました.) After さむい? (さむく なりました.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R251-tomorrow-and-not",
+      "sequence": 15060,
+      "title": "Review — tomorrow, and what I will not do",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what you will and will not do, and what something became",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c52811541ce7957",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I will go tomorrow\", politely, then \"I will not go\", to a friend. (ashita ikimasu, ikanai.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I will work next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I will work next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I will see a film tomorrow. — to a friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I will see a film tomorrow. — to a friend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It will probably snow tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It will probably snow tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I do not eat meat, and I do not drink coffee. — to a friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I do not eat meat, and I do not drink coffee. — to a friend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My younger brother became a teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My younger brother became a teacher.]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R251-tomorrow-and-not-say",
+              "prompt": "Say, to a friend, that you did not go yesterday, then, politely, that it got cold.",
+              "assesses": [
+                "JA-GRAMMAR-C251-NAI-02",
+                "JA-LEX-C251-NARU-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "kinō ikanakatta; samuku narimashita",
+                "きのう いかなかった。さむく なりました。",
+                "ikanakatta, samuku narimashita"
+              ],
+              "feedback": {
+                "correct": "ikanakatta for 'did not go'; samuku narimashita for 'it got cold'.",
+                "incorrect": "Did not go is ikanakatta; it got cold is samuku narimashita."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is there a future form? (No: the non-past and a time word.) \"I won't come\", plainly? (こない.) \"There is no time\"? (じかんが ない.) \"I did not eat\"? (たべなかった.) \"It got hot\"? (あつく なりました.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

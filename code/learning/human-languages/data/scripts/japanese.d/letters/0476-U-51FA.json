@@ -1,0 +1,18 @@
+{
+  "glyph": "出",
+  "sound": "shutsu / sui / deru / dasu / ideru / idasu",
+  "role": "logograph",
+  "components": [
+    "two open boxes, one stacked on the other",
+    "one long centre stem through both"
+  ],
+  "strokeOrder": [
+    "draw the long centre stem from the top down",
+    "lift, draw the upper left side down, then without lifting turn right along the base of the upper part",
+    "lift, draw the upper right side down",
+    "lift, draw the lower left side down, then without lifting turn right along the bottom",
+    "lift, draw the lower right side down"
+  ],
+  "strokeOrderNote": "KanjiVG, kanji/051fa.svg (https://github.com/KanjiVG/kanjivg/blob/master/kanji/051fa.svg), records 出 (U+51FA) as five stroke paths, kvg:051fa-s1 to s5, in this order and direction (Ulrich Apel and contributors, CC BY-SA 3.0). KanjiVG stores each stroke as one directed path in writing order: s1 is the long centre stem, drawn from the top down (kvg:type ㇑a); s2 is the upper left side drawn down, turning right along the base of the upper part without lifting (㇄a); s3 is the upper right side, drawn down (㇑); s4 is the lower left side drawn down, turning right along the bottom without lifting (㇄a); s5 is the lower right side, drawn down (㇑). Only the order and direction are taken from that file. No ductus geometry has been fitted to the Noto Sans JP outline for this kanji yet, so the row carries no verified pen-lift count or structured source (script-ductus holds every such claim to a ductus): the lessons teach it copy-only, from this order.",
+  "notes": "Go out, put out. Read da in 言い出す iidasu, to suggest; shutsu and de are its readings in other words."
+}

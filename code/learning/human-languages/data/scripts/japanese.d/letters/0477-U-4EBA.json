@@ -1,0 +1,15 @@
+{
+  "glyph": "人",
+  "sound": "jin / nin / hito",
+  "role": "logograph",
+  "components": [
+    "a stroke falling to the left",
+    "a stroke falling to the right, leaning on it"
+  ],
+  "strokeOrder": [
+    "draw the long falling stroke from the top, down to the left",
+    "lift, start partway down the first stroke and draw the second down to the right"
+  ],
+  "strokeOrderNote": "KanjiVG, kanji/04eba.svg (https://github.com/KanjiVG/kanjivg/blob/master/kanji/04eba.svg), records 人 (U+4EBA) as two stroke paths, kvg:04eba-s1 to s2, in this order and direction (Ulrich Apel and contributors, CC BY-SA 3.0). KanjiVG stores each stroke as one directed path in writing order: s1 is the long falling stroke, drawn from the top down to the left (kvg:type ㇒); s2 is the stroke falling to the right, drawn from partway down the first (㇏). Only the order and direction are taken from that file. No ductus geometry has been fitted to the Noto Sans JP outline for this kanji yet, so the row carries no verified pen-lift count or structured source (script-ductus holds every such claim to a ductus): the lessons teach it copy-only, from this order.",
+  "notes": "Person. Read jin in 日本人 nihonjin, a Japanese person; nin and hito are its readings in other words."
+}
