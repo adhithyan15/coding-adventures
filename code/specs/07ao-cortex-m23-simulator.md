@@ -88,23 +88,30 @@ Secure execution may fetch and access any attributed region. Non-secure normal
 fetches and data accesses require a wholly Non-secure range. An NSC address is
 accepted only by the explicit secure-gateway transition, not by a normal
 Non-secure fetch or data access. Security checks happen before the inherited
-core executes, so an attribution failure is typed and preserves complete
-state.
+core commits. Fetch attribution precedes inherited execution. The inherited
+core then decodes, validates, and executes only against a private,
+non-observable candidate so inherited decode and semantic faults keep their
+architectural priority. Any described data access is attributed before the
+candidate may commit; a rejected candidate is restored immediately. Thus an
+attribution failure is typed and preserves complete architectural and private
+validation state.
 
 ## 5. Checked lifecycle and traces
 
 Program load is nonempty, halfword-aligned, in range, and resets the selected
 configuration before installing bytes. Direct register and memory APIs are
-checked. `step` builds a candidate transition and commits only after fetch,
-decode, security attribution, data-access preflight, and inherited execution
-succeed. All failures are typed and atomic.
+checked. `step` checks fetch attribution, privately builds and validates an
+inherited candidate, preflights that candidate's described data access, and
+only then commits it. Rejected candidates are not observable or retained. All
+failures are typed and atomic.
 
 Every successful `StepTrace` contains exact raw bytes, width, mnemonic,
 PC-before/after, security state, and complete M23 before/after snapshots.
 `run` retains at most 64 complete traces under the same conservative 8 MiB
 budget as the inherited core, rolls back the complete run on the first fault
-or step-limit exhaustion, and allocates nested snapshots fallibly. `execute`
-preflights the bound and atomically combines load and run.
+or step-limit exhaustion, resynchronizes its private validation scratch, and
+allocates nested snapshots fallibly. `execute` preflights the bound and
+atomically combines load and run, including private-scratch rollback.
 
 ## 6. Completion gate
 

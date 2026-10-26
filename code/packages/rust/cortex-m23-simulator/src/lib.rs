@@ -248,11 +248,21 @@ pub struct ExecutionResult {
 }
 
 /// Exact single-core functional machine within the package's stated boundary.
-#[derive(Debug)]
 pub struct CortexM23Simulator {
     state: CortexM23State,
-    /// Execution scratch. `state` is the sole architectural authority.
+    /// Non-observable execution scratch. `state` is the sole authority.
     core: cortex_m0_simulator::CortexM0Simulator,
+}
+
+impl fmt::Debug for CortexM23Simulator {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // The inherited core is deliberately omitted: it is a private
+        // validation candidate, not persistent architectural state.
+        formatter
+            .debug_struct("CortexM23Simulator")
+            .field("state", &self.state)
+            .finish_non_exhaustive()
+    }
 }
 
 impl Default for CortexM23Simulator {
@@ -427,20 +437,34 @@ impl CortexM23Simulator {
         // successful candidate is allowed to commit.
         self.core.restore(to_core_state(&before)?)?;
         let core_trace = self.core.step()?;
-        if let Some((address, bytes, access)) = inherited_data_access(&before, first) {
-            checked_instruction_data_range(address, bytes)?;
-            check_access(&before, address, bytes, access)?;
-        }
+        let raw = core_trace.raw;
+        let mnemonic = core_trace.mnemonic;
+        let candidate = (|| {
+            if let Some((address, bytes, access)) = inherited_data_access(&before, first) {
+                checked_instruction_data_range(address, bytes)?;
+                check_access(&before, address, bytes, access)?;
+            }
 
-        let mut next = try_clone_state(&before)?;
-        update_from_core(&mut next, core_trace.state_after);
-        let state_after = try_clone_state(&next)?;
+            let mut next = try_clone_state(&before)?;
+            update_from_core(&mut next, core_trace.state_after);
+            let state_after = try_clone_state(&next)?;
+            Ok::<_, CortexM23Error>((next, state_after))
+        })();
+        let (next, state_after) = match candidate {
+            Ok(candidate) => candidate,
+            Err(error) => {
+                self.core
+                    .restore(core_trace.state_before)
+                    .expect("inherited pre-state was already validated");
+                return Err(error);
+            }
+        };
         let trace = StepTrace {
             pc_before: before.pc,
             pc_after: next.pc,
-            raw: core_trace.raw,
+            raw,
             width,
-            mnemonic: core_trace.mnemonic,
+            mnemonic,
             security_before: before.security_state,
             security_after: next.security_state,
             state_before: before,
@@ -453,6 +477,7 @@ impl CortexM23Simulator {
     pub fn run(&mut self, max_steps: usize) -> Result<ExecutionResult, CortexM23Error> {
         check_retention(max_steps)?;
         let before = try_clone_state(&self.state)?;
+        let core_before = to_core_state(&before)?;
         let mut traces = Vec::new();
         traces
             .try_reserve_exact(max_steps)
@@ -462,6 +487,9 @@ impl CortexM23Simulator {
                 Ok(trace) => traces.push(trace),
                 Err(error) => {
                     self.state = before;
+                    self.core
+                        .restore(core_before)
+                        .expect("saved run pre-state was already validated");
                     return Err(error);
                 }
             }
@@ -470,6 +498,9 @@ impl CortexM23Simulator {
                     Ok(state) => state,
                     Err(error) => {
                         self.state = before;
+                        self.core
+                            .restore(core_before)
+                            .expect("saved run pre-state was already validated");
                         return Err(error);
                     }
                 };
@@ -482,6 +513,9 @@ impl CortexM23Simulator {
             }
         }
         self.state = before;
+        self.core
+            .restore(core_before)
+            .expect("saved run pre-state was already validated");
         Err(CortexM23Error::StepLimitExceeded { limit: max_steps })
     }
 
@@ -493,14 +527,21 @@ impl CortexM23Simulator {
     ) -> Result<ExecutionResult, CortexM23Error> {
         check_retention(max_steps)?;
         let before = try_clone_state(&self.state)?;
+        let core_before = to_core_state(&before)?;
         if let Err(error) = self.load(program, origin) {
             self.state = before;
+            self.core
+                .restore(core_before)
+                .expect("saved execute pre-state was already validated");
             return Err(error);
         }
         match self.run(max_steps) {
             Ok(result) => Ok(result),
             Err(error) => {
                 self.state = before;
+                self.core
+                    .restore(core_before)
+                    .expect("saved execute pre-state was already validated");
                 Err(error)
             }
         }
@@ -1005,6 +1046,11 @@ mod tests {
         simulator.try_get_state().expect("state snapshot")
     }
 
+    fn assert_scratch_matches_architecture(simulator: &CortexM23Simulator) {
+        let expected = to_core_state(&snapshot(simulator)).expect("core projection");
+        assert_eq!(simulator.core.get_state(), expected);
+    }
+
     fn non_secure_program(words: &[u16]) -> CortexM23Simulator {
         let mut simulator = CortexM23Simulator::default();
         simulator.load(&bytes(words), 0).expect("load");
@@ -1412,6 +1458,46 @@ mod tests {
     }
 
     #[test]
+    fn denied_secure_load_clears_private_candidate_and_hides_scratch() {
+        let mut simulator = CortexM23Simulator::default();
+        simulator.load(&bytes(&[0x6808]), 0).unwrap(); // LDR r0, [r1]
+        simulator.write_memory(0x100, 4, 0xdead_beef).unwrap();
+        simulator
+            .configure_sau_region(
+                0,
+                SauRegion {
+                    enabled: true,
+                    base: 0,
+                    limit: 31,
+                    non_secure_callable: false,
+                },
+            )
+            .unwrap();
+        simulator.configure_sau(true, false).unwrap();
+        simulator.enter_non_secure(1).unwrap();
+        let mut state = snapshot(&simulator);
+        state.registers[0] = 0x1111_1111;
+        state.registers[1] = 0x100;
+        simulator.restore(state).unwrap();
+
+        let before = snapshot(&simulator);
+        let debug_before = format!("{simulator:?}");
+        assert!(matches!(
+            simulator.step(),
+            Err(CortexM23Error::SecurityAttributionFault {
+                access: AccessKind::DataRead,
+                attribute: SecurityAttribute::Secure,
+                ..
+            })
+        ));
+        assert_eq!(snapshot(&simulator), before);
+        assert_scratch_matches_architecture(&simulator);
+        assert_eq!(simulator.core.get_state().registers[0], 0x1111_1111);
+        assert_eq!(format!("{simulator:?}"), debug_before);
+        assert!(!debug_before.contains("core"));
+    }
+
+    #[test]
     fn inherited_instruction_families_match_cortex_m0_exactly() {
         let bl = encoding::bl(0);
         let cases: &[&[u16]] = &[
@@ -1489,6 +1575,7 @@ mod tests {
             Err(CortexM23Error::StepLimitExceeded { limit: 1 })
         );
         assert_eq!(snapshot(&simulator), before);
+        assert_scratch_matches_architecture(&simulator);
 
         let error = simulator
             .execute(&bytes(&[encoding::bkpt(1)]), 0, 2)
@@ -1498,6 +1585,7 @@ mod tests {
             CortexM23Error::Core(cortex_m0_simulator::CortexM0Error::UnsupportedBreakpoint { .. })
         ));
         assert_eq!(snapshot(&simulator), before);
+        assert_scratch_matches_architecture(&simulator);
         assert_eq!(
             simulator.run(MAX_RETAINED_STEPS + 1),
             Err(CortexM23Error::RetentionLimitExceeded {

@@ -5,7 +5,9 @@ This package is a checked, bounded teaching model of one Arm Cortex-M23
 instruction surface and adds the Cortex-M23 Security Extension boundary:
 Secure/Non-secure execution state, banked stack/mask/control state, an
 eight-region SAU, checked attribution on fetch and data accesses, and explicit
-security-transition hooks.
+security-transition hooks. Inherited execution is a private validation
+candidate: rejected SAU candidates are restored immediately and never appear
+in the simulator's public or debug-visible state.
 
 The public contract is specified in
 [`07ao-cortex-m23-simulator.md`](../../../specs/07ao-cortex-m23-simulator.md).
