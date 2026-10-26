@@ -6,7 +6,7 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
-import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
@@ -33,13 +33,14 @@ import org.junit.Test
 //   restored launch (MOSAIC_EXPECT_RESTORED=1) the survivor is back -> delete
 //                   it -> the journal is empty again
 //
-// Timeline rows are the toolkit RecordList's buttons, tagged
-// `record-list-title` (or `-selected` for the entry open in the editor).
-// RecordList is mounted more than once (On this day, J4c, sits above the
-// timeline), and the resolver suffixes a later mount's parts (`-m2`,
-// #15959), so rows are matched by tag PREFIX. The editor's title field holds
-// the same text as its row, so rows are matched by tag AND text rather than
-// by text alone.
+// Timeline rows are mosaic-pkg-card Cards, each opened by the "Open" button
+// beside it, tagged `timeline-entry-open` (or `-selected` for the entry open
+// in the editor), so rows are matched by tag PREFIX. The button's visible
+// text is "Open" on every row; its accessible name, the Compose
+// `contentDescription`, is "Open {title}" (the app's open-label row field),
+// so rows are matched by tag AND that name. (They were the toolkit
+// RecordList's `record-list-title` buttons, matched by their text, before
+// the timeline became Cards.)
 
 private const val UI_DRAFT_TITLE = "Drafted on Compose"
 private const val UI_KEPT_TITLE = "Kept across a relaunch"
@@ -50,9 +51,9 @@ private const val UI_EMPTY = "No entries yet"
 private val ACCEPTANCE_VIEWPORT = Size(1100f, 760f)
 
 private fun timelineRow(title: String): SemanticsMatcher =
-    SemanticsMatcher("a RecordList row button") { node ->
-        node.config.getOrNull(SemanticsProperties.TestTag)?.startsWith("record-list-title") == true
-    } and hasText(title)
+    SemanticsMatcher("a timeline entry's Open button") { node ->
+        node.config.getOrNull(SemanticsProperties.TestTag)?.startsWith("timeline-entry-open") == true
+    } and hasContentDescription("Open $title")
 
 @OptIn(ExperimentalTestApi::class)
 private fun ComposeUiTest.write(title: String, body: String) {

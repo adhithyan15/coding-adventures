@@ -14,6 +14,22 @@
   - New `conformance/flutter/journal_scroll_test.dart`, the same check with a
     drag of the pane's `Scrollable`. Journal has no Flutter desktop lane yet,
     so it is run locally, and the file says how.
+- **Rows name their Open button (`open-label`).** Every row list
+  (`timeline-rows`, search hits and `on-this-day-rows`) gains a seventh
+  field, `row[6] = "Open {title}"`. The row type is `[String; ROW_FIELDS]`,
+  with `ROW_FIELDS = 7`. It is needed because `journal-app` now draws timeline
+  rows as `mosaic-pkg-card` Cards, each with an *Open* button beside it, and
+  the button's accessible name must name the entry. A layout expression
+  cannot join strings, so the app sends the whole name. The name contains
+  the visible word "Open" (WCAG 2.5.3). Rows are append-only, so
+  `RecordList`, which reads `row[0]`–`row[5]`, is unaffected. A new test
+  checks that all three lists carry the field, including an untitled entry's
+  fallback title.
+- **The native UI tests open an entry by its Open button.** Compose
+  desktop, Android and iPadOS now match `timeline-entry-open` (prefix) and
+  the accessible name `Open {title}` (Compose `contentDescription`, the
+  XCUITest `label`), where they used to match `record-list-title` and its
+  text.
 
 - **iPadOS UI test.** New `conformance/swiftui-ios/JournalUiTests.swift`, an
   XCUITest that CI compiles into the iOS project (`--ios-ui-test`) and runs on
