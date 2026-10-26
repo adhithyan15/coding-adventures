@@ -18072,3 +18072,18 @@ changelog, and removes only the exact gradient-descent exemption. The public
 unchanged. Training loops, random sampling, convergence claims, native
 runtimes, and new filesystem, process, network, environment, clock, entropy,
 credential, or other host authority remain out of scope.
+
+## October 26, 2026: Python front queue reconciliation
+
+PR #18260 merged through guarded squash auto-merge as
+`fd5ee771aa2ae14e9bd639eba25e7b41baf8a4dc`, and its completed worktree was
+removed. The Python branch rebased without conflict onto that exact main.
+Post-merge prioritization correctly assigned the open hosted slot to the
+higher-leverage Swift hash-functions package, now ready PR #18312 at exact
+reviewed head `e60a15a73ed7ed2d090b996b0b184454e811b947`.
+
+The three hosted parity slots are therefore #18183, #18293, and #18312. This
+Python tranche remains local-only, independently reviewed, and next among
+dependency-ready owners. It must be revalidated and independently reviewed
+again at its exact post-rebase head before a future publication. The prepared
+Bezier successors remain blocked on #18293; no fourth parity PR may open.
