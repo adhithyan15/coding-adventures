@@ -1,6 +1,5 @@
 {
   "omits": [
-    "TIME-NIGHT",
     "GREETING-DAY",
     "GREETING-AFTERNOON"
   ],

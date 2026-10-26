@@ -176,6 +176,14 @@ nodes are realized and both A1 writing stages are proved; A1 is not attained yet
 because the level gate asks for 600 headwords at or below A1 and the core brings
 the track to 401.
 
+**Chapters 99-146** are the A1 vocabulary: 240 words (85 verbs), five a chapter, on
+the A1 nodes, from washing, the desk, getting about and things you can do to signs
+and notices, takeaway, what people are like, music, weather, festivals, first and
+half, and day and night. Twenty-four more characters are written, each right after
+the word that first shows it (洗 菜 用 本 站 试 网 外 边 出 心 包 以 些 音 吵 病 春 千 扫 重
+节 每 半). With them Chinese attains A1 on the level gate: 641 headwords and 172
+verbs at or below A1.
+
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) records the original authored-and-planned path

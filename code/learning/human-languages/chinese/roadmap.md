@@ -249,6 +249,14 @@ three-minute clock and closes with a review of the core. A1 headwords 347 -> 401
 verbs 73 -> 87; all twelve A1 nodes realized, both A1 writing stages proved. A1 is
 not attained: the vocabulary tranches (about 200 more headwords) come next.
 
+## The A1 vocabulary (delivered, chapters 99-146)
+
+240 words (85 verbs) in two reviewed tranches on the A1 nodes, and 24 more characters
+written (洗 菜 用 本 站 试 网 外 边 出 心 包 以 些 音 吵 病 春 千 扫 重 节 每 半), 153 inventory
+rows in all. Chinese attains A1: 641 headwords and 172 verbs at or below A1. Next:
+the A2 rung, whose two missing spine nodes are talking about the future and reading
+practical texts.
+
 ## Part II onward — cumulative pre-A1 to C2 build *(planned)*
 
 Continue the official vocabulary tranche with oral meaning, source-verified
