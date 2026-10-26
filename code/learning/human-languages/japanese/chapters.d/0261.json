@@ -1,0 +1,21 @@
+{
+  "chapter": 261,
+  "title": "It Depends, and What Would Happen",
+  "label": "ch:ja-it-depends-and-what-would-happen",
+  "canDo": "I can say what something depends on (tenki ni yorimasu), say what is done in a given case (ame no baai wa), say what would happen if (okane ga attara, kau deshō), and tell a trip in six connected lines.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R261-it-depends",
+    "kind": "production",
+    "summary": "Complete JA-R261-it-depends: say what a plan depends on and what would happen if.",
+    "assesses": [
+      "JA-GRAMMAR-C261-DEPENDS-01",
+      "JA-LEX-C261-BAAI-01",
+      "JA-GRAMMAR-C261-DEPENDS-02",
+      "JA-GRAMMAR-C261-WOULD-01",
+      "JA-GRAMMAR-C261-WOULD-02"
+    ]
+  }
+}

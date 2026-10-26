@@ -1,0 +1,11 @@
+{
+  "id": "JA-R250-what-i-did-yesterday",
+  "pathSegment": "JA-PATH-250-PAST250",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-250-PAST250",
+      "order": 2
+    }
+  ]
+}

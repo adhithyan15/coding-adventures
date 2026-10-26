@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:0217da8d33cebedd",
+  "lessonIds": [
+    "JA-C256-dou-yatte",
+    "JA-C256-mai",
+    "JA-C256-kippu-o-nimai",
+    "JA-C256-nihonjin",
+    "JA-W256-jin-kanji",
+    "JA-R256-which-way-to-the-station"
+  ],
+  "tex": "japanese/book/chapters/ch256-which-way-to-the-station.tex"
+}
