@@ -78,7 +78,7 @@ fn big_endian_memory_modes_widths_and_postincrement_suppression() {
 #[test]
 fn displacement_gbr_pc_relative_and_mova_use_scaled_addresses() {
     let mut program = vec![0_u8; 32];
-    for word in program.chunks_exact_mut(2) {
+    for word in program.as_chunks_mut::<2>().0 {
         word.copy_from_slice(&[0x00, 0x09]);
     }
     program.splice(
