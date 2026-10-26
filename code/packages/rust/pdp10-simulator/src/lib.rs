@@ -644,8 +644,8 @@ impl Pdp10Simulator {
             0o262 => {
                 let address = self.pop_address(ac);
                 let value = self.read_data(address);
-                self.write_data(ea, value);
                 self.decrement_stack(ac);
+                self.write_data(ea, value);
                 "POP"
             }
             0o263 => {

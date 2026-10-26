@@ -233,6 +233,13 @@ fn pushdown_pointers_use_full_word_arithmetic_and_expose_overflow() {
     assert_eq!(pop.accumulator(3).unwrap(), 0o777777_777777);
     assert_eq!(pop.memory_word(0o500).unwrap(), 0o456);
     assert!(pop.state().flags.pushdown_overflow);
+
+    let mut aliased_pop = loaded(&[instruction(0o262, 3, false, 0, 3)]);
+    aliased_pop.set_accumulator(0, 0o123).unwrap();
+    aliased_pop.set_accumulator(3, 0o000001_000000).unwrap();
+    aliased_pop.step().unwrap();
+    assert_eq!(aliased_pop.accumulator(3).unwrap(), 0o123);
+    assert!(aliased_pop.state().flags.pushdown_overflow);
 }
 
 #[test]
