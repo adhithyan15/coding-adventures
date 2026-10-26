@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Loans and Instalments",
+  "label": "ch:gu-loans-and-instalments",
+  "canDo": "I can talk about a loan and paying it back.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C425-cukte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can talk about a loan and paying it back.",
+    "assesses": [
+      "GU-LEX-C425-LOAN425-03",
+      "GU-LEX-C425-LOAN425-04",
+      "GU-LEX-C425-LOAN425-05"
+    ]
+  }
+}

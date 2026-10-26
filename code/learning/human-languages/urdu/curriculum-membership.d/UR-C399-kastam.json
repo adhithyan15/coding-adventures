@@ -1,0 +1,11 @@
+{
+  "id": "UR-C399-kastam",
+  "pathSegment": "UR-PATH-399-HIFAZAT399",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-399-HIFAZAT399",
+      "order": 2
+    }
+  ]
+}

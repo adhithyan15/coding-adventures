@@ -1,0 +1,11 @@
+{
+  "id": "GU-C546-uprat",
+  "pathSegment": "GU-PATH-546-VAGAR546",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-546-VAGAR546",
+      "order": 3
+    }
+  ]
+}

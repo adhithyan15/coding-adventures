@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-544-TAPHAVAT544",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GU-EXT-544-TAPHAVAT544"
+  ],
+  "after": []
+}

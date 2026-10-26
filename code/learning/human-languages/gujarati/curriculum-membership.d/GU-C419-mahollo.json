@@ -1,0 +1,11 @@
+{
+  "id": "GU-C419-mahollo",
+  "pathSegment": "GU-PATH-419-STREET419",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-419-STREET419",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:c8fdf5d7b1c4c2af",
+  "lessonIds": [
+    "GU-C529-tabakko",
+    "GU-C529-kram",
+    "GU-C529-andaj",
+    "GU-C529-adhuru",
+    "GU-C529-antim"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch529.txt",
+  "json": "gujarati/narration/ch529.json",
+  "textHash": "fnv1a64:e5e16671923bc712",
+  "jsonHash": "fnv1a64:46ee415af010a8ab",
+  "findings": []
+}

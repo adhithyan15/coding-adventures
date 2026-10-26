@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER attribute-comment line-break vertical slice",
+  "fixtures": [
+    {
+      "name": "attribute-comment-line-break-variants",
+      "source": "erDiagram\nENTITY {\n  string first \"Primary<br>identifier\"\n  string second \"Second<br/>line\"\n  string third PK \"Third<br />line\"\n}"
+    }
+  ]
+}

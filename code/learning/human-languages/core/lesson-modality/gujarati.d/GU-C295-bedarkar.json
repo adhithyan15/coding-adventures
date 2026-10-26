@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C295-bedarkar",
+    "language": "gujarati",
+    "chapter": 295,
+    "sequence": 16530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb9cd934fe786442"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Free Time",
+  "label": "ch:ur-free-time",
+  "canDo": "I can talk about what I do in my free time.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C513-album",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about what I do in my free time.",
+    "assesses": [
+      "UR-LEX-C513-FURSAT513-03",
+      "UR-LEX-C513-FURSAT513-04",
+      "UR-LEX-C513-FURSAT513-05"
+    ]
+  }
+}

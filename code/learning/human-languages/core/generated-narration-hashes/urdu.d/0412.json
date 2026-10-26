@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:ecb0785ed5f4233f",
+  "lessonIds": [
+    "UR-C412-qasba",
+    "UR-C412-abadi",
+    "UR-C412-bashinda",
+    "UR-C412-dehat",
+    "UR-C412-paros"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch412.txt",
+  "json": "urdu/narration/ch412.json",
+  "textHash": "fnv1a64:5d07ea2dde5ddc7a",
+  "jsonHash": "fnv1a64:c2476494b335ce21",
+  "findings": []
+}

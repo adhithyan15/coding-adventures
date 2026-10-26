@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Quilts and Pillows",
+  "label": "ch:gu-quilts-and-pillows",
+  "canDo": "I can ask for bedding and settle down for the night.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C411-suvdavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can ask for bedding and settle down for the night.",
+    "assesses": [
+      "GU-LEX-C411-QUILT411-03",
+      "GU-LEX-C411-QUILT411-04",
+      "GU-LEX-C411-QUILT411-05"
+    ]
+  }
+}

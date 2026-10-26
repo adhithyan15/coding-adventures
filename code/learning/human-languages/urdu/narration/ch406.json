@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 406,
+  "title": "Nights Outdoors",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b84a2c5c35679fae",
+  "lessons": [
+    {
+      "id": "UR-C406-lakri",
+      "sequence": 24020,
+      "title": "لکڑی (lakṛī) — wood; firewood",
+      "headword": "لکڑی",
+      "romanization": "lakṛī",
+      "gloss": "wood; firewood",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8732498f3b14cd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to send for, then the Urdu for a tip (for service)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لکڑی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لکڑی — lakṛī — \"wood; firewood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ہم جنگل سے لکڑی لائے۔ ham jangal se lakṛī lāe. We brought wood back from the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لکڑی (lakṛī) is inherited: CDIAL lists the Hindi cousin lakṛī, \"a stick, firewood\", under Sanskrit lakuṭa, \"a club\" (CDIAL 10875)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ham jangal se lakṛī lāe. — We brought wood back from the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ham jangal se lakṛī lāe.* — We brought wood back from the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to send for, then the Urdu for a tip (for service), then say lakṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to send for, then the Urdu for a tip (for service), then say *lakṛī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لکڑی (lakṛī) mean? (\"Wood; firewood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C406-sulgana",
+      "sequence": 24030,
+      "title": "سلگانا (sulgānā) — to kindle (a fire); to light",
+      "headword": "سلگانا",
+      "romanization": "sulgānā",
+      "gloss": "to kindle (a fire); to light",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1992b2320d8a0b60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a tip (for service), then the Urdu for wood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سلگانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سلگانا — sulgānā — \"to kindle (a fire); to light\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سارا نے لکڑی سے آگ سلگائی۔ sārā ne lakṛī se āg sulgāī. Sara got a fire going with the wood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے چولہا سلگایا, us ne chūlhā sulgāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سلگانا (sulgānā) is built on sulagnā, \"to smoulder, to catch fire\", which CDIAL lists under Sanskrit saṃlagna, \"attached, stuck together\" (CDIAL 12999): this is the form for setting a fire going."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sulgānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sulgānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sulgānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sulgānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārā ne lakṛī se āg sulgāī. — Sara got a fire going with the wood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārā ne lakṛī se āg sulgāī.* — Sara got a fire going with the wood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a tip (for service), then the Urdu for wood, then say sulgānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a tip (for service), then the Urdu for wood, then say *sulgānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سلگانا (sulgānā) mean? (\"To kindle (a fire); to light\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C406-orhna",
+      "sequence": 24040,
+      "title": "اوڑھنا (oṛhnā) — to wrap oneself in (a shawl or a blanket)",
+      "headword": "اوڑھنا",
+      "romanization": "oṛhnā",
+      "gloss": "to wrap oneself in (a shawl or a blanket)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0068d3ffb8664a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for wood, then the Urdu for to kindle (a fire)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اوڑھنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اوڑھنا — oṛhnā — \"to wrap oneself in (a shawl or a blanket)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سردی تھی، اس لیے ہم نے کمبل اوڑھے۔ sardī thī, is liye ham ne kambal oṛhe. It was cold, so we wrapped ourselves in blankets."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے چادر اوڑھی, us ne chādar oṛhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اوڑھنا (oṛhnā) is inherited: CDIAL lists the Hindi cousin oṛhnā, \"to cover\", under ōḍḍh, a form it reconstructs (CDIAL 2547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṛhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṛhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṛhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṛhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sardī thī, is liye ham ne kambal oṛhe. — It was cold, so we wrapped ourselves in blankets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sardī thī, is liye ham ne kambal oṛhe.* — It was cold, so we wrapped ourselves in blankets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for wood, then the Urdu for to kindle (a fire), then say oṛhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for wood, then the Urdu for to kindle (a fire), then say *oṛhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اوڑھنا (oṛhnā) mean? (\"To wrap oneself in (a shawl or a blanket)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C406-shamiyana",
+      "sequence": 24050,
+      "title": "شامیانہ (shāmiyānā) — a canopy; a large awning",
+      "headword": "شامیانہ",
+      "romanization": "shāmiyānā",
+      "gloss": "a canopy; a large awning",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbd22915f613ab44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to kindle (a fire), then the Urdu for to wrap oneself in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شامیانہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شامیانہ — shāmiyānā — \"a canopy; a large awning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میدان میں ایک بڑا شامیانہ تھا۔ maidān meṅ ek baṛā shāmiyānā thā. There was a big canopy on the field."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شامیانہ (shāmiyānā) is usually traced to Persian shāmiyāna, \"a canopy\"; weddings and camps put one up against the sun and the rain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāmiyānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāmiyānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāmiyānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāmiyānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maidān meṅ ek baṛā shāmiyānā thā. — There was a big canopy on the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maidān meṅ ek baṛā shāmiyānā thā.* — There was a big canopy on the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to kindle (a fire), then the Urdu for to wrap oneself in, then say shāmiyānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to kindle (a fire), then the Urdu for to wrap oneself in, then say *shāmiyānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شامیانہ (shāmiyānā) mean? (\"A canopy; a large awning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C406-basera",
+      "sequence": 24060,
+      "title": "بسیرا (baserā) — a night's shelter; a roost",
+      "headword": "بسیرا",
+      "romanization": "baserā",
+      "gloss": "a night's shelter; a roost",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4428b6474d90656f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to wrap oneself in, then the Urdu for a canopy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بسیرا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بسیرا — baserā — \"a night's shelter; a roost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پرندے شام کو درختوں پر بسیرا کرتے ہیں۔ parinde shām ko darakhtoṅ par baserā karte haiṅ. In the evening the birds roost in the trees."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بسیرا (baserā) is inherited: CDIAL lists the Hindi cousin baserā, \"a place of staying\", under vāsakara, a form it reconstructs (CDIAL 11594)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baserā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baserā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baserā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baserā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parinde shām ko darakhtoṅ par baserā karte haiṅ. — In the evening the birds roost in the trees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parinde shām ko darakhtoṅ par baserā karte haiṅ.* — In the evening the birds roost in the trees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to wrap oneself in, then the Urdu for a canopy, then say baserā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to wrap oneself in, then the Urdu for a canopy, then say *baserā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بسیرا (baserā) mean? (\"A night's shelter; a roost\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:24d868ba13f5ea2d",
+  "lessonIds": [
+    "GU-C467-vartan",
+    "GU-C467-adab",
+    "GU-C467-nakhra",
+    "GU-C467-caritrya",
+    "GU-C467-lajvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch467.txt",
+  "json": "gujarati/narration/ch467.json",
+  "textHash": "fnv1a64:67e94639654127ac",
+  "jsonHash": "fnv1a64:2aa23eb4b93d0094",
+  "findings": []
+}

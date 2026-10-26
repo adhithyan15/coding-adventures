@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:04b4a29506f39f98",
+  "lessonIds": [
+    "GU-C504-kumbhar",
+    "GU-C504-cakdo",
+    "GU-C504-garo",
+    "GU-C504-gudvu",
+    "GU-C504-kodiyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch504.txt",
+  "json": "gujarati/narration/ch504.json",
+  "textHash": "fnv1a64:27e9c753f4184712",
+  "jsonHash": "fnv1a64:280fcb194ceb0577",
+  "findings": []
+}

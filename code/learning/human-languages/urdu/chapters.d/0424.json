@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Goods and Sacks",
+  "label": "ch:ur-goods-and-sacks",
+  "canDo": "I can talk about a shop's stock: sacks, packets and goods wrapped to take home.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C424-lapetna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about a shop's stock: sacks, packets and goods wrapped to take home.",
+    "assesses": [
+      "UR-LEX-C424-MAAL424-03",
+      "UR-LEX-C424-MAAL424-04",
+      "UR-LEX-C424-MAAL424-05"
+    ]
+  }
+}

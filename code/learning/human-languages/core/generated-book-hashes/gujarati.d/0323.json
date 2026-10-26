@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:8c01aa4d828a9c49",
+  "lessonIds": [
+    "GU-C323-sahid",
+    "GU-C323-balidan",
+    "GU-C323-vijay",
+    "GU-C323-ver",
+    "GU-C323-padkarvu"
+  ],
+  "tex": "gujarati/book/chapters/ch323-the-martyrs.tex"
+}

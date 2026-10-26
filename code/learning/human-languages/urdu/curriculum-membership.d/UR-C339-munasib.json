@@ -1,0 +1,11 @@
+{
+  "id": "UR-C339-munasib",
+  "pathSegment": "UR-PATH-339-IKHTIYAR339",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-339-IKHTIYAR339",
+      "order": 2
+    }
+  ]
+}

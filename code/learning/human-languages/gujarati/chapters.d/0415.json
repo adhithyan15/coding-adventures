@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "Landmarks",
+  "label": "ch:gu-landmarks",
+  "canDo": "I can give directions by landmarks.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C415-gotvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can give directions by landmarks.",
+    "assesses": [
+      "GU-LEX-C415-LANDMARK415-03",
+      "GU-LEX-C415-LANDMARK415-04",
+      "GU-LEX-C415-LANDMARK415-05"
+    ]
+  }
+}

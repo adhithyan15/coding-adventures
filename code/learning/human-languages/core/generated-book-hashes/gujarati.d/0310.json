@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:f4d3c1dd600bf98c",
+  "lessonIds": [
+    "GU-C310-tukdi",
+    "GU-C310-jivlen",
+    "GU-C310-sahay",
+    "GU-C310-mujhavu",
+    "GU-C310-vikheravu"
+  ],
+  "tex": "gujarati/book/chapters/ch310-the-search-team.tex"
+}

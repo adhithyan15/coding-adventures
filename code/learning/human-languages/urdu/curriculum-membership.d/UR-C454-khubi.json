@@ -1,0 +1,11 @@
+{
+  "id": "UR-C454-khubi",
+  "pathSegment": "UR-PATH-454-CHARACTER454",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-454-CHARACTER454",
+      "order": 3
+    }
+  ]
+}

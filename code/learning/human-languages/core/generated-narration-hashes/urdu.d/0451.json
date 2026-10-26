@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:9e1d44bc4b8dfc72",
+  "lessonIds": [
+    "UR-C451-hichkichana",
+    "UR-C451-lajana",
+    "UR-C451-nadamat",
+    "UR-C451-pasheman",
+    "UR-C451-khijalat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch451.txt",
+  "json": "urdu/narration/ch451.json",
+  "textHash": "fnv1a64:6c89ed8d7edf6c38",
+  "jsonHash": "fnv1a64:16e7a495acd78fa7",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:5b340d80a222fbaa",
+  "lessonIds": [
+    "UR-C383-manzuri",
+    "UR-C383-intizam",
+    "UR-C383-qati",
+    "UR-C383-batorna",
+    "UR-C383-fel-hona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch383.txt",
+  "json": "urdu/narration/ch383.json",
+  "textHash": "fnv1a64:d0693b2237b31685",
+  "jsonHash": "fnv1a64:2ef992e041fb14be",
+  "findings": []
+}

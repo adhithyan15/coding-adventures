@@ -1,0 +1,11 @@
+{
+  "id": "UR-C411-baramada",
+  "pathSegment": "UR-PATH-411-DHALAN411",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-411-DHALAN411",
+      "order": 2
+    }
+  ]
+}

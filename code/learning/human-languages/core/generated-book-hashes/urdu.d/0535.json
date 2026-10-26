@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:44ead4976fa27d6f",
+  "lessonIds": [
+    "UR-C535-shagun",
+    "UR-C535-manhus",
+    "UR-C535-tona",
+    "UR-C535-najumi",
+    "UR-C535-zaicha"
+  ],
+  "tex": "urdu/book/chapters/ch535-omens-and-stars.tex"
+}

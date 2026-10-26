@@ -1,0 +1,11 @@
+{
+  "id": "GU-C440-sangam",
+  "pathSegment": "GU-PATH-440-STREAM440",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-440-STREAM440",
+      "order": 2
+    }
+  ]
+}

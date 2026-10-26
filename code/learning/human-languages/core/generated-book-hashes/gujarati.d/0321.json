@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:488600a273c137c4",
+  "lessonIds": [
+    "GU-C321-talvar",
+    "GU-C321-dhal",
+    "GU-C321-hathiyar",
+    "GU-C321-top",
+    "GU-C321-vidhvu"
+  ],
+  "tex": "gujarati/book/chapters/ch321-swords-and-shields.tex"
+}

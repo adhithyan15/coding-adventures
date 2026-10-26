@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER title line-break vertical slice",
+  "fixtures": [
+    {
+      "name": "title-line-break-variants",
+      "source": "erDiagram\ntitle \"Domain<br>Model<br/>Across<br />Lines\"\nENTITY {\n  string id PK\n}"
+    }
+  ]
+}

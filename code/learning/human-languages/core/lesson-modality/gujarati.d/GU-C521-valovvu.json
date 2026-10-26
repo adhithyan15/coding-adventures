@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C521-valovvu",
+    "language": "gujarati",
+    "chapter": 521,
+    "sequence": 29040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7a94710ce2ff6c3"
+  },
+  "findings": []
+}

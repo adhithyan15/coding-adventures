@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C528-bajet",
+    "language": "gujarati",
+    "chapter": 528,
+    "sequence": 29390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ae27734787e9a29"
+  },
+  "findings": []
+}

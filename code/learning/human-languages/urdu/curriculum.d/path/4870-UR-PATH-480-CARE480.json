@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-480-CARE480",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-480-CARE480"
+  ],
+  "after": []
+}

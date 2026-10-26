@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:16679b1d65c44822",
+  "lessonIds": [
+    "GU-C372-vimo",
+    "GU-C372-geranti",
+    "GU-C372-kavac",
+    "GU-C372-sacet",
+    "GU-C372-avarvu"
+  ],
+  "tex": "gujarati/book/chapters/ch372-insurance-and-guarantees.tex"
+}

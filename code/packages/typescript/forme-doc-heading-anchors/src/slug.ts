@@ -51,7 +51,7 @@
  *
  * The empty-slug case is real and is what triggers our collision
  * suffixing in the walker — two empty-titled headings (e.g. `# ` `#  `)
- * collide on `""`, and the second one gets bumped to `-2`.
+ * collide on `""`, and the second one gets bumped to `-1`.
  *
  * =============================================================================
  * DETERMINISM NOTES

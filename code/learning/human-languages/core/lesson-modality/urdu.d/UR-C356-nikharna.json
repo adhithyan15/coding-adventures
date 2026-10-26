@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C356-nikharna",
+    "language": "urdu",
+    "chapter": 356,
+    "sequence": 21320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e368ac0fc9ad5ccb"
+  },
+  "findings": []
+}

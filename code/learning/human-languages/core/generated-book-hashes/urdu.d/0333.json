@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:3e0d4c1be5c27115",
+  "lessonIds": [
+    "UR-C333-maqsad",
+    "UR-C333-khatir",
+    "UR-C333-gharaz",
+    "UR-C333-faida",
+    "UR-C333-istemal-karna"
+  ],
+  "tex": "urdu/book/chapters/ch333-what-it-is-for.tex"
+}

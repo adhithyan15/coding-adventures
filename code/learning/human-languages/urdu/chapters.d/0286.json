@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "The Injured",
+  "label": "ch:ur-the-injured",
+  "canDo": "I can describe who was hurt and how badly.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C286-sambhalna-oneself",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can describe who was hurt and how badly.",
+    "assesses": [
+      "UR-LEX-C286-ZAKHMI286-03",
+      "UR-LEX-C286-ZAKHMI286-04",
+      "UR-LEX-C286-ZAKHMI286-05"
+    ]
+  }
+}

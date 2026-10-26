@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:04f2bfa0440f95c4",
+  "lessonIds": [
+    "UR-C541-zaviya",
+    "UR-C541-halat",
+    "UR-C541-mashrut",
+    "UR-C541-naubat",
+    "UR-C541-bilfarz"
+  ],
+  "tex": "urdu/book/chapters/ch541-in-that-case.tex"
+}

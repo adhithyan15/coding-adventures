@@ -1,0 +1,11 @@
+{
+  "id": "GU-R400-review-393-400",
+  "pathSegment": "GU-PATH-400-SCOOTER400",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-400-SCOOTER400",
+      "order": 5
+    }
+  ]
+}

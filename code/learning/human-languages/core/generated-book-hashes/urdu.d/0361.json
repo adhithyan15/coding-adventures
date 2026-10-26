@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:418efad25875e3d4",
+  "lessonIds": [
+    "UR-C361-imkan",
+    "UR-C361-gunjaish",
+    "UR-C361-ittifaq",
+    "UR-C361-ehtimal",
+    "UR-C361-bitna"
+  ],
+  "tex": "urdu/book/chapters/ch361-is-it-possible.tex"
+}

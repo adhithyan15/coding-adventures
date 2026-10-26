@@ -1,0 +1,11 @@
+{
+  "id": "GU-C397-umbro",
+  "pathSegment": "GU-PATH-397-DOOR397",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-397-DOOR397",
+      "order": 1
+    }
+  ]
+}

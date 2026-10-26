@@ -1,0 +1,11 @@
+{
+  "id": "GU-C289-vakil",
+  "pathSegment": "GU-PATH-289-ADALAT289",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-289-ADALAT289",
+      "order": 1
+    }
+  ]
+}

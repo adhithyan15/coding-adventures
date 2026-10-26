@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:16104cc0d22aa766",
+  "lessonIds": [
+    "GU-C290-daku",
+    "GU-C290-banduk",
+    "GU-C290-dhamki",
+    "GU-C290-dhamkavvu",
+    "GU-C290-chinavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch290-bandits-on-the-road.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 551,
+  "title": "Training for the Big Day",
+  "label": "ch:gu-training-for-the-big-day",
+  "canDo": "I can talk about training and practice before a big day.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C551-trophi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 551: I can talk about training and practice before a big day.",
+    "assesses": [
+      "GU-LEX-C551-TALIM551-03",
+      "GU-LEX-C551-TALIM551-04",
+      "GU-LEX-C551-TALIM551-05"
+    ]
+  }
+}

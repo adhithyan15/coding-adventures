@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:c9f96cc83744c629",
+  "lessonIds": [
+    "UR-C504-svich",
+    "UR-C504-plag",
+    "UR-C504-karant",
+    "UR-C504-khunti",
+    "UR-C504-saket"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch504.txt",
+  "json": "urdu/narration/ch504.json",
+  "textHash": "fnv1a64:75fdc104deee9639",
+  "jsonHash": "fnv1a64:b3809b769347f4de",
+  "findings": []
+}

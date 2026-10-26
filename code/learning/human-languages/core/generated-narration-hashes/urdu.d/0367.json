@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:3fb9c2139dca7fb3",
+  "lessonIds": [
+    "UR-C367-mahz",
+    "UR-C367-qaida",
+    "UR-C367-khilaf-varzi",
+    "UR-C367-shiq",
+    "UR-C367-nafiz-hona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch367.txt",
+  "json": "urdu/narration/ch367.json",
+  "textHash": "fnv1a64:99e0c2c4728c469d",
+  "jsonHash": "fnv1a64:b87634e138e8c666",
+  "findings": []
+}

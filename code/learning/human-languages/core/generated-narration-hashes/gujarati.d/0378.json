@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:d9d6a8a65f653f78",
+  "lessonIds": [
+    "GU-C378-had",
+    "GU-C378-maryada",
+    "GU-C378-atisay",
+    "GU-C378-praman",
+    "GU-C378-khamvu",
+    "GU-R378-review-371-378"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch378.txt",
+  "json": "gujarati/narration/ch378.json",
+  "textHash": "fnv1a64:13db04c096c381be",
+  "jsonHash": "fnv1a64:c1ce21d40333ec7b",
+  "findings": []
+}

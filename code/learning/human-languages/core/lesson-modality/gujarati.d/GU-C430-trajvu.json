@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C430-trajvu",
+    "language": "gujarati",
+    "chapter": 430,
+    "sequence": 23890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa0a74e7d3a16ae1"
+  },
+  "findings": []
+}

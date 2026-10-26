@@ -1,4 +1,33 @@
 # Changelog — `aarch64-backend`
+
+## Unreleased — f64 negation flips the sign bit
+
+### Fixed
+
+- `neg_f64` flips the sign bit (`MOV X1,#1<<63; EOR X0,X0,X1`) instead of `NEG X0,X0`. An f64 rides its stack slot as raw IEEE-754 bits, so the integer
+  two's-complement negate miscompiled every non-trivial real negation:
+  `LET X = 2.5: PRINT -X` printed `-1.75` (0x4004… → 0xBFFC…), and `-(+0.0)`
+  stayed `+0.0`. `aot-core`'s `specialise` turns IIR `neg` with an `f64` type
+  into `neg_f64`, which Dartmouth BASIC emits for every unary minus on a real.
+  The only matrix row that exercised it, `ABS(-42)`, negates twice, and a
+  two's-complement negate is its own inverse, so the bug round-tripped to
+  the right answer. A folded `Float` operand is now materialised from its own
+  bits. New unit tests pin the emitted `EOR` sequence and the absence of the
+  integer `NEG` (the folded-literal path is covered by the matrix row, not a
+  unit test), and a new lang-aot matrix row (`LET X = 2.5` / `PRINT -X` → `-2.5`)
+  runs it on every backend.
+
+## [0.43.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
+
+- **`f64_add` / `f64_sub` / `f64_mul` / `f64_div`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6c): the existing
+  `emit_fp_binop` (`fadd`/`fsub`/`fmul`/`fdiv d0, d0, d1`; FPCR traps off).
+- **`f64_neg` / `f64_signbit`** on the raw bits: `ldr x0,[a]`, then
+  `eor x0, x0, x1` with `x1 = 0x8000…` or `lsr x0, x0, x1` with `x1 = 63`.
+  A float literal operand is loaded as its `to_bits()` (new
+  `load_f64_bits`); an integer literal is refused.
+- `op_support`: all six `Lowered`. Tests compare the emitted words with
+  `aarch64-encoder`'s (structural; no AArch64 host here).
+
 ## [0.42.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
 
 - **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): two `V1_BUILTINS` rows,

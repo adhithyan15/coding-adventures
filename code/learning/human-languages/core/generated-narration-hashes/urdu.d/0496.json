@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:50eea56e61ec87c8",
+  "lessonIds": [
+    "UR-C496-varkshap",
+    "UR-C496-shikanja",
+    "UR-C496-surakh",
+    "UR-C496-chhedna",
+    "UR-C496-regmal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch496.txt",
+  "json": "urdu/narration/ch496.json",
+  "textHash": "fnv1a64:8398c09ebe35f735",
+  "jsonHash": "fnv1a64:2fbea129e6b18b2d",
+  "findings": []
+}

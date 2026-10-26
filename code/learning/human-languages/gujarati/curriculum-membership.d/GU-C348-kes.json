@@ -1,0 +1,11 @@
+{
+  "id": "GU-C348-kes",
+  "pathSegment": "GU-PATH-348-KES348",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-348-KES348",
+      "order": 1
+    }
+  ]
+}

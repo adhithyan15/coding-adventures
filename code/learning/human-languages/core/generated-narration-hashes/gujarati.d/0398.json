@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:2bd9a3ac00b62587",
+  "lessonIds": [
+    "GU-C398-jhoku",
+    "GU-C398-ujagro",
+    "GU-C398-ughvu",
+    "GU-C398-jhatko",
+    "GU-C398-khakhadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch398.txt",
+  "json": "gujarati/narration/ch398.json",
+  "textHash": "fnv1a64:9b6c63e851a74531",
+  "jsonHash": "fnv1a64:b1d0b56c983fc975",
+  "findings": []
+}

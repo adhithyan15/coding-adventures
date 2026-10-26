@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:a9cc5e4240e435ed",
+  "lessonIds": [
+    "GU-C512-pad",
+    "GU-C512-intaravyu",
+    "GU-C512-vetan",
+    "GU-C512-karkirdi",
+    "GU-C512-badhti"
+  ],
+  "tex": "gujarati/book/chapters/ch512-looking-for-a-job.tex"
+}

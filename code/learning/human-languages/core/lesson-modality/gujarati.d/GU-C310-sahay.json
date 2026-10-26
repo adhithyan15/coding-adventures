@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C310-sahay",
+    "language": "gujarati",
+    "chapter": 310,
+    "sequence": 17300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de51eeebd4514775"
+  },
+  "findings": []
+}

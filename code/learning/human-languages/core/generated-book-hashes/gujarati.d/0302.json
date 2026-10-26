@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:3028907a43bcabee",
+  "lessonIds": [
+    "GU-C302-bambo",
+    "GU-C302-bujhavvu",
+    "GU-C302-dordu",
+    "GU-C302-ogalvu",
+    "GU-C302-bhadko"
+  ],
+  "tex": "gujarati/book/chapters/ch302-the-fire-engine.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C303-inkar-karna",
+    "language": "urdu",
+    "chapter": 303,
+    "sequence": 18380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7374e62149b425b9"
+  },
+  "findings": []
+}

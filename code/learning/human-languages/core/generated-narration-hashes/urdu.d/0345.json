@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:0e35758d517a6867",
+  "lessonIds": [
+    "UR-C345-qadr",
+    "UR-C345-iman",
+    "UR-C345-izzat",
+    "UR-C345-usul",
+    "UR-C345-aqida"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch345.txt",
+  "json": "urdu/narration/ch345.json",
+  "textHash": "fnv1a64:226da15bcbc55086",
+  "jsonHash": "fnv1a64:dbd9664be7d5b4d4",
+  "findings": []
+}

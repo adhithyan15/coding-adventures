@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:ccb58d24a63e3e88",
+  "lessonIds": [
+    "GU-C400-skutar",
+    "GU-C400-helmet",
+    "GU-C400-horn",
+    "GU-C400-hendal",
+    "GU-C400-uchalvu-toss",
+    "GU-R400-review-393-400"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch400.txt",
+  "json": "gujarati/narration/ch400.json",
+  "textHash": "fnv1a64:c2a162c6544dc801",
+  "jsonHash": "fnv1a64:b1944843e2a8a6a2",
+  "findings": []
+}

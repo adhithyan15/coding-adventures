@@ -1,0 +1,11 @@
+{
+  "id": "UR-W273-suad",
+  "pathSegment": "UR-PATH-273-COMPARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-273-COMPARE",
+      "order": 3
+    }
+  ]
+}

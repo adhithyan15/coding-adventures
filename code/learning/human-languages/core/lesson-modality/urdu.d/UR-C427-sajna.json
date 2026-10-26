@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C427-sajna",
+    "language": "urdu",
+    "chapter": 427,
+    "sequence": 25140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:798f2c693735fcb8"
+  },
+  "findings": []
+}

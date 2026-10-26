@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:0e4190bf0ddefb82",
+  "lessonIds": [
+    "GU-C431-godam",
+    "GU-C431-puravtho",
+    "GU-C431-unap",
+    "GU-C431-jaththabandh",
+    "GU-C431-sangharvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch431.txt",
+  "json": "gujarati/narration/ch431.json",
+  "textHash": "fnv1a64:356d14189b9d8d01",
+  "jsonHash": "fnv1a64:6e99e3a592a6419f",
+  "findings": []
+}

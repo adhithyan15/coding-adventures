@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Pictures and Painters",
+  "label": "ch:ur-pictures-and-painters",
+  "canDo": "I can talk about pictures and the people who paint them.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C515-jhalakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can talk about pictures and the people who paint them.",
+    "assesses": [
+      "UR-LEX-C515-TASVIR515-03",
+      "UR-LEX-C515-TASVIR515-04",
+      "UR-LEX-C515-TASVIR515-05"
+    ]
+  }
+}

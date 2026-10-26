@@ -1,0 +1,21 @@
+{
+  "chapter": 316,
+  "title": "According to the Report",
+  "label": "ch:gu-according-to-the-report",
+  "canDo": "I can say when something happened and what a report said.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-R316-review-309-316",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can say when something happened and what a report said.",
+    "assesses": [
+      "GU-LEX-C316-MUJAB316-01",
+      "GU-LEX-C316-MUJAB316-02",
+      "GU-LEX-C316-MUJAB316-03",
+      "GU-LEX-C316-MUJAB316-04",
+      "GU-LEX-C316-MUJAB316-05"
+    ]
+  }
+}

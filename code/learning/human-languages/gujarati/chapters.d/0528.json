@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "If We Plan Ahead",
+  "label": "ch:gu-if-we-plan-ahead",
+  "canDo": "I can say what will happen if we plan ahead.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C528-yojvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can say what will happen if we plan ahead.",
+    "assesses": [
+      "GU-LEX-C528-YOJVU528-03",
+      "GU-LEX-C528-YOJVU528-04",
+      "GU-LEX-C528-YOJVU528-05"
+    ]
+  }
+}

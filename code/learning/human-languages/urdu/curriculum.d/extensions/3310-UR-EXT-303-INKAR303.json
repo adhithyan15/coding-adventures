@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-303-INKAR303",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report what someone denied and what was admitted.",
+  "prerequisites": []
+}

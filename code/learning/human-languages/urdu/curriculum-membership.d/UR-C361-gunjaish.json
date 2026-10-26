@@ -1,0 +1,11 @@
+{
+  "id": "UR-C361-gunjaish",
+  "pathSegment": "UR-PATH-361-IMKAN361",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-361-IMKAN361",
+      "order": 1
+    }
+  ]
+}

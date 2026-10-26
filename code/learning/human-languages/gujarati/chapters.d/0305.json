@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "When the Earth Shook",
+  "label": "ch:gu-when-the-earth-shook",
+  "canDo": "I can say what an earthquake brought down and who was trapped.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C305-katmal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can say what an earthquake brought down and who was trapped.",
+    "assesses": [
+      "GU-LEX-C305-BHUKAMP305-03",
+      "GU-LEX-C305-BHUKAMP305-04",
+      "GU-LEX-C305-BHUKAMP305-05"
+    ]
+  }
+}

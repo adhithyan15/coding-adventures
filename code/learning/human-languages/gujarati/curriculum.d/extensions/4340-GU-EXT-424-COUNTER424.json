@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-424-COUNTER424",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can do simple business at a bank counter.",
+  "prerequisites": []
+}

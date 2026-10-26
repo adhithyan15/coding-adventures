@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "What It Is For",
+  "label": "ch:gu-what-it-is-for",
+  "canDo": "I can say what something is for and what someone means to do.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C340-sadhvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can say what something is for and what someone means to do.",
+    "assesses": [
+      "GU-LEX-C340-HETU340-03",
+      "GU-LEX-C340-HETU340-04",
+      "GU-LEX-C340-HETU340-05"
+    ]
+  }
+}

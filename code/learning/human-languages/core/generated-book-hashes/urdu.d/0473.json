@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:e61711889ea70150",
+  "lessonIds": [
+    "UR-C473-kasakna",
+    "UR-C473-ainthan",
+    "UR-C473-jakarna",
+    "UR-C473-langrana",
+    "UR-C473-sozish"
+  ],
+  "tex": "urdu/book/chapters/ch473-aches-and-stiffness.tex"
+}

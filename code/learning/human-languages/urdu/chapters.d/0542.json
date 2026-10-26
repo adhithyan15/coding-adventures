@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "Anyway",
+  "label": "ch:ur-anyway",
+  "canDo": "I can move a conversation on after a condition.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C542-khulasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can move a conversation on after a condition.",
+    "assesses": [
+      "UR-LEX-C542-KHAIR542-03",
+      "UR-LEX-C542-KHAIR542-04",
+      "UR-LEX-C542-KHAIR542-05"
+    ]
+  }
+}

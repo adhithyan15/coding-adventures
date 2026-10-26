@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:40c507964b5f1509",
+  "lessonIds": [
+    "GU-C295-valak",
+    "GU-C295-brek",
+    "GU-C295-bedarkar",
+    "GU-C295-dand",
+    "GU-C295-kacadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch295.txt",
+  "json": "gujarati/narration/ch295.json",
+  "textHash": "fnv1a64:cc03bed4d6605728",
+  "jsonHash": "fnv1a64:46acc2364e8b27be",
+  "findings": []
+}

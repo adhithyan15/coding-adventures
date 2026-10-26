@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:4be89c8d6ecf9b50",
+  "lessonIds": [
+    "UR-C377-badtar",
+    "UR-C377-umda",
+    "UR-C377-am",
+    "UR-C377-bigarna-worsen",
+    "UR-C377-sudharna-improve"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch377.txt",
+  "json": "urdu/narration/ch377.json",
+  "textHash": "fnv1a64:5f0811805d582e1e",
+  "jsonHash": "fnv1a64:75abecb783fe193f",
+  "findings": []
+}

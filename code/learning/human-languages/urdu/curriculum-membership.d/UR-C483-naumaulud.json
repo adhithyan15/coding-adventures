@@ -1,0 +1,11 @@
+{
+  "id": "UR-C483-naumaulud",
+  "pathSegment": "UR-PATH-483-BABY483",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-483-BABY483",
+      "order": 4
+    }
+  ]
+}

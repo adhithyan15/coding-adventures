@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C523-pharsan",
+    "language": "gujarati",
+    "chapter": 523,
+    "sequence": 29120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a9752a595d8f5c1"
+  },
+  "findings": []
+}

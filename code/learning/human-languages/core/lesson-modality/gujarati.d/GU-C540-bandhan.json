@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C540-bandhan",
+    "language": "gujarati",
+    "chapter": 540,
+    "sequence": 30000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea1dece0d9ef79a3"
+  },
+  "findings": []
+}

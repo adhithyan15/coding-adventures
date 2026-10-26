@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "A Heated Argument",
+  "label": "ch:ur-a-heated-argument",
+  "canDo": "I can say who argued, and what each side said.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C334-mantiq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can say who argued, and what each side said.",
+    "assesses": [
+      "UR-LEX-C334-BAHAS334-03",
+      "UR-LEX-C334-BAHAS334-04",
+      "UR-LEX-C334-BAHAS334-05"
+    ]
+  }
+}

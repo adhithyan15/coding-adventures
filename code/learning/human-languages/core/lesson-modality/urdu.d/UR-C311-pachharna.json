@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C311-pachharna",
+    "language": "urdu",
+    "chapter": 311,
+    "sequence": 18800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:402908cedc559951"
+  },
+  "findings": []
+}

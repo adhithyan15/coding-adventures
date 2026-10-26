@@ -1,0 +1,11 @@
+{
+  "id": "GU-C511-kadiyo",
+  "pathSegment": "GU-PATH-511-MAJUR511",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-511-MAJUR511",
+      "order": 2
+    }
+  ]
+}

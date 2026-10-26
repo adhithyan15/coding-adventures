@@ -1,0 +1,11 @@
+{
+  "id": "GU-C311-janavvu",
+  "pathSegment": "GU-PATH-311-SAMACHAR311",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-311-SAMACHAR311",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:169ebca614e4d0a2",
+  "lessonIds": [
+    "UR-C409-janib",
+    "UR-C409-rukh",
+    "UR-C409-nazdik",
+    "UR-C409-gosha",
+    "UR-C409-jhankna",
+    "UR-R409-review-402-409"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch409.txt",
+  "json": "urdu/narration/ch409.json",
+  "textHash": "fnv1a64:dc3bb38b835638de",
+  "jsonHash": "fnv1a64:79b316f2bb44613d",
+  "findings": []
+}

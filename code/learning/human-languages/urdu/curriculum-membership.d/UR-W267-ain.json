@@ -1,0 +1,11 @@
+{
+  "id": "UR-W267-ain",
+  "pathSegment": "UR-PATH-267-STORY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-267-STORY",
+      "order": 1
+    }
+  ]
+}

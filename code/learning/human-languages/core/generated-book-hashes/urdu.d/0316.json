@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:b5816a614e8363fa",
+  "lessonIds": [
+    "UR-C316-qaidi",
+    "UR-C316-pahra",
+    "UR-C316-surang",
+    "UR-C316-khisakna",
+    "UR-C316-rengna"
+  ],
+  "tex": "urdu/book/chapters/ch316-escape-from-the-fort.tex"
+}

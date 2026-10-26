@@ -1,0 +1,11 @@
+{
+  "id": "GU-C421-ghurakvu",
+  "pathSegment": "GU-PATH-421-NOISE421",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-421-NOISE421",
+      "order": 3
+    }
+  ]
+}

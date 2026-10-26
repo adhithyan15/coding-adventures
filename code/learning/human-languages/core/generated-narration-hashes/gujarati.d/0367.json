@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:018726854d7b69d9",
+  "lessonIds": [
+    "GU-C367-sambhavatah",
+    "GU-C367-acuk",
+    "GU-C367-niscit",
+    "GU-C367-dharna",
+    "GU-C367-akvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch367.txt",
+  "json": "gujarati/narration/ch367.json",
+  "textHash": "fnv1a64:2f9ec5218e68449e",
+  "jsonHash": "fnv1a64:7a49ba6d9bbabee1",
+  "findings": []
+}

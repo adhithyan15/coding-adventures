@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Which Way?",
+  "label": "ch:gu-which-way",
+  "canDo": "I can ask the way and follow someone who points it out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C413-cidhvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can ask the way and follow someone who points it out.",
+    "assesses": [
+      "GU-LEX-C413-WAY413-03",
+      "GU-LEX-C413-WAY413-04",
+      "GU-LEX-C413-WAY413-05"
+    ]
+  }
+}

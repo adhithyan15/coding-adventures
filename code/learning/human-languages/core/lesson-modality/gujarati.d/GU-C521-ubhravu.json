@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C521-ubhravu",
+    "language": "gujarati",
+    "chapter": 521,
+    "sequence": 29050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87ba8b55c0c304db"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Damp and Cracks",
+  "label": "ch:ur-damp-and-cracks",
+  "canDo": "I can talk about damp walls and painting them.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C503-lipna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about damp walls and painting them.",
+    "assesses": [
+      "UR-LEX-C503-SILAN503-03",
+      "UR-LEX-C503-SILAN503-04",
+      "UR-LEX-C503-SILAN503-05"
+    ]
+  }
+}

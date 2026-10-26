@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:0c9e1665d1155f80",
+  "lessonIds": [
+    "GU-C550-tir",
+    "GU-C550-nisan",
+    "GU-C550-taakvu",
+    "GU-C550-bhedvu",
+    "GU-C550-dodvir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch550.txt",
+  "json": "gujarati/narration/ch550.json",
+  "textHash": "fnv1a64:b532d8107dccc22b",
+  "jsonHash": "fnv1a64:3c8edcb76550bc4c",
+  "findings": []
+}

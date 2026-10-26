@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:b434b25d8a7b84ee",
+  "lessonIds": [
+    "GU-C290-daku",
+    "GU-C290-banduk",
+    "GU-C290-dhamki",
+    "GU-C290-dhamkavvu",
+    "GU-C290-chinavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch290.txt",
+  "json": "gujarati/narration/ch290.json",
+  "textHash": "fnv1a64:7deda16e51208066",
+  "jsonHash": "fnv1a64:0b7d472249f5a05e",
+  "findings": []
+}

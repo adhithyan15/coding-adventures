@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C501-pighlana",
+    "language": "urdu",
+    "chapter": 501,
+    "sequence": 29380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2914991357aaba6"
+  },
+  "findings": []
+}

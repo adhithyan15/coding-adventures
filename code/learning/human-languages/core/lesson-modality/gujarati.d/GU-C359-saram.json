@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C359-saram",
+    "language": "gujarati",
+    "chapter": 359,
+    "sequence": 20040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf4cec3f25e05720"
+  },
+  "findings": []
+}

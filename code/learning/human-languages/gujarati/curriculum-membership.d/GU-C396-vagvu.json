@@ -1,0 +1,11 @@
+{
+  "id": "GU-C396-vagvu",
+  "pathSegment": "GU-PATH-396-GUARD396",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-396-GUARD396",
+      "order": 3
+    }
+  ]
+}

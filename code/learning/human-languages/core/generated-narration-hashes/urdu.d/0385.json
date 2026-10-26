@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:1bf3a66303f694e0",
+  "lessonIds": [
+    "UR-C385-vazifa",
+    "UR-C385-farq",
+    "UR-C385-mauzu",
+    "UR-C385-dakhila",
+    "UR-C385-tarjih-dena",
+    "UR-R385-review-379-385",
+    "UR-R385-review-final-385"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch385.txt",
+  "json": "urdu/narration/ch385.json",
+  "textHash": "fnv1a64:40d87e3390a02836",
+  "jsonHash": "fnv1a64:533b6993b7fc22c8",
+  "findings": []
+}

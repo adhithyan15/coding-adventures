@@ -1,0 +1,11 @@
+{
+  "id": "UR-C376-mamuli",
+  "pathSegment": "UR-PATH-376-MIQDAR376",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-376-MIQDAR376",
+      "order": 2
+    }
+  ]
+}

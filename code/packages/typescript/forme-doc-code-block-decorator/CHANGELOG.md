@@ -3,6 +3,8 @@
 ## Unreleased
 
 - Decorates both code variants while retaining the fenced discriminator and complete metadata. The existing explicit filename-hint transform can strip a hint line from payload. `DecoratedFencedBlockNode` is exported alongside the unchanged legacy interface.
+- Reconcile the downstream pipeline documentation with the complete
+  shipped DOC00 v0 cluster.
 
 ## 1.0.0 — 2026-10-05
 

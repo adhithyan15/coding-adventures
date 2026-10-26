@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Carving and Shaping",
+  "label": "ch:gu-carving-and-shaping",
+  "canDo": "I can talk about sculpture, carving and exhibitions.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C525-pradarsan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can talk about sculpture, carving and exhibitions.",
+    "assesses": [
+      "GU-LEX-C525-SHILP525-03",
+      "GU-LEX-C525-SHILP525-04",
+      "GU-LEX-C525-SHILP525-05"
+    ]
+  }
+}

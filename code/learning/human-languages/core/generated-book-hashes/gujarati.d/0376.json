@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:8bb0559ab06f1aec",
+  "lessonIds": [
+    "GU-C376-bhul",
+    "GU-C376-gaphlat",
+    "GU-C376-khami",
+    "GU-C376-dhil",
+    "GU-C376-sudharvu-improve"
+  ],
+  "tex": "gujarati/book/chapters/ch376-mistakes-and-slips.tex"
+}

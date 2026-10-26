@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Rights and the Constitution",
+  "label": "ch:gu-rights-and-the-constitution",
+  "canDo": "I can talk about the rights a constitution protects.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C356-jalavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can talk about the rights a constitution protects.",
+    "assesses": [
+      "GU-LEX-C356-BANDHARAN356-03",
+      "GU-LEX-C356-BANDHARAN356-04",
+      "GU-LEX-C356-BANDHARAN356-05"
+    ]
+  }
+}

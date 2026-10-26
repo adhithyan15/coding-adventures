@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C546-vina",
+    "language": "gujarati",
+    "chapter": 546,
+    "sequence": 30310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:419f11a87ff5c637"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C334-dalil",
+  "pathSegment": "UR-PATH-334-BAHAS334",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-334-BAHAS334",
+      "order": 1
+    }
+  ]
+}

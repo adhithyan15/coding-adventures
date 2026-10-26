@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C423-dam",
+    "language": "urdu",
+    "chapter": 423,
+    "sequence": 24910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:321d301b26ec6211"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C365-tabdili",
+    "language": "urdu",
+    "chapter": 365,
+    "sequence": 21770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d10e13813dd3c750"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:cd37786c371b7900",
+  "lessonIds": [
+    "GU-C388-ruprekha",
+    "GU-C388-upakram",
+    "GU-C388-abhiyan",
+    "GU-C388-arambhvu",
+    "GU-C388-adarvu"
+  ],
+  "tex": "gujarati/book/chapters/ch388-getting-started.tex"
+}

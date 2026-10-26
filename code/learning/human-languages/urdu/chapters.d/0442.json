@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "A Surprise",
+  "label": "ch:ur-a-surprise",
+  "canDo": "I can say that something amazed me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C442-achambha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can say that something amazed me.",
+    "assesses": [
+      "UR-LEX-C442-SURPRISE442-03",
+      "UR-LEX-C442-SURPRISE442-04",
+      "UR-LEX-C442-SURPRISE442-05"
+    ]
+  }
+}

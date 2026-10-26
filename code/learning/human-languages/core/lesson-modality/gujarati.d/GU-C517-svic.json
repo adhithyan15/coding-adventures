@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C517-svic",
+    "language": "gujarati",
+    "chapter": 517,
+    "sequence": 28840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bee449608c4ad291"
+  },
+  "findings": []
+}

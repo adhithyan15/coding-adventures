@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:738edf2b80f1e8d6",
+  "lessonIds": [
+    "GU-C375-avasyak",
+    "GU-C375-anivarya",
+    "GU-C375-pharjiyat",
+    "GU-C375-patvu",
+    "GU-C375-puru-padvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch375.txt",
+  "json": "gujarati/narration/ch375.json",
+  "textHash": "fnv1a64:f0c2c6e2175f59a5",
+  "jsonHash": "fnv1a64:51446b8ff47969c6",
+  "findings": []
+}

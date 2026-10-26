@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "The Story Behind the Festival",
+  "label": "ch:gu-the-story-behind-the-festival",
+  "canDo": "I can say how a festival is kept and why.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C327-parva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can say how a festival is kept and why.",
+    "assesses": [
+      "GU-LEX-C327-UTSAV327-03",
+      "GU-LEX-C327-UTSAV327-04",
+      "GU-LEX-C327-UTSAV327-05"
+    ]
+  }
+}

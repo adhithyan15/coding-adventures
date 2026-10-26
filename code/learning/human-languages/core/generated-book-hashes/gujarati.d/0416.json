@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:da4bab1ad344b522",
+  "lessonIds": [
+    "GU-C416-kendra",
+    "GU-C416-vistar",
+    "GU-C416-paru",
+    "GU-C416-bhagol",
+    "GU-C416-bhamvu",
+    "GU-R416-review-409-416"
+  ],
+  "tex": "gujarati/book/chapters/ch416-areas-and-places.tex"
+}

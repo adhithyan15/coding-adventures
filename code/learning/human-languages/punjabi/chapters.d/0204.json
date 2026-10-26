@@ -1,0 +1,18 @@
+{
+  "chapter": 204,
+  "title": "With Children",
+  "label": "ch:pa-a2-bachchian",
+  "canDo": "I can recognise and use one children form before a familiar postposition.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C204-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce one children form in a bounded familiar-postposition frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-GRAMMAR-BACHCHIAN-204"
+    ],
+    "note": "This twenty-seventh Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

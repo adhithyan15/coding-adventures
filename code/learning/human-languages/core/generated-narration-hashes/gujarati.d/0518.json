@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:66971a49528e530e",
+  "lessonIds": [
+    "GU-C518-pasti",
+    "GU-C518-jalu",
+    "GU-C518-jhadu",
+    "GU-C518-phug",
+    "GU-C518-cotadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch518.txt",
+  "json": "gujarati/narration/ch518.json",
+  "textHash": "fnv1a64:c77397f0d5f72dbf",
+  "jsonHash": "fnv1a64:4f0c9a41dfccec73",
+  "findings": []
+}

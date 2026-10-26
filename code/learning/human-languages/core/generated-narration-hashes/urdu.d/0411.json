@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:2b04e5485c5104ea",
+  "lessonIds": [
+    "UR-C411-dhalan",
+    "UR-C411-lurhakna",
+    "UR-C411-baramada",
+    "UR-C411-tah-khana",
+    "UR-C411-baghal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch411.txt",
+  "json": "urdu/narration/ch411.json",
+  "textHash": "fnv1a64:0bda07f563704de2",
+  "jsonHash": "fnv1a64:eb93320dffff0c10",
+  "findings": []
+}

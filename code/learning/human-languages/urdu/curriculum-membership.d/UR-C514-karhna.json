@@ -1,0 +1,11 @@
+{
+  "id": "UR-C514-karhna",
+  "pathSegment": "UR-PATH-514-KARHAI514",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-514-KARHAI514",
+      "order": 2
+    }
+  ]
+}

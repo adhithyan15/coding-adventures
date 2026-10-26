@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:a6704c173b19c869",
+  "lessonIds": [
+    "GU-C420-kamad",
+    "GU-C420-naliyu",
+    "GU-C420-vad",
+    "GU-C420-thabhlo",
+    "GU-C420-chavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch420.txt",
+  "json": "gujarati/narration/ch420.json",
+  "textHash": "fnv1a64:9165b9301d56e9d0",
+  "jsonHash": "fnv1a64:9fd7e6929d970c04",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:cfd7a36740a185a2",
+  "lessonIds": [
+    "GU-C461-krpan",
+    "GU-C461-udau",
+    "GU-C461-kangal",
+    "GU-C461-sakhavat",
+    "GU-C461-dan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch461.txt",
+  "json": "gujarati/narration/ch461.json",
+  "textHash": "fnv1a64:56318aadef90c2c2",
+  "jsonHash": "fnv1a64:c9d4227122bd4b57",
+  "findings": []
+}

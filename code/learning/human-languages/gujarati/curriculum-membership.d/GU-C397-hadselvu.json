@@ -1,0 +1,11 @@
+{
+  "id": "GU-C397-hadselvu",
+  "pathSegment": "GU-PATH-397-DOOR397",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-397-DOOR397",
+      "order": 3
+    }
+  ]
+}

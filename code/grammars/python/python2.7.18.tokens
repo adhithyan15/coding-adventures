@@ -5,31 +5,32 @@
 # source_sha: 8d21aa21f2cbc6d50aab3f420bb23be1d081dac4
 # evidence: Grammar/Grammar blob 4c3f33da32d5ca202b3e5549032e6c09e9784a6f; Grammar/Tokens blob -;
 #   Parser/tokenizer.c blob 89666611940cf84c0a6e88ac7c365b134e9c5a26; Lib/keyword.py blob 69794bda8c879a098a2adaef5e4bcee32f8683c8
-# basis: reviewed against the tag's own syntax files (LANG84 phase 7c slice 1). Tokens follow tokenizer.c tok_get (decimal [1-9][0-9]* or a single 0; octal, hex and `L` suffixes are not lexed) and PyToken_OneChar/TwoChars/ThreeChars (45 operators), and keyword.py kwlist (31, `print` among them); the grammar follows Grammar/Grammar file_input..print_stmt..atom/trailer/arglist.
+# basis: reviewed against the tag's own syntax files (LANG84 phase 7c slices 1 and 2). Tokens follow tokenizer.c tok_get (decimal, octal 0[0-7]*, hex 0x, 0o and 0b, each with an optional l/L suffix) and PyToken_OneChar/TwoChars/ThreeChars (45 operators), and keyword.py kwlist (31, `print` among them); the grammar follows Grammar/Grammar file_input..print_stmt..atom/trailer/arglist.
 
 # ---------------------------------------------------------------------------
 # What this pair lexes, and what it does not, so a reader never has to guess.
 #
-# Lexed: decimal integers, names, this release's keywords (`print` is one: in
-# Python 2 `print` is a statement, not a function), every operator and
-# delimiter its tokenizer knows (including `<>` and the backquote, which
-# Python 3 removed), `#` comments, a `\`-newline continuation, and the
-# indentation engine's NEWLINE/INDENT/DEDENT (newlines inside brackets are
-# suppressed, blank and comment-only lines produce nothing).
+# Lexed: integers in every spelling this release's tokenizer reads as an int
+# or a long (decimal `42`, octal `010`, hex `0x1F`, `0o17` and `0b101`, each
+# with an optional `l`/`L` long suffix), names, this release's keywords
+# (`print` is one: in Python 2 `print` is a statement, not a function), every
+# operator and delimiter its tokenizer knows (including `<>` and the
+# backquote, which Python 3 removed), `#` comments, a `\`-newline
+# continuation, and the indentation engine's NEWLINE/INDENT/DEDENT (newlines
+# inside brackets are suppressed, blank and comment-only lines produce
+# nothing).
 #
 # NOT lexed (a lexer error here; later LANG84 Python slices):
 #   strings and unicode literals      'a' "a" u'a' r'a'
 #   floats and imaginary numbers      1.5 1e3 .5 2j       (`1.5` lexes as INT DOT INT
 #                                                          and fails to parse)
-#   octal, hex and long integers      010 0x1F 1L         (Python 2 reads `010` as 8)
 #   tabs before a comment, form feeds
 #
 # Known narrowings against the release's own tokenizer (each rejects; none
 # accepts a program the release would read differently):
-#   * Only `0` itself is a zero: `00` is octal zero in Python 2 and a lexer
-#     error here, like every other octal literal.
-#   * A number must not run into a name character: `1L`, `1if` and `1_` are
-#     lexer errors (`\b` closes INT).
+#   * A number must not run into a name character: `1if`, `1_`, `0x1Fg` and
+#     `0o8` are lexer errors (`\b` closes INT). The release reports `0o8` and
+#     `0b2` as errors too, and splits `1if` into `1` and `if`.
 #   * `\` must be followed directly by the newline, as CPython requires.
 # ---------------------------------------------------------------------------
 
@@ -39,11 +40,21 @@ skip:
   COMMENT           = /#[^\n]*/
   LINE_CONTINUATION = /\\\n/
 
-# --- integers (tok_get in Parser/tokenizer.c) --------------------------------
-# A non-zero decimal is a digit 1-9 then digits. A leading `0` starts an octal
-# (or hex) literal in Python 2, so the only decimal that starts with `0` is
-# `0` itself. There is no `_` separator (that is PEP 515, Python 3.6).
-INT = /(?:[1-9][0-9]*|0)\b/
+# --- integers (tok_get in Parser/tokenizer.c; parsenumber in Python/ast.c) --
+# Python 2 spellings, each with an optional `l`/`L` suffix that makes a long:
+#
+#   decimal  [1-9][0-9]*           1  42  7L
+#   octal    0[0-7]*               0  00  010 (= 8)  0777L
+#   hex      0[xX][0-9a-fA-F]+     0x1F  0XffL
+#   octal    0[oO][0-7]+           0o17  0O17L     (PEP 3127, 2.6)
+#   binary   0[bB][01]+            0b101  0B1L     (PEP 3127, 2.6)
+#
+# A decimal digit after a leading `0` (`08`, `0178`) is the tokenizer's
+# ERRORTOKEN, and here a lexer error. There is no `_` separator (that is PEP
+# 515, Python 3.6). Which value a spelling denotes is the compiler's job
+# (python-iir-compiler int_lower.rs, profile `py2`), which refuses a literal
+# above i64.
+INT = /(?:0[xX][0-9a-fA-F]+|0[oO][0-7]+|0[bB][01]+|0[0-7]*|[1-9][0-9]*)[lL]?\b/
 
 # --- names -------------------------------------------------------------------
 NAME = /[a-zA-Z_][a-zA-Z0-9_]*/

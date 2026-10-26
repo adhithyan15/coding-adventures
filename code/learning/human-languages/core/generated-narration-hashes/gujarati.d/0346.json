@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:515bbbddc9d5c496",
+  "lessonIds": [
+    "GU-C346-dakhlo",
+    "GU-C346-udaharan",
+    "GU-C346-tark",
+    "GU-C346-judu",
+    "GU-C346-sarkhavvu",
+    "GU-R346-review-339-346"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch346.txt",
+  "json": "gujarati/narration/ch346.json",
+  "textHash": "fnv1a64:e6b8ee4df0c05fd8",
+  "jsonHash": "fnv1a64:c1bbf8900d4f9088",
+  "findings": []
+}

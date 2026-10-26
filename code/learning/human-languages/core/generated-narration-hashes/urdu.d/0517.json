@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:3c11967459a25e49",
+  "lessonIds": [
+    "UR-C517-istej",
+    "UR-C517-tali",
+    "UR-C517-shaiqin",
+    "UR-C517-mukalama",
+    "UR-C517-lubhana",
+    "UR-R517-review-510-517"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch517.txt",
+  "json": "urdu/narration/ch517.json",
+  "textHash": "fnv1a64:d6be8232fdcbae48",
+  "jsonHash": "fnv1a64:8687d0e8fc10ba3c",
+  "findings": []
+}

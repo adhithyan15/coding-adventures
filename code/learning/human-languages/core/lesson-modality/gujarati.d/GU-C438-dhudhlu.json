@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C438-dhudhlu",
+    "language": "gujarati",
+    "chapter": 438,
+    "sequence": 24330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b24e386e0d2f0903"
+  },
+  "findings": []
+}

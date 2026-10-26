@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 504,
+  "title": "Clay and the Wheel",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:04b4a29506f39f98",
+  "lessons": [
+    {
+      "id": "GU-C504-kumbhar",
+      "sequence": 28150,
+      "title": "કુંભાર (kumbhār) — a potter",
+      "headword": "કુંભાર",
+      "romanization": "kumbhār",
+      "gloss": "a potter",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c912fbbaadfeede3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a crack, then the Gujarati for to split (wood)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કુંભાર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કુંભાર — kumbhār — \"a potter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમારા ગામમાં એક કુંભાર રહે છે. amārā gāmmā̃ ek kumbhār rahe che. A potter lives in our village."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કુંભાર (kumbhār) is inherited from Sanskrit kumbhakāra, \"a pot-maker\", built from kumbha, \"a pot\", and kāra, \"maker\"; CDIAL lists the Gujarati word (CDIAL 3310)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumbhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumbhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumbhār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumbhār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amārā gāmmā̃ ek kumbhār rahe che. — A potter lives in our village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amārā gāmmā̃ ek kumbhār rahe che.* — A potter lives in our village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a crack, then the Gujarati for to split (wood), then say kumbhār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a crack, then the Gujarati for to split (wood), then say *kumbhār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કુંભાર (kumbhār) mean? (\"A potter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C504-cakdo",
+      "sequence": 28160,
+      "title": "ચાકડો (cākḍo) — a potter's wheel",
+      "headword": "ચાકડો",
+      "romanization": "cākḍo",
+      "gloss": "a potter's wheel",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a7484ade2806749",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to split (wood), then the Gujarati for a potter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચાકડો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચાકડો — cākḍo — \"a potter's wheel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "કુંભાર ચાકડા પર માટીનું માટલું બનાવે છે. kumbhār cākḍā par māṭīnũ māṭlũ banāve che. The potter makes a clay pot on the wheel."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is built on cāk, \"a wheel, a potter's wheel\", which CDIAL lists under Sanskrit cakrá, \"a wheel\" (CDIAL 4538); ચાકડો (cākḍo) adds the ending -ḍo."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cākḍo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cākḍo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cākḍo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cākḍo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumbhār cākḍā par māṭīnũ māṭlũ banāve che. — The potter makes a clay pot on the wheel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumbhār cākḍā par māṭīnũ māṭlũ banāve che.* — The potter makes a clay pot on the wheel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to split (wood), then the Gujarati for a potter, then say cākḍo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to split (wood), then the Gujarati for a potter, then say *cākḍo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચાકડો (cākḍo) mean? (\"A potter's wheel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C504-garo",
+      "sequence": 28170,
+      "title": "ગારો (gāro) — mud plaster",
+      "headword": "ગારો",
+      "romanization": "gāro",
+      "gloss": "mud plaster",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14442ef58f65fb60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a potter, then the Gujarati for a potter's wheel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગારો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગારો — gāro — \"mud plaster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમારા ગામનાં જૂનાં ઘર ગારાનાં છે. amārā gāmnā̃ jūnā̃ ghar gārānā̃ che. The old houses in our village are made of mud."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગારો (gāro) comes from gāra, a form CDIAL reconstructs, and CDIAL lists the Gujarati word as earth and water mixed for building a wall (CDIAL 4137)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amārā gāmnā̃ jūnā̃ ghar gārānā̃ che. — The old houses in our village are made of mud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amārā gāmnā̃ jūnā̃ ghar gārānā̃ che.* — The old houses in our village are made of mud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a potter, then the Gujarati for a potter's wheel, then say gāro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a potter, then the Gujarati for a potter's wheel, then say *gāro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગારો (gāro) mean? (\"Mud plaster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C504-gudvu",
+      "sequence": 28180,
+      "title": "ગૂંદવું (gū̃dvũ) — to knead clay",
+      "headword": "ગૂંદવું",
+      "romanization": "gū̃dvũ",
+      "gloss": "to knead clay",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:685cb4f26f154512",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a potter's wheel, then the Gujarati for mud plaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગૂંદવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગૂંદવું — gū̃dvũ — \"to knead clay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "કુંભારે પગથી માટી ગૂંદી. kumbhāre pagthī māṭī gū̃dī. The potter kneaded the clay with his feet."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે માટી ગૂંદી, teṇe māṭī gū̃dī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગૂંદવું (gū̃dvũ) is said of clay or of a stiff dough worked long and hard; the past agrees with what is kneaded: માટી ગૂંદી. CDIAL lists Hindi gū̃dhnā, \"to plait, mix, knead\", under Sanskrit gupháti, \"strings together\" (CDIAL 4205), beside a Gujarati verb for plaiting; it gives no Gujarati form for kneading, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gū̃dvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gū̃dvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gū̃dvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gū̃dvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumbhāre pagthī māṭī gū̃dī. — The potter kneaded the clay with his feet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumbhāre pagthī māṭī gū̃dī.* — The potter kneaded the clay with his feet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a potter's wheel, then the Gujarati for mud plaster, then say gū̃dvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a potter's wheel, then the Gujarati for mud plaster, then say *gū̃dvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગૂંદવું (gū̃dvũ) mean? (\"To knead clay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C504-kodiyu",
+      "sequence": 28190,
+      "title": "કોડિયું (koḍiyũ) — a clay lamp",
+      "headword": "કોડિયું",
+      "romanization": "koḍiyũ",
+      "gloss": "a clay lamp",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce93ec7187610945",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for mud plaster, then the Gujarati for to knead clay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કોડિયું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કોડિયું — koḍiyũ — \"a clay lamp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દિવાળીમાં અમે બારીમાં કોડિયાં મૂકીએ છીએ. divāḷīmā̃ ame bārīmā̃ koḍiyā̃ mūkīe chīe. At Diwali we put clay lamps in the windows."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કોડિયું (koḍiyũ) is filed by CDIAL under Sanskrit kuṭa, \"a water-pot, a pitcher\", and CDIAL lists the Gujarati word as an earthen cup for oil and a wick (CDIAL 3227). The plural is કોડિયાં."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḍiyũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḍiyũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḍiyũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḍiyũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divāḷīmā̃ ame bārīmā̃ koḍiyā̃ mūkīe chīe. — At Diwali we put clay lamps in the windows.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divāḷīmā̃ ame bārīmā̃ koḍiyā̃ mūkīe chīe.* — At Diwali we put clay lamps in the windows.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for mud plaster, then the Gujarati for to knead clay, then say koḍiyũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for mud plaster, then the Gujarati for to knead clay, then say *koḍiyũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કોડિયું (koḍiyũ) mean? (\"A clay lamp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

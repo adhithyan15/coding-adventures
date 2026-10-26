@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C429-parvadvu",
+    "language": "gujarati",
+    "chapter": 429,
+    "sequence": 23880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9849653524efe278"
+  },
+  "findings": []
+}

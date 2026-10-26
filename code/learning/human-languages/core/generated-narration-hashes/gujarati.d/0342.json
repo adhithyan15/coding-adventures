@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:0216beac7f2bcf2b",
+  "lessonIds": [
+    "GU-C342-vivad",
+    "GU-C342-takrar",
+    "GU-C342-matbhed",
+    "GU-C342-khandan",
+    "GU-C342-tokvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch342.txt",
+  "json": "gujarati/narration/ch342.json",
+  "textHash": "fnv1a64:f8f72146400524e8",
+  "jsonHash": "fnv1a64:cb0d64d6674613c5",
+  "findings": []
+}

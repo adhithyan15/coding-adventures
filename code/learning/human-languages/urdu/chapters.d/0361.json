@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Is It Possible?",
+  "label": "ch:ur-is-it-possible",
+  "canDo": "I can say whether something is possible, and on what condition.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C361-bitna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can say whether something is possible, and on what condition.",
+    "assesses": [
+      "UR-LEX-C361-IMKAN361-03",
+      "UR-LEX-C361-IMKAN361-04",
+      "UR-LEX-C361-IMKAN361-05"
+    ]
+  }
+}

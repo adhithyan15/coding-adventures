@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:8b0a8598a2754a3a",
+  "lessonIds": [
+    "GU-C353-nagrik",
+    "GU-C353-janta",
+    "GU-C353-matdan",
+    "GU-C353-umedvar",
+    "GU-C353-cutavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch353.txt",
+  "json": "gujarati/narration/ch353.json",
+  "textHash": "fnv1a64:d5d5a28a26d9ffc8",
+  "jsonHash": "fnv1a64:7ed11d21e28821f9",
+  "findings": []
+}

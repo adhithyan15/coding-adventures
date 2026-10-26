@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:9bd165ddbf306756",
+  "lessonIds": [
+    "GU-C432-sonu",
+    "GU-C432-cadi",
+    "GU-C432-jhaverat",
+    "GU-C432-ghasvu",
+    "GU-C432-camkavvu",
+    "GU-R432-review-425-432"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch432.txt",
+  "json": "gujarati/narration/ch432.json",
+  "textHash": "fnv1a64:1f4ff502882d5e1a",
+  "jsonHash": "fnv1a64:a03af2266043c3d4",
+  "findings": []
+}

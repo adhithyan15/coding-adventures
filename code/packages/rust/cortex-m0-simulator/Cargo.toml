@@ -1,0 +1,8 @@
+[package]
+name = "cortex-m0-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked Armv6-M Cortex-M0 functional simulator"
+license = "MIT"
+
+[dependencies]

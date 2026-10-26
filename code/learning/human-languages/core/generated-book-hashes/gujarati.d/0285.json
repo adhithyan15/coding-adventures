@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:28917671a4c433d4",
+  "lessonIds": [
+    "GU-C285-cor",
+    "GU-C285-cori",
+    "GU-C285-nasvu",
+    "GU-C285-pakadvu",
+    "GU-C285-loko"
+  ],
+  "tex": "gujarati/book/chapters/ch285-a-thief-in-the-night.tex"
+}

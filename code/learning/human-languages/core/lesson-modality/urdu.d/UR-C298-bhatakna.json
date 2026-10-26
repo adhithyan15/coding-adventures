@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C298-bhatakna",
+    "language": "urdu",
+    "chapter": 298,
+    "sequence": 18130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3b499dc46e39f69"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C426-ragarna",
+    "language": "urdu",
+    "chapter": 426,
+    "sequence": 25080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00348bb44a6284d6"
+  },
+  "findings": []
+}

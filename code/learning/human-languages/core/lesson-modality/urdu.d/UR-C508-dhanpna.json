@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C508-dhanpna",
+    "language": "urdu",
+    "chapter": 508,
+    "sequence": 29740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16f97d6676f5bc29"
+  },
+  "findings": []
+}

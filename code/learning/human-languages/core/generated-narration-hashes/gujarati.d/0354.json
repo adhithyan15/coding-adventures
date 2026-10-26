@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:afdedc367b6703b0",
+  "lessonIds": [
+    "GU-C354-adhikari",
+    "GU-C354-mantri",
+    "GU-C354-manjuri",
+    "GU-C354-parvangi",
+    "GU-C354-nimvu",
+    "GU-R354-review-347-354"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch354.txt",
+  "json": "gujarati/narration/ch354.json",
+  "textHash": "fnv1a64:9d56df37a6f44d42",
+  "jsonHash": "fnv1a64:29a75930ed3fb00e",
+  "findings": []
+}

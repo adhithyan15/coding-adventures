@@ -1,0 +1,11 @@
+{
+  "id": "UR-C488-damad",
+  "pathSegment": "UR-PATH-488-INLAWS488",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-488-INLAWS488",
+      "order": 3
+    }
+  ]
+}

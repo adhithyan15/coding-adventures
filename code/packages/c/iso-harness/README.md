@@ -20,9 +20,12 @@ the standard does not require:
 | ----------- | --------------------- | ----------------- | ------------------ |
 | GCC / Clang | `-std=c17`/`-std=c++17` | `-pedantic-errors` | `-Wall -Wextra -Werror` |
 | MSVC        | `/std:c17`/`/std:c++17` | `/permissive-`     | `/W4 /WX` (`/EHsc` for C++) |
+| clang-cl    | `/std:c17`/`/std:c++17` | `/permissive- /clang:-pedantic-errors` | `/W4 /WX` (`/EHsc` for C++) |
 
 `-pedantic-errors` (GCC/Clang) and `/permissive-` (MSVC) are the switches that
 actually turn "uses a non-ISO extension" into an error.
+Clang's MSVC-compatible driver needs its explicit pedantic switch as well:
+`/permissive-` alone accepted the negative GNU-extension fixtures in actual CI.
 
 ## Coverage is across the CI matrix
 

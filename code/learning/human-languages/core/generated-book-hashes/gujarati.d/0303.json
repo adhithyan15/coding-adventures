@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:7bcee94f81c0e69c",
+  "lessonIds": [
+    "GU-C303-vavajhodu",
+    "GU-C303-tratakvu",
+    "GU-C303-chapru",
+    "GU-C303-jhupdu",
+    "GU-C303-ujadvu"
+  ],
+  "tex": "gujarati/book/chapters/ch303-the-cyclone.tex"
+}

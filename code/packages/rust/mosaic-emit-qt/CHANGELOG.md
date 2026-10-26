@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-25 (Fixed container width floors)
+
+- Preserve static non-shrinking Row/Column/Box widths on ordinary container
+  surfaces, including painted wrappers. Reject state geometry and conflicting
+  constraints; retain the unsupported flex-shrink diagnostic (#18250).
+
 ## 2026-10-23 (Repeated container width floors)
 
 - Derive a single Row/Column/Box child's For delegate minimum from its static

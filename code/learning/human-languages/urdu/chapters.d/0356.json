@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Making Things Better",
+  "label": "ch:ur-making-things-better",
+  "canDo": "I can say how a place or a person improved.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C356-nikharna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can say how a place or a person improved.",
+    "assesses": [
+      "UR-LEX-C356-ISLAH356-03",
+      "UR-LEX-C356-ISLAH356-04",
+      "UR-LEX-C356-ISLAH356-05"
+    ]
+  }
+}

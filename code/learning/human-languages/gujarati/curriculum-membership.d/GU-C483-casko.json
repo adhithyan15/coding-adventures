@@ -1,0 +1,11 @@
+{
+  "id": "GU-C483-casko",
+  "pathSegment": "GU-PATH-483-VEDNA483",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-483-VEDNA483",
+      "order": 1
+    }
+  ]
+}

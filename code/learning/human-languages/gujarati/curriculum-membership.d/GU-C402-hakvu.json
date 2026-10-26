@@ -1,0 +1,11 @@
+{
+  "id": "GU-C402-hakvu",
+  "pathSegment": "GU-PATH-402-CART402",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-402-CART402",
+      "order": 4
+    }
+  ]
+}

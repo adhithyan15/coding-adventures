@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:9cd6ffef8f2618e8",
+  "lessonIds": [
+    "GU-C347-kaydo",
+    "GU-C347-ullanghan",
+    "GU-C347-palan",
+    "GU-C347-lagu",
+    "GU-C347-uthapvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch347.txt",
+  "json": "gujarati/narration/ch347.json",
+  "textHash": "fnv1a64:c036aaa4cddfb2f1",
+  "jsonHash": "fnv1a64:72f6ab440a06f00e",
+  "findings": []
+}

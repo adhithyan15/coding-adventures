@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:061f6a0dd10d30b6",
+  "lessonIds": [
+    "UR-C320-atish-bazi",
+    "UR-C320-patakha",
+    "UR-C320-chhirakna",
+    "UR-C320-bhigona",
+    "UR-C320-jhumna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch320.txt",
+  "json": "urdu/narration/ch320.json",
+  "textHash": "fnv1a64:123524972e8088b9",
+  "jsonHash": "fnv1a64:b2575bf87962084b",
+  "findings": []
+}

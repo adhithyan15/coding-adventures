@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Offices and Officials",
+  "label": "ch:ur-offices-and-officials",
+  "canDo": "I can deal with an office and its officials.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C343-sujhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can deal with an office and its officials.",
+    "assesses": [
+      "UR-LEX-C343-MAHKAMA343-03",
+      "UR-LEX-C343-MAHKAMA343-04",
+      "UR-LEX-C343-MAHKAMA343-05"
+    ]
+  }
+}

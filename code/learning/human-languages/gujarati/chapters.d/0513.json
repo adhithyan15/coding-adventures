@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "On the Factory Floor",
+  "label": "ch:gu-on-the-factory-floor",
+  "canDo": "I can talk about industries, companies and machines.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C513-bhangar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about industries, companies and machines.",
+    "assesses": [
+      "GU-LEX-C513-KARKHANU513-03",
+      "GU-LEX-C513-KARKHANU513-04",
+      "GU-LEX-C513-KARKHANU513-05"
+    ]
+  }
+}

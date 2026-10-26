@@ -1,0 +1,151 @@
+# Python 3.6.0 (2016-12-23) tokens: py-int-print and py-float-print lexical slice.
+# @version 1
+# PARTIAL: lexes only the py-int-print/py-float-print neighbourhood listed below; see code/grammars/python/README.md.
+# source_ref: https://github.com/python/cpython/tree/v3.6.0
+# source_sha: 5c4568a05a0a62b5947c55f68f9f2ecfb90a4f12
+# evidence: Grammar/Grammar blob b139e9f66c8ce0bd2d3ed585e81ff13b00445395; Grammar/Tokens blob -;
+#   Parser/tokenizer.c blob 0fa3aebc0f8d515c2302d8abda760da09101291f; Lib/keyword.py blob 6e1e882a91e7006f5699ca9ac6df8292d8b8457f
+# basis: reviewed against the tag's own syntax files (LANG84 phase 7c slice 2). Tokens follow tokenizer.c tok_decimal_tail (PEP 515 `_` separators, new in 3.6) and PyToken_OneChar/TwoChars/ThreeChars (47 operators) and keyword.py kwlist (33, no async/await); the grammar follows Grammar/Grammar file_input..atom_expr/trailer/arglist.
+
+# ---------------------------------------------------------------------------
+# What this pair lexes, and what it does not, so a reader never has to guess.
+#
+# Lexed: decimal integers, floats (LANG84 phase 7c slice 3), names, this
+# release's keywords, every operator and delimiter its tokenizer knows, `#`
+# comments, a `\`-newline continuation, and the indentation engine's
+# NEWLINE/INDENT/DEDENT (newlines inside brackets are suppressed, blank and
+# comment-only lines produce nothing).
+#
+# NOT lexed (a lexer error here; later LANG84 Python slices):
+#   strings, bytes and f-strings      'a' "a" b'' f''
+#   imaginary numbers                 2j 1.5j
+#   hex, octal and binary integers    0x1F 0o17 0b101
+#   non-ASCII identifiers (PEP 3131), tabs before a comment, form feeds
+#
+# Known narrowings against the release's own tokenizer (each rejects; none
+# accepts a program the release would read differently):
+#   * A number must not run into a name character: `1if` and `1_` are lexer
+#     errors (`\b` closes INT). CPython rejects `1_` too and reads `1if` as
+#     `1` then `if`.
+#   * `\` must be followed directly by the newline, as CPython requires.
+# ---------------------------------------------------------------------------
+
+mode: indentation
+
+skip:
+  COMMENT           = /#[^\n]*/
+  LINE_CONTINUATION = /\\\n/
+
+# --- floats (LANG84 7c slice 3; `fraction`/`exponent` in Parser/tokenizer.c) --
+# A float is digits `.` [digits] [exponent], `.` digits [exponent], or digits
+# exponent, where an exponent is `e`/`E`, an optional sign and digits. Unlike
+# an INT, a float may start with zeros (`00.5`, `0123e1`).
+# Each digit part may hold single `_` separators between digits (PEP 515), as
+# for INT: `1_000.5`, `1e1_0`. `1_.5`, `1._5` and `1e_1` are errors.
+# FLOAT comes before INT, so `1.5` is never INT DOT INT. Its `\b` keeps a float
+# from running into a name character (`1.5if`, `1.5j`), as INT's does; because
+# a `\b` cannot follow a trailing `.`, FLOAT_TRAILING_DOT takes `1.` before a
+# non-word character (`print(1.)`). Imaginary literals (`1j`) are not lexed.
+FLOAT = /(?:[0-9](?:_?[0-9])*\.(?:[0-9](?:_?[0-9])*)?(?:[eE][+-]?[0-9](?:_?[0-9])*)?|\.[0-9](?:_?[0-9])*(?:[eE][+-]?[0-9](?:_?[0-9])*)?|[0-9](?:_?[0-9])*[eE][+-]?[0-9](?:_?[0-9])*)\b/
+FLOAT_TRAILING_DOT = /[0-9](?:_?[0-9])*\./ -> FLOAT
+
+# --- integers (PEP 515 `_` separators, 3.6+) ----------------------------------
+# A non-zero decimal is a digit 1-9 then digits, each optionally preceded by one
+# `_`. Zero is `0` then more zeros, each optionally after one `_` (`00`, `0_0`).
+# `0123`, `0_1`, `1__0` and `1_` are errors in this release, and here.
+INT = /(?:[1-9](?:_?[0-9])*|0(?:_?0)*)\b/
+
+# --- names -------------------------------------------------------------------
+NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# --- operators and delimiters (47 in this release's tokenizer) --------
+# `<>` is in the tokenizer for the `from __future__ import barry_as_FLUFL`
+# easter egg (PEP 401); without that import the parser refuses it, and this
+# pair's grammar never uses it.
+# Longest first: the first matching pattern wins.
+DOUBLE_STAR_EQUALS  = "**="
+LEFT_SHIFT_EQUALS   = "<<="
+RIGHT_SHIFT_EQUALS  = ">>="
+FLOOR_DIV_EQUALS    = "//="
+ELLIPSIS            = "..."
+DOUBLE_STAR         = "**"
+FLOOR_DIV           = "//"
+LEFT_SHIFT          = "<<"
+RIGHT_SHIFT         = ">>"
+EQUALS_EQUALS       = "=="
+NOT_EQUALS          = "!="
+LEGACY_NOT_EQUALS   = "<>"
+LESS_EQUALS         = "<="
+GREATER_EQUALS      = ">="
+ARROW               = "->"
+PLUS_EQUALS         = "+="
+MINUS_EQUALS        = "-="
+STAR_EQUALS         = "*="
+SLASH_EQUALS        = "/="
+PERCENT_EQUALS      = "%="
+AMP_EQUALS          = "&="
+PIPE_EQUALS         = "|="
+CARET_EQUALS        = "^="
+AT_EQUALS           = "@="
+PLUS                = "+"
+MINUS               = "-"
+STAR                = "*"
+SLASH               = "/"
+PERCENT             = "%"
+EQUALS              = "="
+LESS_THAN           = "<"
+GREATER_THAN        = ">"
+AMP                 = "&"
+PIPE                = "|"
+CARET               = "^"
+TILDE               = "~"
+AT                  = "@"
+LPAREN              = "("
+RPAREN              = ")"
+LBRACKET            = "["
+RBRACKET            = "]"
+LBRACE              = "{"
+RBRACE              = "}"
+COMMA               = ","
+COLON               = ":"
+SEMICOLON           = ";"
+DOT                 = "."
+
+# --- keywords (kwlist of Lib/keyword.py at the tag: 33) ------------------
+# `async` and `await` are not in kwlist yet (3.7): the tokenizer only makes
+# them ASYNC/AWAIT inside an `async def`, which this subset never reaches,
+# so they stay NAME here.
+keywords:
+  False
+  None
+  True
+  and
+  as
+  assert
+  break
+  class
+  continue
+  def
+  del
+  elif
+  else
+  except
+  finally
+  for
+  from
+  global
+  if
+  import
+  in
+  is
+  lambda
+  nonlocal
+  not
+  or
+  pass
+  raise
+  return
+  try
+  while
+  with
+  yield

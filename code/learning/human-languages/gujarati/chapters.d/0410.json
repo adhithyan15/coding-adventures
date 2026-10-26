@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Bathrooms and Hot Water",
+  "label": "ch:gu-bathrooms-and-hot-water",
+  "canDo": "I can ask about the bathroom and the hot water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C410-nicovvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can ask about the bathroom and the hot water.",
+    "assesses": [
+      "GU-LEX-C410-BATH410-03",
+      "GU-LEX-C410-BATH410-04",
+      "GU-LEX-C410-BATH410-05"
+    ]
+  }
+}

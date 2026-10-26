@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C369-nirat",
+    "language": "gujarati",
+    "chapter": 369,
+    "sequence": 20550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a33b8fddfca7c582"
+  },
+  "findings": []
+}

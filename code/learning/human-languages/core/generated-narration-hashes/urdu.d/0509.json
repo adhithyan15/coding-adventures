@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:edb102b4d35faef1",
+  "lessonIds": [
+    "UR-C509-chhachh",
+    "UR-C509-bilona",
+    "UR-C509-jamana",
+    "UR-C509-handi",
+    "UR-C509-chhalkana",
+    "UR-R509-review-502-509"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch509.txt",
+  "json": "urdu/narration/ch509.json",
+  "textHash": "fnv1a64:e78ab1b8df94981e",
+  "jsonHash": "fnv1a64:b0e8c4fa0967f31e",
+  "findings": []
+}

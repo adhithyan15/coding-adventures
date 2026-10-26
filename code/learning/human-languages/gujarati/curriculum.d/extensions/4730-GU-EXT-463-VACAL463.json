@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-463-VACAL463",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether someone talks a lot or a little.",
+  "prerequisites": []
+}

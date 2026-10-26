@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "An Award for Courage",
+  "label": "ch:gu-an-award-for-courage",
+  "canDo": "I can say who was honoured and why.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C309-garva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can say who was honoured and why.",
+    "assesses": [
+      "GU-LEX-C309-INAM309-03",
+      "GU-LEX-C309-INAM309-04",
+      "GU-LEX-C309-INAM309-05"
+    ]
+  }
+}

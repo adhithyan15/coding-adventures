@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:c475c69c05281a1d",
+  "lessonIds": [
+    "UR-C499-kapas",
+    "UR-C499-dhunna",
+    "UR-C499-charkha",
+    "UR-C499-katna-spin",
+    "UR-C499-ganth"
+  ],
+  "tex": "urdu/book/chapters/ch499-cotton-and-thread.tex"
+}

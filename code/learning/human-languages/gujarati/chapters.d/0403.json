@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "On the Highway",
+  "label": "ch:gu-on-the-highway",
+  "canDo": "I can talk about distances on the highway.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C403-takravu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can talk about distances on the highway.",
+    "assesses": [
+      "GU-LEX-C403-HIGHWAY403-03",
+      "GU-LEX-C403-HIGHWAY403-04",
+      "GU-LEX-C403-HIGHWAY403-05"
+    ]
+  }
+}

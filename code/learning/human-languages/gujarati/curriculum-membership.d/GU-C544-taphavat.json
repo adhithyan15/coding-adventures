@@ -1,0 +1,11 @@
+{
+  "id": "GU-C544-taphavat",
+  "pathSegment": "GU-PATH-544-TAPHAVAT544",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-544-TAPHAVAT544",
+      "order": 1
+    }
+  ]
+}

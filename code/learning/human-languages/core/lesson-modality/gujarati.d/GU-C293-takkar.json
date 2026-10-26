@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C293-takkar",
+    "language": "gujarati",
+    "chapter": 293,
+    "sequence": 16420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d7eb88d491c558b"
+  },
+  "findings": []
+}

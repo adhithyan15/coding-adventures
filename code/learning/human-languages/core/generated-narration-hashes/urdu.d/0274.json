@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:d31502bf6de058ea",
+  "lessonIds": [
+    "UR-C274-agar-to",
+    "UR-C274-agar-barish-hui",
+    "UR-C274-shart",
+    "UR-R274-if-and-otherwise"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "urdu/narration/ch274.txt",
+  "json": "urdu/narration/ch274.json",
+  "textHash": "fnv1a64:62a227e701eb9081",
+  "jsonHash": "fnv1a64:47a7e4b7196121d1",
+  "findings": []
+}

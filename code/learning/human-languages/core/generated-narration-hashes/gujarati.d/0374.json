@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:f5dfa5d84bb1cfad",
+  "lessonIds": [
+    "GU-C374-avrodh",
+    "GU-C374-vighna",
+    "GU-C374-musibat",
+    "GU-C374-khalvu",
+    "GU-C374-nivarvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch374.txt",
+  "json": "gujarati/narration/ch374.json",
+  "textHash": "fnv1a64:e327d5c2af28569b",
+  "jsonHash": "fnv1a64:bb657f82a04f38ca",
+  "findings": []
+}

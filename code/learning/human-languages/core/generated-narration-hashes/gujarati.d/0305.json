@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:450d0ef7c6f8910d",
+  "lessonIds": [
+    "GU-C305-halvu",
+    "GU-C305-dhaglo",
+    "GU-C305-dhasvu",
+    "GU-C305-datavu",
+    "GU-C305-katmal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch305.txt",
+  "json": "gujarati/narration/ch305.json",
+  "textHash": "fnv1a64:a058cda37cd98936",
+  "jsonHash": "fnv1a64:d5b2f87014c5defb",
+  "findings": []
+}

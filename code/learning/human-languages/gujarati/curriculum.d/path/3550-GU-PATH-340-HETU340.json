@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-340-HETU340",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GU-EXT-340-HETU340"
+  ],
+  "after": []
+}

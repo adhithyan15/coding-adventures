@@ -7,6 +7,88 @@
   new `GrammarElement::AutoInsert`, whose inserted token and closers are
   token names.
 
+## Unreleased — LANG84 phase 7c, slice 3: `py-float-print`
+
+### Added
+- **Floats on the release path.** A new `ReleaseProfile` field, `floats`
+  (`Floats::Repr` or `Floats::None`), and a new profile, `py30`, for 3.0a1,
+  whose `str(float)` is `%.12g` (`PREC_STR`). `py3` (3.5.10 and later)
+  gets `Floats::Repr`: `print` writes `repr`, `float_repr` being `tp_str`
+  since 3.2. Under it the walker types every value `int` or `float` and
+  lowers floats to LANG83 ops: a `FLOAT` token to an `f64` `const`, an
+  `int` operand to `int_to_real`, `+ - * /` to the PR6c `f64_add`/
+  `f64_sub`/`f64_mul`/`f64_div`, unary minus to `f64_neg`, and
+  `print(float)` to `write_f64_py` plus `putchar 10`. `/` is true division.
+  A divisor known to be `±0` emits `trap "Trap.DivZero"` before the
+  division, as CPython raises ZeroDivisionError.
+- **Refusals** (`Unsupported`): float `//` and `%`, `int / int` with an
+  operand above 2^53, a literal that overflows to `inf`, and (under `py30`
+  and `py2`) any float or true `/`. `decode_float_text` re-checks a
+  caller-supplied `FLOAT` token against the Python 3 float grammar, so
+  only digits, `.`, an exponent and its sign reach Rust's parser.
+- `ReleaseProfile::subsets` (a list, narrowest first) replaces `subset`;
+  `py3` claims `py-int-print` and `py-float-print`. `subset()` names the
+  widest. `PROFILE_TOKENS` (`py3` adds `FLOAT`) joins `PROFILE_RULES`.
+- `run_module` captures `write_f64_py` (the VM's own `python_repr`) in the
+  same ordered output buffer as `print_i64` and `putchar`.
+- **Corpus.** `corpus/py-float-print/` has 24 cases (13 positive, five of
+  which trap; 11 refusals), each checked against host CPython 3.11.17,
+  3.12.3 and 3.13.16; `float_underscores` has `.reject@3.5.10`.
+  `py-int-print`'s `reject_float` and `reject_true_division` left that
+  corpus, since six of its seven releases now compile them; 3.0a1's
+  refusal is pinned by `release_3_0a1_refuses_floats_and_true_division`.
+- **Tests.** Stage I and IIR identity for `py-float-print` on its six
+  releases; the sweep's two float classes ({3.6.0, 3.12.3, 3.13.16,
+  3.11.17, 3.16.0a1} and {3.5.10}); the oracle over both Python 3
+  corpora; IIR-shape tests (`write_f64_py` and the newline, `int_to_real`,
+  the IEEE ops, `f64_neg`, the trap before a zero divisor, the 2^53 rule,
+  forged `FLOAT` tokens); `cst_contract` checks `FLOAT` exists in exactly
+  the `py3` releases.
+
+## Unreleased — LANG84 phase 7c, slice 2: Python 2 literals; 2.4, 2.6, 3.5.10, 3.6.0
+
+### Added
+- **Python 2 integer literals.** A new `ReleaseProfile` field,
+  `int_literals` (`IntLiterals::Decimal` for `py3`, `IntLiterals::Python2`
+  for `py2`), picks the decoder. The `py2` decoder reads every spelling the
+  tags' `tok_get` lexes and `parsenumber` reads: decimal, octal `0[0-7]*`
+  (`010` is 8), hex `0x`, PEP 3127 `0o`/`0b`, and an `l`/`L` long suffix,
+  which changes no value (`str()` of a long has no `L`; a long that fits
+  `i64` does the same arithmetic as an int). The lexer decides which
+  prefixes a release has: `0o17` never reaches the decoder from a 2.2 or
+  2.4 tree. A literal above `i64::MAX` is refused as `Unsupported`, which
+  also avoids the one spelling two Python 2 releases read differently (a hex
+  or octal literal between `LONG_MAX` and `ULONG_MAX` is negative at 2.2
+  and a positive long from 2.4, PEP 237). The decoders are free functions
+  (`decode_decimal`, `decode_python2`, `digits_value`), so a forged token is
+  re-checked by the same code.
+- **Four more profiled releases:** 2.4 and 2.6 (`py2`), 3.5.10 and 3.6.0
+  (`py3`). `profile_for` lists them.
+- **Corpus.** `py2-int-print` grows to 49 cases (24 positive):
+  `octal_literals` and `long_suffix` (formerly `reject_octal` and
+  `reject_long_suffix`), `hex_literals`, `pep3127_literals`
+  (`.reject@2.2`, `.reject@2.4`) and `overflow_long_literal`, plus eight
+  refusals (`08`, `0o8`, `0b2`, `0x`, `1LL`, and hex, octal and long
+  literals above `i64`). `py-int-print`'s `int_underscores` gains
+  `.reject@3.5.10`.
+- **Tests.** `python_2_integer_literals_follow_each_release` (prefixes per
+  release, refusals, and eight spellings of 8 that lower to identical IIR);
+  `the_translation_keeps_every_literal_value`; py2 forged-token checks in
+  `forged_trees_are_refused`. The translate-to-Python-3 oracle now rewrites
+  `0NNN` to `0oNNN` and drops the `L` suffix; it agrees on all 24 positive
+  cases.
+
+### Changed
+- **Release sweep.** `release_classes.csv` now has four classes. Python 3:
+  {3.0a1, 3.5.10} (no PEP 515 `_`), represented by 3.0a1, and {3.6.0,
+  3.12.3, 3.13.16, 3.11.17, 3.16.0a1}, now represented by 3.6.0 (it
+  replaces 3.12.3 as the earliest member). Python 2: {2.2, 2.4} and {2.6,
+  2.7.18}, split by `pep3127_literals`; represented by 2.2 and 2.6.
+- The release lists and counts in `release_subsets`, `release_sweep` and
+  `cst_contract` (11 profiled releases).
+- The decimal decoder's leading-zero message now says "a SyntaxError in
+  Python 3 (Python 2 read them as octal)", since one subset now has octal.
+
 ## Unreleased — LANG84 phase 7c, slice 1: Python 2 (`py2-int-print`)
 
 ### Added

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C545-yukti",
+    "language": "gujarati",
+    "chapter": 545,
+    "sequence": 30290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4fe8e5fa85ab857"
+  },
+  "findings": []
+}

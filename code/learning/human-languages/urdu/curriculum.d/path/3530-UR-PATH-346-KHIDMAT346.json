@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-346-KHIDMAT346",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "UR-EXT-346-KHIDMAT346"
+  ],
+  "after": []
+}

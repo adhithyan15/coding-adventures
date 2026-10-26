@@ -1,0 +1,11 @@
+{
+  "id": "GU-C412-khodvu-peg",
+  "pathSegment": "GU-PATH-412-CAMP412",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-412-CAMP412",
+      "order": 3
+    }
+  ]
+}

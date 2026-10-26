@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:cdadca46a351f2a1",
+  "lessonIds": [
+    "UR-C332-nuqsan",
+    "UR-C332-zariya",
+    "UR-C332-radd-e-amal",
+    "UR-C332-bigarna",
+    "UR-C332-phailna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch332.txt",
+  "json": "urdu/narration/ch332.json",
+  "textHash": "fnv1a64:fa7a343a6e7125da",
+  "jsonHash": "fnv1a64:104b5bc239501bbb",
+  "findings": []
+}

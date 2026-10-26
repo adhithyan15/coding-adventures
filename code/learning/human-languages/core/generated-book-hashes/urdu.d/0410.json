@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:cbcf2e56949c9f41",
+  "lessonIds": [
+    "UR-C410-imarat",
+    "UR-C410-maqam",
+    "UR-C410-bord",
+    "UR-C410-khamba",
+    "UR-C410-dikhana"
+  ],
+  "tex": "urdu/book/chapters/ch410-landmarks.tex"
+}

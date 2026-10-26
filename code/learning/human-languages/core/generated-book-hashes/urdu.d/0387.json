@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:e1fe57d9fd144b98",
+  "lessonIds": [
+    "UR-C387-quli",
+    "UR-C387-sanduq",
+    "UR-C387-ladna",
+    "UR-C387-dhhona",
+    "UR-C387-bithana"
+  ],
+  "tex": "urdu/book/chapters/ch387-porters-and-loads.tex"
+}

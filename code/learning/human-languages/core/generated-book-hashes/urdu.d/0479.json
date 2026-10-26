@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:73d271a482a8fb34",
+  "lessonIds": [
+    "UR-C479-dakhil-karna",
+    "UR-C479-vard",
+    "UR-C479-apreshan",
+    "UR-C479-sarjan",
+    "UR-C479-istrechar",
+    "UR-R479-review-472-479"
+  ],
+  "tex": "urdu/book/chapters/ch479-in-hospital.tex"
+}

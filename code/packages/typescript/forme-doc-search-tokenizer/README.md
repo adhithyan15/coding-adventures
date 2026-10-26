@@ -161,8 +161,9 @@ runtime query tokeniser:
         └──────── matched documents ranked + displayed
 ```
 
-Next DOC00 v0 packages: `forme-doc-search-index-builder`,
-`forme-doc-search-client-js`, `forme-doc-site-emitter`.
+The complete DOC00 v0 cluster now ships. The index builder and
+browser-ready search client share this tokenizer contract, and the
+site emitter packages their generated assets.
 
 ## v0 simplifications (documented)
 

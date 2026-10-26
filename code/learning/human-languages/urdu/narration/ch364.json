@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 364,
+  "title": "Clearly So",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0adb0031dba23af7",
+  "lessons": [
+    {
+      "id": "UR-C364-zahir",
+      "sequence": 21690,
+      "title": "ظاہر (zāhir) — evident; plain",
+      "headword": "ظاہر",
+      "romanization": "zāhir",
+      "gloss": "evident; plain",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3079c23301b119e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a nagging fear, then the Urdu for confidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ظاہر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ظاہر — zāhir — \"evident; plain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر وہ نہیں آیا تو ظاہر ہے وہ ناراض ہے۔ agar voh nahīṅ āyā to zāhir hai voh nārāz hai. If he has not come, he is clearly cross."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ظاہر (zāhir) is usually traced, through Persian, to Arabic ẓāhir, \"outward, apparent\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zāhir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zāhir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zāhir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zāhir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar voh nahīṅ āyā to zāhir hai voh nārāz hai. — If he has not come, he is clearly cross.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar voh nahīṅ āyā to zāhir hai voh nārāz hai.* — If he has not come, he is clearly cross.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a nagging fear, then the Urdu for confidence, then say zāhir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a nagging fear, then the Urdu for confidence, then say *zāhir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ظاہر (zāhir) mean? (\"Evident; plain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C364-lazmi",
+      "sequence": 21700,
+      "title": "لازمی (lāzmī) — compulsory; bound to happen",
+      "headword": "لازمی",
+      "romanization": "lāzmī",
+      "gloss": "compulsory; bound to happen",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78e8049804b2b360",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for confidence, then the Urdu for evident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لازمی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لازمی — lāzmī — \"compulsory; bound to happen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ گاڑی چلاتے ہیں تو لائسنس لازمی ہے۔ agar āp gāṛī chalāte haiṅ to lāisans lāzmī hai. If you drive a car, a licence is compulsory."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لازمی (lāzmī) is usually traced to Persian lāzimī, \"necessary\", built on Arabic lāzim, \"binding\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāzmī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāzmī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāzmī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāzmī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp gāṛī chalāte haiṅ to lāisans lāzmī hai. — If you drive a car, a licence is compulsory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp gāṛī chalāte haiṅ to lāisans lāzmī hai.* — If you drive a car, a licence is compulsory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for confidence, then the Urdu for evident, then say lāzmī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for confidence, then the Urdu for evident, then say *lāzmī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لازمی (lāzmī) mean? (\"Compulsory; bound to happen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C364-vaqai",
+      "sequence": 21710,
+      "title": "واقعی (vāqaī) — really; truly",
+      "headword": "واقعی",
+      "romanization": "vāqaī",
+      "gloss": "really; truly",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c11718ba390372c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for evident, then the Urdu for compulsory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: واقعی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "واقعی — vāqaī — \"really; truly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ واقعی بیمار ہیں تو گھر جائیے۔ agar āp vāqaī bīmār haiṅ to ghar jāiye. If you really are ill, go home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "واقعی (vāqaī) is usually traced, through Persian, to Arabic wāqiʿī, \"actual\", built on wāqiʿ, \"happening, real\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāqaī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāqaī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāqaī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāqaī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp vāqaī bīmār haiṅ to ghar jāiye. — If you really are ill, go home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp vāqaī bīmār haiṅ to ghar jāiye.* — If you really are ill, go home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for evident, then the Urdu for compulsory, then say vāqaī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for evident, then the Urdu for compulsory, then say *vāqaī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does واقعی (vāqaī) mean? (\"Really; truly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C364-numayan",
+      "sequence": 21720,
+      "title": "نمایاں (numāyāṅ) — prominent; clearly visible",
+      "headword": "نمایاں",
+      "romanization": "numāyāṅ",
+      "gloss": "prominent; clearly visible",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a00f3e64d92dff4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for compulsory, then the Urdu for really."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نمایاں",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نمایاں — numāyāṅ — \"prominent; clearly visible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر یہ نشان نمایاں ہوتا تو میں دیکھ لیتا۔ agar yih nishān numāyāṅ hotā to maiṅ dekh letā. If this mark had stood out, I would have seen it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نمایاں (numāyāṅ) is usually traced to Persian numāyān, \"appearing, visible\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "numāyāṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *numāyāṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "numāyāṅ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *numāyāṅ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar yih nishān numāyāṅ hotā to maiṅ dekh letā. — If this mark had stood out, I would have seen it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar yih nishān numāyāṅ hotā to maiṅ dekh letā.* — If this mark had stood out, I would have seen it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for compulsory, then the Urdu for really, then say numāyāṅ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for compulsory, then the Urdu for really, then say *numāyāṅ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نمایاں (numāyāṅ) mean? (\"Prominent; clearly visible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C364-ubharna-emerge",
+      "sequence": 21730,
+      "title": "ابھرنا (ubharnā) — to emerge; to come to the surface",
+      "headword": "ابھرنا",
+      "romanization": "ubharnā",
+      "gloss": "to emerge; to come to the surface",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e92cc10f82b05469",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for really, then the Urdu for prominent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ابھرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ابھرنا — ubharnā — \"to emerge; to come to the surface\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر کوئی نیا سوال ابھرا تو ہم بات کریں گے۔ agar koī nayā savāl ubharā to ham bāt kareṅ ge. If a new question comes up, we will talk."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ سوال پھر ابھرا, voh savāl phir ubharā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ابھرنا (ubharnā) is inherited: CDIAL lists the Hindi cousin ubharnā, \"to rise, to swell\", under Sanskrit údbharati, \"raises\" (CDIAL 2038); ابھارنا, \"to bring out\", is its causative."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ubharnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ubharnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ubharnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ubharnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar koī nayā savāl ubharā to ham bāt kareṅ ge. — If a new question comes up, we will talk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar koī nayā savāl ubharā to ham bāt kareṅ ge.* — If a new question comes up, we will talk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for really, then the Urdu for prominent, then say ubharnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for really, then the Urdu for prominent, then say *ubharnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ابھرنا (ubharnā) mean? (\"To emerge; to come to the surface\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

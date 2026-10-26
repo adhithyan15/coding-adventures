@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:34d4d33b9c4271e7",
+  "lessonIds": [
+    "UR-C460-diler",
+    "UR-C460-janbaz",
+    "UR-C460-jokham",
+    "UR-C460-larna",
+    "UR-C460-dilavar"
+  ],
+  "tex": "urdu/book/chapters/ch460-courage.tex"
+}

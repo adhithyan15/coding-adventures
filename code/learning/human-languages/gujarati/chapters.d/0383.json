@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Effort",
+  "label": "ch:gu-effort",
+  "canDo": "I can say what effort it will take to succeed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C383-jhujhvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can say what effort it will take to succeed.",
+    "assesses": [
+      "GU-LEX-C383-PRAYATNA383-03",
+      "GU-LEX-C383-PRAYATNA383-04",
+      "GU-LEX-C383-PRAYATNA383-05"
+    ]
+  }
+}

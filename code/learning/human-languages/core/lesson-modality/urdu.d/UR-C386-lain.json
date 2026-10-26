@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C386-lain",
+    "language": "urdu",
+    "chapter": 386,
+    "sequence": 23020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59a597f2a3c8cce2"
+  },
+  "findings": []
+}

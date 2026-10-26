@@ -1,0 +1,11 @@
+{
+  "id": "UR-C524-tadbir",
+  "pathSegment": "UR-PATH-524-FEHRIST524",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-524-FEHRIST524",
+      "order": 3
+    }
+  ]
+}

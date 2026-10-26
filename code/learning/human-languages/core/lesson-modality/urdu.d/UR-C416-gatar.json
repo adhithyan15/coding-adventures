@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C416-gatar",
+    "language": "urdu",
+    "chapter": 416,
+    "sequence": 24550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5c43d3dd5f56f8d"
+  },
+  "findings": []
+}

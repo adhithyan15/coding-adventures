@@ -1,0 +1,11 @@
+{
+  "id": "GU-C548-kaptan",
+  "pathSegment": "GU-PATH-548-TEAM548",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-548-TEAM548",
+      "order": 1
+    }
+  ]
+}

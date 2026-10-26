@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-285-CHOR285",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-285-CHOR285"
+  ],
+  "after": []
+}

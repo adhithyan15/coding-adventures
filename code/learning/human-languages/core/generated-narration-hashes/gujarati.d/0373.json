@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:008d5bb6b890181a",
+  "lessonIds": [
+    "GU-C373-upay",
+    "GU-C373-nirakaran",
+    "GU-C373-vikalp",
+    "GU-C373-muskeli",
+    "GU-C373-nadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch373.txt",
+  "json": "gujarati/narration/ch373.json",
+  "textHash": "fnv1a64:beed6556e79fef53",
+  "jsonHash": "fnv1a64:fc262364b817d8aa",
+  "findings": []
+}

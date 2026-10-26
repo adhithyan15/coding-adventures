@@ -1,0 +1,11 @@
+{
+  "id": "GU-C456-mahenu",
+  "pathSegment": "GU-PATH-456-DUBHA456",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-456-DUBHA456",
+      "order": 2
+    }
+  ]
+}

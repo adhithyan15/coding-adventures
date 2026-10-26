@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "The Water Rose",
+  "label": "ch:ur-the-water-rose",
+  "canDo": "I can say how a flood rose and what it took.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C293-bhanvar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can say how a flood rose and what it took.",
+    "assesses": [
+      "UR-LEX-C293-SAILAB293-03",
+      "UR-LEX-C293-SAILAB293-04",
+      "UR-LEX-C293-SAILAB293-05"
+    ]
+  }
+}

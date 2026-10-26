@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C327-khazana",
+    "language": "urdu",
+    "chapter": 327,
+    "sequence": 19610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:098307a5e0858d6b"
+  },
+  "findings": []
+}

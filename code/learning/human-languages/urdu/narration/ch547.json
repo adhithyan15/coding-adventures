@@ -1,0 +1,923 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 547,
+  "title": "Looking Ahead",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:f3ee63ff7d99e4c4",
+  "lessons": [
+    {
+      "id": "UR-C547-tasavvur",
+      "sequence": 31710,
+      "title": "تصور (tasavvur) — imagination; a picture in the mind",
+      "headword": "تصور",
+      "romanization": "tasavvur",
+      "gloss": "imagination; a picture in the mind",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:caae4c696bc4e387",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to grapple with (a hard task), then the Urdu for a yardstick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تصور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تصور — tasavvur — \"imagination; a picture in the mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر تصور نہ ہوتا تو کوئی نئی چیز نہ بنتی۔ agar tasavvur na hotā to koī naī chīz na bantī. Without imagination nothing new would ever be made."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تصور (tasavvur) is usually traced, through Persian, to Arabic taṣawwur, \"forming an image in the mind\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasavvur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasavvur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasavvur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasavvur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tasavvur na hotā to koī naī chīz na bantī. — Without imagination nothing new would ever be made.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tasavvur na hotā to koī naī chīz na bantī.* — Without imagination nothing new would ever be made.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to grapple with (a hard task), then the Urdu for a yardstick, then say tasavvur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to grapple with (a hard task), then the Urdu for a yardstick, then say *tasavvur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تصور (tasavvur) mean? (\"Imagination; a picture in the mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C547-niyyat",
+      "sequence": 31720,
+      "title": "نیت (niyyat) — an intention (in one's heart)",
+      "headword": "نیت",
+      "romanization": "niyyat",
+      "gloss": "an intention (in one's heart)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d32e21f97f6759a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a yardstick, then the Urdu for imagination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نیت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نیت — niyyat — \"an intention (in one's heart)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر نیت اچھی ہے تو راستہ مل جائے گا۔ agar niyyat achchhī hai to rāstā mil jāe gā. If your heart is in the right place, you'll find a way."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نیت (niyyat) is usually traced, through Persian, to Arabic niyya, \"an intention\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyyat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyyat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyyat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyyat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar niyyat achchhī hai to rāstā mil jāe gā. — If your heart is in the right place, you'll find a way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar niyyat achchhī hai to rāstā mil jāe gā.* — If your heart is in the right place, you'll find a way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a yardstick, then the Urdu for imagination, then say niyyat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a yardstick, then the Urdu for imagination, then say *niyyat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نیت (niyyat) mean? (\"An intention (in one's heart)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C547-muhim",
+      "sequence": 31730,
+      "title": "مہم (muhim) — a campaign; a venture",
+      "headword": "مہم",
+      "romanization": "muhim",
+      "gloss": "a campaign; a venture",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:514c763d2af98d8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for imagination, then the Urdu for an intention (in one's heart)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مہم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مہم — muhim — \"a campaign; a venture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر مہم ختم ہوئی تو سب گھر لوٹیں گے۔ agar muhim khatm huī to sab ghar lauṭeṅ ge. If the campaign ends, everyone will go home."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مہم (muhim) is usually traced, through Persian, to Arabic muhimm, \"an important matter\"; the sense \"a campaign\" came later, and the sources we use do not show how it arose."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muhim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muhim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muhim, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muhim*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar muhim khatm huī to sab ghar lauṭeṅ ge. — If the campaign ends, everyone will go home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar muhim khatm huī to sab ghar lauṭeṅ ge.* — If the campaign ends, everyone will go home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for imagination, then the Urdu for an intention (in one's heart), then say muhim again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for imagination, then the Urdu for an intention (in one's heart), then say *muhim* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مہم (muhim) mean? (\"A campaign; a venture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C547-peshkash",
+      "sequence": 31740,
+      "title": "پیشکش (peshkash) — an offer",
+      "headword": "پیشکش",
+      "romanization": "peshkash",
+      "gloss": "an offer",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9eaa2f86427ae412",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an intention (in one's heart), then the Urdu for a campaign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پیشکش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیشکش — peshkash — \"an offer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر یہ پیشکش اچھی ہوئی تو میں قبول کروں گا۔ agar yih peshkash achchhī huī to maiṅ qabūl karūṅ gā. If the offer is good, I will accept it."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیشکش (peshkash) is usually traced to Persian pēshkash, \"something offered\", built from pēsh, \"before\", and kash-, \"to draw\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peshkash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peshkash*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peshkash, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peshkash*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar yih peshkash achchhī huī to maiṅ qabūl karūṅ gā. — If the offer is good, I will accept it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar yih peshkash achchhī huī to maiṅ qabūl karūṅ gā.* — If the offer is good, I will accept it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an intention (in one's heart), then the Urdu for a campaign, then say peshkash again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an intention (in one's heart), then the Urdu for a campaign, then say *peshkash* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پیشکش (peshkash) mean? (\"An offer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C547-sanvarna-intr",
+      "sequence": 31750,
+      "title": "سنورنا (sanvarnā) — to take shape nicely; to be put right",
+      "headword": "سنورنا",
+      "romanization": "sanvarnā",
+      "gloss": "to take shape nicely; to be put right",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8b4c5a36abc9f93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a campaign, then the Urdu for an offer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سنورنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سنورنا — sanvarnā — \"to take shape nicely; to be put right\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر بچوں نے اچھا سیکھا تو کل سنور جائے گا۔ agar bachchoṅ ne achchhā sīkhā to kal sanvar jāe gā. If the children learn well, tomorrow will turn out well."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ کمرہ سنور گیا, voh kamrā sanvar gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سنورنا (sanvarnā) is inherited: CDIAL lists the Hindi cousins sãwārṇā, \"to arrange, to deck\", and its intransitive sãwarnā, \"to be arranged\", under Sanskrit saṃvārayati, \"puts in order\" (CDIAL 13021)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanvarnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanvarnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanvarnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanvarnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar bachchoṅ ne achchhā sīkhā to kal sanvar jāe gā. — If the children learn well, tomorrow will turn out well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar bachchoṅ ne achchhā sīkhā to kal sanvar jāe gā.* — If the children learn well, tomorrow will turn out well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a campaign, then the Urdu for an offer, then say sanvarnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a campaign, then the Urdu for an offer, then say *sanvarnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سنورنا (sanvarnā) mean? (\"To take shape nicely; to be put right\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R547-review-541-547",
+      "sequence": 31760,
+      "title": "Looking back: from In That Case to Looking Ahead",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from In That Case to Looking Ahead",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0371a06b726b6e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for an angle and circumstances."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an angle, circumstances, conditional, a point (that things come to), supposing (for argument's sake)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an angle, circumstances, conditional, a point (that things come to), supposing (for argument's sake)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "in any case, well (moving on), in particular, a point (in an argument), a summary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: in any case, well (moving on), in particular, a point (in an argument), a summary]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what one expects, a prediction, to see through, to put a value on, correct",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what one expects, a prediction, to see through, to put a value on, correct]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a beginning, the start, the close (of an event), a series, order (a set sequence)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a beginning, the start, the close (of an event), a series, order (a set sequence)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temporary, permanent, final, a stage, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: temporary, permanent, final, a stage, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toil, to lend a hand, ease, to grapple with (a hard task), a yardstick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: toil, to lend a hand, ease, to grapple with (a hard task), a yardstick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imagination, an intention (in one's heart), a campaign, an offer, to take shape nicely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: imagination, an intention (in one's heart), a campaign, an offer, to take shape nicely]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An angle? (زاویہ, zāviyā.) Circumstances? (حالات, hālāt.) Conditional? (مشروط, mashrūt.) A point (that things come to)? (نوبت, naubat.) Supposing (for argument's sake)? (بالفرض, bilfarz.) In any case? (بہرحال, baharhāl.) Well (moving on)? (خیر, khair.) In particular? (بالخصوص, bilkhusūs.) A point (in an argument)? (نکتہ, nuktā.) A summary? (خلاصہ, khulāsā.) What one expects? (توقع, tavaqqo.) A prediction? (پیش گوئی, pesh goī.) To see through? (تاڑنا, tāṛnā.) To put a value on? (آنکنا, āṅknā.) Correct? (درست, durust.) A beginning? (آغاز, āghāz.) The start? (شروع, shurū.) The close (of an event)? (اختتام, ikhtitām.) A series? (سلسلہ, silsilā.) Order (a set sequence)? (ترتیب, tartīb.) Temporary? (عارضی, ārzī.) Permanent? (مستقل, mustaqil.) Final? (حتمی, hatmī.) A stage? (مرحلہ, marhalā.) Durable? (پائیدار, pāedār.) Toil? (مشقت, mashaqqat.) To lend a hand? (ہاتھ بٹانا, hāth baṭānā.) Ease? (آسانی, āsānī.) To grapple with (a hard task)? (جوجھنا, jūjhnā.) A yardstick? (پیمانہ, paimānā.) Imagination? (تصور, tasavvur.) An intention (in one's heart)? (نیت, niyyat.) A campaign? (مہم, muhim.) An offer? (پیشکش, peshkash.) To take shape nicely? (سنورنا, sanvarnā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R547-review-final-547",
+      "sequence": 31770,
+      "title": "Looking Ahead — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28725651bd3fc87e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for imagination and an intention (in one's heart)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imagination, an intention (in one's heart), a campaign, an offer, to take shape nicely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: imagination, an intention (in one's heart), a campaign, an offer, to take shape nicely]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Imagination? (تصور, tasavvur.) An intention (in one's heart)? (نیت, niyyat.) A campaign? (مہم, muhim.) An offer? (پیشکش, peshkash.) To take shape nicely? (سنورنا, sanvarnā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
