@@ -135,3 +135,19 @@ Completion requires:
    observer, helper, dead-anchor, post-commit, and direct-Q variants.
 7. A working BUILD recipe, workspace membership, format, warnings-denied Clippy
    and rustdoc, and at least 80% core line coverage with a 95% target.
+
+## Completion audit
+
+Complete locally. HALT Q is authoritative through the entire lifecycle and the
+private observer is proven non-decisive under deliberate divergence in both
+directions. Checked restore validates the complete snapshot before mutation,
+and a late `run` fault restores the caller's complete pre-run state, including
+HALT Q. Independently derived owned-container counts total exactly 1,428 DFFs.
+
+The differential now covers all 256 first-byte classifications: 240 valid
+transitions and 16 matching typed atomic unknown-opcode faults. The package has
+90 component/unit tests, seven integration tests, and four doctests. All five
+hostile full-crate variants type-check before the structural validator rejects
+their observer, helper, dead-anchor, post-commit, or direct-Q bypass. Format,
+warnings-denied Clippy and rustdoc, release tests, the affected build, and
+96.69% package-source line coverage (1,607/1,662) are green.
