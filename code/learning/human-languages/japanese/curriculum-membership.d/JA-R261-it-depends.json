@@ -1,0 +1,11 @@
+{
+  "id": "JA-R261-it-depends",
+  "pathSegment": "JA-PATH-261-CONDITION261",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-261-CONDITION261",
+      "order": 4
+    }
+  ]
+}
