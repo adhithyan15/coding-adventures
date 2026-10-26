@@ -75,7 +75,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 7 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
 | 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
-| 10 | SuperH-2 | published programming manuals | Complete locally awaiting independent exact-head review: Spec 07av's bounded SH-2 integer core has complete 64 KiB state, big-endian transport, delayed control flow, integer/memory and multiply/divide families including `MUL.L`, MAC alias sequencing, typed atomic lifecycle, 20 tests, and 93.95% line coverage (962/1,024). Remaining interrupt/peripheral/SoC and later-SuperH work stays explicit below. |
+| 10 | SuperH-2 | published programming manuals | Complete locally awaiting independent exact-head review: Spec 07av's bounded SH-2 integer core has complete 64 KiB state, big-endian transport, delayed control flow, integer/memory and multiply/divide families including `MUL.L`, exact `DIV1` Q/M/T quadrant behavior, MAC alias sequencing, typed atomic lifecycle, 22 tests, and 94.29% line coverage (1,023/1,085). Remaining interrupt/peripheral/SoC and later-SuperH work stays explicit below. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |

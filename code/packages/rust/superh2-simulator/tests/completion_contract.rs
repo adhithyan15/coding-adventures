@@ -138,6 +138,23 @@ fn multiplication_division_and_mac_alias_order_are_visible() {
 }
 
 #[test]
+fn div1_incoming_q_one_quadrant_matches_the_manual() {
+    let mut cpu = loaded(&[0x31, 0x24]); // DIV1 R2,R1
+    install_state(&mut cpu, |s| {
+        s.registers[1] = 1;
+        s.registers[2] = 1;
+        s.sr.q = true;
+        s.sr.m = true;
+        s.sr.t = false;
+    });
+
+    let state = cpu.step().unwrap().post_state;
+    assert_eq!(state.registers[1], 1);
+    assert!(state.sr.q);
+    assert!(state.sr.t);
+}
+
+#[test]
 fn unsigned_word_multiply_retains_the_full_32_bit_product() {
     let mut cpu = loaded(&[0x21, 0x2e]);
     install_state(&mut cpu, |s| {

@@ -1432,15 +1432,14 @@ fn divide_step(state: &mut SuperH2State, rm: usize, rn: usize) {
     state.sr.q = state.registers[rn] >> 31 != 0;
     state.registers[rn] = (state.registers[rn] << 1) | u32::from(state.sr.t);
     let before = state.registers[rn];
-    let add = old_q == state.sr.m;
-    if add {
+    if old_q == state.sr.m {
         state.registers[rn] = state.registers[rn].wrapping_sub(state.registers[rm]);
         let borrow = state.registers[rn] > before;
-        state.sr.q = if state.sr.q { !borrow } else { borrow };
+        state.sr.q ^= borrow ^ old_q;
     } else {
         state.registers[rn] = state.registers[rn].wrapping_add(state.registers[rm]);
         let carry = state.registers[rn] < before;
-        state.sr.q = if state.sr.q { carry } else { !carry };
+        state.sr.q = !(state.sr.q ^ carry ^ old_q);
     }
     state.sr.t = state.sr.q == state.sr.m;
 }
@@ -1478,6 +1477,36 @@ fn mac(state: &mut SuperH2State, rn: usize, rm: usize, width: Width) -> Result<(
 #[cfg(test)]
 mod unit_tests {
     use super::*;
+
+    fn div1_manual_oracle(
+        dividend: u32,
+        divisor: u32,
+        old_q: bool,
+        m: bool,
+        t: bool,
+    ) -> (u32, bool, bool, bool) {
+        let pre_q = dividend & 0x8000_0000 != 0;
+        let shifted = (dividend << 1) | u32::from(t);
+        let (result, event, q) = match (old_q, m) {
+            (false, false) => {
+                let (result, borrow) = shifted.overflowing_sub(divisor);
+                (result, borrow, if pre_q { !borrow } else { borrow })
+            }
+            (false, true) => {
+                let (result, carry) = shifted.overflowing_add(divisor);
+                (result, carry, if pre_q { carry } else { !carry })
+            }
+            (true, false) => {
+                let (result, carry) = shifted.overflowing_add(divisor);
+                (result, carry, if pre_q { !carry } else { carry })
+            }
+            (true, true) => {
+                let (result, borrow) = shifted.overflowing_sub(divisor);
+                (result, borrow, if pre_q { borrow } else { !borrow })
+            }
+        };
+        (result, q, q == m, event)
+    }
 
     #[test]
     fn classification_covers_every_claimed_family() {
@@ -1561,5 +1590,60 @@ mod unit_tests {
         let before = cpu.snapshot();
         assert_eq!(cpu.run_inner(1, true), Err(SuperH2Error::AllocationFailure));
         assert_eq!(cpu.snapshot(), before);
+    }
+
+    #[test]
+    fn div1_matches_independent_manual_truth_table_at_boundaries() {
+        let dividends = [
+            0,
+            1,
+            0x3fff_ffff,
+            0x7fff_ffff,
+            0x8000_0000,
+            0x8000_0001,
+            0xbfff_ffff,
+            u32::MAX,
+        ];
+        let divisors = [0, 1, 2, 0x7fff_ffff, 0x8000_0000, u32::MAX];
+        let mut seen = [false; 32];
+
+        for old_q in [false, true] {
+            for m in [false, true] {
+                for t in [false, true] {
+                    for dividend in dividends {
+                        for divisor in divisors {
+                            let (expected_rn, expected_q, expected_t, event) =
+                                div1_manual_oracle(dividend, divisor, old_q, m, t);
+                            let pre_q = dividend & 0x8000_0000 != 0;
+                            let index = (usize::from(old_q) << 4)
+                                | (usize::from(m) << 3)
+                                | (usize::from(t) << 2)
+                                | (usize::from(pre_q) << 1)
+                                | usize::from(event);
+                            seen[index] = true;
+
+                            let mut state = SuperH2State::default();
+                            state.registers[1] = dividend;
+                            state.registers[2] = divisor;
+                            state.sr.q = old_q;
+                            state.sr.m = m;
+                            state.sr.t = t;
+                            divide_step(&mut state, 2, 1);
+
+                            assert_eq!(
+                                (state.registers[1], state.sr.q, state.sr.t),
+                                (expected_rn, expected_q, expected_t),
+                                "old_q={old_q} m={m} t={t} dividend={dividend:#010x} divisor={divisor:#010x}"
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        assert!(
+            seen.into_iter().all(|covered| covered),
+            "boundary matrix must realize every old-Q/M/T/pre-Q/carry-or-borrow truth-table row"
+        );
     }
 }
