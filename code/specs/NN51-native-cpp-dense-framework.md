@@ -3,6 +3,16 @@
 Status: specified before implementation. Native C++ training and seven-native
 checkpoint exchange are not delivered by the preceding parser prerequisite.
 
+Implementation checkpoint: independent native library/command and shared ISO
+fronts exist locally. GCC/LLVM Clang each passed 237 library checks and actual
+fresh/resume/baseline command validation through step 3002. Both tested 93 real
+allocation-failure positions; ASan's separate variant passed 236 checks without
+the incompatible replacement hooks, plus actual command tests. Local coverage:
+97.56% library lines, 90.91% command lines, 100% Python validator statements.
+Installed CMake consumer compiled/linked/ran. These are Windows-local results,
+not actual Linux/macOS/MSVC CI or seven-native exchange. CI selection audit,
+teaching/curriculum, independent final review and publication remain pending.
+
 ## Selection after NN50
 
 NN50 merged [PR #18333](https://github.com/adhithyan15/coding-adventures/pull/18333)
