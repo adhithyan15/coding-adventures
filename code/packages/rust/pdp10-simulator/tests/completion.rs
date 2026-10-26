@@ -238,7 +238,8 @@ fn pushdown_pointers_use_full_word_arithmetic_and_expose_overflow() {
     aliased_pop.set_accumulator(0, 0o123).unwrap();
     aliased_pop.set_accumulator(3, 0o000001_000000).unwrap();
     aliased_pop.step().unwrap();
-    assert_eq!(aliased_pop.accumulator(3).unwrap(), 0o123);
+    // KA10 POP is RDP; WR; SOBAC: when E is P, decrement the popped word.
+    assert_eq!(aliased_pop.accumulator(3).unwrap(), 0o777777_000122);
     assert!(aliased_pop.state().flags.pushdown_overflow);
 }
 
