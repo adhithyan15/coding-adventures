@@ -18,6 +18,7 @@ const stp01TestPath = "code/specs/fixtures/starlark-opcode-provider-v1/cases.jso
 func stp01Packages(root string) []discovery.Package {
 	return []discovery.Package{
 		{Name: "go/starlark-compiler", Path: filepath.Join(root, "code/packages/go/starlark-compiler"), Language: "go"},
+		{Name: "haskell/starlark-compiler", Path: filepath.Join(root, "code/packages/haskell/starlark-compiler"), Language: "haskell"},
 		{Name: "rust/extra", Path: filepath.Join(root, "code/packages/rust/extra"), Language: "rust"},
 	}
 }
@@ -26,11 +27,14 @@ func TestSTP01FixtureExactSelection(t *testing.T) {
 	root := t.TempDir()
 	packages := stp01Packages(root)
 	for _, platform := range []string{"linux", "darwin", "windows"} {
-		for _, lang := range []string{"all", "go", "rust"} {
+		for _, lang := range []string{"all", "go", "haskell", "rust"} {
 			got, err := changedPackageRootsForPlatformAndLanguage([]string{stp01TestPath}, packages, root, platform, lang)
 			want := map[string]bool{}
-			if lang != "rust" {
+			if lang == "all" || lang == "go" {
 				want["go/starlark-compiler"] = true
+			}
+			if lang == "all" || lang == "haskell" {
+				want["haskell/starlark-compiler"] = true
 			}
 			if err != nil || !reflect.DeepEqual(got, want) {
 				t.Fatalf("%s/%s got %v/%v", platform, lang, got, err)
@@ -44,7 +48,7 @@ func TestSTP01FixtureExactSelection(t *testing.T) {
 		}
 	}
 	got, err := changedPackageRootsForPlatform([]string{stp01TestPath, "code/packages/rust/extra/src/lib.rs"}, packages, root, "linux")
-	if err != nil || len(got) != 2 || !got["go/starlark-compiler"] || !got["rust/extra"] {
+	if err != nil || len(got) != 3 || !got["go/starlark-compiler"] || !got["haskell/starlark-compiler"] || !got["rust/extra"] {
 		t.Fatalf("union %v/%v", got, err)
 	}
 	for _, files := range [][]string{nil, {}} {
@@ -53,8 +57,8 @@ func TestSTP01FixtureExactSelection(t *testing.T) {
 			t.Fatalf("nil/empty %v/%v", got, err)
 		}
 	}
-	for _, lang := range []string{"all", "go", "rust"} {
-		got, err := changedPackageRootsForPlatformAndLanguage([]string{stp01TestPath}, packages[1:], root, "linux", lang)
+	for _, lang := range []string{"all", "go", "haskell", "rust"} {
+		got, err := changedPackageRootsForPlatformAndLanguage([]string{stp01TestPath}, packages[2:], root, "linux", lang)
 		if lang == "rust" {
 			if err != nil || len(got) != 0 {
 				t.Fatal(got, err)
@@ -103,15 +107,21 @@ func TestSTP01FixturePlanAndAtomicity(t *testing.T) {
 	if err = json.Unmarshal(data, &p); err != nil {
 		t.Fatal(err)
 	}
-	if p.Force || !p.LanguagesNeeded["go"] || p.LanguagesNeeded["rust"] {
+	if p.Force || !p.LanguagesNeeded["go"] || !p.LanguagesNeeded["haskell"] || p.LanguagesNeeded["rust"] {
 		t.Fatalf("plan toolchains/force %+v", p.LanguagesNeeded)
 	}
+	wantAffected := []string{"go/starlark-compiler", "haskell/starlark-compiler"}
 	for _, platform := range []string{"linux", "darwin", "windows"} {
-		if !reflect.DeepEqual(p.StateForPlatform(platform).AffectedPackages, []string{"go/starlark-compiler"}) {
+		if !reflect.DeepEqual(p.StateForPlatform(platform).AffectedPackages, wantAffected) {
 			t.Fatal(platform, p.StateForPlatform(platform).AffectedPackages)
 		}
 	}
-	missing := packages[1:]
+	for attempt := 0; attempt < 100; attempt++ {
+		if got := affectedListFromSet(map[string]bool{"haskell/starlark-compiler": true, "go/starlark-compiler": true}); !reflect.DeepEqual(got, wantAffected) {
+			t.Fatalf("attempt %d: affected packages are not stable: %v", attempt, got)
+		}
+	}
+	missing := packages[2:]
 	g, err := resolver.ResolveDependencies(missing)
 	if err != nil {
 		t.Fatal(err)

@@ -7225,6 +7225,12 @@ where
     if let Some(config) = &diagram.architecture_config {
         scene_metadata.insert("architecture.numIter".into(), config.num_iter.to_string());
     }
+    if diagram.kind == diagram_ir::StructuralKind::Er {
+        scene_metadata.insert(
+            "er.useMaxWidth".into(),
+            diagram.render_config.use_max_width.to_string(),
+        );
+    }
     let lf = options.label_font.clone();
     let ls = lf.size;
 
@@ -10134,12 +10140,14 @@ mod tests {
         let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedStructuralDiagram {
+            kind: diagram_ir::StructuralKind::Architecture,
             width: 200.0,
             height: 100.0,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
             architecture_config: None,
+            render_config: Default::default(),
             groups: vec![],
             nodes: vec![diagram_ir::LayoutedStructuralNode {
                 id: "api".into(),
@@ -10191,6 +10199,7 @@ mod tests {
         let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedStructuralDiagram {
+            kind: diagram_ir::StructuralKind::Architecture,
             width: 200.0,
             height: 100.0,
             title: None,
@@ -10200,6 +10209,7 @@ mod tests {
                 num_iter: 5000,
                 ..diagram_ir::ArchitectureConfig::default()
             }),
+            render_config: Default::default(),
             groups: vec![],
             nodes: vec![],
             relationships: vec![],
@@ -10217,12 +10227,14 @@ mod tests {
         let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedStructuralDiagram {
+            kind: diagram_ir::StructuralKind::Class,
             width: 200.0,
             height: 80.0,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
             architecture_config: None,
+            render_config: Default::default(),
             groups: vec![],
             nodes: vec![],
             relationships: vec![diagram_ir::LayoutedStructuralRelationship {
@@ -10268,12 +10280,14 @@ mod tests {
         let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedStructuralDiagram {
+            kind: diagram_ir::StructuralKind::Class,
             width: 200.0,
             height: 80.0,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
             architecture_config: None,
+            render_config: Default::default(),
             groups: vec![],
             nodes: vec![],
             relationships: vec![diagram_ir::LayoutedStructuralRelationship {
@@ -10297,6 +10311,33 @@ mod tests {
         let scene = diagram_to_paint_structural(&layout, &opts);
         assert_eq!(scene.instructions.len(), 1);
         assert!(matches!(scene.instructions[0], PaintInstruction::Path(_)));
+    }
+
+    #[test]
+    fn er_use_max_width_lowers_to_scene_metadata() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedStructuralDiagram {
+            kind: diagram_ir::StructuralKind::Er,
+            width: 200.0,
+            height: 80.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            architecture_config: None,
+            render_config: diagram_ir::StructuralRenderConfig { use_max_width: false },
+            groups: vec![],
+            nodes: vec![],
+            relationships: vec![],
+        };
+
+        let scene = diagram_to_paint_structural(&layout, &opts);
+        assert_eq!(
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("er.useMaxWidth")),
+            Some(&"false".to_string())
+        );
     }
 
     #[test]
