@@ -4,14 +4,15 @@
 //!
 //! | Path | Entry points | Subset | Grammar | Errors |
 //! |------|--------------|--------|---------|--------|
-//! | LANG84 release path (phase 7a) | [`compile_source_at`], [`compile_cst`], [`run_source_at`] | `py-int-print`: `print` of `i64` arithmetic, LANG83 ops, runs on all nine backends | one tagged release's `python<release>.*` pair | [`FrontendError`] (LANG84 C6) |
+//! | LANG84 release path (phases 7a–7c) | [`compile_source_at`], [`compile_cst`], [`run_source_at`] | `py-int-print`: `print` of `i64` arithmetic; `py-float-print` (7c slice 3) adds IEEE floats; `py2-int-print`; LANG83 ops, runs on all nine backends | one tagged release's `python<release>.*` pair | [`FrontendError`] (LANG84 C6) |
 //! | LANG79 float pilot | [`compile_source`], [`compile_ast`], [`run_source`] | float expressions and bindings on `vm-core` | the legacy minor line `"3.12"` | `String` |
 //!
 //! They share nothing but this crate. The release path is described in
 //! `release_api.rs` and `int_lower.rs`, its release switches in [`profiles`].
-//! The rest of this file is the float pilot, unchanged by LANG84 phase 7a: it
-//! keeps its legacy grammar until LANG83's float formatting lets the float
-//! subset move to release pairs (LANG84 7b/7c).
+//! The rest of this file is the float pilot, unchanged by LANG84: it keeps
+//! its legacy grammar and its own API. Since LANG84 phase 7c slice 3 the
+//! release path has floats too (`py-float-print`); the pilot's bindings,
+//! NameError and multi-argument `print` are later slices of that subset.
 //!
 //! # LANG79's float pilot
 //!

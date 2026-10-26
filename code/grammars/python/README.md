@@ -15,15 +15,16 @@ This directory holds three kinds of files:
 - Seven Python 3 pairs: `python3.0a1`, `python3.11.17`, `python3.12.3`,
   `python3.13.16` and `python3.16.0a1` (LANG84 phase 7a), and
   `python3.5.10` and `python3.6.0` (phase 7c slice 2). Each is a **partial**
-  pair for the `py-int-print` subset, and `pair-evidence.csv` cites the
-  upstream files it was written from. See [Release pairs](#release-pairs-lang84-phase-7a).
+  pair for the `py-int-print` subset, and all but 3.0a1 also lex floats for
+  `py-float-print` (phase 7c slice 3). `pair-evidence.csv` cites the
+  upstream files each was written from. See [Release pairs](#release-pairs-lang84-phase-7a).
 - Four Python 2 pairs (LANG84 phase 7c): `python2.2` and `python2.7.18`
   (slice 1), `python2.4` and `python2.6` (slice 2). They are partial pairs
   for the `py2-int-print` subset: the `print` statement, classic `/`, and
   Python 2's octal, hex and long literals. See
   [Python 2 pairs](#python-2-pairs-lang84-phase-7c).
-- `subsets.csv`, `corpus/py-int-print/` and `corpus/py2-int-print/`: the
-  subsets and their oracle-backed test cases. See [Corpus](#corpus-py-int-print-py2-int-print).
+- `subsets.csv`, `corpus/py-int-print/`, `corpus/py-float-print/` and
+  `corpus/py2-int-print/`: the subsets and their oracle-backed test cases. See [Corpus](#corpus-py-int-print-py-float-print-py2-int-print).
 
 The CSV header declares the legacy pairs with
 `legacy-minor-line-pairs: ...`, so `release_inventory.py check` does not
@@ -126,8 +127,11 @@ Python 3. These seven releases have a pair:
 | 3.13.16 | host `python3`; the frontend's `DEFAULT_RELEASE` | as 3.12.3 | host interpreter |
 | 3.16.0a1 | newest inventory row | as 3.12.3 | pinned source at the tag |
 
-Every row is `partial`, stage `P`, `grammar_subset` `py-int-print`,
-`iir_status` `py-int-print` and profile `py3`. Since LANG84 phase 7b slice 2
+Every row is `partial`, stage `P`. 3.0a1 has `grammar_subset` and
+`iir_status` `py-int-print` and profile `py30`; the other six have
+`grammar_subset` `py-float-print`, `iir_status` and `backend_status`
+`py-int-print;py-float-print`, and profile `py3` (LANG84 phase 7c slice 3:
+3.0a1's `str(float)` is `%.12g`, the others' is `repr`). Since LANG84 phase 7b slice 2
 every row also claims `backend_status`. `python-iir-compiler`'s
 `tests/release_sweep.rs` groups the seven releases into IIR-identity classes
 and writes `release_classes.csv` (`subset,case,release,class`, one row per
@@ -232,7 +236,7 @@ The release sweep puts 2.2 and 2.4 in one IIR-identity class and 2.6 and
 `lang_matrix` runs the corpus on 2.2 and on 2.6, and `check --matrix` credits
 those rows to 2.4 and 2.7.18.
 
-## Corpus (`py-int-print`, `py2-int-print`)
+## Corpus (`py-int-print`, `py-float-print`, `py2-int-print`)
 
 `corpus/py2-int-print/` has the same layout as the `py-int-print` corpus
 below. There is no host `python2`, so each `.cite` names the pinned historical
@@ -272,12 +276,25 @@ Each rejected case's `.cite` records whether CPython accepts the program
 `IndentationError`). A `py-int-print` refusal of a valid Python program is a
 subset limit, not a claim about Python.
 
+### `py-float-print`
+
+`corpus/py-float-print/` (LANG84 phase 7c slice 3) has the same layout and
+the same three host oracles. It holds the float cases only (literals, `_`
+in floats with `.reject@3.5.10`, true division, mixing, signed zeros,
+`inf`/`nan`, repr's layout, ZeroDivisionError after output, and one
+`Trap.Overflow` case where an overflowing int meets a float, whose `.cite`
+records the float CPython prints), plus refusals: float `//` and `%`,
+`1e400`, `int / int` above 2^53, imaginary literals, malformed spellings.
+The int cases stay in `py-int-print`; a release that claims both subsets
+runs both corpora. The release sweep finds two `py-float-print` classes:
+3.5.10 alone (no `_`), and 3.6.0 with the other four.
+
 ## Subsets (`subsets.csv`)
 
 `subsets.csv` (LANG84 phase 2b) declares the subsets that `grammar_subset`,
 `iir_status` and `backend_status` may name:
 
 - `py-int-print` (phase 7a, above), with its corpus in `corpus/py-int-print/`.
-- `py-float-print`: LANG79's float `print` subset (phase 7), defined in
-  LANG79. Its corpus goes in `corpus/py-float-print/` when a release first
-  claims stage I. No row names it yet.
+- `py-float-print` (phase 7c slice 3, above): `py-int-print` plus floats,
+  printed as `repr`, on 3.5.10 and later. The name is LANG79's; LANG79's
+  pilot (the legacy `"3.12"` path) is not a claim of it.
