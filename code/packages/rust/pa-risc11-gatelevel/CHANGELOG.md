@@ -6,4 +6,6 @@
 - Added exact 525,436-DFF state authority, independent decode/datapath/control,
   transactional lifecycle behavior, structural anti-bypass checks, and full
   state differential tests against the checked functional oracle.
-- Verified 17 release tests and 96.83% line coverage (978/1,010 lines).
+- Verified 25 release tests and 97.65% line coverage (1,040/1,065 lines),
+  including post-progress allocation rollback, exact functional lifecycle
+  parity, exhaustive subtractor relations, and the complete hostile matrix.

@@ -243,7 +243,7 @@ pub(crate) fn add_condition(selector: u8, result: u32, carry: u8, overflow: u8) 
 
 #[cfg(test)]
 mod tests {
-    use super::add32;
+    use super::{add32, not32, sub32};
 
     #[test]
     fn every_nibble_truth_table_and_carry_input_is_exact() {
@@ -267,6 +267,62 @@ mod tests {
                     }
                 }
             }
+        }
+    }
+
+    #[test]
+    fn every_nibble_subtract_truth_table_borrow_and_cb_order_is_exact() {
+        for nibble in 0..8 {
+            let shift = nibble * 4;
+            for left_nibble in 0..16_u32 {
+                for right_nibble in 0..16_u32 {
+                    for borrow_in in 0..=1_u8 {
+                        let (low_left, low_right, carry_in) = if nibble == 0 {
+                            (0, 0, 1 - borrow_in)
+                        } else if borrow_in == 1 {
+                            (0, 1, 1)
+                        } else {
+                            (0, 0, 1)
+                        };
+                        let left = (left_nibble << shift) | low_left;
+                        let right = (right_nibble << shift) | low_right;
+                        let (result, _, _, carries) = add32(left, not32(right), carry_in);
+                        let expected_nibble = left_nibble
+                            .wrapping_sub(right_nibble)
+                            .wrapping_sub(u32::from(borrow_in))
+                            & 15;
+                        let expected_no_borrow = left_nibble >= right_nibble + u32::from(borrow_in);
+                        assert_eq!((result >> shift) & 15, expected_nibble);
+                        assert_eq!(carries[7 - nibble], u8::from(expected_no_borrow));
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn full_word_carry_borrow_and_signed_overflow_edges_are_directed() {
+        for (left, right, sum, carry, overflow, cb) in [
+            (u32::MAX, 1, 0, 1, 0, [1; 8]),
+            (0x7fff_ffff, 1, 0x8000_0000, 0, 1, [0, 1, 1, 1, 1, 1, 1, 1]),
+            (0x8000_0000, 0x8000_0000, 0, 1, 1, [1, 0, 0, 0, 0, 0, 0, 0]),
+        ] {
+            let actual = add32(left, right, 0);
+            assert_eq!(
+                (actual.0, actual.1, actual.2, actual.3),
+                (sum, carry, overflow, cb)
+            );
+        }
+        for (left, right, difference, no_borrow, overflow, cb) in [
+            (0, 1, u32::MAX, 0, 0, [0; 8]),
+            (0x10, 1, 0x0f, 1, 0, [1, 1, 1, 1, 1, 1, 1, 0]),
+            (0x8000_0000, 1, 0x7fff_ffff, 1, 1, [1, 0, 0, 0, 0, 0, 0, 0]),
+        ] {
+            let actual = sub32(left, right);
+            assert_eq!(
+                (actual.0, actual.1, actual.2, actual.3),
+                (difference, no_borrow, overflow, cb)
+            );
         }
     }
 }

@@ -15,10 +15,11 @@ nullification state, halt, and installed-image metadata.
 The functional simulator is used only as an independent test oracle.  See
 Spec 07au2 for the exact admitted instruction surface and exclusions.
 
-The implementation has 17 release tests. Measured all-target package line
-coverage is 96.83% (978/1,010 lines). The matrices cover all 64 primary decode
+The implementation has 25 release tests. Measured all-target package line
+coverage is 97.65% (1,040/1,065 lines). The matrices cover all 64 primary decode
 lines, all 64 ALU extension values, every SHD count, every condition and sense,
-register overlap/GR0, memory widths and boundaries, delay/nullification,
+register overlap/GR0, exhaustive nibble add/subtract relations, reserved-field
+neighbors, memory widths and boundaries, delay/nullification, functional-oracle
 lifecycle rollback, stable-Q divergence, and compiler-checked hostile rewrites.
 
 ```rust

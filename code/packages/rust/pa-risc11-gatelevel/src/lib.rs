@@ -40,7 +40,7 @@ pub enum AllocationPoint {
 pub struct PaRisc11GateSimulator {
     physical: PhysicalState,
     observer: PaRisc11State,
-    failure: Cell<Option<AllocationPoint>>,
+    failure: Cell<Option<(AllocationPoint, usize)>>,
 }
 
 impl Default for PaRisc11GateSimulator {
@@ -73,16 +73,31 @@ impl PaRisc11GateSimulator {
     /// unless explicitly armed and never changes architectural state.
     #[doc(hidden)]
     pub fn inject_allocation_failure(&self, point: AllocationPoint) {
-        self.failure.set(Some(point));
+        self.inject_allocation_failure_after(point, 0);
+    }
+
+    /// Fail after `successful_boundaries` matching allocations have completed.
+    /// This makes post-progress `run` and `execute` rollback reproducible.
+    #[doc(hidden)]
+    pub fn inject_allocation_failure_after(
+        &self,
+        point: AllocationPoint,
+        successful_boundaries: usize,
+    ) {
+        self.failure.set(Some((point, successful_boundaries)));
     }
 
     fn allocation(&self, point: AllocationPoint) -> Result<(), PaRisc11Error> {
-        if self.failure.get() == Some(point) {
-            self.failure.set(None);
-            Err(PaRisc11Error::AllocationFailed)
-        } else {
-            Ok(())
+        if let Some((armed, remaining)) = self.failure.get() {
+            if armed == point {
+                if remaining == 0 {
+                    self.failure.set(None);
+                    return Err(PaRisc11Error::AllocationFailed);
+                }
+                self.failure.set(Some((armed, remaining - 1)));
+            }
         }
+        Ok(())
     }
 
     fn project(&self, point: AllocationPoint) -> Result<PaRisc11State, PaRisc11Error> {

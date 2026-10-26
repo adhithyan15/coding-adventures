@@ -373,8 +373,8 @@ Implementation is complete only when all of the following are true:
 
 Independent security/correctness review is mandatory before publication.
 
-The completed local package has 17 release tests and measured all-target line
-coverage of 96.83% (978/1,010 lines). The recorded evidence includes the exact
+The completed local package has 25 release tests and measured all-target line
+coverage of 97.65% (1,040/1,065 lines). The recorded evidence includes the exact
 inventory, full classification and condition matrices, complete-state
 differentials, lifecycle/allocation rollback, stable-Q divergence, and
 compiler-checked hostile full-crate mutations required above.
