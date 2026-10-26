@@ -66,11 +66,14 @@ public flag/fault type, but it must not repeat these decisions with `i128` or
 `u128` ordering, equality, or range operators.  Completion evidence includes
 the exact fit/overflow boundaries, signed extremes, high-half divergence, and
 a structural call-path guard that fails if host-wide qualification reappears
-in instruction execution. That guard locks normalized production bodies for
-both qualifier networks, every multiply/divide qualification entry point, and
-their instruction consumers. Its adversarial fixtures must reject helper
-indirection, shadowed gate results, unused gate anchors, direct high-word
-predicates, iterator `sum`/`count`/`min`, and host equality/range variants.
+in instruction execution. That guard parses the production Rust syntax,
+requires exactly one reviewed top-level definition for both qualifier networks
+and every multiply/divide qualification entry point, requires `exec_one` to
+dispatch directly through its instruction match, and locks the relevant
+consumer arms. Its adversarial fixtures must reject helper indirection,
+shadowed gate results, unused gate anchors, direct high-word predicates,
+iterator `sum`/`count`/`min`, host equality/range variants, inactive `cfg`
+decoys, and later active duplicate definitions.
 
 ## Lifecycle and atomicity
 
