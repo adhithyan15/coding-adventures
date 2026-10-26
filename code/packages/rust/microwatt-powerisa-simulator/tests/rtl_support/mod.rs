@@ -117,7 +117,6 @@ pub fn initial_state(row: &Row) -> State {
 
 pub fn expected_state(row: &Row, mut actual: State) -> State {
     actual.gpr = row.after_gprs;
-    actual.cia = row.cia_after;
     actual.lr = row.after_lr;
     actual.ctr = row.after_ctr;
     actual.cr = row.after_cr;

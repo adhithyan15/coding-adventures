@@ -180,6 +180,39 @@ fn every_reviewed_slash_field_bit_is_ignored() {
     for (xo, name) in [(9, "mulhdu"), (11, "mulhwu"), (73, "mulhd"), (75, "mulhw")] {
         supported_with_each_bit((31 << 26) | (xo << 1), &[10], name);
     }
+    for (xo, name) in [
+        (21, "ldx"),
+        (23, "lwzx"),
+        (53, "ldux"),
+        (55, "lwzux"),
+        (87, "lbzx"),
+        (119, "lbzux"),
+        (149, "stdx"),
+        (151, "stwx"),
+        (181, "stdux"),
+        (183, "stwux"),
+        (215, "stbx"),
+        (247, "stbux"),
+        (279, "lhzx"),
+        (311, "lhzux"),
+        (341, "lwax"),
+        (343, "lhax"),
+        (373, "lwaux"),
+        (375, "lhaux"),
+        (407, "sthx"),
+        (439, "sthux"),
+        (532, "ldbrx"),
+        (534, "lwbrx"),
+        (660, "stdbrx"),
+        (662, "stwbrx"),
+        (790, "lhbrx"),
+        (918, "sthbrx"),
+    ] {
+        let base = (31 << 26) | (3 << 21) | (6 << 16) | (4 << 11) | (xo << 1);
+        supported_with_each_bit(base, &[0], name);
+    }
+    supported_with_each_bit((31 << 26) | (8 << 16) | (339 << 1), &[0], "mfspr");
+    supported_with_each_bit((31 << 26) | (8 << 16) | (467 << 1), &[0], "mtspr");
     supported_with_each_bit(
         (31 << 26) | (598 << 1),
         &[0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24, 25],

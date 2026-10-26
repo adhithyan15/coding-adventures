@@ -439,10 +439,13 @@ the production instruction enum.
 - a deterministic GHDL harness at Microwatt commit
   `f341bed306a9a7281bf65200df8cc1f0a002617d`, with FPU disabled and 64-bit
   little-endian mode pinned, seeds GPRs, CR, XER, LR, CTR, CIA, and bounded
-  memory, executes one valid included instruction, and exports complete state;
+  memory, executes one valid included instruction, and exports all 32 GPRs,
+  CR, XER, LR, CTR, RAM writes, and the complete bounded-memory hash. The
+  harness does not observe CIA, so generated CIA columns are setup/fall-through
+  metadata and are excluded from the RTL differential assertion;
 - checked-in generated vectors record the commit, harness command, generator
   version, seed, row count, and content SHA-256 so CI does not need the network;
-- the RTL corpus contains at least one complete-state row for every included
+- the RTL corpus contains at least one observed-state row for every included
   execution family/form plus explicit source-lock rows for slash-field decode,
   SO/OV32, word multiply/divide shaping, arithmetic shifts, parity, branch,
   memory, and synchronization. It does not claim that all BO/BI outcomes,

@@ -16,7 +16,6 @@ fn every_pinned_rtl_row_matches_the_functional_simulator() {
         let actual = cpu.get_state();
         let expected = rtl_support::expected_state(&row, actual.clone());
         assert_eq!(actual.gpr, expected.gpr, "{} GPRs", row.name);
-        assert_eq!(actual.cia, expected.cia, "{} CIA", row.name);
         assert_eq!(actual.lr, expected.lr, "{} LR", row.name);
         assert_eq!(actual.ctr, expected.ctr, "{} CTR", row.name);
         assert_eq!(actual.cr, expected.cr, "{} CR", row.name);

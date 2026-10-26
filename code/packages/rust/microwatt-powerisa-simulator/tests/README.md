@@ -19,7 +19,11 @@ The committed corpus is an executed full-core RTL differential, not a
 hand-derived substitute. `rtl/generate.py` compiles the exact Microwatt commit
 in VHDL-2008 mode with FPU and branch-target cache disabled, runs 173
 deterministic one-instruction rows, and exports all 32 GPRs, CR, XER, LR, CTR,
-CIA, RAM writes, and the complete 64 KiB memory hash. `rtl_corpus.rs`
+RAM writes, and the complete 64 KiB memory hash. Microwatt does not export CIA
+through this harness: the corpus CIA columns document the fixed injected
+address and sequential fall-through expectation, and `rtl_differential.rs`
+intentionally excludes CIA from the RTL comparison. Independent functional
+tests cover CIA and control-flow semantics. `rtl_corpus.rs`
 independently validates the manifest/schema and pinned boundary choices;
 `rtl_differential.rs` compares every row with the production simulator.
 

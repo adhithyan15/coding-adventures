@@ -51,7 +51,9 @@ rows cover the reviewed SO, word multiply/divide shaping/Rc, branch, memory,
 and synchronization boundaries. A separately generated 173-row corpus was
 executed against the complete pinned Microwatt VHDL core with official,
 checksum-verified GHDL 6.0.0. Independent Rust consumers validate its manifest
-and compare every complete-state/memory result with this simulator. Network and
-GHDL access are not needed for normal tests. The exact tool/source pins,
+and compare every RTL-observed register/memory result with this simulator. CIA
+is fixed setup/fall-through metadata rather than an RTL observation; its
+functional behavior is covered independently. Network and GHDL access are not
+needed for normal tests. The exact tool/source pins,
 reproduction command, and evidence boundary are in
 [`tests/README.md`](tests/README.md).

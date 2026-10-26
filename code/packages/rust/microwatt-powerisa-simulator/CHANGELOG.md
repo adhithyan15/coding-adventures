@@ -16,4 +16,5 @@
   half preservation, and Microwatt word-multiply result/overflow behavior.
 - Add an executed 173-row complete-core GHDL differential corpus with pinned
   tool/source/harness hashes plus independent manifest and functional
-  consumers.
+  consumers; the documented differential boundary excludes CIA because the
+  pinned harness does not export it.
