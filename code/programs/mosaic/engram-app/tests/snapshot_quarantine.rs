@@ -18,12 +18,17 @@
 //! they pin, for every host:
 //!
 //! ```text
-//!   snapshot loads?   set aside as .corrupt?   what is stored afterwards
-//!   ---------------   ----------------------   ------------------------------
-//!   yes               (not attempted)          the snapshot, untouched
-//!   no                succeeds                 .corrupt = old, snapshot = demo
-//!   no                fails                    snapshot = old; nothing saved
+//!   snapshot loads?   copied aside?                 what is stored afterwards
+//!   ---------------   ---------------------------   ---------------------------
+//!   yes               (not attempted)               the snapshot, untouched
+//!   no                to the first free .corrupt    copy = old, snapshot = demo
+//!   no                fails, or 10 names all taken  snapshot = old; nothing saved
 //! ```
+//!
+//! "First free" is `.corrupt`, then `.corrupt.1` … `.corrupt.9`. A copy never
+//! replaces an earlier quarantine, because the earlier one may be the real
+//! history: startup rejects it, and then a reload after an import rejects the
+//! merged result too.
 //!
 //! The tests run the real host files under Node with stand-ins only at the
 //! edges: a fake wasm engine whose `loadSnapshot` accepts exactly the text
@@ -158,12 +163,18 @@ fn electron_leaves_a_loadable_snapshot_alone() {
     assert!(!case.corrupt.exists());
 }
 
+/// `<snapshot>.corrupt` for 0, `<snapshot>.corrupt.<n>` after that.
+fn electron_quarantine(case: &ElectronCase, index: usize) -> PathBuf {
+    if index == 0 {
+        case.corrupt.clone()
+    } else {
+        PathBuf::from(format!("{}.{index}", case.corrupt.display()))
+    }
+}
+
 #[test]
 fn electron_quarantines_an_unloadable_snapshot_before_saving_the_demo() {
     let case = electron_case(STUDY_HISTORY);
-    // A quarantine left by an earlier launch is replaced, as every generated
-    // Mosaic host does.
-    fs::write(&case.corrupt, "an older quarantine").unwrap();
     if start_electron(&case.root, &case.snapshot).is_none() {
         return;
     }
@@ -172,17 +183,41 @@ fn electron_quarantines_an_unloadable_snapshot_before_saving_the_demo() {
 }
 
 #[test]
-fn electron_saves_nothing_over_the_snapshot_when_the_quarantine_fails() {
+fn electron_never_replaces_an_earlier_quarantine() {
     let case = electron_case(STUDY_HISTORY);
-    // A non-empty directory where `.corrupt` should go: removing it without
-    // `recursive` fails, so the move is never made.
-    fs::create_dir_all(&case.corrupt).unwrap();
-    fs::write(case.corrupt.join("keep"), "x").unwrap();
+    fs::write(&case.corrupt, "the real history, quarantined at startup").unwrap();
+    // A directory in the next slot is skipped like a file.
+    fs::create_dir_all(electron_quarantine(&case, 1)).unwrap();
+    if start_electron(&case.root, &case.snapshot).is_none() {
+        return;
+    }
+    assert_eq!(
+        fs::read_to_string(&case.corrupt).unwrap(),
+        "the real history, quarantined at startup"
+    );
+    assert_eq!(
+        fs::read_to_string(electron_quarantine(&case, 2)).unwrap(),
+        STUDY_HISTORY
+    );
+    assert_eq!(fs::read_to_string(&case.snapshot).unwrap(), DEMO_STATE);
+}
+
+#[test]
+fn electron_saves_nothing_over_the_snapshot_when_every_quarantine_name_is_taken() {
+    let case = electron_case(STUDY_HISTORY);
+    for index in 0..10 {
+        fs::write(
+            electron_quarantine(&case, index),
+            format!("quarantine {index}"),
+        )
+        .unwrap();
+    }
     if start_electron(&case.root, &case.snapshot).is_none() {
         return;
     }
     assert_eq!(fs::read_to_string(&case.snapshot).unwrap(), STUDY_HISTORY);
-    assert!(case.corrupt.join("keep").exists());
+    assert!(!electron_quarantine(&case, 10).exists());
+    assert_eq!(fs::read_to_string(&case.corrupt).unwrap(), "quarantine 0");
 }
 
 // --------------------------------------------------------------------------
@@ -263,16 +298,41 @@ fn web_leaves_a_loadable_snapshot_alone() {
 
 #[test]
 fn web_sets_an_unloadable_snapshot_aside_before_saving_the_demo() {
+    let Some(storage) = start_web(&[(WEB_KEY, STUDY_HISTORY)], None) else {
+        return;
+    };
+    assert_eq!(storage[WEB_CORRUPT_KEY], STUDY_HISTORY);
+    assert_eq!(storage[WEB_KEY], DEMO_STATE);
+}
+
+#[test]
+fn web_never_replaces_an_earlier_quarantine() {
     let Some(storage) = start_web(
         &[
             (WEB_KEY, STUDY_HISTORY),
-            (WEB_CORRUPT_KEY, "an older quarantine"),
+            (WEB_CORRUPT_KEY, "the real history, quarantined at startup"),
         ],
         None,
     ) else {
         return;
     };
-    assert_eq!(storage[WEB_CORRUPT_KEY], STUDY_HISTORY);
+    assert_eq!(
+        storage[WEB_CORRUPT_KEY],
+        "the real history, quarantined at startup"
+    );
+    assert_eq!(storage["engram.snapshot.v1.corrupt.1"], STUDY_HISTORY);
+    assert_eq!(storage[WEB_KEY], DEMO_STATE);
+}
+
+#[test]
+fn web_does_not_copy_a_snapshot_it_already_holds() {
+    let Some(storage) = start_web(
+        &[(WEB_KEY, STUDY_HISTORY), (WEB_CORRUPT_KEY, STUDY_HISTORY)],
+        None,
+    ) else {
+        return;
+    };
+    assert!(storage.get("engram.snapshot.v1.corrupt.1").is_none());
     assert_eq!(storage[WEB_KEY], DEMO_STATE);
 }
 
@@ -283,4 +343,17 @@ fn web_saves_nothing_over_the_snapshot_when_setting_it_aside_fails() {
     };
     assert_eq!(storage[WEB_KEY], STUDY_HISTORY);
     assert!(storage.get(WEB_CORRUPT_KEY).is_none());
+}
+
+#[test]
+fn web_saves_nothing_over_the_snapshot_when_every_quarantine_key_is_taken() {
+    let mut keys = vec![WEB_CORRUPT_KEY.to_string()];
+    keys.extend((1..10).map(|index| format!("{WEB_CORRUPT_KEY}.{index}")));
+    let mut storage: Vec<(&str, &str)> = keys.iter().map(|key| (key.as_str(), "older")).collect();
+    storage.push((WEB_KEY, STUDY_HISTORY));
+    let Some(storage) = start_web(&storage, None) else {
+        return;
+    };
+    assert_eq!(storage[WEB_KEY], STUDY_HISTORY);
+    assert!(storage.get("engram.snapshot.v1.corrupt.10").is_none());
 }

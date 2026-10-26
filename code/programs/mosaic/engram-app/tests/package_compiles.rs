@@ -2941,13 +2941,16 @@ fn source_tree_has_expected_shape() {
     assert_contains(&xaml_host, "ENGRAM_SNAPSHOT_PATH");
     assert_contains(&xaml_host, "mosaic-snapshot.v1.json");
     assert_contains(&xaml_host, "HydrateSession");
-    // A snapshot the engine rejects is moved aside, never saved over, and a
-    // failed move switches saving off. tests/snapshot_quarantine.rs runs that
+    // A snapshot the engine rejects is copied aside under the first free
+    // `.corrupt` name, never saved over, and a failed copy switches saving
+    // off. tests/snapshot_quarantine.rs runs that
     // contract for the Electron and web hosts under Node; this host needs
     // WinUI, so its source is pinned here instead.
     assert_contains(&xaml_host, "QuarantineSnapshot(path);");
     assert_contains(&xaml_host, "path + \".corrupt\"");
-    assert_contains(&xaml_host, "File.Move(path, corrupt, overwrite: true)");
+    assert_contains(&xaml_host, "$\"{path}.corrupt.{index}\"");
+    assert_contains(&xaml_host, "File.Copy(path, corrupt, overwrite: false);");
+    assert_contains(&xaml_host, "private const int MaxQuarantinedSnapshots = 10;");
     assert_contains(&xaml_host, "PersistenceDisabled = true;");
     // The react backend's TypeScript web host mirrors engram-host.mjs, whose
     // quarantine tests/snapshot_quarantine.rs runs under Node.
@@ -2957,10 +2960,9 @@ fn source_tree_has_expected_shape() {
         &react_web_host,
         "const CORRUPT_SNAPSHOT_STORAGE_KEY = `${SNAPSHOT_STORAGE_KEY}.corrupt`;",
     );
-    assert_contains(
-        &react_web_host,
-        "if (!writeStorage(CORRUPT_SNAPSHOT_STORAGE_KEY, snapshot)) {",
-    );
+    assert_contains(&react_web_host, "quarantineSnapshot(snapshot);");
+    assert_contains(&react_web_host, "if (held === snapshot) {");
+    assert_contains(&react_web_host, "const MAX_QUARANTINED_SNAPSHOTS = 10;");
     assert_contains(&react_web_host, "persistenceDisabled = true;");
     assert_contains(&xaml_host, "PersistSnapshot");
     assert_contains(&xaml_host, "eg_snapshot");

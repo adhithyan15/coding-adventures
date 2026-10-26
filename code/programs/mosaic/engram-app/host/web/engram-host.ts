@@ -39,11 +39,21 @@ const WASM_URL = "./engram_engine.wasm";
 const DECK_ID_STORAGE_KEY = "engram.deckId";
 const SNAPSHOT_STORAGE_KEY = "engram.snapshot.v1";
 // A snapshot this build cannot load is someone's study history, not garbage.
-// It is copied to `engram.snapshot.v1.corrupt` (the `.corrupt` name every
-// generated Mosaic host uses for a rejected file) before the demo deck is
-// saved in its place. If even that copy fails, saving is switched off for the
-// session: an unsaved session is recoverable, an overwritten snapshot is not.
+// Before the demo deck is saved in its place it is copied aside, and a copy
+// never replaces an earlier one, because that earlier one may be the real
+// history:
+//
+//   first rejection    engram.snapshot.v1.corrupt      (the `.corrupt` name
+//   second             engram.snapshot.v1.corrupt.1     the generated hosts
+//   ...                ...                              use for a file)
+//   tenth              engram.snapshot.v1.corrupt.9
+//
+// A snapshot already held under one of those keys is not copied again. If the
+// copy fails (localStorage is full), or all ten keys are taken, saving is
+// switched off for the session: an unsaved session is recoverable, an
+// overwritten snapshot is not.
 const CORRUPT_SNAPSHOT_STORAGE_KEY = `${SNAPSHOT_STORAGE_KEY}.corrupt`;
+const MAX_QUARANTINED_SNAPSHOTS = 10;
 let persistenceDisabled: boolean = false;
 const HOST_INTENT_EVENT = "engram-host-intent";
 const HOST_READY_EVENT = "mosaic-host-ready";
@@ -87,10 +97,7 @@ function hydrateEngine(engine: EngramEngine): void {
       return;
     }
     console.warn("Engram persisted snapshot was invalid; resetting demo state", loaded.error);
-    if (!writeStorage(CORRUPT_SNAPSHOT_STORAGE_KEY, snapshot)) {
-      persistenceDisabled = true;
-      console.warn("Engram could not set the unreadable snapshot aside; this session will not be saved");
-    }
+    quarantineSnapshot(snapshot);
   }
 
   engine.resetDemo();
@@ -287,6 +294,28 @@ function downloadBytes(bytes: Uint8Array, name: string): void {
   link.click();
   link.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function quarantineSnapshot(snapshot: string): void {
+  for (let index = 0; index < MAX_QUARANTINED_SNAPSHOTS; index += 1) {
+    const key = index === 0 ? CORRUPT_SNAPSHOT_STORAGE_KEY : `${CORRUPT_SNAPSHOT_STORAGE_KEY}.${index}`;
+    const held = readStorage(key);
+    if (held === snapshot) {
+      return;
+    }
+    if (held !== null) {
+      continue;
+    }
+    if (!writeStorage(key, snapshot)) {
+      persistenceDisabled = true;
+      console.warn("Engram could not set the unreadable snapshot aside; this session will not be saved");
+    }
+    return;
+  }
+  persistenceDisabled = true;
+  console.warn(
+    `Engram already holds ${MAX_QUARANTINED_SNAPSHOTS} unreadable snapshots; this session will not be saved until they are cleared`,
+  );
 }
 
 function persistSnapshot(engine: EngramEngine): void {
