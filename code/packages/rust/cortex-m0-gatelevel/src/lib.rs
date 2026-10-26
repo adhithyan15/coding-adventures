@@ -255,7 +255,7 @@ impl CortexM0GateLevel {
         for (target, index) in bytes.iter_mut().zip(range) {
             *target = self.memory.read(index);
         }
-        Ok(u32::from_le_bytes(bytes))
+        Ok(gates::assemble_le_u32(bytes))
     }
 
     pub fn write_memory(
@@ -265,7 +265,7 @@ impl CortexM0GateLevel {
         value: u32,
     ) -> Result<(), CortexM0Error> {
         let range = engine::checked_range(address, width)?;
-        for (index, byte) in range.zip(value.to_le_bytes()) {
+        for (index, byte) in range.zip(gates::split_le_u32(value)) {
             self.memory.write(index, byte);
         }
         Ok(())

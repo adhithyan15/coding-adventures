@@ -43,6 +43,38 @@ pub fn bits_to_u32(bits: &[u8]) -> u32 {
         .fold(0, |value, (bit, q)| value | (u32::from(*q) << bit))
 }
 
+/// Assemble two little-endian bytes through fixed wiring.
+#[must_use]
+pub fn assemble_le_u16(bytes: [u8; 2]) -> u16 {
+    let wires = bytes.map(u8_to_bits);
+    bits_to_u16(&std::array::from_fn::<_, 16, _>(|bit| {
+        wires[bit / 8][bit % 8]
+    }))
+}
+
+/// Assemble four little-endian bytes through fixed wiring.
+#[must_use]
+pub fn assemble_le_u32(bytes: [u8; 4]) -> u32 {
+    let wires = bytes.map(u8_to_bits);
+    bits_to_u32(&std::array::from_fn::<_, 32, _>(|bit| {
+        wires[bit / 8][bit % 8]
+    }))
+}
+
+/// Decompose a halfword to little-endian bytes through fixed wiring.
+#[must_use]
+pub fn split_le_u16(value: u16) -> [u8; 2] {
+    let wires = u16_to_bits(value);
+    std::array::from_fn(|byte| bits_to_u8(&wires[byte * 8..byte * 8 + 8]))
+}
+
+/// Decompose a word to little-endian bytes through fixed wiring.
+#[must_use]
+pub fn split_le_u32(value: u32) -> [u8; 4] {
+    let wires = u32_to_bits(value);
+    std::array::from_fn(|byte| bits_to_u8(&wires[byte * 8..byte * 8 + 8]))
+}
+
 /// Gate equality against a constant over the selected low-width input.
 #[must_use]
 pub(crate) fn selected(value: u32, expected: u32, width: usize) -> u8 {

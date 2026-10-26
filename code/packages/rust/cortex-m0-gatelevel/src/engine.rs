@@ -250,9 +250,9 @@ pub(crate) fn step_state(mut state: CortexM0State) -> Result<StepTrace, CortexM0
     state.pc = crate::gates::add_32(pc, width as u32, 0).0;
     let mnemonic = execute_decoded(&mut state, first, second, class, pc)?;
     let mut raw = [0; 4];
-    raw[..2].copy_from_slice(&first.to_le_bytes());
+    raw[..2].copy_from_slice(&gates::split_le_u16(first));
     if let Some(second) = second {
-        raw[2..].copy_from_slice(&second.to_le_bytes());
+        raw[2..].copy_from_slice(&gates::split_le_u16(second));
     }
     Ok(StepTrace {
         pc_before: pc,
@@ -424,7 +424,7 @@ pub(crate) fn read_memory(
     let range = checked_range(address, width)?;
     let mut bytes = [0; 4];
     bytes[..width].copy_from_slice(&state.memory[range]);
-    Ok(u32::from_le_bytes(bytes))
+    Ok(gates::assemble_le_u32(bytes))
 }
 
 pub(crate) fn write_memory(
@@ -434,7 +434,7 @@ pub(crate) fn write_memory(
     value: u32,
 ) -> Result<(), CortexM0Error> {
     let range = checked_range(address, width)?;
-    state.memory[range].copy_from_slice(&value.to_le_bytes()[..width]);
+    state.memory[range].copy_from_slice(&gates::split_le_u32(value)[..width]);
     Ok(())
 }
 
@@ -450,7 +450,7 @@ fn fetch16(state: &CortexM0State, pc: u32) -> Result<u16, CortexM0Error> {
         return Err(CortexM0Error::FetchOutsideProgram { pc, width: 2 });
     }
     let start = pc as usize;
-    Ok(u16::from_le_bytes([
+    Ok(gates::assemble_le_u16([
         state.memory[start],
         state.memory[start + 1],
     ]))
@@ -1135,7 +1135,7 @@ fn execute_miscellaneous(
             u8::from(state.handler_mode),
         ) == 1
         {
-            state.primask = raw == 0xb672;
+            state.primask = line16(raw, 4, 1, 1) == 1;
         }
         return Ok(if raw == 0xb672 { "cpsid" } else { "cpsie" });
     }
@@ -1152,11 +1152,10 @@ fn execute_miscellaneous(
             0x0 => Ok("nop"),
             0x1 => Ok("yield"),
             0x2 => {
-                if state.event_registered {
-                    state.event_registered = false;
-                } else {
-                    state.sleeping = true;
-                }
+                let event = u8::from(state.event_registered);
+                state.sleeping =
+                    or_gate(and_gate(event, u8::from(state.sleeping)), not_gate(event)) == 1;
+                state.event_registered = false;
                 Ok("wfe")
             }
             0x3 => {
@@ -1345,12 +1344,12 @@ fn execute_special_register(
         let Some(mut value) = read_special(state, sysm) else {
             return Err(CortexM0Error::UnknownInstruction32 { first, second, pc });
         };
-        if gates::bit_and_32(u32::from(state.control), 1) != 0
-            && !state.handler_mode
-            && !matches!(sysm, 0 | 20)
-        {
-            value = 0;
-        }
+        let unprivileged = and_gate(
+            gates::u32_to_bits(u32::from(state.control))[0],
+            not_gate(u8::from(state.handler_mode)),
+        );
+        let unprivileged_value = if matches!(sysm, 0 | 20) { value } else { 0 };
+        value = gates::select_32(value, unprivileged_value, unprivileged);
         state.registers[rd as usize] = value;
         return Ok("mrs");
     }
@@ -1363,9 +1362,11 @@ fn execute_special_register(
         state.apsr = gates::bit_and_32(value, APSR_MASK);
         return Ok("msr");
     }
-    if matches!(sysm, 5..=7)
-        || (gates::bit_and_32(u32::from(state.control), 1) != 0 && !state.handler_mode)
-    {
+    let unprivileged = and_gate(
+        gates::u32_to_bits(u32::from(state.control))[0],
+        not_gate(u8::from(state.handler_mode)),
+    );
+    if matches!(sysm, 5..=7) || unprivileged == 1 {
         return Ok("msr");
     }
     match sysm {
@@ -1374,14 +1375,15 @@ fn execute_special_register(
         16 => state.primask = gates::bit_and_32(value, 1) != 0,
         _ => {
             let requested = gates::bit_and_32(value, 3) as u8;
-            state.control = if state.handler_mode {
-                gates::bit_or_32(
-                    gates::bit_and_32(u32::from(state.control), 2),
-                    gates::bit_and_32(u32::from(requested), 1),
-                ) as u8
-            } else {
-                requested
-            };
+            let handler_value = gates::bit_or_32(
+                gates::bit_and_32(u32::from(state.control), 2),
+                gates::bit_and_32(u32::from(requested), 1),
+            );
+            state.control = gates::select_32(
+                u32::from(requested),
+                handler_value,
+                u8::from(state.handler_mode),
+            ) as u8;
         }
     }
     Ok("msr")
