@@ -72,6 +72,12 @@
       "description": "不 bù drops to bú before a fourth-tone syllable.",
       "citation": "bù shì",
       "spoken": "bú shì"
+    },
+    {
+      "id": "tone-sandhi-yi",
+      "description": "一 yī is said yí before a fourth tone and yì before the other tones; counting, dates and ordinals keep yī.",
+      "citation": "yī ge",
+      "spoken": "yí ge"
     }
   ],
   "letters": [

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-95-WHY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can ask why.",
+  "prerequisites": []
+}

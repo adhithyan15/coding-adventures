@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-97-MY-DAY",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "ZH-EXT-97-MY-DAY"
+  ],
+  "after": []
+}

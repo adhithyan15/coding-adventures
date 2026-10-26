@@ -233,6 +233,22 @@ seven pre-A1 spine nodes. Next: the A1 core (location with 在, 没, 想 / 要, 
 everyday actions and things, qualities, 因为 … 所以, measure words and 两), whose
 characters to write are re-picked now that stage 2 writes 这 吃 喝 去 今 会 想.
 
+## The A1 core (delivered, chapters 85-98)
+
+Fourteen hand-authored chapters, 85 lessons. Twelve realize the six A1 spine nodes
+Chinese lacked: `SPINE-ASK-LOCATION` (在, 那儿, 哪儿 and four place words),
+`SPINE-NAME-EVERYDAY-THINGS` (没有, 不 against 没, four things, 两 and four measure
+words, and the tone of 一), `SPINE-NAME-EVERYDAY-ACTIONS` (给, 做, put, bring, stand),
+`SPINE-SAY-WHAT-I-WANT` (想要, 不要, *xūyào*, 一点儿, 也 and ordering at a table),
+`SPINE-DESCRIBE-QUALITIES` (太好了, 有点儿, clean, dirty, 都, the same, young, fat,
+thin) and `SPINE-SAY-WHY` (为什么, 因为, *suǒyǐ* and three reasons), with 会, 能 and
+*kěyǐ* on `SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO`. Thirteen characters are written (在 哪 没
+两 给 能 要 也 太 都 为 因 时), 129 in all. Chapter 97 reads a 57-character day and proves
+controlled composition; chapter 98 proves timed production on this book's own
+three-minute clock and closes with a review of the core. A1 headwords 347 -> 401,
+verbs 73 -> 87; all twelve A1 nodes realized, both A1 writing stages proved. A1 is
+not attained: the vocabulary tranches (about 200 more headwords) come next.
+
 ## Part II onward — cumulative pre-A1 to C2 build *(planned)*
 
 Continue the official vocabulary tranche with oral meaning, source-verified

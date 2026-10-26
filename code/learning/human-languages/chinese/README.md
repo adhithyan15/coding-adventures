@@ -157,6 +157,25 @@ together. Twenty-four more characters are written (机 白 长 快 电 打 起 �
 attains pre-A1 on the level gate: 324 headwords and 71 verbs, all seven pre-A1
 spine nodes realized.
 
+**Chapters 85-98** are the A1 core, hand-authored. Twelve chapters realize the six
+A1 spine nodes the track had not reached: where things are and the where-question
+(在, 那儿, 哪儿, inside, outside, on top, under, the toilet), what there is and is not
+(没有, and 不 against 没), counting with 两 and the measure words *bēi*, *běn*,
+*zhāng* and *zhī* (with the tone 一 takes before each), five everyday actions (给,
+做, put, bring, stand), 会, 能 and *kěyǐ*, wanting and needing (想要, 不要, 一点儿),
+ordering at a table with 也, too much and a bit too much (太好了, 有点儿), all of them
+(都), and why and because (为什么, 因为, *suǒyǐ*). Thirteen characters are written,
+one a chapter, each right after the word that first shows it: 在 哪 没 两 给 能 要 也 太
+都 为 因 时, every one built from pieces the reader already writes. Chapter 97 reads a
+57-character day in characters the reader has written and then writes the first
+line of Chinese with nothing to copy (controlled composition); chapter 98 fills a
+five-field form and writes a short message under this book's own three-minute
+clock (timed production), then reviews the whole core. Words whose characters are
+not written yet go in pinyin inside the learner's own writing. All twelve A1 spine
+nodes are realized and both A1 writing stages are proved; A1 is not attained yet,
+because the level gate asks for 600 headwords at or below A1 and the core brings
+the track to 401.
+
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) records the original authored-and-planned path
