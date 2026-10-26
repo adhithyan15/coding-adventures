@@ -191,9 +191,11 @@ Completion requires:
    record form and then feeds the resulting CR bit into the already authoritative
    branch network. Expected status values must not call functional or gate
    production helpers;
-8. all 239 reproducible Python full-state vectors remain unchanged and green.
-   New status-edge tests are primary-source-derived Rust witnesses rather than
-   copies of the legacy Python implementation;
+8. all 239 reproducible Python full-state vectors remain green. The legacy
+   `sraw` seed with source `0x80000000` and count 63 must update its stale
+   clamp-to-31 CA hash; the other 238 hashes remain unchanged. New status-edge
+   tests are primary-source-derived Rust witnesses rather than copies of the
+   legacy Python implementation;
 9. a `syn`-parsed hostile structural suite verifies the one external,
    unattributed status-module binding and the complete decoder-to-relation-to-
    mux-to-commit chain. Compile-valid adversarial fixtures must reject host
@@ -208,6 +210,12 @@ Completion requires:
 The completed conditional-branch repair passes three gate/topology suites,
 three lifecycle suites, the aggregate 239-vector differential, strict checks,
 and 94.58% package line coverage (838/886).
+
+The completed CR/XER authority cell passes 23 gate-package and 13
+functional-package test functions, the corrected 239-vector differential,
+strict formatting/Clippy/rustdoc, affected builds, lessons validation, and
+95.15% gate-package line coverage (962/1,011). The functional package remains at
+90.25% line coverage (639/708).
 
 ## Independent specification review
 
