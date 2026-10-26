@@ -1609,6 +1609,31 @@ process handshake or alert messages, validate certificates, select trust
 roots, check revocation, perform I/O, open a socket, authorize HTTP or OAuth
 transport, or replace `tls-platform`. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-cipher-suite-policy` prerequisite now binds the
+three repository-targeted RFC 8446 TLS 1.3 cipher-suite wire identifiers to
+their exact AEAD algorithm, HKDF hash, key length, IV length, authentication-tag
+length, and conservative maximum records per traffic key. The standard
+metadata is immutable. A caller supplies a non-empty, duplicate-free allowlist
+and an explicit nonzero record ceiling for every allowed suite; each ceiling
+must be no greater than the suite maximum. Selection accepts only an exact
+known wire identifier already authorized by that policy and returns one
+validated value carrying all parameters together, so later key derivation,
+nonce state, and AEAD routing cannot independently reinterpret the negotiated
+suite. AES-GCM policies conservatively stop at `2^24` records, below RFC 8446
+section 5.5's `2^24.5` full-size-record bound. ChaCha20-Poly1305 policies are
+bounded by the record sequence because RFC 8446 states that it wraps before the
+algorithm's safety limit; the nonce prerequisite's conservative sequence
+semantics still stop before increment wrap.
+
+The registry is policy data only. It neither proves that a repository-owned
+AEAD or hash implementation is suitable for production nor selects a suite on
+behalf of a handshake. It stores no keys, IVs, nonces, plaintext, ciphertext,
+or provider data; invokes no cryptography; and performs no negotiation, key
+derivation, record protection, key update, certificate processing, trust,
+revocation, I/O, HTTP, OAuth transport, or network effect. Unsupported RFC 8446
+CCM suites fail closed until separately reviewed repository-owned primitives
+and limits are added. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
