@@ -5,8 +5,28 @@
 package bezier2d
 
 import (
+	"errors"
+	"math"
+
 	"github.com/adhithyan15/coding-adventures/code/packages/go/point2d"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/trig"
+)
+
+// The neutral G2D02 fixture pins these limits so every implementation fails
+// at the same boundary instead of depending on its host stack size.
+const (
+	FlatteningFixtureVersion  = 1
+	FlatteningMaxDepth        = 32
+	FlatteningMaxSubdivisions = 65_535
+)
+
+var (
+	// ErrInvalidTolerance reports a zero, negative, NaN, or infinite tolerance.
+	ErrInvalidTolerance = errors.New("bezier2d: tolerance must be finite and positive")
+	// ErrNonFiniteGeometry reports non-finite input or derived control geometry.
+	ErrNonFiniteGeometry = errors.New("bezier2d: non-finite geometry")
+	// ErrFlatteningBudgetExceeded reports the pinned depth or split ceiling.
+	ErrFlatteningBudgetExceeded = errors.New("bezier2d: flattening budget exceeded")
 )
 
 // ============================================================================
@@ -40,17 +60,51 @@ func SplitQuad(q QuadraticBezier, t float64) (QuadraticBezier, QuadraticBezier) 
 	return QuadraticBezier{q.P0, q0, m}, QuadraticBezier{m, q1, q.P2}
 }
 
-// PolylineQuad adaptively subdivides into a polyline within tolerance.
-func PolylineQuad(q QuadraticBezier, tolerance float64) []point2d.Point {
-	chordMid := q.P0.Lerp(q.P2, 0.5)
-	curveMid := EvalQuad(q, 0.5)
-	if chordMid.Distance(curveMid) <= tolerance {
-		return []point2d.Point{q.P0, q.P2}
+// PolylineQuad conservatively flattens q or returns an atomic error.
+//
+// Midpoint-only tests miss symmetric curves whose midpoint lies on the chord.
+// The quadratic convex-hull property gives a stronger test: the entire curve
+// stays within the maximum distance from its control point to the finite chord
+// segment. An explicit stack avoids host recursion limits, and pushing right
+// before left preserves increasing parameter order when popping.
+func PolylineQuad(q QuadraticBezier, tolerance float64) ([]point2d.Point, error) {
+	if !validTolerance(tolerance) {
+		return nil, ErrInvalidTolerance
 	}
-	left, right := SplitQuad(q, 0.5)
-	pts := PolylineQuad(left, tolerance)
-	rpts := PolylineQuad(right, tolerance)
-	return append(pts, rpts[1:]...)
+	if !finitePoints(q.P0, q.P1, q.P2) {
+		return nil, ErrNonFiniteGeometry
+	}
+
+	type frame struct {
+		curve QuadraticBezier
+		depth int
+	}
+	stack := []frame{{curve: q}}
+	points := []point2d.Point{q.P0}
+	subdivisions := 0
+	for len(stack) > 0 {
+		current := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		errorBound, ok := pointToSegmentDistance(current.curve.P1, current.curve.P0, current.curve.P2)
+		if !ok {
+			return nil, ErrNonFiniteGeometry
+		}
+		if errorBound <= tolerance {
+			points = append(points, current.curve.P2)
+			continue
+		}
+		if current.depth >= FlatteningMaxDepth || subdivisions >= FlatteningMaxSubdivisions {
+			return nil, ErrFlatteningBudgetExceeded
+		}
+		left, right := SplitQuad(current.curve, 0.5)
+		if !finitePoints(left.P0, left.P1, left.P2, right.P0, right.P1, right.P2) {
+			return nil, ErrNonFiniteGeometry
+		}
+		subdivisions++
+		nextDepth := current.depth + 1
+		stack = append(stack, frame{curve: right, depth: nextDepth}, frame{curve: left, depth: nextDepth})
+	}
+	return points, nil
 }
 
 // BboxQuad returns the tight bounding box of the quadratic Bezier.
@@ -120,16 +174,88 @@ func SplitCubic(c CubicBezier, t float64) (CubicBezier, CubicBezier) {
 	return CubicBezier{c.P0, p01, p012, p0123}, CubicBezier{p0123, p123, p23, c.P3}
 }
 
-// PolylineCubic adaptively subdivides into a polyline within tolerance.
-func PolylineCubic(c CubicBezier, tolerance float64) []point2d.Point {
-	chordMid := c.P0.Lerp(c.P3, 0.5)
-	curveMid := EvalCubic(c, 0.5)
-	if chordMid.Distance(curveMid) <= tolerance {
-		return []point2d.Point{c.P0, c.P3}
+// PolylineCubic conservatively flattens c or returns an atomic error.
+// Both off-curve controls participate in the finite-segment error bound.
+func PolylineCubic(c CubicBezier, tolerance float64) ([]point2d.Point, error) {
+	if !validTolerance(tolerance) {
+		return nil, ErrInvalidTolerance
 	}
-	left, right := SplitCubic(c, 0.5)
-	pts := PolylineCubic(left, tolerance)
-	return append(pts, PolylineCubic(right, tolerance)[1:]...)
+	if !finitePoints(c.P0, c.P1, c.P2, c.P3) {
+		return nil, ErrNonFiniteGeometry
+	}
+
+	type frame struct {
+		curve CubicBezier
+		depth int
+	}
+	stack := []frame{{curve: c}}
+	points := []point2d.Point{c.P0}
+	subdivisions := 0
+	for len(stack) > 0 {
+		current := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		firstBound, firstOK := pointToSegmentDistance(current.curve.P1, current.curve.P0, current.curve.P3)
+		secondBound, secondOK := pointToSegmentDistance(current.curve.P2, current.curve.P0, current.curve.P3)
+		if !firstOK || !secondOK {
+			return nil, ErrNonFiniteGeometry
+		}
+		if math.Max(firstBound, secondBound) <= tolerance {
+			points = append(points, current.curve.P3)
+			continue
+		}
+		if current.depth >= FlatteningMaxDepth || subdivisions >= FlatteningMaxSubdivisions {
+			return nil, ErrFlatteningBudgetExceeded
+		}
+		left, right := SplitCubic(current.curve, 0.5)
+		if !finitePoints(left.P0, left.P1, left.P2, left.P3, right.P0, right.P1, right.P2, right.P3) {
+			return nil, ErrNonFiniteGeometry
+		}
+		subdivisions++
+		nextDepth := current.depth + 1
+		stack = append(stack, frame{curve: right, depth: nextDepth}, frame{curve: left, depth: nextDepth})
+	}
+	return points, nil
+}
+
+func validTolerance(tolerance float64) bool {
+	return tolerance > 0 && !math.IsNaN(tolerance) && !math.IsInf(tolerance, 0)
+}
+
+func finitePoints(points ...point2d.Point) bool {
+	for _, point := range points {
+		if math.IsNaN(point.X) || math.IsNaN(point.Y) || math.IsInf(point.X, 0) || math.IsInf(point.Y, 0) {
+			return false
+		}
+	}
+	return true
+}
+
+// pointToSegmentDistance scales before squaring so tiny curved geometry does
+// not underflow into a false zero-distance chord. A false result means finite
+// inputs produced non-finite derived arithmetic and flattening must fail closed.
+func pointToSegmentDistance(point, start, end point2d.Point) (float64, bool) {
+	dx, dy := end.X-start.X, end.Y-start.Y
+	px, py := point.X-start.X, point.Y-start.Y
+	if math.IsNaN(dx) || math.IsNaN(dy) || math.IsNaN(px) || math.IsNaN(py) ||
+		math.IsInf(dx, 0) || math.IsInf(dy, 0) || math.IsInf(px, 0) || math.IsInf(py, 0) {
+		return 0, false
+	}
+	scale := math.Max(math.Max(math.Abs(dx), math.Abs(dy)), math.Max(math.Abs(px), math.Abs(py)))
+	if scale == 0 {
+		return 0, true
+	}
+	nx, ny := dx/scale, dy/scale
+	npx, npy := px/scale, py/scale
+	denominator := nx*nx + ny*ny
+	projection := 0.0
+	if denominator > 0 {
+		projection = math.Max(0, math.Min(1, (npx*nx+npy*ny)/denominator))
+	}
+	distance := scale * math.Hypot(npx-projection*nx, npy-projection*ny)
+	if math.IsNaN(distance) || math.IsInf(distance, 0) {
+		return 0, false
+	}
+	return distance, true
 }
 
 // BboxCubic returns the tight bounding box of the cubic Bezier.

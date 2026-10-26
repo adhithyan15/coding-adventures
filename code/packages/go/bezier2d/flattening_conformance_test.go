@@ -116,6 +116,13 @@ func TestFlatteningRejectsNonFiniteInputsAtomically(t *testing.T) {
 	if !errors.Is(err, ErrNonFiniteGeometry) || points != nil {
 		t.Fatalf("expected atomic non-finite control error, got points=%v err=%v", points, err)
 	}
+
+	badCubic := CubicBezier{straight.P0, straight.P1, straight.P1, straight.P2}
+	badCubic.P2.Y = math.NaN()
+	points, err = PolylineCubic(badCubic, 0.1)
+	if !errors.Is(err, ErrNonFiniteGeometry) || points != nil {
+		t.Fatalf("expected atomic non-finite cubic control error, got points=%v err=%v", points, err)
+	}
 }
 
 func TestFlatteningFailsClosedOnDerivedOverflowAndSubnormalGeometry(t *testing.T) {
