@@ -4,6 +4,8 @@
 //! `AND → OR → XOR → NOT → full_adder → ripple-carry adder → ALU`.
 //! Registers and all 16 MiB of memory form an exact
 //! 134,218,289-D-flip-flop persistent topology.
+//! Stable Q outputs are the sole architectural state authority; the historical
+//! public register and halt fields remain synchronized compatibility observers.
 //!
 //! ## Why gate-level?
 //!
@@ -59,7 +61,7 @@
 //! ], 1000);
 //! assert_eq!(cpu.rf.d[0], 8);
 //! assert_eq!(cpu.rf.flag_c(), 0);
-//! assert!(cpu.halted);
+//! assert!(cpu.halted());
 //! ```
 
 pub mod alu;
@@ -68,6 +70,6 @@ pub mod cpu;
 pub mod registers;
 mod state;
 
-pub use cpu::{Cpu68K, FLIP_FLOP_COUNT};
+pub use cpu::{Cpu68K, PhysicalStorageInventory, FLIP_FLOP_COUNT};
 pub use m68k_simulator::{ExecutionResult, M68kError, M68kState, StepTrace};
 pub use state::DffMemory;
