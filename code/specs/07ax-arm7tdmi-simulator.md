@@ -93,8 +93,12 @@ borrow, and signed overflow follow ARM definitions. Logical flag-setting forms
 take C from the shifter carry-out and preserve V. A zero shift amount, the
 special LSR/ASR-by-32 forms, modulo-32 register shifts, RRX, and shifts by or
 beyond 32 follow the ARMv4T tables rather than host shift behavior. Multiply
-flag forms update only their architecturally defined N/Z outputs and preserve
-the other flags.
+flag forms update their architecturally defined N/Z outputs. ARMv4 makes some
+multiply carry/overflow outputs unpredictable: C is unpredictable for
+`MULS`/`MLAS` and Thumb `MUL`, while C and V are unpredictable for flag-setting
+long multiplies; `MULS`/`MLAS` leave V unaffected. This deterministic oracle
+preserves every architecturally unpredictable C/V bit rather than inventing a
+hardware value, documents that choice, and tests it explicitly.
 
 MRS exposes only the selected admitted status register. MSR honors its encoded
 field mask. User mode may write only the documented condition-code field;
@@ -105,7 +109,8 @@ User/System returns `UnavailableSavedStatus` atomically.
 
 An ARM data-processing instruction with `S=1` and `Rd=PC` restores CPSR from
 the current mode's SPSR after validating that SPSR. Other writes to PC preserve
-the current instruction-set state and apply the alignment rule for that state.
+the current instruction-set state and apply their family-specific low-bit rule
+defined below.
 
 ## 6. Pipeline-visible PC and state exchange
 
@@ -122,14 +127,26 @@ that visible value down to four bytes where the encoding requires it. A Thumb
 store cannot name PC as an ordinary source except where its instruction form
 explicitly provides LR/PC list behavior.
 
-`BX` selects Thumb state when target bit zero is one and ARM state otherwise,
-then clears the alignment bits required by the selected state. Every other PC
-write preserves CPSR.T and requires ARM word alignment or Thumb halfword
-alignment. The two Thumb BL halfwords execute as separate architectural steps:
-the prefix places its documented intermediate value in LR and the suffix forms
-the target and return address. A suffix without a valid prefix-derived LR is
-still interpreted by the architecture's register semantics; the simulator
-does not invent hidden decoder state.
+`BX` sets CPSR.T from target bit zero and clears only that bit in the written
+PC. A target whose low bits are `10` selects ARM state but is architecturally
+unpredictable in ARMv4T, so this checked model rejects it atomically instead of
+silently clearing bit one. The remaining `00`, `01`, and `11` patterns follow
+the documented exchange rule, including BX executed from either state and a
+Thumb BX whose own instruction address is two modulo four.
+
+Other PC writes preserve CPSR.T but do not share one generic alignment rule.
+In ARM state, `LDR` or `LDM` loading PC ignores loaded bits 1:0 and remains in
+ARM state; ordinary ARM data-processing PC results use their documented ARM
+alignment. In Thumb state, `POP {...,PC}` and ordinary Thumb PC writes ignore
+bit zero and remain in Thumb state. Directly encoded branch displacements are
+already aligned by construction. Tests cover every discarded low-bit pattern
+without allowing an operation other than BX to exchange instruction state.
+
+The two Thumb BL halfwords execute as separate architectural steps: the prefix
+places its documented intermediate value in LR and the suffix forms the target
+and return address. A suffix without a valid prefix-derived LR is still
+interpreted by the architecture's register semantics; the simulator does not
+invent hidden decoder state.
 
 This model does not simulate fetch/decode/execute timing, pipeline refill
 cycles, or bus cycles. Pipeline visibility here means only the programmer-
@@ -236,8 +253,9 @@ The functional cell is complete only when it has:
 2. witnesses for all ARM conditions, arithmetic flags, shifter boundaries,
    multiply widths, status masks, privilege, every register bank, mode change,
    SPSR restore, and all PC-visible pipeline cases;
-3. ARM/Thumb `BX`, aligned PC writes, ARM branches/links, both Thumb BL halves,
-   taken/not-taken control flow, and target-fault rollback;
+3. ARM/Thumb `BX` over every low-bit pattern, instruction-state-preserving
+   LDR/LDM/POP/data-processing PC writes, ARM branches/links, both Thumb BL
+   halves, taken/not-taken control flow, and target-fault rollback;
 4. every transfer width/sign/addressing mode, swap, multiple-transfer order,
    overlap rejection, writeback, memory boundary, and full rollback;
 5. complete-state load, restore, halt, run, execute, trace-bound, allocation,
