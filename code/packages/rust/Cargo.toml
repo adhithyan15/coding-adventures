@@ -715,6 +715,7 @@ members = [
     "javascript-to-semantic-ir",
     "scytale-cipher",
     "sha256",
+    "sha384",
     "sha512",
     "vigenere-cipher",
     "erl-nif-bridge",
