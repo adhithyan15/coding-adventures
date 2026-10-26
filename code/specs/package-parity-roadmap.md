@@ -18052,3 +18052,23 @@ of scope.
 ## October 25: serial Haskell opcode-provider recovery
 
 PR #18174 actually merged as `bd533925647b7fbac74eba35e611a8ba3930757f`; PR #18147 previously merged its frozen16 adoption. The unpublished67 draft remains separate. Earlier three-slot and draft-publication statements above are historical. Existing PR #18183 is now the sole active implementation. Its original `231de32b` head is preserved locally while its net change is carefully rebased onto `9000beddee61a136cf5c0c6c5787f81d3d717834`. Actual CI fails before compilation in Cabal3.10.3.0 coverage planning for vector0.13.2; preserve coverage and inert metadata APIs while validating a package-local repair. Local native13tests/all359records, productionHPC100percent expressions/alternatives, Go15packages/84.6percentcoverage, vet/build, realplanner14-packageclosure and metadata/parity checks pass. Runtime source80a01 passed independent review; final documentation delta and fresh hosted CI remain required. See [the exact recovery evidence](../packages/haskell/starlark-compiler/VALIDATION.md).
+
+## October 25, 2026: Python gradient-descent front preparation
+
+After the local Swift hash-functions tranche reached an exact-head independent
+PASS, the dependency-ready backlog was reprioritized without waiting for the
+full hosted queue. `python-gradient-descent-build-front-coverage` ranks next:
+it has no unfinished dependency, retires one exact orphan exemption, and
+unblocks two recorded descendants. The independent Swift paint-vm-ascii
+capability-only repair has narrower downstream leverage and remains pending.
+
+Preparation starts from exact origin/main
+`27dc687739ac74e8f5bbab70916a03d62a609743` on branch
+`codex/parity-python-gradient-descent-front-20261025`. The bounded owner adds
+truthful Unix and Windows BUILD fronts, production-only coverage, Ruff checks,
+ML02 behavior and immutability tests, publishable metadata, package README and
+changelog, and removes only the exact gradient-descent exemption. The public
+`sgd(weights, gradients, learning_rate)` API and its pure update semantics stay
+unchanged. Training loops, random sampling, convergence claims, native
+runtimes, and new filesystem, process, network, environment, clock, entropy,
+credential, or other host authority remain out of scope.
