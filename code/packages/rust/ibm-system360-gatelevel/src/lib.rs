@@ -23,6 +23,11 @@ pub const FLIP_FLOP_COUNT: usize = MEMORY_BYTES * 8 + 16 * 32 + 4 * 64 + 24 + 2 
 /// Stable educational storage-plus-combinational gate estimate.
 pub const ESTIMATED_GATE_COUNT: usize = FLIP_FLOP_COUNT * 6 + 196_608;
 
+/// Failure to allocate checked stable-Q storage for an embedding gate model.
+#[doc(hidden)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct StorageAllocationError;
+
 /// IBM System/360 state stored in simulated D flip-flops.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct System360GateLevel {
@@ -57,6 +62,24 @@ impl System360GateLevel {
         }
     }
 
+    /// Construct the exact stable-Q bank through a checked allocation.
+    ///
+    /// This is exposed for source-backed successor gate packages that embed
+    /// this engine as their sole architectural storage bank.
+    #[doc(hidden)]
+    pub fn try_new_storage() -> Result<Self, StorageAllocationError> {
+        Ok(Self {
+            memory: DffMemory::try_new(MEMORY_BYTES).map_err(|()| StorageAllocationError)?,
+            gprs: [[0; 32]; 16],
+            fprs: [[0; 64]; 4],
+            pc: [0; 24],
+            condition_code: [0; 2],
+            halted: 0,
+            loaded_origin: 0,
+            loaded_len: 0,
+        })
+    }
+
     pub fn reset(&mut self) {
         self.memory.clear();
         for register in &mut self.gprs {
@@ -74,16 +97,30 @@ impl System360GateLevel {
 
     #[must_use]
     pub fn get_state(&self) -> System360State {
+        self.state_with_memory(self.memory.snapshot())
+    }
+
+    fn state_with_memory(&self, memory: Vec<u8>) -> System360State {
         System360State {
             gprs: std::array::from_fn(|index| read_bits(&self.gprs[index]) as u32),
             fprs: std::array::from_fn(|index| read_bits(&self.fprs[index])),
             pc: read_bits(&self.pc) as u32,
             condition_code: read_bits(&self.condition_code) as u8,
-            memory: self.memory.snapshot(),
+            memory,
             halted: self.halted != 0,
             loaded_origin: self.loaded_origin,
             loaded_len: self.loaded_len,
         }
+    }
+
+    /// Reconstruct stable-Q state through checked owned-memory allocation.
+    #[doc(hidden)]
+    pub fn try_get_state_storage(&self) -> Result<System360State, StorageAllocationError> {
+        Ok(self.state_with_memory(
+            self.memory
+                .try_snapshot()
+                .map_err(|()| StorageAllocationError)?,
+        ))
     }
 
     pub fn restore(&mut self, snapshot: System360State) -> Result<(), System360Error> {
@@ -106,6 +143,19 @@ impl System360GateLevel {
         clock_bit(&mut self.halted, snapshot.halted);
         self.loaded_origin = snapshot.loaded_origin;
         self.loaded_len = snapshot.loaded_len;
+    }
+
+    /// Restore a state already validated by an enclosing transactional API.
+    #[doc(hidden)]
+    pub fn restore_validated_storage(&mut self, snapshot: &System360State) {
+        self.restore_validated(snapshot);
+    }
+
+    /// Read the stable-Q halt latch without allocating a full snapshot.
+    #[doc(hidden)]
+    #[must_use]
+    pub const fn halted_q(&self) -> bool {
+        self.halted != 0
     }
 
     fn commit_transition(&mut self, next: &System360State) {
@@ -159,6 +209,18 @@ impl System360GateLevel {
                 index,
             })?;
         clock_bits(register, u64::from(value));
+        Ok(())
+    }
+
+    /// Clock a validated successor condition code into the shared DFF bank.
+    #[doc(hidden)]
+    pub fn write_condition_code(&mut self, value: u8) -> Result<(), System360Error> {
+        if value > 3 {
+            return Err(System360Error::InvalidState {
+                reason: "condition code is outside 0..3",
+            });
+        }
+        clock_bits(&mut self.condition_code, u64::from(value));
         Ok(())
     }
 

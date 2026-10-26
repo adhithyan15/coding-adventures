@@ -51,23 +51,55 @@ pub struct ExecutionResult {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum System370Error {
     EmptyProgram,
-    MisalignedProgram { origin: u32 },
-    ProgramOutOfRange { origin: u32, bytes: usize },
-    FetchOutsideProgram { pc: u32 },
-    TruncatedInstruction { pc: u32, needed: usize },
-    UnknownOpcode { opcode: u8, pc: u32 },
-    UnsupportedSupervisorCall { number: u8 },
-    MisalignedAccess { address: u32, alignment: usize },
-    MemoryOutOfRange { address: u32, bytes: usize },
-    InvalidRegister { bank: &'static str, index: usize },
-    InvalidState { reason: &'static str },
-    Specification { reason: &'static str },
+    MisalignedProgram {
+        origin: u32,
+    },
+    ProgramOutOfRange {
+        origin: u32,
+        bytes: usize,
+    },
+    FetchOutsideProgram {
+        pc: u32,
+    },
+    TruncatedInstruction {
+        pc: u32,
+        needed: usize,
+    },
+    UnknownOpcode {
+        opcode: u8,
+        pc: u32,
+    },
+    UnsupportedSupervisorCall {
+        number: u8,
+    },
+    MisalignedAccess {
+        address: u32,
+        alignment: usize,
+    },
+    MemoryOutOfRange {
+        address: u32,
+        bytes: usize,
+    },
+    InvalidRegister {
+        bank: &'static str,
+        index: usize,
+    },
+    InvalidState {
+        reason: &'static str,
+    },
+    Specification {
+        reason: &'static str,
+    },
     FixedPointOverflow,
     FixedPointDivide,
     FloatingExponent,
     FloatingDivide,
+    /// A checked gate-level wrapper could not reserve required owned storage.
+    AllocationFailed,
     Halted,
-    MaxStepsExceeded { max_steps: usize },
+    MaxStepsExceeded {
+        max_steps: usize,
+    },
 }
 
 impl Display for System370Error {
@@ -114,6 +146,7 @@ impl Display for System370Error {
             Self::FixedPointDivide => write!(f, "System/370 fixed-point divide exception"),
             Self::FloatingExponent => write!(f, "System/370 floating-point exponent exception"),
             Self::FloatingDivide => write!(f, "System/370 floating-point divide exception"),
+            Self::AllocationFailed => write!(f, "System/370 allocation failed"),
             Self::Halted => write!(f, "System/370 CPU is halted"),
             Self::MaxStepsExceeded { max_steps } => {
                 write!(f, "execution exceeded {max_steps} steps")
@@ -718,6 +751,7 @@ mod tests {
             System370Error::FixedPointDivide,
             System370Error::FloatingExponent,
             System370Error::FloatingDivide,
+            System370Error::AllocationFailed,
             System370Error::Halted,
             System370Error::MaxStepsExceeded { max_steps: 1 },
         ];

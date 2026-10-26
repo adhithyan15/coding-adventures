@@ -7,7 +7,8 @@ It preserves the complete checked System/370 functional boundary: the modeled
 System/360 problem-state integer, branch, character, and hexadecimal-floating
 surface plus `MVCL`, `CLCL`, `CLM`, `STCM`, and `ICM`.
 
-**Implementation is unblocked.** Pull request #18363 merged into `origin/main`
+**Implementation is complete locally and awaiting independent exact-head
+review.** Pull request #18363 merged into `origin/main`
 as `08d9140e6c0c60f7e74f1a5ad569e9c7cd68e364`, this specification branch is
 reconciled with that exact functional oracle, and all fourteen functional
 release tests pass. The corrected oracle clears the ignored high bytes of
@@ -237,6 +238,8 @@ Completion requires all of the following:
    validation, and exceeds 80% package line coverage with a 95% target.
 
 This repaired specification received independent review before implementation.
-Its prerequisite and freshness gates are now satisfied; package code may be
-implemented only against the corrected oracle recorded above and must receive
-a different reviewer's exact-clean-head PASS before publication.
+The completed package has 18 release integration tests, including the literal
+1,536-case transport matrix, functional differentials, allocation rollback,
+gate truth tables, and compiler-checked complete hostile crates. Strict checks
+and 91.83% package-source line coverage (776/845) pass. Publication remains
+blocked on a different reviewer's exact-clean-head PASS.
