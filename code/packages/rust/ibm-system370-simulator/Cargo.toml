@@ -1,0 +1,13 @@
+[package]
+name = "ibm-system370-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked functional simulator for the IBM System/370 architecture"
+license = "MIT"
+
+[lib]
+name = "ibm_system370_simulator"
+path = "src/lib.rs"
+
+[dependencies]
+ibm-system360-simulator = { path = "../ibm-system360-simulator" }
