@@ -1992,6 +1992,27 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_attribute_comment_line_break_variants() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nENTITY {\n  string first \"Primary<br>identifier\"\n  string second \"Second<br/>line\"\n  string third \"Third<br />line\"\n}\n",
+        );
+        let comments: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.value.contains("<br"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(
+            comments,
+            [
+                "Primary<br>identifier",
+                "Second<br/>line",
+                "Third<br />line"
+            ]
+        );
+    }
+
+    #[test]
     fn tokenizes_er_unicode_symbol_identifiers() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\n_**testẽζ➕Ø😀㌕ぼ**_\nperson[😀]\nperson ||--o| a : __hẽ😀__\n",

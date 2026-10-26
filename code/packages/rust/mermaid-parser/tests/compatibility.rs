@@ -253,6 +253,14 @@ const ER_ATTRIBUTE_TYPE_VALIDATION_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-type-validation-11.16.1-visual-corpus.json"
 ));
+const ER_ATTRIBUTE_COMMENT_LINE_BREAKS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-attribute-comment-line-breaks-11.16.1-corpus.json"
+));
+const ER_ATTRIBUTE_COMMENT_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-attribute-comment-line-breaks-11.16.1-visual-corpus.json"
+));
 const ER_UNICODE_SYMBOLS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-unicode-symbols-11.16.1-corpus.json"
@@ -3046,6 +3054,31 @@ fn pinned_er_attribute_type_boundaries_match_upstream() {
             fixture["name"]
         );
     }
+}
+
+#[test]
+fn pinned_er_attribute_comment_breaks_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_ATTRIBUTE_COMMENT_LINE_BREAKS_CORPUS)
+        .expect("ER attribute-comment line-break corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ATTRIBUTE_COMMENT_LINE_BREAKS_VISUAL_CORPUS)
+        .expect("ER attribute-comment line-break visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER attribute-comment line-break source"),
+    )
+    .expect("ER attribute-comment line-break fixture must parse");
+
+    assert_eq!(
+        diagram.nodes[0].compartments[0].entries,
+        [
+            "first: string - Primary\nidentifier",
+            "second: string - Second\nline",
+            "third: string [PK] - Third\nline"
+        ]
+    );
 }
 
 #[test]

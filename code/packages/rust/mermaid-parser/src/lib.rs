@@ -13716,7 +13716,10 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                         field.push_str(&format!(" [{}]", keys.join(", ")));
                     }
                     if let Some(comment) = comment {
-                        field.push_str(&format!(" - {comment}"));
+                        field.push_str(&format!(
+                            " - {}",
+                            normalize_mermaid_line_breaks(&comment)
+                        ));
                     }
                     fields.push(field);
                     cursor.skip_terminators();
