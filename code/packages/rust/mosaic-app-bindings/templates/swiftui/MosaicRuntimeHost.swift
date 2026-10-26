@@ -783,7 +783,10 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         try manager.moveItem(at: url, to: candidate)
         return nil
       } catch {
-        return "Could not move it aside to \(candidate.path): \(error.localizedDescription)"
+        // Without its full stop: the warning adds its own after this.
+        let reason = error.localizedDescription
+        let trimmed = reason.hasSuffix(".") ? String(reason.dropLast()) : reason
+        return "Could not move it aside to \(candidate.path): \(trimmed)"
       }
     }
     return "All \(maxQuarantinedStates) quarantine names beside it are taken; move them away to save again"

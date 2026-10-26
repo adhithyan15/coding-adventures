@@ -749,7 +749,8 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) :
                 Files.move(file.toPath(), candidate)
                 null
             } catch (error: Exception) {
-                "Could not move it aside to $candidate: ${error.message}"
+                // Named: an AccessDeniedException's message is only the paths.
+                "Could not move it aside to $candidate: ${error.javaClass.simpleName}: ${error.message}"
             }
         }
         return "All $MOSAIC_MAX_QUARANTINED_STATES quarantine names beside it are taken; " +

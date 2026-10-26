@@ -1023,9 +1023,8 @@ constexpr int MaxQuarantinedStates = 10;
 QString moveStateAside(const QString &path)
 {
     for (int index = 0; index < MaxQuarantinedStates; ++index) {
-        const auto candidate = index == 0
-            ? path + QStringLiteral(".corrupt")
-            : path + QStringLiteral(".corrupt.%1").arg(index);
+        QString candidate = path + QStringLiteral(".corrupt");
+        if (index > 0) candidate += QStringLiteral(".%1").arg(index);
         const QFileInfo existing(candidate);
         if (existing.exists() || existing.isSymLink()) continue;
         QFile file(path);

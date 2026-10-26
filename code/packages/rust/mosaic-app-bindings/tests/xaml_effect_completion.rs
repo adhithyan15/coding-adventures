@@ -185,6 +185,7 @@ fn the_emitted_xaml_host_answers_effects() {
         "closes",
         "deferred",
         "scoped",
+        "quarantine",
     ] {
         let stdout = run(
             Command::new("dotnet")
@@ -238,6 +239,14 @@ fn the_emitted_xaml_host_answers_effects() {
         "a deferred answer raises props-changed once",
         "an answer inside the handler raises no props-changed",
         "state cannot be persisted while a deferred effect is outstanding",
+        "an earlier quarantine is never replaced",
+        "a rejected file moves to the first free name",
+        "a file moved aside leaves saving on",
+        "fresh state is saved once the rejected file is aside",
+        "with every name taken, the warning says nothing is saved",
+        "a file that could not move aside is not written over",
+        "the warning stays showing after an event",
+        "no quarantine was replaced",
         "answering from another thread does not deadlock",
         "answering a deferred effect settles it",
         "the deferred answer's value reached the app",

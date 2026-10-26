@@ -1465,7 +1465,8 @@ public static class MosaicRuntimeHost
                 }
                 catch (Exception moveError)
                 {
-                    return $"Could not move it aside to {candidate}: {moveError.Message}";
+                    // TrimEnd: the warning adds its own full stop after this.
+                    return $"Could not move it aside to {candidate}: {moveError.Message.TrimEnd('.')}";
                 }
             }
             return $"All {MaxQuarantinedStates} quarantine names beside it are taken; move them away to save again";

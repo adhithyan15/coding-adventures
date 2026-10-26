@@ -2314,8 +2314,8 @@ mod tests {
                 host: "qt",
                 source: format!("{}\n{}", qt.header, qt.source),
                 names: [
-                    "? path + QStringLiteral(\".corrupt\")",
-                    ": path + QStringLiteral(\".corrupt.%1\").arg(index);",
+                    "QString candidate = path + QStringLiteral(\".corrupt\");",
+                    "if (index > 0) candidate += QStringLiteral(\".%1\").arg(index);",
                     "constexpr int MaxQuarantinedStates = 10;",
                 ],
                 skip: "if (existing.exists() || existing.isSymLink()) continue;",
