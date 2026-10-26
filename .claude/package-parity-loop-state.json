@@ -293,7 +293,7 @@
     {
       "id": "build-tool-extra-ci-toolchain-declaration-remaining-engines",
       "title": "Implement extra CI toolchain declarations in every supported build-tool engine",
-      "status": "in_progress",
+      "status": "pending",
       "depends_on": [
         "build-tool-csharp-extra-ci-toolchain-declaration-conformance",
         "build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
@@ -20731,7 +20731,7 @@
     {
       "id": "geometry-bezier2d-flattening-haskell-swift",
       "title": "Consume safe Bezier flattening contract in Haskell and Swift",
-      "status": "pending",
+      "status": "in_progress",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
@@ -26305,17 +26305,22 @@
     {
       "id": "csharp-document-ast-windows-build-repeatability",
       "title": "Make the existing C# document AST Windows build execute on repeated runs",
-      "status": "in_progress",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-csharp-document-ast-windows-20261025",
-      "pr_number": null,
+      "pr_number": 18259,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18259",
       "delivery_class": "portable-build-front",
       "package_paths": [
         "code/packages/csharp/document-ast"
       ],
       "notes": "Native validation of rendererPR18143 reproduced the existing document-ast BUILD_windows returning success with no output when .dotnet/.artifacts already exist, using a verified short PATH with dotnet9available. Its ungrouped if-not-exist setup captures the following command chain. Repair this existing package front separately and require real native tests/coverage on consecutive invocations. Four dependency tests passed directly; no repeat-front or measured dependency-coverage credit. New renderer BUILD_windows is repaired in18143; do not absorb unrelated package source here.",
       "selection_notes": "Selected after the independent dotnet WasmOpcodes coverage tranche completed local validation but remained behind the three-PR publication ceiling. This package is a C# Markdown prerequisite and has no implementation overlap with the active TypeScript GFM, CommonMark fixture, Haskell Starlark-provider, or prepared WasmOpcodes coverage branches. Fresh inspection also confirms that the test project has no Coverlet provider, so both existing CollectCoverage/Threshold properties are inert. The same bounded owner must group the Windows setup conditionals, wire production-only MSBuild coverage, enforce the 95% library line target, and prove clean plus warm execution without changing AST behavior.",
-      "validation_notes": "Activating the real provider first produced the expected RED: four passing tests covered only 56.25% of production lines and the 95% gate returned nonzero. Two focused public-API tests now exercise every remaining block and inline node family without changing production code. A clean run and immediate warm repeat each execute six tests and report 100% line, branch and method coverage for only CodingAdventures.DocumentAst. A one-test selection measures 14.58% line coverage and exits 1 with the below-threshold error, proving fail-closed enforcement. dotnet format reports no changes and the direct/transitive NuGet audit reports zero vulnerabilities. The grouped Windows command mirrors the same build/no-build instrumentation, filter and threshold; real hosted Windows execution remains the publication gate."
+      "validation_notes": "Activating the real provider first produced the expected RED: four passing tests covered only 56.25% of production lines and the 95% gate returned nonzero. Two focused public-API tests now exercise every remaining block and inline node family without changing production code. A clean run and immediate warm repeat each execute six tests and report 100% line, branch and method coverage for only CodingAdventures.DocumentAst. A one-test selection measures 14.58% line coverage and exits 1 with the below-threshold error, proving fail-closed enforcement. dotnet format reports no changes and the direct/transitive NuGet audit reports zero vulnerabilities. The grouped Windows command mirrors the same build/no-build instrumentation, filter and threshold; real hosted Windows execution remains the publication gate.",
+      "merged_head_revision": "9fe978f402d6ee29915d212fb9f33aec35045b24",
+      "merged_at": "2026-10-26T04:30:17Z",
+      "merge_revision": "bfc66cbaac24fea43af893c4a4a9cac5553ef115",
+      "merge_notes": "PR #18259 completed guarded squash auto-merge after its exact reviewed head passed the required checks and GitHub reported no merge conflict. This receipt closes the stale in-progress lifecycle entry discovered during independent review of the Haskell/Swift Bezier tranche."
     }
   ],
   "postmerge_refresh": {
