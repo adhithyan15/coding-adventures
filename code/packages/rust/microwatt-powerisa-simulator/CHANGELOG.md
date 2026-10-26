@@ -10,4 +10,3 @@
   termination semantics.
 - Pin sticky SO to 64-bit OV only, Microwatt word multiply/divide shaping and
   full-width Rc, and valid-but-unsupported `ptesync`.
-
