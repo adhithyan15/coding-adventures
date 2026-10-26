@@ -69,14 +69,15 @@ boundary explicitly classifies all 20 inherited Cortex-M3 instruction
 families, differentially witnesses inherited integer, privilege, IT, memory,
 exclusive, branch, power, and lifecycle state, and covers the bounded DSP and
 optional FPv4-SP extension. All 30 release tests, strict Clippy/rustdoc, and
-92.81% line coverage (994/1071) are green. Cortex-M7 is therefore the next
-independent functional cell.
+92.81% line coverage (994/1071) are green. Cortex-M7 is merged, while
+Cortex-M23 is the next queued publication cell and Cortex-M33 is already in
+review.
 
 | Order | Target | Public basis | Planned boundary |
 |---:|---|---|---|
-| 1 | Arm Cortex-M7 | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
-| 2 | Arm Cortex-M23 | Armv8-M manuals | Baseline profile and security-state boundary. |
-| 3 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
+| 1 | Arm Cortex-M7 (merged) | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
+| 2 | Arm Cortex-M23 (in publication) | Armv8-M manuals | Baseline profile and security-state boundary. |
+| 3 | Arm Cortex-M33 (in review) | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
 | 4 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 5 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
 | 6 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
