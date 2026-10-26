@@ -132,9 +132,16 @@ When a package component is loaded, its own names are checked too:
   variable on React (`{title}`) and HTML (`{{title}}`), so a bare NAME is
   checked like an expression name. Exempt are `true`/`false`, the kernel's
   enum positions (`moslayout_compiler::KEYWORD_LITERAL_PROPS`, such as
-  `axis: both` or `a11y-role: heading`), and, at a call site, a value bound
-  to a `one-of` slot. A bare NAME that names one of the component's own
-  slots becomes `slot: <name>`, so it takes the call site's binding.
+  `axis: both` or `a11y-role: heading`), and, at a call site, one of the
+  declared values of the `one-of` slot it binds. A bare NAME that names one
+  of the component's own slots becomes `slot: <name>`, so it takes the call
+  site's binding. That includes forwarding: `Badge ( tone: tone )`.
+- **`one-of` values.** A `one-of` value bound at a call site (`tone: loud`)
+  reaches the callee as the string `"loud"`, except in an enum position,
+  where it stays a bare value. It is never a variable.
+  - Afterwards, expressions that have become constant are evaluated:
+    `( "loud" == "calm" )` becomes `false`. TypeScript rejects that
+    comparison as written.
 - **The child-mount slot.** It may be read only at the mount. A read
   anywhere else is `ChildMountSlotReferenced`, because nothing ever binds
   that slot by prop.

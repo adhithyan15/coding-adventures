@@ -81,6 +81,33 @@ What changed:
   a cycle cannot recurse. A bare NAME naming the component's own slot is
   rewritten to `slot: <name>` when the component loads, so substitution
   binds it.
+- **`one-of` values (round 4, MEDIUM; also fixes P14).**
+  - **The check.** At a call site inside a package, a bare NAME bound to a
+    `one-of` slot is a literal only if it is one of that slot's declared
+    values. Anything else gets the identifier rule:
+    - `tone: authToken` is rejected. Before, the exemption let it through,
+      and the callee read React `{authToken}`.
+    - `tone: tone` forwards the caller's own slot. Before, it stayed
+      `Keyword("tone")` and captured the consumer's `tone`.
+    - A declared value that also names a caller slot is the value.
+  - **Substitution.** A declared `one-of` value becomes the string it
+    spells (`one_of_literals`). It is a bare `Keyword` again only in a
+    `KEYWORD_LITERAL_PROPS` position. So `content: slot: tone` renders
+    "loud", and `( tone == "calm" )` becomes `( "loud" == "calm" )`,
+    never `( loud == "calm" )`.
+  - **Constant folding.** `fold_constant_expressions` then evaluates
+    expressions that have become constant, because TypeScript rejects
+    `"loud" == "calm"` (TS2367). It folds:
+    - `==`/`!=` on two literals of one kind;
+    - numeric comparisons;
+    - `!` of a boolean;
+    - `&&`/`||` with a boolean literal on the left.
+
+    Nothing else is folded, and an expression with nothing to fold keeps
+    its exact text.
+  - A bare NAME bound to a `one-of` slot at the consumer's own call site
+    that is not a declared value (a loop variable, say) is the consumer's
+    variable, and is unchanged.
 - **Callee-scope limits (round 2, LOW).**
   - Callee-scope errors are capped at `MAX_REPORTED_ERRORS`, and the rest
     are counted as omitted.
@@ -132,6 +159,15 @@ What changed:
   - bare NAMEs at a nested call site follow the mounted slot's type;
   - callee-scope errors are capped and expressions quoted in part;
   - a failed load is cached.
+- Round-4 tests:
+  - a non-value `one-of` binding is an identifier (`authToken` rejected);
+  - a `one-of` value is a string and never a variable. That covers text,
+    folded comparisons, a value under a `For` that binds the same name,
+    and a `Keyword` again in `HostTable ( dir: … )`;
+  - forwarding binds through;
+  - a declared value wins over a caller slot of the same name;
+  - a consumer loop variable stays a variable;
+  - a table of constant-folding cases.
 
 ### Added — a component can be mounted more than once (UI34 §5 step 4)
 

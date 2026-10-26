@@ -910,7 +910,9 @@ impl LayoutPackageResolver {
             .collect();
         let mut bindings = resolved.default_bindings;
         bindings.extend(build_binding_map(&declared));
-        rewrite_bindings(target, &bindings, &HashSet::new());
+        let one_of = one_of_literals(&resolved.slots, &mut bindings);
+        rewrite_bindings(target, &bindings, &one_of, &HashSet::new());
+        fold_constant_expressions(target);
         fold_constant_conditionals(target);
 
         let exports = self.package_exports(pkg)?;
@@ -1602,6 +1604,7 @@ fn is_defaultable(slot_type: &mosmodel_compiler::SlotType) -> bool {
 fn rewrite_bindings(
     node: &mut LayoutNode,
     bindings: &HashMap<String, LayoutPropValue>,
+    one_of: &HashMap<String, String>,
     shadowed: &HashSet<String>,
 ) {
     // Dependency events are private unless the call site forwards them. Leaving
@@ -1611,8 +1614,19 @@ fn rewrite_bindings(
         LayoutPropValue::EmitRef(name) => bindings.contains_key(name),
         _ => true,
     });
+    let tag = node.tag.clone();
     for prop in &mut node.props {
         match &prop.value {
+            // A `one-of` value is an enum literal only where every backend
+            // reads a bare NAME as one; anywhere else it is the string it
+            // spells (`bindings` already holds it as one).
+            LayoutPropValue::SlotRef(name)
+                if one_of.get(name).is_some_and(|value| {
+                    moslayout_compiler::is_keyword_literal(&tag, &prop.name, value)
+                }) =>
+            {
+                prop.value = LayoutPropValue::Keyword(one_of[name].clone());
+            }
             LayoutPropValue::SlotRef(name) => {
                 if let Some(value) = bindings.get(name) {
                     prop.value = value.clone();
@@ -1634,8 +1648,50 @@ fn rewrite_bindings(
     }
     let inner = for_scope(node, shadowed);
     for child in &mut node.children {
-        rewrite_bindings(child, bindings, &inner);
+        rewrite_bindings(child, bindings, one_of, &inner);
     }
+}
+
+/// Make every `one-of` binding a string, and return the values by slot name
+/// (both spellings) for `rewrite_bindings`.
+///
+/// A call site writes a `one-of` value bare (`tone: loud`), so it arrives as
+/// a `Keyword`, and a `Keyword` substituted into the callee would be read
+/// as a variable: React `{loud}` in `Text ( content: slot: tone )`, and
+/// `( loud == "calm" )` in an expression, an undeclared identifier (P14).
+/// Held as `String`, it renders as the text `loud` and compares as the
+/// string `"loud"`. In a `KEYWORD_LITERAL_PROPS` position it goes back to a
+/// `Keyword`, since an enum prop wants the bare value.
+///
+/// Only a value the slot declares is a literal. A bare NAME that is not
+/// one (`tone: row` inside the consumer's `For ( as: row )`) is the
+/// consumer's variable, and stays a `Keyword`. A `String` that spells a
+/// declared value (forwarded from an outer `one-of` slot) is recorded too,
+/// so it reaches an enum prop as a `Keyword` again.
+fn one_of_literals(
+    slots: &[mosmodel_compiler::SlotDecl],
+    bindings: &mut HashMap<String, LayoutPropValue>,
+) -> HashMap<String, String> {
+    let mut literals = HashMap::new();
+    for slot in slots {
+        let mosmodel_compiler::SlotType::OneOf(values) = &slot.r#type else {
+            continue;
+        };
+        let value = match bindings.get(&slot.name) {
+            Some(LayoutPropValue::Keyword(value) | LayoutPropValue::String(value))
+                if values.contains(value) =>
+            {
+                value.clone()
+            }
+            _ => continue,
+        };
+        let camel = to_camel_case_first_lower(&slot.name);
+        for name in [slot.name.clone(), camel] {
+            bindings.insert(name.clone(), LayoutPropValue::String(value.clone()));
+            literals.insert(name, value.clone());
+        }
+    }
+    literals
 }
 
 /// The names in scope for `node`'s children: `scope`, plus the `as:` and
@@ -1653,6 +1709,389 @@ fn for_scope(node: &LayoutNode, scope: &HashSet<String>) -> HashSet<String> {
         }
     }
     inner
+}
+
+// ---------------------------------------------------------------------------
+// Constant expressions
+// ---------------------------------------------------------------------------
+//
+// Substitution can leave an expression with no names in it: Badge's
+// `( tone == "calm" )` with `tone: loud` bound becomes `( "loud" == "calm" )`.
+// That is correct, but TypeScript rejects it: comparing two different string
+// literal types is error TS2367 ("This comparison appears to be
+// unintentional"), and React's output is type-checked. So the inliner
+// evaluates what has become constant, the way `fold_constant_conditionals`
+// already picks the branch of a literal `If`:
+//
+//   ( "loud" == "calm" )           →  false         (the whole prop becomes `false`)
+//   ( "loud" == "calm" || open )   →  ( open )
+//   ( "calm" == "calm" && open )   →  ( open )
+//   ( row [ 0 ] == "calm" )        →  unchanged     (a name is left)
+//
+// Only what every backend agrees on is folded:
+// - `==` and `!=` between two literals of the same kind;
+// - `<`, `<=`, `>` and `>=` between two numbers;
+// - `!` of a boolean;
+// - `&&` and `||` whose left side is a boolean literal. `false && x` is
+//   `false`, `true && x` is `x`, and the same for `||`. That is exact even
+//   in JavaScript, where these return an operand rather than a boolean.
+// Anything else, such as truthiness or comparisons across kinds, is left as
+// written. An expression in which nothing folds keeps its text byte for
+// byte.
+
+/// A literal value inside an expression.
+#[derive(Debug, Clone, PartialEq)]
+enum Konst {
+    Bool(bool),
+    Num(f64),
+    /// A string's contents as written between the quotes, escapes included.
+    /// Two strings are equal exactly when these are, because the layout
+    /// compiler and `js_string_literal` escape the same way.
+    Str(String),
+}
+
+/// One expression node, evaluated as far as it goes.
+struct Folded {
+    /// Its value, when it is a constant.
+    konst: Option<Konst>,
+    /// Its text, re-printed with single spaces as the layout compiler does.
+    text: String,
+    /// Whether anything at or below this node was folded.
+    changed: bool,
+}
+
+impl Folded {
+    fn leaf(text: String, konst: Option<Konst>) -> Self {
+        Self {
+            konst,
+            text,
+            changed: false,
+        }
+    }
+
+    fn bool(value: bool) -> Self {
+        Self {
+            konst: Some(Konst::Bool(value)),
+            text: value.to_string(),
+            changed: true,
+        }
+    }
+}
+
+/// Tokens of an expression, for the folder. `None` if it holds anything the
+/// grammar does not (then nothing is folded).
+fn fold_tokens(expr: &str) -> Option<Vec<String>> {
+    let bytes = expr.as_bytes();
+    let mut tokens = Vec::new();
+    let mut i = 0;
+    while i < bytes.len() {
+        let b = bytes[i];
+        if b.is_ascii_whitespace() {
+            i += 1;
+        } else if b == b'"' {
+            let start = i;
+            i += 1;
+            let mut escaped = false;
+            loop {
+                let c = *bytes.get(i)?;
+                i += 1;
+                if escaped {
+                    escaped = false;
+                } else if c == b'\\' {
+                    escaped = true;
+                } else if c == b'"' {
+                    break;
+                }
+            }
+            tokens.push(expr[start..i].to_string());
+        } else if b.is_ascii_digit() {
+            let start = i;
+            while i < bytes.len() && (bytes[i].is_ascii_digit() || bytes[i] == b'.') {
+                i += 1;
+            }
+            tokens.push(expr[start..i].to_string());
+        } else if is_identifier_start(b) {
+            let start = i;
+            i += 1;
+            loop {
+                while i < bytes.len() && is_identifier_continue(bytes[i]) {
+                    i += 1;
+                }
+                if i + 1 < bytes.len() && bytes[i] == b'-' && bytes[i + 1].is_ascii_alphabetic() {
+                    i += 1;
+                    continue;
+                }
+                break;
+            }
+            tokens.push(expr[start..i].to_string());
+        } else {
+            let two = expr.get(i..i + 2).unwrap_or("");
+            let op = if matches!(two, "==" | "!=" | "<=" | ">=" | "&&" | "||") {
+                two
+            } else {
+                let one = expr.get(i..i + 1)?;
+                if !matches!(one, "<" | ">" | "!" | "." | "[" | "]" | "(" | ")" | ":") {
+                    return None;
+                }
+                one
+            };
+            i += op.len();
+            tokens.push(op.to_string());
+        }
+    }
+    Some(tokens)
+}
+
+/// A recursive-descent evaluator over `moslayout.grammar`'s `expr`.
+struct ExprFolder {
+    tokens: Vec<String>,
+    at: usize,
+}
+
+impl ExprFolder {
+    fn peek(&self) -> Option<&str> {
+        self.tokens.get(self.at).map(String::as_str)
+    }
+
+    fn next(&mut self) -> Option<String> {
+        let token = self.tokens.get(self.at).cloned();
+        self.at += 1;
+        token
+    }
+
+    fn expect(&mut self, token: &str) -> Option<()> {
+        (self.next()? == token).then_some(())
+    }
+
+    /// `or_expr` and `and_expr`: a left-associative chain of `op`.
+    fn chain(&mut self, op: &str, operand: fn(&mut Self) -> Option<Folded>) -> Option<Folded> {
+        let mut acc = operand(self)?;
+        while self.peek() == Some(op) {
+            self.next();
+            let rhs = operand(self)?;
+            // `&&` short-circuits on false, `||` on true.
+            let stop = op == "||";
+            acc = match acc.konst {
+                Some(Konst::Bool(b)) if b == stop => Folded::bool(b),
+                Some(Konst::Bool(_)) => Folded {
+                    changed: true,
+                    ..rhs
+                },
+                _ => Folded {
+                    text: format!("{} {op} {}", acc.text, rhs.text),
+                    konst: None,
+                    changed: acc.changed || rhs.changed,
+                },
+            };
+        }
+        Some(acc)
+    }
+
+    fn or_expr(&mut self) -> Option<Folded> {
+        self.chain("||", Self::and_expr)
+    }
+
+    fn and_expr(&mut self) -> Option<Folded> {
+        self.chain("&&", Self::eq_expr)
+    }
+
+    /// `eq_expr` and `rel_expr`: one optional comparison.
+    fn eq_expr(&mut self) -> Option<Folded> {
+        let lhs = self.rel_expr()?;
+        let Some(op) = self
+            .peek()
+            .filter(|t| matches!(*t, "==" | "!="))
+            .map(str::to_string)
+        else {
+            return Some(lhs);
+        };
+        self.next();
+        let rhs = self.rel_expr()?;
+        let same = match (&lhs.konst, &rhs.konst) {
+            (Some(Konst::Bool(a)), Some(Konst::Bool(b))) => Some(a == b),
+            (Some(Konst::Num(a)), Some(Konst::Num(b))) => Some(a == b),
+            (Some(Konst::Str(a)), Some(Konst::Str(b))) => Some(a == b),
+            _ => None,
+        };
+        Some(match same {
+            Some(same) => Folded::bool(same == (op == "==")),
+            None => Folded {
+                text: format!("{} {op} {}", lhs.text, rhs.text),
+                konst: None,
+                changed: lhs.changed || rhs.changed,
+            },
+        })
+    }
+
+    fn rel_expr(&mut self) -> Option<Folded> {
+        let lhs = self.unary()?;
+        let Some(op) = self
+            .peek()
+            .filter(|t| matches!(*t, "<" | "<=" | ">" | ">="))
+            .map(str::to_string)
+        else {
+            return Some(lhs);
+        };
+        self.next();
+        let rhs = self.unary()?;
+        Some(match (&lhs.konst, &rhs.konst) {
+            (Some(Konst::Num(a)), Some(Konst::Num(b))) => Folded::bool(match op.as_str() {
+                "<" => a < b,
+                "<=" => a <= b,
+                ">" => a > b,
+                _ => a >= b,
+            }),
+            _ => Folded {
+                text: format!("{} {op} {}", lhs.text, rhs.text),
+                konst: None,
+                changed: lhs.changed || rhs.changed,
+            },
+        })
+    }
+
+    fn unary(&mut self) -> Option<Folded> {
+        if self.peek() != Some("!") {
+            return self.postfix();
+        }
+        self.next();
+        let operand = self.unary()?;
+        Some(match operand.konst {
+            Some(Konst::Bool(b)) => Folded::bool(!b),
+            _ => Folded {
+                text: format!("! {}", operand.text),
+                konst: None,
+                changed: operand.changed,
+            },
+        })
+    }
+
+    fn postfix(&mut self) -> Option<Folded> {
+        let mut base = self.primary()?;
+        loop {
+            match self.peek() {
+                Some(".") => {
+                    self.next();
+                    let member = self.next()?;
+                    base = Folded {
+                        text: format!("{} . {member}", base.text),
+                        konst: None,
+                        changed: base.changed,
+                    };
+                }
+                Some("[") => {
+                    self.next();
+                    let index = self.or_expr()?;
+                    self.expect("]")?;
+                    base = Folded {
+                        text: format!("{} [ {} ]", base.text, index.text),
+                        konst: None,
+                        changed: base.changed || index.changed,
+                    };
+                }
+                _ => return Some(base),
+            }
+        }
+    }
+
+    fn primary(&mut self) -> Option<Folded> {
+        let token = self.next()?;
+        if token == "(" {
+            let inner = self.or_expr()?;
+            self.expect(")")?;
+            return Some(Folded {
+                text: format!("( {} )", inner.text),
+                konst: inner.konst,
+                changed: inner.changed,
+            });
+        }
+        if (token == "slot" || token == "emit") && self.peek() == Some(":") {
+            self.next();
+            let name = self.next()?;
+            return Some(Folded::leaf(format!("{token} : {name}"), None));
+        }
+        let first = token.as_bytes()[0];
+        let konst = if first == b'"' {
+            Some(Konst::Str(token[1..token.len() - 1].to_string()))
+        } else if first.is_ascii_digit() {
+            Some(Konst::Num(token.parse().ok()?))
+        } else if token == "true" || token == "false" {
+            Some(Konst::Bool(token == "true"))
+        } else if is_identifier_start(first) {
+            None
+        } else {
+            return None;
+        };
+        Some(Folded::leaf(token, konst))
+    }
+}
+
+/// What folding did to one expression prop.
+#[derive(Debug, PartialEq)]
+enum FoldOutcome {
+    /// Nothing was constant: keep the text exactly.
+    Unchanged,
+    /// Part of it folded.
+    Text(String),
+    /// All of it folded to a literal.
+    Value(LayoutPropValue),
+}
+
+fn fold_expression(expr: &str) -> FoldOutcome {
+    let Some(tokens) = fold_tokens(expr) else {
+        return FoldOutcome::Unchanged;
+    };
+    let mut folder = ExprFolder { tokens, at: 0 };
+    let Some(root) = folder.or_expr() else {
+        return FoldOutcome::Unchanged;
+    };
+    if folder.at != folder.tokens.len() || !root.changed {
+        return FoldOutcome::Unchanged;
+    }
+    match root.konst {
+        Some(Konst::Bool(b)) => FoldOutcome::Value(LayoutPropValue::Keyword(b.to_string())),
+        Some(Konst::Num(n)) => FoldOutcome::Value(LayoutPropValue::Number(n)),
+        Some(Konst::Str(raw)) => FoldOutcome::Value(LayoutPropValue::String(unescape_js(&raw))),
+        None => FoldOutcome::Text(root.text),
+    }
+}
+
+/// The text a JavaScript-style string literal's contents (between the
+/// quotes) stands for, for the escapes `js_string_literal` writes.
+fn unescape_js(raw: &str) -> String {
+    let mut out = String::with_capacity(raw.len());
+    let mut chars = raw.chars();
+    while let Some(c) = chars.next() {
+        if c != '\\' {
+            out.push(c);
+            continue;
+        }
+        match chars.next() {
+            Some('n') => out.push('\n'),
+            Some('r') => out.push('\r'),
+            Some('t') => out.push('\t'),
+            Some(other) => out.push(other),
+            None => out.push('\\'),
+        }
+    }
+    out
+}
+
+/// Fold every constant expression in an inlined callee subtree (see the
+/// section comment). Runs before caller children are spliced in, so only
+/// the callee's own expressions are touched.
+fn fold_constant_expressions(node: &mut LayoutNode) {
+    for prop in &mut node.props {
+        if let LayoutPropValue::Expr(text) = &prop.value {
+            match fold_expression(text) {
+                FoldOutcome::Unchanged => {}
+                FoldOutcome::Text(text) => prop.value = LayoutPropValue::Expr(text),
+                FoldOutcome::Value(value) => prop.value = value,
+            }
+        }
+    }
+    for child in &mut node.children {
+        fold_constant_expressions(child);
+    }
 }
 
 /// Resolve `If`/`Else` pairs whose condition became a literal during binding.
@@ -1937,8 +2376,11 @@ fn rewrite_expression_bindings(
 //   a KEYWORD_LITERAL_PROPS position           a literal enum value
 //     (`axis: both`, `a11y-role: heading`)
 //   a `For`'s `as:` / `index:`                 a binder
-//   a call site's prop bound to a `one-of`     a literal (one of its values)
-//     slot of the component it mounts
+//   a call site's prop bound to a `one-of`     a literal, if it is one of
+//     slot of the component it mounts          that slot's declared values;
+//                                              otherwise an identifier, as
+//                                              below (`tone: tone` forwards
+//                                              the caller's own `tone`)
 //   anywhere else                              an identifier: a `For`
 //                                              binding in scope, or a slot
 //                                              of this component, or an error
@@ -1973,13 +2415,18 @@ impl NestedInterfaces {
             .then(|| (self.pkg.clone(), node.tag.clone()))
     }
 
-    /// Whether `prop`, at a call site of `target`, binds a `one-of` slot.
-    /// Unknown (an interface that failed to load) counts as no, so the
-    /// value gets the identifier check: fail closed.
-    fn binds_one_of(&self, target: &(String, String), prop: &str) -> bool {
+    /// Whether `word`, bound to `prop` at a call site of `target`, is one of
+    /// the values of the `one-of` slot it binds. Only a declared value is a
+    /// literal: any other bare NAME there is an identifier (`tone: tone`
+    /// forwards the caller's own `tone`; `tone: authToken` reads nothing the
+    /// caller declares). Unknown (an interface that failed to load) counts
+    /// as no, so the value gets the identifier check: fail closed.
+    fn is_one_of_value(&self, target: &(String, String), prop: &str, word: &str) -> bool {
         self.slots.get(target).is_some_and(|slots| {
             slots.iter().any(|slot| {
-                slot.name == prop && matches!(slot.r#type, mosmodel_compiler::SlotType::OneOf(_))
+                slot.name == prop
+                    && matches!(&slot.r#type, mosmodel_compiler::SlotType::OneOf(values)
+                        if values.iter().any(|value| value == word))
             })
         })
     }
@@ -2107,7 +2554,7 @@ impl CalleeScope<'_> {
                     let literal = if let Some(target) = &target {
                         word == "true"
                             || word == "false"
-                            || self.nested.binds_one_of(target, &prop.name)
+                            || self.nested.is_one_of_value(target, &prop.name, word)
                     } else {
                         (tag == "For" && (prop.name == "as" || prop.name == "index"))
                             || moslayout_compiler::is_keyword_literal(&tag, &prop.name, word)
@@ -4311,6 +4758,224 @@ version = "1"
         );
         let mut again = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-lib::Card }");
         assert_eq!(resolver.resolve(&mut again).expect_err("cached"), first);
+    }
+
+    // ---- Security review round 4: `one-of` values ----
+
+    /// `mosaic-pkg-lib` exporting `Panel` (given) and `Badge`, whose `tone`
+    /// is `one-of calm loud`, shown as text, compared in expressions, inside
+    /// a `For` whose binding is also called `loud`, and passed to the enum
+    /// prop `HostTable ( dir: … )` through `dir`.
+    fn badge_package(panel_mil: &str, panel_mll: &str) -> (TempDir, LayoutPackageResolver) {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let lib = make_pkg(
+            &pkgs,
+            "mosaic-pkg-lib",
+            "mosaic-pkg-lib",
+            &["Panel", "Badge"],
+        );
+        write_component(
+            &lib,
+            "Badge",
+            r#"component Badge {
+  slot tone : one-of calm loud ;
+  slot dir : one-of ltr rtl ;
+  slot open : bool ;
+  slot items : list<text> ;
+}"#,
+            r#"layout Badge { Column [ badge ] {
+  Text [ badge-tone ] ( content: tone )
+  If ( when: ( tone == "loud" ) ) { Text [ badge-loud ] ( content: "L" ) }
+  If ( when: ( tone == "calm" ) ) { Text [ badge-calm ] ( content: "C" ) }
+  HostButton [ badge-button ] ( label: "b" , selected: ( tone == "calm" || open ) )
+  HostTable [ badge-table ] ( dir: slot: dir ) { HostTableBody { Row { Box ( table-cell-role: data ) { Text ( content: "x" ) } } } }
+  For ( each: slot: items , as: loud ) { Text [ badge-looped ] ( content: slot: tone ) }
+} }"#,
+        );
+        write_component(&lib, "Panel", panel_mil, panel_mll);
+        (tmp, LayoutPackageResolver::new(vec![pkgs]))
+    }
+
+    fn prop_value(root: &LayoutNode, part: &str, prop: &str) -> Option<LayoutPropValue> {
+        props_of(root, part)
+            .iter()
+            .find(|p| p.name == prop)
+            .map(|p| p.value.clone())
+    }
+
+    fn has_part(node: &LayoutNode, part: &str) -> bool {
+        node.part_name.as_deref() == Some(part) || node.children.iter().any(|c| has_part(c, part))
+    }
+
+    /// Exploit: `tone: authToken` at a call site inside a package is not a
+    /// value of `tone`, so it is an identifier, and Panel declares nothing
+    /// by that name. Before, the `one-of` exemption let it through and
+    /// Badge read it as React `{authToken}`.
+    #[test]
+    fn a_one_of_binding_that_is_not_a_declared_value_is_an_identifier() {
+        let (_tmp, resolver) = badge_package(
+            "component Panel { slot rows : list<text> ; }",
+            "layout Panel { Badge ( tone: authToken , dir: ltr , open: false , items: slot: rows ) }",
+        );
+        let mut layout =
+            consumer_layout("layout ProbeApp { pkg::mosaic-pkg-lib::Panel ( rows: slot: names ) }");
+
+        let error = only(
+            resolver
+                .resolve(&mut layout)
+                .expect_err("authToken is free"),
+        );
+        assert!(
+            matches!(&error,
+                LayoutResolveError::UndeclaredExpressionIdentifier { identifier, expression, .. }
+                    if identifier == "authToken" && expression == "tone: authToken"),
+            "{error:?}"
+        );
+    }
+
+    /// `tone: loud` is the string "loud" everywhere in Badge: text in
+    /// `content:`, a string in comparisons (which then fold, so React never
+    /// sees TS2367's `"loud" == "calm"`), the value under a `For` that binds
+    /// a variable called `loud`, and a `Keyword` again in the enum prop
+    /// `dir:`.
+    #[test]
+    fn a_one_of_value_is_a_string_and_never_a_variable() {
+        let (_tmp, resolver) = badge_package(
+            "component Panel { slot is-open : bool ; slot rows : list<text> ; }",
+            "layout Panel { Badge ( tone: loud , dir: rtl , open: slot: is-open , items: slot: rows ) }",
+        );
+        let mut layout = consumer_layout(
+            "layout ProbeApp { pkg::mosaic-pkg-lib::Panel ( is-open: slot: flag , rows: slot: names ) }",
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        let root = &layout.root;
+        let text = |v: &str| Some(LayoutPropValue::String(v.to_string()));
+        assert_eq!(prop_value(root, "badge-tone", "content"), text("loud"));
+        assert_eq!(prop_value(root, "badge-looped", "content"), text("loud"));
+        assert!(
+            has_part(root, "badge-loud"),
+            "( \"loud\" == \"loud\" ) keeps its branch"
+        );
+        assert!(
+            !has_part(root, "badge-calm"),
+            "( \"loud\" == \"calm\" ) drops its branch"
+        );
+        assert_eq!(
+            prop_value(root, "badge-button", "selected"),
+            Some(LayoutPropValue::Expr("( flag )".to_string()))
+        );
+        assert_eq!(
+            prop_value(root, "badge-table", "dir"),
+            Some(LayoutPropValue::Keyword("rtl".to_string()))
+        );
+    }
+
+    /// Forwarding: Panel's `Badge ( tone: tone )` names Panel's own `tone`,
+    /// which is not a value of Badge's. It becomes `slot: tone`, so Panel's
+    /// binding reaches Badge. Before, it stayed `Keyword("tone")` and Badge
+    /// read the consumer's `tone`.
+    #[test]
+    fn forwarding_a_one_of_slot_binds_through() {
+        let (_tmp, resolver) = badge_package(
+            r#"component Panel {
+  slot tone : one-of calm loud ;
+  slot dir : one-of ltr rtl ;
+  slot rows : list<text> ;
+}"#,
+            "layout Panel { Badge ( tone: tone , dir: dir , open: false , items: slot: rows ) }",
+        );
+        let mut layout = consumer_layout(
+            "layout ProbeApp { pkg::mosaic-pkg-lib::Panel ( tone: calm , dir: rtl , rows: slot: names ) }",
+        );
+        resolver.resolve(&mut layout).expect("resolves");
+        let root = &layout.root;
+        assert_eq!(
+            prop_value(root, "badge-tone", "content"),
+            Some(LayoutPropValue::String("calm".to_string()))
+        );
+        assert!(has_part(root, "badge-calm") && !has_part(root, "badge-loud"));
+        assert_eq!(
+            prop_value(root, "badge-table", "dir"),
+            Some(LayoutPropValue::Keyword("rtl".to_string()))
+        );
+    }
+
+    /// Tie-break: a declared value that also names one of the caller's
+    /// slots is the value. Panel has a slot called `loud`; `tone: loud`
+    /// still means the value `loud`.
+    #[test]
+    fn a_declared_value_wins_over_a_caller_slot_of_the_same_name() {
+        let (_tmp, resolver) = badge_package(
+            "component Panel { slot loud : text ; slot rows : list<text> ; }",
+            "layout Panel { Badge ( tone: loud , dir: ltr , open: true , items: slot: rows ) }",
+        );
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { pkg::mosaic-pkg-lib::Panel ( loud: "SLOT" , rows: slot: names ) }"#,
+        );
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            prop_value(&layout.root, "badge-tone", "content"),
+            Some(LayoutPropValue::String("loud".to_string()))
+        );
+    }
+
+    /// In the consumer's own scope a bare NAME that is not a value is the
+    /// consumer's variable (here its loop binding) and stays one.
+    #[test]
+    fn a_consumer_loop_variable_bound_to_a_one_of_slot_stays_a_variable() {
+        let (_tmp, resolver) = badge_package("component Panel { }", "layout Panel { Box { } }");
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { Column { For ( each: slot: tones , as: t ) {
+  pkg::mosaic-pkg-lib::Badge ( tone: t , dir: ltr , open: false , items: slot: names )
+} } }"#,
+        );
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            prop_value(&layout.root, "badge-tone", "content"),
+            Some(LayoutPropValue::Keyword("t".to_string()))
+        );
+    }
+
+    #[test]
+    fn constant_expressions_fold_only_what_every_backend_agrees_on() {
+        let cases = [
+            (
+                r#"( "loud" == "calm" )"#,
+                FoldOutcome::Value(LayoutPropValue::Keyword("false".into())),
+            ),
+            (
+                r#"( "calm" == "calm" )"#,
+                FoldOutcome::Value(LayoutPropValue::Keyword("true".into())),
+            ),
+            (r#"( "a" != "b" && x )"#, FoldOutcome::Text("( x )".into())),
+            (
+                r#"( "a" == "b" || x . y [ 0 ] )"#,
+                FoldOutcome::Text("( x . y [ 0 ] )".into()),
+            ),
+            (
+                r#"( x || "a" == "b" )"#,
+                FoldOutcome::Text("( x || false )".into()),
+            ),
+            (
+                "( ! ( 2 > 1 ) )",
+                FoldOutcome::Value(LayoutPropValue::Keyword("false".into())),
+            ),
+            (r#"( "a" == 1 )"#, FoldOutcome::Unchanged),
+            ("( x == 1 )", FoldOutcome::Unchanged),
+            (r#"( "q\"uote" )"#, FoldOutcome::Unchanged),
+            ("( slot : open && true )", FoldOutcome::Unchanged),
+            (
+                "( true && slot : open )",
+                FoldOutcome::Text("( slot : open )".into()),
+            ),
+            ("( 1 = 2 )", FoldOutcome::Unchanged),
+        ];
+        for (expr, expected) in cases {
+            assert_eq!(fold_expression(expr), expected, "{expr}");
+        }
     }
 
     // ---- The repository's own packages and apps ----
