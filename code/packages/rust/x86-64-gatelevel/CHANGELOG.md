@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.1] — 2026-10-26
+
+### Fixed
+
+- Route signed and unsigned multiply overflow and divide quotient-fit
+  qualification through gate reductions over the complete 128-bit result.
+- Add exact boundary differentials, per-wire qualifier witnesses, atomic fault
+  coverage, and a structural guard against host-wide comparisons returning to
+  instruction execution.
+
 ## [0.1.0] — 2026-08-31
 
 ### Added

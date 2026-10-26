@@ -13,8 +13,11 @@ The decoder is shared only as the instruction bit-field boundary. The gate
 package owns instruction execution. Repository gates and ripple-carry adders
 implement arithmetic flags, Boolean operations, barrel shifts and rotates,
 effective addresses, all 16 conditions, a fixed 64-round partial-product
-multiplier, and a fixed 128-round restoring divider. Successful transitions
-clock the DFF state; typed instruction faults leave every DFF unchanged.
+multiplier, and a fixed 128-round restoring divider. Product truncation flags
+and signed/unsigned quotient-fit faults are qualified by reductions over every
+discarded result wire rather than host-wide integer comparisons. Successful
+transitions clock the DFF state; typed instruction faults leave every DFF
+unchanged.
 
 The checked API shares `X86State`, `X86Error`, `X86StepTrace`, and
 `X86ExecutionResult` with `x86-simulator`, including exact snapshots,
@@ -28,5 +31,6 @@ RUSTDOCFLAGS="-D warnings" cargo doc -p coding-adventures-x86-64-gatelevel --no-
 ```
 
 The aggregate differential replays all 262 reproducible Python full-state
-vectors from the functional package. The normative completion contract is
-Spec 07w2.
+vectors from the functional package. Focused multiply/divide differentials
+also pin every signed/unsigned 64-bit fit boundary and atomic overflow fault.
+The normative completion contract is Spec 07w2.

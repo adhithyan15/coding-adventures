@@ -233,18 +233,16 @@ pub fn exec_one(
         }
         Instr::Imul { dst, src } => {
             let product = multiply_signed(st.get(*dst), read_op(st, mem, src, next_ip, 8)?);
-            let result = product as u64;
-            st.set(*dst, result);
-            let truncated = product != i128::from(result as i64);
+            st.set(*dst, product.low);
+            let truncated = product.overflow != 0;
             st.flags.cf = truncated;
             st.flags.of = truncated;
             Ok(Flow::Next)
         }
         Instr::ImulImm { dst, src, imm } => {
             let product = multiply_signed(read_op(st, mem, src, next_ip, 8)?, *imm as u64);
-            let result = product as u64;
-            st.set(*dst, result);
-            let truncated = product != i128::from(result as i64);
+            st.set(*dst, product.low);
+            let truncated = product.overflow != 0;
             st.flags.cf = truncated;
             st.flags.of = truncated;
             Ok(Flow::Next)
@@ -252,9 +250,9 @@ pub fn exec_one(
         Instr::Mul { src } => {
             let source = read_op(st, mem, src, next_ip, 8)?;
             let product = multiply_unsigned(st.get(Reg::Rax), source);
-            st.set(Reg::Rax, product as u64);
-            st.set(Reg::Rdx, (product >> 64) as u64);
-            st.flags.cf = product >> 64 != 0;
+            st.set(Reg::Rax, product.low);
+            st.set(Reg::Rdx, product.high);
+            st.flags.cf = product.overflow != 0;
             st.flags.of = st.flags.cf;
             Ok(Flow::Next)
         }
@@ -297,30 +295,24 @@ pub fn exec_one(
         }
         Instr::Div { divisor, signed } => {
             let d = read_op(st, mem, divisor, next_ip, 8)?;
-            if d == 0 {
-                return Err(Trap::DivideError(instr_off as u64));
-            }
             let lo = st.get(Reg::Rax);
             let hi = st.get(Reg::Rdx);
             // The dividend is the 128-bit `rdx:rax` pair.
             let dividend = ((hi as u128) << 64) | (lo as u128);
             let (quot, rem) = if *signed {
-                let (q, r) =
+                let division =
                     divide_signed(dividend, d).ok_or(Trap::DivideError(instr_off as u64))?;
-                // x86 also raises `#DE` when the quotient doesn't fit the 64-bit
-                // dest (e.g. `i64::MIN / -1` ⇒ +2^63).
-                if q < i64::MIN as i128 || q > i64::MAX as i128 {
+                if division.quotient.overflow != 0 {
                     return Err(Trap::DivideError(instr_off as u64));
                 }
-                (q as u64, r as u64)
+                (division.quotient.low, division.remainder)
             } else {
-                let (q, r) =
+                let division =
                     divide_unsigned(dividend, d).ok_or(Trap::DivideError(instr_off as u64))?;
-                // Unsigned `#DE` when the quotient overflows 64 bits.
-                if q > u64::MAX as u128 {
+                if division.quotient.overflow != 0 {
                     return Err(Trap::DivideError(instr_off as u64));
                 }
-                (q as u64, r)
+                (division.quotient.low, division.remainder)
             };
             st.set(Reg::Rax, quot);
             st.set(Reg::Rdx, rem);
@@ -636,6 +628,27 @@ fn apply_alu(
 mod tests {
     use super::*;
 
+    fn assert_mul_div_matches_functional(mut state: CpuState, instruction: Instr) {
+        let mut functional_state = state.clone();
+        let mut gate_memory = Memory::new(64, 0, 0);
+        let mut functional_memory = Memory::new(64, 0, 0);
+        let gate_result = exec_one(&mut state, &mut gate_memory, &instruction, 0, 0, 0);
+        let functional_result = x86_simulator::execute::exec_one(
+            &mut functional_state,
+            &mut functional_memory,
+            &instruction,
+            0,
+            0,
+            0,
+        );
+        assert_eq!(gate_result.as_ref().err(), functional_result.as_ref().err());
+        assert_eq!(state.gpr, functional_state.gpr);
+        assert_eq!(state.rip, functional_state.rip);
+        assert_eq!(state.flags, functional_state.flags);
+        assert_eq!(state.xmm, functional_state.xmm);
+        assert_eq!(gate_memory.snapshot(), functional_memory.snapshot());
+    }
+
     /// Run a single register-only instruction against a fresh CPU and return the
     /// mutated state.  A tiny scratch `Memory` satisfies the signature; these ops
     /// never touch it.
@@ -870,6 +883,119 @@ mod tests {
         )
         .unwrap_err();
         assert!(matches!(err, Trap::DivideError(_)));
+    }
+
+    #[test]
+    fn multiply_qualification_matches_functional_at_every_fit_boundary() {
+        for (left, right) in [
+            (0, u64::MAX),
+            (1, u64::MAX),
+            (i64::MAX as u64, 1),
+            (i64::MAX as u64, 2),
+            (i64::MIN as u64, 1),
+            (i64::MIN as u64, (-1_i64) as u64),
+            ((-1_i64) as u64, (-1_i64) as u64),
+            (0x4000_0000_0000_0000, 2),
+        ] {
+            let mut state = CpuState::default();
+            state.set(Reg::Rax, left);
+            state.set(Reg::Rcx, right);
+            assert_mul_div_matches_functional(
+                state,
+                Instr::Imul {
+                    dst: Reg::Rax,
+                    src: Operand::Reg(Reg::Rcx),
+                },
+            );
+        }
+
+        for (source, immediate) in [
+            (i64::MAX as u64, 1),
+            (i64::MAX as u64, 2),
+            (i64::MIN as u64, 1),
+            (i64::MIN as u64, -1),
+        ] {
+            let mut state = CpuState::default();
+            state.set(Reg::Rcx, source);
+            assert_mul_div_matches_functional(
+                state,
+                Instr::ImulImm {
+                    dst: Reg::Rax,
+                    src: Operand::Reg(Reg::Rcx),
+                    imm: immediate,
+                },
+            );
+        }
+
+        for (left, right) in [
+            (0, u64::MAX),
+            (1, u64::MAX),
+            (u64::MAX, 1),
+            (u64::MAX, 2),
+            (1_u64 << 63, 2),
+        ] {
+            let mut state = CpuState::default();
+            state.set(Reg::Rax, left);
+            state.set(Reg::Rcx, right);
+            assert_mul_div_matches_functional(
+                state,
+                Instr::Mul {
+                    src: Operand::Reg(Reg::Rcx),
+                },
+            );
+        }
+    }
+
+    #[test]
+    fn divide_qualification_matches_functional_and_faults_before_writes() {
+        let cases = [
+            (0, u64::MAX, 1, false),
+            (1, 0, 1, false),
+            (0, i64::MAX as u64, 1, true),
+            (u64::MAX, i64::MIN as u64, 1, true),
+            (u64::MAX, i64::MIN as u64, (-1_i64) as u64, true),
+            (u64::MAX, i64::MAX as u64, 1, true),
+            (0x8000_0000_0000_0000, 0, (-1_i64) as u64, true),
+            (0x0123_4567_89ab_cdef, 0xfedc_ba98_7654_3210, 0, false),
+        ];
+        for (high, low, divisor, signed) in cases {
+            let mut state = CpuState::default();
+            state.set(Reg::Rdx, high);
+            state.set(Reg::Rax, low);
+            state.set(Reg::Rcx, divisor);
+            assert_mul_div_matches_functional(
+                state,
+                Instr::Div {
+                    divisor: Operand::Reg(Reg::Rcx),
+                    signed,
+                },
+            );
+        }
+
+        let mut state = CpuState::default();
+        state.set(Reg::Rdx, 1);
+        state.set(Reg::Rax, 0);
+        state.set(Reg::Rcx, 1);
+        state.flags = Flags {
+            cf: true,
+            pf: true,
+            zf: true,
+            sf: true,
+            of: true,
+            af: true,
+        };
+        let before = state.clone();
+        let error = exec(
+            &mut state,
+            &Instr::Div {
+                divisor: Operand::Reg(Reg::Rcx),
+                signed: false,
+            },
+        )
+        .unwrap_err();
+        assert!(matches!(error, Trap::DivideError(_)));
+        assert_eq!(state.gpr, before.gpr);
+        assert_eq!(state.flags, before.flags);
     }
 
     #[test]

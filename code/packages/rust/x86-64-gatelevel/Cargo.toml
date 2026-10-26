@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-x86-64-gatelevel"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "DFF-backed x86-64 gate-level simulator"
 license = "MIT"

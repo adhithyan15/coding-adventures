@@ -15,6 +15,22 @@ pub(crate) enum ShiftKind {
     RotateRight,
 }
 
+/// A 128-bit datapath result accompanied by a gate-derived 64-bit fit wire.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) struct QualifiedWideResult {
+    pub(crate) low: u64,
+    pub(crate) high: u64,
+    /// One when discarding `high` would change the selected interpretation.
+    pub(crate) overflow: u8,
+}
+
+/// A qualified wide quotient and the low 64-bit architectural remainder.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) struct QualifiedDivision {
+    pub(crate) quotient: QualifiedWideResult,
+    pub(crate) remainder: u64,
+}
+
 pub(crate) fn shift(value: u64, amount: u32, kind: ShiftKind) -> u64 {
     let select = u64_to_bits(u64::from(amount & 63));
     let mut stage = u64_to_bits(value);
@@ -32,7 +48,11 @@ pub(crate) fn shift(value: u64, amount: u32, kind: ShiftKind) -> u64 {
     bits_to_u64(&stage)
 }
 
-pub(crate) fn multiply_unsigned(a: u64, b: u64) -> u128 {
+pub(crate) fn multiply_unsigned(a: u64, b: u64) -> QualifiedWideResult {
+    qualify_unsigned(&u128_to_bits(multiply_unsigned_wide(a, b)))
+}
+
+fn multiply_unsigned_wide(a: u64, b: u64) -> u128 {
     let a = u64_to_bits(a);
     let b = u64_to_bits(b);
     let mut accumulator = [0_u8; 128];
@@ -50,20 +70,29 @@ pub(crate) fn multiply_unsigned(a: u64, b: u64) -> u128 {
     bits_to_u128(&accumulator)
 }
 
-pub(crate) fn multiply_signed(a: u64, b: u64) -> i128 {
+pub(crate) fn multiply_signed(a: u64, b: u64) -> QualifiedWideResult {
     let a_negative = u64_to_bits(a)[63];
     let b_negative = u64_to_bits(b)[63];
     let a_magnitude = magnitude64(a, a_negative);
     let b_magnitude = magnitude64(b, b_negative);
-    let product = multiply_unsigned(a_magnitude, b_magnitude);
-    if xor_gate(a_negative, b_negative) == 0 {
+    let product = multiply_unsigned_wide(a_magnitude, b_magnitude);
+    let product = if xor_gate(a_negative, b_negative) == 0 {
         product as i128
     } else {
         negate128(product) as i128
-    }
+    };
+    qualify_signed(&u128_to_bits(product as u128))
 }
 
-pub(crate) fn divide_unsigned(dividend: u128, divisor: u64) -> Option<(u128, u64)> {
+pub(crate) fn divide_unsigned(dividend: u128, divisor: u64) -> Option<QualifiedDivision> {
+    let (quotient, remainder) = divide_unsigned_wide(dividend, divisor)?;
+    Some(QualifiedDivision {
+        quotient: qualify_unsigned(&u128_to_bits(quotient)),
+        remainder,
+    })
+}
+
+fn divide_unsigned_wide(dividend: u128, divisor: u64) -> Option<(u128, u64)> {
     if zero_64(divisor) != 0 {
         return None;
     }
@@ -94,7 +123,7 @@ pub(crate) fn divide_unsigned(dividend: u128, divisor: u64) -> Option<(u128, u64
     Some((bits_to_u128(&quotient), bits_to_u64(&remainder[..64])))
 }
 
-pub(crate) fn divide_signed(dividend: u128, divisor: u64) -> Option<(i128, i64)> {
+pub(crate) fn divide_signed(dividend: u128, divisor: u64) -> Option<QualifiedDivision> {
     if zero_64(divisor) != 0 {
         return None;
     }
@@ -106,7 +135,7 @@ pub(crate) fn divide_signed(dividend: u128, divisor: u64) -> Option<(i128, i64)>
         negate128(dividend)
     };
     let divisor_magnitude = magnitude64(divisor, divisor_negative);
-    let (quotient, remainder) = divide_unsigned(dividend_magnitude, divisor_magnitude)?;
+    let (quotient, remainder) = divide_unsigned_wide(dividend_magnitude, divisor_magnitude)?;
     let quotient = if xor_gate(dividend_negative, divisor_negative) == 0 {
         quotient
     } else {
@@ -117,7 +146,10 @@ pub(crate) fn divide_signed(dividend: u128, divisor: u64) -> Option<(i128, i64)>
     } else {
         add_64(invert_64(remainder), 0, 1).0
     };
-    Some((quotient as i128, remainder as i64))
+    Some(QualifiedDivision {
+        quotient: qualify_signed(&u128_to_bits(quotient)),
+        remainder,
+    })
 }
 
 pub(crate) fn address(base: u64, index: u64, scale: u8, displacement: i64) -> u64 {
@@ -167,6 +199,33 @@ fn negate128(value: u128) -> u128 {
     bits_to_u128(&ripple_carry_adder_with_carry(&inverted, &zero, 1).sum)
 }
 
+fn qualify_unsigned(bits: &[u8; 128]) -> QualifiedWideResult {
+    let low = bits_to_u64(&bits[..64]);
+    let high = bits_to_u64(&bits[64..]);
+    let any_high = bits[64..].iter().copied().fold(0, or_gate);
+    QualifiedWideResult {
+        low,
+        high,
+        overflow: any_high,
+    }
+}
+
+fn qualify_signed(bits: &[u8; 128]) -> QualifiedWideResult {
+    let low = bits_to_u64(&bits[..64]);
+    let high = bits_to_u64(&bits[64..]);
+    let sign = bits[63];
+    let differs_from_sign = bits[64..]
+        .iter()
+        .copied()
+        .map(|bit| xor_gate(bit, sign))
+        .fold(0, or_gate);
+    QualifiedWideResult {
+        low,
+        high,
+        overflow: differs_from_sign,
+    }
+}
+
 fn u128_to_bits(value: u128) -> [u8; 128] {
     std::array::from_fn(|bit| ((value >> bit) & 1) as u8)
 }
@@ -213,16 +272,58 @@ mod tests {
             (0x8000_0000_0000_0000, 3),
             (0x1234_5678_9abc_def0, 0xfedc_ba98_7654_3210),
         ] {
-            assert_eq!(multiply_unsigned(a, b), u128::from(a) * u128::from(b));
+            let unsigned = multiply_unsigned(a, b);
+            let unsigned_oracle = u128::from(a) * u128::from(b);
+            assert_eq!(unsigned.low, unsigned_oracle as u64);
+            assert_eq!(unsigned.high, (unsigned_oracle >> 64) as u64);
+            assert_eq!(unsigned.overflow != 0, unsigned.high != 0);
+
+            let signed = multiply_signed(a, b);
+            let signed_oracle = i128::from(a as i64) * i128::from(b as i64);
+            assert_eq!(signed.low, signed_oracle as u64);
+            assert_eq!(signed.high, ((signed_oracle as u128) >> 64) as u64);
             assert_eq!(
-                multiply_signed(a, b),
-                i128::from(a as i64) * i128::from(b as i64)
+                signed.overflow != 0,
+                signed_oracle != i128::from(signed_oracle as i64)
             );
             if b != 0 {
                 let dividend = (u128::from(a) << 64) | u128::from(!a);
-                let (q, r) = divide_unsigned(dividend, b).unwrap();
-                assert_eq!(q, dividend / u128::from(b));
-                assert_eq!(r, (dividend % u128::from(b)) as u64);
+                let division = divide_unsigned(dividend, b).unwrap();
+                let q = dividend / u128::from(b);
+                assert_eq!(division.quotient.low, q as u64);
+                assert_eq!(division.quotient.high, (q >> 64) as u64);
+                assert_eq!(division.remainder, (dividend % u128::from(b)) as u64);
+            }
+        }
+    }
+
+    #[test]
+    fn wide_result_qualification_uses_every_discarded_wire() {
+        let unsigned_fit = u128_to_bits(u128::from(u64::MAX));
+        assert_eq!(qualify_unsigned(&unsigned_fit).overflow, 0);
+        for high_bit in 64..128 {
+            let mut bits = unsigned_fit;
+            bits[high_bit] = 1;
+            assert_eq!(
+                qualify_unsigned(&bits).overflow,
+                1,
+                "unsigned high bit {high_bit}"
+            );
+        }
+
+        for sign in [0, 1] {
+            let mut exact = [sign; 128];
+            exact[..63].fill(0);
+            exact[63] = sign;
+            assert_eq!(qualify_signed(&exact).overflow, 0);
+            for high_bit in 64..128 {
+                let mut mismatch = exact;
+                mismatch[high_bit] = not_gate(sign);
+                assert_eq!(
+                    qualify_signed(&mismatch).overflow,
+                    1,
+                    "signed high bit {high_bit} with sign {sign}"
+                );
             }
         }
     }
