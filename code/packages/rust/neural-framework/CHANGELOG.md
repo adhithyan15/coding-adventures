@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- NN49 extends the separate required interchange runner to native C: thirty
+  directed pairs, 78 actual children, six native lanes and zero bindings, with
+  full baseline/return comparisons through 3002. Exact-head CI/merge pending.
+
 - NN46 extends required interchange to native Ruby: twenty directed pairs,
   five actual native lanes, zero bindings, full baselines/returns through 3002.
 

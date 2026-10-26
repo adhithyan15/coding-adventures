@@ -7,6 +7,12 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.12` accumulate here until the next version is
 cut.
 
+### Changed
+
+- The `mosaic-pkg-toolkit` dependency pin moves from 0.15.0 to 0.16.0, the
+  toolkit's current version (Journal already pins it). 0.16.0 only adds
+  `RecordList`; nothing TaskApp uses changed, so no source or output changes.
+
 ## [0.5.12] - 2026-10-25
 
 ### Fixed
