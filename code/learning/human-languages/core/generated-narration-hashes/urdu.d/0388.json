@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:19ee7892625868ad",
+  "lessonIds": [
+    "UR-C388-signal",
+    "UR-C388-jankshan",
+    "UR-C388-phatak",
+    "UR-C388-barth",
+    "UR-C388-takna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch388.txt",
+  "json": "urdu/narration/ch388.json",
+  "textHash": "fnv1a64:928666c2bf903357",
+  "jsonHash": "fnv1a64:ff54e28dc3284d20",
+  "findings": []
+}

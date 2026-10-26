@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C396-qafila",
+    "language": "urdu",
+    "chapter": 396,
+    "sequence": 23540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18a5bea21b49647a"
+  },
+  "findings": []
+}

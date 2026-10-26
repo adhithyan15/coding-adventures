@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:b672e7f199fdbfc1",
+  "lessonIds": [
+    "UR-C502-kharkharana",
+    "UR-C502-qabza",
+    "UR-C502-nat",
+    "UR-C502-zang",
+    "UR-C502-ispring"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch502.txt",
+  "json": "urdu/narration/ch502.json",
+  "textHash": "fnv1a64:2e56809b000211f3",
+  "jsonHash": "fnv1a64:699df67a4ebcd3f7",
+  "findings": []
+}

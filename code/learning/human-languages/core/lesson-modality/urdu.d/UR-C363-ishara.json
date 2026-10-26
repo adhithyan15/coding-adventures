@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C363-ishara",
+    "language": "urdu",
+    "chapter": 363,
+    "sequence": 21650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8be7115f60221c2b"
+  },
+  "findings": []
+}

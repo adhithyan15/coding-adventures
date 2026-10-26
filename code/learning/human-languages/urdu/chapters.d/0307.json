@@ -1,0 +1,21 @@
+{
+  "chapter": 307,
+  "title": "A Fight in the Market",
+  "label": "ch:ur-a-fight-in-the-market",
+  "canDo": "I can tell who hit whom in a fight.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-R307-review-300-307",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can tell who hit whom in a fight.",
+    "assesses": [
+      "UR-LEX-C307-JHAGRA307-01",
+      "UR-LEX-C307-JHAGRA307-02",
+      "UR-LEX-C307-JHAGRA307-03",
+      "UR-LEX-C307-JHAGRA307-04",
+      "UR-LEX-C307-JHAGRA307-05"
+    ]
+  }
+}

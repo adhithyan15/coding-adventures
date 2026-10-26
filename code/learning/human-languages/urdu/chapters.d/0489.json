@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "More of the Family",
+  "label": "ch:ur-more-of-the-family",
+  "canDo": "I can name more members of the family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C489-navasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can name more members of the family.",
+    "assesses": [
+      "UR-LEX-C489-KIN489-03",
+      "UR-LEX-C489-KIN489-04",
+      "UR-LEX-C489-KIN489-05"
+    ]
+  }
+}

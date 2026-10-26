@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 338,
+  "title": "For Example",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:57e29b808f45635d",
+  "lessons": [
+    {
+      "id": "UR-C338-misal",
+      "sequence": 20350,
+      "title": "مثال (misāl) — an example",
+      "headword": "مثال",
+      "romanization": "misāl",
+      "gloss": "an example",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fb37867cd2997bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to own up to, then the Urdu for a misunderstanding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مثال",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مثال — misāl — \"an example\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ایک مثال دیجیے۔ ek misāl dījiye. Give an example, please."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مثال (misāl) is usually traced, through Persian, to Arabic mithāl, \"a likeness, a model\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "misāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *misāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "misāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *misāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek misāl dījiye. — Give an example, please.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek misāl dījiye.* — Give an example, please.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to own up to, then the Urdu for a misunderstanding, then say misāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to own up to, then the Urdu for a misunderstanding, then say *misāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مثال (misāl) mean? (\"An example\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C338-yani",
+      "sequence": 20360,
+      "title": "یعنی (yānī) — that is to say; in other words",
+      "headword": "یعنی",
+      "romanization": "yānī",
+      "gloss": "that is to say; in other words",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd653aa2f017281d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a misunderstanding, then the Urdu for an example."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: یعنی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "یعنی — yānī — \"that is to say; in other words\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وہ پرسوں آئے گا، یعنی اتوار کو۔ voh parsoṅ āe gā, yānī itvār ko. He will come the day after tomorrow, that is, on Sunday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "یعنی (yānī) is usually traced, through Persian, to Arabic yaʿnī, \"it means\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yānī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yānī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yānī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yānī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voh parsoṅ āe gā, yānī itvār ko. — He will come the day after tomorrow, that is, on Sunday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voh parsoṅ āe gā, yānī itvār ko.* — He will come the day after tomorrow, that is, on Sunday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a misunderstanding, then the Urdu for an example, then say yānī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a misunderstanding, then the Urdu for an example, then say *yānī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does یعنی (yānī) mean? (\"That is to say; in other words\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C338-vazeh",
+      "sequence": 20370,
+      "title": "واضح (vāzeh) — clear in meaning; plain",
+      "headword": "واضح",
+      "romanization": "vāzeh",
+      "gloss": "clear in meaning; plain",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3a2ce23831623b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an example, then the Urdu for that is to say."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: واضح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "واضح — vāzeh — \"clear in meaning; plain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آپ کا جواب واضح نہیں ہے۔ āp kā javāb vāzeh nahīṅ hai. Your answer is not clear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "واضح (vāzeh) is usually traced, through Persian, to Arabic wāḍiḥ, \"clear, evident\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāzeh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāzeh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāzeh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāzeh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āp kā javāb vāzeh nahīṅ hai. — Your answer is not clear.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āp kā javāb vāzeh nahīṅ hai.* — Your answer is not clear.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an example, then the Urdu for that is to say, then say vāzeh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an example, then the Urdu for that is to say, then say *vāzeh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does واضح (vāzeh) mean? (\"Clear in meaning; plain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C338-ginana",
+      "sequence": 20380,
+      "title": "گنانا (ginānā) — to list; to enumerate (reasons, faults)",
+      "headword": "گنانا",
+      "romanization": "ginānā",
+      "gloss": "to list; to enumerate (reasons, faults)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02074790f8f1533c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for that is to say, then the Urdu for clear in meaning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گنانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گنانا — ginānā — \"to list; to enumerate (reasons, faults)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے تین سبب گنائے۔ us ne tīn sabab gināe. He listed three causes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے سبب گنائے, us ne sabab gināe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گنانا (ginānā) is the causative of گننا, \"to count\", which is inherited: CDIAL lists the Hindi cousin ginnā under Sanskrit gaṇáyati, \"counts\" (CDIAL 3993). To count things out one by one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ginānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ginānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ginānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ginānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us ne tīn sabab gināe. — He listed three causes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us ne tīn sabab gināe.* — He listed three causes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for that is to say, then the Urdu for clear in meaning, then say ginānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for that is to say, then the Urdu for clear in meaning, then say *ginānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گنانا (ginānā) mean? (\"To list; to enumerate (reasons, faults)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C338-havala",
+      "sequence": 20390,
+      "title": "حوالہ (havālā) — a reference (to a source)",
+      "headword": "حوالہ",
+      "romanization": "havālā",
+      "gloss": "a reference (to a source)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a467f0a3a13374ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for clear in meaning, then the Urdu for to enumerate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حوالہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حوالہ — havālā — \"a reference (to a source)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اپنی بات کا حوالہ دیجیے۔ apnī bāt kā havālā dījiye. Give a source for your point, please."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حوالہ (havālā) is usually traced, through Persian, to Arabic ḥawāla, \"a handing over\"; Urdu uses it for pointing a reader on to a source, a sense our sources do not trace step by step."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "havālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *havālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "havālā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *havālā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apnī bāt kā havālā dījiye. — Give a source for your point, please.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apnī bāt kā havālā dījiye.* — Give a source for your point, please.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for clear in meaning, then the Urdu for to enumerate, then say havālā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for clear in meaning, then the Urdu for to enumerate, then say *havālā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حوالہ (havālā) mean? (\"A reference (to a source)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R338-review-331-338",
+      "sequence": 20400,
+      "title": "Looking back: from What Caused It to For Example",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from What Caused It to For Example",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f79988ecf12a09b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for a cause and a basis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cause, a basis, responsible, to be linked, connected",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cause, a basis, responsible, to be linked, connected]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harm, a means, a reaction, to spoil, to spread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: harm, a means, a reaction, to spoil, to spread]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a purpose, for the sake of, a motive, a benefit, to use",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a purpose, for the sake of, a motive, a benefit, to use]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to argue, a reasoned argument, to interrupt, an altercation, logic",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to argue, a reasoned argument, to interrupt, an altercation, logic]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "against, to back, to oppose, in agreement, a side in a dispute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: against, to back, to oppose, in agreement, a side in a dispute]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to prove, firm, an accusation, a document, genuine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to prove, firm, an accusation, a document, genuine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to confirm, to acknowledge, to give the lie to, to own up to, a misunderstanding",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to confirm, to acknowledge, to give the lie to, to own up to, a misunderstanding]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an example, that is to say, clear in meaning, to enumerate, a reference",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an example, that is to say, clear in meaning, to enumerate, a reference]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A cause? (سبب, sabab.) A basis? (بنیاد, bunyād.) Responsible? (ذمہ دار, zimme-dār.) To be linked? (جڑنا, juṛnā.) Connected? (وابستہ, vābastā.) Harm? (نقصان, nuqsān.) A means? (ذریعہ, zariyā.) A reaction? (رد عمل, radd-e-amal.) To spoil? (بگاڑنا, bigāṛnā.) To spread? (پھیلنا, phailnā.) A purpose? (مقصد, maqsad.) For the sake of? (خاطر, khātir.) A motive? (غرض, gharaz.) A benefit? (فائدہ, fāidā.) To use? (استعمال کرنا, istemāl karnā.) To argue? (بحث کرنا, bahas karnā.) A reasoned argument? (دلیل, dalīl.) To interrupt? (ٹوکنا, ṭoknā.) An altercation? (تکرار, takrār.) Logic? (منطق, mantiq.) Against? (خلاف, khilāf.) To back? (حمایت کرنا, himāyat karnā.) To oppose? (مخالفت کرنا, mukhālafat karnā.) In agreement? (متفق, muttafiq.) A side in a dispute? (فریق, farīq.) To prove? (ثابت کرنا, sābit karnā.) Firm? (پختہ, pukhtā.) An accusation? (الزام, ilzām.) A document? (دستاویز, dastāvez.) Genuine? (کھرا, kharā.) To confirm? (تصدیق کرنا, tasdīq karnā.) To acknowledge? (تسلیم کرنا, taslīm karnā.) To give the lie to? (جھٹلانا, jhuṭlānā.) To own up to? (قبول کرنا, qabūl karnā.) A misunderstanding? (غلط فہمی, ghalat-fahmī.) An example? (مثال, misāl.) That is to say? (یعنی, yānī.) Clear in meaning? (واضح, vāzeh.) To enumerate? (گنانا, ginānā.) A reference? (حوالہ, havālā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

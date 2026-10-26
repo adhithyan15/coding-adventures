@@ -1,0 +1,11 @@
+{
+  "id": "UR-C365-tabdili",
+  "pathSegment": "UR-PATH-365-HALAT365",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-365-HALAT365",
+      "order": 3
+    }
+  ]
+}

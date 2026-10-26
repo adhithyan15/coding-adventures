@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:d8bbe64b99a26b79",
+  "lessonIds": [
+    "UR-C418-hisab",
+    "UR-C418-sud",
+    "UR-C418-qist",
+    "UR-C418-adaigi",
+    "UR-C418-ghatana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch418.txt",
+  "json": "urdu/narration/ch418.json",
+  "textHash": "fnv1a64:11b2e869e66d6983",
+  "jsonHash": "fnv1a64:aff02a9683589cf7",
+  "findings": []
+}

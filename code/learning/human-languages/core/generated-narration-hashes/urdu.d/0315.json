@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:f1e2cfeaffa4cc4d",
+  "lessonIds": [
+    "UR-C315-ajdad",
+    "UR-C315-basna",
+    "UR-C315-nasl",
+    "UR-C315-sadi",
+    "UR-C315-ujarna",
+    "UR-R315-review-308-315"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch315.txt",
+  "json": "urdu/narration/ch315.json",
+  "textHash": "fnv1a64:123478b61d615fc7",
+  "jsonHash": "fnv1a64:c1e9f26810a16fce",
+  "findings": []
+}

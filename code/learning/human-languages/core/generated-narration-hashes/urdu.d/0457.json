@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:7f5c650bd62aa3f8",
+  "lessonIds": [
+    "UR-C457-mukhlis",
+    "UR-C457-makkar",
+    "UR-C457-etibar-karna",
+    "UR-C457-diyanat",
+    "UR-C457-vada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch457.txt",
+  "json": "urdu/narration/ch457.json",
+  "textHash": "fnv1a64:460fa62c3c1e4b4d",
+  "jsonHash": "fnv1a64:c26185640ea78d1f",
+  "findings": []
+}

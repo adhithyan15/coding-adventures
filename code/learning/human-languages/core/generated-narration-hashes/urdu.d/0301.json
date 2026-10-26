@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:0eb86d2dd3594d37",
+  "lessonIds": [
+    "UR-C301-sahafi",
+    "UR-C301-mauqa",
+    "UR-C301-editar",
+    "UR-C301-tafsil",
+    "UR-C301-likhvana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch301.txt",
+  "json": "urdu/narration/ch301.json",
+  "textHash": "fnv1a64:f95e6b816cdf4607",
+  "jsonHash": "fnv1a64:fb2fb104b1fe1a97",
+  "findings": []
+}

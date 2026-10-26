@@ -1,0 +1,11 @@
+{
+  "id": "UR-C267-sara-ka-safar",
+  "pathSegment": "UR-PATH-267-STORY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-267-STORY",
+      "order": 4
+    }
+  ]
+}

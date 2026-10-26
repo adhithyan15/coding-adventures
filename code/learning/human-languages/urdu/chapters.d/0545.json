@@ -1,0 +1,19 @@
+{
+  "chapter": 545,
+  "title": "For Now or for Good",
+  "label": "ch:ur-for-now-or-for-good",
+  "canDo": "I can talk about what is temporary and what is permanent.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C545-paedar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can talk about what is temporary and what is permanent.",
+    "assesses": [
+      "UR-LEX-C545-MUSTAQIL545-03",
+      "UR-LEX-C545-MUSTAQIL545-04",
+      "UR-LEX-C545-MUSTAQIL545-05"
+    ]
+  }
+}

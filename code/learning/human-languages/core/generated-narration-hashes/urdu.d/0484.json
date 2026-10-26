@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:23acfdfd74eaa700",
+  "lessonIds": [
+    "UR-C484-parvarish-karna",
+    "UR-C484-lori",
+    "UR-C484-jhulana",
+    "UR-C484-khilana",
+    "UR-C484-pilana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch484.txt",
+  "json": "urdu/narration/ch484.json",
+  "textHash": "fnv1a64:16621dba6d8bb1f1",
+  "jsonHash": "fnv1a64:797057c8f1588595",
+  "findings": []
+}

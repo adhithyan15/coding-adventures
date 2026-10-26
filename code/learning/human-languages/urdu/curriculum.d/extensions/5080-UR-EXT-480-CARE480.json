@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-480-CARE480",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how I look after someone who is ill.",
+  "prerequisites": []
+}

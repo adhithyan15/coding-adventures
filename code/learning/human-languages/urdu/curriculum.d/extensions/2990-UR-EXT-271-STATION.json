@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-271-STATION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can buy a ticket and ask when the next train leaves (ek ṭikaṭ dījiye, aglī gāṛī kab hai?), and say what went wrong (merā thailā kho gayā, merī gāṛī chhūṭ gaī).",
+  "prerequisites": []
+}

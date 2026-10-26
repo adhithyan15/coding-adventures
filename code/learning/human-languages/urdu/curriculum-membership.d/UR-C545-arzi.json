@@ -1,0 +1,11 @@
+{
+  "id": "UR-C545-arzi",
+  "pathSegment": "UR-PATH-545-MUSTAQIL545",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-545-MUSTAQIL545",
+      "order": 0
+    }
+  ]
+}

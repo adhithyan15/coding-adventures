@@ -69,12 +69,26 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18112 — prepare, publish, and audit `task-app-v0.5.10`.** The bounded
-board-column floor slice #18030 is complete in #18031 with all PR and release
-payload checks passing. Prioritize this compatible patch checkpoint under
-#13543 before further fidelity work. Preparation must merge before publication;
-audit immutable provenance, manifest, assets and checksums before closing the
-issue. Keep the existing artifact matrix and unsigned limitations unchanged.
+**Next: #18264 — publish and audit the v0.5.12 Qt rail checkpoint.**
+The rail repair #18250 merged in #18251 with all payload validations passing
+in run 40230057835. Prepare its compatible patch, then publish only after
+preparation merges and audit immutable provenance, assets, and checksums.
+Preparation is not publication; artifact and unsigned-platform limits stay unchanged.
+
+**Completed fidelity slice: #18250 — Qt fixed non-shrinking rail geometry.**
+The v0.5.11 checkpoint (#18238) is published and audited: run 40225950352,
+source `bd533925647b7fbac74eba35e611a8ba3930757f`, 13 assets / 12 checksums /
+11 manifest payloads. Return to bounded native fidelity under #12022: preserve
+the rail's 236-pixel floor without changing shared styles or diagnostic budgets.
+
+**Published checkpoint: #18238 — v0.5.11.**
+The release-note detail repair #18197 merged in #18198 and shipped in v0.5.11.
+All existing payload checks and the immutable metadata audit passed.
+The immutable v0.5.10 checkpoint (#18112) is published and audited:
+13 assets, 12 checksum entries, and 11 manifest payloads from
+`1eee296461f07dd5a1657c7a4822799aa1552df9`. All release lanes passed in
+run 40168462613. Keep the existing artifact matrix and unsigned limitations
+unchanged; never rewrite that immutable release to repair its notes.
 
 **Published checkpoint: [#17950](https://github.com/adhithyan15/coding-adventures/issues/17950)
 — prepare, publish, and audit `task-app-v0.5.9`.** P0 lifecycle gates are

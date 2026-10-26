@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:b3fb245bdc668c2d",
+  "lessonIds": [
+    "UR-C477-qatra",
+    "UR-C477-gholna",
+    "UR-C477-kaipsul",
+    "UR-C477-puriya",
+    "UR-C477-phankna"
+  ],
+  "tex": "urdu/book/chapters/ch477-taking-medicine.tex"
+}

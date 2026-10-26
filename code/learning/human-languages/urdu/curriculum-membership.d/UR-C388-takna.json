@@ -1,0 +1,11 @@
+{
+  "id": "UR-C388-takna",
+  "pathSegment": "UR-PATH-388-SIGNAL388",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-388-SIGNAL388",
+      "order": 4
+    }
+  ]
+}

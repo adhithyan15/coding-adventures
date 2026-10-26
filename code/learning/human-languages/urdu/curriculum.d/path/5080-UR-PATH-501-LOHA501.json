@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-501-LOHA501",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-501-LOHA501"
+  ],
+  "after": []
+}

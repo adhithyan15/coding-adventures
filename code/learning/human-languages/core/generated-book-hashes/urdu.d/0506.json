@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:9f480798c8722e4b",
+  "lessonIds": [
+    "UR-C506-safai",
+    "UR-C506-manjhna",
+    "UR-C506-chipkana",
+    "UR-C506-dhulna",
+    "UR-C506-khangalna"
+  ],
+  "tex": "urdu/book/chapters/ch506-scrubbing-and-rinsing.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C314-katba",
+  "pathSegment": "UR-PATH-314-KHANDAR314",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-314-KHANDAR314",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 479,
+  "title": "In Hospital",
+  "label": "ch:ur-in-hospital",
+  "canDo": "I can talk about someone who is in hospital.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R479-review-472-479",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about someone who is in hospital.",
+    "assesses": [
+      "UR-LEX-C479-WARD479-01",
+      "UR-LEX-C479-WARD479-02",
+      "UR-LEX-C479-WARD479-03",
+      "UR-LEX-C479-WARD479-04",
+      "UR-LEX-C479-WARD479-05"
+    ]
+  }
+}

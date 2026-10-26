@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:0271ac9c20b63810",
+  "lessonIds": [
+    "UR-C488-valima",
+    "UR-C488-susral",
+    "UR-C488-bahu",
+    "UR-C488-damad",
+    "UR-C488-byahna"
+  ],
+  "tex": "urdu/book/chapters/ch488-after-the-wedding.tex"
+}

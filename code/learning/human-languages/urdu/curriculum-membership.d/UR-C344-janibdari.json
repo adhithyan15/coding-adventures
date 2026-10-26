@@ -1,0 +1,11 @@
+{
+  "id": "UR-C344-janibdari",
+  "pathSegment": "UR-PATH-344-BARABAR344",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-344-BARABAR344",
+      "order": 2
+    }
+  ]
+}

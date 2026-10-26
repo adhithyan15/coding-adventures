@@ -1,0 +1,984 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 268,
+  "title": "What I Think, and Why",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:83def0f6a3abde89",
+  "lessons": [
+    {
+      "id": "UR-C268-lagna",
+      "sequence": 16260,
+      "title": "لگنا (lagnā) — to seem, to be felt",
+      "headword": "لگنا",
+      "romanization": "lagnā",
+      "gloss": "to seem; to be felt",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8273a4a54323fc24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"hunger\" and \"thirst\". (bhūk, pyās.) Urdu usually says \"I am hungry\" another way: hunger has struck you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لگنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لگنا — lagnā — \"to seem; to be felt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مجھے بھوک لگی ہے۔ mujhe bhūk lagī hai. — \"I'm hungry.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The one who feels it takes مجھے (mujhe), and the verb follows the thing felt: بھوک (bhūk) is feminine, so لگی (lagī)."
+            },
+            {
+              "kind": "speech",
+              "text": "مجھے یہ فلم اچھی لگی۔ mujhe yih film achchhī lagī. — \"I liked this film.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"this film seemed good to me\". فلم is feminine: اچھی لگی."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لگنا (lagnā) is inherited. CDIAL traces it to Sanskrit lagyati, \"adheres to\" (CDIAL 10895): a hunger or a liking attaches itself to the one who feels it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lagnā, then mujhe bhūk lagī hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lagnā*, then *mujhe bhūk lagī hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I'm thirsty\" — mujhe pyās lagī hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I'm thirsty\" — *mujhe pyās lagī hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I liked this film\" — mujhe yih film achchhī lagī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I liked this film\" — *mujhe yih film achchhī lagī*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لگنا (lagnā) mean? (\"To seem, to be felt\".) \"I'm hungry\"? (مجھے بھوک لگی ہے.) Why لگی? (بھوک is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C268-khayal",
+      "sequence": 16270,
+      "title": "خیال (khayāl) — a thought, an idea",
+      "headword": "خیال",
+      "romanization": "khayāl",
+      "gloss": "a thought; an idea",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee9c268964bb46e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I liked it\", of a film. (mujhe achchhī lagī.) Then \"to think\". (sochnā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خیال",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خیال — khayāl — \"a thought; an idea\". It is masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ اچھا خیال ہے۔ yih achchhā khayāl hai. — \"That's a good idea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "مجھے ایک خیال آیا۔ mujhe ek khayāl āyā. — \"An idea came to me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An idea comes to you, as hunger strikes you: مجھے, and آیا (āyā) for a masculine thought."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خیال (khayāl) is usually traced, through Persian, to Arabic khayāl, \"a fancy, an image in the mind\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khayāl, then yih achchhā khayāl hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khayāl*, then *yih achchhā khayāl hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"That's a bad idea\" — yih burā khayāl hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"That's a bad idea\" — *yih burā khayāl hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"An idea came to me\" — mujhe ek khayāl āyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"An idea came to me\" — *mujhe ek khayāl āyā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خیال (khayāl) mean? (\"A thought, an idea\".) Masculine or feminine? (Masculine: اچھا خیال (khayāl).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C268-ghalat",
+      "sequence": 16280,
+      "title": "غلط (ghalat) — wrong",
+      "headword": "غلط",
+      "romanization": "ghalat",
+      "gloss": "wrong",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54588249931d0aa3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"a good idea\". (achchhā khayāl.) Then \"fine, correct\". (ṭhīk.) This lesson gives its opposite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غلط",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غلط — ghalat — \"wrong\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ جواب غلط ہے۔ yih javāb ghalat hai. — \"This answer is wrong.\""
+            },
+            {
+              "kind": "speech",
+              "text": "میں غلط تھا۔ maiṅ ghalat thā. — \"I was wrong.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It does not change for a man or a woman: میں غلط تھی (maiṅ ghalat thī)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غلط (ghalat) is usually traced, through Persian, to Arabic ghalaṭ, \"an error\". Its first letter is new to your hand; the next lesson takes it out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghalat, then yih javāb ghalat hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghalat*, then *yih javāb ghalat hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This answer is right\" — yih javāb ṭhīk hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This answer is right\" — *yih javāb ṭhīk hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I was wrong\", as a woman — maiṅ ghalat thī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I was wrong\", as a woman — *maiṅ ghalat thī*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غلط (ghalat) mean? (\"Wrong\".) Its opposite? (ٹھیک.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W268-ghain",
+      "sequence": 16290,
+      "title": "غ (ghain) — the letter that opens غلط (ghalat)",
+      "headword": "غ",
+      "romanization": "ghain",
+      "gloss": "ghain — the letter that opens غلط",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:3564ed0404bfd1cb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: غ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: غ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ع once, and name it. (ain.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say غلط (ghalat), \"wrong\". This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: غ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غ — ghain, the sound gh, made far back in the throat."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens غلط (ghalat). You already write ع: غ (ghain) is that shape with one dot above it. At the start of a word, as here, it is the small open head alone, joined on to the letter after it; standing alone it keeps the deep bowl below the line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: غ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on غ (ghain) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at غلط (ghalat) and point at غ (ghain) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **غلط** and point at غ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "غ (ghain) three times, saying gh as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: غ three times, saying *gh* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "غلط (ghalat) once, joined, with the dot above its first letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **غلط** once, joined, with the dot above its first letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "غلط (ghalat) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **غلط** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — غ? (ghain, gh.) What tells it from ع? (The dot.) Which word did it come from? (غلط, ghalat, \"wrong\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C268-mujhe-lagta-hai",
+      "sequence": 16300,
+      "title": "مجھے لگتا ہے (mujhe lagtā hai) — what I think",
+      "headword": "مجھے لگتا ہے",
+      "romanization": "mujhe lagtā hai",
+      "gloss": "I think — it seems to me, with ki and what you think",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c44fd0f1a101adf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I'm hungry\". (mujhe bhūk lagī hai.) Then \"it will rain\". (bārish ho gī.) Join the two verbs, and you have an opinion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مجھے لگتا ہے کہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مجھے لگتا ہے۔ mujhe lagtā hai. — \"I think so.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"it seems to me\". کہ (ki), \"that\", hangs the thought on it:"
+            },
+            {
+              "kind": "speech",
+              "text": "مجھے لگتا ہے کہ بارش ہو گی۔ mujhe lagtā hai ki bārish ho gī. — \"I think it will rain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "مجھے لگتا ہے کہ وہ نہیں آئے گا۔ mujhe lagtā hai ki voh nahīṅ āe gā. — \"I don't think he'll come.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: in my view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "میرے خیال میں یہ ٹھیک ہے۔ mere khayāl meṅ yih ṭhīk hai. — \"In my view, this is right.\""
+            },
+            {
+              "kind": "speech",
+              "text": "میری رائے میں یہ غلط ہے۔ merī rāe meṅ yih ghalat hai. — \"In my opinion, this is wrong.\""
+            },
+            {
+              "kind": "speech",
+              "text": "خیال (khayāl) is masculine, so میرے (mere); رائے (rāe) is feminine, so میری (merī). To ask:"
+            },
+            {
+              "kind": "speech",
+              "text": "آپ کا کیا خیال ہے؟ āp kā kyā khayāl hai? — \"What do you think?\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think it will rain\" — mujhe lagtā hai ki bārish ho gī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think it will rain\" — *mujhe lagtā hai ki bārish ho gī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think she will come\" — mujhe lagtā hai ki voh āe gī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think she will come\" — *mujhe lagtā hai ki voh āe gī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think they will come\" — mujhe lagtā hai ki voh āeṅ ge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think they will come\" — *mujhe lagtā hai ki voh āeṅ ge*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "UR-C268-mujhe-lagta-hai-r1",
+              "prompt": "Say that you think it will rain, then ask what your friend thinks.",
+              "assesses": [
+                "UR-GRAMMAR-C268-OPINION-01",
+                "UR-GRAMMAR-C268-OPINION-02"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "mujhe lagtā hai ki bārish ho gī; āp kā kyā khayāl hai?",
+                "مجھے لگتا ہے کہ بارش ہو گی۔ آپ کا کیا خیال ہے؟",
+                "mujhe lagtā hai ki bārish ho gī, āp kā kyā khayāl hai"
+              ],
+              "feedback": {
+                "correct": "mujhe lagtā hai ki, then the thought; āp kā kyā khayāl hai.",
+                "incorrect": "Start with mujhe lagtā hai ki; ask with āp kā kyā khayāl hai."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think so\"? (مجھے لگتا ہے (mujhe lagtā hai).) \"In my view\"? (میرے خیال (khayāl) میں.) Why میری رائے? (رائے is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C268-ki-vajah-se",
+      "sequence": 16310,
+      "title": "کی وجہ سے (kī vajah se) — the reason",
+      "headword": "کی وجہ سے",
+      "romanization": "kī vajah se",
+      "gloss": "because of — and kyūṅki, because: giving the reason",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:611969f4ae243314",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"because\" and \"a reason\". (kyūṅki, vajah.) Then \"I think so\". (mujhe lagtā hai.) An opinion wants a reason."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کیونکہ and چونکہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "میں نہیں آیا۔ maiṅ nahīṅ āyā. — \"I didn't come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "میں نہیں آیا کیونکہ میں بیمار تھا۔ maiṅ nahīṅ āyā kyūṅki maiṅ bīmār thā. — \"I didn't come because I was ill.\""
+            },
+            {
+              "kind": "speech",
+              "text": "کیونکہ (kyūṅki) puts the reason second. چونکہ (chūṅki) puts it first, and the other half opens with اس لیے (is liye):"
+            },
+            {
+              "kind": "speech",
+              "text": "چونکہ میں بیمار تھا، chūṅki maiṅ bīmār thā, اس لیے میں نہیں آیا۔ is liye maiṅ nahīṅ āyā. — \"Since I was ill, I didn't come.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: a noun as the reason",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بارش کی وجہ سے ہم گھر پر رہے۔ bārish kī vajah se ham ghar par rahe. — \"Because of the rain we stayed at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "وجہ (vajah) is feminine, so کی (kī). The noun goes in front:"
+            },
+            {
+              "kind": "speech",
+              "text": "دیر کی وجہ سے وہ ناراض تھی۔ der kī vajah se voh nārāz thī. — \"She was cross because of the delay.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Because of the rain I stayed at home\" — bārish kī vajah se maiṅ ghar par rahā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Because of the rain I stayed at home\" — *bārish kī vajah se maiṅ ghar par rahā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Because of the delay I stayed at home\" — der kī vajah se maiṅ ghar par rahā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Because of the delay I stayed at home\" — *der kī vajah se maiṅ ghar par rahā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Because of the heat I stayed at home\" — garmī kī vajah se maiṅ ghar par rahā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Because of the heat I stayed at home\" — *garmī kī vajah se maiṅ ghar par rahā*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "UR-C268-ki-vajah-se-r1",
+              "prompt": "Say that you didn't come because you were ill, then that you stayed at home because of the rain.",
+              "assesses": [
+                "UR-GRAMMAR-C268-REASON-01",
+                "UR-GRAMMAR-C268-REASON-02"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "maiṅ nahīṅ āyā kyūṅki maiṅ bīmār thā; bārish kī vajah se maiṅ ghar par rahā",
+                "میں نہیں آیا کیونکہ میں بیمار تھا۔ بارش کی وجہ سے میں گھر پر رہا۔",
+                "میں نہیں آئی کیونکہ میں بیمار تھی۔ بارش کی وجہ سے میں گھر پر رہی۔",
+                "maiṅ nahīṅ āī kyūṅki maiṅ bīmār thī, bārish kī vajah se maiṅ ghar par rahī"
+              ],
+              "feedback": {
+                "correct": "kyūṅki before a whole reason; kī vajah se after a noun.",
+                "incorrect": "A sentence as the reason takes kyūṅki; a noun takes kī vajah se after it."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Because I was ill\"? (کیونکہ میں بیمار تھا.) \"Because of the rain\"? (بارش کی وجہ سے (kī vajah se).) Why کی? (وجہ is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R268-opinion-and-reason",
+      "sequence": 16320,
+      "title": "Review — what I think, and why",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what you think, and why",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6237d6d09157174c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"having eaten\" and \"after the meal\". (khā kar, khāne ke bād.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I'm hungry. I liked this film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I'm hungry. I liked this film.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I think it will rain. What do you think?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I think it will rain. What do you think?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In my view this is right. In my opinion that is wrong.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In my view this is right. In my opinion that is wrong.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I didn't come because I was ill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I didn't come because I was ill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Because of the rain we stayed at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Because of the rain we stayed at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "غلط (ghalat) once, and point at غ (ghain) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **غلط** once, and point at غ inside it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think he won't come\"? (مجھے لگتا ہے (mujhe lagtā hai) کہ وہ نہیں آئے گا.) Now the other way round: چونکہ or کیونکہ to put the reason first? (چونکہ.) \"Because of the delay\"? (دیر کی وجہ سے (kī vajah se).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

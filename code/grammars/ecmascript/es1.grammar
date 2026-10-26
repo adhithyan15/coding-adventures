@@ -104,7 +104,7 @@ empty_statement = SEMICOLON ;
 # Expression statement: any expression followed by a semicolon.
 # This is the catch-all for function calls, assignments via operators, etc.
 
-expression_statement = expression SEMICOLON ;
+expression_statement = !( LBRACE | "function" ) expression SEMICOLON ; # lookahead: see the note at the end of this file
 
 # If/else: the dangling-else ambiguity is resolved by PEG's ordered choice —
 # the `else` always binds to the nearest `if`.
@@ -310,3 +310,18 @@ property_name = NAME | STRING | NUMBER ;
 
 function_expression = "function" [ NAME ] LPAREN [ formal_parameter_list ] RPAREN
                       LBRACE function_body RBRACE ;
+
+# ============================================================================
+# ExpressionStatement lookahead (F12 phase 0)
+# ============================================================================
+#
+# ECMA-262: ExpressionStatement : [lookahead ∉ { `{`, `function` }]
+# Expression ;
+#
+# A `{` at the start of a statement is a Block, and `function` (and, from
+# ES2015, `class` and `let [`) start declarations, never expressions. Without
+# the lookahead, a block whose last statement has no `;` yet (ASI only runs
+# after the whole parse fails) re-parsed as an object literal: `{ a }` became
+# `({a})`, and `{ a }⏎/foo/g.exec(s)` compiled to a different program. The
+# rule is kept on one line, with this note at the end of the file, so the
+# rules after it keep their line numbers in the compiled grammars.

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C388-jankshan",
+    "language": "urdu",
+    "chapter": 388,
+    "sequence": 23110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e860fe2536d61c4"
+  },
+  "findings": []
+}

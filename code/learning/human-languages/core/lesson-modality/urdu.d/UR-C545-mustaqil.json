@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C545-mustaqil",
+    "language": "urdu",
+    "chapter": 545,
+    "sequence": 31620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b2310a1d4ab932f"
+  },
+  "findings": []
+}

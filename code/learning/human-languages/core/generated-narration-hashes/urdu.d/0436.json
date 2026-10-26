@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:4fd28645ebe0f1ec",
+  "lessonIds": [
+    "UR-C436-qudrat",
+    "UR-C436-khushbu",
+    "UR-C436-konpal",
+    "UR-C436-pankhuri",
+    "UR-C436-murjhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch436.txt",
+  "json": "urdu/narration/ch436.json",
+  "textHash": "fnv1a64:4ff7cfa76342161a",
+  "jsonHash": "fnv1a64:7f20ab8f64428b0e",
+  "findings": []
+}

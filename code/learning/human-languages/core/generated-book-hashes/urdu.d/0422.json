@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:b67a307b95e47c81",
+  "lessonIds": [
+    "UR-C422-dallal",
+    "UR-C422-jaidad",
+    "UR-C422-bima",
+    "UR-C422-vusul-karna",
+    "UR-C422-lautana"
+  ],
+  "tex": "urdu/book/chapters/ch422-brokers-and-property.tex"
+}

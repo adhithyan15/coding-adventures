@@ -136,4 +136,32 @@ export default [
       }
     },
   },
+  {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
+    caseOrder: 240,
+    name: "keeps Urdu ث ڈ ذ ص ع غ as recognition-only rows with no borrowed stroke order",
+    verify: ({ SCRIPTS }) => {
+      // The Urdu B1 core (chapters 264-275) reads these six letters in its
+      // headwords and copies them in copy-only letter lessons. Their rows carry
+      // Urdu-scoped provenance and nothing else: no strokeOrder, no source and
+      // no pen lifts, until an Urdu-scoped stroke-order source is verified. A
+      // Persian or Arabic row's order for the same code point is not borrowed.
+      const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!;
+      const sounds: Record<string, string> = {
+        "ث": "s", "ڈ": "ḍ", "ذ": "z", "ص": "s", "ع": "silent; it colours the vowel", "غ": "gh",
+      };
+      for (const glyph of [..."ثڈذصعغ"]) {
+        const row = urdu.letters.find((entry) => entry.glyph === glyph);
+        expect(row, glyph).toBeDefined();
+        expect(row!.sound, glyph).toBe(sounds[glyph]);
+        expect(row!.role, glyph).toBe("consonant");
+        expect(row!.strokeOrder, glyph).toEqual([]);
+        expect(row!.strokeOrderSource, glyph).toBeUndefined();
+        expect(row!.penLifts, glyph).toBeUndefined();
+        expect(row!.notes, glyph).toMatch(/no Urdu-scoped stroke-order source has been verified/);
+      }
+      expect(urdu.letters).toHaveLength(37);
+    },
+  },
 ] satisfies readonly GlyphEvidence[];

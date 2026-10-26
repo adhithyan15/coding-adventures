@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Long Journeys",
+  "label": "ch:ur-long-journeys",
+  "canDo": "I can talk about a long journey: the distance, the guide and a tired child.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C402-jagana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can talk about a long journey: the distance, the guide and a tired child.",
+    "assesses": [
+      "UR-LEX-C402-MUSAFAT402-03",
+      "UR-LEX-C402-MUSAFAT402-04",
+      "UR-LEX-C402-MUSAFAT402-05"
+    ]
+  }
+}

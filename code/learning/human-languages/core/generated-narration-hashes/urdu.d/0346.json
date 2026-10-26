@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:d86a0cc8b5496442",
+  "lessonIds": [
+    "UR-C346-khidmat",
+    "UR-C346-isar",
+    "UR-C346-lalach",
+    "UR-C346-bhalai",
+    "UR-C346-jatana",
+    "UR-R346-review-339-346"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch346.txt",
+  "json": "urdu/narration/ch346.json",
+  "textHash": "fnv1a64:8ef05b1f2733a017",
+  "jsonHash": "fnv1a64:8b66b37fa21464ad",
+  "findings": []
+}

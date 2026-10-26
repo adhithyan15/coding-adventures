@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "The Workshop",
+  "label": "ch:ur-the-workshop",
+  "canDo": "I can name things in a workshop and say what they do.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C496-regmal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can name things in a workshop and say what they do.",
+    "assesses": [
+      "UR-LEX-C496-VARKSHAP496-03",
+      "UR-LEX-C496-VARKSHAP496-04",
+      "UR-LEX-C496-VARKSHAP496-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:f43712c5e9f59c2e",
+  "lessonIds": [
+    "UR-C352-mazmun",
+    "UR-C352-maqala",
+    "UR-C352-danishvar",
+    "UR-C352-ilm",
+    "UR-C352-chhantna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch352.txt",
+  "json": "urdu/narration/ch352.json",
+  "textHash": "fnv1a64:04bcfce3a2a60a3d",
+  "jsonHash": "fnv1a64:d43f469b2faad0b6",
+  "findings": []
+}

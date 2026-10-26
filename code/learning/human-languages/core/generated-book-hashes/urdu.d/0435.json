@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:7c5eb6f6aa61781f",
+  "lessonIds": [
+    "UR-C435-khalij",
+    "UR-C435-langar",
+    "UR-C435-jal",
+    "UR-C435-sip",
+    "UR-C435-dubki"
+  ],
+  "tex": "urdu/book/chapters/ch435-bays-and-nets.tex"
+}

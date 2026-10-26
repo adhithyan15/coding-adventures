@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:10c3faf5d2d3c7eb",
+  "lessonIds": [
+    "UR-C366-sirf",
+    "UR-C366-sivae",
+    "UR-C366-ijazat",
+    "UR-C366-hargiz",
+    "UR-C366-mana-karna"
+  ],
+  "tex": "urdu/book/chapters/ch366-what-must-happen-first.tex"
+}

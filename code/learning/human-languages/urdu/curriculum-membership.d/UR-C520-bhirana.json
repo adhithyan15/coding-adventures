@@ -1,0 +1,11 @@
+{
+  "id": "UR-C520-bhirana",
+  "pathSegment": "UR-PATH-520-AKHARA520",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-520-AKHARA520",
+      "order": 3
+    }
+  ]
+}

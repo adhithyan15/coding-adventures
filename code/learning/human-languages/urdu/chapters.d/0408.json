@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "North, South, East and West",
+  "label": "ch:ur-north-south-east-and-west",
+  "canDo": "I can say which direction a place lies in.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C408-maghrib",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can say which direction a place lies in.",
+    "assesses": [
+      "UR-LEX-C408-SIMT408-03",
+      "UR-LEX-C408-SIMT408-04",
+      "UR-LEX-C408-SIMT408-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C332-radd-e-amal",
+    "language": "urdu",
+    "chapter": 332,
+    "sequence": 20070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c5fd65dd632a02a"
+  },
+  "findings": []
+}

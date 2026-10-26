@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:8cef4c73d7a7ed9f",
+  "lessonIds": [
+    "UR-C301-sahafi",
+    "UR-C301-mauqa",
+    "UR-C301-editar",
+    "UR-C301-tafsil",
+    "UR-C301-likhvana"
+  ],
+  "tex": "urdu/book/chapters/ch301-reporters.tex"
+}

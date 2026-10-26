@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:57e29b808f45635d",
+  "lessonIds": [
+    "UR-C338-misal",
+    "UR-C338-yani",
+    "UR-C338-vazeh",
+    "UR-C338-ginana",
+    "UR-C338-havala",
+    "UR-R338-review-331-338"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch338.txt",
+  "json": "urdu/narration/ch338.json",
+  "textHash": "fnv1a64:71b1c9ac880d4856",
+  "jsonHash": "fnv1a64:8ad2150eae3c2fa6",
+  "findings": []
+}

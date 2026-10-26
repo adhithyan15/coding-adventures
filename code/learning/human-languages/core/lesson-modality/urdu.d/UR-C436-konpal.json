@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C436-konpal",
+    "language": "urdu",
+    "chapter": 436,
+    "sequence": 25580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a8a7ec2fcf38906"
+  },
+  "findings": []
+}

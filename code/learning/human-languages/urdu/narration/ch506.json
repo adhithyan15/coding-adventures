@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 506,
+  "title": "Scrubbing and Rinsing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5e29119239fad448",
+  "lessons": [
+    {
+      "id": "UR-C506-safai",
+      "sequence": 29610,
+      "title": "صفائی (safāī) — cleaning; cleanliness",
+      "headword": "صفائی",
+      "romanization": "safāī",
+      "gloss": "cleaning; cleanliness",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5454c25868720c82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to tear (something), then the Urdu for to have (something) put away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صفائی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صفائی — safāī — \"cleaning; cleanliness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ہم ہر اتوار کو گھر کی صفائی کرتے ہیں۔ ham har itvār ko ghar kī safāī karte haiṅ. We clean the house every Sunday."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صفائی (safāī) is built on sāf, \"clean\", which is usually traced, through Persian, to Arabic ṣāfī, \"pure, clear\", with the noun ending -āī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "safāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *safāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "safāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *safāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ham har itvār ko ghar kī safāī karte haiṅ. — We clean the house every Sunday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ham har itvār ko ghar kī safāī karte haiṅ.* — We clean the house every Sunday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to tear (something), then the Urdu for to have (something) put away, then say safāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to tear (something), then the Urdu for to have (something) put away, then say *safāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صفائی (safāī) mean? (\"Cleaning; cleanliness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C506-manjhna",
+      "sequence": 29620,
+      "title": "مانجھنا (māṅjhnā) — to scour (pots)",
+      "headword": "مانجھنا",
+      "romanization": "māṅjhnā",
+      "gloss": "to scour (pots)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46ec71382c961a2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to have (something) put away, then the Urdu for cleaning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مانجھنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مانجھنا — māṅjhnā — \"to scour (pots)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے راکھ سے برتن مانجھے۔ us ne rākh se bartan māṅjhe. She scoured the pots with ash."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے کڑاہی مانجھی, us ne kaṛāhī māṅjhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مانجھنا (māṅjhnā) is inherited: CDIAL lists the Hindi cousin mā̃jnā, \"to rub, to clean, to polish\", under Sanskrit mārjati, \"wipes, cleans\" (CDIAL 10080)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṅjhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṅjhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṅjhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṅjhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us ne rākh se bartan māṅjhe. — She scoured the pots with ash.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us ne rākh se bartan māṅjhe.* — She scoured the pots with ash.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to have (something) put away, then the Urdu for cleaning, then say māṅjhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to have (something) put away, then the Urdu for cleaning, then say *māṅjhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مانجھنا (māṅjhnā) mean? (\"To scour (pots)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C506-chipkana",
+      "sequence": 29630,
+      "title": "چپکانا (chipkānā) — to stick (something) on; to glue",
+      "headword": "چپکانا",
+      "romanization": "chipkānā",
+      "gloss": "to stick (something) on; to glue",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff7a457fc6a27177",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for cleaning, then the Urdu for to scour (pots)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چپکانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چپکانا — chipkānā — \"to stick (something) on; to glue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میں نے لفافے پر ٹکٹ چپکایا۔ maiṅ ne lifāfe par ṭikaṭ chipkāyā. I stuck a stamp on the envelope."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے دیوار پر اشتہار چپکایا, us ne dīvār par ishtihār chipkāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چپکانا (chipkānā) is inherited: CDIAL lists the Hindi cousins cep, \"gummy matter\", and cepnā, \"to stick on\", under cippa, \"gummy matter\" (CDIAL 4819)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chipkānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chipkānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chipkānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chipkānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ ne lifāfe par ṭikaṭ chipkāyā. — I stuck a stamp on the envelope.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṅ ne lifāfe par ṭikaṭ chipkāyā.* — I stuck a stamp on the envelope.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for cleaning, then the Urdu for to scour (pots), then say chipkānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for cleaning, then the Urdu for to scour (pots), then say *chipkānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چپکانا (chipkānā) mean? (\"To stick (something) on; to glue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C506-dhulna",
+      "sequence": 29640,
+      "title": "دھلنا (dhulnā) — to be washed; to come clean",
+      "headword": "دھلنا",
+      "romanization": "dhulnā",
+      "gloss": "to be washed; to come clean",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:922e3283e9b63e8d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to scour (pots), then the Urdu for to stick (something) on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دھلنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دھلنا — dhulnā — \"to be washed; to come clean\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ چادر جلدی دھل گئی۔ yih chādar jaldī dhul gaī. This sheet washed clean quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ چادر دھل گئی, voh chādar dhul gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دھلنا (dhulnā) is the intransitive partner of dhonā, \"to wash\", which CDIAL files under dhauvati, \"washes\", a form it reconstructs (CDIAL 6886)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhulnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhulnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhulnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhulnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih chādar jaldī dhul gaī. — This sheet washed clean quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih chādar jaldī dhul gaī.* — This sheet washed clean quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to scour (pots), then the Urdu for to stick (something) on, then say dhulnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to scour (pots), then the Urdu for to stick (something) on, then say *dhulnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دھلنا (dhulnā) mean? (\"To be washed; to come clean\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C506-khangalna",
+      "sequence": 29650,
+      "title": "کھنگالنا (khaṅgālnā) — to rinse out",
+      "headword": "کھنگالنا",
+      "romanization": "khaṅgālnā",
+      "gloss": "to rinse out",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5c4f1a3aa319880",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to stick (something) on, then the Urdu for to be washed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کھنگالنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کھنگالنا — khaṅgālnā — \"to rinse out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے نل کے نیچے گلاس کھنگالے۔ us ne nal ke nīche glās khaṅgāle. She rinsed the glasses under the tap."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے بالٹی کھنگالی, us ne balṭī khaṅgālī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کھنگالنا (khaṅgālnā) is inherited: CDIAL lists the Hindi cousin khãgālnā, \"to rinse\", under khakkhālayati, a form it reconstructs (CDIAL 3762)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṅgālnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṅgālnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṅgālnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṅgālnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us ne nal ke nīche glās khaṅgāle. — She rinsed the glasses under the tap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us ne nal ke nīche glās khaṅgāle.* — She rinsed the glasses under the tap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to stick (something) on, then the Urdu for to be washed, then say khaṅgālnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to stick (something) on, then the Urdu for to be washed, then say *khaṅgālnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کھنگالنا (khaṅgālnā) mean? (\"To rinse out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

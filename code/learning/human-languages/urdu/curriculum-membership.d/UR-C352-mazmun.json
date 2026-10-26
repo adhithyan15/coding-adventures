@@ -1,0 +1,11 @@
+{
+  "id": "UR-C352-mazmun",
+  "pathSegment": "UR-PATH-352-MAZMUN352",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-352-MAZMUN352",
+      "order": 0
+    }
+  ]
+}

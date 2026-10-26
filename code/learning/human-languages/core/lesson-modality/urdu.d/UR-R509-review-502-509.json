@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R509-review-502-509",
+    "language": "urdu",
+    "chapter": 509,
+    "sequence": 29810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5b7fcb2fcbd2827"
+  },
+  "findings": []
+}

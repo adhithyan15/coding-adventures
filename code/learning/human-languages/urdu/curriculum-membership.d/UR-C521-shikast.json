@@ -1,0 +1,11 @@
+{
+  "id": "UR-C521-shikast",
+  "pathSegment": "UR-PATH-521-MAICH521",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-521-MAICH521",
+      "order": 4
+    }
+  ]
+}

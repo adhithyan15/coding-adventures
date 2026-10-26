@@ -1,0 +1,11 @@
+{
+  "id": "UR-C331-vabasta",
+  "pathSegment": "UR-PATH-331-SABAB331",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-331-SABAB331",
+      "order": 4
+    }
+  ]
+}

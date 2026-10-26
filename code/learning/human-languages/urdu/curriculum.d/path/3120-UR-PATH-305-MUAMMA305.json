@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-305-MUAMMA305",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "UR-EXT-305-MUAMMA305"
+  ],
+  "after": []
+}

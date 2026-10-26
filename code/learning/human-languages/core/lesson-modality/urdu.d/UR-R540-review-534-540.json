@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R540-review-534-540",
+    "language": "urdu",
+    "chapter": 540,
+    "sequence": 31400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03f42d2611ce0d65"
+  },
+  "findings": []
+}

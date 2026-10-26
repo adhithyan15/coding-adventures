@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 365,
+  "title": "As Things Stand",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0d70281bec421a5d",
+  "lessons": [
+    {
+      "id": "UR-C365-halat",
+      "sequence": 21740,
+      "title": "حالت (hālat) — a state (of health, of repair)",
+      "headword": "حالت",
+      "romanization": "hālat",
+      "gloss": "a state (of health, of repair)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16ecb0f7facc3bed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for prominent, then the Urdu for to emerge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حالت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حالت — hālat — \"a state (of health, of repair)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر مریض کی حالت ٹھیک نہیں تو ہسپتال لے جائیے۔ agar marīz kī hālat ṭhīk nahīṅ to haspatāl le jāiye. If the patient is not well, take him to hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حالت (hālat) is usually traced, through Persian, to Arabic ḥāla, \"a state, a condition\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hālat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hālat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hālat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hālat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar marīz kī hālat ṭhīk nahīṅ to haspatāl le jāiye. — If the patient is not well, take him to hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar marīz kī hālat ṭhīk nahīṅ to haspatāl le jāiye.* — If the patient is not well, take him to hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for prominent, then the Urdu for to emerge, then say hālat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for prominent, then the Urdu for to emerge, then say *hālat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حالت (hālat) mean? (\"A state (of health, of repair)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C365-surat-e-hal",
+      "sequence": 21750,
+      "title": "صورت حال (sūrat-e-hāl) — a situation",
+      "headword": "صورت حال",
+      "romanization": "sūrat-e-hāl",
+      "gloss": "a situation",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1df21f65f03693d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to emerge, then the Urdu for a state."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صورت حال",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صورت حال — sūrat-e-hāl — \"a situation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر صورت حال بدلی تو ہم بھی بدلیں گے۔ agar sūrat-e-hāl badlī to ham bhī badleṅ ge. If the situation changes, we will change too."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صورت حال (sūrat-e-hāl) is built from two loans, each usually traced, through Persian, to Arabic: Arabic ṣūra, \"a form\", and Arabic ḥāl, \"a state\". The shape things are in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūrat-e-hāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūrat-e-hāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūrat-e-hāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūrat-e-hāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar sūrat-e-hāl badlī to ham bhī badleṅ ge. — If the situation changes, we will change too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar sūrat-e-hāl badlī to ham bhī badleṅ ge.* — If the situation changes, we will change too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to emerge, then the Urdu for a state, then say sūrat-e-hāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to emerge, then the Urdu for a state, then say *sūrat-e-hāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صورت حال (sūrat-e-hāl) mean? (\"A situation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C365-musibat",
+      "sequence": 21760,
+      "title": "مصیبت (musībat) — a hardship; trouble",
+      "headword": "مصیبت",
+      "romanization": "musībat",
+      "gloss": "a hardship; trouble",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b228c2b3f40c0e40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a state, then the Urdu for a situation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مصیبت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصیبت — musībat — \"a hardship; trouble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر گاڑی رک گئی تو ہم مصیبت میں ہوں گے۔ agar gāṛī ruk gaī to ham musībat meṅ hoṅ ge. If the car breaks down, we will be in trouble."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصیبت (musībat) is usually traced, through Persian, to Arabic muṣība, \"a misfortune\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musībat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musībat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musībat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musībat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar gāṛī ruk gaī to ham musībat meṅ hoṅ ge. — If the car breaks down, we will be in trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar gāṛī ruk gaī to ham musībat meṅ hoṅ ge.* — If the car breaks down, we will be in trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a state, then the Urdu for a situation, then say musībat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a state, then the Urdu for a situation, then say *musībat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مصیبت (musībat) mean? (\"A hardship; trouble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C365-tabdili",
+      "sequence": 21770,
+      "title": "تبدیلی (tabdīlī) — a change",
+      "headword": "تبدیلی",
+      "romanization": "tabdīlī",
+      "gloss": "a change",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d10e13813dd3c750",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a situation, then the Urdu for a hardship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تبدیلی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تبدیلی — tabdīlī — \"a change\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر قانون میں تبدیلی آئی تو ٹیکس کم ہو گا۔ agar qānūn meṅ tabdīlī āī to ṭaiks kam ho gā. If the law changes, the tax will come down."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تبدیلی (tabdīlī) is built on tabdīl, \"changing\", usually traced, through Persian, to Arabic tabdīl, with the noun ending -ī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabdīlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabdīlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabdīlī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabdīlī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar qānūn meṅ tabdīlī āī to ṭaiks kam ho gā. — If the law changes, the tax will come down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar qānūn meṅ tabdīlī āī to ṭaiks kam ho gā.* — If the law changes, the tax will come down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a situation, then the Urdu for a hardship, then say tabdīlī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a situation, then the Urdu for a hardship, then say *tabdīlī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تبدیلی (tabdīlī) mean? (\"A change\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C365-phansana",
+      "sequence": 21780,
+      "title": "پھنسانا (phansānā) — to land in trouble; to trap",
+      "headword": "پھنسانا",
+      "romanization": "phansānā",
+      "gloss": "to land in trouble; to trap",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0792c2cecbd3e211",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a hardship, then the Urdu for a change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پھنسانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھنسانا — phansānā — \"to land in trouble; to trap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر تم نے جھوٹ کہا تو مجھے بھی پھنساؤ گے۔ agar tum ne jhūṭ kahā to mujhe bhī phansāo ge. If you tell a lie, you will drag me into trouble too."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے مجھے پھنسایا, us ne mujhe phansāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھنسانا (phansānā) is inherited: CDIAL lists the Hindi cousin phãsānā, \"to ensnare\", under Sanskrit spāśáyati, \"causes to be bound\" (CDIAL 13814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phansānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phansānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phansānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phansānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum ne jhūṭ kahā to mujhe bhī phansāo ge. — If you tell a lie, you will drag me into trouble too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum ne jhūṭ kahā to mujhe bhī phansāo ge.* — If you tell a lie, you will drag me into trouble too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a hardship, then the Urdu for a change, then say phansānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a hardship, then the Urdu for a change, then say *phansānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پھنسانا (phansānā) mean? (\"To land in trouble; to trap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

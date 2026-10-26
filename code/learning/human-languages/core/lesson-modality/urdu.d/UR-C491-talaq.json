@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C491-talaq",
+    "language": "urdu",
+    "chapter": 491,
+    "sequence": 28640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3871a9cc98641621"
+  },
+  "findings": []
+}

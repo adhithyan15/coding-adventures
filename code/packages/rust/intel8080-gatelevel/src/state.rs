@@ -50,7 +50,11 @@ impl DffMemory {
     }
 
     pub(crate) fn read(&self, address: usize) -> u8 {
-        let start = address * 8;
+        // The 8080/8085 address bus is exactly 16 bits wide.  Multi-byte
+        // accesses at 0xffff therefore present 0x0000 on the next bus cycle;
+        // callers may express that cycle as `address + 1`, so fold it back to
+        // the physical bus width before selecting the DFF bank.
+        let start = (address & 0xffff) * 8;
         self.state[start..start + 8]
             .iter()
             .enumerate()
@@ -58,7 +62,7 @@ impl DffMemory {
     }
 
     pub(crate) fn write(&mut self, address: usize, value: u8) {
-        let start = address * 8;
+        let start = (address & 0xffff) * 8;
         let bits: Vec<u8> = (0..8).map(|bit| (value >> bit) & 1).collect();
         register(&bits, 0, &mut self.state[start..start + 8]);
         register(&bits, 1, &mut self.state[start..start + 8]);

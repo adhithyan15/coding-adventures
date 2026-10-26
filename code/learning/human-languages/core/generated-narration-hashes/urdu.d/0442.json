@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:1a3ae1a4cc9ba2ab",
+  "lessonIds": [
+    "UR-C442-tajjub",
+    "UR-C442-ajib",
+    "UR-C442-dang",
+    "UR-C442-ajuba",
+    "UR-C442-achambha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch442.txt",
+  "json": "urdu/narration/ch442.json",
+  "textHash": "fnv1a64:867a4328bf69bc2e",
+  "jsonHash": "fnv1a64:c8bb49246aa914b3",
+  "findings": []
+}

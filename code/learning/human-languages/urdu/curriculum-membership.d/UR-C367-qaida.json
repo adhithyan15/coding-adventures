@@ -1,0 +1,11 @@
+{
+  "id": "UR-C367-qaida",
+  "pathSegment": "UR-PATH-367-QAIDA367",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-367-QAIDA367",
+      "order": 1
+    }
+  ]
+}

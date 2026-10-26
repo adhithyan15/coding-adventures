@@ -23,7 +23,7 @@ use diagram_ir::{
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
-    tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
+    tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_gitgraph,
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state, try_tokenize_mermaid_gantt, try_tokenize_mermaid_journey,
     try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
@@ -36,6 +36,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_railroad_ebnf, try_tokenize_mermaid_railroad_abnf,
     try_tokenize_mermaid_railroad_peg,
     try_tokenize_mermaid_info,
+    try_tokenize_mermaid_er,
     try_tokenize_mermaid_zenuml,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
@@ -289,7 +290,11 @@ pub fn parse_mermaid_gitgraph_ast(source: &str) -> Result<GrammarASTNode, ParseE
 }
 
 pub fn parse_mermaid_er_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
-    let tokens = tokenize_mermaid_er(source);
+    let tokens = try_tokenize_mermaid_er(source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
     let grammar = parse_parser_grammar(ER_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|e| panic!("Failed to parse er.grammar: {e}"));
     let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
@@ -11636,7 +11641,7 @@ fn preprocess_mermaid_source(source: &str) -> Result<PreprocessedMermaid, ParseE
     })
 }
 
-fn mermaid_front_matter_scalar(source: &str, key: &str) -> Option<String> {
+fn mermaid_front_matter_value(source: &str, key: &str) -> Option<String> {
     let mut lines = source.lines().skip_while(|line| line.trim().is_empty());
     if lines.next()?.trim() != "---" { return None; }
     for line in lines {
@@ -11644,10 +11649,14 @@ fn mermaid_front_matter_scalar(source: &str, key: &str) -> Option<String> {
         if trimmed == "---" { break; }
         let Some((name, value)) = trimmed.split_once(':') else { continue };
         if name.trim() == key {
-            return Some(value.trim().trim_matches(['\'', '"']).to_ascii_lowercase());
+            return Some(value.trim().trim_matches(['\'', '"']).to_string());
         }
     }
     None
+}
+
+fn mermaid_front_matter_scalar(source: &str, key: &str) -> Option<String> {
+    mermaid_front_matter_value(source, key).map(|value| value.to_ascii_lowercase())
 }
 
 fn blank_mermaid_front_matter(source: &str) -> Result<Vec<u8>, ParseError> {
@@ -13497,16 +13506,23 @@ fn expect_gitgraph_token(
 
 /// Parse Mermaid ER syntax into the shared structural IR.
 pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
-    parse_mermaid_er_ast(source)?;
+    let front_matter_title = mermaid_front_matter_value(source, "title");
+    let preprocessed = preprocess_mermaid_source(source)?;
+    parse_mermaid_er_ast(&preprocessed.source)?;
 
-    let mut cursor = TokenCursor::new(tokenize_mermaid_er(source));
+    let tokens = try_tokenize_mermaid_er(&preprocessed.source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let mut cursor = TokenCursor::new(tokens);
     cursor.skip_terminators();
     cursor
         .consume_if("HEADER")
         .ok_or_else(|| token_error(cursor.current(), "expected erDiagram header"))?;
     cursor.skip_terminators();
 
-    let mut title = None;
+    let mut title = front_matter_title;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
     let mut nodes: Vec<StructuralNode> = Vec::new();
@@ -13596,7 +13612,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         let entity_id = parse_er_name(&mut cursor)?;
         let mut entity_label = entity_id.clone();
         if cursor.consume_if("LBRACKET").is_some() {
-            entity_label = parse_er_name(&mut cursor)?;
+            entity_label = normalize_mermaid_line_breaks(&parse_er_name(&mut cursor)?);
             cursor
                 .consume_if("RBRACKET")
                 .ok_or_else(|| token_error(cursor.current(), "expected ']' after ER alias"))?;
@@ -13700,7 +13716,10 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                         field.push_str(&format!(" [{}]", keys.join(", ")));
                     }
                     if let Some(comment) = comment {
-                        field.push_str(&format!(" - {comment}"));
+                        field.push_str(&format!(
+                            " - {}",
+                            normalize_mermaid_line_breaks(&comment)
+                        ));
                     }
                     fields.push(field);
                     cursor.skip_terminators();
@@ -13782,6 +13801,23 @@ fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
 }
 
 fn parse_er_attribute_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    if !matches!(
+        token_name(cursor.current()),
+        "IDENTIFIER"
+            | "MD_PARENT"
+            | "TITLE_KW"
+            | "DIRECTION_KW"
+            | "CLASSDEF_KW"
+            | "CLASS_KW"
+            | "STYLE_KW"
+            | "ESCAPED_ATTRIBUTE"
+            | "COMMA_ATTRIBUTE_TYPE"
+    ) {
+        return Err(token_error(
+            cursor.current(),
+            "expected ER attribute name",
+        ));
+    }
     let mut name = parse_er_name(cursor)?;
     while cursor.consume_if("LBRACKET").is_some() {
         name.push('[');

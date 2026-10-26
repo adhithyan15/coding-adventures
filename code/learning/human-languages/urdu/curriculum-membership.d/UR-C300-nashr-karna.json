@@ -1,0 +1,11 @@
+{
+  "id": "UR-C300-nashr-karna",
+  "pathSegment": "UR-PATH-300-KHABAR300",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-300-KHABAR300",
+      "order": 1
+    }
+  ]
+}

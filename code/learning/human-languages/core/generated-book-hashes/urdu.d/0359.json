@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:7a2f10c7b6cf68f5",
+  "lessonIds": [
+    "UR-C359-bavujud",
+    "UR-C359-alava",
+    "UR-C359-agarche",
+    "UR-C359-albatta",
+    "UR-C359-jhukna"
+  ],
+  "tex": "urdu/book/chapters/ch359-even-so.tex"
+}

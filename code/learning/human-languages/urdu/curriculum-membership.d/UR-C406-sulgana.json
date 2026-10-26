@@ -1,0 +1,11 @@
+{
+  "id": "UR-C406-sulgana",
+  "pathSegment": "UR-PATH-406-BASERA406",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-406-BASERA406",
+      "order": 1
+    }
+  ]
+}

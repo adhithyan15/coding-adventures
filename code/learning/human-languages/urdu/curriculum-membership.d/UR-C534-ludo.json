@@ -1,0 +1,11 @@
+{
+  "id": "UR-C534-ludo",
+  "pathSegment": "UR-PATH-534-BISAT534",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-534-BISAT534",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C495-maharat",
+  "pathSegment": "UR-PATH-495-AJRAT495",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-495-AJRAT495",
+      "order": 2
+    }
+  ]
+}

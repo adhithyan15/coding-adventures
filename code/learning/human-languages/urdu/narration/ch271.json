@@ -1,0 +1,843 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 271,
+  "title": "At the Station, and When Things Go Wrong",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:1cbd0e99546f863f",
+  "lessons": [
+    {
+      "id": "UR-C271-ek-tikat-dijiye",
+      "sequence": 16420,
+      "title": "ایک ٹکٹ دیجیے (ek ṭikaṭ dījiye) — at the ticket window",
+      "headword": "ایک ٹکٹ دیجیے",
+      "romanization": "ek ṭikaṭ dījiye",
+      "gloss": "a ticket, please — buying a ticket and asking when the train leaves",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79f5c577fbeeb9a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"turn left\", politely. (bāeṅ muṛiye.) Then \"a ticket\". (ṭikaṭ.) At the window you ask for one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a ticket, please",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ایک ٹکٹ دیجیے۔ ek ṭikaṭ dījiye. — \"A ticket, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "دیجیے (dījiye) is دینا asked politely. The place goes in front with کا (kā):"
+            },
+            {
+              "kind": "speech",
+              "text": "لاہور کا ایک ٹکٹ دیجیے۔ Lāhaur kā ek ṭikaṭ dījiye. — \"A ticket to Lahore, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ٹکٹ کتنے کا ہے؟ ṭikaṭ kitne kā hai? — \"How much is the ticket?\""
+            },
+            {
+              "kind": "speech",
+              "text": "کتنے کا (kitne kā), \"of how much\", asks a price."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: when does it leave?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اگلی گاڑی کب ہے؟ aglī gāṛī kab hai? — \"When is the next train?\""
+            },
+            {
+              "kind": "speech",
+              "text": "گاڑی (gāṛī) is feminine, so اگلی (aglī), and so the future too:"
+            },
+            {
+              "kind": "speech",
+              "text": "گاڑی کتنے بجے جائے گی؟ gāṛī kitne baje jāe gī? — \"What time will the train leave?\""
+            },
+            {
+              "kind": "speech",
+              "text": "وہ چار بجے جائے گی۔ voh chār baje jāe gī. — \"It will leave at four.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When is the next train?\" — aglī gāṛī kab hai?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When is the next train?\" — *aglī gāṛī kab hai?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When is the next bus?\" — aglī bas kab hai?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When is the next bus?\" — *aglī bas kab hai?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When is the next taxi?\" — aglī ṭaiksī kab hai?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When is the next taxi?\" — *aglī ṭaiksī kab hai?*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "UR-C271-ek-tikat-dijiye-r1",
+              "prompt": "Ask for a ticket to Lahore, then ask when the next train is.",
+              "assesses": [
+                "UR-GRAMMAR-C271-TICKET-01",
+                "UR-GRAMMAR-C271-TICKET-02"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "lāhaur kā ek ṭikaṭ dījiye; aglī gāṛī kab hai?",
+                "لاہور کا ایک ٹکٹ دیجیے۔ اگلی گاڑی کب ہے؟",
+                "lāhaur kā ek ṭikaṭ dījiye, aglī gāṛī kab hai"
+              ],
+              "feedback": {
+                "correct": "kā ek ṭikaṭ dījiye; aglī for the feminine gāṛī.",
+                "incorrect": "The place with kā, then ek ṭikaṭ dījiye; gāṛī is feminine: aglī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A ticket, please\"? (ایک ٹکٹ دیجیے (ek ṭikaṭ dījiye).) \"How much is it?\" (کتنے کا ہے؟) Why اگلی? (گاڑی is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C271-chhutna",
+      "sequence": 16430,
+      "title": "چھوٹنا (chhūṭnā) — to be missed, to be left behind",
+      "headword": "چھوٹنا",
+      "romanization": "chhūṭnā",
+      "gloss": "to be missed; to be left behind",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:278d35c09ec22b49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"when is the next train?\" (aglī gāṛī kab hai?) Then \"small\". (chhoṭā.) Keep that word in mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چھوٹنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چھوٹنا — chhūṭnā — \"to be missed; to be left behind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میری گاڑی چھوٹ گئی۔ merī gāṛī chhūṭ gaī. — \"I missed my train.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"my train got left behind\". The train is the subject, so گئی (gaī), feminine; you say nothing about yourself but میری."
+            },
+            {
+              "kind": "speech",
+              "text": "میری بس چھوٹ گئی۔ merī bas chhūṭ gaī. — \"I missed my bus.\""
+            },
+            {
+              "kind": "speech",
+              "text": "چھوٹ (chhūṭ) is spelled like چھوٹا (chhoṭā), \"small\", without its ending. Urdu leaves the vowel unwritten; the romanization tells them apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چھوٹنا (chhūṭnā) is inherited. CDIAL traces it to a reconstructed kṣuṭyate, \"is released\" (CDIAL 3707), and lists its Hindi twin with the sense \"escapes\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhūṭnā, then merī gāṛī chhūṭ gaī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhūṭnā*, then *merī gāṛī chhūṭ gaī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I missed my bus\" — merī bas chhūṭ gaī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I missed my bus\" — *merī bas chhūṭ gaī*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چھوٹنا (chhūṭnā) mean? (\"To be missed, to be left behind\".) \"I missed my train\"? (میری گاڑی چھوٹ گئی.) And چھوٹا? (chhoṭā, \"small\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C271-hadsa",
+      "sequence": 16440,
+      "title": "حادثہ (hādsā) — an accident",
+      "headword": "حادثہ",
+      "romanization": "hādsā",
+      "gloss": "an accident",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2b3ebfad612da90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I missed my train\". (merī gāṛī chhūṭ gaī.) Then \"a road\". (saṛak.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حادثہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حادثہ — hādsā — \"an accident\". It is masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "ایک حادثہ ہوا۔ ek hādsā huā. — \"There was an accident.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"an accident happened\": ہوا (huā), masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "سڑک پر حادثہ ہوا۔ saṛak par hādsā huā. — \"There was an accident on the road.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حادثہ (hādsā) is usually traced, through Persian, to Arabic ḥāditha, \"an event\": something that happens. Its fourth letter is new to your hand; the next lesson takes it out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hādsā, then ek hādsā huā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hādsā*, then *ek hādsā huā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"There was an accident on the bridge\" — pul par hādsā huā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"There was an accident on the bridge\" — *pul par hādsā huā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حادثہ (hādsā) mean? (\"An accident\".) Why ہوا and not ہوئی? (حادثہ (hādsā) is masculine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W271-se",
+      "sequence": 16450,
+      "title": "ث (se) — the letter inside حادثہ (hādsā)",
+      "headword": "ث",
+      "romanization": "se",
+      "gloss": "se — the letter inside حادثہ",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:b84df4dd4fa33b87",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ث",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ث and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ذ once, and name it. (zāl.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say حادثہ (hādsā), \"an accident\". This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ث",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ث — se, the sound s, the same as س."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the fourth letter of حادثہ (hādsā). You already write ت: ث (se) is that shape with three dots above it instead of two. Inside a word it is a single short tooth wearing the three dots. Urdu keeps it for words from Arabic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ث",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ث (se) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at حادثہ (hādsā) and point at ث (se) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **حادثہ** and point at ث inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ث (se) three times, saying s as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ث three times, saying *s* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "حادثہ (hādsā) once, joined, with three dots on the tooth",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **حادثہ** once, joined, with three dots on the tooth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "حادثہ (hādsā) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **حادثہ** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ث? (se, s.) What tells it from ت? (Three dots, not two.) Which word did it come from? (حادثہ, hādsā, \"an accident\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C271-kho-gaya",
+      "sequence": 16460,
+      "title": "کھو گیا (kho gayā) — when things go wrong",
+      "headword": "کھو گیا",
+      "romanization": "kho gayā",
+      "gloss": "got lost — saying what went wrong, and telling the police",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d88cfc83a6eeaf26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I missed my train\" and \"there was an accident\". (merī gāṛī chhūṭ gaī, ek hādsā huā.) Then \"to lose\". (khonā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: it got lost",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تھیلا کھو گیا۔ thailā kho gayā. — \"The bag got lost.\""
+            },
+            {
+              "kind": "speech",
+              "text": "میرا تھیلا کھو گیا۔ merā thailā kho gayā. — \"My bag got lost.\""
+            },
+            {
+              "kind": "speech",
+              "text": "میری کتاب کھو گئی۔ merī kitāb kho gaī. — \"My book got lost.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The lost thing is the subject, as in گاڑی چھوٹ گئی: گیا for the masculine تھیلا (thailā), گئی for کتاب. The stem with گیا says it is gone, and no نے comes in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: telling someone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "میں نے پولیس کو بتایا۔ maiṅ ne polīs ko batāyā. — \"I told the police.\""
+            },
+            {
+              "kind": "speech",
+              "text": "میں تھانے گیا۔ maiṅ thāne gayā. — \"I went to the police station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "جب حادثہ ہوا، jab hādsā huā, تو ہم سڑک پر تھے۔ to ham saṛak par the. — \"When the accident happened, we were on the road.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My bag got lost\" — merā thailā kho gayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My bag got lost\" — *merā thailā kho gayā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My ticket got lost\" — merā ṭikaṭ kho gayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My ticket got lost\" — *merā ṭikaṭ kho gayā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My book got lost\" — merī kitāb kho gaī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My book got lost\" — *merī kitāb kho gaī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "UR-C271-kho-gaya-r1",
+              "prompt": "Say that your bag got lost, then that you told the police.",
+              "assesses": [
+                "UR-GRAMMAR-C271-PROBLEM-01",
+                "UR-GRAMMAR-C271-PROBLEM-02"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "merā thailā kho gayā; maiṅ ne polīs ko batāyā",
+                "میرا تھیلا کھو گیا۔ میں نے پولیس کو بتایا۔",
+                "merā thailā kho gayā, maiṅ ne polīs ko batāyā"
+              ],
+              "feedback": {
+                "correct": "kho gayā follows the bag; batāyā takes ne.",
+                "incorrect": "The bag is the subject: thailā kho gayā. Telling takes ne: maiṅ ne polīs ko batāyā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"My bag got lost\"? (میرا تھیلا کھو گیا (kho gayā).) Does it take نے? (No.) \"I told the police\"? (میں نے پولیس کو بتایا.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R271-at-the-station",
+      "sequence": 16470,
+      "title": "Review — at the station",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a ticket, the next train, and what went wrong",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c504914b86bade99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"how do you get to the station?\" (isṭeshan kaise jāte haiṅ?) Then \"turn left\". (bāeṅ muṛiye.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "A ticket to Lahore, please. How much is it?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: A ticket to Lahore, please. How much is it?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "When is the next train? It will leave at four.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: When is the next train? It will leave at four.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I missed my train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I missed my train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My bag got lost, and I told the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My bag got lost, and I told the police.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "There was an accident on the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: There was an accident on the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "حادثہ (hādsā) once, and point at ث (se) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **حادثہ** once, and point at ث inside it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A ticket, please\"? (ایک ٹکٹ دیجیے (ek ṭikaṭ dījiye).) Now the other way round: in میری گاڑی چھوٹ گئی, which word sets گئی? (گاڑی.) \"My book got lost\"? (میری کتاب کھو گئی.) Which of these takes نے: کھو گیا (kho gayā) or بتایا? (بتایا.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

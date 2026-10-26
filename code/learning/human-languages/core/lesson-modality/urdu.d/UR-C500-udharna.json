@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C500-udharna",
+    "language": "urdu",
+    "chapter": 500,
+    "sequence": 29340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4be09c457ee98a8"
+  },
+  "findings": []
+}

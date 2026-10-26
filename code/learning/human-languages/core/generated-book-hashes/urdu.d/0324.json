@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:9c70ed855734e972",
+  "lessonIds": [
+    "UR-C324-sunana",
+    "UR-C324-dastan",
+    "UR-C324-qissa",
+    "UR-C324-paheli",
+    "UR-C324-kahavat"
+  ],
+  "tex": "urdu/book/chapters/ch324-a-tale-of-long-ago.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C329-kirdar",
+  "pathSegment": "UR-PATH-329-AFSANA329",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-329-AFSANA329",
+      "order": 2
+    }
+  ]
+}

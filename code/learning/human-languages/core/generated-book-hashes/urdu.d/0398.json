@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:49022b83eb5ef30b",
+  "lessonIds": [
+    "UR-C398-parvaz",
+    "UR-C398-tayyara",
+    "UR-C398-nashist",
+    "UR-C398-kasna",
+    "UR-C398-multavi"
+  ],
+  "tex": "urdu/book/chapters/ch398-flights.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:70af343e1462b6b1",
+  "lessonIds": [
+    "UR-C545-arzi",
+    "UR-C545-mustaqil",
+    "UR-C545-hatmi",
+    "UR-C545-marhala",
+    "UR-C545-paedar"
+  ],
+  "tex": "urdu/book/chapters/ch545-for-now-or-for-good.tex"
+}

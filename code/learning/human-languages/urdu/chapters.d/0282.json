@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "The Investigation",
+  "label": "ch:ur-the-investigation",
+  "canDo": "I can say what the police found and what will happen if they find more.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C282-dhundna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can say what the police found and what will happen if they find more.",
+    "assesses": [
+      "UR-LEX-C282-TAFTISH282-03",
+      "UR-LEX-C282-TAFTISH282-04",
+      "UR-LEX-C282-TAFTISH282-05"
+    ]
+  }
+}

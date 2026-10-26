@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:4b5b374925cbdf89",
+  "lessonIds": [
+    "UR-C349-tahqiq",
+    "UR-C349-tajriba",
+    "UR-C349-muhaqqiq",
+    "UR-C349-daryaft",
+    "UR-C349-khojna"
+  ],
+  "tex": "urdu/book/chapters/ch349-research.tex"
+}

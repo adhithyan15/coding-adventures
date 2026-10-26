@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "What Was Going On",
+  "label": "ch:ur-what-was-going-on",
+  "canDo": "I can say what was going on in the past (voh paṛh rahī thī), set a scene with jab … to, and say during with daurān.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-R266-what-was-going-on",
+    "kind": "production",
+    "summary": "Complete UR-R266-what-was-going-on: say what was going on, and what happened in the middle of it.",
+    "assesses": [
+      "UR-GRAMMAR-C266-ONGOING-PAST-01",
+      "UR-GRAMMAR-C266-ONGOING-PAST-02",
+      "UR-LEX-C266-DAURAN-01"
+    ]
+  }
+}

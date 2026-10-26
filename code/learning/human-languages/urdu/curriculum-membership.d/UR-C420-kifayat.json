@@ -1,0 +1,11 @@
+{
+  "id": "UR-C420-kifayat",
+  "pathSegment": "UR-PATH-420-AAMDANI420",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-420-AAMDANI420",
+      "order": 2
+    }
+  ]
+}

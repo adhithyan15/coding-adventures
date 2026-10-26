@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:6899d047986844ee",
+  "lessonIds": [
+    "UR-C368-diqqat",
+    "UR-C368-rukavat",
+    "UR-C368-hal",
+    "UR-C368-atakna",
+    "UR-C368-nibtana"
+  ],
+  "tex": "urdu/book/chapters/ch368-getting-out-of-trouble.tex"
+}

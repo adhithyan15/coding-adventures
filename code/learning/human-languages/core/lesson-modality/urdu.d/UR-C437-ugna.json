@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C437-ugna",
+    "language": "urdu",
+    "chapter": 437,
+    "sequence": 25650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:046c1f539ad598dd"
+  },
+  "findings": []
+}

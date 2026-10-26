@@ -1,0 +1,11 @@
+{
+  "id": "UR-C543-durust",
+  "pathSegment": "UR-PATH-543-ATKAL543",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-543-ATKAL543",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:75a3b5b17fce04fc",
+  "lessonIds": [
+    "UR-C495-ujrat",
+    "UR-C495-hartal",
+    "UR-C495-maharat",
+    "UR-C495-thekedar",
+    "UR-C495-khapana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch495.txt",
+  "json": "urdu/narration/ch495.json",
+  "textHash": "fnv1a64:4aa2c7745309134e",
+  "jsonHash": "fnv1a64:b1a3651ab5fc0a88",
+  "findings": []
+}

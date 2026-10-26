@@ -1,0 +1,12 @@
+[package]
+name = "x509-ocsp-aia-locator-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free policy for selecting strict OCSP AIA locators"
+
+[dependencies]
+x509-authority-information-access = { path = "../x509-authority-information-access" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-extension = { path = "../x509-extension" }

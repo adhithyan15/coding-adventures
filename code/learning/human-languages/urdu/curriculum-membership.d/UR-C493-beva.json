@@ -1,0 +1,11 @@
+{
+  "id": "UR-C493-beva",
+  "pathSegment": "UR-PATH-493-MOURNING493",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-493-MOURNING493",
+      "order": 4
+    }
+  ]
+}

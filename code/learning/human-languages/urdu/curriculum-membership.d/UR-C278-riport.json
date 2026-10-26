@@ -1,0 +1,11 @@
+{
+  "id": "UR-C278-riport",
+  "pathSegment": "UR-PATH-278-THANA278",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-278-THANA278",
+      "order": 1
+    }
+  ]
+}

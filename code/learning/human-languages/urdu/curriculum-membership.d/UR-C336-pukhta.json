@@ -1,0 +1,11 @@
+{
+  "id": "UR-C336-pukhta",
+  "pathSegment": "UR-PATH-336-SABIT336",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-336-SABIT336",
+      "order": 1
+    }
+  ]
+}

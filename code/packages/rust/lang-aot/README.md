@@ -29,8 +29,12 @@ their checked total stays within `2^53 - 1` units, so every path value remains
 an exact binary64 integer; the budget is tracked through parentheses and
 supported wrappers and applied per conditional path. Exact whole-number
 factors may also scale the sign-rooted integer transform through magnitude
-`2^53`, including exact additive composition; fractional factors, denominator
-roots, repeated roots, and oversized products stay conservative. A non-unit
+`2^53`, including exact additive composition. Independently bounded dynamic
+sign-rooted transforms may multiply while their checked complete product stays
+within that limit. They may add or subtract while their checked complete sum
+stays within the same limit. Fractional factors, denominator roots, other
+non-multiplying multiple roots, and oversized products or sums stay
+conservative. A non-unit
 static divisor is accepted only when it divides
 every possible exact integer value of the sign-rooted transform. Static
 whole-number factors may precede the sign-rooted numerator, including exact
@@ -66,11 +70,13 @@ sign root. Two dynamic roots, path-dependent signs, and effectful selectors
 remain conservative.
 Checked exact-integer normalizers may provide the sign-rooted transform's
 nonnegative exponent when the complete right-associative exponent chain stays
-inside the established unroll cap. Unproven exponents remain conservative.
-Positive variable-free whole-number powers may raise the exact sign-rooted integer
-transform within the existing exponent-unroll cap while checked exponentiation
-remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
-stay conservative. Integer `div` by a variable-free nonzero whole number may
+inside the established unroll cap. A zero result proves the power is exactly
+one; unproven exponents remain conservative.
+Nonnegative variable-free whole-number powers may raise the exact sign-rooted
+integer transform within the existing exponent-unroll cap while checked
+exponentiation remains within `2^53`; zero produces exact one, while negative,
+dynamic, deeper, and oversized powers stay conservative. Integer `div` by a
+variable-free nonzero whole number may
 reduce the exact transform with a truncation-toward-zero bound, including
 composition through later powers, remainders, and exact real division; zero,
 dynamic, and sign-rooted divisors remain outside this composed proof. Integer

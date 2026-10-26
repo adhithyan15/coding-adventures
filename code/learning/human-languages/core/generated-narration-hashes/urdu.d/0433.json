@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:3052c3f2200fe0ae",
+  "lessonIds": [
+    "UR-C433-tila",
+    "UR-C433-dher",
+    "UR-C433-ghar",
+    "UR-C433-tinka",
+    "UR-C433-ukharna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch433.txt",
+  "json": "urdu/narration/ch433.json",
+  "textHash": "fnv1a64:8f7f3e1107d48a6a",
+  "jsonHash": "fnv1a64:13484437416ffdcc",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C503-int",
+  "pathSegment": "UR-PATH-503-SILAN503",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-503-SILAN503",
+      "order": 1
+    }
+  ]
+}

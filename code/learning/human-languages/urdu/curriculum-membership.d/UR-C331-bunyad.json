@@ -1,0 +1,11 @@
+{
+  "id": "UR-C331-bunyad",
+  "pathSegment": "UR-PATH-331-SABAB331",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-331-SABAB331",
+      "order": 1
+    }
+  ]
+}
