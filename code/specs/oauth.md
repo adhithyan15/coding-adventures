@@ -1634,6 +1634,26 @@ revocation, I/O, HTTP, OAuth transport, or network effect. Unsupported RFC 8446
 CCM suites fail closed until separately reviewed repository-owned primitives
 and limits are added. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-hkdf-label` prerequisite now owns only the exact
+RFC 8446 section 7.1 `HkdfLabel` information framing consumed by a future
+repository-owned HKDF boundary. A validated value binds one public 16-bit
+requested output length, a caller label from 1 through 249 bytes, and a context
+from 0 through 255 bytes. Encoding always prepends the six-byte `"tls13 "`
+namespace, emits the resulting 7-through-255-byte label and one-byte context
+lengths, and writes into caller-owned storage only after the complete encoded
+length and capacity have been checked. The maximum encoded value is 514 bytes.
+Stable failures expose only categories, never caller bytes or lengths.
+
+This framing slice receives no secret, performs no HKDF or hashing, selects no
+cipher-suite hash, derives or stores no key or IV, and does not audit the
+generic repository HKDF implementation for production TLS secret handling.
+Later traffic-key composition must combine a selected cipher suite, reviewed
+HKDF execution, the labels `"key"` and `"iv"`, and empty context without
+letting detached caller parameters reinterpret the selected suite. Handshake
+key scheduling, transcript hashing, record protection, certificate validation,
+trust, revocation, I/O, HTTP, OAuth transport, and concrete HTTPS remain
+unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
