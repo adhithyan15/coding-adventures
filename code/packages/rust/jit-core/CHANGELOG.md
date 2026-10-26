@@ -10,14 +10,64 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **New bytecodes `CLASS_F64` (0x5D), `DIGITS_F64` (0x5E), `EXP10_F64`
   (0x5F)**, shaped like `SIGNBIT_F64`: a float register in, an ordinary
   integer register out, computed by `vm_core::float_format` (the VM's own
-  core, so the tiers agree). 0x59–0x5C are left to an in-flight branch's
-  int⇄float bytecodes. The one-operand float ops now share an `f64_unary`
+  core, so the tiers agree). 0x59–0x5C are the int⇄float conversion
+  bytecodes (below). The one-operand float ops now share an `f64_unary`
   table; a dest that is also a float register is refused, as for
   `f64_signbit`. A propagated float literal operand is accepted.
 - `OP_SUPPORT`: `f64_class`, `f64_digits`, `f64_exp10` are `Lowered`; the
   declaration test types their result `i64`.
 - Tests: `f64_digit_queries_read_a_float_register`, refusal cases, and the
   truncated-bytecode check for the three tags.
+
+## Unreleased — LANG83 conversions on the JIT
+
+- **`int_to_real`, `real_to_int_trunc` and `real_to_int_floor` are
+  `Lowered`.** They were `Refused(INTERPRETER_TIER_ONLY)`, so every function
+  that mixed integers and floats ran on the interpreter tier: Python's
+  `1 + 2.5`, BASIC's `INT` and ALGOL's `entier`. They now compile to new
+  bytecodes, specified in
+  [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md),
+  "Conversions on the JIT":
+  - `I64_TO_F64` reads an integer register (or a folded integer literal) and
+    writes a float register's bits with Rust `as f64` (round to nearest, ties
+    to even).
+  - `F64_TO_I64_TRUNC` / `F64_TO_I64_FLOOR` read a float register (or a
+    folded float literal), apply `trunc()` / `floor()`, then narrow with
+    vm-core's `real_to_i64_checked`.
+- **Both sides are checked.** A float source given to `int_to_real`, an
+  integer source given to a narrowing op, a narrowing destination that is
+  also a float register, or an `int_to_real` into a non-`f64` parameter
+  refuses the function. Bits are never reinterpreted.
+- **Non-integer values fail closed (security review).** `run` used to seed
+  every non-`f64` parameter with `as_i64().unwrap_or(0)`, and stored every
+  `call_builtin` result the same way. So a `Float(2.5)` or string argument,
+  or a builtin returning a `Float`, silently read as 0, and with
+  `int_to_real` now lowered, `int_to_real` of such a value returned 0.0
+  where the interpreter raises. Now:
+  - every parameter now has a checked prologue entry. The new `PARAM_I64`
+    entry is the integer twin of `PARAM_F64`. An argument that is not `Int`
+    or `Bool` fails the call. A missing argument leaves the register 0, as
+    before. An argument beyond the declared parameters is ignored, as in the
+    interpreter's `handle_call`; it used to be written into a body temporary;
+  - a builtin result other than `Int`, `Bool` or a void `Null` errors too.
+    A void `Null` stored into a destination is still 0. That is the one
+    deliberate leftover, because the CIR does not yet mark a void builtin's
+    destination.
+
+  Tests: `f64_parameter_is_loaded_by_a_checked_prologue` now pins the error
+  instead of the old 0. New: `int_to_real_of_a_float_argument_fails_closed`
+  and `a_non_integer_builtin_result_fails_closed`.
+- **Failures match the VM.** A non-finite or out-of-range narrowing writes
+  vm-core's exact `real_to_int: …` text. `error_from_message` returns that
+  text as the same `VMError::Custom`, without the `generic-cir-jit:` prefix.
+- **Tests:**
+  - `int_to_real` on 0, -1, 2⁵³, 2⁵³+1, `i64::MIN` and `i64::MAX`, plus a
+    literal;
+  - trunc and floor on fractions of both signs and on -2⁶³;
+  - NaN, ±∞, 2⁶³, -1e30 and 1e300, checked against the VM's own error;
+  - a mixed int/float function;
+  - eight wrong-class refusals.
+  The declaration test confirms that the JIT compiles all three.
 
 ## [0.10.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 

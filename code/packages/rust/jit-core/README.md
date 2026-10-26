@@ -210,3 +210,11 @@ and `f64_signbit` writes an ordinary integer register.
 LANG83 PR7b adds `CLASS_F64` / `DIGITS_F64` / `EXP10_F64` (`f64_class`,
 `f64_digits`, `f64_exp10`): like `SIGNBIT_F64`, a float register in and an
 integer register out, computed by `vm_core::float_format`.
+The LANG83 conversions follow: `int_to_real` (`I64_TO_F64`, Rust `as f64`)
+reads an integer register and writes a float register, and
+`real_to_int_trunc`/`real_to_int_floor` (`F64_TO_I64_TRUNC`/`F64_TO_I64_FLOOR`)
+read a float register and write an integer one. A source of the wrong class
+refuses the function. A failed narrowing (a non-finite value, or one outside
+i64) writes vm-core's own `real_to_i64_checked` text to the error slot, and
+`JITCore` returns it as the same `VMError::Custom`, so both tiers fail
+identically.
