@@ -189,9 +189,11 @@ pub enum Language {
     /// compiler walks the CST that the generic `GrammarLexer`/`GrammarParser`
     /// build from that edition's `es<edition>.tokens`/`.grammar` and emits
     /// only LANG83 registry ops: `+ - * /` and unary `-` are the PR6c IEEE
-    /// `f64_*` ops (BEAM refuses them at compile time), `console.log` is
-    /// `write_f64_js` and `putchar` (the `-` of `-0` behind an
-    /// `f64_signbit` test), and a ReferenceError is
+    /// `f64_*` ops (BEAM refuses them at compile time), `console.log` is a
+    /// `call` of the module's own `String(x)` helper, `__js_write_number`
+    /// (LANG83 PR7c-js: `f64_class`/`f64_digits`/`f64_exp10` and integer
+    /// code), and `putchar` (the `-` of `-0` behind an `f64_signbit` >
+    /// `f64_class` test), and a ReferenceError is
     /// `trap "Trap.ReferenceError"`. No backend has JavaScript code.
     JavaScript,
 }

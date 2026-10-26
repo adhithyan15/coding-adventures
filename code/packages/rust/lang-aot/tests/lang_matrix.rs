@@ -11420,7 +11420,11 @@ fn main() { out(1, VALUE); }\n",
     // (`<case>.cite`); `javascript_rows_agree_with_the_host_node_oracle` reruns it.
     // A row with arithmetic uses the PR6c `f64_*` ops, which BEAM refuses at
     // compile time (`UnsupportedOps`, allowed by stage B), so it lists the seven
-    // IEEE columns; a literal-only row runs on all eight.
+    // IEEE columns; a literal-only row runs on all eight. Since LANG83 PR7c-js
+    // a number is printed by the module's own `__js_write_number` helper
+    // (`f64_class`/`f64_digits`/`f64_exp10` and integer code, all lowered on
+    // BEAM), and the `-0` test is `f64_class`/`f64_signbit`, so the arithmetic
+    // alone decides the columns.
     Prog { lang: Language::JavaScript, ext: "js", src: js_case!("arithmetic"), expect: Expect::Stdout("3 -3 42"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/arithmetic") },
     Prog { lang: Language::JavaScript, ext: "js", src: js_case!("asi_newlines"), expect: Expect::Stdout("1\n2\n2"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/asi_newlines") },
     Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_after_names"), expect: Expect::Stdout("1 3 3"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/division_after_names") },
@@ -29210,9 +29214,10 @@ fn javascript_rows() -> Vec<&'static Prog> {
     rows
 }
 
-/// Does this JavaScript row's module do IEEE arithmetic (a PR6c `f64_*` op,
-/// including the `f64_add` of the `-0` sign test)? Exactly those rows leave
-/// BEAM out of their columns.
+/// Does this JavaScript row's module do IEEE arithmetic (a PR6c `f64_*`
+/// op)? Exactly those rows leave BEAM out of their columns. Until LANG83
+/// PR7c-js the `-0` sign test added an `f64_add` of its own; the class test
+/// that replaced it is arithmetic-free.
 fn javascript_row_uses_ieee_arithmetic(module: &interpreter_ir::IIRModule) -> bool {
     module
         .functions
@@ -29283,14 +29288,19 @@ fn javascript_rows_agree_with_the_host_node_oracle() {
 }
 
 /// LANG84 C7.3: every row's module holds only registry ops — the PR6c IEEE
-/// arithmetic and `f64_signbit`, `cmp_gt`, `write_f64_js`, `putchar` — plus
-/// the ungated `const`, the `-0` branch and `ret` of the exit status; no JavaScript-named
-/// builtin survives. Eight backends accept every row's module at compile
-/// time. BEAM accepts exactly the literal-only rows and refuses the others
-/// with `UnsupportedOps` naming only `f64_*` arithmetic — at compile time,
-/// which stage B allows — so its cells are never a run-time failure.
+/// arithmetic, the PR7b `f64_class`/`f64_digits`/`f64_exp10`, `f64_signbit`,
+/// integer `add`/`sub`/`mul`/`div` and compares, `putchar` — plus the ungated
+/// `const`, branches, `call` and `ret`; no JavaScript-named builtin survives
+/// (LANG83 PR7c-js: `write_f64_js` is gone from the module, and `String(x)`
+/// is the compiler's own `__js_write_number`). Eight backends accept every
+/// row's module at compile time. BEAM accepts exactly the literal-only rows
+/// and refuses the others with `UnsupportedOps` naming only the five `f64_*`
+/// arithmetic ops — never the `-0` class test or the number helpers — at
+/// compile time, which stage B allows, so its cells are never a run-time
+/// failure.
 #[test]
 fn javascript_rows_pass_the_lang83_check_on_all_nine_backends() {
+    const ARITHMETIC: [&str; 5] = ["f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg"];
     let (mut beam_runs, mut beam_refuses) = (0usize, 0usize);
     for program in javascript_rows() {
         let module = lang_aot::compile_source_to_iir_at(Language::JavaScript, program.release, program.src, "c7")
@@ -29302,20 +29312,26 @@ fn javascript_rows_pass_the_lang83_check_on_all_nine_backends() {
         for instr in module.functions.iter().flat_map(|f| &f.instructions) {
             match interpreter_ir::op_registry::registry_name(instr) {
                 Some(name) => assert!(
-                    [
-                        "f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg", "f64_signbit", "cmp_gt",
-                        "write_f64_js", "putchar",
-                    ]
-                    .contains(&name),
+                    ARITHMETIC.contains(&name)
+                        || [
+                            "f64_signbit", "f64_class", "f64_digits", "f64_exp10", "add", "sub", "mul", "div",
+                            "cmp_eq", "cmp_lt", "cmp_gt", "cmp_ge", "putchar",
+                        ]
+                        .contains(&name),
                     "{:?}: unexpected registry op {name}",
                     program.case
                 ),
                 None => assert!(
-                    ["const", "jmp_if_false", "label", "ret"].contains(&instr.op.as_str()),
+                    ["const", "jmp", "jmp_if_false", "label", "call", "ret"].contains(&instr.op.as_str()),
                     "{:?}: {instr:?}",
                     program.case
                 ),
             }
+            assert!(
+                instr.srcs.iter().all(|s| s.as_var() != Some("write_f64_js")),
+                "{:?}: PR7c-js prints with the module's helper, not write_f64_js: {instr:?}",
+                program.case
+            );
         }
         for backend in lang_aot::op_check::Backend::ALL {
             let checked = lang_aot::op_check::check_module_for(backend, &module);
@@ -29332,7 +29348,7 @@ fn javascript_rows_pass_the_lang83_check_on_all_nine_backends() {
                 }
                 (false, Err(refusal)) => {
                     assert!(
-                        refusal.refusals.iter().all(|r| r.op.starts_with("f64_") && r.op != "f64_signbit"),
+                        refusal.refusals.iter().all(|r| ARITHMETIC.contains(&&*r.op)),
                         "{:?}: BEAM refused more than IEEE arithmetic: {refusal}",
                         program.case
                     );
@@ -29351,17 +29367,52 @@ fn javascript_rows_pass_the_lang83_check_on_all_nine_backends() {
     assert!(beam_runs > 0 && beam_refuses > 0, "{beam_runs} BEAM runs, {beam_refuses} refusals");
 }
 
-/// The matrix's JIT column drives `execute_with_jit`, which compiles only
-/// fully typed functions, and a function that prints is not (its
-/// `call_builtin … : void` and the `-0` branch's labels are untyped), so those
-/// cells run on the interpreter tier (see the lesson "A JIT column driven by
-/// execute_with_jit interprets every function that prints"). This test closes
-/// that gap for JavaScript: every row's `main` must compile to JIT bytecode
-/// (float registers may only meet float-aware instructions, so a stray `mov`
-/// or float compare would refuse it) and, run compiled, print the row's
-/// expected stdout.
+/// LANG83 PR7c-js: with the arithmetic taken out, what is left of a
+/// JavaScript print — the `-0` class test, the call and the four
+/// `String(x)` helpers — lowers on BEAM. Every row's module, minus its
+/// `f64_*` arithmetic (each result replaced by a constant), passes BEAM's op
+/// check and the whole BEAM pipeline. Before PR7c-js the sign test's own
+/// `f64_add` kept every computed value's print off BEAM.
 #[test]
-fn javascript_rows_compile_and_run_on_the_jit_without_its_interpreter_fallback() {
+fn javascript_prints_lower_on_beam_once_the_arithmetic_is_gone() {
+    let mut stripped = 0usize;
+    for program in javascript_rows() {
+        let mut module = prog_iir(program, "c7").unwrap();
+        for function in &mut module.functions {
+            for instr in &mut function.instructions {
+                if matches!(instr.op.as_str(), "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg") {
+                    *instr = interpreter_ir::IIRInstr::new(
+                        "const",
+                        instr.dest.clone(),
+                        vec![interpreter_ir::Operand::Float(1.5)],
+                        "f64",
+                    );
+                    stripped += 1;
+                }
+            }
+        }
+        lang_aot::op_check::check_module_for(lang_aot::op_check::Backend::Beam, &module)
+            .unwrap_or_else(|e| panic!("{:?}: BEAM refused a print: {e}", program.case));
+        lang_aot::compile_iir_to_beam(module, "c7")
+            .unwrap_or_else(|e| panic!("{:?}: BEAM lowering failed: {e}", program.case));
+    }
+    assert!(stripped > 0);
+}
+
+/// The matrix's JIT column drives `execute_with_jit`, which compiles the
+/// fully typed functions eagerly and interprets the rest. Since LANG83
+/// PR7c-js a row's `main` `call`s the module's `__js_write_number`, and the
+/// generic JIT has no `call` bytecode, so `main` runs on the interpreter tier
+/// (LANG83 "Per-backend lowering": "Where the JIT refuses a helper's `call`,
+/// that function falls back to the interpreter"). So do `__js_write_number`
+/// and the recursive `__js_write_uint`. The two call-free helpers,
+/// `__js_digit_count` and `__js_write_digits`, are integer code the JIT
+/// compiles. This test pins exactly that split for every row, then runs
+/// `main` on the interpreter with those two compiled: the interpreter's
+/// `call`s reach the compiled code, which writes every significant digit,
+/// and the row's stdout is unchanged.
+#[test]
+fn javascript_rows_run_with_their_call_free_number_helpers_compiled_by_the_jit() {
     use jit_core::core::JITCore;
     use jit_core::GenericCirJit;
     use std::sync::{Arc, Mutex};
@@ -29369,41 +29420,61 @@ fn javascript_rows_compile_and_run_on_the_jit_without_its_interpreter_fallback()
     for program in javascript_rows() {
         let mut module = prog_iir(program, "main").unwrap();
         lower_dynamic_for_generic_engine(&mut module);
-        let mut vm = vm_core::core::VMCore::new();
-        let backend = GenericCirJit::new();
         let printed: Arc<Mutex<Vec<u8>>> = Arc::default();
+        let compiled_bytes: Arc<Mutex<Vec<u8>>> = Arc::default();
+        // The interpreter tier: main, the `-0` sign, separators and the
+        // non-digit text of `__js_write_number`.
+        let mut vm = vm_core::core::VMCore::new();
         let bytes = Arc::clone(&printed);
+        vm.builtins_mut().register("putchar", move |args: &[Value]| {
+            let b = (args.first().and_then(Value::as_i64).unwrap_or(0) & 0xFF) as u8;
+            bytes.lock().expect("VM output buffer").push(b);
+            Ok(Value::Null)
+        });
+        // The compiled tier writes into the same stream, and also records
+        // what it wrote.
+        let backend = GenericCirJit::new();
+        let (bytes, mine) = (Arc::clone(&printed), Arc::clone(&compiled_bytes));
         backend.register_builtin("putchar", move |args: &[Value]| {
             let b = (args.first().and_then(Value::as_i64).unwrap_or(0) & 0xFF) as u8;
             bytes.lock().expect("JIT output buffer").push(b);
-            Value::Null
-        });
-        let bytes = Arc::clone(&printed);
-        backend.register_builtin("write_f64_js", move |args: &[Value]| {
-            let text = args
-                .first()
-                .and_then(Value::as_f64)
-                .map_or_else(|| format!("<write_f64_js: not a float: {args:?}>"), js_number_text);
-            bytes.lock().expect("JIT output buffer").extend_from_slice(text.as_bytes());
+            mine.lock().expect("JIT output record").push(b);
             Value::Null
         });
         let error_slot = Arc::clone(&backend.error);
         let mut jit = JITCore::new(&mut vm, Box::new(backend));
-        let compiled = jit.compile(&mut vm, &module, "main");
-        assert!(
-            matches!(compiled, Ok(true)) && jit.is_compiled("main"),
-            "{:?}@{:?}: the JIT did not compile main ({compiled:?})",
+        let names: Vec<String> = module.functions.iter().map(|f| f.name.clone()).collect();
+        let mut compiled: Vec<&str> = Vec::new();
+        for name in &names {
+            if matches!(jit.compile(&mut vm, &module, name), Ok(true)) {
+                compiled.push(name);
+            }
+        }
+        assert_eq!(
+            compiled,
+            ["__js_digit_count", "__js_write_digits"],
+            "{:?}@{:?}: the JIT's share of {names:?}",
             program.case,
             program.release
         );
-        // The VM tier has no `write_f64_js`/`putchar` that writes here, so
-        // output in the buffer can only come from the compiled code.
         jit.execute(&mut vm, &mut module, "main", &[])
             .unwrap_or_else(|e| panic!("{:?}@{:?}: {e:?}", program.case, program.release));
         assert!(error_slot.lock().expect("JIT error slot").take().is_none());
         let stdout = String::from_utf8(printed.lock().unwrap().clone()).unwrap();
         let Expect::Stdout(want) = program.expect else { panic!("{:?}", program.expect) };
         assert_eq!(stdout.trim(), want, "{:?}@{:?}", program.case, program.release);
+        // Every byte the compiled tier wrote is a digit, and a row prints a
+        // significant digit exactly when some finite non-zero number's
+        // digits went through the compiled `__js_write_digits`.
+        let from_jit = compiled_bytes.lock().unwrap().clone();
+        assert!(from_jit.iter().all(u8::is_ascii_digit), "{:?}: {from_jit:?}", program.case);
+        assert_eq!(
+            !from_jit.is_empty(),
+            want.bytes().any(|b| (b'1'..=b'9').contains(&b)),
+            "{:?}@{:?}",
+            program.case,
+            program.release
+        );
     }
 }
 

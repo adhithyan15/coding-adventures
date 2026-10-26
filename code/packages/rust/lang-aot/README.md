@@ -1452,24 +1452,29 @@ generic `GrammarLexer`/`GrammarParser` build from one edition's
 |---|---|
 | number literal | `const` (`f64`) |
 | `a + b`, `a - b`, `a * b`, `a / b`, `-a` | `f64_add`, `f64_sub`, `f64_mul`, `f64_div`, `f64_neg` (PR6c, IEEE, never a trap) |
-| `console.log(a, b)` | `write_f64_js a`, `putchar 32`, `write_f64_js b`, `putchar 10` |
-| `-0` | `putchar 45` behind `cmp_gt (f64_signbit x) (f64_signbit (x + 0))` |
+| `console.log(a, b)` | `call __js_write_number, a`, `putchar 32`, `call __js_write_number, b`, `putchar 10` |
+| `-0` | `putchar 45` behind `cmp_gt (f64_signbit x) (f64_class x)` |
 | reading an undeclared name, or a `let` before its declaration | `trap "Trap.ReferenceError"` |
 
-No backend has JavaScript code. `1 / 0` is `Infinity` and `0 * -1` prints
-`-0` on every IEEE column. BEAM floats cannot hold an infinity or a NaN, so
-BEAM refuses the `f64_*` arithmetic at compile time with `UnsupportedOps`,
-which LANG84 stage B allows; a module without arithmetic (a literal, or a
-binding of one, is never `-0`, so it needs no sign test) runs on BEAM too.
+No backend has JavaScript code. Since LANG83 PR7c-js, `String(x)` is a
+function the compiler writes into the module, `__js_write_number`. It is built
+from the PR7b primitives `f64_class`, `f64_signbit`, `f64_digits` and
+`f64_exp10`, plus integer helpers and `putchar`; it replaces the
+`write_f64_js` builtin. `1 / 0` is `Infinity` and `0 * -1` prints `-0` on
+every IEEE column. BEAM floats cannot hold an infinity or a NaN, so BEAM
+refuses the `f64_*` arithmetic at compile time with `UnsupportedOps`, which
+LANG84 stage B allows. Nothing else is refused (the `-0` class test and the
+helpers lower there), so a module without arithmetic runs on BEAM too.
 
 Thirty-eight `lang_matrix` rows run every accepted case of
 `code/grammars/ecmascript/corpus/es-number-log/` on es2016 and es2021, the two
 IIR-identity class representatives of `javascript-iir-compiler`'s release
 sweep, and on the default es2020: the 11 literal-only rows on all eight
 columns, the 27 with arithmetic on the seven IEEE columns. They prove stage B
-for es2016–es2025 (`release_inventory.py check --matrix`), agree with host
-node v22, and every row's `main` compiles to JIT bytecode and runs compiled
-to the same output.
+for es2016–es2025 (`release_inventory.py check --matrix`) and agree with host
+node v22. On the JIT, the two call-free number helpers compile and write
+every significant digit. `main` calls the helper, and the generic JIT has no
+`call` bytecode, so `main` runs on its interpreter tier.
 
 ```sh
 lang-aot prog.js --lang javascript@es2016 --emit=llvm-ir
