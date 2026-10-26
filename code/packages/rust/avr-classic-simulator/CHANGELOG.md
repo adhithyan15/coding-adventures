@@ -13,6 +13,7 @@
 - Preserve restorable terminal NOP/BREAK post-states while validating every PC
   against the device's 14-bit range, and preflight both return-address bytes
   before CALL, RCALL, or ICALL mutates the candidate stack.
-- Validate the completed boundary with 32 release tests and exhaustive
-  addition/subtraction flag oracles, reaching 97.32% package line coverage
-  (944/970).
+- Validate the completed boundary with 33 release tests, exhaustive
+  addition/subtraction flag oracles, and bug-sensitive fractional multiply
+  carry/zero/unaffected-flag regressions, reaching 97.33% package line coverage
+  (946/972).

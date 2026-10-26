@@ -1,6 +1,6 @@
 use avr_classic_simulator::{
-    AvrClassicSimulator, AvrError, AvrState, TraceAllocation, DATA_SIZE, FLAG_C, FLAG_I, FLAG_Z,
-    MAX_RETAINED_STEPS, PROGRAM_SIZE, RAM_END, SREG_ADDR,
+    AvrClassicSimulator, AvrError, AvrState, TraceAllocation, DATA_SIZE, FLAG_C, FLAG_H, FLAG_I,
+    FLAG_N, FLAG_S, FLAG_T, FLAG_V, FLAG_Z, MAX_RETAINED_STEPS, PROGRAM_SIZE, RAM_END, SREG_ADDR,
 };
 
 fn image(words: &[u16]) -> Vec<u8> {
@@ -353,24 +353,30 @@ fn every_arithmetic_subfamily_and_multiplier_variant_decodes() {
 
 #[test]
 fn fractional_multiply_carry_uses_the_unshifted_product() {
-    for (word, left, right, result, carry) in [
-        (0x0309, 0x80, 0x80, 0x8000, false), // FMUL
-        (0x0309, 0xff, 0xff, 0xfc02, true),  // FMUL
-        (0x0381, 0x80, 0x80, 0x8000, false), // FMULS
-        (0x0389, 0x80, 0x80, 0x8000, true),  // FMULSU
+    const UNAFFECTED: u8 = FLAG_I | FLAG_T | FLAG_H | FLAG_S | FLAG_V | FLAG_N;
+    for (word, left, right, result, carry, zero) in [
+        (0x0309, 0x80, 0x80, 0x8000, false, false), // FMUL
+        (0x0309, 0xff, 0xff, 0xfc02, true, false),  // FMUL
+        (0x0309, 0x00, 0x80, 0x0000, false, true),  // FMUL zero result
+        (0x0381, 0x80, 0x80, 0x8000, false, false), // FMULS
+        (0x0389, 0x80, 0xff, 0x0100, true, false),  // FMULSU: raw 0x8080
     ] {
         let mut cpu = one(word);
         cpu.set_register(16, left).unwrap();
         cpu.set_register(17, right).unwrap();
-        cpu.set_data(SREG_ADDR as u16, FLAG_I | FLAG_Z | FLAG_C)
+        cpu.set_data(SREG_ADDR as u16, UNAFFECTED | FLAG_Z | FLAG_C)
             .unwrap();
         cpu.step().unwrap();
         let actual = u16::from(cpu.state().register(0).unwrap())
             | (u16::from(cpu.state().register(1).unwrap()) << 8);
         assert_eq!(actual, result, "word {word:04x}");
         assert_eq!(cpu.state().sreg() & FLAG_C != 0, carry, "word {word:04x}");
-        assert_eq!(cpu.state().sreg() & FLAG_Z, 0, "word {word:04x}");
-        assert_ne!(cpu.state().sreg() & FLAG_I, 0, "word {word:04x}");
+        assert_eq!(cpu.state().sreg() & FLAG_Z != 0, zero, "word {word:04x}");
+        assert_eq!(
+            cpu.state().sreg() & UNAFFECTED,
+            UNAFFECTED,
+            "word {word:04x}"
+        );
     }
 }
 

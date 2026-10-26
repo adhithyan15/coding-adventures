@@ -23,7 +23,7 @@ assert_eq!(cpu.state(), &final_state);
 not a complete microcontroller: peripherals, interrupts, EEPROM protocol,
 timing, pins, watchdog, sleep, and self-programming remain excluded.
 
-The release completion suite exercises 32 lifecycle, exhaustive flag, and
+The release completion suite exercises 33 lifecycle, exhaustive flag, and
 instruction-family tests. It includes terminal-state restore round trips and
-whole-span call-stack preflight at the lower SRAM boundary, and reaches 97.32%
-line coverage (944/970) in the package library.
+whole-span call-stack preflight at the lower SRAM boundary, and reaches 97.33%
+line coverage (946/972) in the package library.
