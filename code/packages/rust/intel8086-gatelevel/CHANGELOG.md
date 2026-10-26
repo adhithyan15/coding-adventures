@@ -11,6 +11,11 @@
 - Added a public physical-storage inventory derived from the concrete memory,
   register/FLAGS, HALT, and port-latch containers, plus mirror-divergence,
   restore, halt-source, result, and fault-preservation tests.
+- Made register, FLAGS, and input/output-port Q outputs authoritative as well.
+  Execution begins by driving compatibility observers from Q, snapshots and
+  checked port reads sample Q, successful instructions clock result wires, and
+  restore/rollback clock every counted bank. Added adversarial divergence tests
+  across snapshot, execution, restore, rollback, IN, and OUT paths.
 
 ## [0.2.0] — 2026-08-28
 

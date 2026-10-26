@@ -21,12 +21,15 @@ The memory implementation keeps a cached view of the DFF Q bus so full-state
 inspection and differential hashing remain byte-linear; every write still
 clocks both phases of the underlying eight flip-flops.
 
-The halt latch follows the same rule: its DFF Q output is authoritative for
-execution, snapshots, restore, results, and rollback. The historical public
-`halted` boolean remains a synchronized compatibility observer, while
-`halted()` reads Q directly. `physical_storage_inventory()` derives every bank
-count from the concrete memory, register/FLAGS, halt, and port containers so
-the topology can be checked independently of `FLIP_FLOP_COUNT`.
+Every counted DFF bank follows the same rule. Register, FLAGS, HALT, input-port,
+and output-port Q outputs are authoritative for execution, snapshots, restore,
+results, and rollback. Historical public fields remain synchronized
+compatibility observers; assigning them directly cannot clock architectural
+state. Explicit register/segment/FLAGS and input-port setters clock their DFFs,
+`halted()` reads HALT Q, and the checked output-port getter reads port Q.
+`physical_storage_inventory()` derives every bank count from the concrete
+memory, register/FLAGS, halt, and port containers so the topology can be
+checked independently of `FLIP_FLOP_COUNT`.
 
 ## Gate data paths
 

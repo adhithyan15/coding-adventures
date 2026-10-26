@@ -75,7 +75,7 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
-| P0 in repair | Intel 8086 counted DFF authority | Independent review confirmed HALT Q authority but found the counted register, FLAGS, and port banks still accepted public host fields as architectural input at instruction boundaries. Make every counted bank Q-authoritative across execution, snapshot, restore, rollback, and port I/O; retain public fields and arrays only as synchronized compatibility observers; add deliberate divergence tests for each bank. |
+| P0 complete locally | Intel 8086 counted DFF authority | Every counted bank is now Q-authoritative across execution, snapshot, restore, rollback, and port I/O; public fields and arrays are synchronized compatibility observers only. Register/FLAGS public read APIs sample Q, explicit setters clock Q, instruction evaluation starts Q-to-wire and commits result wires, and IN/OUT use port Q directly. Adversarial divergence tests cover ADC, snapshot, restore, rollback, IN, and OUT. Release tests cover 62 unit cases, all 461 differential vectors, 10 lifecycle cases, and 14 doctests; line coverage is 95.34% (2,906/3,048). |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. |
 
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
