@@ -276,6 +276,10 @@ analyzing the consumer's `.mll`:
      the called component's same-named slots — this is how the
      existing same-file component-reference path already works
      (UI14 §6).
+   - **Required slots.** Before substitution, the callee's interface
+     is checked: every slot with no default must be bound at the call
+     site, or the result is `SlotBindingMissing` (§7). An omitted slot
+     with a default takes its default.
    - **Part names.** *As built:* the called component's part names
      are inlined **as authored** (`sheet` stays `sheet`), so the
      consumer, its tests, and every backend's accessibility id,
@@ -418,10 +422,49 @@ The resolver surfaces precise, fixable errors:
 | `ComponentNotExported { package, component }` | Manifest's `[components].exports` does not list the component | Add the component to the manifest, or re-check the PascalCase name. |
 | `ComponentSourceMissing { package, component, file }` | `src/<C>.mil` (or `.mll`/`.msl`) is missing | Add the missing file to the package. |
 | `CircularPackageReference { cycle }` | `pkg::A::X → pkg::B::Y → pkg::A::X` | Refactor the cycle out; package graphs must be DAGs. |
-| `SlotBindingMissing { package, component, slot }` | Call site did not supply a required slot | Bind the slot at the call site or mark it optional in the component's `.mil`. |
+| `SlotBindingMissing { package, component, slot }` | Call site did not supply a required slot | Bind the slot at the call site, or give it a default in the component's `.mil` (`slot x : text = "" ;`). |
 
 Each error carries the source span of the offending `pkg::` reference
 so editors and language-server clients can underline it.
+
+**Implementation note: `SlotBindingMissing` (2026-10-26,
+mosaic-unbound-slot-semantics-v1 §4 R1 / follow-up F1).** Built in
+`mosaic-package-resolver` as
+`SlotBindingMissing { consumer, package, component, slot, call_site, defaultable }`.
+How it behaves:
+
+- **When it runs.** Once per resolve, before any substitution. It walks the
+  consumer's tree and, once each, the layout of every package component it
+  reaches. A nested reference inside a package is reported against that
+  package component, and an unqualified reference to a sibling export
+  counts as a call site. Caller-authored children belong to the component
+  that wrote them.
+- **What it checks.** The callee's *interface*: every slot in its `.mil`
+  with no default. It does not look at which slots the layout reads, so a
+  required slot the layout never uses must still be bound. That is what
+  stops an unbound name surviving into the consumer's scope, where it was
+  captured by a same-named consumer slot or leaked into an expression as an
+  undeclared identifier.
+- **Exemptions.** `node` and `list<node>` slots are filled by the caller's
+  children, not by a prop, and an unfilled mount is removed (UI29-2).
+- **Every error.** Every missing slot at every call site is reported in one
+  `Multiple` error. One missing slot is reported bare.
+- **The message.** It names the package and component, and gives the fix.
+  The "give it a default" half is offered only for `text`, `number` and
+  `bool`, the types that can have one today.
+
+Two departures from this section:
+
+- There is no "mark it optional" marker. The marker is `= <default>`
+  (UI13 §1).
+- The layout IR carries no source spans. `call_site` is a path through the
+  consumer's tree instead, for example
+  `Column[app-root] > Row#2 > pkg::mosaic-pkg-lib::Card[hero]`. A named
+  node shows its part name, and an unnamed one shows its 1-based position
+  among its siblings.
+
+Until this was built, a missing binding surfaced as the consumer's
+misleading `UnknownSlot`, or not at all.
 
 ---
 
