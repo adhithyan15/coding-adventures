@@ -87,10 +87,11 @@ merged, while Cortex-M33 is already in review.
 | 9 | PA-RISC 1.1 | published architecture manuals | Local functional complete: checked bounded integer core, big-endian transport, both IA queues, PSW nibble carry/borrow state, delayed control, nullification, calls/returns, complete traces, typed atomic lifecycle, three allocation-seam unit tests, 19 integration tests, one doctest, and 92.80% line coverage (580/625). Gate work remains evidence/scope pending. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
-| 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
+| 12 | ARM7TDMI | published ARMv4T manuals | Complete locally: bounded ARMv4T ARM/Thumb integer core; all 31 physical GPRs and five SPSRs; pipeline-visible PC, bank/state exchange, checked memory and full-span control targets; exact transactional traces/lifecycle; 39 release tests; and 88.30% line coverage (1,389/1,573). Gate partner and SoC composition remain queued. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
-| 15 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Functional cell repaired locally: source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core, source-only constant-generator enforcement, exact Format II trace roles, and injected allocation rollback; independent re-review/publication is next. MSP430X, peripherals, clocks, power, and timing stay outside this cell. |
+| 15 | RCA CDP1802 (merged) | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; PR #18354 landed. |
+| 16 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Functional cell repaired locally: source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core, source-only constant-generator enforcement, exact Format II trace roles, and injected allocation rollback; independent re-review/publication is next. MSP430X, peripherals, clocks, power, and timing stay outside this cell. |
 
 MSP430 follows Xtensa rather than displacing an active item. TI's public
 SLAU144K chapter 3 gives a complete classic encoding, addressing, flag, and
