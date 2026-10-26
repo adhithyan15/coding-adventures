@@ -26158,8 +26158,7 @@
       "recovery_source_revision": "23e5bd02f04f8da7b462630b939006af03c39eca",
       "recovery_validation_receipt": "code/specs/fixtures/commonmark-0.31.2/VALIDATION.md",
       "recovery_notes": "Serially recover existing PR18174 after verified18147merge: reviewed net-tree rebase onto d6ce, Node/npm setup admission for Venture-only plans, exact source and real generatedReact/Electron validation. Historical three-PR selection and prior validation notes remain history; current operator ceiling is one. Native reader migration stays separate.",
-      "merge_commit": "bd533925647b7fbac74eba35e611a8ba3930757f",
-      "merged_at": "2026-10-25T19:23:19Z"
+      "merge_commit": "bd533925647b7fbac74eba35e611a8ba3930757f"
     },
     {
       "id": "commonmark-language-neutral-reader-migrations",
