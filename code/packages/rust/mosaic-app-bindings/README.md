@@ -229,3 +229,13 @@ intervals can overlap and must not be summed as exclusive event totals. Missing
 or failing diagnostic getters omit this object; disabled profiling does not read
 them. Counter sampling adds profiling overhead. Export remains bounded and runs
 on normal process exit.
+
+### Native repeater lifecycle counters
+
+Opt-in XAML profiling includes an optional `realization` object with per-interval
+`prepared` and `cleared` counts from ItemsRepeater lifecycle events. They count
+item preparations/clearings (including reuse), not unique controls or visibility.
+No visual-tree traversal or element retention is added. Projection counts remain
+separate; absent/malformed/throwing diagnostic contracts omit their own object.
+Overlapping intervals are not exclusive attribution. See
+`code/specs/mosaic-xaml-realization-counters-20261026.md` for acceptance limits.

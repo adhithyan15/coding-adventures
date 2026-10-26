@@ -20,11 +20,19 @@ using System.Threading.Tasks;
 
 namespace Mosaic.Generated;
 
-internal sealed class MalformedProjectionProbe { public string MosaicProjectionCounts => "not counters"; }
+internal sealed class MalformedProjectionProbe { public string MosaicProjectionCounts => "not counters"; public int MosaicRealizationCounts => 0; }
+
+internal sealed class RealizationOnlyProbe { public (long, long) MosaicRealizationCounts { get; set; } }
 
 // Mirrors the emitter's public diagnostic shape without a WinUI dependency.
 internal sealed class ProjectionProbe
 {
+    public int RealizationReads;
+    public (long, long) Realizations = (100, 80);
+    public (long, long) MosaicRealizationCounts
+    {
+        get { RealizationReads++; if (Throw) throw new InvalidOperationException(); return Realizations; }
+    }
     public int Reads;
     public bool Throw;
     public (long, long, long, long) Counts = (10, 20, 30, 40);
@@ -469,7 +477,9 @@ internal static class Driver
                 var projectionProbe = new ProjectionProbe();
                 var projectionScope = MosaicRuntimeHost.BeginProfile("projection", projectionProbe)!;
                 projectionProbe.Counts = (12, 23, 35, 47);
+                projectionProbe.Realizations = (107, 83);
                 CheckScope(projectionScope);
+                Check(projectionProbe.RealizationReads == 2, "idempotent disposal reads realization twice");
                 Check(projectionProbe.Reads == 2, "idempotent disposal reads end counters once");
                 using (MosaicRuntimeHost.BeginProfile("absent", new object())) { }
                 using (MosaicRuntimeHost.BeginProfile("malformed", new MalformedProjectionProbe())) { }
@@ -477,22 +487,35 @@ internal static class Driver
                 projectionProbe.Throw = true;
                 failingEnd?.Dispose();
                 using (MosaicRuntimeHost.BeginProfile("throwing", projectionProbe)) { }
+                var realizationOnly = new RealizationOnlyProbe();
+                using (MosaicRuntimeHost.BeginProfile("realization-only", realizationOnly))
+                    realizationOnly.MosaicRealizationCounts = (4, 1);
                 break;
             case "projection-validate":
                 var projectionLines = System.IO.File.ReadAllLines(Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH")!);
-                Check(projectionLines.Length == 5, "one record per scope");
+                Check(projectionLines.Length == 6, "one record per scope");
                 using (var doc = System.Text.Json.JsonDocument.Parse(projectionLines[0]))
                 {
+                    var realization = doc.RootElement.GetProperty("realization");
+                    Check(realization.GetProperty("prepared").GetInt64() == 7
+                        && realization.GetProperty("cleared").GetInt64() == 3, "native lifecycle deltas are exported");
                     var delta = doc.RootElement.GetProperty("projection");
                     Check(delta.GetProperty("reads").GetInt64() == 2
                         && delta.GetProperty("created").GetInt64() == 3
                         && delta.GetProperty("reused").GetInt64() == 5
                         && delta.GetProperty("removed").GetInt64() == 7, "counter deltas are exported");
                 }
-                foreach (var line in projectionLines[1..])
+                foreach (var line in projectionLines[1..5])
                 {
                     using var doc = System.Text.Json.JsonDocument.Parse(line);
+                    Check(!doc.RootElement.TryGetProperty("realization", out _), "unavailable realization omitted");
                     Check(!doc.RootElement.TryGetProperty("projection", out _), "unavailable diagnostics omit projection");
+                }
+                using (var doc = System.Text.Json.JsonDocument.Parse(projectionLines[5]))
+                {
+                    Check(!doc.RootElement.TryGetProperty("projection", out _), "realization is independent of projection contract");
+                    Check(doc.RootElement.GetProperty("realization").GetProperty("prepared").GetInt64() == 4,
+                        "realization-only contract exports counters");
                 }
                 break;
             case "profile-bounded":
@@ -505,7 +528,7 @@ internal static class Driver
                             "excluded phase creates no scope");
                     Check(MosaicRuntimeHost.BeginProfile("Interaction-handler", excluded) is null,
                         "phase filtering is ordinal and exact");
-                    Check(excluded.Reads == 0, "excluded phases never inspect component diagnostics");
+                    Check(excluded.Reads == 0 && excluded.RealizationReads == 0, "excluded phases never inspect component diagnostics");
                 }
                 var scopes = new List<IDisposable>();
                 for (var i = 0; i < 5000; i++)
