@@ -481,11 +481,27 @@ fn point_to_segment_distance(
     // very large chord. Dividing by the scaled chord length leaves the result
     // in the point vector's original units.
     let cross = compensated_product_difference(px, sy, py, sx)?;
-    let distance = cross.abs() / normalized_length;
-    if !distance.is_finite() {
-        return Err(FlatteningError::NonFiniteGeometry);
+
+    // Widen for division-rounding in the scaled chord components, the final
+    // compensated-product rounding, and the norm. This is intentionally an
+    // upper bound: accepting a chord requires proving the true distance is no
+    // larger than tolerance. The dominant scaled component is exactly +/-1.
+    let sx_error = division_error_bound(sx, dx, chord_scale);
+    let sy_error = division_error_bound(sy, dy, chord_scale);
+    let product_magnitude = (px * sy).abs() + (py * sx).abs();
+    let numerator_error = px.abs() * sy_error
+        + py.abs() * sx_error
+        + 8.0 * f64::EPSILON * (cross.abs() + product_magnitude);
+    let norm_error = sx_error.hypot(sy_error) + 8.0 * f64::EPSILON * normalized_length;
+    let lower_norm = normalized_length - norm_error;
+    if !numerator_error.is_finite() || lower_norm <= 0.0 {
+        return Ok(outward_magnitude(point_length));
     }
-    Ok(outward_magnitude(distance))
+    let distance = (cross.abs() + numerator_error) / lower_norm;
+    if !distance.is_finite() {
+        return Ok(outward_magnitude(point_length));
+    }
+    Ok(outward_magnitude(distance).min(outward_magnitude(point_length)))
 }
 
 /// Return a*b-c*d with product and subtraction roundoff folded into the result.
@@ -511,6 +527,14 @@ fn compensated_product_difference(a: f64, b: f64, c: f64, d: f64) -> Result<f64,
         Ok(result)
     } else {
         Err(FlatteningError::NonFiniteGeometry)
+    }
+}
+
+fn division_error_bound(ratio: f64, numerator: f64, denominator: f64) -> f64 {
+    if numerator == 0.0 || numerator.abs() == denominator {
+        0.0
+    } else {
+        f64::EPSILON * ratio.abs() + f64::from_bits(1)
     }
 }
 

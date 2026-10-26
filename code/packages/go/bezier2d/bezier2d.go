@@ -291,11 +291,25 @@ func pointToSegmentDistance(point, start, end point2d.Point) (float64, bool) {
 	if !ok {
 		return 0, false
 	}
-	distance := math.Abs(cross) / normalizedLength
-	if math.IsNaN(distance) || math.IsInf(distance, 0) {
-		return 0, false
+	// Widen for division-rounding in the scaled chord components, the final
+	// compensated-product rounding, and the norm. This is intentionally an
+	// upper bound: accepting a chord requires proving the true distance is no
+	// larger than tolerance. The dominant scaled component is exactly +/-1.
+	sxError := divisionErrorBound(sx, dx, chordScale)
+	syError := divisionErrorBound(sy, dy, chordScale)
+	productMagnitude := math.Abs(px*sy) + math.Abs(py*sx)
+	numeratorError := math.Abs(px)*syError + math.Abs(py)*sxError +
+		8*(math.Nextafter(1, 2)-1)*(math.Abs(cross)+productMagnitude)
+	normError := math.Hypot(sxError, syError) + 8*(math.Nextafter(1, 2)-1)*normalizedLength
+	lowerNorm := normalizedLength - normError
+	if math.IsInf(numeratorError, 0) || lowerNorm <= 0 {
+		return outwardMagnitude(pointLength), true
 	}
-	return outwardMagnitude(distance), true
+	distance := (math.Abs(cross) + numeratorError) / lowerNorm
+	if math.IsNaN(distance) || math.IsInf(distance, 0) {
+		return outwardMagnitude(pointLength), true
+	}
+	return math.Min(outwardMagnitude(distance), outwardMagnitude(pointLength)), true
 }
 
 // compensatedProductDifference returns a*b-c*d with the product and
@@ -323,6 +337,13 @@ func compensatedProductDifference(a, b, c, d float64) (float64, bool) {
 		return 0, false
 	}
 	return result, true
+}
+
+func divisionErrorBound(ratio, numerator, denominator float64) float64 {
+	if numerator == 0 || math.Abs(numerator) == denominator {
+		return 0
+	}
+	return (math.Nextafter(1, 2)-1)*math.Abs(ratio) + math.SmallestNonzeroFloat64
 }
 
 func outwardMagnitude(value float64) float64 {
