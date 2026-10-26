@@ -18001,6 +18001,10 @@ package directory, so dependency-install directory changes do not persist into
 the Arc2D install, compile, test, or coverage commands. Runner-equivalent
 execution passes the actual 32-test Arc2D suite at 100% line and 95.23% branch
 coverage. The invalid repair candidate and its provisional backlog item are
-retired rather than published. Current-main reconciliation, shared-fixture
-selector integration, hosted platforms, and independent final-head review
-remain required before this tranche's publication.
+retired rather than published. Reconciliation over the unrelated Mermaid
+receipt at `20ba82cbe644174616d85b05a314c8395772ad8f` preserves that result: all
+three Bezier2D suites plus Elixir and Lua Arc2D pass again. The TypeScript
+Arc2D rerun reached its unchanged npm install front but hit the known shared
+npm Arborist `edgesOut` transient, not a package or working-directory failure.
+A clean rerun, shared-fixture selector integration, hosted platforms, and
+independent final-head review remain required before publication.
