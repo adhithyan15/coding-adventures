@@ -202,12 +202,12 @@ describe("handwriting ductus", () => {
     // 62 -> 92: the thirty characters stage 2's tranche a writes (chapters
     // 31-55), each right after the word that anchors it: 他 们 妈 男 叫 来
     // 这 那 吃 饭 喝 水 买 多 少 去 车 天 今 星 期 年 明 点 午 晚 手 说 话 想.
-    // 92 -> 98: the first characters stage 2's tranche b writes (chapters 58-63),
+    // 92 -> 104: the first characters stage 2's tranche b writes (chapters 58-67),
     // each right after the word that anchors it:
-    // 机 白 长 快 电 打.
-    expect(chinese.letters).toHaveLength(98);
+    // 机 白 长 快 电 打 起 门 问 气 雨 马.
+    expect(chinese.letters).toHaveLength(104);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      98,
+      104,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),
