@@ -51,6 +51,12 @@ The implementation must also publish a physical-storage inventory whose bank
 counts are computed from the concrete code, XDATA, IRAM/SFR, PC, and halt
 storage containers. The inventory total must equal the independently stated
 `FLIP_FLOP_COUNT`; tests that merely restate the constant are insufficient.
+The PC state register's stable Q outputs are likewise the sole architectural
+program-counter authority. The legacy public `RegisterFile8051::pc` integer is
+only a synchronized observer: fetch, increment, branching, snapshots, restore,
+checked and legacy execution, bounded results, and rollback read or clock the
+PC DFF bank. External writes to the compatibility integer cannot redirect
+execution and are repaired at the next mutating execution boundary.
 
 Installed-program origin and length are lifecycle metadata, not silicon state,
 and are therefore excluded from the hardware DFF total.
@@ -99,10 +105,10 @@ The required conformance boundary is:
    metadata, and complete before/after snapshots.
 4. Test invalid state sizes, load overflow, truncation, halted stepping,
    deterministic clearing, exact topology, and bounded result traces.
-   Deliberate divergence of the public halt observer from Q must additionally
-   prove that snapshots, steps, runs, results, restore, and fault rollback
-   remain Q-driven and re-synchronize the observer where a mutating boundary
-   is entered.
+   Deliberate divergence of the public halt and PC observers from their Q
+   outputs must additionally prove that snapshots, steps, runs, results,
+   restore, and fault rollback remain Q-driven and re-synchronize observers
+   where a mutating boundary is entered.
 5. Pass formatting, Clippy with warnings denied, rustdoc with warnings denied,
    and at least 80% package line coverage.
 
