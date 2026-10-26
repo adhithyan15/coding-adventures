@@ -13,4 +13,4 @@ All notable changes to this package will be documented in this file.
 - Cover complete-state transport, inherited differential behavior, every new
   condition-code class, storage boundaries, and typed atomic failures.
 - Verify all inherited first-byte classifications across fourteen tests, with
-  100% function coverage and 98.60% line coverage (563/571 lines).
+  100% function coverage and 98.77% line coverage (564/571 lines).
