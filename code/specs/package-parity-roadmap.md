@@ -17995,12 +17995,12 @@ coverage, with a focused selection proving the 95% floor fails closed; Elixir
 passes 16 tests and Lua passes 24. Their real dependent Arc2D suites pass 32,
 9, and 9 tests respectively.
 
-That dependent run also exposed a separate TypeScript Arc2D build-front gap:
-successive directory changes leave its Unix BUILD executing Bezier2D instead
-of Arc2D. The new pending
-`geometry-arc2d-typescript-build-working-directory` owner records the bounded
-repair. It is dependency-ready but ranks behind the already prepared
-three-language and two-language Bezier tranches. This branch uses an explicit
-real Arc2D invocation meanwhile; current-main reconciliation, shared-fixture
+Independent review rejected the initially suspected TypeScript Arc2D
+working-directory gap. The repository runner starts every BUILD line from the
+package directory, so dependency-install directory changes do not persist into
+the Arc2D install, compile, test, or coverage commands. Runner-equivalent
+execution passes the actual 32-test Arc2D suite at 100% line and 95.23% branch
+coverage. The invalid repair candidate and its provisional backlog item are
+retired rather than published. Current-main reconciliation, shared-fixture
 selector integration, hosted platforms, and independent final-head review
-remain required before publication.
+remain required before this tranche's publication.
