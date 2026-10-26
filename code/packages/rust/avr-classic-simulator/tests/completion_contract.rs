@@ -662,6 +662,38 @@ fn all_skip_sources_classify_two_word_successors() {
 }
 
 #[test]
+fn all_taken_skip_sources_validate_terminal_targets_atomically() {
+    let cases = [
+        (rr(0x1000, 2, 3), true, false),
+        (0xfc00 | (2 << 4), true, false),
+        (0xfe00 | (2 << 4), false, false),
+        (0x9900, true, false),
+        (0x9b00, true, true),
+    ];
+    for (skip, zero_bit, io_set) in cases {
+        for skipped in [&[0x0000][..], &[0x9000, 0x0100][..]] {
+            let mut words = vec![skip];
+            words.extend_from_slice(skipped);
+            let mut cpu = AvrClassicSimulator::new();
+            cpu.load(&image(&words), 0).unwrap();
+            cpu.set_register(2, if zero_bit { 0 } else { 1 }).unwrap();
+            cpu.set_register(3, 0).unwrap();
+            cpu.set_data(0x20, u8::from(io_set)).unwrap();
+            let before = cpu.state().clone();
+            assert_eq!(
+                cpu.step(),
+                Err(AvrError::FetchOutsideProgram {
+                    pc: words.len() as u16
+                }),
+                "opcode {skip:#06x}, skipped width {}",
+                skipped.len()
+            );
+            assert_eq!(cpu.state(), &before);
+        }
+    }
+}
+
+#[test]
 fn truncated_two_word_fetch_and_skip_are_atomic() {
     for prefix in [0x9000, 0x9200, 0x940c, 0x940e] {
         let mut cpu = one(prefix);

@@ -1210,7 +1210,9 @@ fn finish_skip(
         if width == 2 {
             fetch_second(state, state.pc)?;
         }
-        state.pc = state.pc.wrapping_add(width as u16) & 0x3fff;
+        let target = state.pc.wrapping_add(width as u16) & 0x3fff;
+        validate_target(state, target)?;
+        state.pc = target;
     }
     let mut t = transition(name, 1);
     t.skipped = skip;
