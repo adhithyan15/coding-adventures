@@ -78,7 +78,9 @@ lengths are the low 24 bits of their registers.
 
 Bytes move left-to-right until the destination length is exhausted. Source
 bytes are used while available, followed by the pad byte. The address and
-length registers advance after every byte. Condition code is 0 for equal
+length registers advance after every byte; updated address-register high
+bytes are zero while the ignored high bytes of both length registers remain
+unchanged. Condition code is 0 for equal
 initial lengths, 1 when destination is shorter, and 2 when destination is
 longer. If a destination byte would destructively overlap unread source in the
 architecturally forbidden direction, condition code 3 is produced without
@@ -88,10 +90,12 @@ storage ranges are typed atomic faults.
 ### Compare Logical Long — `CLCL` (`0F`, RR)
 
 The two even register pairs identify variable-length byte strings. Missing
-bytes in the shorter operand compare as that operand's pad byte, taken from
-the high byte of its odd length register. Comparison proceeds left-to-right
+bytes in either operand compare as the single pad byte from the high byte of
+R2+1. Comparison proceeds left-to-right
 until unequal bytes are found or both fields are exhausted. Address and length
-registers describe the unexamined suffix. Condition code is 0 for equality, 1
+registers describe the unexamined suffix; updated address-register high bytes
+are zero while the ignored high bytes of both length registers remain
+unchanged. Condition code is 0 for equality, 1
 when operand one is low, and 2 when operand one is high. Odd pairs or invalid
 storage are typed atomic faults.
 
