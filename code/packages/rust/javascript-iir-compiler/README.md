@@ -4,7 +4,10 @@ The first native JavaScript execution slice. It parses JavaScript into the
 generic parse tree (CST), lowers a deliberately small numeric/`console.log`
 subset from that tree directly into InterpreterIR, and runs it on the Rust
 `vm-core` interpreter. It does not use Semantic IR or a host JavaScript runtime
-to execute programs.
+to execute programs. Since 0.6.0 (LANG84 phase 6e) the IIR holds LANG83
+registry operations only, so `lang-aot --lang javascript` also runs it on
+native x86-64/AArch64, LLVM, WASM, JVM, CLR, BEAM and the JIT, with no
+JavaScript code in any backend (see "Every backend" below).
 
 ## Pipeline: the compiler walks the parse tree
 
@@ -55,12 +58,13 @@ An empty call emits one newline; a call with multiple arguments separates the
 formatted numbers with one space. Four or more arguments and
 other syntax are rejected explicitly. This is a pilot, not a complete
 JavaScript engine.
-Number display outside the pilot's finite `1e-6` to `1e21` range is rejected
-until full ECMAScript formatting lands.
-If a later VM instruction fails, `run_source` returns a `JavaScriptRunError`
-containing the output from earlier completed `console.log` calls and the error
-message. A number-display failure appends none of the failing call's text,
-even when it occurs in the last argument. The `jsvm` command flushes that output
+Every number prints as node's `console.log` prints it: `String(x)` (so `1e21`
+is `1e+21` and `0.0000001` is `1e-7`), except that `-0` keeps its sign.
+If the program stops on a ReferenceError, `run_source` returns a
+`JavaScriptRunError` containing the output from earlier completed
+`console.log` calls and the error message. Every argument is evaluated before
+the line is written, so a ReferenceError in the last argument appends none of
+the failing call's text. The `jsvm` command flushes that output
 to stdout before reporting the error on stderr and exiting unsuccessfully.
 A compile error has empty output. es2020.tokens carries the F10 mode table, so
 the ordinary lexer reads a `/` after a value as division: repeated divisions
@@ -77,10 +81,11 @@ iteratively, so no tree can panic the compiler or exhaust its stack.
 ## Bindings
 
 Top-level `let NAME = <numeric expression>;` and `const NAME = ...;` bind one
-plain identifier. Each binding lowers to a `mov` into IIR register
-`js.<name>`; `.` cannot appear in a JavaScript identifier, so user names never
-collide with compiler temporaries (`js0`, `js1`, ...) or runner builtins
-(`js_console_log`, ...).
+plain identifier. Each binding lives in IIR register `js.<name>`: the
+instruction computing the initializer writes it directly (a `mov` only when
+the initializer is another binding); `.` cannot appear in a JavaScript
+identifier, so user names never collide with compiler temporaries and labels
+(`js0`, `js1`, ...).
 
 ```rust
 let output = javascript_iir_compiler::run_source(
@@ -147,3 +152,29 @@ assert_eq!(error.category(), "Parse");
   `parse_javascript_cst_bounded` or `parse_javascript_typed`
   (changed in 0.3.0: it used to take `&javascript_ast::Program`)
 - `run_source(src) -> Result<String, JavaScriptRunError>`
+
+## Every backend (LANG84 phase 6e)
+
+The module uses LANG83 registry operations only:
+
+| JavaScript | IIR |
+| --- | --- |
+| number literal | `const` (`f64`) |
+| `a + b`, `a - b`, `a * b`, `a / b`, `-a` | `f64_add`, `f64_sub`, `f64_mul`, `f64_div`, `f64_neg` (IEEE, never a trap) |
+| `console.log(a, b)` | evaluate `a` and `b`, then `write_f64_js a`, `putchar 32`, `write_f64_js b`, `putchar 10` |
+| `-0` | `putchar 45` when `f64_signbit x` > `f64_signbit (x + 0)` |
+| ReferenceError | `trap "Trap.ReferenceError"` |
+
+`write_f64_js` is `String(x)`, which prints `-0` as `0`, while
+`console.log` prints `-0`. Adding `+0` turns `-0` into `+0` and leaves every
+other non-NaN value alone, so the sign bits of `x` and `x + 0` differ for
+`-0` only. A literal can never be `-0`, so printing a literal (or a binding of
+one) skips that test: `console.log(42)` has no arithmetic at all, and even
+BEAM, whose floats cannot hold an infinity and which refuses the `f64_*` ops
+at compile time, runs it.
+
+`run_module` registers `write_f64_js` and `putchar` into one bounded buffer.
+A `Trap.ReferenceError` ends the program (the compiler emits nothing after
+it); `run_source` reports it with V8's message, which the compiler recorded,
+since the IIR does not name the binding, while `run_module` on its own reports
+`trap: Trap.ReferenceError`.

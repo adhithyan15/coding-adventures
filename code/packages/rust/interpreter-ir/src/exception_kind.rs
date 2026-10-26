@@ -58,11 +58,12 @@
 //! | [`TRAP_CONV_RANGE`] | `"Trap.ConvRange"` | `real_to_int_trunc`/`real_to_int_floor` on a non-finite or out-of-range value |
 //! | [`TRAP_OVERFLOW`] | `"Trap.Overflow"` | `i64_div_floor` of `MIN / -1` (LANG83 PR1b); the `i64_*_ovf` family (PR4) |
 //! | [`TRAP_USER`] | `"Trap.User"` | a frontend's explicit abort (`die`, a bare `raise`, …) via `trap` |
+//! | [`TRAP_REFERENCE_ERROR`] | `"Trap.ReferenceError"` | reading a name that is not bound yet, or at all (JavaScript, LANG84 6e) |
 //!
 //! # The closed trap-kind table (LANG83)
 //!
 //! The `trap kind` operation (LANG83) may only name a kind from a **closed**
-//! table: the six built-in `Trap.*` leaves above plus [`LANGUAGE_TRAP_KINDS`],
+//! table: the seven built-in `Trap.*` leaves above plus [`LANGUAGE_TRAP_KINDS`],
 //! where a language frontend registers its own kinds (for example a future
 //! `Ruby.ZeroDivisionError`) in the PR that first emits them. Each kind has a
 //! **stable integer id** ([`trap_kind_id`]) — what a native backend passes to
@@ -107,9 +108,22 @@ pub const TRAP_OVERFLOW: &str = "Trap.Overflow";
 /// (Perl `die`, Ruby `raise "msg"`), emitted as `trap "Trap.User"` (LANG83).
 pub const TRAP_USER: &str = "Trap.User";
 
+/// A read of a binding that does not exist yet, or at all, with *defined*
+/// trapping semantics (LANG84 phase 6e). JavaScript raises a `ReferenceError`
+/// for both the temporal dead zone (`console.log(a); let a = 1;`) and an
+/// undeclared name, and `javascript-iir-compiler` lowers each to
+/// `trap "Trap.ReferenceError"` after the output written so far.
+///
+/// It is a built-in `Trap.*` leaf rather than a `JavaScript.*` language kind
+/// because "this name is unbound here" is not JavaScript's alone: any
+/// frontend with late-bound names (Python's `NameError`, a Lisp's unbound
+/// variable) reaches the same failure and can share the kind.
+pub const TRAP_REFERENCE_ERROR: &str = "Trap.ReferenceError";
+
 /// The built-in trap kinds. The first four are in the order §6 of the T2 spec
-/// lists them; LANG83 appended `Trap.Overflow` and `Trap.User`. **Append
-/// only** — an entry's position (plus one) is its stable [`trap_kind_id`].
+/// lists them; LANG83 appended `Trap.Overflow` and `Trap.User`, and LANG84
+/// phase 6e `Trap.ReferenceError`. **Append only** — an entry's position
+/// (plus one) is its stable [`trap_kind_id`].
 pub const ALL_TRAP_KINDS: &[&str] = &[
     TRAP_BOUNDS,
     TRAP_NULL,
@@ -117,6 +131,7 @@ pub const ALL_TRAP_KINDS: &[&str] = &[
     TRAP_CONV_RANGE,
     TRAP_OVERFLOW,
     TRAP_USER,
+    TRAP_REFERENCE_ERROR,
 ];
 
 /// Language-specific trap kinds a frontend may name in `trap` (LANG83).
@@ -299,7 +314,9 @@ mod tests {
         assert!(is_trap_kind(TRAP_USER));
         assert!(kind_matches(TRAP_KIND, TRAP_OVERFLOW));
         assert!(!kind_matches(TRAP_OVERFLOW, TRAP_DIV_ZERO));
-        assert_eq!(ALL_TRAP_KINDS.len(), 6);
+        assert!(is_trap_kind(TRAP_REFERENCE_ERROR));
+        assert!(kind_matches(TRAP_KIND, TRAP_REFERENCE_ERROR));
+        assert_eq!(ALL_TRAP_KINDS.len(), 7);
     }
 
     #[test]
@@ -312,13 +329,14 @@ mod tests {
             (TRAP_CONV_RANGE, 4),
             (TRAP_OVERFLOW, 5),
             (TRAP_USER, 6),
+            (TRAP_REFERENCE_ERROR, 7),
         ];
         for (kind, id) in pinned {
             assert_eq!(trap_kind_id(kind), Some(id), "{kind}");
             assert_eq!(trap_kind_name(id), Some(kind));
         }
         assert_eq!(trap_kind_name(0), None);
-        assert_eq!(trap_kind_name(7), None);
+        assert_eq!(trap_kind_name(8), None);
         assert_eq!(trap_kind_name(LANGUAGE_TRAP_KIND_ID_BASE), LANGUAGE_TRAP_KINDS.first().copied());
         assert_eq!(trap_kind_id(TRAP_KIND), None);
         assert_eq!(trap_kind_id(CATCH_ANY), None);

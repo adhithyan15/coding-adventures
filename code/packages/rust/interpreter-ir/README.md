@@ -60,8 +60,9 @@ Type strings: `u8 u16 u32 u64 i8 i16 i32 i64 bool f32 f64 str void any`
 
 Exception kind names (`exception_kind` module) are dotted paths, e.g. `"Trap.Bounds"`;
 `catch "Trap"` catches any `Trap.*`, and `"*"` catches anything. The closed table a
-LANG83 `trap` may name is the six built-in leaves (`Trap.Bounds`, `Trap.Null`,
-`Trap.DivZero`, `Trap.ConvRange`, `Trap.Overflow`, `Trap.User`) plus
+LANG83 `trap` may name is the seven built-in leaves (`Trap.Bounds`, `Trap.Null`,
+`Trap.DivZero`, `Trap.ConvRange`, `Trap.Overflow`, `Trap.User`,
+`Trap.ReferenceError`) plus
 `LANGUAGE_TRAP_KINDS`; `trap_kind_id` gives each a stable, append-only integer id.
 
 ## The standard operation registry (LANG83)
