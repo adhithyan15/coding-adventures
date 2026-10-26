@@ -172,6 +172,14 @@ detail (the editor) is not wrapped: its content is bounded.
   scroll container (EM-11). The Android test already reaches rows through
   semantics. The iPadOS test's taps scroll on their own. Neither needs a
   change.
+- **Reachability on Flutter** (`conformance/flutter/journal_scroll_test.dart`):
+  - it writes the entries through the runtime;
+  - it requires that the bottom row starts below the window;
+  - it drags the pane's `Scrollable` until the row is inside the window;
+  - it taps the row, and requires that the editor holds it.
+
+  Journal has no Flutter desktop lane in CI yet (Mosaic backlog item 13), so
+  the file says how to run it, and that lane should adopt it.
 
 ## Native hosts (J5a)
 
