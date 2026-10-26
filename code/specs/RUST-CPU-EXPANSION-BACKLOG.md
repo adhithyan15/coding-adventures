@@ -57,6 +57,7 @@ claim unsound even when ISA differentials remain green.
 
 | Priority | Target | Status | Required boundary |
 |---:|---|---|---|
+| P0 | Cortex-M APSR MSR masks | local complete | Repaired inherited Cortex-M3 functional/gate mask classification and Cortex-M7 GE/NZCVQ group isolation before Cortex-M7 gate composition. Mask `01` writes GE only, `10` writes NZCVQ only, `11` writes both, and `00` plus non-APSR aliases fault atomically. All 81 affected release tests, strict checks, docs, affected builds, exact functional/gate differentials, and 93.23% combined line coverage (4,187/4,491) are green; independent exact-head review remains before publication. |
 | P0 | Motorola 68000 gate | local complete | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
 
 ## Independent functional queue

@@ -184,20 +184,57 @@ fn inherited_instructions_preserve_cortex_m7_only_state() {
 }
 
 #[test]
-fn ge_round_trips_through_every_apsr_special_register_alias() {
+fn apsr_masks_isolate_nzcvq_and_ge_for_every_alias() {
     for sysm in 0..=3 {
-        let write = msr(0, sysm);
-        let read = mrs(1, sysm);
-        let mut simulator = loaded(&[write[0], write[1], read[0], read[1]]);
-        simulator.write_register(0, 0xa80b_0000).unwrap();
+        for (mask, expected_apsr, expected_ge) in [
+            (1, 0x5000_0000, 0b1011),
+            (2, 0xa800_0000, 0b0101),
+            (3, 0xa800_0000, 0b1011),
+        ] {
+            let write = msr_masked(0, sysm, mask);
+            let read = mrs(1, sysm);
+            let mut simulator = loaded(&[write[0], write[1], read[0], read[1]]);
+            let mut state = simulator.get_state();
+            state.core.apsr = 0x5000_0000;
+            state.ge = 0b0101;
+            state.core.registers[0] = 0xa80b_0000;
+            simulator.restore(state).unwrap();
 
-        assert_eq!(simulator.step().unwrap().mnemonic, "msr");
-        assert_eq!(simulator.get_state().core.apsr, 0xa800_0000);
-        assert_eq!(simulator.get_state().ge, 0b1011);
+            assert_eq!(simulator.step().unwrap().mnemonic, "msr");
+            assert_eq!(simulator.get_state().core.apsr, expected_apsr);
+            assert_eq!(simulator.get_state().ge, expected_ge);
 
-        assert_eq!(simulator.step().unwrap().mnemonic, "mrs");
-        assert_eq!(simulator.read_register(1).unwrap(), 0xa80b_0000);
-        assert_eq!(simulator.get_state().ge, 0b1011);
+            assert_eq!(simulator.step().unwrap().mnemonic, "mrs");
+            assert_eq!(
+                simulator.read_register(1).unwrap(),
+                expected_apsr | (u32::from(expected_ge) << 16)
+            );
+        }
+    }
+}
+
+#[test]
+fn reserved_apsr_mask_is_typed_and_atomic() {
+    let write = msr_masked(0, 0, 0);
+    for false_it in [false, true] {
+        let mut simulator = loaded(&write);
+        let mut state = simulator.get_state();
+        state.core.apsr = 0x5000_0000;
+        state.ge = 0b0101;
+        state.core.registers[0] = 0xa80b_0000;
+        if false_it {
+            state.core.itstate = 0x08;
+        }
+        simulator.restore(state).unwrap();
+        let before = simulator.get_state();
+
+        assert!(matches!(
+            simulator.step(),
+            Err(CortexM7Error::Core(
+                CortexM3Error::UnknownInstruction32 { .. }
+            ))
+        ));
+        assert_eq!(simulator.get_state(), before);
     }
 }
 
@@ -215,7 +252,7 @@ fn false_it_conditions_skip_ge_special_register_transport() {
     assert_eq!(reader.read_register(1).unwrap(), 0xdead_beef);
     assert_eq!(reader.get_state().ge, 0b1011);
 
-    let write = msr(0, 0);
+    let write = msr_masked(0, 0, 1);
     let mut writer = loaded(&write);
     let mut state = writer.get_state();
     state.core.itstate = 0x08;

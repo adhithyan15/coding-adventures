@@ -567,6 +567,48 @@ fn barriers_special_registers_and_privilege_execute() {
 }
 
 #[test]
+fn apsr_msr_masks_classify_encode_and_preserve_groups() {
+    assert_eq!(msr(0, 0), msr_masked(0, 0, 2));
+    assert_eq!(msr_masked(0, 0, 1), [0xf380, 0x8400]);
+    assert_eq!(msr_masked(0, 0, 2), [0xf380, 0x8800]);
+    assert_eq!(msr_masked(0, 0, 3), [0xf380, 0x8c00]);
+
+    for sysm in 0..=3 {
+        for (mask, expected) in [(1, 0x5000_0000), (2, 0xa800_0000), (3, 0xa800_0000)] {
+            let encoded = msr_masked(0, sysm, mask);
+            assert_eq!(
+                classify(encoded[0], Some(encoded[1])),
+                Ok(InstructionClass::SpecialRegister)
+            );
+            let mut simulator = loaded(&encoded);
+            let mut state = simulator.get_state();
+            state.apsr = 0x5000_0000;
+            state.registers[0] = 0xa80b_0000;
+            simulator.restore(state).unwrap();
+            assert_eq!(simulator.step().unwrap().mnemonic, "msr");
+            assert_eq!(simulator.get_state().apsr, expected);
+        }
+
+        let reserved = msr_masked(0, sysm, 0);
+        let mut simulator = loaded(&reserved);
+        let before = simulator.get_state();
+        assert!(matches!(
+            simulator.step(),
+            Err(CortexM3Error::UnknownInstruction32 { .. })
+        ));
+        assert_eq!(simulator.get_state(), before);
+    }
+
+    for mask in [1, 3] {
+        let reserved = msr_masked(0, 20, mask);
+        assert!(matches!(
+            classify(reserved[0], Some(reserved[1])),
+            Err(CortexM3Error::UnknownInstruction32 { .. })
+        ));
+    }
+}
+
+#[test]
 fn cps_and_low_power_hints_track_interrupt_event_and_sleep_state() {
     let mut cps = loaded(&[0xb672, 0xb662, bkpt(0)]);
     cps.step().unwrap();

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Honor the architectural APSR MSR mask groups: G-only writes GE, NZCVQ-only
+  preserves GE, combined writes both, and reserved masks roll back complete
+  Cortex-M7 state.
+- Reach 96.66% line coverage (492 of 509 lines).
+
 ## 0.1.0 — 2026-10-25
 
 - Add a checked Cortex-M7 functional boundary built on the complete Cortex-M3

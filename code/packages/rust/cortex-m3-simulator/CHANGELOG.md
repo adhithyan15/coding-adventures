@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Distinguish `APSR_g`, `APSR_nzcvq`, and `APSR_nzcvqg` MSR masks, preserve
+  NZCVQ on G-only writes, reject reserved masks atomically, and expose an
+  explicit-mask encoder while retaining the existing NZCVQ default.
+- Reach 92.17% line coverage (1,459 of 1,583 lines).
+
 ## 0.1.0 — 2026-10-24
 
 - Add the checked Armv7-M Cortex-M3 functional execution boundary, IT and

@@ -706,7 +706,20 @@ pub(crate) fn classify_at(
             return Ok(InstructionClass::TableBranch);
         }
         let mrs = and_gate(line16(first, 0, 16, 0xf3ef), line16(second, 12, 4, 8));
-        let msr = and_gate(line16(first, 4, 12, 0xf38), line16(second, 8, 8, 0x88));
+        let msr_shape = and_gate(
+            and_gate(line16(first, 4, 12, 0xf38), line16(second, 12, 4, 8)),
+            line16(second, 8, 2, 0),
+        );
+        let apsr_sysm = line16(second, 2, 6, 0);
+        let mask_one = line16(second, 10, 2, 1);
+        let mask_two = line16(second, 10, 2, 2);
+        let mask_three = line16(second, 10, 2, 3);
+        let apsr_mask = or_gate(mask_one, or_gate(mask_two, mask_three));
+        let valid_mask = or_gate(
+            and_gate(apsr_sysm, apsr_mask),
+            and_gate(not_gate(apsr_sysm), mask_two),
+        );
+        let msr = and_gate(msr_shape, valid_mask);
         if or_gate(mrs, msr) == 1 {
             return Ok(InstructionClass::SpecialRegister);
         }
@@ -1950,7 +1963,8 @@ fn execute_special_register(
     }
     let value = state.registers[rn as usize];
     if matches!(sysm, 0..=3) {
-        state.apsr = gates::bit_and_32(value, APSR_MASK);
+        let write_nzcvq = line16(second, 11, 1, 1);
+        state.apsr = gates::select_32(state.apsr, gates::bit_and_32(value, APSR_MASK), write_nzcvq);
         return Ok("msr");
     }
     let unprivileged = and_gate(
@@ -2094,7 +2108,16 @@ pub mod encoding {
 
     #[must_use]
     pub const fn msr(rn: u16, sysm: u8) -> [u16; 2] {
-        [0xf380 | (rn & 0xf), 0x8800 | sysm as u16]
+        msr_masked(rn, sysm, 2)
+    }
+
+    /// Encode MSR with an explicit two-bit architectural mask.
+    #[must_use]
+    pub const fn msr_masked(rn: u16, sysm: u8, mask: u8) -> [u16; 2] {
+        [
+            0xf380 | (rn & 0xf),
+            0x8000 | (((mask as u16) & 3) << 10) | sysm as u16,
+        ]
     }
 
     #[must_use]

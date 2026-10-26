@@ -30,4 +30,11 @@ IT, CBZ/CBNZ, wide moves and memory transfers, division, bit operations,
 table branches, exclusive transfers, barriers, low-power/event behavior,
 BASEPRI, FAULTMASK, and special-register views. Release differential tests
 compare every implemented decode subfamily with the functional oracle. The
-completion baseline is 92.12% combined Rust line coverage (2,323/2,506).
+current completion baseline is 93.21% combined Rust line coverage
+(2,236/2,399).
+
+APSR MSR mask classification and NZCVQ write enable are gate-derived. G-only
+writes preserve the Cortex-M3 flags, NZCVQ and combined masks update them, and
+reserved masks fault atomically in exact functional lockstep. The default
+`msr` encoder remains NZCVQ-compatible; `msr_masked` exposes all mask bits for
+composition and verification.

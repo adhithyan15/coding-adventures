@@ -387,9 +387,12 @@ impl CortexM7Simulator {
                     .write_register(rd, value | (u32::from(self.ge) << 16))?;
             }
             "msr" if first & 0xfff0 == 0xf380 => {
-                let rn = (first & 0xf) as u8;
-                let value = self.core.read_register(rn)?;
-                self.ge = ((value >> 16) & 0xf) as u8;
+                let mask = ((second >> 10) & 3) as u8;
+                if mask & 1 != 0 {
+                    let rn = (first & 0xf) as u8;
+                    let value = self.core.read_register(rn)?;
+                    self.ge = ((value >> 16) & 0xf) as u8;
+                }
             }
             _ => {}
         }

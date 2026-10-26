@@ -14,6 +14,13 @@ failed IT member uses the explicit synthetic `it-skip` marker.
 Composed cores can use `try_get_state` to obtain the same complete snapshot
 with typed allocation failure.
 
+APSR writes honor the architectural two-bit MSR mask. `APSR_g` is a successful
+no-op on this Cortex-M3 boundary because GE is not implemented,
+`APSR_nzcvq` updates N/Z/C/V/Q, and `APSR_nzcvqg` updates the same implemented
+group while reserving the extension group for composed cores. Mask zero and
+non-APSR mask aliases are rejected atomically. The source-compatible `msr`
+encoder emits `APSR_nzcvq`; `msr_masked` exposes the explicit mask forms.
+
 The core is intentionally separate from NVIC, SysTick, debug, AHB-Lite timing,
 and vendor peripherals. Those compose around this package in later gate and SoC
 cells.
@@ -26,5 +33,5 @@ over R0-R12/SP bases (with PC forms rejected), exclusive monitor, table
 branch, barrier, and special-register families. It also covers flags, scalar
 and multiple memory, branches, stack ordering, dual stack selection, privilege,
 power hints, typed faults, and transactional lifecycle. Release tests, strict
-Clippy, and rustdoc warnings pass. The completion baseline is 86.35% line
-coverage (1,348/1,561).
+Clippy, and rustdoc warnings pass. The current completion baseline is 92.17%
+line coverage (1,459/1,583).
