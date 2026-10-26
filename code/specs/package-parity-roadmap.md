@@ -18087,3 +18087,19 @@ Python tranche remains local-only, independently reviewed, and next among
 dependency-ready owners. It must be revalidated and independently reviewed
 again at its exact post-rebase head before a future publication. The prepared
 Bezier successors remain blocked on #18293; no fourth parity PR may open.
+
+## October 26, 2026: Haskell merge and Python publication selection
+
+Haskell Starlark provider PR #18183 completed every exact-head check and merged
+through guarded squash auto-merge as
+`ab25faef874fdc7788b37eabc19b87b7c1c79835`. Its reviewed worktree and local
+branch were removed after the merge receipt was verified in current main.
+
+The freed hosted slot was reprioritized before publication. The reviewed Python
+gradient-descent front remains the highest-leverage bounded ready item: it
+removes one exact orphan exemption and unlocks two recorded descendants. The
+reviewed Swift PaintVmAscii capability profile and Kotlin micro-qr build front
+remain compact local preparations. Bezier successor tranches remain blocked on
+PR #18293. The Python branch is rebased onto exact current main
+`06d8c098e5c3aa93b196716db30dc4d28247ea0a` and must pass fresh native,
+metadata, state, planner, and exact-head independent review before publication.
