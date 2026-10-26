@@ -3696,7 +3696,7 @@ fn checked_ops_on_real_clang_flush_then_trap_overflow() {
 }
 
 // ===========================================================================
-// LANG83 PR6a — write_f64_py / write_f64_js
+// LANG83 PR6a / PR7e — float output is the compiler's, not the backend's
 // ===========================================================================
 
 /// `main` writes each value with `builtin`, a space after each, and also uses
@@ -3723,50 +3723,18 @@ fn float_program(builtin: &str, values: &[f64]) -> IIRModule {
     }
 }
 
+/// LANG83 PR7e: PR6a's `write_f64_py` / `write_f64_js` (the module-local
+/// `@__iir_write_f64`) are gone. A module that still calls one is refused
+/// at lowering, never compiled into a call nothing defines. (The layout
+/// moved into the compilers' own helpers; `lang-aot`'s `op_conformance`
+/// runs them over the PR6a table on this column.)
 #[test]
-fn float_writers_call_one_module_local_routine_with_a_layout_flag() {
-    let ll = lower(&float_program("write_f64_py", &[1.5]));
-    assert!(ll.contains("call void @__iir_write_f64(double "), "{ll}");
-    assert!(ll.contains(", i32 0)"), "Python layout is 0");
-    assert_eq!(ll.matches("define internal void @__iir_write_f64(").count(), 1);
-    assert_eq!(ll.matches("define internal i32 @__iir_f64_digits(").count(), 1);
-    assert_eq!(ll.matches("declare i32 @putchar(i32)").count(), 1, "putchar declared once");
-    // Self-contained: no harness runtime and no libc formatter.
-    assert!(!ll.contains("@printf") && !ll.contains("@__twig_") && !ll.contains("@snprintf"));
-    let js = lower(&float_program("write_f64_js", &[1.5]));
-    assert!(js.contains(", i32 1)"), "JavaScript layout is 1");
-    // A module that prints no float carries none of it.
-    assert!(!lower(&floor_program("i64_div_floor", &[(7, 2)])).contains("__iir_f64_digits"));
-}
-
-#[test]
-fn float_writers_match_python_and_javascript_on_real_clang() {
-    let values = [
-        0.0, -0.0, 1.0, 100.0, 0.1, 123.456, 1e15, 1e16, 1e21, 1e-4, 1e-5, 1e-7, 1.5e-7, 5e-324,
-        1.7976931348623157e308, 2.9802322387695312e-08, f64::INFINITY, f64::NEG_INFINITY, f64::NAN,
-    ];
-    let Some(out) = run_on_clang(&float_program("write_f64_py", &values), "f64_py") else { return };
-    assert!(out.status.success());
-    // Every expected string is what host python3 / node print.
-    assert_eq!(
-        String::from_utf8_lossy(&out.stdout),
-        "0.0 -0.0 1.0 100.0 0.1 123.456 1000000000000000.0 1e+16 1e+21 0.0001 1e-05 1e-07 1.5e-07 \
-         5e-324 1.7976931348623157e+308 2.9802322387695312e-08 inf -inf nan "
-    );
-    let out = run_on_clang(&float_program("write_f64_js", &values), "f64_js").expect("clang present");
-    assert!(out.status.success());
-    assert_eq!(
-        String::from_utf8_lossy(&out.stdout),
-        "0 0 1 100 0.1 123.456 1000000000000000 10000000000000000 1e+21 0.0001 0.00001 1e-7 1.5e-7 \
-         5e-324 1.7976931348623157e+308 2.9802322387695312e-8 Infinity -Infinity NaN "
-    );
-}
-
-#[test]
-fn a_module_function_in_the_reserved_iir_namespace_is_refused_when_floats_are_printed() {
-    let mut m = float_program("write_f64_js", &[1.0]);
-    m.functions.push(IIRFunction::new("__iir_f64_digits", vec![], "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]));
-    assert!(lower_iir_to_llvm(&m, &IIRLlvmConfig::default()).is_err());
+fn retired_float_writers_are_refused() {
+    for name in ["write_f64_py", "write_f64_js"] {
+        let err = lower_iir_to_llvm(&float_program(name, &[1.5]), &IIRLlvmConfig::default())
+            .expect_err(name);
+        assert!(format!("{err:?}").contains(name), "{name}: {err:?}");
+    }
 }
 
 // ===========================================================================
@@ -3811,17 +3779,15 @@ fn digit_ops_emit_the_core_and_wrappers_but_not_the_writer() {
     assert_eq!(ll.matches("define internal i64 @__iir_f64_shortest_digits(").count(), 1);
     // No layout code, and nothing that writes a byte: the digits are pure.
     assert!(!ll.contains("@__iir_write_f64") && !ll.contains("@putchar"), "{ll}");
-    // A module that both prints a float and asks for its digits carries ONE core.
-    let mut both = digit_program(&[1.5], true);
-    let tail_at = both.functions[0].instructions.len() - 2;
-    let ret = both.functions[0].instructions.split_off(tail_at);
-    both.functions[0].instructions.push(IIRInstr::new("call_builtin", None, vec![v("write_f64_py"), v("c0")], "void"));
-    both.functions[0].instructions.extend(ret);
-    let ll = lower(&both);
+    // Self-contained: no harness runtime and no libc formatter.
+    assert!(!ll.contains("@__twig_") && !ll.contains("@snprintf"), "{ll}");
+    // With separators, `putchar` is declared once, and there is still one core.
+    let ll = lower(&digit_program(&[1.5, 2.5], true));
     assert_eq!(ll.matches("define internal i32 @__iir_f64_digits(").count(), 1, "{ll}");
-    assert_eq!(ll.matches("define internal void @__iir_write_f64(").count(), 1);
     assert_eq!(ll.matches("declare i32 @putchar(i32)").count(), 1);
     assert!(validate_for_llvm(&digit_program(&[1.5], true)).is_empty());
+    // A module that asks for no digits carries none of it.
+    assert!(!lower(&floor_program("i64_div_floor", &[(7, 2)])).contains("__iir_f64_digits"));
     // The reserved namespace is refused for the digit ops too.
     let mut clash = digit_program(&[1.0], false);
     clash.functions.push(IIRFunction::new("__iir_f64_shortest_digits", vec![], "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]));
@@ -3861,11 +3827,12 @@ fn digit_ops_match_python_repr_on_real_clang() {
 // LANG83 PR6c — non-trapping IEEE f64 arithmetic and f64_signbit
 // ===========================================================================
 
-/// `main` runs each `(op, operands)` on float constants, writes the result
-/// with `write_f64_js`, then writes its `f64_signbit` with `write_i64`, a
-/// space after each.
+/// `main` runs each `(op, operands)` on float constants and writes the
+/// result's `f64_class`, `f64_digits`, `f64_exp10` and `f64_signbit` with
+/// `write_i64`, a space after each. Those four identify every value (PR6a
+/// observed it through `write_f64_js`, removed in PR7e).
 fn ieee_program(cases: &[(&str, &[f64])]) -> IIRModule {
-    let mut m = float_program("write_f64_js", &[]);
+    let mut m = float_program("write_i64", &[]);
     let ret = m.functions[0].instructions.split_off(1);
     let body = &mut m.functions[0].instructions;
     for (i, (op, xs)) in cases.iter().enumerate() {
@@ -3877,8 +3844,12 @@ fn ieee_program(cases: &[(&str, &[f64])]) -> IIRModule {
         }
         let (r, s) = (format!("r{i}"), format!("s{i}"));
         body.push(IIRInstr::new(*op, Some(r.clone()), srcs, "f64"));
-        body.push(IIRInstr::new("call_builtin", None, vec![v("write_f64_js"), v(&r)], "void"));
-        body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
+        for query in ["f64_class", "f64_digits", "f64_exp10"] {
+            let q = format!("{query}{i}");
+            body.push(IIRInstr::new(query, Some(q.clone()), vec![v(&r)], "i64"));
+            body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&q)], "void"));
+            body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
+        }
         body.push(IIRInstr::new("f64_signbit", Some(s.clone()), vec![v(&r)], "i64"));
         body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&s)], "void"));
         body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
@@ -3934,13 +3905,22 @@ fn ieee_ops_follow_the_edge_table_on_real_clang() {
     ]);
     let Some(out) = run_on_clang(&program, "ieee") else { return };
     assert!(out.status.success(), "nothing traps: {}", String::from_utf8_lossy(&out.stderr));
-    // A NaN's sign bit is unspecified, so its signbit (after each "NaN") is
-    // checked only for being 0 or 1.
+    // Each row is `class digits exp10 signbit`: class 2 is ±Infinity, 3 NaN,
+    // 0 a zero (whose sign the signbit tells). A NaN's sign bit is
+    // unspecified, so it is checked only for being 0 or 1.
     let text = String::from_utf8_lossy(&out.stdout).into_owned();
     let words: Vec<&str> = text.split_whitespace().collect();
     let want = [
-        "Infinity", "0", "-Infinity", "1", "NaN", "?", "0", "1", "Infinity", "0",
-        "0.30000000000000004", "0", "0", "1", "NaN", "?", "0", "1", "Infinity", "0",
+        "2", "0", "0", "0", // 1/0 = Infinity
+        "2", "0", "0", "1", // -1/0 = -Infinity
+        "3", "0", "0", "?", // 0/0 = NaN
+        "0", "0", "0", "1", // -1 × 0 = -0
+        "2", "0", "0", "0", // 1e308 × 10 = Infinity
+        "1", "30000000000000004", "-1", "0", // 0.1 + 0.2
+        "0", "0", "0", "1", // -0 - 0 = -0
+        "3", "0", "0", "?", // Infinity - Infinity = NaN
+        "0", "0", "0", "1", // -(0) = -0
+        "2", "0", "0", "0", // -(-Infinity) = Infinity
     ];
     assert_eq!(words.len(), want.len(), "{text}");
     for (got, want) in words.iter().zip(want) {

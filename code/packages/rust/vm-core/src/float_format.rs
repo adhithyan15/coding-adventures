@@ -1,32 +1,37 @@
-//! Shortest round-trip float formatting in Python's and JavaScript's layouts
-//! (LANG83 PR6a — `write_f64_py` / `write_f64_js`).
+//! Shortest round-trip float digits — the VM's (and the JIT's) lowering of
+//! the LANG83 PR7b ops `f64_class`, `f64_digits` and `f64_exp10`.
 //!
 //! # Two questions: which digits, and where the point goes
 //!
 //! Printing a float is two separate decisions.
 //!
-//! 1. **The digits.** Python's `repr(x)` and JavaScript's `String(x)` both
-//!    print the *shortest* decimal digit string that reads back as exactly
-//!    `x`. If several strings of that length read back as `x`, they print the
-//!    one *closest* to `x`; on an exact tie, the one whose last digit is even.
-//!    `0.1` is really `0.1000000000000000055511151231257827…`, but `0.1` is
-//!    the shortest string that rounds back to it, so that is what you see.
+//! 1. **The digits.** Python's `repr(x)`, JavaScript's `String(x)`, Java 19+
+//!    and Ryu all print the *shortest* decimal digit string that reads back
+//!    as exactly `x`. If several strings of that length read back as `x`, they
+//!    print the one *closest* to `x`; on an exact tie, the one whose last
+//!    digit is even. `0.1` is really `0.1000000000000000055511151231257827…`,
+//!    but `0.1` is the shortest string that rounds back to it. This rule has
+//!    one definition that names no language, so it is an IIR op.
 //!
-//! 2. **The layout.** Given digits `D` and the decimal exponent `e` of the
-//!    first digit (`123.4` → `D = "1234"`, `e = 2`), the two languages differ:
+//! 2. **The layout.** Given digits `D` and the decimal exponent `e10` of the
+//!    first digit (`123.4` → `D = 1234`, `e10 = 2`), every language places
+//!    the point, the exponent and the sign its own way:
 //!
 //!    | value | Python `repr` | JavaScript `toString` |
 //!    |-------|---------------|-----------------------|
 //!    | `1e16` | `1e+16` | `10000000000000000` |
-//!    | `1e21` | `1e+21` | `1e+21` |
-//!    | `1.5e-7` | `1.5e-07` | `1.5e-7` |
 //!    | `100.0` | `100.0` | `100` |
 //!    | `-0.0` | `-0.0` | `0` |
-//!    | `inf` / `nan` | `inf` / `nan` | `Infinity` / `NaN` |
 //!
-//!    Python uses fixed notation when `-4 <= e < 16`; JavaScript when
-//!    `-7 < e < 21`. Python pads the exponent to two digits; JavaScript does
-//!    not. Python keeps `.0` on an integral value; JavaScript drops it.
+//!    That is a language's rule, so it is **not** here. Each compiler emits a
+//!    module-local helper that lays the digits out with integer ops and
+//!    `putchar` (python-iir-compiler's `__py_write_float`,
+//!    javascript-iir-compiler's `__js_write_number`).
+//!
+//! Until LANG83 PR7e this module also held both layouts (`format_f64`,
+//! `python_repr`, `js_to_string`) for the VM's `write_f64_py` /
+//! `write_f64_js` builtins. Those builtins are gone, and with them the
+//! layouts: no line of the VM knows which language it runs.
 //!
 //! # Where the digits come from here
 //!
@@ -35,11 +40,12 @@
 //! between two shortest candidates, Rust takes the upper one, while Python,
 //! JavaScript (ECMA-262 `Number::toString`, step 5's "choose the even one"),
 //! Java 19+ and Ryu all take the one whose last digit is even. That is not
-//! exotic: `2^-25` is exactly `2.98023223876953125e-08`, Python prints
-//! `2.9802322387695312e-08` and Rust `2.9802322387695313e-8`; so does any
-//! double near `1e15` with a `.25` or `.75` fraction (`1072012167405248.25`).
-//! Measured against host `python3` on 535 432 values, Rust's digits differed
-//! on 94 — every one of them such a tie.
+//! exotic: `2^-25` is exactly `2.98023223876953125e-08`, whose shortest
+//! digits are `29802322387695312` (even), where Rust prints
+//! `2.9802322387695313e-8`; so does any double near `1e15` with a `.25` or
+//! `.75` fraction (`1072012167405248.25`). Measured against host `python3` on
+//! 535 432 values, Rust's digits differed on 94 — every one of them such a
+//! tie.
 //!
 //! So this module reads Rust's shortest digits out of `format!("{:e}", x)`
 //! (`"1.2345e-7"`, `"1e16"`), and then checks for that one case with Rust's
@@ -49,38 +55,17 @@
 //! value is a tie, and the even neighbour is taken whenever it, too, reads back
 //! as the same double. Both answers come from Rust's own formatting.
 //!
-//! The VM's default `write_f64_py` / `write_f64_js` builtins and the JIT's
-//! embedder-registered handlers both call these functions, so the two
-//! in-process columns cannot disagree.
-//!
-//! # The digits on their own (LANG83 PR7b)
-//!
-//! The layout is a language's rule; the digits are not. So the digits are
-//! also exposed as three language-neutral integer queries — [`f64_class`],
-//! [`f64_digits`] and [`f64_exp10`], the VM's (and the JIT's) lowering of the
-//! registry ops of the same names — built on [`shortest_digits`], which
-//! returns `(D, e10)` as integers. A compiler can then print a float in any
-//! layout with integer arithmetic and `putchar`. Both paths share one core
-//! (`shortest_digit_string`), so `format_f64`'s output is unchanged.
-
-/// Which language's layout to use for the shortest digits.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum FloatLayout {
-    /// Python `repr(float)` (also `str` and what `print` writes).
-    Python,
-    /// JavaScript `Number.prototype.toString()` (what `console.log` writes).
-    JavaScript,
-}
+//! The VM's `f64_class` / `f64_digits` / `f64_exp10` handlers and the JIT's
+//! `CLASS_F64` / `DIGITS_F64` / `EXP10_F64` bytecodes both call these
+//! functions, so the two in-process columns cannot disagree.
 
 /// The shortest round-trip digits of a finite, non-zero `x`, as a digit
 /// STRING: `(digits, e10)` with `|x| ≈ 0.d₁ × 10^(e10+1)`, i.e. `e10` is the
 /// decimal exponent of the first digit. `digits` has no leading or trailing
 /// zeros.
 ///
-/// This is the one internal core. [`shortest_digits`] (the LANG83 PR7b
-/// `f64_digits` / `f64_exp10` answer) reads it as an integer, and
-/// [`format_f64`] (PR6a's `write_f64_py` / `write_f64_js`) lays the string
-/// out, so the ops and the writers cannot disagree on a digit.
+/// The internal core; [`shortest_digits`] (the LANG83 PR7b `f64_digits` /
+/// `f64_exp10` answer) reads it as an integer.
 fn shortest_digit_string(x: f64) -> (String, i32) {
     debug_assert!(x.is_finite() && x != 0.0, "shortest_digit_string needs a finite non-zero value");
     // `{:e}` of a positive float is `d[.ddd]e[-]n`: the mantissa's digits ARE
@@ -234,134 +219,43 @@ fn increment_digits(digits: &str, e10: i32) -> (String, i32) {
     ("1".to_string(), e10 + 1)
 }
 
-/// Lay out shortest digits `digits` with first-digit exponent `e10`, for a
-/// value whose sign has already been written (the result has no sign).
-///
-/// This is the one place the two layouts are spelled out; every backend's own
-/// layout code (C, LLVM IR, WASM, JVM and CIL helpers, BEAM) follows it.
-fn layout_digits(digits: &str, e10: i32, layout: FloatLayout) -> String {
-    let n = digits.len() as i32;
-    let (lo, hi) = match layout {
-        // Python: fixed when -4 <= e < 16.
-        FloatLayout::Python => (-4, 16),
-        // JavaScript: fixed when -7 < e < 21, i.e. -6 <= e < 21.
-        FloatLayout::JavaScript => (-6, 21),
-    };
-    let mut out = String::with_capacity(32);
-    if (lo..hi).contains(&e10) {
-        if e10 < 0 {
-            // 0.000ddd — (-e10 - 1) zeros between the point and the digits.
-            out.push_str("0.");
-            out.extend(std::iter::repeat_n('0', (-e10 - 1) as usize));
-            out.push_str(digits);
-        } else if n <= e10 + 1 {
-            // Integral: the digits, then zeros up to the units place.
-            out.push_str(digits);
-            out.extend(std::iter::repeat_n('0', (e10 + 1 - n) as usize));
-            if layout == FloatLayout::Python {
-                out.push_str(".0");
-            }
-        } else {
-            // The point falls inside the digits.
-            let split = (e10 + 1) as usize;
-            out.push_str(&digits[..split]);
-            out.push('.');
-            out.push_str(&digits[split..]);
-        }
-    } else {
-        // d[.ddd]e±X — a point only when more digits follow.
-        out.push_str(&digits[..1]);
-        if n > 1 {
-            out.push('.');
-            out.push_str(&digits[1..]);
-        }
-        out.push('e');
-        out.push(if e10 < 0 { '-' } else { '+' });
-        let magnitude = e10.unsigned_abs();
-        if layout == FloatLayout::Python && magnitude < 10 {
-            out.push('0');
-        }
-        out.push_str(&magnitude.to_string());
-    }
-    out
-}
-
-/// Format `x` in `layout`: the special values, then the sign, then the
-/// shortest digits laid out.
-///
-/// ```
-/// use vm_core::float_format::{format_f64, FloatLayout::{JavaScript, Python}};
-/// assert_eq!(format_f64(1e16, Python), "1e+16");
-/// assert_eq!(format_f64(1e16, JavaScript), "10000000000000000");
-/// assert_eq!(format_f64(-0.0, Python), "-0.0");
-/// assert_eq!(format_f64(-0.0, JavaScript), "0");
-/// ```
-pub fn format_f64(x: f64, layout: FloatLayout) -> String {
-    let py = layout == FloatLayout::Python;
-    if x.is_nan() {
-        // Python prints `nan` for every NaN, whatever its sign bit.
-        return if py { "nan" } else { "NaN" }.to_string();
-    }
-    let sign = if x.is_sign_negative() { "-" } else { "" };
-    if x.is_infinite() {
-        return format!("{sign}{}", if py { "inf" } else { "Infinity" });
-    }
-    if x == 0.0 {
-        // `0.0 == -0.0`, so this arm takes both zeros. Python keeps the sign
-        // (`-0.0`); JavaScript's `Number::toString` prints `0` for both.
-        return if py { format!("{sign}0.0") } else { "0".to_string() };
-    }
-    let (digits, e10) = shortest_digit_string(x);
-    format!("{sign}{}", layout_digits(&digits, e10, layout))
-}
-
-/// Python `repr(x)` — what `write_f64_py` writes.
-pub fn python_repr(x: f64) -> String {
-    format_f64(x, FloatLayout::Python)
-}
-
-/// JavaScript `String(x)` — what `write_f64_js` writes.
-pub fn js_to_string(x: f64) -> String {
-    format_f64(x, FloatLayout::JavaScript)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    /// `(value, Python repr, JavaScript String)` — every row was produced by
-    /// host `python3` and `node`.
-    const TABLE: &[(f64, &str, &str)] = &[
-        (1.0, "1.0", "1"),
-        (100.0, "100.0", "100"),
-        (0.1, "0.1", "0.1"),
-        (123.456, "123.456", "123.456"),
-        (1e15, "1000000000000000.0", "1000000000000000"),
-        (1e16, "1e+16", "10000000000000000"),
-        (1e20, "1e+20", "100000000000000000000"),
-        (1e21, "1e+21", "1e+21"),
-        (1e-4, "0.0001", "0.0001"),
-        (1e-5, "1e-05", "0.00001"),
-        (1e-6, "1e-06", "0.000001"),
-        (1e-7, "1e-07", "1e-7"),
-        (1.5e-7, "1.5e-07", "1.5e-7"),
-        (-2.5, "-2.5", "-2.5"),
-        (5e-324, "5e-324", "5e-324"),
-        (2.2250738585072014e-308, "2.2250738585072014e-308", "2.2250738585072014e-308"),
-        (1.7976931348623157e308, "1.7976931348623157e+308", "1.7976931348623157e+308"),
+    /// `(value, D, e10)` — every row is host `python3`'s `repr` split at the
+    /// digits (the same values the PR6a layout tables used: each layout edge,
+    /// the extremes and a tie).
+    const TABLE: &[(f64, u64, i32)] = &[
+        (1.0, 1, 0),
+        (100.0, 1, 2),
+        (0.1, 1, -1),
+        (123.456, 123456, 2),
+        (1e15, 1, 15),
+        (1e16, 1, 16),
+        (1e20, 1, 20),
+        (1e21, 1, 21),
+        (1e-4, 1, -4),
+        (1e-5, 1, -5),
+        (1e-6, 1, -6),
+        (1e-7, 1, -7),
+        (1.5e-7, 15, -7),
+        (-2.5, 25, 0),
+        (5e-324, 5, -324),
+        (2.2250738585072014e-308, 22250738585072014, -308),
+        (1.7976931348623157e308, 17976931348623157, 308),
         // 2^-25: exactly halfway between two 17-digit candidates; the even
         // last digit wins.
-        (2.9802322387695312e-08, "2.9802322387695312e-08", "2.9802322387695312e-8"),
-        (9007199254740994.0, "9007199254740994.0", "9007199254740994"),
-        (2e23, "2e+23", "2e+23"),
-        (123456789012345680.0, "1.2345678901234568e+17", "123456789012345680"),
+        (2.9802322387695312e-08, 29802322387695312, -8),
+        (9007199254740994.0, 9007199254740994, 15),
+        (2e23, 2, 23),
+        (123456789012345680.0, 12345678901234568, 17),
     ];
 
     #[test]
-    fn layouts_match_host_python_and_node() {
-        for &(x, py, js) in TABLE {
-            assert_eq!(python_repr(x), py, "python repr of {x:e}");
-            assert_eq!(js_to_string(x), js, "js toString of {x:e}");
+    fn digits_match_host_python() {
+        for &(x, d, e10) in TABLE {
+            assert_eq!(shortest_digits(x), (d, e10), "{x:e}");
         }
     }
 
@@ -370,37 +264,22 @@ mod tests {
         // Rust's own `{:e}` rounds these ties up; python3 and node print the
         // even neighbour.
         assert_eq!(format!("{:e}", 2f64.powi(-25)), "2.9802322387695313e-8");
-        assert_eq!(python_repr(2f64.powi(-25)), "2.9802322387695312e-08");
+        assert_eq!(shortest_digits(2f64.powi(-25)), (29802322387695312, -8));
         // 1072012167405248.25 exactly (the ulp here is 1/8), a tie between
-        // …248.2 and …248.3 at 17 digits.
+        // …248.2 and …248.3 at 17 digits (Python and JavaScript print …248.2).
         let tie = 1_072_012_167_405_248.0 + 0.25;
-        assert_eq!(python_repr(tie), "1072012167405248.2");
-        assert_eq!(js_to_string(tie), "1072012167405248.2");
-        assert_eq!(python_repr(5.960464477539063e-7), "5.960464477539062e-07");
+        assert_eq!(shortest_digits(tie), (10720121674052482, 15));
+        // Python prints 5.960464477539062e-07.
+        assert_eq!(shortest_digits(5.960464477539063e-7), (5960464477539062, -7));
         assert_eq!(increment_digits("1299", 3), ("1300".to_string(), 3));
         assert_eq!(increment_digits("999", 3), ("1".to_string(), 4));
     }
 
+    /// The integer digits agree with the core's digit string, and the three
+    /// ops give 0 for the classes without digits.
     #[test]
-    fn special_values() {
-        assert_eq!(python_repr(0.0), "0.0");
-        assert_eq!(python_repr(-0.0), "-0.0");
-        assert_eq!(js_to_string(0.0), "0");
-        assert_eq!(js_to_string(-0.0), "0");
-        assert_eq!(python_repr(f64::INFINITY), "inf");
-        assert_eq!(python_repr(f64::NEG_INFINITY), "-inf");
-        assert_eq!(js_to_string(f64::INFINITY), "Infinity");
-        assert_eq!(js_to_string(f64::NEG_INFINITY), "-Infinity");
-        assert_eq!(python_repr(f64::NAN), "nan");
-        assert_eq!(python_repr(-f64::NAN), "nan");
-        assert_eq!(js_to_string(f64::NAN), "NaN");
-    }
-
-    /// PR7b: the integer digits agree with the string the writers lay out,
-    /// and the three ops give 0 for the classes without digits.
-    #[test]
-    fn neutral_primitives_match_the_layouts() {
-        for &(x, py, _) in TABLE {
+    fn neutral_primitives_follow_the_core() {
+        for &(x, ..) in TABLE {
             let (d, e10) = shortest_digits(x);
             let (s, se10) = shortest_digit_string(x);
             assert_eq!((d.to_string(), e10), (s, se10), "{x:e}");
@@ -408,35 +287,37 @@ mod tests {
             assert_eq!(f64_digits(x), d as i64);
             assert_eq!(f64_exp10(x), i64::from(e10));
             assert!(d % 10 != 0 && d < 100_000_000_000_000_000, "{x:e}: D = {d}");
-            // The digits, re-read with the exponent, give the same double.
-            let n = d.to_string().len() as i32;
-            let back: f64 = format!("{d}e{}", e10 - n + 1).parse().unwrap();
-            assert_eq!(back.to_bits(), x.abs().to_bits(), "{x:e} vs Python {py}");
         }
         assert_eq!(shortest_digits(1.5), (15, 0));
         assert_eq!(shortest_digits(1e21), (1, 21));
-        assert_eq!(shortest_digits(2f64.powi(-25)), (29802322387695312, -8), "ties to even");
         for (x, class) in [(0.0, 0), (-0.0, 0), (f64::INFINITY, 2), (f64::NEG_INFINITY, 2), (f64::NAN, 3), (-f64::NAN, 3)] {
             assert_eq!((f64_class(x), f64_digits(x), f64_exp10(x)), (class, 0, 0), "{x:e}");
         }
         assert_eq!(f64_class(-5e-324), 1, "subnormals are class 1");
     }
 
+    /// Every `(D, e10)` reads back as the same double, and is the shortest
+    /// such: one digit fewer (rounded either way) never reads back.
     #[test]
     fn shortest_digits_round_trip() {
-        // Every printed string must read back as the same bits.
         let mut state = 0x9E37_79B9_7F4A_7C15_u64;
         for _ in 0..20_000 {
             state ^= state << 13;
             state ^= state >> 7;
             state ^= state << 17;
             let x = f64::from_bits(state);
-            if !x.is_finite() {
+            if !x.is_finite() || x == 0.0 {
                 continue;
             }
-            for s in [python_repr(x), js_to_string(x)] {
-                let back: f64 = s.parse().unwrap();
-                assert_eq!(back.to_bits(), x.to_bits(), "{s} does not read back as {x:e}");
+            let (d, e10) = shortest_digits(x);
+            let n = d.to_string().len() as i32;
+            let back: f64 = format!("{d}e{}", e10 - n + 1).parse().unwrap();
+            assert_eq!(back.to_bits(), x.abs().to_bits(), "{d}e{} does not read back as {x:e}", e10 - n + 1);
+            if n > 1 {
+                for shorter in [d / 10, d / 10 + 1] {
+                    let y: f64 = format!("{shorter}e{}", e10 - n + 2).parse().unwrap();
+                    assert_ne!(y.to_bits(), x.abs().to_bits(), "{x:e}: {shorter} is shorter than {d}");
+                }
             }
         }
     }

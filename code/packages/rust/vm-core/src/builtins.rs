@@ -15,12 +15,18 @@
 //! | `"print_i64"` | Prints one integer in decimal **plus `\n`** to stdout (LANG83 standard builtin) |
 //! | `"putchar"` | Writes the low byte of one integer to stdout (LANG83 standard builtin) |
 //! | `"write_i64"` | Prints one integer in decimal, **no** newline (LANG83 PR1b standard builtin) |
-//! | `"write_f64_py"` | Prints one float as Python `repr` does (shortest round-trip digits), **no** newline (LANG83 PR6a) |
-//! | `"write_f64_js"` | Prints one float as JavaScript `String(x)` does, **no** newline (LANG83 PR6a) |
+//!
+//! There is no float writer. LANG83 PR6a's `write_f64_py` / `write_f64_js`
+//! (a float in Python's / JavaScript's layout) were removed in PR7e, because
+//! a VM builtin may not carry one language's rules: a compiler prints a float
+//! with its own module-local helper over the `f64_class` / `f64_digits` /
+//! `f64_exp10` ops (see `crate::float_format`). No default builtin's name
+//! names a language (`interpreter_ir::op_registry::language_name_violation`,
+//! checked by `default_builtins_name_no_language`).
 //!
 //! ## One ordered output stream (LANG83)
 //!
-//! `print_str`, `print_i64`, `write_i64`, `write_f64_*` and `putchar` all write through the **same**
+//! `print_str`, `print_i64`, `write_i64` and `putchar` all write through the **same**
 //! `std::io::stdout()` handle, in call order, so a program that mixes them sees
 //! one ordered byte stream — never "all the integers, then all the bytes". An
 //! embedder that wants to capture output re-registers all four names with
@@ -172,28 +178,6 @@ impl BuiltinRegistry {
             Ok(Value::Null)
         });
 
-        // write_f64_py / write_f64_js — LANG83 PR6a: the shortest decimal that
-        // reads back as exactly the float, in Python's `repr` or JavaScript's
-        // `toString` layout (see `crate::float_format`), NO newline. Same
-        // handle and flush discipline as write_i64, so the stream stays ordered.
-        for (name, layout) in [
-            ("write_f64_py", crate::float_format::FloatLayout::Python),
-            ("write_f64_js", crate::float_format::FloatLayout::JavaScript),
-        ] {
-            reg.register(name, move |args| {
-                let x = args.first().and_then(Value::as_f64).ok_or_else(|| VMError::TypeError {
-                    expected: "float".into(),
-                    actual: args.first().map(Value::iir_type_name).unwrap_or("missing").into(),
-                    context: name.into(),
-                })?;
-                let mut out = io::stdout();
-                out.write_all(crate::float_format::format_f64(x, layout).as_bytes())
-                    .and_then(|()| out.flush())
-                    .map_err(|e| VMError::Custom(format!("{name} write failed: {e}")))?;
-                Ok(Value::Null)
-            });
-        }
-
         // putchar — LANG83 standard output builtin: the low byte of an integer.
         reg.register("putchar", |args| {
             let n = args.first().and_then(Value::as_i64).ok_or_else(|| VMError::TypeError {
@@ -279,6 +263,22 @@ impl BuiltinRegistry {
     /// Return `true` if a handler is registered for `name`.
     pub fn has(&self, name: &str) -> bool {
         self.handlers.contains_key(name)
+    }
+
+    /// Every registered name, sorted — so an embedder (or a test) can check
+    /// what a program may `call_builtin`.
+    ///
+    /// ```
+    /// use vm_core::builtins::BuiltinRegistry;
+    /// let reg = BuiltinRegistry::new();
+    /// let names = reg.names();
+    /// assert!(names.contains(&"putchar"));
+    /// assert!(names.windows(2).all(|w| w[0] < w[1]));
+    /// ```
+    pub fn names(&self) -> Vec<&str> {
+        let mut names: Vec<&str> = self.handlers.keys().map(String::as_str).collect();
+        names.sort_unstable();
+        names
     }
 }
 
@@ -399,17 +399,20 @@ mod tests {
         assert_eq!(reg.call("write_i64", &[Value::Int(i64::MIN)]).unwrap(), Value::Null);
     }
 
+    /// LANG83 PR7e: the float writers are gone, and no default builtin
+    /// names a source language.
     #[test]
-    fn lang83_pr6a_float_writers_are_registered_by_default() {
+    fn default_builtins_name_no_language() {
         let reg = BuiltinRegistry::new();
         for name in ["write_f64_py", "write_f64_js"] {
-            assert!(reg.has(name), "{name}");
-            // An integer is not a float: a clean type error, never a guess.
-            let err = reg.call(name, &[Value::Int(1)]).unwrap_err();
-            assert!(matches!(err, VMError::TypeError { .. }), "{name}");
-            assert!(matches!(reg.call(name, &[]).unwrap_err(), VMError::TypeError { .. }), "{name}");
-            for x in [0.1, -0.0, f64::INFINITY, f64::NAN, 5e-324] {
-                assert_eq!(reg.call(name, &[Value::Float(x)]).unwrap(), Value::Null, "{name}({x})");
+            assert!(!reg.has(name), "{name} was removed in LANG83 PR7e");
+            assert!(matches!(reg.call(name, &[Value::Float(1.5)]), Err(VMError::UnknownOpcode(_))));
+        }
+        let names = reg.names();
+        assert!(names.len() >= 7, "{names:?}");
+        for name in names {
+            if let Some(why) = interpreter_ir::op_registry::language_name_violation(name) {
+                panic!("vm-core default builtin: {why}");
             }
         }
     }

@@ -255,21 +255,26 @@ LANG83 PR7b adds the language-neutral float primitives `f64_class` (0 ±0,
 1 finite non-zero, 2 ±Infinity, 3 NaN), `f64_digits` (the shortest round-trip
 significand `D`) and `f64_exp10` (the exponent of `D`'s leading digit), each a
 `Value::Int`. They are `vm_core::float_format::{f64_class, f64_digits,
-f64_exp10}`, built on `shortest_digits(x) -> (u64, i32)`, the same core the
-float writers below lay out (`shortest_digits(1.5) == (15, 0)`).
-LANG83 PR6a adds the default builtins `write_f64_py` and `write_f64_js`. They
-print a float as the shortest decimal that reads back as exactly that value,
-in Python's `repr` layout or JavaScript's `toString` layout, with no newline.
-The formatting lives in `vm_core::float_format`, which the JIT's embedder
-handlers also call:
+f64_exp10}`, built on `shortest_digits(x) -> (u64, i32)`
+(`shortest_digits(1.5) == (15, 0)`).
+
+There is no float writer. LANG83 PR6a's default builtins `write_f64_py` and
+`write_f64_js` printed a float in Python's `repr` or JavaScript's `toString`
+layout; PR7e removed them, with `format_f64`, `python_repr` and
+`js_to_string`, because a VM builtin may not carry one language's rules. A
+compiler now prints a float with its own module-local helper built from the
+three ops, integer arithmetic and `putchar`. `BuiltinRegistry::names()` lists
+the registered builtins, and a test checks that no default one names a
+language (`interpreter_ir::op_registry::language_name_violation`).
 
 ```rust
-use vm_core::float_format::{js_to_string, python_repr};
+use vm_core::float_format::{f64_class, f64_digits, f64_exp10, shortest_digits};
 
-assert_eq!(python_repr(1e16), "1e+16");
-assert_eq!(js_to_string(1e16), "10000000000000000");
-assert_eq!(python_repr(0.1 + 0.2), "0.30000000000000004");
+assert_eq!(shortest_digits(1e16), (1, 16));
+assert_eq!((f64_digits(0.1 + 0.2), f64_exp10(0.1 + 0.2)), (30000000000000004, -1));
 // An exact tie rounds to the even digit, as Python and JavaScript do
 // (Rust's own `{:e}` rounds this one up).
-assert_eq!(python_repr(2f64.powi(-25)), "2.9802322387695312e-08");
+assert_eq!(shortest_digits(2f64.powi(-25)), (29802322387695312, -8));
+assert_eq!(f64_class(f64::NAN), 3);
+assert!(!vm_core::builtins::BuiltinRegistry::new().has("write_f64_py"));
 ```

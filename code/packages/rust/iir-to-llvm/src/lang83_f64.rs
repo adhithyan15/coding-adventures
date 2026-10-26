@@ -1,11 +1,15 @@
-//! LANG83 PR6a — shortest round-trip float output, as module-local LLVM IR
-//! (and, since PR7b, the digits on their own).
+//! LANG83 PR7b — shortest round-trip float digits, as module-local LLVM IR.
 //!
-//! `call_builtin "write_f64_py", x` and `call_builtin "write_f64_js", x` lower
-//! to `call void @__iir_write_f64(double x, i32 0|1)`. This file holds the IR
-//! that call reaches. It is emitted **into the module**, so a `.ll` that prints
-//! a float needs nothing but libc's `putchar` — no harness runtime, no shared
-//! helper library.
+//! `f64_digits x` and `f64_exp10 x` lower to calls of
+//! `@__iir_f64_shortest_digits(double)` / `@__iir_f64_shortest_exp10(double)`.
+//! This file holds the IR those calls reach. It is emitted **into the
+//! module**, so a `.ll` that asks for a float's digits needs no harness
+//! runtime and no shared helper library.
+//!
+//! Until LANG83 PR7e it also held PR6a's float writer, `@__iir_write_f64(x,
+//! js)`, which laid the digits out in Python's or JavaScript's style for
+//! `write_f64_py` / `write_f64_js`. Those builtins are gone: a compiler lays
+//! a float out itself, in its own module, over these digits and `putchar`.
 //!
 //! # Linkage: `internal`, never interposable
 //!
@@ -42,16 +46,10 @@
 //! | `@__iir_f64_digits(mag, out, kout)` | `twig_f64_digits` | digits 0..9 into `out`, count returned, `k` stored |
 //! | `@__iir_f64_shortest_digits(x)` | `__iir_f64_digits` | LANG83 PR7b `f64_digits`: `D` as an `i64` |
 //! | `@__iir_f64_shortest_exp10(x)` | `__iir_f64_exp10` | LANG83 PR7b `f64_exp10`: `k - 1` |
-//! | `@__iir_write_f64(x, js)` | `twig_write_f64` | specials, sign, layout, `putchar` |
 //!
-//! # Two constants, one core (LANG83 PR7b)
-//!
-//! [`LANG83_F64_DIGITS_LL`] holds the computation: the big integers, the
-//! digit core and the two PR7b wrappers that return `D` and `e10` as plain
-//! integers. [`LANG83_F64_WRITE_LL`] holds the PR6a layout and output, which
-//! call that same core. A module that only asks for the digits gets the first
-//! and no `putchar`; a module that prints a float gets both. Either way there
-//! is one copy of the core, so `f64_digits` and `write_f64_py` cannot disagree.
+//! [`LANG83_F64_DIGITS_LL`] holds all of it: the big integers, the digit core
+//! and the two PR7b wrappers that return `D` and `e10` as plain integers. It
+//! is pure computation and writes nothing, so it needs no `putchar`.
 //! `f64_class` needs no helper: it is a `bitcast` and three compares, inline.
 //!
 //! A big integer is `[40 x i64]` on the stack: 40 base-2^32 limbs, least
@@ -63,11 +61,10 @@
 //! 32-byte digit buffer, whose writes are bounded by `n < 31`.
 
 /// The big-integer routines, the shortest-digits core and the two PR7b
-/// wrappers, emitted once when a module uses a float writer (PR6a) or
-/// `f64_digits` / `f64_exp10` (PR7b). Pure computation: needs no declaration
-/// from the caller.
+/// wrappers, emitted once when a module uses `f64_digits` / `f64_exp10`.
+/// Pure computation: needs no declaration from the caller.
 pub(crate) const LANG83_F64_DIGITS_LL: &str = r#"
-; ── LANG83 PR6a: shortest round-trip float output (see lang83_f64.rs) ──────
+; ── LANG83 PR6a/PR7b: shortest round-trip float digits (see lang83_f64.rs) ─
 
 ; a = v: zero all 40 limbs, then the low and high 32 bits of v.
 define internal void @__iir_bn_set(ptr %a, i64 %v) {
@@ -390,8 +387,8 @@ finish:
 ; ── LANG83 PR7b: the digits on their own ───────────────────────────────────
 ;
 ; `f64_digits x` and `f64_exp10 x` lower to calls of these two wrappers around
-; the same core the writer prints from, so an op and a writer can never
-; disagree on a digit. x = 0.D × 10^k, so the leading digit's exponent is
+; the one core above, so the two ops can never disagree on a digit.
+; x = 0.D × 10^k, so the leading digit's exponent is
 ; k - 1. Both give 0 for ±0, ±Infinity and NaN, which have no digits:
 ;
 ;   has = mag != 0 && mag < 0x7FF0000000000000   (finite and non-zero)
@@ -460,215 +457,5 @@ search:
   %k = load i64, ptr %kslot
   %e = sub i64 %k, 1
   ret i64 %e
-}
-"#;
-
-/// The PR6a writer's layout and output code, emitted only when a module uses
-/// `write_f64_py` / `write_f64_js`, after [`LANG83_F64_DIGITS_LL`] (whose core
-/// it calls). Needs `declare i32 @putchar(i32)`, which the caller emits (the
-/// module may already declare it for the `putchar` builtin).
-pub(crate) const LANG83_F64_WRITE_LL: &str = r#"
-; putchar('0' + d[i]) for i in [from, to).
-define internal void @__iir_put_digits(ptr %d, i64 %from, i64 %to) {
-entry:
-  br label %head
-head:
-  %i = phi i64 [ %from, %entry ], [ %i1, %body ]
-  %more = icmp slt i64 %i, %to
-  br i1 %more, label %body, label %exit
-body:
-  %p = getelementptr i8, ptr %d, i64 %i
-  %v = load i8, ptr %p
-  %v32 = zext i8 %v to i32
-  %ch = add i32 %v32, 48
-  %w = call i32 @putchar(i32 %ch)
-  %i1 = add i64 %i, 1
-  br label %head
-exit:
-  ret void
-}
-
-; putchar(c) n times (n <= 0: nothing).
-define internal void @__iir_put_repeat(i32 %c, i64 %n) {
-entry:
-  br label %head
-head:
-  %i = phi i64 [ 0, %entry ], [ %i1, %body ]
-  %more = icmp slt i64 %i, %n
-  br i1 %more, label %body, label %exit
-body:
-  %w = call i32 @putchar(i32 %c)
-  %i1 = add i64 %i, 1
-  br label %head
-exit:
-  ret void
-}
-
-; Every byte of the n-byte constant at %p.
-define internal void @__iir_put_text(ptr %p, i64 %n) {
-entry:
-  br label %head
-head:
-  %i = phi i64 [ 0, %entry ], [ %i1, %body ]
-  %more = icmp slt i64 %i, %n
-  br i1 %more, label %body, label %exit
-body:
-  %q = getelementptr i8, ptr %p, i64 %i
-  %v = load i8, ptr %q
-  %v32 = zext i8 %v to i32
-  %w = call i32 @putchar(i32 %v32)
-  %i1 = add i64 %i, 1
-  br label %head
-exit:
-  ret void
-}
-
-@__iir_f64_nan_py = private unnamed_addr constant [3 x i8] c"nan"
-@__iir_f64_nan_js = private unnamed_addr constant [3 x i8] c"NaN"
-@__iir_f64_inf_py = private unnamed_addr constant [3 x i8] c"inf"
-@__iir_f64_inf_js = private unnamed_addr constant [8 x i8] c"Infinity"
-@__iir_f64_zero_py = private unnamed_addr constant [3 x i8] c"0.0"
-
-; Print x as Python repr (%js = 0) or JavaScript toString (%js != 0), no
-; newline. e = k - 1 is the exponent of the first digit; fixed notation when
-; -4 <= e < 16 (Python) / -6 <= e < 21 (JavaScript), else d[.ddd]e+-X.
-define internal void @__iir_write_f64(double %x, i32 %js) {
-entry:
-  %digits = alloca [32 x i8]
-  %kslot = alloca i64
-  %bits = bitcast double %x to i64
-  %mag = and i64 %bits, 9223372036854775807
-  %isjs = icmp ne i32 %js, 0
-  %isnan = icmp ugt i64 %mag, 9218868437227405312
-  br i1 %isnan, label %nan, label %signed
-nan:
-  %nanp = select i1 %isjs, ptr @__iir_f64_nan_js, ptr @__iir_f64_nan_py
-  call void @__iir_put_text(ptr %nanp, i64 3)
-  ret void
-signed:
-  ; A minus sign for every negative value except JavaScript's -0 ("0").
-  %neg = icmp slt i64 %bits, 0
-  %iszero = icmp eq i64 %mag, 0
-  %jszero = and i1 %isjs, %iszero
-  %keep = xor i1 %jszero, true
-  %minus = and i1 %neg, %keep
-  br i1 %minus, label %sign, label %special
-sign:
-  %ws = call i32 @putchar(i32 45)
-  br label %special
-special:
-  %isinf = icmp eq i64 %mag, 9218868437227405312
-  br i1 %isinf, label %inf, label %finite
-inf:
-  br i1 %isjs, label %inf_js, label %inf_py
-inf_js:
-  call void @__iir_put_text(ptr @__iir_f64_inf_js, i64 8)
-  ret void
-inf_py:
-  call void @__iir_put_text(ptr @__iir_f64_inf_py, i64 3)
-  ret void
-finite:
-  br i1 %iszero, label %zero, label %nonzero
-zero:
-  br i1 %isjs, label %zero_js, label %zero_py
-zero_js:
-  %wz = call i32 @putchar(i32 48)
-  ret void
-zero_py:
-  call void @__iir_put_text(ptr @__iir_f64_zero_py, i64 3)
-  ret void
-nonzero:
-  %n32 = call i32 @__iir_f64_digits(i64 %mag, ptr %digits, ptr %kslot)
-  %n = sext i32 %n32 to i64
-  %k = load i64, ptr %kslot
-  %e = sub i64 %k, 1
-  %lo = select i1 %isjs, i64 -6, i64 -4
-  %hi = select i1 %isjs, i64 21, i64 16
-  %ge_lo = icmp sge i64 %e, %lo
-  %lt_hi = icmp slt i64 %e, %hi
-  %fixed = and i1 %ge_lo, %lt_hi
-  br i1 %fixed, label %fixed_notation, label %sci
-fixed_notation:
-  %eneg = icmp slt i64 %e, 0
-  br i1 %eneg, label %below_one, label %at_least_one
-below_one:
-  ; 0.000ddd: "0." then -e-1 zeros, then the digits.
-  %w0 = call i32 @putchar(i32 48)
-  %w1 = call i32 @putchar(i32 46)
-  %lead = sub i64 -1, %e
-  call void @__iir_put_repeat(i32 48, i64 %lead)
-  call void @__iir_put_digits(ptr %digits, i64 0, i64 %n)
-  ret void
-at_least_one:
-  ; e+1 integer places: digits while they last, then zeros.
-  %e1 = add i64 %e, 1
-  %fewer = icmp slt i64 %n, %e1
-  %int_digits = select i1 %fewer, i64 %n, i64 %e1
-  call void @__iir_put_digits(ptr %digits, i64 0, i64 %int_digits)
-  %pad = sub i64 %e1, %int_digits
-  call void @__iir_put_repeat(i32 48, i64 %pad)
-  %has_frac = icmp sgt i64 %n, %e1
-  br i1 %has_frac, label %fraction, label %integral
-fraction:
-  %wd = call i32 @putchar(i32 46)
-  call void @__iir_put_digits(ptr %digits, i64 %e1, i64 %n)
-  ret void
-integral:
-  ; Python keeps ".0" on an integral float; JavaScript does not.
-  br i1 %isjs, label %done, label %point_zero
-point_zero:
-  %wp = call i32 @putchar(i32 46)
-  %wq = call i32 @putchar(i32 48)
-  br label %done
-done:
-  ret void
-sci:
-  call void @__iir_put_digits(ptr %digits, i64 0, i64 1)
-  %multi = icmp sgt i64 %n, 1
-  br i1 %multi, label %sci_frac, label %sci_exp
-sci_frac:
-  %wf = call i32 @putchar(i32 46)
-  call void @__iir_put_digits(ptr %digits, i64 1, i64 %n)
-  br label %sci_exp
-sci_exp:
-  %we = call i32 @putchar(i32 101)
-  %eneg2 = icmp slt i64 %e, 0
-  %sgn = select i1 %eneg2, i32 45, i32 43
-  %wsg = call i32 @putchar(i32 %sgn)
-  %negated = sub i64 0, %e
-  %a = select i1 %eneg2, i64 %negated, i64 %e
-  ; Python pads the exponent to two digits (1e-05); JavaScript does not.
-  %one_digit = icmp slt i64 %a, 10
-  %ispy = xor i1 %isjs, true
-  %pad0 = and i1 %ispy, %one_digit
-  br i1 %pad0, label %exp_pad, label %exp_hundreds
-exp_pad:
-  %wpad = call i32 @putchar(i32 48)
-  br label %exp_hundreds
-exp_hundreds:
-  %has100 = icmp sge i64 %a, 100
-  br i1 %has100, label %put100, label %exp_tens
-put100:
-  %h = udiv i64 %a, 100
-  %h32 = trunc i64 %h to i32
-  %hc = add i32 %h32, 48
-  %wh = call i32 @putchar(i32 %hc)
-  br label %exp_tens
-exp_tens:
-  %has10 = icmp sge i64 %a, 10
-  br i1 %has10, label %put10, label %exp_ones
-put10:
-  %tq = udiv i64 %a, 10
-  %tr = urem i64 %tq, 10
-  %t32 = trunc i64 %tr to i32
-  %tc = add i32 %t32, 48
-  %wt = call i32 @putchar(i32 %tc)
-  br label %exp_ones
-exp_ones:
-  %o = urem i64 %a, 10
-  %o32 = trunc i64 %o to i32
-  %oc = add i32 %o32, 48
-  %wo = call i32 @putchar(i32 %oc)
-  ret void
 }
 "#;

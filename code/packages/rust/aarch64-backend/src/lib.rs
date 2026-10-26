@@ -201,12 +201,10 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "print_i64",    n_args: 1, returns: false },
     // LANG83 PR1b — decimal, no newline (`__twig_write_i64`, same stdout FILE*).
     BuiltinSig { name: "write_i64",    n_args: 1, returns: false },
-    // LANG83 PR6a — a double as Python `repr` / JS `Number#toString`, no
-    // newline (`__twig_write_f64_py` / `__twig_write_f64_js`). The f64 slot's
-    // raw 8 bytes travel in the integer argument register, so the generic
-    // marshalling is unchanged; the runtime reinterprets them.
-    BuiltinSig { name: "write_f64_py", n_args: 1, returns: false },
-    BuiltinSig { name: "write_f64_js", n_args: 1, returns: false },
+    // No float writer: LANG83 PR6a's `write_f64_py` / `write_f64_js` were
+    // removed in PR7e (a compiler lays a float out itself over the PR7b
+    // `__twig_f64_digits` / `__twig_f64_exp10` calls below), so a
+    // `call_builtin "write_f64_py"` is now an unknown builtin, refused.
     BuiltinSig { name: "putchar",      n_args: 1, returns: false },
     BuiltinSig { name: "getchar",      n_args: 0, returns: true  },
     BuiltinSig { name: "print_string", n_args: 2, returns: false },
@@ -967,7 +965,7 @@ fn emit_instr(
     // both unsigned tests.)
     //
     // `f64_digits` / `f64_exp10` call the native runtime's shortest-digits
-    // search (`twig_runtime.c`, the PR6a C core): the bits in `x0`, the
+    // search (`twig_runtime.c`, the PR6a C digit core): the bits in `x0`, the
     // integer result back in `x0`:
     //
     //   ldr x0,[a]; bl __twig_f64_digits; str x0,[d]
@@ -3853,39 +3851,6 @@ mod tests {
         assert_eq!(relocs.iter().map(|r| r.symbol.as_str()).collect::<Vec<_>>(), ["__twig_write_i64"]);
     }
 
-    /// LANG83 PR6a: a float writer is a plain V1 builtin call. The f64's
-    /// raw bits are materialised in a general register (`movz …, #0x3FF8,
-    /// lsl #48` for 1.5), stored to its slot, and reloaded into x0 with an
-    /// integer `ldr` right before `bl __twig_write_f64_*`: no FP register is
-    /// involved, which is what the runtime's `int64_t bits` parameter expects.
-    #[test]
-    fn float_writers_pass_the_raw_bits_in_x0() {
-        for name in ["write_f64_py", "write_f64_js"] {
-            let cir = vec![
-                const_f64("x", 1.5),
-                CIRInstr { op: "call_builtin".into(), dest: None,
-                           srcs: vec![CIROperand::Var(name.into()), CIROperand::Var("x".into())],
-                           ty: "void".into(), deopt_to: None },
-                CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![], ty: "void".into(), deopt_to: None },
-            ];
-            let params: [(String, String); 0] = [];
-            let (bytes, relocs) = compile_with_relocs(&ctx("f", &params, "void"), &cir).unwrap();
-            let symbol = format!("__twig_{name}");
-            assert_eq!(relocs.iter().map(|r| r.symbol.as_str()).collect::<Vec<_>>(), [symbol.as_str()]);
-            let ws = words(&bytes);
-            // MOVZ/MOVK (64-bit) with hw = 3 and imm16 = 0x3FF8: the top half of 1.5's bits.
-            assert!(
-                ws.iter().any(|w| (w & 0xDFE0_0000) == 0xD2E0_0000 && ((w >> 5) & 0xFFFF) == 0x3FF8),
-                "{name}: 1.5's bit pattern is built in a general register"
-            );
-            // The word before the BL is `ldr x0, [sp, #imm]` (64-bit, unsigned offset).
-            let call = relocs[0].word_idx;
-            let ldr = ws[call - 1];
-            assert_eq!(ldr & 0xFFC0_0000, 0xF940_0000, "{name}: an integer LDR, not an FP load");
-            assert_eq!((ldr & 0x1F, (ldr >> 5) & 0x1F), (0, 31), "{name}: into x0, from sp");
-        }
-    }
-
     // ---- LANG40/LANG41: io_out handler (BL __twig_print_i64 external reloc) ----
 
     #[test]
@@ -4014,6 +3979,24 @@ mod tests {
             &ctx("bad_name", &[], "void"), &cir, &HashMap::new()
         );
         assert!(result.is_err(), "unknown builtin name should error");
+    }
+
+    /// LANG83 PR7e: the PR6a float writers are gone from the helper table,
+    /// so a module that still calls one is refused, never linked against a
+    /// runtime symbol that no longer exists.
+    #[test]
+    fn retired_float_writers_are_unknown_builtins() {
+        for name in ["write_f64_py", "write_f64_js"] {
+            let cir = vec![
+                const_f64("x", 1.5),
+                CIRInstr { op: "call_builtin".into(), dest: None,
+                           srcs: vec![CIROperand::Var(name.into()), CIROperand::Var("x".into())],
+                           ty: "void".into(), deopt_to: None },
+                CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![], ty: "void".into(), deopt_to: None },
+            ];
+            let result = compile_with_globals(&ctx("f", &[], "void"), &cir, &HashMap::new());
+            assert!(result.is_err(), "{name}");
+        }
     }
 
     #[test]

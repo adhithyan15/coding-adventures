@@ -22,7 +22,6 @@
 //! | `add sub mul div neg` (integer) | `ADD_I64` … `NEG_I64` | Lowered |
 //! | `cmp_*` (integer / bool) | `CMP_*_I64` | Lowered |
 //! | `print_i64`, `putchar`, `write_i64` | `CALL_BUILTIN` to the embedder-registered handler | Lowered |
-//! | `write_f64_py`, `write_f64_js` | `CALL_BUILTIN_F64` (the float's bits, handed over as `Value::Float`) to the embedder-registered handler; `const_f64` compiles to the bits | Lowered |
 //! | `i64_div_floor`, `i64_mod_floor` | `DIV_FLOOR_I64`, `MOD_FLOOR_I64` (defined traps) | Lowered |
 //! | `trap` | `TRAP <kind id>` (error slot `trap: <kind>`) | Lowered |
 //! | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf` | `ADD_OVF_I64` … `NEG_OVF_I64` (`checked_*`; `Trap.Overflow`) | Lowered |
@@ -50,10 +49,9 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("putchar", Lowered),
     ("print_str", Refused(INTERPRETER_TIER_ONLY)),
     ("write_i64", Lowered),
-    // LANG83 PR6a — the embedder formats (lang-aot's harness calls
-    // `vm_core::float_format`, the same code as the VM's default builtins).
-    ("write_f64_py", Lowered),
-    ("write_f64_js", Lowered),
+    // No float writer: LANG83 PR7e removed `write_f64_py` / `write_f64_js`
+    // (and the `CALL_BUILTIN_F64` bytecode that served them). A compiler's
+    // float-layout helper is integer code over `f64_digits` / `f64_exp10`.
     // ── Strings (LANG-FULL E4) ──────────────────────────────────────────────
     ("str_const", Refused(INTERPRETER_TIER_ONLY)),
     ("str_len", Refused(INTERPRETER_TIER_ONLY)),
@@ -206,13 +204,11 @@ mod tests {
         jit.register_builtin("print_i64", |_args: &[Value]| Value::Null);
         jit.register_builtin("putchar", |_args: &[Value]| Value::Null);
         jit.register_builtin("write_i64", |_args: &[Value]| Value::Null);
-        jit.register_builtin("write_f64_py", |_args: &[Value]| Value::Null);
-        jit.register_builtin("write_f64_js", |_args: &[Value]| Value::Null);
         for spec in STANDARD_OPS {
             let func = one_op_function(spec);
             let cir = specialise(&func, 0);
             // Compile WITH the parameter list, as JITCore does, so an `f64`
-            // parameter is known to hold a float (LANG83 PR6a).
+            // parameter is known to hold a float (LANG83 PR6a's `PARAM_F64`).
             let ctx = FunctionContext { name: "f", params: &func.params, return_type: &func.return_type };
             let compiles = jit.compile_function(&ctx, &cir).is_some();
             assert_eq!(

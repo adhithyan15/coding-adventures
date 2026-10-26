@@ -72,8 +72,7 @@ retired the never-used `LANGUAGE_TRAP_KINDS` table).
 
 `op_registry::STANDARD_OPS` names every operation a frontend may emit and every
 backend must lower or refuse — output builtins (`print_i64`, `putchar`,
-`write_i64`, and since PR6a `write_f64_py` / `write_f64_js`, which print an `f64` as
-the shortest round-trip decimal in Python's or JavaScript's layout), `print_str` and the string ops, arithmetic and comparison (since PR6c also the
+`write_i64`), `print_str` and the string ops, arithmetic and comparison (since PR6c also the
 non-trapping IEEE `f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` and
 the sign test `f64_signbit`; since PR7b the language-neutral float primitives
 `f64_class`, `f64_digits` and `f64_exp10`, which give a float's class and its
@@ -91,6 +90,24 @@ assert_eq!(lookup("write_i64").unwrap().kind, OpKind::Builtin);
 // New names are type-first: a `div_` prefix would be captured by the native
 // backends' prefix dispatch and silently compiled as truncating division.
 assert!(name_rule_violation("div_floor").is_some());
+```
+
+There is no float writer. PR6a's `write_f64_py` / `write_f64_js` printed an `f64`
+in Python's or JavaScript's layout; LANG83 PR7e removed them, because the IIR
+names no source language. A compiler prints a float with a module-local helper
+built from `f64_class`, `f64_digits`, `f64_exp10`, integer ops and `putchar`.
+`op_registry::language_name_violation` keeps it that way: it splits a name on `_`
+and `.` and refuses a part that is a language token (`py`, `js`, `ruby`, …) or
+reads as an exception class (`ReferenceError`). A test runs it over every registry
+name and trap kind; vm-core and `lang-aot` run it over their builtins.
+
+```rust
+use interpreter_ir::op_registry::{language_name_violation, lookup};
+
+assert!(lookup("write_f64_py").is_none());
+assert!(language_name_violation("write_f64_py").is_some());
+assert!(language_name_violation("Trap.ReferenceError").is_some());
+assert!(language_name_violation("f64_digits").is_none());
 ```
 
 `opcodes::may_trap`, `opcodes::trap_kinds` and `opcodes::is_terminator` answer the

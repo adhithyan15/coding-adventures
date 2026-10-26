@@ -468,22 +468,15 @@ impl FnRegs {
 }
 
 // ---------------------------------------------------------------------------
-// LANG83 PR6a — the float writer `__iir_write_f64(float64, int32)`
+// LANG83 PR6a / PR7b — the shortest round-trip digits
 // ---------------------------------------------------------------------------
 //
-// `call_builtin "write_f64_py", x` / `"write_f64_js", x` lower to
-//
-// ```text
-// ldloc x;  ldc.i4.0 | ldc.i4.1;  call void <Asm>Program::__iir_write_f64(float64, int32)
-// ```
-//
-// and the module gets this one extra static method when it prints a float.
 // Since .NET Core 3.0, `double.ToString("R", CultureInfo.InvariantCulture)`
-// prints the SHORTEST decimal that reads back as the value. The method re-reads
-// that string's digits `D` and decimal exponent `e`, because .NET's own layout
-// (`1E+16`, `1E-05`, `123.456`) is neither Python's nor JavaScript's. It then
-// writes the LANG83 layout piece by piece with `Console.Write(string)`, on the
-// same writer as every other output builtin:
+// prints the SHORTEST decimal that reads back as the value. The module's own
+// `string __iir_f64_shortest(float64 ax, int32& e10)` re-reads that string's
+// digits `D` and decimal exponent `e`, because .NET's own layout (`1E+16`,
+// `1E-05`, `123.456`) is not the digits alone. It returns `D` and stores `e`
+// through the managed pointer:
 //
 // ```text
 // s    = Math.Abs(x).ToString("R", Invariant)       "1.5E-05" | "123.456" | "100"
@@ -498,225 +491,33 @@ impl FnRegs {
 // e    = ilen - 1 - lz + exp                        exponent of D[0]
 // ```
 //
-// Since LANG83 PR7b the digit parse above is its own method,
-// `string __iir_f64_shortest(float64 ax, int32& e10)` (it returns `D` and
-// stores `e` through the managed pointer), shared by the writer and by the
-// `f64_digits` / `f64_exp10` helpers, so the three can never disagree on a
-// digit. The writer's output is unchanged.
+// The PR7b `f64_digits` / `f64_exp10` helpers call it, so the two can never
+// disagree on a digit. PR6a wrote this parse inside the float writer
+// `__iir_write_f64(float64, int32)`, which also laid `D` out in Python's or
+// JavaScript's style for `write_f64_py` / `write_f64_js`. LANG83 PR7e removed
+// the writers: a compiler lays a float out itself, in its own module.
 //
 // The stack is EMPTY at every label and every branch: each value goes
-// straight to a local or to `Console.Write`. CoreCLR rejects IL whose stack
-// shape differs between the edges into a label, even when `ilasm` assembles
-// it (lesson from Perl 4a). The unit tests run a stack-depth model over this
-// method to hold that rule and to check `.maxstack 8`.
+// straight to a local. CoreCLR rejects IL whose stack shape differs between
+// the edges into a label, even when `ilasm` assembles it (lesson from Perl
+// 4a). The unit tests run a stack-depth model over these methods to hold
+// that rule and to check `.maxstack 8`.
 
-/// The helper's CIL name; a module function with this name is refused.
-const WRITE_F64_METHOD: &str = "__iir_write_f64";
-
-/// Every synthetic float method a class may carry (LANG83 PR6a / PR7b); a
-/// module function with one of these names is refused.
-const SYNTHETIC_F64_METHODS: &[&str] = &[WRITE_F64_METHOD, "__iir_f64_shortest", "__iir_f64_digits", "__iir_f64_exp10"];
+/// Every synthetic float method a class may carry (LANG83 PR7b); a module
+/// function with one of these names is refused.
+const SYNTHETIC_F64_METHODS: &[&str] = &["__iir_f64_shortest", "__iir_f64_digits", "__iir_f64_exp10"];
 
 /// `true` if the module uses the PR7b op `op` (`f64_digits` / `f64_exp10`).
 fn module_uses_op(module: &IIRModule, op: &str) -> bool {
     module.functions.iter().flat_map(|f| &f.instructions).any(|i| i.op == op)
 }
 
-/// `true` if the module calls either PR6a float writer.
-fn module_uses_write_f64(module: &IIRModule) -> bool {
-    module.functions.iter().flat_map(|f| &f.instructions).any(|i| {
-        i.op == "call_builtin"
-            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_py" || n == "write_f64_js")
-    })
-}
-
-/// The helper's IL. Labels are `F64_*`, unique within the method.
-const WRITE_F64_IL: &str = r#"  .method private static void __iir_write_f64(float64 x, int32 js) cil managed {
-    .maxstack 8
-    .locals init (string d, int32 n, int32 e, int32 a)
-    ldarg 0
-    ldarg 0
-    beq F64_NOT_NAN
-    ldarg 1
-    brfalse F64_NAN_PY
-    ldstr "NaN"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_NAN_PY:
-    ldstr "nan"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_NOT_NAN:
-    ldarg 0
-    call bool [System.Runtime]System.Double::IsNegative(float64)
-    brfalse F64_NO_SIGN
-    ldarg 1
-    brfalse F64_MINUS
-    ldarg 0
-    ldc.r8 0.0
-    beq F64_NO_SIGN
-  F64_MINUS:
-    ldstr "-"
-    call void [System.Console]System.Console::Write(string)
-  F64_NO_SIGN:
-    ldarg 0
-    call bool [System.Runtime]System.Double::IsInfinity(float64)
-    brfalse F64_FINITE
-    ldarg 1
-    brfalse F64_INF_PY
-    ldstr "Infinity"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_INF_PY:
-    ldstr "inf"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_FINITE:
-    ldarg 0
-    ldc.r8 0.0
-    bne.un F64_DIGITS
-    ldarg 1
-    brfalse F64_ZERO_PY
-    ldstr "0"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_ZERO_PY:
-    ldstr "0.0"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_DIGITS:
-    ldarg 0
-    call float64 [System.Runtime]System.Math::Abs(float64)
-    ldloca e
-    call string {ASM}Program::__iir_f64_shortest(float64, int32&)
-    stloc d
-    ldloc d
-    callvirt instance int32 [System.Runtime]System.String::get_Length()
-    stloc n
-    ldarg 1
-    brfalse F64_PY_RANGE
-    ldloc e
-    ldc.i4 -6
-    blt F64_SCI
-    ldloc e
-    ldc.i4 21
-    bge F64_SCI
-    br F64_FIXED
-  F64_PY_RANGE:
-    ldloc e
-    ldc.i4 -4
-    blt F64_SCI
-    ldloc e
-    ldc.i4 16
-    bge F64_SCI
-  F64_FIXED:
-    ldloc e
-    ldc.i4.0
-    bge F64_AT_LEAST_ONE
-    ldstr "0."
-    call void [System.Console]System.Console::Write(string)
-    ldc.i4 48
-    ldc.i4.m1
-    ldloc e
-    sub
-    newobj instance void [System.Runtime]System.String::.ctor(char, int32)
-    call void [System.Console]System.Console::Write(string)
-    ldloc d
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_AT_LEAST_ONE:
-    ldloc n
-    ldloc e
-    ldc.i4.1
-    add
-    bgt F64_FRACTION
-    ldloc d
-    call void [System.Console]System.Console::Write(string)
-    ldc.i4 48
-    ldloc e
-    ldc.i4.1
-    add
-    ldloc n
-    sub
-    newobj instance void [System.Runtime]System.String::.ctor(char, int32)
-    call void [System.Console]System.Console::Write(string)
-    ldarg 1
-    brtrue F64_DONE
-    ldstr ".0"
-    call void [System.Console]System.Console::Write(string)
-  F64_DONE:
-    ret
-  F64_FRACTION:
-    ldloc d
-    ldc.i4.0
-    ldloc e
-    ldc.i4.1
-    add
-    callvirt instance string [System.Runtime]System.String::Substring(int32, int32)
-    call void [System.Console]System.Console::Write(string)
-    ldstr "."
-    call void [System.Console]System.Console::Write(string)
-    ldloc d
-    ldloc e
-    ldc.i4.1
-    add
-    callvirt instance string [System.Runtime]System.String::Substring(int32)
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_SCI:
-    ldloc d
-    ldc.i4.0
-    ldc.i4.1
-    callvirt instance string [System.Runtime]System.String::Substring(int32, int32)
-    call void [System.Console]System.Console::Write(string)
-    ldloc n
-    ldc.i4.1
-    ble F64_EXPONENT
-    ldstr "."
-    call void [System.Console]System.Console::Write(string)
-    ldloc d
-    ldc.i4.1
-    callvirt instance string [System.Runtime]System.String::Substring(int32)
-    call void [System.Console]System.Console::Write(string)
-  F64_EXPONENT:
-    ldstr "e"
-    call void [System.Console]System.Console::Write(string)
-    ldloc e
-    ldc.i4.0
-    bge F64_E_POSITIVE
-    ldstr "-"
-    call void [System.Console]System.Console::Write(string)
-    ldc.i4.0
-    ldloc e
-    sub
-    stloc a
-    br F64_E_ABS
-  F64_E_POSITIVE:
-    ldstr "+"
-    call void [System.Console]System.Console::Write(string)
-    ldloc e
-    stloc a
-  F64_E_ABS:
-    ldarg 1
-    brtrue F64_E_DIGITS
-    ldloc a
-    ldc.i4 10
-    bge F64_E_DIGITS
-    ldstr "0"
-    call void [System.Console]System.Console::Write(string)
-  F64_E_DIGITS:
-    ldloc a
-    call void [System.Console]System.Console::Write(int32)
-    ret
-  }
-"#;
-
 /// LANG83 PR7b: the shared digit parse, `__iir_f64_shortest(ax, out e10)` —
 /// returns `D` (the shortest digits of `ax = |x|`, finite and non-zero, as a
 /// string with no leading or trailing zeros) and stores the exponent of its
-/// first digit through `e10`. Moved here unchanged from `__iir_write_f64`,
-/// which now calls it like the two queries below. `{ASM}` is replaced with
-/// the assembly name at emission.
+/// first digit through `e10`. Moved here unchanged from PR6a's
+/// `__iir_write_f64` (removed in PR7e); the two queries below call it.
+/// `{ASM}` is replaced with the assembly name at emission.
 const F64_SHORTEST_IL: &str = r#"  .method private static string __iir_f64_shortest(float64 ax, int32& e10) cil managed {
     .maxstack 8
     .locals init (float64 v, string s, int32 idx, int32 exp, string m, int32 dot, int32 ilen, string all, string d1, int32 lz, string d)
@@ -1127,13 +928,11 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
         emit_method(&mut il, module, f, asm, &globals)?;
     }
 
-    // LANG83 PR6a / PR7b: the float writer and the two digit queries, each
-    // once and only when used, all calling ONE shared digit parse
-    // (`__iir_f64_shortest`), so an op and a writer agree on every digit.
-    let uses_write_f64 = module_uses_write_f64(module);
+    // LANG83 PR7b: the two digit queries, each once and only when used,
+    // both calling ONE shared digit parse (`__iir_f64_shortest`).
     let uses_digits = module_uses_op(module, "f64_digits");
     let uses_exp10 = module_uses_op(module, "f64_exp10");
-    if uses_write_f64 || uses_digits || uses_exp10 {
+    if uses_digits || uses_exp10 {
         if let Some(f) = module.functions.iter().find(|f| SYNTHETIC_F64_METHODS.contains(&f.name.as_str())) {
             return Err(IIRClrError::InvalidOperand {
                 function: f.name.clone(),
@@ -1143,7 +942,7 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
         // The helpers call each other through the class, whose name is the
         // assembly name plus `Program` (see the launcher below).
         il.push_str(&F64_SHORTEST_IL.replace("{ASM}", asm));
-        for (used, helper) in [(uses_write_f64, WRITE_F64_IL), (uses_digits, F64_DIGITS_IL), (uses_exp10, F64_EXP10_IL)] {
+        for (used, helper) in [(uses_digits, F64_DIGITS_IL), (uses_exp10, F64_EXP10_IL)] {
             if used {
                 il.push_str(&helper.replace("{ASM}", asm));
             }
@@ -2563,23 +2362,6 @@ fn emit_method(
                 // `write_i64` (LANG83 PR1b) — decimal, NO newline:
                 // `Console.Write(int64)`, the same `Console.Out` writer as
                 // `print_i64`/`putchar`/`print_str`, so the stream stays ordered.
-                // `write_f64_py` / `write_f64_js` (LANG83 PR6a): the module's own
-                // `__iir_write_f64(float64, int32 layout)` — 0 = Python repr,
-                // 1 = JavaScript toString. The operand must be a float64.
-                if builtin == "write_f64_py" || builtin == "write_f64_js" {
-                    let val = var_src(f, instr, 1, builtin)?;
-                    if regs.home(val)?.ty != "float64" {
-                        return Err(IIRClrError::InvalidOperand {
-                            function: f.name.clone(),
-                            detail: format!("call_builtin \"{builtin}\" requires an f64 operand"),
-                        });
-                    }
-                    load_var(il, &regs, val)?;
-                    let layout = u8::from(builtin == "write_f64_js");
-                    let _ = writeln!(il, "    ldc.i4.{layout}");
-                    let _ = writeln!(il, "    call void {asm}Program::{WRITE_F64_METHOD}(float64, int32)");
-                    continue;
-                }
                 if builtin == "write_i64" {
                     let val = var_src(f, instr, 1, "write_i64")?;
                     load_var_as(il, &regs, val, "int64")?;

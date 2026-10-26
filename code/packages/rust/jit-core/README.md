@@ -199,14 +199,19 @@ module that uses a refused op at compile time, with a typed error. Since LANG83 
 `trap: Trap.Overflow` to the error slot, which `JITCore` drains into
 `VMError::Trap` so an interpreted caller stops too. `CIRInstr::is_pure` treats all
 four as impure, so dead-code elimination keeps an unused checked op.
-LANG83 PR6a adds `write_f64_py` / `write_f64_js` (`CALL_BUILTIN_F64`, which
-hands the embedder a `Value::Float`). To support them, `const_f64` compiles to
-the float's bits. Every other use of a float register still refuses the whole
-function, so it runs on the interpreter tier.
+LANG83 PR6a made `const_f64` compile to the float's bits and an `f64`
+parameter load through a checked `PARAM_F64` prologue. Its float writers
+`write_f64_py` / `write_f64_js` (the `CALL_BUILTIN_F64` bytecode, 0x51) were
+removed in LANG83 PR7e: 0x51 is now an unknown opcode, and a `call_builtin`
+of a float register refuses the function like any other use of a float
+register outside the float ops below.
 LANG83 PR6c adds `ADD_F64` … `DIV_F64`, `NEG_F64`, `SIGNBIT_F64` and `RET_F64`:
 the destinations of `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` are float
 registers too (holding the bits), the ops compute in Rust `f64` (never a trap),
 and `f64_signbit` writes an ordinary integer register.
 LANG83 PR7b adds `CLASS_F64` / `DIGITS_F64` / `EXP10_F64` (`f64_class`,
 `f64_digits`, `f64_exp10`): like `SIGNBIT_F64`, a float register in and an
-integer register out, computed by `vm_core::float_format`.
+integer register out, computed by `vm_core::float_format`. A compiler's
+float-layout helper (`__py_write_float`, `__js_write_number`) is integer code
+over these; its call-free parts compile here, and the parts with a `call` run
+on the interpreter tier.

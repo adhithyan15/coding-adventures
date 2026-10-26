@@ -77,13 +77,39 @@
 //! the integer↔real conversions — plus the four PR1b operations (`write_i64`,
 //! `i64_div_floor`, `i64_mod_floor`, `trap`), which every backend declares
 //! `Refused` until PR1b lowers them. Later slices add families that every
-//! backend lowers in the same PR: PR4's overflow-checked `i64_*_ovf` ops and
-//! PR6a's float writers `write_f64_py` / `write_f64_js` (shortest round-trip
-//! digits in Python's and JavaScript's layouts), and PR6c's non-trapping IEEE
+//! backend lowers in the same PR: PR4's overflow-checked `i64_*_ovf` ops,
+//! PR6c's non-trapping IEEE
 //! `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` with `f64_signbit` (lowered
 //! on the eight IEEE backends; BEAM refuses the arithmetic at compile time),
 //! and PR7b's language-neutral float primitives `f64_class`, `f64_digits` and
 //! `f64_exp10` (the shortest round-trip digits as integers, on all nine).
+//!
+//! PR6a's float writers `write_f64_py` / `write_f64_js` were registered here
+//! until LANG83 PR7e. They printed a float in Python's or JavaScript's layout,
+//! so every backend carried two languages' formatting rules. Each compiler
+//! now emits its own layout helper over the PR7b digits, and the writers are
+//! gone (see the next section).
+//!
+//! # The language-neutrality rule (LANG83 PR7)
+//!
+//! The IIR is a language-neutral machine. **No registry op, builtin or trap
+//! kind may name a source language** or carry one language's semantics.
+//! [`language_name_violation`] enforces the *name* half: it splits a name on
+//! `_` and `.` and refuses any part that is a language token
+//! ([`LANGUAGE_TOKENS`]) or shaped like a language's exception class (a part
+//! ending in `error` or `exception`, such as `ReferenceError`):
+//!
+//! ```text
+//!   write_f64_py         → write | f64 | py            "py" is Python       ✗
+//!   Trap.ReferenceError  → Trap | ReferenceError       an exception class   ✗
+//!   f64_digits           → f64 | digits                                     ✓
+//!   Trap.Unbound         → Trap | Unbound              a condition          ✓
+//! ```
+//!
+//! A test runs it over every registry name and every trap kind; vm-core runs
+//! it over its default builtins and `lang-aot`'s harnesses over theirs. A
+//! compiler's own module-local helpers (`__py_write_float`) are not IIR
+//! vocabulary, so the rule does not apply to them.
 //! Instructions that are not registry entries
 //! (control flow, calls, memory, heap, bitwise, the `dyn_*` lisp builtins, …)
 //! are simply not gated by the registry; their existing validators still apply.
@@ -169,12 +195,6 @@ pub const LANG83_PR1B: &str = "LANG83 PR1b";
 /// PR1b's, these were registered and lowered on every backend in one slice.
 pub const LANG83_PR4: &str = "LANG83 PR4";
 
-/// The `introduced_by` tag of the shortest round-trip float-output builtins
-/// (LANG83 PR6a): `write_f64_py` (Python `repr(float)`) and `write_f64_js`
-/// (JavaScript `Number.prototype.toString`). Like PR4's, registered and
-/// lowered on every backend in one slice.
-pub const LANG83_PR6A: &str = "LANG83 PR6a";
-
 /// The `introduced_by` tag of the non-trapping IEEE-754 `f64` arithmetic
 /// family and its sign-bit query (LANG83 PR6c): `f64_add`, `f64_sub`,
 /// `f64_mul`, `f64_div`, `f64_neg`, `f64_signbit`. Registered in one slice and
@@ -227,11 +247,6 @@ impl OpSpec {
     /// `true` if this entry is one of the LANG83 PR4 overflow-checked ops.
     pub fn is_pr4(&self) -> bool {
         self.introduced_by == LANG83_PR4
-    }
-
-    /// `true` if this entry is one of the LANG83 PR6a float-output builtins.
-    pub fn is_pr6a(&self) -> bool {
-        self.introduced_by == LANG83_PR6A
     }
 
     /// `true` if this entry is one of the LANG83 PR6c IEEE `f64` ops.
@@ -297,13 +312,10 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     spec("putchar", Builtin, Output, 1, false, &["int"], NO_TRAP, "BF07"),
     spec("print_str", Op, Output, 1, false, &["str"], NO_TRAP, "LANG-FULL E4"),
     spec("write_i64", Builtin, Output, 1, false, &["int"], NO_TRAP, LANG83_PR1B),
-    // LANG83 PR6a: an `f64` as the SHORTEST decimal that reads back as exactly
-    // that value (ties to even), no newline — one builtin per *layout*, not a
-    // flags operand. `_py` is Python `repr` (`1e+16`, `1.0`, `-0.0`, `inf`,
-    // `nan`); `_js` is JavaScript `Number#toString` (`10000000000000000`, `1`,
-    // `0`, `Infinity`, `NaN`). The spec's "PR6a" section has both tables.
-    spec("write_f64_py", Builtin, Output, 1, false, UN_F64, NO_TRAP, LANG83_PR6A),
-    spec("write_f64_js", Builtin, Output, 1, false, UN_F64, NO_TRAP, LANG83_PR6A),
+    // There is no float writer. LANG83 PR6a's `write_f64_py` / `write_f64_js`
+    // (a float in Python's / JavaScript's layout) were removed in PR7e: a
+    // compiler prints a float with its own module-local helper, built from the
+    // PR7b digit ops below, integer arithmetic and `putchar`.
     // ── Strings (LANG-FULL E4): immutable byte strings ──────────────────────
     spec("str_const", Op, Str, 1, true, &["literal"], NO_TRAP, "LANG-FULL E4"),
     spec("str_len", Op, Str, 1, true, &["str"], NO_TRAP, "LANG-FULL E4"),
@@ -509,6 +521,68 @@ pub fn name_rule_violation(name: &str) -> Option<String> {
     })
 }
 
+/// The source-language tokens no IIR vocabulary name may contain (LANG83
+/// PR7, "The principle"). A name is split on `_` and `.`; a part equal to one
+/// of these, ignoring case, names a language.
+///
+/// Languages the repository compiles, their common abbreviations, and the
+/// families the spec lists. It cannot be complete. It covers the spelling a
+/// writer reaches for first (`_py`, `_js`, `_rb`, `_pl`) and the languages
+/// with a frontend here whose names are not also ordinary words: `Oct`,
+/// `Nib`, `REDUCE` and `Derive` are left out, because `i64_to_oct` or
+/// `vec_reduce` would be neutral ops.
+pub const LANGUAGE_TOKENS: &[&str] = &[
+    "py", "python", "python2", "python3", "js", "javascript", "ecma", "ecmascript", "rb", "ruby",
+    "pl", "perl", "lisp", "scheme", "twig", "mccarthy", "basic", "algol", "cobol", "fortran",
+    "flowmatic", "brainfuck", "macsyma", "maxima", "wolfram", "mathematica", "lua", "elixir",
+    "erlang", "haskell", "swift", "csharp", "java", "kotlin", "golang", "rust", "smalltalk",
+    "pascal",
+];
+
+/// The language-neutrality violation for an IIR vocabulary name — a registry
+/// op or builtin, a VM builtin, or a trap kind — or `None` if it names no
+/// source language.
+///
+/// The name is split on `_` and `.`, and each part is checked, ignoring case:
+///
+/// | Part | Verdict | Example |
+/// |------|---------|---------|
+/// | a [`LANGUAGE_TOKENS`] entry | names a language | `write_f64_py`, `Ruby.ZeroDivisionError` |
+/// | ends in `error` or `exception` | a language's exception class; a trap kind names a *condition* instead | `Trap.ReferenceError`, `NameError` |
+/// | anything else | neutral | `f64_digits`, `Trap.Unbound`, `equal?` |
+///
+/// Splitting first matters: `print_str` contains no language although `str`
+/// and `print` might look like source words, and `js` inside `adjust` is not
+/// a part at all.
+///
+/// ```
+/// use interpreter_ir::op_registry::language_name_violation;
+/// assert!(language_name_violation("f64_digits").is_none());
+/// assert!(language_name_violation("Trap.Unbound").is_none());
+/// assert!(language_name_violation("write_f64_py").unwrap().contains("\"py\""));
+/// assert!(language_name_violation("Trap.ReferenceError").unwrap().contains("exception class"));
+/// ```
+pub fn language_name_violation(name: &str) -> Option<String> {
+    name.split(['_', '.']).filter(|part| !part.is_empty()).find_map(|part| {
+        let lower = part.to_ascii_lowercase();
+        if LANGUAGE_TOKENS.contains(&lower.as_str()) {
+            Some(format!(
+                "{name:?} contains {part:?}, a source language's name: the IIR is \
+                 language-neutral (LANG83 PR7), so the compiler of that language must \
+                 translate its semantics into neutral ops (or a module-local helper)"
+            ))
+        } else if lower.ends_with("error") || lower.ends_with("exception") {
+            Some(format!(
+                "{name:?} contains {part:?}, which reads as a language's exception class: \
+                 a trap kind names a machine-level condition (LANG83 PR7), and a \
+                 compiler maps its language's error onto one"
+            ))
+        } else {
+            None
+        }
+    })
+}
+
 /// Check a backend's `OP_SUPPORT` table against the registry.
 ///
 /// Every backend crate calls this from a unit test. It fails when a registry
@@ -591,6 +665,48 @@ mod tests {
         }
     }
 
+    /// LANG83 PR7e: no registry op or builtin, and no trap kind, names a
+    /// source language or a language's exception class.
+    #[test]
+    fn no_registry_name_or_trap_kind_names_a_language() {
+        for name in STANDARD_OPS.iter().map(|s| s.name).chain(crate::exception_kind::ALL_TRAP_KINDS.iter().copied()) {
+            if let Some(why) = language_name_violation(name) {
+                panic!("{why}");
+            }
+        }
+    }
+
+    /// The rule catches the names PR7 retired, so none of them can come back,
+    /// and they are really gone from the registry and the kind table.
+    #[test]
+    fn the_language_name_rule_rejects_the_retired_names() {
+        for old in [
+            "write_f64_py",
+            "write_f64_js",
+            "write_f64_rb",
+            "f64_to_str_pl",
+            "py_print_float",
+            "py_name_error",
+            "Trap.ReferenceError",
+            "Ruby.ZeroDivisionError",
+            "NameError",
+            "lisp_truthy",
+            "JS.TypeError",
+        ] {
+            assert!(language_name_violation(old).is_some(), "{old} names a language");
+            assert!(lookup(old).is_none(), "{old} must not be registered");
+            assert!(!is_trap_kind(old), "{old} must not be a trap kind");
+        }
+        // Case does not matter; empty parts (`__x`) are skipped.
+        assert!(language_name_violation("Write_F64_PY").is_some());
+        assert!(language_name_violation("__python_helper").is_some());
+        // Neutral names pass, including ones whose letters merely contain a
+        // token (`adjust` holds "js", `plus` holds "pl"): only whole parts count.
+        for ok in ["f64_digits", "i64_div_floor", "putchar", "print_str", "Trap.Unbound", "Trap.DivZero", "equal?", "adjust_plus", "+"] {
+            assert!(language_name_violation(ok).is_none(), "{ok} is neutral");
+        }
+    }
+
     #[test]
     fn grandfathered_names_are_registered_comparisons() {
         for name in GRANDFATHERED_PREFIXED_NAMES {
@@ -659,24 +775,6 @@ mod tests {
             assert!(spec.operand_types.iter().all(|t| *t == "i64"), "{name} is defined on i64");
         }
         assert_eq!(lookup("i64_neg_ovf").unwrap().arity, 1);
-    }
-
-    #[test]
-    fn pr6a_set_is_exactly_the_two_float_writers() {
-        let mut pr6a: Vec<&str> =
-            STANDARD_OPS.iter().filter(|s| s.is_pr6a()).map(|s| s.name).collect();
-        pr6a.sort_unstable();
-        assert_eq!(pr6a, ["write_f64_js", "write_f64_py"]);
-        for name in pr6a {
-            let spec = lookup(name).unwrap();
-            // Output builtins, like write_i64: one f64 operand, no result, and
-            // formatting a float can never trap (inf and nan have spellings).
-            assert_eq!(spec.kind, OpKind::Builtin);
-            assert_eq!(spec.family, OpFamily::Output);
-            assert!(!spec.dest, "{name} only writes");
-            assert_eq!(spec.operand_types, ["f64"]);
-            assert!(spec.may_trap.is_empty(), "{name} never traps");
-        }
     }
 
     /// Every LANG83 operation that may trap must be kept by dead-code

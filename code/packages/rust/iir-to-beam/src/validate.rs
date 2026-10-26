@@ -114,10 +114,8 @@ pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &[
     "pair?", "equal?", "not", "print_i64", "putchar", "getchar", "input_more", "input_i64",
     "input_str",
     // LANG83 PR1b: `io:format("~w", [X])` — `print_i64` without the newline.
+    // (LANG83 PR6a's `write_f64_py` / `write_f64_js` were removed in PR7e.)
     "write_i64",
-    // LANG83 PR6a: the module-local '__iir_write_f64'/2 (float_to_list
-    // [short] digits, Python / JavaScript layout).
-    "write_f64_py", "write_f64_js",
 ];
 
 const UNSUPPORTED_OPS: &[&str] = &[

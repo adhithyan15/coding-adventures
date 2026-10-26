@@ -1434,9 +1434,6 @@ pub fn lower_iir_to_beam(
                 // LANG83: `print_i64` now emits `call_ext io:format/2`.
                 Some(Operand::Var(name)) if matches!(
                     name.as_str(), "putchar" | "print_i64" | "write_i64" | "getchar" | "input_more"
-                        // LANG83 PR6a: a local `call` to '__iir_write_f64'/2,
-                        // which clobbers every X register like a call_ext.
-                        | "write_f64_py" | "write_f64_js"
                         | "input_i64" | "input_str"
                 ))) {
                 continue;
@@ -1524,21 +1521,17 @@ pub fn lower_iir_to_beam(
         });
     }
 
-    // ── Step 4b: LANG83 PR6a float writer / PR7b digit queries ────────────
+    // ── Step 4b: LANG83 PR7b digit queries ─────────────────────────────────
     //
     // Interned here, after every function's labels are reserved, so a module
-    // that prints no float and asks for no digits keeps byte-identical
-    // atom/import/literal tables and label numbering. Each helper's two
-    // preamble labels are reserved now (the call sites below need the entry
-    // labels); the bodies are appended after the last user function. The
-    // shared digit parse '__iir_f64_shortest'/1 comes with any of them.
-    let uses_write_f64 = module.functions.iter().flat_map(|f| &f.instructions).any(|i| {
-        i.op == "call_builtin"
-            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_py" || n == "write_f64_js")
-    });
+    // that asks for no digits keeps byte-identical atom/import/literal tables
+    // and label numbering. Each helper's two preamble labels are reserved now
+    // (the call sites below need the entry labels); the bodies are appended
+    // after the last user function. The shared digit parse
+    // '__iir_f64_shortest'/1 comes with either query.
     let uses_op = |op: &str| module.functions.iter().flat_map(|f| &f.instructions).any(|i| i.op == op);
     let (uses_digits, uses_exp10) = (uses_op("f64_digits"), uses_op("f64_exp10"));
-    let f64_beam: Option<lang83_f64::F64Beam> = if uses_write_f64 || uses_digits || uses_exp10 {
+    let f64_beam: Option<lang83_f64::F64Beam> = if uses_digits || uses_exp10 {
         if let Some(f) = module.functions.iter().find(|f| lang83_f64::HELPER_NAMES.contains(&f.name.as_str())) {
             return Err(IIRBeamError::InvalidOperand {
                 function: f.name.clone(),
@@ -1556,10 +1549,8 @@ pub fn lower_iir_to_beam(
             Ok(lang83_f64::Helper { atom: atoms.intern(name), arity, fi_label, entry_label })
         };
         let shortest = helper("__iir_f64_shortest", 1)?;
-        let writer = if uses_write_f64 { Some(helper("__iir_write_f64", 2)?) } else { None };
         let digits = if uses_digits { Some(helper("__iir_f64_digits", 1)?) } else { None };
         let exp10 = if uses_exp10 { Some(helper("__iir_f64_exp10", 1)?) } else { None };
-        let lists_atom = atoms.intern("lists");
         let mut import = |m: u32, f: &str, arity: u32| {
             let fa = atoms.intern(f);
             imports.intern(m, fa, arity)
@@ -1567,10 +1558,6 @@ pub fn lower_iir_to_beam(
         let imp_float_to_list = import(erlang_atom, "float_to_list", 2);
         let imp_split = import(string_atom, "split", 2);
         let imp_list_to_integer = import(erlang_atom, "list_to_integer", 1);
-        let imp_duplicate = import(lists_atom, "duplicate", 2);
-        let imp_sublist = import(lists_atom, "sublist", 2);
-        let imp_nthtail = import(lists_atom, "nthtail", 2);
-        let imp_integer_to_list = import(erlang_atom, "integer_to_list", 1);
         let mut lits = HashMap::new();
         lits.insert("[short]", literal_pool.intern_term(lang83_f64::etf_short_option()));
         for text in lang83_f64::TEXT_LITERALS {
@@ -1578,7 +1565,6 @@ pub fn lower_iir_to_beam(
         }
         Some(lang83_f64::F64Beam {
             shortest,
-            writer,
             digits,
             exp10,
             atom_leading: atoms.intern("leading"),
@@ -1591,11 +1577,6 @@ pub fn lower_iir_to_beam(
             imp_sub: import_sub,
             imp_add: import_add,
             imp_trim: import_trim,
-            imp_duplicate,
-            imp_sublist,
-            imp_nthtail,
-            imp_integer_to_list,
-            imp_put_chars: import_put_chars,
             lits,
         })
     } else {
@@ -3431,34 +3412,6 @@ pub fn lower_iir_to_beam(
                     ]));
                     instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
                         BEAMOperand::u(1), BEAMOperand::u(import_put_chars as u64),
-                    ]));
-                    restore_live_across_imported_call!(cur_idx);
-                }
-                "call_builtin" if matches!(instr.srcs.first(),
-                    Some(Operand::Var(name)) if name == "write_f64_py" || name == "write_f64_js") => {
-                    // LANG83 PR6a: `'__iir_write_f64'(X, Layout)`, the module's
-                    // own float writer (see `lang83_f64`); layout 0 = Python
-                    // repr, 1 = JavaScript toString.
-                    //
-                    //   move  X        -> x0
-                    //   move  {i,0|1}  -> x1
-                    //   call  2, '__iir_write_f64'/2
-                    let source = operand_reg!(get_src!(instr, 1));
-                    let layout = u64::from(matches!(instr.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_js"));
-                    let entry = f64_beam.as_ref().and_then(|b| b.writer.as_ref()).map(|w| w.entry_label).ok_or_else(|| IIRBeamError::UnsupportedOp {
-                        function: fn_name.clone(),
-                        op: "write_f64_*: no '__iir_write_f64' helper (internal error)".into(),
-                    })?;
-                    let cur_idx = instr_idx - 1;
-                    save_live_across_imported_call!(cur_idx);
-                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                        BEAMOperand::x(source), BEAMOperand::x(0),
-                    ]));
-                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                        BEAMOperand::i(layout), BEAMOperand::x(1),
-                    ]));
-                    instrs.push(BEAMInstruction::new(OP_CALL, vec![
-                        BEAMOperand::u(2), BEAMOperand::f(entry),
                     ]));
                     restore_live_across_imported_call!(cur_idx);
                 }
@@ -5725,27 +5678,21 @@ pub fn lower_iir_to_beam(
 // ===========================================================================
 
 // ===========================================================================
-// LANG83 PR6a — the module-local float writer `'__iir_write_f64'/2`
+// LANG83 PR6a / PR7b — the shortest round-trip digits
 // ===========================================================================
 //
-// `call_builtin "write_f64_py", x` / `"write_f64_js", x` lower to
+// A module that uses `f64_digits` / `f64_exp10` gets extra functions. They are
+// exported, like every function this backend emits, because the Code chunk's
+// function count is the export count.
 //
-// ```text
-// move  X -> x0;  move {i,0|1} -> x1;  call 2, '__iir_write_f64'/2
-// ```
-//
-// and a module that prints a float gets one extra function. It is exported,
-// like every function this backend emits, because the Code chunk's function
-// count is the export count.
 // OTP 25+'s `erlang:float_to_list(F, [short])` prints the SHORTEST decimal
 // that reads back as `F` (Ryu, round-half-even ties; CI runs OTP 27). The
-// function reads that string's digits `D` and decimal exponent `E` back out,
-// because Erlang's own layout (`1.0e16`, `0.1`, `1.0e-5`) is neither Python's
-// nor JavaScript's, then prints the LANG83 layout piece by piece through
-// `io:put_chars/1`, the same `io` server every other output builtin uses:
+// shared parse reads that string's digits `D` and decimal exponent `E` back
+// out, because Erlang's own layout (`1.0e16`, `0.1`, `1.0e-5`) is not the
+// digits alone:
 //
 // ```erlang
-// '__iir_write_f64'(F, Js) ->
+// '__iir_f64_shortest'(F) ->
 //     L0 = float_to_list(F, [short]),                 % "-1.5e-7", "100.0", "-0.0"
 //     {Neg, L} = case L0 of [$- | T] -> {1, T}; _ -> {0, L0} end,
 //     [M | R1] = string:split(L, "e"),
@@ -5755,41 +5702,33 @@ pub fn lower_iir_to_beam(
 //     All = case R2 of [] -> I; [Fr] -> I ++ Fr end,
 //     D1 = string:trim(All, leading, "0"),
 //     LZ = length(All) - length(D1),
-//     D = string:trim(D1, trailing, "0"),             % the digits
-//     N = length(D),
+//     D = string:trim(D1, trailing, "0"),             % the digits ([] for ±0.0)
 //     E = ILen - 1 - LZ + Exp,                        % exponent of hd(D)
-//     Neg =:= 1 andalso not (Js =:= 1 andalso N =:= 0) andalso put_chars("-"),
-//     if N =:= 0 -> put_chars(Js =:= 1 ? "0" : "0.0");      % ±0.0
-//        fixed (-4 =< E < 16 Python, -6 =< E < 21 JS) -> ...;
-//        true -> sci ...
-//     end.
+//     [Neg, E | D].
+// '__iir_f64_digits'(X) -> case '__iir_f64_shortest'(X) of [_, _ | []] -> 0;
+//                                                          [_, _ | D]  -> list_to_integer(D) end.
+// '__iir_f64_exp10'(X)  -> case '__iir_f64_shortest'(X) of [_, _ | []] -> 0;
+//                                                          [_, E | _]  -> E end.
 // ```
 //
 // BEAM has no `inf` or `nan` float: the emulator raises `badarith` before one
 // can exist, so there are no arms for them. `-0.0` is a distinct float since
-// OTP 27 and `float_to_list` keeps its `-`.
+// OTP 27 and `float_to_list` keeps its `-`. `f64_class` needs no helper (two
+// compares inline).
 //
 // Registers: every value that must survive an imported call lives in a Y
 // slot. The frame is `allocate`d and every slot is initialised to nil before
 // the first call, so a GC never scans garbage (BEAM07). Every test and BIF
 // reads X registers only. Each `gc_bif` names a Live count that covers
-// exactly the X registers still needed. The unit tests execute this function
-// on an opcode-and-BIF model (`lang83_pr6a.rs`).
+// exactly the X registers still needed. The unit tests execute these
+// functions on an opcode-and-BIF model (`lang83_pr6a.rs`).
 //
-// LANG83 PR7b split the function at the digits. Everything up to `D` and `E`
-// is now its own function, `'__iir_f64_shortest'(F) -> [Neg, E | D]`, and
-// three callers share it:
-//
-// ```erlang
-// '__iir_write_f64'(F, Js) -> [Neg, E | D] = '__iir_f64_shortest'(F), ...layout...
-// '__iir_f64_digits'(X)    -> case '__iir_f64_shortest'(X) of [_, _ | []] -> 0;
-//                                                             [_, _ | D]  -> list_to_integer(D) end.
-// '__iir_f64_exp10'(X)     -> case '__iir_f64_shortest'(X) of [_, _ | []] -> 0;
-//                                                             [_, E | _]  -> E end.
-// ```
-//
-// so an op and a writer can never disagree on a digit, and the writer's
-// output is unchanged. `f64_class` needs no helper (two compares inline).
+// History: PR6a wrote the parse inside the float writer
+// `'__iir_write_f64'(F, Js)`, which then laid `D` out in Python's or
+// JavaScript's style through `io:put_chars/1` for `write_f64_py` /
+// `write_f64_js`. PR7b split it at the digits; LANG83 PR7e removed the
+// writer, because a backend may not carry a language's layout. A compiler
+// lays a float out itself, in its own module.
 mod lang83_f64 {
     use super::*;
 
@@ -5801,18 +5740,16 @@ mod lang83_f64 {
         pub entry_label: u32,
     }
 
-    /// The names a module function may not take (LANG83 PR6a / PR7b).
-    pub(super) const HELPER_NAMES: &[&str] =
-        &["__iir_f64_shortest", "__iir_write_f64", "__iir_f64_digits", "__iir_f64_exp10"];
+    /// The names a module function may not take (LANG83 PR7b).
+    pub(super) const HELPER_NAMES: &[&str] = &["__iir_f64_shortest", "__iir_f64_digits", "__iir_f64_exp10"];
 
     /// The interned atoms, imports and literals the helpers use, and their
-    /// preamble labels. Built only for a module that prints a float or asks
-    /// for its digits, so no other module's tables change. The shared parse
-    /// '__iir_f64_shortest'/1 is always present; each of the others only
-    /// when the module uses it.
+    /// preamble labels. Built only for a module that asks for a float's
+    /// digits, so no other module's tables change. The shared parse
+    /// '__iir_f64_shortest'/1 is always present; each query only when the
+    /// module uses it.
     pub(super) struct F64Beam {
         pub shortest: Helper,
-        pub writer: Option<Helper>,
         pub digits: Option<Helper>,
         pub exp10: Option<Helper>,
         pub atom_leading: u32,
@@ -5825,11 +5762,6 @@ mod lang83_f64 {
         pub imp_sub: u32,
         pub imp_add: u32,
         pub imp_trim: u32,
-        pub imp_duplicate: u32,
-        pub imp_sublist: u32,
-        pub imp_nthtail: u32,
-        pub imp_integer_to_list: u32,
-        pub imp_put_chars: u32,
         /// Literal-table indices, keyed by the literal's text (`"[short]"`
         /// for the option list, otherwise the character list itself).
         pub lits: HashMap<&'static str, u32>,
@@ -5838,12 +5770,12 @@ mod lang83_f64 {
     impl F64Beam {
         /// Every function emitted, in emission order.
         pub(super) fn helpers(&self) -> impl Iterator<Item = &Helper> {
-            std::iter::once(&self.shortest).chain(self.writer.iter()).chain(self.digits.iter()).chain(self.exp10.iter())
+            std::iter::once(&self.shortest).chain(self.digits.iter()).chain(self.exp10.iter())
         }
     }
 
-    /// The character-list literals the helper prints or splits on.
-    pub(super) const TEXT_LITERALS: &[&str] = &["e", ".", "0", "-", "0.0", "0.", ".0", "e-", "e+"];
+    /// The character-list literals the parse splits on or trims.
+    pub(super) const TEXT_LITERALS: &[&str] = &["e", ".", "0"];
 
     /// ETF (`131`-prefixed) encoding of the character list `s`
     /// (`STRING_EXT`: tag 107, u16 length, the bytes).
@@ -5862,20 +5794,18 @@ mod lang83_f64 {
         out
     }
 
-    /// Y slots.
-    const JS: u8 = 0;
-    const NEG: u8 = 1;
-    /// The sign-stripped string, later reused for |E|, E+1 and the zero pad.
-    const SCRATCH: u8 = 2;
-    const EXP: u8 = 3;
-    const MANT: u8 = 4;
-    const ILEN: u8 = 5;
-    const ALL: u8 = 6;
-    const DIGITS: u8 = 7;
-    const E: u8 = 8;
-    const N: u8 = 9;
+    /// Y slots of `'__iir_f64_shortest'/1`.
+    const NEG: u8 = 0;
+    /// The sign-stripped string.
+    const SCRATCH: u8 = 1;
+    const EXP: u8 = 2;
+    const MANT: u8 = 3;
+    const ILEN: u8 = 4;
+    const ALL: u8 = 5;
+    const DIGITS: u8 = 6;
+    const E: u8 = 7;
     /// Frame size.
-    pub(super) const N_Y: u8 = 10;
+    pub(super) const N_Y: u8 = 8;
 
     struct Asm<'a> {
         out: &'a mut Vec<BEAMInstruction>,
@@ -5905,16 +5835,6 @@ mod lang83_f64 {
         fn call_ext(&mut self, arity: u64, import: u32) {
             self.ins(OP_CALL_EXT, vec![BEAMOperand::u(arity), BEAMOperand::u(u64::from(import))]);
         }
-        /// `io:put_chars(<literal>)`.
-        fn put_lit(&mut self, text: &'static str) {
-            self.lit(text, BEAMOperand::x(0));
-            self.call_ext(1, self.b.imp_put_chars);
-        }
-        /// `io:put_chars(Y)`.
-        fn put_y(&mut self, y: u8) {
-            self.mv(BEAMOperand::y(y), BEAMOperand::x(0));
-            self.call_ext(1, self.b.imp_put_chars);
-        }
         fn jump(&mut self, l: u32) {
             self.ins(OP_JUMP, vec![BEAMOperand::f(l)]);
         }
@@ -5938,7 +5858,7 @@ mod lang83_f64 {
     }
 
     /// Append every helper `b` names to `out`: the shared parse, then the
-    /// writer and the two digit queries when present. `labels` is the
+    /// two digit queries when present. `labels` is the
     /// module's label counter (the helpers' internal labels come from it).
     pub(super) fn emit(
         b: &F64Beam,
@@ -5947,9 +5867,6 @@ mod lang83_f64 {
         out: &mut Vec<BEAMInstruction>,
     ) -> Result<(), String> {
         emit_shortest(b, mod_atom, labels, out)?;
-        if let Some(w) = &b.writer {
-            emit_writer(b, w, mod_atom, labels, out)?;
-        }
         for (h, digits) in [(&b.digits, true), (&b.exp10, false)] {
             if let Some(h) = h {
                 emit_query(b, h, digits, mod_atom, labels, out)?;
@@ -5966,8 +5883,7 @@ mod lang83_f64 {
     }
 
     /// `'__iir_f64_shortest'(F) -> [Neg, E | D]` (LANG83 PR7b): the PR6a
-    /// writer's digit parse, moved here unchanged so the writer and the two
-    /// digit queries share it. `Neg` is 1 when `float_to_list` printed a
+    /// writer's digit parse, moved here so the two digit queries share it. `Neg` is 1 when `float_to_list` printed a
     /// `-`, `D` the shortest digits as a character list (`[]` for ±0.0) and
     /// `E` the exponent of `hd(D)`. The result is two cons cells, built after
     /// a `test_heap 4, 0` (every value is in a Y slot by then).
@@ -6099,161 +6015,6 @@ mod lang83_f64 {
             a.mv(x(3), x(0));
         }
         a.ins(OP_DEALLOCATE, vec![BEAMOperand::u(0)]);
-        a.ins(OP_RETURN, vec![]);
-        Ok(())
-    }
-
-    /// Append `'__iir_write_f64'/2`: the shared parse, then the layout.
-    fn emit_writer(
-        b: &F64Beam,
-        w: &Helper,
-        mod_atom: u32,
-        labels: &mut u32,
-        out: &mut Vec<BEAMInstruction>,
-    ) -> Result<(), String> {
-        let (x, y) = (BEAMOperand::x, BEAMOperand::y);
-        let mut a = Asm { out, labels, b };
-        preamble(&mut a, w, mod_atom);
-        a.ins(OP_ALLOCATE, vec![BEAMOperand::u(u64::from(N_Y)), BEAMOperand::u(2)]);
-        for slot in 0..N_Y {
-            a.mv(BEAMOperand::a(0), y(slot));
-        }
-        a.mv(x(1), y(JS));
-
-        // [Neg, E | D] = '__iir_f64_shortest'(F); N = length(D).
-        a.ins(OP_CALL, vec![BEAMOperand::u(1), BEAMOperand::f(b.shortest.entry_label)]);
-        a.ins(OP_GET_LIST, vec![x(0), x(1), x(2)]);
-        a.mv(x(1), y(NEG));
-        a.ins(OP_GET_LIST, vec![x(2), x(3), x(4)]);
-        a.mv(x(3), y(E));
-        a.mv(x(4), y(DIGITS));
-        a.mv(x(4), x(0));
-        a.bif1(1, b.imp_length, x(0), x(1));
-        a.mv(x(1), y(N));
-
-        // The sign: always in Python; in JavaScript not for -0.
-        let (no_minus, put_minus) = (a.label()?, a.label()?);
-        a.mv(y(NEG), x(0));
-        a.test(OP_IS_EQ_EXACT, no_minus, x(0), int(1));
-        a.mv(y(JS), x(0));
-        a.test(OP_IS_EQ_EXACT, put_minus, x(0), int(1));
-        a.mv(y(N), x(0));
-        a.test(OP_IS_EQ_EXACT, put_minus, x(0), int(0));
-        a.jump(no_minus);
-        a.bind(put_minus);
-        a.put_lit("-");
-        a.bind(no_minus);
-
-        // ±0: no digits survive the trims.
-        let (nonzero, zero_py, ret) = (a.label()?, a.label()?, a.label()?);
-        a.mv(y(N), x(0));
-        a.test(OP_IS_EQ_EXACT, nonzero, x(0), int(0));
-        a.mv(y(JS), x(0));
-        a.test(OP_IS_EQ_EXACT, zero_py, x(0), int(1));
-        a.put_lit("0");
-        a.jump(ret);
-        a.bind(zero_py);
-        a.put_lit("0.0");
-        a.jump(ret);
-        a.bind(nonzero);
-
-        // Fixed when Lo =< E < Hi: (-6, 21) for JavaScript, (-4, 16) for Python.
-        let (py_range, fixed, sci) = (a.label()?, a.label()?, a.label()?);
-        a.mv(y(E), x(1));
-        a.mv(y(JS), x(0));
-        a.test(OP_IS_EQ_EXACT, py_range, x(0), int(1));
-        a.test(OP_IS_GE, sci, x(1), int(-6));
-        a.test(OP_IS_LT, sci, x(1), int(21));
-        a.jump(fixed);
-        a.bind(py_range);
-        a.test(OP_IS_GE, sci, x(1), int(-4));
-        a.test(OP_IS_LT, sci, x(1), int(16));
-        a.bind(fixed);
-        let (at_least_one, fraction) = (a.label()?, a.label()?);
-        a.test(OP_IS_LT, at_least_one, x(1), int(0));
-        // E < 0: "0." ++ duplicate(-E - 1, $0) ++ D
-        a.put_lit("0.");
-        a.mv(int(-1), x(0));
-        a.mv(y(E), x(1));
-        a.bif2(2, b.imp_sub, x(0), x(1), x(0));
-        a.mv(int(i64::from(b'0')), x(1));
-        a.call_ext(2, b.imp_duplicate);
-        a.call_ext(1, b.imp_put_chars);
-        a.put_y(DIGITS);
-        a.jump(ret);
-        a.bind(at_least_one);
-        // E1 = E + 1 integer places.
-        a.mv(y(E), x(0));
-        a.mv(int(1), x(1));
-        a.bif2(2, b.imp_add, x(0), x(1), x(2));
-        a.mv(y(N), x(3));
-        a.test(OP_IS_GE, fraction, x(2), x(3));
-        // Integral: D ++ duplicate(E1 - N, $0), then ".0" in Python.
-        a.bif2(4, b.imp_sub, x(2), x(3), x(4));
-        a.mv(x(4), y(SCRATCH));
-        a.put_y(DIGITS);
-        a.mv(y(SCRATCH), x(0));
-        a.mv(int(i64::from(b'0')), x(1));
-        a.call_ext(2, b.imp_duplicate);
-        a.call_ext(1, b.imp_put_chars);
-        a.mv(y(JS), x(0));
-        a.test(OP_IS_EQ_EXACT, ret, x(0), int(0));
-        a.put_lit(".0");
-        a.jump(ret);
-        a.bind(fraction);
-        // sublist(D, E1) ++ "." ++ nthtail(E1, D)
-        a.mv(x(2), y(SCRATCH));
-        a.mv(y(DIGITS), x(0));
-        a.mv(y(SCRATCH), x(1));
-        a.call_ext(2, b.imp_sublist);
-        a.call_ext(1, b.imp_put_chars);
-        a.put_lit(".");
-        a.mv(y(SCRATCH), x(0));
-        a.mv(y(DIGITS), x(1));
-        a.call_ext(2, b.imp_nthtail);
-        a.call_ext(1, b.imp_put_chars);
-        a.jump(ret);
-
-        // Scientific: d[.ddd]e±X, Python padding X to two digits.
-        a.bind(sci);
-        let (exponent, e_positive, e_abs, e_digits) = (a.label()?, a.label()?, a.label()?, a.label()?);
-        a.mv(y(DIGITS), x(0));
-        a.mv(int(1), x(1));
-        a.call_ext(2, b.imp_sublist);
-        a.call_ext(1, b.imp_put_chars);
-        a.mv(y(N), x(0));
-        a.test(OP_IS_LT, exponent, int(1), x(0));
-        a.put_lit(".");
-        a.mv(y(DIGITS), x(0));
-        a.ins(OP_GET_LIST, vec![x(0), x(1), x(2)]);
-        a.mv(x(2), x(0));
-        a.call_ext(1, b.imp_put_chars);
-        a.bind(exponent);
-        a.mv(y(E), x(0));
-        a.test(OP_IS_LT, e_positive, x(0), int(0));
-        a.put_lit("e-");
-        a.mv(int(0), x(0));
-        a.mv(y(E), x(1));
-        a.bif2(2, b.imp_sub, x(0), x(1), x(0));
-        a.mv(x(0), y(SCRATCH));
-        a.jump(e_abs);
-        a.bind(e_positive);
-        a.put_lit("e+");
-        a.mv(y(E), x(0));
-        a.mv(x(0), y(SCRATCH));
-        a.bind(e_abs);
-        a.mv(y(JS), x(0));
-        a.test(OP_IS_EQ_EXACT, e_digits, x(0), int(0));
-        a.mv(y(SCRATCH), x(0));
-        a.test(OP_IS_LT, e_digits, x(0), int(10));
-        a.put_lit("0");
-        a.bind(e_digits);
-        a.mv(y(SCRATCH), x(0));
-        a.call_ext(1, b.imp_integer_to_list);
-        a.call_ext(1, b.imp_put_chars);
-
-        a.bind(ret);
-        a.ins(OP_DEALLOCATE, vec![BEAMOperand::u(u64::from(N_Y))]);
         a.ins(OP_RETURN, vec![]);
         Ok(())
     }

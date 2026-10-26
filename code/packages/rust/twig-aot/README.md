@@ -46,15 +46,16 @@ two translation units:
 - `runtime/twig_runtime.c` — portable I/O + heap helpers (`__twig_print_i64`,
   `__twig_print_string`, `__twig_putchar`, `__twig_alloc_bytes`, …), plus the
   LANG83 helpers `__twig_write_i64` (no newline) and `__twig_trap(kind_id)`,
-  which flushes stdout, prints `trap: <kind>` on stderr and aborts, and the
-  LANG83 PR6a float writers `__twig_write_f64_py` / `__twig_write_f64_js`
-  (`int64_t bits` → Python `repr` / JavaScript `toString`, no newline): a
-  self-contained Burger–Dybvig shortest-digits core over fixed 40-limb big
-  integers, the commented reference the LLVM and WASM backends port. Since
-  LANG83 PR7b the same core also answers `__twig_f64_digits(bits)` /
-  `__twig_f64_exp10(bits)` (the shortest round-trip significand and the
-  exponent of its leading digit), which the native backends call for the
-  `f64_digits` / `f64_exp10` ops.
+  which flushes stdout, prints `trap: <kind>` on stderr and aborts, and
+  `__twig_f64_digits(bits)` / `__twig_f64_exp10(bits)` (LANG83 PR7b: the
+  shortest round-trip significand of a double and the exponent of its
+  leading digit), which the native backends call for the `f64_digits` /
+  `f64_exp10` ops. They run a self-contained Burger–Dybvig shortest-digits
+  core over fixed 40-limb big integers, the commented reference the LLVM and
+  WASM backends port. The runtime holds no float *layout*: LANG83 PR7e
+  removed the PR6a writers `__twig_write_f64_py` / `__twig_write_f64_js`
+  (Python `repr` / JavaScript `toString`), and each compiler now lays a
+  float out in its own module.
 - `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):
   `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`truthy`/`make_symbol`/`nil`
   plus int box/unbox, implementing `dynval-runtime`'s 3-bit-tagged 64-bit

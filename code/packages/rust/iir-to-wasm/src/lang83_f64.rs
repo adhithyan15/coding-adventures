@@ -1,19 +1,23 @@
-//! LANG83 PR6a — shortest round-trip float output as in-module WASM functions.
+//! LANG83 PR7b — shortest round-trip float digits as in-module WASM functions.
 //!
-//! `call_builtin "write_f64_py", x` / `"write_f64_js", x` lower to
+//! `f64_digits x` / `f64_exp10 x` lower to
 //!
 //! ```text
 //! local.get $x        ;; f64
-//! i32.const 0 | 1     ;; layout: 0 = Python repr, 1 = JavaScript toString
-//! call $__iir_write_f64
+//! call $digits_value  ;; or $exp10_value — f64 -> i64
 //! ```
 //!
-//! and this file builds `$__iir_write_f64` and the functions it calls. They
-//! live **inside the module**, like `$__str_eq` and `$__ensure_capacity`: the
-//! host only has to provide `env.putchar`, which every output program already
-//! imports. Formatting a float is pure computation, so it is not the host's
-//! job. The module gets no `__write_f64` import, and no shared helper library
-//! is involved.
+//! and this file builds those two functions and the ones they call. They
+//! live **inside the module**, like `$__str_eq` and `$__ensure_capacity`.
+//! Computing a float's digits is pure computation, so it is not the host's
+//! job: the module gets no import for it, and no shared helper library is
+//! involved.
+//!
+//! Until LANG83 PR7e this file also built PR6a's float writer,
+//! `$__iir_write_f64(x, layout)`, and its `putchar` helpers, which laid the
+//! digits out in Python's or JavaScript's style for `write_f64_py` /
+//! `write_f64_js`. Those builtins are gone: a compiler lays a float out
+//! itself, in its own module, over these digits and `putchar`.
 //!
 //! # The algorithm
 //!
@@ -35,21 +39,12 @@
 //! | 7 | `f64_digits` | `(mag: i64) -> i32` | the digits, `k` stored at `K` |
 //! | 8 | `digits_value` | `(x: f64) -> i64` | LANG83 PR7b `f64_digits`: `D` as one integer |
 //! | 9 | `exp10_value` | `(x: f64) -> i64` | LANG83 PR7b `f64_exp10`: `k - 1` |
-//! | 10 | `put_digits` | `(from: i32, to: i32)` | `putchar('0' + D[i])` |
-//! | 11 | `put_repeat` | `(c: i32, n: i64)` | `putchar(c)` `n` times |
-//! | 12 | `write_f64` | `(x: f64, js: i32)` | specials, sign, layout |
 //!
-//! # Two groups (LANG83 PR7b)
-//!
-//! Helpers 0–9 are pure computation: the big integers, the digit core and
-//! the two PR7b wrappers that return `D` and `e10` as plain `i64`s. They are
-//! present whenever a module uses `f64_digits` / `f64_exp10` or a float
-//! writer. Helpers 10–12 print, so they need `env.putchar`; they are appended
-//! only when a module uses `write_f64_py` / `write_f64_js`. A module that
-//! asks for the digits but prints no float therefore imports no `putchar`.
-//! Either way there is ONE digit core, so an op and a writer agree on every
-//! digit. `f64_class` needs no helper: it is a reinterpret and three
-//! compares, inline in `lower.rs`.
+//! All ten are pure computation: the big integers, the digit core and the two
+//! PR7b wrappers that return `D` and `e10` as plain `i64`s. They are present
+//! whenever a module uses `f64_digits` / `f64_exp10`, and they write nothing,
+//! so they need no `env.putchar`. `f64_class` needs no helper: it is a
+//! reinterpret and three compares, inline in `lower.rs`.
 //!
 //! # Memory
 //!
@@ -72,21 +67,13 @@
 
 use wasm_types::{FuncType, FunctionBody, ValueType};
 
-/// Bytes of linear memory the float writer reserves (five 320-byte big
+/// Bytes of linear memory the digit core reserves (five 320-byte big
 /// integers, a 32-byte digit buffer, an 8-byte `k`, padded to 64).
 pub(crate) const F64_SCRATCH_BYTES: usize = 1664;
 
-/// How many in-module functions [`build_f64_helpers`] appends without the
-/// writer (the computation group, helpers 0–9).
+/// How many in-module functions [`build_f64_helpers`] appends (helpers 0–9).
 #[cfg(test)]
-pub(crate) const F64_CORE_HELPER_COUNT: u32 = 10;
-
-/// How many it appends with the writer (helpers 0–12).
-#[cfg(test)]
-pub(crate) const F64_HELPER_COUNT: u32 = 13;
-
-/// Index of `$__iir_write_f64` among the helpers (it is the last one).
-pub(crate) const WRITE_F64_OFFSET: u32 = 12;
+pub(crate) const F64_HELPER_COUNT: u32 = 10;
 
 /// Index of the PR7b `f64_digits` wrapper among the helpers.
 pub(crate) const DIGITS_VALUE_OFFSET: u32 = 8;
@@ -132,7 +119,6 @@ const I32_GT_S: u8 = 0x4A;
 const I32_LE_S: u8 = 0x4C;
 const I32_GE_S: u8 = 0x4E;
 const I64_EQZ: u8 = 0x50;
-const I64_EQ: u8 = 0x51;
 const I64_NE: u8 = 0x52;
 const I64_LT_S: u8 = 0x53;
 const I64_LT_U: u8 = 0x54;
@@ -155,8 +141,6 @@ const I64_OR: u8 = 0x84;
 const I64_SHL: u8 = 0x86;
 const I64_SHR_S: u8 = 0x87;
 const I64_SHR_U: u8 = 0x88;
-const I32_WRAP_I64: u8 = 0xA7;
-const I64_EXTEND_I32_S: u8 = 0xAC;
 const I64_EXTEND_I32_U: u8 = 0xAD;
 const I64_REINTERPRET_F64: u8 = 0xBD;
 /// Block type "no result".
@@ -268,8 +252,6 @@ impl Asm {
 struct Ctx {
     /// Function index of helper #0 (`bn_set`).
     base: u32,
-    /// Function index of the `env.putchar(i32)` import.
-    putchar: u32,
     /// Linear-memory address of the scratch region.
     scratch: i32,
 }
@@ -291,8 +273,6 @@ const BN_ADD: u32 = 4;
 const BN_SUB: u32 = 5;
 const BN_CMP: u32 = 6;
 const F64_DIGITS: u32 = 7;
-const PUT_DIGITS: u32 = 10;
-const PUT_REPEAT: u32 = 11;
 
 /// `limb(i)` address: `a + (i << 3)` with `a` and `i` in i32 locals.
 fn limb_addr(asm: &mut Asm, a: u32, i: u32) {
@@ -643,153 +623,14 @@ fn exp10_value(ctx: Ctx) -> FunctionBody {
     asm.finish(vec![ValueType::I64])
 }
 
-/// `put_digits(from, to)`: `putchar('0' + DIGITS[i])` for `i` in `[from, to)`.
-fn put_digits(ctx: Ctx) -> FunctionBody {
-    const FROM: u32 = 0;
-    const TO: u32 = 1;
-    let mut asm = Asm::new();
-    asm.open(BLOCK).open(LOOP);
-    asm.get(FROM).get(TO).op(I32_GE_S).br_if(1);
-    asm.i32c(ctx.addr(DIGITS)).get(FROM).op(I32_ADD).mem(I32_LOAD8_U, 0, 0);
-    asm.i32c(48).op(I32_ADD).call(ctx.putchar);
-    asm.get(FROM).i32c(1).op(I32_ADD).set(FROM);
-    asm.br(0);
-    asm.op(END).op(END);
-    asm.finish(vec![])
-}
-
-/// `put_repeat(c, n)`: `putchar(c)` `n` times (nothing when `n <= 0`).
-fn put_repeat(ctx: Ctx) -> FunctionBody {
-    const CH: u32 = 0;
-    const N: u32 = 1;
-    let mut asm = Asm::new();
-    asm.open(BLOCK).open(LOOP);
-    asm.get(N).i64c(0).op(I64_LE_S).br_if(1);
-    asm.get(CH).call(ctx.putchar);
-    asm.get(N).i64c(1).op(I64_SUB).set(N);
-    asm.br(0);
-    asm.op(END).op(END);
-    asm.finish(vec![])
-}
-
-/// `putchar` each byte of `text`.
-fn put_text(asm: &mut Asm, ctx: Ctx, text: &[u8]) {
-    for &b in text {
-        asm.i32c(i32::from(b)).call(ctx.putchar);
-    }
-}
-
-/// `if js { put js_text } else { put py_text }; return`.
-fn put_by_layout(asm: &mut Asm, ctx: Ctx, js: u32, js_text: &[u8], py_text: &[u8]) {
-    asm.get(js).open(IF);
-    put_text(asm, ctx, js_text);
-    asm.op(ELSE);
-    put_text(asm, ctx, py_text);
-    asm.op(END).op(RETURN);
-}
-
-/// `write_f64(x, js)`: NaN, sign, infinities, zeros, then the digits laid out
-/// (fixed when -4 <= e < 16 for Python / -6 <= e < 21 for JavaScript, else
-/// `d[.ddd]e±X`, Python padding the exponent to two digits).
-fn write_f64(ctx: Ctx) -> FunctionBody {
-    const X: u32 = 0;
-    const JS: u32 = 1;
-    const BITS: u32 = 2;
-    const MAG: u32 = 3;
-    const N: u32 = 4; // i32
-    const E: u32 = 5;
-    const A: u32 = 6;
-    const E1: u32 = 7;
-    const M: u32 = 8;
-    let mut asm = Asm::new();
-    asm.get(X).op(I64_REINTERPRET_F64).set(BITS);
-    asm.get(BITS).i64c(i64::MAX).op(I64_AND).set(MAG);
-    // NaN (any sign): exponent all ones, mantissa non-zero.
-    asm.get(MAG).i64c(EXP_ALL_ONES).op(I64_GT_U).open(IF);
-    put_by_layout(&mut asm, ctx, JS, b"NaN", b"nan");
-    asm.op(END);
-    // A minus sign for every negative value except JavaScript's -0.
-    asm.get(BITS).i64c(0).op(I64_LT_S);
-    asm.get(JS).get(MAG).op(I64_EQZ).op(I32_AND).op(I32_EQZ);
-    asm.op(I32_AND).open(IF);
-    put_text(&mut asm, ctx, b"-");
-    asm.op(END);
-    asm.get(MAG).i64c(EXP_ALL_ONES).op(I64_EQ).open(IF);
-    put_by_layout(&mut asm, ctx, JS, b"Infinity", b"inf");
-    asm.op(END);
-    asm.get(MAG).op(I64_EQZ).open(IF);
-    put_by_layout(&mut asm, ctx, JS, b"0", b"0.0");
-    asm.op(END);
-    // The digits, and e = k - 1 (the exponent of the first digit).
-    asm.get(MAG).call(ctx.f(F64_DIGITS)).set(N);
-    asm.i32c(ctx.addr(K)).load64(0).i64c(1).op(I64_SUB).set(E);
-    // fixed = e >= (js ? -6 : -4) && e < (js ? 21 : 16)
-    asm.get(E).i64c(-6).i64c(-4).get(JS).op(SELECT).op(I64_GE_S);
-    asm.get(E).i64c(21).i64c(16).get(JS).op(SELECT).op(I64_LT_S);
-    asm.op(I32_AND).open(IF);
-    {
-        asm.get(E).i64c(0).op(I64_LT_S).open(IF);
-        // 0.000ddd
-        put_text(&mut asm, ctx, b"0.");
-        asm.i32c(48).i64c(-1).get(E).op(I64_SUB).call(ctx.f(PUT_REPEAT));
-        asm.i32c(0).get(N).call(ctx.f(PUT_DIGITS));
-        asm.op(ELSE);
-        // e+1 integer places: digits while they last, then zeros.
-        asm.get(E).i64c(1).op(I64_ADD).set(E1);
-        asm.get(N).op(I64_EXTEND_I32_S).get(E1).get(N).op(I64_EXTEND_I32_S).get(E1).op(I64_LT_S).op(SELECT).set(M);
-        asm.i32c(0).get(M).op(I32_WRAP_I64).call(ctx.f(PUT_DIGITS));
-        asm.i32c(48).get(E1).get(M).op(I64_SUB).call(ctx.f(PUT_REPEAT));
-        asm.get(N).op(I64_EXTEND_I32_S).get(E1).op(I64_GT_S).open(IF);
-        put_text(&mut asm, ctx, b".");
-        asm.get(E1).op(I32_WRAP_I64).get(N).call(ctx.f(PUT_DIGITS));
-        asm.op(ELSE);
-        // Python keeps ".0" on an integral float; JavaScript does not.
-        asm.get(JS).op(I32_EQZ).open(IF);
-        put_text(&mut asm, ctx, b".0");
-        asm.op(END);
-        asm.op(END);
-        asm.op(END);
-    }
-    asm.op(ELSE);
-    {
-        // d[.ddd]e±X
-        asm.i32c(0).i32c(1).call(ctx.f(PUT_DIGITS));
-        asm.get(N).i32c(1).op(I32_GT_S).open(IF);
-        put_text(&mut asm, ctx, b".");
-        asm.i32c(1).get(N).call(ctx.f(PUT_DIGITS));
-        asm.op(END);
-        put_text(&mut asm, ctx, b"e");
-        asm.i32c(i32::from(b'-')).i32c(i32::from(b'+')).get(E).i64c(0).op(I64_LT_S).op(SELECT).call(ctx.putchar);
-        asm.i64c(0).get(E).op(I64_SUB).get(E).get(E).i64c(0).op(I64_LT_S).op(SELECT).set(A);
-        // Python pads the exponent to two digits (1e-05); JavaScript does not.
-        asm.get(JS).op(I32_EQZ).get(A).i64c(10).op(I64_LT_S).op(I32_AND).open(IF);
-        put_text(&mut asm, ctx, b"0");
-        asm.op(END);
-        asm.get(A).i64c(100).op(I64_GE_S).open(IF);
-        asm.get(A).i64c(100).op(I64_DIV_U).op(I32_WRAP_I64).i32c(48).op(I32_ADD).call(ctx.putchar);
-        asm.op(END);
-        asm.get(A).i64c(10).op(I64_GE_S).open(IF);
-        asm.get(A).i64c(10).op(I64_DIV_U).i64c(10).op(I64_REM_U).op(I32_WRAP_I64).i32c(48).op(I32_ADD).call(ctx.putchar);
-        asm.op(END);
-        asm.get(A).i64c(10).op(I64_REM_U).op(I32_WRAP_I64).i32c(48).op(I32_ADD).call(ctx.putchar);
-    }
-    asm.op(END);
-    let mut locals = vec![ValueType::I64, ValueType::I64, ValueType::I32];
-    locals.extend(std::iter::repeat_n(ValueType::I64, 4)); // E, A, E1, M
-    asm.finish(locals)
-}
-
 /// The helpers in index order, each with its type, for a module whose helper
 /// #0 gets function index `base` and whose scratch region starts at linear
-/// address `scratch`. With `putchar` (the `env.putchar` import's index) the
-/// writer group 10–12 is appended too; without it only the computation group
-/// 0–9 (`F64_CORE_HELPER_COUNT`).
-pub(crate) fn build_f64_helpers(base: u32, putchar: Option<u32>, scratch: u32) -> Vec<(FuncType, FunctionBody)> {
+/// address `scratch`.
+pub(crate) fn build_f64_helpers(base: u32, scratch: u32) -> Vec<(FuncType, FunctionBody)> {
     use ValueType::{F64, I32, I64};
-    // `putchar` is only read by the writer group, which exists only with it.
-    let ctx = Ctx { base, putchar: putchar.unwrap_or(u32::MAX), scratch: scratch as i32 };
+    let ctx = Ctx { base, scratch: scratch as i32 };
     let ty = |params: Vec<ValueType>, results: Vec<ValueType>| FuncType { params, results };
-    let mut helpers = vec![
+    vec![
         (ty(vec![I32, I64], vec![]), bn_set()),
         (ty(vec![I32, I64], vec![]), bn_mul_small()),
         (ty(vec![I32, I64], vec![]), bn_mul_pow(ctx, false)),
@@ -800,13 +641,7 @@ pub(crate) fn build_f64_helpers(base: u32, putchar: Option<u32>, scratch: u32) -
         (ty(vec![I64], vec![I32]), f64_digits(ctx)),
         (ty(vec![F64], vec![I64]), digits_value(ctx)),
         (ty(vec![F64], vec![I64]), exp10_value(ctx)),
-    ];
-    if putchar.is_some() {
-        helpers.push((ty(vec![I32, I32], vec![]), put_digits(ctx)));
-        helpers.push((ty(vec![I32, I64], vec![]), put_repeat(ctx)));
-        helpers.push((ty(vec![F64, I32], vec![]), write_f64(ctx)));
-    }
-    helpers
+    ]
 }
 
 #[cfg(test)]
@@ -814,23 +649,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn helper_count_and_write_index_agree_with_the_builder() {
-        let helpers = build_f64_helpers(100, Some(3), 4096);
+    fn helper_count_and_wrapper_indices_agree_with_the_builder() {
+        let helpers = build_f64_helpers(100, 4096);
         assert_eq!(helpers.len() as u32, F64_HELPER_COUNT);
-        let (ty, _) = &helpers[WRITE_F64_OFFSET as usize];
-        assert_eq!(ty.params, [ValueType::F64, ValueType::I32]);
-        assert!(ty.results.is_empty());
-        // PR7b: both wrappers are f64 -> i64, inside the computation group,
-        // which is all a module gets without a writer.
+        // PR7b: both wrappers are f64 -> i64.
         for at in [DIGITS_VALUE_OFFSET, EXP10_VALUE_OFFSET] {
             let (ty, _) = &helpers[at as usize];
             assert_eq!((ty.params.as_slice(), ty.results.as_slice()), (&[ValueType::F64][..], &[ValueType::I64][..]));
-            assert!(at < F64_CORE_HELPER_COUNT);
+            assert!(at < F64_HELPER_COUNT);
         }
-        let core = build_f64_helpers(100, None, 4096);
-        assert_eq!(core.len() as u32, F64_CORE_HELPER_COUNT);
-        // Nothing in the computation group calls the (absent) putchar.
-        assert!(core.iter().all(|(_, body)| !body.code.windows(6).any(|w| w[0] == CALL && w[1..6] == [0xFF, 0xFF, 0xFF, 0xFF, 0x0F])));
     }
 
     #[test]

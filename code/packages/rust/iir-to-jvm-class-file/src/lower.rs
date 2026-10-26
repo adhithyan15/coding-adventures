@@ -3156,8 +3156,8 @@ fn lower_function(
             //
             // `f64_digits` / `f64_exp10` call the class's own synthetic
             // `__iir_f64_digits(D)J` / `__iir_f64_exp10(D)J` (see
-            // `build_f64_query_method`), which share the PR6a writer's
-            // BigDecimal digit search, so the digits match `write_f64_*`.
+            // `build_f64_query_method`), which share one BigDecimal digit
+            // search (`__iir_f64_shortest`).
             "f64_class" | "f64_digits" | "f64_exp10" => {
                 let (src_slot, src_jtype) = one_src(func, instr, &slots)?;
                 if src_jtype != JvmType::Double {
@@ -4018,30 +4018,6 @@ fn lower_function(
                         code.push(INVOKESTATIC);
                         code.extend_from_slice(&mref.to_be_bytes());
                         emit_istore(&mut code, dest_slot);
-                    }
-                    "write_f64_py" | "write_f64_js" => {
-                        // LANG83 PR6a — `dload x; iconst_<layout>;
-                        // invokestatic __iir_write_f64(DI)V`, the class's own
-                        // synthetic float writer (see `build_write_f64_method`).
-                        let val_name = match instr.srcs.get(1) {
-                            Some(Operand::Var(s)) => s.clone(),
-                            _ => return Err(IIRJvmError::InvalidOperand {
-                                function: fname.clone(),
-                                detail: format!("call_builtin \"{builtin_name}\" requires srcs[1] = Operand::Var(val:f64)"),
-                            }),
-                        };
-                        let (val_slot, val_type) = lookup_var(&val_name)?;
-                        if val_type != JvmType::Double {
-                            return Err(IIRJvmError::InvalidOperand {
-                                function: fname.clone(),
-                                detail: format!("call_builtin \"{builtin_name}\" requires an f64 operand, got {val_type:?}"),
-                            });
-                        }
-                        emit_typed_load(&mut code, val_slot, val_type);
-                        code.push(if builtin_name == "write_f64_js" { ICONST_1 } else { ICONST_0 });
-                        let mref = cp.add_methodref(class_name, WRITE_F64_METHOD, WRITE_F64_DESCRIPTOR);
-                        code.push(INVOKESTATIC);
-                        code.extend_from_slice(&mref.to_be_bytes());
                     }
                     "write_i64" => {
                         // LANG83 PR1b — decimal, NO newline, straight to
@@ -5719,65 +5695,15 @@ fn generate_call_closure_dispatch(
 }
 
 // ---------------------------------------------------------------------------
-// LANG83 PR6a — the synthetic float writer `__iir_write_f64(DI)V`
+// LANG83 PR6a / PR7b — synthetic float methods
 // ---------------------------------------------------------------------------
 //
-// `call_builtin "write_f64_py", x` / `"write_f64_js", x` lower to
-//
-// ```text
-// dload x;  iconst_0 | iconst_1;  invokestatic <this class>.__iir_write_f64(DI)V
-// ```
-//
-// and this section builds that one extra static method, emitted into the class
-// only when the module prints a float. The hard part is the DIGITS: Python's
-// `repr` and JavaScript's `String(x)` both print the SHORTEST decimal that
-// reads back as the double, the closest one on a length tie, and the one with
-// an even last digit on an exact tie. `Double.toString` only does that since
-// JDK 19 (JDK-4511638); on JDK 8 or 17 it prints `1.9999999999999998E23`
-// where Python and JavaScript print `2e+23`. The class file is version 49, so
-// ANY JVM from Java 5 on may run it, and its output must not depend on which.
-// So the method finds the digits itself with a short search over
-// `java.math.BigDecimal` roundings of the double's exact value (Java 5 APIs
-// only; the argument is at its code), then moves the decimal point the way
-// Python or JavaScript would:
-//
-// ```java
-// private static void __iir_write_f64(double x, int js) {
-//     StringBuilder sb = new StringBuilder();
-//     if (x != x) { sb.append(js != 0 ? "NaN" : "nan"); }               // NaN
-//     else {
-//         if (Double.doubleToRawLongBits(x) < 0 && !(js != 0 && x == 0)) sb.append("-");
-//         if (Double.isInfinite(x)) sb.append(js != 0 ? "Infinity" : "inf");
-//         else if (x == 0) sb.append(js != 0 ? "0" : "0.0");
-//         else {
-//             BigDecimal b = shortest(Math.abs(x)).stripTrailingZeros();  // see below
-//             String d = b.unscaledValue().toString();          // the digits, D
-//             int n = d.length(), e = n - 1 - b.scale();        // e: exponent of D[0]
-//             if (js != 0 ? (e >= -6 && e < 21) : (e >= -4 && e < 16)) {
-//                 sb.append(b.toPlainString());                 // 0.0001, 100, 123.456
-//                 if (js == 0 && b.scale() <= 0) sb.append(".0");
-//             } else {
-//                 sb.append(d.charAt(0));
-//                 if (n > 1) sb.append(".").append(d.substring(1));
-//                 sb.append("e").append(e < 0 ? "-" : "+");
-//                 int a = Math.abs(e);
-//                 if (js == 0 && a < 10) sb.append("0");      // Python: 1e-05
-//                 sb.append(a);
-//             }
-//         }
-//     }
-//     System.out.print(sb.toString());
-// }
-// ```
-//
-// Every branch target is reached with an EMPTY operand stack (each `append`
-// chain is stored straight back into the `sb` local), so the class-file
-// verifier sees one consistent stack shape at every join. `max_stack` is
-// measured from the bytecode by `compute_max_stack`, like every method here.
-
-/// The synthetic method's name and descriptor.
-const WRITE_F64_METHOD: &str = "__iir_write_f64";
-const WRITE_F64_DESCRIPTOR: &str = "(DI)V";
+// A class that uses `f64_digits` / `f64_exp10` carries extra `private static`
+// methods built here (PR7b, below). Until LANG83 PR7e it also carried PR6a's
+// float writer `__iir_write_f64(DI)V`, which laid the digits out in Python's
+// `repr` or JavaScript's `String(x)` style for `write_f64_py` /
+// `write_f64_js`. Those builtins are gone: a compiler lays a float out
+// itself, in its own module, over these digits.
 
 /// `ACC_PRIVATE` (JVMS §4.6): the helper is only ever called from this class.
 const ACC_PRIVATE: u16 = 0x0002;
@@ -5826,177 +5752,21 @@ impl Bytecode {
     }
 }
 
-/// Build `private static void __iir_write_f64(double x, int js)`.
-fn build_write_f64_method(cp: &mut ConstantPoolBuilder, class_name: &str) -> Result<JvmMethodInfo, IIRJvmError> {
-    // Locals: x = 0..1 (double), js = 2, b = 3 (BigDecimal), d = 4 (String),
-    // n = 5, e = 6, sb = 7 (StringBuilder), a = 8. Each slot holds ONE type
-    // throughout, so the version-49 type-inferring verifier never has to merge
-    // conflicting types at a join. (The digit search's own locals live in
-    // `__iir_f64_shortest` since LANG83 PR7b.)
-    const X: u8 = 0;
-    const JS: u8 = 2;
-    const BD: u8 = 3;
-    const DIGITS: u8 = 4;
-    const N: u8 = 5;
-    const E: u8 = 6;
-    const SB: u8 = 7;
-    const A: u8 = 8;
-    /// One past the highest slot above.
-    const MAX_LOCALS: u16 = 9;
-    const SBC: &str = "java/lang/StringBuilder";
-    const BDC: &str = "java/math/BigDecimal";
-    let append_str = cp.add_methodref(SBC, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
-    let append_char = cp.add_methodref(SBC, "append", "(C)Ljava/lang/StringBuilder;");
-    let append_int = cp.add_methodref(SBC, "append", "(I)Ljava/lang/StringBuilder;");
-    let mut b = Bytecode::new();
-    // sb.append(<literal>) stored back into sb: leaves the stack empty.
-    let lit = |b: &mut Bytecode, cp: &mut ConstantPoolBuilder, s: &str| {
-        let idx = cp.add_string(s);
-        b.op_u8(ALOAD, SB).op_u16(LDC_W, idx).op_u16(INVOKEVIRTUAL, append_str).op_u8(ASTORE, SB);
-    };
-
-    let sb_class = cp.add_class(SBC);
-    let sb_init = cp.add_methodref(SBC, "<init>", "()V");
-    b.op_u16(NEW, sb_class).op(DUP).op_u16(INVOKESPECIAL, sb_init).op_u8(ASTORE, SB);
-
-    // ── NaN: x != x (dcmpl of NaN with anything is -1, never 0) ──────────────
-    b.op_u8(DLOAD, X).op_u8(DLOAD, X).op(DCMPL).branch(IFEQ, "not_nan");
-    b.op_u8(ILOAD, JS).branch(IFEQ, "nan_py");
-    lit(&mut b, cp, "NaN");
-    b.branch(GOTO, "print");
-    b.bind("nan_py");
-    lit(&mut b, cp, "nan");
-    b.branch(GOTO, "print");
-
-    // ── Sign: every negative value except JavaScript's -0 ────────────────────
-    b.bind("not_nan");
-    let raw_bits = cp.add_methodref("java/lang/Double", "doubleToRawLongBits", "(D)J");
-    b.op_u8(DLOAD, X).op_u16(INVOKESTATIC, raw_bits).op(LCONST_0).op(LCMP).branch(IFGE, "no_sign");
-    b.op_u8(ILOAD, JS).branch(IFEQ, "minus");
-    b.op_u8(DLOAD, X).op(DCONST_0).op(DCMPL).branch(IFEQ, "no_sign");
-    b.bind("minus");
-    lit(&mut b, cp, "-");
-    b.bind("no_sign");
-
-    // ── Infinities ───────────────────────────────────────────────────────────
-    let is_infinite = cp.add_methodref("java/lang/Double", "isInfinite", "(D)Z");
-    b.op_u8(DLOAD, X).op_u16(INVOKESTATIC, is_infinite).branch(IFEQ, "finite");
-    b.op_u8(ILOAD, JS).branch(IFEQ, "inf_py");
-    lit(&mut b, cp, "Infinity");
-    b.branch(GOTO, "print");
-    b.bind("inf_py");
-    lit(&mut b, cp, "inf");
-    b.branch(GOTO, "print");
-
-    // ── Zeros (dcmpl treats -0.0 == 0.0) ─────────────────────────────────────
-    b.bind("finite");
-    b.op_u8(DLOAD, X).op(DCONST_0).op(DCMPL).branch(IFNE, "digits");
-    b.op_u8(ILOAD, JS).branch(IFEQ, "zero_py");
-    lit(&mut b, cp, "0");
-    b.branch(GOTO, "print");
-    b.bind("zero_py");
-    lit(&mut b, cp, "0.0");
-    b.branch(GOTO, "print");
-
-    // ── The shortest digits: the shared BigDecimal search ────────────────────
-    // `__iir_f64_shortest(|x|)` (see `build_f64_shortest_method`) returns the
-    // shortest round-trip decimal of |x|, trailing zeros stripped. The PR7b
-    // `__iir_f64_digits` / `__iir_f64_exp10` call the same method, so a
-    // writer and an op can never disagree on a digit.
-    b.bind("digits");
-    let math_abs = cp.add_methodref("java/lang/Math", "abs", "(D)D");
-    let shortest = cp.add_methodref(class_name, F64_SHORTEST_METHOD, F64_SHORTEST_DESCRIPTOR);
-    b.op_u8(DLOAD, X).op_u16(INVOKESTATIC, math_abs).op_u16(INVOKESTATIC, shortest).op_u8(ASTORE, BD);
-
-    // ── D, n and e from b: digits 1234, scale 2 -> 12.34, e = 1 ──────────────
-    let unscaled = cp.add_methodref(BDC, "unscaledValue", "()Ljava/math/BigInteger;");
-    let bigint_to_string = cp.add_methodref("java/math/BigInteger", "toString", "()Ljava/lang/String;");
-    let length = cp.add_methodref("java/lang/String", "length", "()I");
-    let scale = cp.add_methodref(BDC, "scale", "()I");
-    b.op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, unscaled).op_u16(INVOKEVIRTUAL, bigint_to_string).op_u8(ASTORE, DIGITS);
-    b.op_u8(ALOAD, DIGITS).op_u16(INVOKEVIRTUAL, length).op_u8(ISTORE, N);
-    // e = n - 1 - scale
-    b.op_u8(ILOAD, N).op(ICONST_1).op(ISUB).op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, scale).op(ISUB).op_u8(ISTORE, E);
-
-    // ── Fixed or scientific? JS: -6 <= e < 21; Python: -4 <= e < 16 ──────────
-    b.op_u8(ILOAD, JS).branch(IFEQ, "py_range");
-    b.op_u8(ILOAD, E).op_u8(BIPUSH, (-6i8) as u8).branch(IF_ICMPLT, "sci");
-    b.op_u8(ILOAD, E).op_u8(BIPUSH, 21).branch(IF_ICMPGE, "sci");
-    b.branch(GOTO, "fixed");
-    b.bind("py_range");
-    b.op_u8(ILOAD, E).op_u8(BIPUSH, (-4i8) as u8).branch(IF_ICMPLT, "sci");
-    b.op_u8(ILOAD, E).op_u8(BIPUSH, 16).branch(IF_ICMPGE, "sci");
-
-    // Fixed: BigDecimal's plain string IS the layout; Python adds ".0" to an
-    // integral value (scale <= 0 after stripping zeros).
-    b.bind("fixed");
-    let plain = cp.add_methodref(BDC, "toPlainString", "()Ljava/lang/String;");
-    b.op_u8(ALOAD, SB).op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, plain).op_u16(INVOKEVIRTUAL, append_str).op_u8(ASTORE, SB);
-    b.op_u8(ILOAD, JS).branch(IFNE, "print");
-    b.op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, scale).branch(IFGT, "print");
-    lit(&mut b, cp, ".0");
-    b.branch(GOTO, "print");
-
-    // Scientific: d[.ddd]e±X.
-    b.bind("sci");
-    let char_at = cp.add_methodref("java/lang/String", "charAt", "(I)C");
-    let substring = cp.add_methodref("java/lang/String", "substring", "(I)Ljava/lang/String;");
-    b.op_u8(ALOAD, SB).op_u8(ALOAD, DIGITS).op(ICONST_0).op_u16(INVOKEVIRTUAL, char_at);
-    b.op_u16(INVOKEVIRTUAL, append_char).op_u8(ASTORE, SB);
-    b.op_u8(ILOAD, N).op(ICONST_1).branch(IF_ICMPLE, "exponent");
-    lit(&mut b, cp, ".");
-    b.op_u8(ALOAD, SB).op_u8(ALOAD, DIGITS).op(ICONST_1).op_u16(INVOKEVIRTUAL, substring);
-    b.op_u16(INVOKEVIRTUAL, append_str).op_u8(ASTORE, SB);
-    b.bind("exponent");
-    lit(&mut b, cp, "e");
-    b.op_u8(ILOAD, E).branch(IFGE, "e_positive");
-    lit(&mut b, cp, "-");
-    b.op_u8(ILOAD, E).op(INEG).op_u8(ISTORE, A).branch(GOTO, "e_abs");
-    b.bind("e_positive");
-    lit(&mut b, cp, "+");
-    b.op_u8(ILOAD, E).op_u8(ISTORE, A);
-    b.bind("e_abs");
-    // Python pads the exponent to two digits (1e-05); JavaScript does not.
-    b.op_u8(ILOAD, JS).branch(IFNE, "e_digits");
-    b.op_u8(ILOAD, A).op_u8(BIPUSH, 10).branch(IF_ICMPGE, "e_digits");
-    lit(&mut b, cp, "0");
-    b.bind("e_digits");
-    b.op_u8(ALOAD, SB).op_u8(ILOAD, A).op_u16(INVOKEVIRTUAL, append_int).op_u8(ASTORE, SB);
-
-    // ── One print of the whole text, through the same System.out ────────────
-    b.bind("print");
-    let out = cp.add_fieldref("java/lang/System", "out", "Ljava/io/PrintStream;");
-    let to_string = cp.add_methodref(SBC, "toString", "()Ljava/lang/String;");
-    let print = cp.add_methodref("java/io/PrintStream", "print", "(Ljava/lang/String;)V");
-    b.op_u16(GETSTATIC, out).op_u8(ALOAD, SB).op_u16(INVOKEVIRTUAL, to_string).op_u16(INVOKEVIRTUAL, print);
-    b.op(RETURN);
-
-    let internal = |detail: String| IIRJvmError::StackDepthAnalysis { function: WRITE_F64_METHOD.to_string(), detail };
-    let code = b.finish().map_err(internal)?;
-    let max_stack = compute_max_stack(&code, &cp.entries).map_err(internal)?;
-    cp.add_utf8(WRITE_F64_METHOD);
-    cp.add_utf8(WRITE_F64_DESCRIPTOR);
-    Ok(JvmMethodInfo {
-        access_flags: ACC_PRIVATE | ACC_STATIC,
-        name: WRITE_F64_METHOD.to_string(),
-        descriptor: WRITE_F64_DESCRIPTOR.to_string(),
-        attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute {
-            name: "Code".to_string(),
-            max_stack,
-            max_locals: MAX_LOCALS,
-            code,
-            nested_attributes: vec![],
-        })],
-    })
-}
-
 // ---------------------------------------------------------------------------
 // LANG83 PR7b — the digit search on its own, and the two digit queries
 // ---------------------------------------------------------------------------
 //
-// The PR6a writer's BigDecimal search is a method of its own,
+// The hard part is the DIGITS: the SHORTEST decimal that reads back as the
+// double, the closest one on a length tie, and the one with an even last
+// digit on an exact tie (Python's `repr`, JavaScript's `String(x)`, Ryu).
+// `Double.toString` only does that since JDK 19 (JDK-4511638); on JDK 8 or 17
+// it prints `1.9999999999999998E23` where the rule gives `2e+23`. The class
+// file is version 49, so ANY JVM from Java 5 on may run it, and its answer
+// must not depend on which. So the class finds the digits itself with a short
+// search over `java.math.BigDecimal` roundings of the double's exact value
+// (Java 5 APIs only; the argument is at its code), in
 // `private static BigDecimal __iir_f64_shortest(double ax)` (ax = |x|,
-// finite and non-zero), so the writer and the PR7b ops share it:
+// finite and non-zero). The two PR7b ops call it:
 //
 // ```java
 // private static long __iir_f64_digits(double x) {      // f64_digits
@@ -6024,8 +5794,7 @@ const F64_QUERY_DESCRIPTOR: &str = "(D)J";
 
 /// Every synthetic float method a class may carry; a module function may not
 /// take one of these names.
-const SYNTHETIC_F64_METHODS: &[&str] =
-    &[WRITE_F64_METHOD, F64_SHORTEST_METHOD, F64_DIGITS_METHOD, F64_EXP10_METHOD];
+const SYNTHETIC_F64_METHODS: &[&str] = &[F64_SHORTEST_METHOD, F64_DIGITS_METHOD, F64_EXP10_METHOD];
 
 /// Package one synthetic `private static` method, measuring `max_stack`.
 fn synthetic_method(
@@ -6055,8 +5824,8 @@ fn synthetic_method(
 }
 
 /// Build `private static BigDecimal __iir_f64_shortest(double ax)`: the
-/// PR6a digit search (moved here unchanged from `__iir_write_f64`), for a
-/// finite, non-zero `ax = |x|`.
+/// PR6a digit search (moved here unchanged from PR6a's writer in PR7b), for
+/// a finite, non-zero `ax = |x|`.
 fn build_f64_shortest_method(cp: &mut ConstantPoolBuilder) -> Result<JvmMethodInfo, IIRJvmError> {
     // Locals: ax = 0..1 (double), exact = 2 (BigDecimal), p = 3, lo = 4,
     // hi = 5 (both BigDecimal), lo_miss = 6, hi_miss = 7, c = 8 — one type
@@ -6226,13 +5995,6 @@ fn module_uses_op(module: &IIRModule, op: &str) -> bool {
     module.functions.iter().flat_map(|f| &f.instructions).any(|i| i.op == op)
 }
 
-/// `true` if the module calls either PR6a float writer.
-fn module_uses_write_f64(module: &IIRModule) -> bool {
-    module.functions.iter().flat_map(|f| &f.instructions).any(|i| {
-        i.op == "call_builtin"
-            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_py" || n == "write_f64_js")
-    })
-}
 
 // ---------------------------------------------------------------------------
 // serialize_jvm_class_file — convert JvmClassFile to bytes
@@ -6605,14 +6367,13 @@ pub fn lower_iir_to_jvm(
         methods.push(dispatch_method);
     }
 
-    // ── Step 3c: LANG83 PR6a float writer and PR7b digit queries ─────────────
+    // ── Step 3c: LANG83 PR7b digit queries ───────────────────────────────────
     //
-    // One `__iir_f64_shortest` digit search serves them all; each caller is
-    // emitted only when the module uses it.
-    let uses_write_f64 = module_uses_write_f64(module);
+    // One `__iir_f64_shortest` digit search serves both; each query method
+    // is emitted only when the module uses it.
     let uses_digits = module_uses_op(module, "f64_digits");
     let uses_exp10 = module_uses_op(module, "f64_exp10");
-    if uses_write_f64 || uses_digits || uses_exp10 {
+    if uses_digits || uses_exp10 {
         if let Some(f) = module.functions.iter().find(|f| SYNTHETIC_F64_METHODS.contains(&f.name.as_str())) {
             return Err(IIRJvmError::InvalidOperand {
                 function: f.name.clone(),
@@ -6620,9 +6381,6 @@ pub fn lower_iir_to_jvm(
             });
         }
         methods.push(build_f64_shortest_method(&mut cp)?);
-        if uses_write_f64 {
-            methods.push(build_write_f64_method(&mut cp, &config.class_name)?);
-        }
         if uses_digits {
             methods.push(build_f64_query_method(&mut cp, &config.class_name, true)?);
         }

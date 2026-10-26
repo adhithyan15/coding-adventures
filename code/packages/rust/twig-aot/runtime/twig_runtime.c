@@ -34,8 +34,6 @@
  * |-----------------------|----------------------------------------------|
  * | `__twig_print_i64`    | Print a signed 64-bit integer + newline.     |
  * | `__twig_write_i64`    | LANG83: print a signed 64-bit integer, no newline. |
- * | `__twig_write_f64_py` | LANG83 PR6a: a double as Python `repr`, no newline. |
- * | `__twig_write_f64_js` | LANG83 PR6a: a double as JS `Number#toString`, no newline. |
  * | `__twig_f64_digits`   | LANG83 PR7b `f64_digits`: shortest round-trip significand D. |
  * | `__twig_f64_exp10`    | LANG83 PR7b `f64_exp10`: exponent of D's leading digit.      |
  * | `__twig_trap`         | LANG83: flush stdout, report the trap kind on stderr, abort. |
@@ -145,17 +143,10 @@ void __twig_write_i64(int64_t val) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
- * LANG83 PR6a — shortest round-trip float output
+ * LANG83 PR6a / PR7b — shortest round-trip float digits
  * ─────────────────────────────────────────────────────────────────────────
  *
- * `__twig_write_f64_py(bits)` prints a double the way Python's `repr` does,
- * `__twig_write_f64_js(bits)` the way JavaScript's `Number#toString` does,
- * both with NO newline. The argument is the double's raw bit pattern: the
- * native backends keep an `f64` in a frame slot as its 8 bytes and pass a
- * builtin argument in a general-purpose register (`rdi` / `x0`), so the
- * generic `call_builtin` marshalling needs no float-register path.
- *
- * Two steps, as in every LANG83 backend (spec, "PR6a"):
+ * Printing a float is two steps (spec, "PR6a" and "PR7"):
  *
  *   1. DIGITS — the shortest decimal string D (and exponent k, value =
  *      0.D × 10^k) that reads back as exactly x; on a length tie the closest
@@ -163,6 +154,12 @@ void __twig_write_i64(int64_t val) {
  *      prints 17 digits, `0.1` as `0.10000000000000001`.
  *   2. LAYOUT — where the point goes, which is where Python and JavaScript
  *      differ (`1e+16` vs `10000000000000000`, `1.0` vs `1`).
+ *
+ * Only step 1 lives here, as the PR7b ops `f64_digits` / `f64_exp10` (the
+ * helpers below). Step 2 is a language's rule, so each compiler emits it into
+ * its own module as integer code and `putchar`. Until LANG83 PR7e this file
+ * also held both layouts, as `__twig_write_f64_py` / `__twig_write_f64_js`;
+ * they are gone, and the runtime knows no language.
  *
  * The digits come from the Burger–Dybvig free-format algorithm (the
  * Steele–White / Dragon4 family): exact big-integer arithmetic, no tables.
@@ -341,84 +338,17 @@ static int twig_f64_digits(uint64_t mag, unsigned char out[32], int64_t *k_out) 
     return n;
 }
 
-/* Lay out and print one double. `js` = 0 for Python, 1 for JavaScript.
- *
- *   e = k - 1, the exponent of the first digit (123.4 → e = 2)
- *   fixed when -4 <= e < 16 (Python) / -6 <= e < 21 (JavaScript)
- *     e < 0          → "0." + (-e-1) zeros + D             0.0001
- *     len(D) <= e+1  → D + zeros up to the units place     100 (+ ".0" in Python)
- *     otherwise      → D with a point after e+1 digits     123.456
- *   else sci         → d[.ddd]e±X (Python pads X to two digits)
- */
-static void twig_write_f64(int64_t bits, int js) {
-    uint64_t u = (uint64_t)bits;
-    uint64_t mag = u & 0x7FFFFFFFFFFFFFFFull;
-    twig_runtime_ensure_stdout_binary();
-    if (mag > 0x7FF0000000000000ull) {           /* NaN, whatever its sign */
-        fputs(js ? "NaN" : "nan", stdout);
-        return;
-    }
-    if ((u >> 63) && !(js && mag == 0)) putchar('-');   /* JS prints -0 as "0" */
-    if (mag == 0x7FF0000000000000ull) { fputs(js ? "Infinity" : "inf", stdout); return; }
-    if (mag == 0) { fputs(js ? "0" : "0.0", stdout); return; }
-
-    unsigned char d[32];
-    int64_t k;
-    int n = twig_f64_digits(mag, d, &k);
-    int64_t e = k - 1;
-    int64_t lo = js ? -6 : -4, hi = js ? 21 : 16;
-    if (e >= lo && e < hi) {
-        if (e < 0) {
-            putchar('0'); putchar('.');
-            for (int64_t i = 0; i < -e - 1; i++) putchar('0');
-            for (int i = 0; i < n; i++) putchar('0' + d[i]);
-        } else {
-            for (int64_t i = 0; i <= e; i++) putchar(i < n ? '0' + d[i] : '0');
-            if (n > e + 1) {
-                putchar('.');
-                for (int64_t i = e + 1; i < n; i++) putchar('0' + d[i]);
-            } else if (!js) {
-                putchar('.'); putchar('0');
-            }
-        }
-    } else {
-        putchar('0' + d[0]);
-        if (n > 1) {
-            putchar('.');
-            for (int i = 1; i < n; i++) putchar('0' + d[i]);
-        }
-        putchar('e');
-        putchar(e < 0 ? '-' : '+');
-        int64_t a = e < 0 ? -e : e;   /* |e| <= 324 */
-        if (!js && a < 10) putchar('0');
-        if (a >= 100) putchar('0' + (int)(a / 100));
-        if (a >= 10) putchar('0' + (int)((a / 10) % 10));
-        putchar('0' + (int)(a % 10));
-    }
-}
-
-/* __twig_write_f64_py — LANG83 PR6a `write_f64_py`: Python `repr(float)`,
- * no newline. Same FILE* as every other output helper (one ordered stream);
- * like `__twig_write_i64` it does not flush per call. */
-void __twig_write_f64_py(int64_t bits) {
-    twig_write_f64(bits, 0);
-}
-
-/* __twig_write_f64_js — LANG83 PR6a `write_f64_js`: JavaScript
- * `Number#toString`, no newline. */
-void __twig_write_f64_js(int64_t bits) {
-    twig_write_f64(bits, 1);
-}
-
 /* ─────────────────────────────────────────────────────────────────────────
  * LANG83 PR7b — the digits on their own
  * ─────────────────────────────────────────────────────────────────────────
  *
- * The layout above is a language's rule (Python's `1e+16` against
- * JavaScript's `10000000000000000`); the digits are not. So the registry
- * also exposes them as two language-neutral integer ops, which the native
- * backends lower to calls of these helpers (argument: the raw bits in
- * `rdi` / `x0`, as for `__twig_write_f64_*`; result in `rax` / `x0`):
+ * The layout is a language's rule (Python's `1e+16` against JavaScript's
+ * `10000000000000000`); the digits are not. So the registry exposes them as
+ * two language-neutral integer ops, which the native backends lower to calls
+ * of these helpers. The argument is the double's raw bit pattern: the native
+ * backends keep an `f64` in a frame slot as its 8 bytes and pass it in a
+ * general-purpose register (`rdi` / `x0`), so no float-register path is
+ * needed; the result comes back in `rax` / `x0`:
  *
  *   __twig_f64_digits(bits)  D, the shortest round-trip significand of |x|,
  *                           with no trailing zeros (1 <= D < 10^17)
@@ -433,9 +363,9 @@ void __twig_write_f64_js(int64_t bits) {
  *
  * Both return 0 for ±0, ±Infinity and NaN (f64_class 0, 2, 3), which have
  * no digits. The third op, f64_class, is a few compares on the bits and is
- * emitted inline by the backends. Both helpers run `twig_f64_digits`, the
- * same core `twig_write_f64` prints from, so an op and a writer can never
- * disagree on a digit. Each call runs the search once; nothing is cached.
+ * emitted inline by the backends. Both helpers run `twig_f64_digits`, so
+ * they can never disagree on a digit. Each call runs the search once;
+ * nothing is cached.
  *
  * The names follow this runtime's `__twig_` convention on purpose. They must
  * NOT be `__iir_*`: that prefix belongs to helpers the compilers emit into

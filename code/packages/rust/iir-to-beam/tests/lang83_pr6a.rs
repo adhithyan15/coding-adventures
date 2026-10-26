@@ -1,13 +1,14 @@
-//! LANG83 PR6a on the BEAM backend: `write_f64_py` / `write_f64_js`.
+//! LANG83 floats on the BEAM backend: the PR7b digit ops `f64_class`,
+//! `f64_digits` and `f64_exp10`.
 //!
-//! Both lower to `call 2, '__iir_write_f64'/2`, a local function the module
-//! carries (see `lower.rs`, `mod lang83_f64`). It takes the shortest digits
-//! from `erlang:float_to_list(F, [short])` and lays them out like Python or
-//! JavaScript.
+//! `f64_digits` / `f64_exp10` call local functions the module carries
+//! (`'__iir_f64_digits'/1`, `'__iir_f64_exp10'/1`), which share one parse,
+//! `'__iir_f64_shortest'/1` (see `lower.rs`, `mod lang83_f64`). It takes the
+//! shortest digits from `erlang:float_to_list(F, [short])`.
 //!
 //! There is no `erl` here (CI's BEAM column runs the real emulator), so these
-//! tests EXECUTE the emitted function on a model of the BEAM opcodes and
-//! library functions it uses. The model is strict where real BEAM is
+//! tests EXECUTE the emitted functions on a model of the BEAM opcodes and
+//! library functions they use. The model is strict where real BEAM is
 //! unforgiving:
 //!
 //! * every `call`/`call_ext` clobbers every X register except the result;
@@ -17,8 +18,14 @@
 //!
 //! The model's `float_to_list(F, [short])` is fed the same shortest digits in
 //! several Erlang-plausible layouts (`1.0e16`, `1.0e+16`, `1e16`,
-//! `10000000000000000.0`). For every finite value in the table the output
-//! must be what host `python3` and `node` print.
+//! `10000000000000000.0`). For every finite value in the table the answer
+//! must be host `python3`'s `repr`, split at the digits.
+//!
+//! This file began as PR6a's `write_f64_py` / `write_f64_js` tests (the
+//! local `'__iir_write_f64'/2`). LANG83 PR7e removed both writers: a compiler
+//! lays a float out itself, and `lang-aot`'s `op_conformance` lowers the
+//! PR6a table's finite values through the compilers' helpers (CI executes
+//! the BEAM column).
 
 use std::collections::HashMap;
 
@@ -47,30 +54,6 @@ const OP_GC_BIF2: u8 = 125;
 
 fn v(n: &str) -> Operand {
     Operand::Var(n.into())
-}
-
-/// `main(x: f64) -> i64 { builtin(x); return 0 }`.
-fn writer(builtin: &str) -> BEAMModule {
-    let module = IIRModule {
-        name: "floats".into(),
-        functions: vec![IIRFunction::new(
-            "main",
-            vec![("x".into(), "f64".into())],
-            "i64",
-            vec![
-                IIRInstr::new("call_builtin", None, vec![v(builtin), v("x")], "void"),
-                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
-                IIRInstr::new("ret", None, vec![v("z")], "i64"),
-            ],
-        )],
-        entry_point: Some("main".into()),
-        language: "test".into(),
-        exports: vec![],
-        imports: vec![],
-        release: None,
-    };
-    assert!(validate_for_beam(&module).is_empty(), "{:?}", validate_for_beam(&module));
-    lower_iir_to_beam(&module, &IIRBeamConfig::new("floats")).expect("lowers")
 }
 
 fn atom(m: &BEAMModule, idx: u64) -> &str {
@@ -202,14 +185,6 @@ fn digits_of(py: &str) -> (String, i32) {
     let d1 = all.trim_start_matches('0');
     let lz = (all.len() - d1.len()) as i32;
     (d1.trim_end_matches('0').to_string(), ilen - 1 - lz + exp)
-}
-
-/// Run `'__iir_write_f64'(F, Js)` on the model; returns what `io:put_chars`
-/// printed. `short` is the model's `float_to_list(F, [short])`.
-fn run_helper(m: &BEAMModule, f: f64, js: i64, short: &dyn Fn(f64) -> String) -> String {
-    let mut out = String::new();
-    run_fn(m, "__iir_write_f64", &[Val::Float(f), Val::Int(js)], &mut out, short);
-    out
 }
 
 /// Run the module function `name` with `args` in x0.. on the model; output
@@ -520,49 +495,32 @@ const FLOAT_TABLE: &[(u64, &str, &str)] = &[
     (0x40B99E157689CA19, "6558.08384", "6558.08384"),
 ];
 
+/// LANG83 PR7e: `write_f64_py` / `write_f64_js` (the local
+/// `'__iir_write_f64'/2`) are gone, so the validator and the lowering both
+/// refuse a module that still calls one.
 #[test]
-fn helper_lays_out_every_short_style_like_python_and_javascript() {
-    let m = writer("write_f64_py");
-    let by_bits: HashMap<u64, &str> = FLOAT_TABLE.iter().map(|(b, py, _)| (*b, *py)).collect();
-    for style in [Short::Sci, Short::SciPlus, Short::Bare, Short::Fixed] {
-        let short = |f: f64| {
-            let (d, e) = if f == 0.0 { (String::new(), 0) } else { digits_of(by_bits[&f.to_bits()]) };
-            short_string(&d, e, f.is_sign_negative(), style)
+fn retired_float_writers_are_refused() {
+    for name in ["write_f64_py", "write_f64_js"] {
+        let module = IIRModule {
+            name: "floats".into(),
+            functions: vec![IIRFunction::new("main", vec![("x".into(), "f64".into())], "i64", vec![
+                IIRInstr::new("call_builtin", None, vec![v(name), v("x")], "void"),
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![v("z")], "i64"),
+            ])],
+            entry_point: Some("main".into()),
+            language: "test".into(),
+            exports: vec![],
+            imports: vec![],
+            release: None,
         };
-        // BEAM has no inf or nan floats: those rows cannot reach the helper.
-        for &(bits, py, js) in FLOAT_TABLE.iter().filter(|(b, _, _)| f64::from_bits(*b).is_finite()) {
-            let f = f64::from_bits(bits);
-            assert_eq!(run_helper(&m, f, 0, &short), py, "{style:?} python {f:e}");
-            assert_eq!(run_helper(&m, f, 1, &short), js, "{style:?} javascript {f:e}");
-        }
+        assert!(!validate_for_beam(&module).is_empty(), "{name}");
+        assert!(lower_iir_to_beam(&module, &IIRBeamConfig::new("floats")).is_err(), "{name}");
     }
 }
 
 #[test]
-fn call_site_passes_the_float_and_layout_then_calls_the_local_helper() {
-    for (builtin, layout) in [("write_f64_py", 0), ("write_f64_js", 1)] {
-        let m = writer(builtin);
-        let entry = m
-            .instructions
-            .iter()
-            .position(|i| i.opcode == OP_FUNC_INFO && atom(&m, i.operands[1].value) == "__iir_write_f64")
-            .map(|fi| m.instructions[fi + 1].operands[0].value)
-            .unwrap();
-        let call = m.instructions.iter().position(|i| i.opcode == OP_CALL && i.operands[1].value == entry).expect("local call");
-        assert_eq!(m.instructions[call].operands[0].value, 2, "arity 2");
-        let set_layout = &m.instructions[call - 1];
-        assert_eq!((set_layout.opcode, set_layout.operands[0].value, set_layout.operands[1].value), (OP_MOVE, layout, 1));
-        // Exported, so the Code chunk's function count (= exports) covers it.
-        let helper = m.exports.iter().find(|e| atom(&m, u64::from(e.function_atom_index)) == "__iir_write_f64");
-        assert!(matches!(helper, Some(e) if e.arity == 2 && u64::from(e.label) == entry));
-        assert_eq!(m.exports.len(), m.instructions.iter().filter(|i| i.opcode == OP_FUNC_INFO).count());
-        // main + the shared parse '__iir_f64_shortest'/1 + the writer.
-        assert_eq!(m.instructions.iter().filter(|i| i.opcode == OP_FUNC_INFO).count(), 3, "main + two helpers");
-    }
-}
-
-#[test]
-fn a_module_without_float_output_is_unchanged() {
+fn a_module_without_digit_ops_is_unchanged() {
     let module = IIRModule {
         name: "plain".into(),
         functions: vec![IIRFunction::new("main", vec![], "i64", vec![
@@ -576,30 +534,8 @@ fn a_module_without_float_output_is_unchanged() {
         release: None,
     };
     let m = lower_iir_to_beam(&module, &IIRBeamConfig::new("plain")).unwrap();
-    assert!(!m.atoms.iter().any(|a| a == "__iir_write_f64" || a == "float_to_list" || a == "nthtail"));
+    assert!(!m.atoms.iter().any(|a| a == "__iir_f64_shortest" || a == "float_to_list"));
     assert!(m.literals.is_empty());
-}
-
-#[test]
-fn a_function_named_like_the_helper_is_refused() {
-    let mut module = IIRModule {
-        name: "clash".into(),
-        functions: vec![IIRFunction::new("main", vec![("x".into(), "f64".into())], "i64", vec![
-            IIRInstr::new("call_builtin", None, vec![v("write_f64_js"), v("x")], "void"),
-            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
-            IIRInstr::new("ret", None, vec![v("z")], "i64"),
-        ])],
-        entry_point: Some("main".into()),
-        language: "test".into(),
-        exports: vec![],
-        imports: vec![],
-        release: None,
-    };
-    module.functions.push(IIRFunction::new("__iir_write_f64", vec![], "i64", vec![
-        IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
-        IIRInstr::new("ret", None, vec![v("z")], "i64"),
-    ]));
-    assert!(lower_iir_to_beam(&module, &IIRBeamConfig::new("clash")).is_err());
 }
 
 // ── LANG83 PR7b: f64_class / f64_digits / f64_exp10 ─────────────────────────
@@ -645,8 +581,8 @@ fn digit_module() -> BEAMModule {
     lower_iir_to_beam(&module, &IIRBeamConfig::new("digits")).expect("lowers")
 }
 
-/// The helpers are emitted once each, exported, and share one parse; a
-/// module without the writer carries no writer.
+/// The helpers are emitted once each, exported, and share one parse; there is
+/// no writer (removed in PR7e), and only the parse's imports are interned.
 #[test]
 fn pr7b_digit_helpers_share_the_parse_and_are_exported() {
     let m = digit_module();
@@ -655,7 +591,30 @@ fn pr7b_digit_helpers_share_the_parse_and_are_exported() {
     for helper in ["__iir_f64_shortest", "__iir_f64_digits", "__iir_f64_exp10"] {
         assert_eq!(fis.iter().filter(|n| **n == helper).count(), 1, "{helper} in {fis:?}");
     }
-    assert!(!fis.contains(&"__iir_write_f64"), "no writer when nothing prints a float");
+    assert!(!fis.contains(&"__iir_write_f64"), "no writer (removed in PR7e)");
+    for writer_only in ["duplicate", "nthtail", "integer_to_list"] {
+        assert!(!m.atoms.iter().any(|a| a == writer_only), "{writer_only} was the writer's import");
+    }
+    // A module function may not take a helper's name.
+    let clash = IIRModule {
+        name: "clash".into(),
+        functions: vec![
+            IIRFunction::new("main", vec![("x".into(), "f64".into())], "i64", vec![
+                IIRInstr::new("f64_digits", Some("d".into()), vec![v("x")], "i64"),
+                IIRInstr::new("ret", None, vec![v("d")], "i64"),
+            ]),
+            IIRFunction::new("__iir_f64_shortest", vec![], "i64", vec![
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![v("z")], "i64"),
+            ]),
+        ],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+        release: None,
+    };
+    assert!(lower_iir_to_beam(&clash, &IIRBeamConfig::new("clash")).is_err());
     assert_eq!(m.exports.len(), fis.len(), "every func_info is exported");
     // f64_class is inline: no call in q_class.
     let start = m.instructions.iter().position(|i| i.opcode == OP_FUNC_INFO && atom(&m, i.operands[1].value) == "q_class").unwrap();

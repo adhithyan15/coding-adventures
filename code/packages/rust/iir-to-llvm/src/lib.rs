@@ -380,12 +380,9 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // `linkonce_odr` `@__iir_write_i64` (libc `printf("%lld")`), so it needs no
     // host shim and shares libc's `stdout` with `putchar`.
     "write_i64",
-    // LANG83 PR6a — shortest round-trip float output, Python `repr` / JS
-    // `Number#toString` layout, no newline. Both lower to the module's own
-    // `internal` `@__iir_write_f64(double, i32 layout)` (see
-    // `lang83_f64.rs`), which writes with libc `putchar`.
-    "write_f64_py",
-    "write_f64_js",
+    // No float writer: LANG83 PR6a's `write_f64_py` / `write_f64_js` were
+    // removed in PR7e. A compiler prints a float with its own helper over
+    // `f64_digits` / `f64_exp10` (the module-local core in `lang83_f64.rs`).
     "putchar",
     "getchar",
     "input_i64",
@@ -876,12 +873,9 @@ pub fn lower_iir_to_llvm(
     // explicit `trap`, or the defined traps of the floor-division ops) — each
     // gets one self-contained definition / message constant.
     let mut used_write_i64 = false;
-    // LANG83 PR6a: either float writer pulls in the module-local
-    // `@__iir_write_f64` definitions (and `putchar`, which they write with).
-    let mut used_write_f64 = false;
     // LANG83 PR7b: `f64_digits` / `f64_exp10` pull in the digit core and its
-    // two wrappers (`LANG83_F64_DIGITS_LL`) — but not the writer's layout code
-    // or `putchar`.
+    // two wrappers (`LANG83_F64_DIGITS_LL`); they write nothing, so no
+    // `putchar`.
     let mut used_f64_digit_ops = false;
     let mut trap_kinds: std::collections::BTreeSet<u32> = std::collections::BTreeSet::new();
     // LANG83 PR4: the `*.with.overflow` intrinsics the checked ops call, each
@@ -971,10 +965,6 @@ pub fn lower_iir_to_llvm(
                     match name.as_str() {
                         "print_i64" => used_print_i64 = true,
                         "write_i64" => used_write_i64 = true,
-                        "write_f64_py" | "write_f64_js" => {
-                            used_write_f64 = true;
-                            used_putchar = true;
-                        }
                         "putchar" => used_putchar = true,
                         "getchar" => used_getchar = true,
                         "input_i64" => used_input_i64 = true,
@@ -996,16 +986,15 @@ pub fn lower_iir_to_llvm(
             }
         }
     }
-    // LANG83 PR6a: the float writer's module-local definitions are all named
+    // LANG83 PR7b: the digit core's module-local definitions are all named
     // `@__iir_*`; a module function with such a name would be a duplicate
     // definition that clang rejects with a confusing error. Refuse it here.
-    // (PR7b's digit ops emit the same `@__iir_*` core.)
-    if used_write_f64 || used_f64_digit_ops {
+    if used_f64_digit_ops {
         if let Some(f) = module.functions.iter().find(|f| f.name.starts_with("__iir_")) {
             return Err(IIRLlvmError::InvalidOperand {
                 function: f.name.clone(),
                 detail: "a module function may not use the reserved `__iir_` prefix of the \
-                         float writer's module-local definitions"
+                         float digit core's module-local definitions"
                     .into(),
             });
         }
@@ -1015,13 +1004,9 @@ pub fn lower_iir_to_llvm(
         out.push_str("declare void @__print_i64(i64)\n");
     }
     emit_lang83_runtime(&mut out, used_write_i64, &trap_kinds);
-    // One copy of the digit core serves both the PR7b ops and the PR6a
-    // writers; the writer's layout code follows only when a module prints.
-    if used_write_f64 || used_f64_digit_ops {
+    // One copy of the digit core serves both PR7b ops.
+    if used_f64_digit_ops {
         out.push_str(lang83_f64::LANG83_F64_DIGITS_LL);
-    }
-    if used_write_f64 {
-        out.push_str(lang83_f64::LANG83_F64_WRITE_LL);
     }
     if !used_ovf_intrinsics.is_empty() {
         out.push('\n');
@@ -3255,7 +3240,7 @@ fn lower_f64_ieee(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Re
 /// ```
 ///
 /// The two wrappers are the module's own `internal` definitions around
-/// the PR6a digit core (`lang83_f64.rs`), so the digits match `write_f64_*`.
+/// the PR6a digit core (`lang83_f64.rs`).
 fn lower_f64_digit_query(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
     let opname = instr.op.as_str();
     let dest = require_dest(instr, opname, state.fn_name)?.to_string();
@@ -4674,15 +4659,6 @@ fn lower_call_builtin(
         "write_i64" => {
             let val = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
             out.push_str(&format!("  call void @__iir_write_i64(i64 {val})\n"));
-            Ok(())
-        }
-        // ── write_f64_py / write_f64_js — LANG83 PR6a ───────────────────
-        // One module-local routine; the second argument picks the layout
-        // (0 = Python repr, 1 = JavaScript toString).
-        "write_f64_py" | "write_f64_js" => {
-            let val = resolve_operand(instr.srcs.get(1), &state.env, "double", state.fn_name)?;
-            let layout = i32::from(name == "write_f64_js");
-            out.push_str(&format!("  call void @__iir_write_f64(double {val}, i32 {layout})\n"));
             Ok(())
         }
         "print_i64" => {
