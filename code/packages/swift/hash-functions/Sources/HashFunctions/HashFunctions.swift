@@ -368,11 +368,13 @@ public func avalancheScore(
     for (sampleIndex, sample) in samples.enumerated() {
         guard !sample.isEmpty else { throw HashFunctionError.emptySample(sampleIndex) }
         let original = hashFunction(sample)
-        for bitPosition in 0..<(sample.count * 8) {
-            var flipped = sample
-            flipped[bitPosition / 8] ^= UInt8(1 << (bitPosition % 8))
-            changedBits += Double((original ^ hashFunction(flipped)).nonzeroBitCount)
-            examinedBits += Double(outputBits)
+        for byteIndex in sample.indices {
+            for bitOffset in 0..<8 {
+                var flipped = sample
+                flipped[byteIndex] ^= UInt8(1 << bitOffset)
+                changedBits += Double((original ^ hashFunction(flipped)).nonzeroBitCount)
+                examinedBits += Double(outputBits)
+            }
         }
     }
     return changedBits / examinedBits

@@ -137,8 +137,12 @@ final class HashFunctionsTests: XCTestCase {
         XCTAssertEqual(strategies[4].hash(input), UInt64(murmur3_32(input, seed: 7)))
         XCTAssertEqual(strategies[5].hash(input), try sipHash24(input, key: [UInt8](repeating: 0, count: 16)))
 
-        XCTAssertThrowsError(try PolynomialRollingHash(base: 31, modulus: 0))
-        XCTAssertThrowsError(try SipHash24(key: []))
+        XCTAssertThrowsError(try PolynomialRollingHash(base: 31, modulus: 0)) { error in
+            XCTAssertEqual(error as? HashFunctionError, .invalidModulus)
+        }
+        XCTAssertThrowsError(try SipHash24(key: [])) { error in
+            XCTAssertEqual(error as? HashFunctionError, .invalidSipHashKeyLength(0))
+        }
     }
 
     func testAvalancheScoreUsesOnlyExplicitCallerSamples() throws {
@@ -167,16 +171,24 @@ final class HashFunctionsTests: XCTestCase {
 
         XCTAssertThrowsError(
             try avalancheScore(hashFunction: { _ in 0 }, outputBits: 0, samples: samples)
-        )
+        ) { error in
+            XCTAssertEqual(error as? HashFunctionError, .invalidOutputBits(0))
+        }
         XCTAssertThrowsError(
             try avalancheScore(hashFunction: { _ in 0 }, outputBits: 65, samples: samples)
-        )
+        ) { error in
+            XCTAssertEqual(error as? HashFunctionError, .invalidOutputBits(65))
+        }
         XCTAssertThrowsError(
             try avalancheScore(hashFunction: { _ in 0 }, outputBits: 32, samples: [])
-        )
+        ) { error in
+            XCTAssertEqual(error as? HashFunctionError, .emptySamples)
+        }
         XCTAssertThrowsError(
             try avalancheScore(hashFunction: { _ in 0 }, outputBits: 32, samples: [[]])
-        )
+        ) { error in
+            XCTAssertEqual(error as? HashFunctionError, .emptySample(0))
+        }
     }
 
     func testDistributionTestExactMathAndInputValidation() throws {
@@ -191,9 +203,13 @@ final class HashFunctionsTests: XCTestCase {
         )
         XCTAssertThrowsError(
             try distributionTest(hashFunction: fnv1a64, inputs: [], numBuckets: 4)
-        )
+        ) { error in
+            XCTAssertEqual(error as? HashFunctionError, .emptyInputs)
+        }
         XCTAssertThrowsError(
             try distributionTest(hashFunction: fnv1a64, inputs: inputs, numBuckets: 0)
-        )
+        ) { error in
+            XCTAssertEqual(error as? HashFunctionError, .invalidBucketCount(0))
+        }
     }
 }
