@@ -71,16 +71,20 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Order | Target | Public basis | Planned boundary |
 |---:|---|---|---|
-| 1 | DEC PDP-10 KA10 | published architecture manuals | Active: bounded checked 36-bit functional oracle. |
-| 2 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
-| 3 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
-| 4 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
-| 5 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
-| 6 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
-| 7 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
-| 8 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
-| 9 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
-| 10 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
+| 1 | Arm Cortex-M4 | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
+| 2 | Arm Cortex-M7 | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
+| 3 | Arm Cortex-M23 (merged) | Armv8-M manuals | Bounded baseline/security-state cell complete; exclusive encodings and exceptions remain follow-up work. |
+| 4 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
+| 5 | DEC PDP-10 KA10 (PR #18331) | published architecture manuals | Complete bounded checked 36-bit functional oracle; squash auto-merge armed. |
+| 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
+| 7 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
+| 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
+| 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
+| 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
+| 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
+| 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
+| 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
+| 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 
 ## Discovered follow-up work
 
@@ -98,6 +102,10 @@ architecture/core introduction era, not a claim about a particular chip.
 | P0 complete locally | MIPS R2000 gate HALT storage | HALT DFF Q is now the sole architectural halt authority; the public boolean remains only as a source-compatible observation mirror and is repaired by simulator mutations. The published storage inventory derives 524,288 memory bits, 1,120 register bits, and one HALT bit from the owned physical containers. Deliberate mirror-divergence, restore, and typed-fault atomicity tests pass alongside 33 unit tests, the 218-vector differential suite, nine lifecycle/integrity tests, and 20 doctests. Strict Clippy/rustdoc, the six-package affected build, and 94.50% line coverage (1,581/1,673) are green. |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. Candidate packages discovered by source scan include ARM1, SPARC V8, Motorola 68000, Intel 8051, Intel 8086, and OpenRISC 1000. |
 
+- Extend the bounded Cortex-M23 core with source-backed Armv8-M-exclusive
+  instructions, encoded SG/BXNS/BLXNS transitions, exception stacking/return,
+  stack-limit registers, and MPU/IDAU composition. Keep NVIC, bus transactions,
+  debug, and timing in later SoC/integration cells.
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
