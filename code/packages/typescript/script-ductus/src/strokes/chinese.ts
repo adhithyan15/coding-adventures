@@ -3164,4 +3164,66 @@ export const entries: DuctusEntry[] = [
       source: chineseCharacterSource("尔"),
     },
   ],
+  // 很 is two pieces, and Hanzi Writer Data's nine ordered medians keep them
+  // apart: medians 1-3 write 彳 (two left-falling strokes, then a vertical
+  // that restarts under the lower one), medians 4-9 write 艮 (a horizontal
+  // that turns down the right side of the box, two horizontals, the left side
+  // as a vertical that flicks up to the right at its foot, a short
+  // left-falling stroke, then the long right-falling stroke). Each run is
+  // fitted to the vendored Noto Sans SC 很, whose box is closed by one
+  // outline and whose flick is a separate outline joined to the left side;
+  // the order, directions, the turn, the flick and all eight lifts are the
+  // source's.
+  [
+    "chinese:很",
+    {
+      script: "chinese",
+      glyph: "很",
+      strokes: [
+        simpleStroke(
+          "draw 彳's short upper left-falling stroke",
+          compactPath("272 812 257 780 240 760 204 720 162 680 115 640 98 605"),
+        ),
+        simpleStroke(
+          "lift, then draw 彳's longer lower left-falling stroke",
+          compactPath(
+            "290 588 265 540 236 500 203 460 168 420 128 380 104 350 86 318 76 292",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw 彳's vertical down to the baseline",
+          compactPath("218 450 218 400 218 250 218 100 218 -70"),
+        ),
+        simpleStroke(
+          "lift, then draw 艮's top and turn down its right side",
+          compactPath("450 762 600 762 750 762 834 762 834 650 834 520 834 400"),
+        ),
+        simpleStroke(
+          "lift, then draw 艮's short inner horizontal",
+          compactPath("450 577 640 577 812 577"),
+        ),
+        simpleStroke(
+          "lift, then close 艮's box with a horizontal",
+          compactPath("450 388 640 388 826 388"),
+        ),
+        simpleStroke(
+          "lift, then draw 艮's left side and flick up to the right",
+          compactPath(
+            "436 788 436 600 436 400 436 200 436 40 430 -15 460 -17 520 0 580 15 645 35",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw 艮's short left-falling stroke",
+          compactPath("872 305 853 262 825 240 797 220 768 200 743 180 728 160"),
+        ),
+        simpleStroke(
+          "lift, then draw 艮's long right-falling stroke",
+          compactPath(
+            "590 395 604 360 617 320 632 280 649 240 670 200 693 160 723 120 758 80 803 40 865 0 890 -40 902 -58",
+          ),
+        ),
+      ],
+      source: chineseCharacterSource("很"),
+    },
+  ],
 ];

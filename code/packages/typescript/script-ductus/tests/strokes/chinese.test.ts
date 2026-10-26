@@ -197,9 +197,11 @@ describe("handwriting ductus", () => {
     // `complete` means the inventory covers the current lesson corpus, so the
     // source-verified inventory and authored ductus must grow together.
     // 60 -> 61: 尔, the sound half of 你, which ZH-W01-er teaches alone.
-    expect(chinese.letters).toHaveLength(61);
+    // 61 -> 62: 很, which ZH-W30-hen teaches as the character in front of
+    // every adjective (我很好), written in chapter 30.
+    expect(chinese.letters).toHaveLength(62);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      61,
+      62,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),
@@ -228,6 +230,42 @@ describe("handwriting ductus", () => {
     );
     expect(verifiedLetterFont("尔", er.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
+    );
+  });
+
+  it("Chinese 很 writes 彳 (亻 with one more left-falling stroke above it) before 艮, keeping all nine source medians", () => {
+    // ZH-W30-hen teaches 很 as two pieces, not nine strokes: its left piece is
+    // the person piece the reader has written since 你, with one more
+    // left-falling stroke above it. So strokes 2-3 must head the way 亻's two
+    // strokes do, stroke 1 must fall the same way above them, and all three
+    // must lie left of every stroke of 艮.
+    const hen = DUCTUS[ductusKey("chinese", "很")];
+    expect(hen.source.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%BE%88.json",
+    );
+    expect(hen.source.citation).toMatch(
+      /Hanzi Writer Data 很\.json.*medians 1–9.*snapshot 68d10a4/i,
+    );
+    expect(verifiedLetterFont("很", hen.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(hen.strokes.map((stroke) => penPath(stroke).length)).toEqual([
+      7, 9, 5, 7, 3, 3, 10, 7, 13,
+    ]);
+    expect(penLifts(hen)).toBe(8);
+    const heading = (stroke: (typeof hen.strokes)[number]) => {
+      const path = penPath(stroke);
+      const [a, b] = [path[0], path[path.length - 1]];
+      return [Math.sign(b.x - a.x), Math.sign(b.y - a.y)];
+    };
+    expect(hen.strokes.slice(1, 3).map(heading)).toEqual(
+      CHINESE_PERSON_RADICAL.strokes.map(heading),
+    );
+    expect(heading(hen.strokes[0])).toEqual(heading(hen.strokes[1]));
+    const xs = (strokes: typeof hen.strokes) =>
+      strokes.flatMap((stroke) => penPath(stroke).map((point) => point.x));
+    expect(Math.max(...xs(hen.strokes.slice(0, 3)))).toBeLessThan(
+      Math.min(...xs(hen.strokes.slice(3))),
     );
   });
 

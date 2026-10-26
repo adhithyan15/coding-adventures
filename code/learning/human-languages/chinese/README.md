@@ -124,6 +124,20 @@ things Mandarin does not do (no verb endings, no agreement, no article, no separ
 nationality word) and joins 中国 to 人. The ten are 的, 有, 个, 了, 呢, 对, 岁, 和 and
 喜欢. Exam coverage goes **73/191 to 98/191**.
 
+**Chapter 29** is reading: six characters read cold, six words that are not six
+characters, and a first passage of thirty-four.
+
+**Chapter 30** asks how somebody is (*nǐ zěnmeyàng*) and answers it four ways:
+很好, *máng*, *lèi*, *hái xíng*. It writes one character, 很, the plain link Mandarin
+puts in front of an adjective, and it realizes the last pre-A1 spine node the
+track had not reached.
+
+A word whose characters the track does not write yet is taught by ear, with a
+pinyin headword, and its characters are not shown. A character shown but never
+written would count against the letter-anchoring ratchet, which keeps Chinese at
+zero unwritten characters, and it would ask the reader to read a shape nobody
+taught them. Every hanzi the book prints is one the reader writes.
+
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) records the original authored-and-planned path

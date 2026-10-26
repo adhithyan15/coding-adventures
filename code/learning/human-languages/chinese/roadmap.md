@@ -209,6 +209,15 @@ hand-authored, font-checked ductus rather than a re-subset.
 Realises part of `SPINE-TIME-OF-DAY` and pays back Chapter 1 by showing that 好
 was a building block, not a one-off.
 
+## How are you *(delivered, chapter 30)*
+
+*nǐ zěnmeyàng* — how are you doing? — beside the textbook 你好吗, answered with
+很好, *máng*, *lèi* or *hái xíng*. Realizes `SPINE-CHECK-WELLBEING`, the seventh
+and last pre-A1 spine node. One character is written, 很, the plain link in front
+of an adjective; the four words whose characters are not written yet are taught
+by ear with pinyin headwords, because a character shown but never written would
+count against the track's letter-anchoring ratchet.
+
 ## Part II onward — cumulative pre-A1 to C2 build *(planned)*
 
 Continue the official vocabulary tranche with oral meaning, source-verified

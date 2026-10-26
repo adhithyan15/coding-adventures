@@ -1,4 +1,12 @@
 {
   "version": 1,
-  "language": "chinese"
+  "language": "chinese",
+  "conceptAliases": {
+    "STATE-HOW-ARE-YOU": [
+      "ZH-STATE-HOW-ARE-YOU"
+    ],
+    "WORD-GOOD": [
+      "ZH-WORD-HAO"
+    ]
+  }
 }
