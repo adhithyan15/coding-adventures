@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-535-SHUKAN535",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GU-EXT-535-SHUKAN535"
+  ],
+  "after": []
+}

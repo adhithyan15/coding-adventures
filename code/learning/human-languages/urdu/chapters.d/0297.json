@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "The Relief Camp",
+  "label": "ch:ur-the-relief-camp",
+  "canDo": "I can describe life in a relief camp.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C297-mutasir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can describe life in a relief camp.",
+    "assesses": [
+      "UR-LEX-C297-RAHAT297-03",
+      "UR-LEX-C297-RAHAT297-04",
+      "UR-LEX-C297-RAHAT297-05"
+    ]
+  }
+}

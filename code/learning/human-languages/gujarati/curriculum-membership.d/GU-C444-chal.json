@@ -1,0 +1,11 @@
+{
+  "id": "GU-C444-chal",
+  "pathSegment": "GU-PATH-444-BUD444",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-444-BUD444",
+      "order": 1
+    }
+  ]
+}

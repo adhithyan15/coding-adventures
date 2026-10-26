@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Chop and Grind",
+  "label": "ch:sa-chop-and-grind",
+  "canDo": "I can describe getting food ready to cook.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C512-samyojayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can describe getting food ready to cook.",
+    "assesses": [
+      "SA-LEX-C512-CHURIKA512-03",
+      "SA-LEX-C512-CHURIKA512-04",
+      "SA-LEX-C512-CHURIKA512-05"
+    ]
+  }
+}

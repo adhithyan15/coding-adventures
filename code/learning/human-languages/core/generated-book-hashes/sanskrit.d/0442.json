@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:16b722b52b836157",
+  "lessonIds": [
+    "SA-C442-suryodayah",
+    "SA-C442-udeti",
+    "SA-C442-prakasate",
+    "SA-C442-ksitijam",
+    "SA-C442-vibhati"
+  ],
+  "tex": "sanskrit/book/chapters/ch442-sunrise.tex"
+}

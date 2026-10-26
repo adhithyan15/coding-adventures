@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Bushes and Shade",
+  "label": "ch:ur-bushes-and-shade",
+  "canDo": "I can describe thick growth, shade and green places.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C437-ugna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can describe thick growth, shade and green places.",
+    "assesses": [
+      "UR-LEX-C437-JHARI437-03",
+      "UR-LEX-C437-JHARI437-04",
+      "UR-LEX-C437-JHARI437-05"
+    ]
+  }
+}

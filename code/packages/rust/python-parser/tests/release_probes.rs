@@ -2,8 +2,9 @@
 //! budgets (C5) and error spans (C6).
 //!
 //! Stage P means: positive and negative parse probes for the release's
-//! declared `grammar_subset` (py-int-print for Python 3, py2-int-print for
-//! Python 2 since phase 7c slice 1) pass through the COMPILED tables, and
+//! declared `grammar_subset` (py-int-print for 3.0a1, py-float-print for the
+//! other Python 3 pairs since phase 7c slice 3, py2-int-print for Python 2
+//! since phase 7c slice 1) pass through the COMPILED tables, and
 //! hostile probes come back as errors. Each probe below runs against every
 //! release that claims it in `code/grammars/python/releases.csv`.
 
@@ -44,8 +45,9 @@ fn paired_rows() -> Vec<BTreeMap<String, String>> {
         .collect()
 }
 
-/// The Python 2 pairs (phase 7c slice 1): `print` is a statement there.
-const PY2_RELEASES: &[&str] = &["2.2", "2.7.18"];
+/// The Python 2 pairs (phase 7c slices 1 and 2): `print` is a statement
+/// there.
+const PY2_RELEASES: &[&str] = &["2.2", "2.4", "2.6", "2.7.18"];
 
 /// The paired Python 3 releases, in inventory order.
 fn py3_releases() -> Vec<&'static str> {
@@ -75,7 +77,17 @@ fn supported_releases_are_exactly_the_paired_inventory_rows() {
 #[test]
 fn every_paired_row_claims_stage_p_for_its_subset() {
     for row in paired_rows() {
-        let subset = if PY2_RELEASES.contains(&row["release"].as_str()) { "py2-int-print" } else { "py-int-print" };
+        // The pair's grammar is the widest subset it parses: Python 2's
+        // integer print statement, 3.0a1's integer-only grammar, or (3.5.10
+        // and later) the float grammar, whose `atom` admits FLOAT.
+        let release = row["release"].as_str();
+        let subset = if PY2_RELEASES.contains(&release) {
+            "py2-int-print"
+        } else if release == "3.0a1" {
+            "py-int-print"
+        } else {
+            "py-float-print"
+        };
         assert_eq!(
             (
                 row["grammar_status"].as_str(),
@@ -133,16 +145,29 @@ fn deduplicated_classes_follow_the_evidence() {
     assert_eq!(class("3.12.3"), class("3.13.16"));
     assert_eq!(class("3.13.16"), class("3.16.0a1"));
     // 3.11.17 has no `!` token; 3.0a1 has no `_` separator, no `@=`/`:=`
-    // and no async/await keywords. The subset grammar is the same for all.
+    // and no async/await keywords. Since LANG84 7c slice 3 the six
+    // py-float-print releases share one subset grammar (`atom` admits
+    // FLOAT) and 3.0a1 keeps the integer-only one.
     assert_ne!(class("3.11.17").0, class("3.12.3").0);
     assert_ne!(class("3.0a1").0, class("3.11.17").0);
-    let grammar = class("3.0a1").1;
-    assert!(py3_releases().iter().all(|r| class(r).1 == grammar));
-    // Python 2: one subset grammar (with `print_stmt`) for both pairs, two
-    // token tables (2.7.18 adds `@`, `as` and `with`).
-    assert_eq!(class("2.2").1, class("2.7.18").1);
+    let grammar = class("3.5.10").1;
+    assert!(py3_releases().iter().filter(|r| **r != "3.0a1").all(|r| class(r).1 == grammar));
+    assert_ne!(class("3.0a1").1, grammar);
+    // Python 2: one subset grammar (with `print_stmt`) for all four pairs,
+    // three token tables: 2.4 adds `@`; 2.6 adds `as`, `with` and PEP 3127
+    // `0o`/`0b`; 2.7.18 lexes like 2.6.
+    for release in PY2_RELEASES {
+        assert_eq!(class("2.2").1, class(release).1, "{release}");
+    }
     assert_ne!(class("2.2").1, grammar);
-    assert_ne!(class("2.2").0, class("2.7.18").0);
+    assert_ne!(class("2.2").1, class("3.0a1").1);
+    assert_ne!(class("2.2").0, class("2.4").0);
+    assert_ne!(class("2.4").0, class("2.6").0);
+    assert_eq!(class("2.6").0, class("2.7.18").0);
+    // 3.5.10 adds `@=` (and the barry_as_FLUFL `<>`) to 3.0a1's table; 3.6.0
+    // adds PEP 515 `_` separators.
+    assert_ne!(class("3.5.10").0, class("3.0a1").0);
+    assert_ne!(class("3.6.0").0, class("3.5.10").0);
     assert_eq!(grammar_classes("3.12.2"), None);
     assert_eq!(grammar_classes("3.12"), None);
 }
@@ -259,7 +284,7 @@ const POSITIVE_ALL: &[&str] = &[
     "print(3 * 4)",
     "print(-7 // 2)",
     "print(-7 % 2)",
-    "print(7 / 2)", // parses; the compiler refuses `/` (a float result)
+    "print(7 / 2)", // parses; 3.0a1's compiler refuses `/` (a float result)
     "print()",
     "print(1,)",
     "print(1, 2)", // parses; the compiler refuses two arguments
@@ -285,6 +310,41 @@ const POSITIVE_ALL: &[&str] = &[
 /// PEP 515 (3.6): `_` separators. Valid from 3.6, a lexer error before.
 const UNDERSCORES: &[&str] = &["print(1_000)", "print(0_0)", "print(1_2_3 * 4)"];
 
+/// LANG84 7c slice 3: `py-float-print` literals. They parse on the six
+/// releases that claim the float subset (3.5.10 and later) and are a lexer
+/// or parse error on 3.0a1, whose pair never lexed a float.
+const FLOATS: &[&str] = &[
+    "print(1.5)",
+    "print(1e3)",
+    "print(.5)",
+    "print(1.)",
+    "print(1. + 2)",
+    "print(1.e5)",
+    "print(1.5e-3 * 2E+2)",
+    "print(00.5)",
+    "print(0123e1)",
+    "print(-0.0)",
+    "print(7.5 // 2)", // parses; the compiler refuses float `//`
+];
+
+/// PEP 515 `_` inside a float: from 3.6, a lexer error before it.
+const FLOAT_UNDERSCORES: &[&str] = &["print(1_000.5)", "print(1e1_0)", "print(.0_1)"];
+
+/// Float spellings no claiming release accepts (lexer or parse errors).
+const FLOAT_NEGATIVE: &[&str] = &[
+    "print(1j)",
+    "print(1.5j)",
+    "print(1_.5)",
+    "print(1._5)",
+    "print(1e)",
+    "print(1e+)",
+    "print(1e_1)",
+    "print(1.5.5)",
+    "print(1..5)",
+    "print(1.5if)",
+    "print(1.real)",
+];
+
 const NEGATIVE_ALL: &[&str] = &[
     "print(",
     "print(1",
@@ -293,8 +353,6 @@ const NEGATIVE_ALL: &[&str] = &[
     ";print(1)",
     "print(1 +)",
     "print(0x10)",
-    "print(1.5)",
-    "print(1e3)",
     "print('a')",
     "print(012)",
     "print(1__0)",
@@ -320,7 +378,8 @@ fn py_int_print_probes_for_every_release() {
     let mut checked = 0;
     let releases = py3_releases();
     for &release in &releases {
-        let early = release == "3.0a1";
+        // Before PEP 515 (3.6): 3.0a1 and 3.5.10.
+        let early = ["3.0a1", "3.5.10"].contains(&release);
         for source in POSITIVE_ALL {
             let ast = parse(release, source).unwrap_or_else(|e| panic!("{release}: {source:?} rejected: {e}"));
             assert_eq!(ast.rule_name, "file");
@@ -328,13 +387,35 @@ fn py_int_print_probes_for_every_release() {
         }
         for source in UNDERSCORES {
             match parse(release, source) {
-                Ok(_) => assert!(!early, "3.0a1 must not lex {source:?}"),
+                Ok(_) => assert!(!early, "{release} must not lex {source:?}"),
                 Err(PythonFrontendError::Lex { .. }) => assert!(early, "{release}: {source:?}"),
                 Err(other) => panic!("{release}: {source:?}: {other:?}"),
             }
             checked += 1;
         }
-        for source in NEGATIVE_ALL {
+        // Floats: the six py-float-print releases parse them; 3.0a1 does not.
+        let floats = release != "3.0a1";
+        for source in FLOATS {
+            match parse(release, source) {
+                Ok(_) => assert!(floats, "{release} must not parse {source:?}"),
+                Err(PythonFrontendError::Lex { .. } | PythonFrontendError::Parse { .. }) => {
+                    assert!(!floats, "{release}: {source:?}")
+                }
+                Err(other) => panic!("{release}: {source:?}: {other:?}"),
+            }
+            checked += 1;
+        }
+        for source in FLOAT_UNDERSCORES {
+            match parse(release, source) {
+                Ok(_) => assert!(floats && !early, "{release} must not lex {source:?}"),
+                Err(PythonFrontendError::Lex { .. } | PythonFrontendError::Parse { .. }) => {
+                    assert!(!floats || early, "{release}: {source:?}")
+                }
+                Err(other) => panic!("{release}: {source:?}: {other:?}"),
+            }
+            checked += 1;
+        }
+        for source in NEGATIVE_ALL.iter().chain(FLOAT_NEGATIVE) {
             let error = parse(release, source)
                 .err()
                 .unwrap_or_else(|| panic!("{release}: {source:?} accepted"));
@@ -347,7 +428,13 @@ fn py_int_print_probes_for_every_release() {
     }
     assert_eq!(
         checked,
-        releases.len() * (POSITIVE_ALL.len() + UNDERSCORES.len() + NEGATIVE_ALL.len())
+        releases.len()
+            * (POSITIVE_ALL.len()
+                + UNDERSCORES.len()
+                + FLOATS.len()
+                + FLOAT_UNDERSCORES.len()
+                + NEGATIVE_ALL.len()
+                + FLOAT_NEGATIVE.len())
     );
 }
 
@@ -375,6 +462,12 @@ const PY2_POSITIVE: &[&str] = &[
     "print 1 + \\\n 2",
     "print 0",
     "print 9223372036854775807",
+    "print 0x10",                // phase 7c slice 2: every Python 2 spelling
+    "print 010",
+    "print 00",
+    "print 1L",
+    "print 0XffL - 07l",
+    "print 9223372036854775808", // parses; the compiler refuses (outside i64)
     "print 1, 2", // parses; the compiler refuses (softspace)
     "print 1,",   // parses; the compiler refuses (softspace)
     "abs(1)",     // parses; the compiler refuses a bare expression
@@ -389,10 +482,10 @@ const PY2_NEGATIVE: &[&str] = &[
     "print 1;;",
     ";print 1",
     "print 1 +",
-    "print 0x10",
-    "print 010",
-    "print 00",
-    "print 1L",
+    "print 08",
+    "print 0x",
+    "print 1LL",
+    "print 0x1Fg",
     "print 1_000",
     "print 1.5",
     "print 'a'",
@@ -412,7 +505,7 @@ const PY2_NEGATIVE: &[&str] = &[
 ];
 
 #[test]
-fn py2_int_print_probes_for_both_python_2_releases() {
+fn py2_int_print_probes_for_every_python_2_release() {
     let mut checked = 0;
     for &release in PY2_RELEASES {
         for source in PY2_POSITIVE {
@@ -449,6 +542,16 @@ fn py2_int_print_probes_for_both_python_2_releases() {
         assert_eq!((statements, suffixes), (1, 0), "{release}");
     }
     assert_eq!(checked, PY2_RELEASES.len() * (PY2_POSITIVE.len() + PY2_NEGATIVE.len()));
+    // PEP 3127 (2.6): `0o`/`0b` parse from 2.6 on and are lexer errors in
+    // the 2.2 and 2.4 pairs (CPython lexes `0` then a name there).
+    for source in ["print 0o17", "print 0b101L + 0O7"] {
+        for release in ["2.2", "2.4"] {
+            assert!(matches!(parse(release, source), Err(PythonFrontendError::Lex { .. })), "{release} {source:?}");
+        }
+        for release in ["2.6", "2.7.18"] {
+            assert!(parse(release, source).is_ok(), "{release} {source:?}");
+        }
+    }
     // A Python 2 program is not Python 3 (and vice versa), at the parser.
     assert!(parse("3.13.16", "print 1").is_err());
     assert!(parse("2.7.18", "print(1, end=None)").is_err());
@@ -471,6 +574,14 @@ fn per_release_operator_sets_follow_the_tokenizer() {
     assert_eq!(kinds("3.0a1", "a @= 1")[1..3], ["AT", "EQUALS"]);
     assert_eq!(kinds("3.11.17", "a @= 1")[1], "AT_EQUALS");
     assert!(!lexes("3.11.17", "a ! b") && lexes("3.12.3", "a ! b"));
+    // `@=` is PEP 465 (3.5); 3.5.10 and 3.6.0 also lex `<>` for the
+    // barry_as_FLUFL easter egg, which their grammars (and this subset's)
+    // refuse without the future import.
+    for release in ["3.5.10", "3.6.0"] {
+        assert_eq!(kinds(release, "a @= 1")[1], "AT_EQUALS", "{release}");
+        assert_eq!(kinds(release, "1 <> 2")[1], "LEGACY_NOT_EQUALS", "{release}");
+        assert!(matches!(parse(release, "print(1 <> 2)"), Err(PythonFrontendError::Parse { .. })), "{release}");
+    }
     // `async` became a hard keyword in 3.7; in 3.0a1 it is a NAME.
     let kind = |release: &str| {
         let (_, tokens) = tokenize_python_at("async\n", Some(release), &budgets).unwrap();
@@ -489,8 +600,10 @@ fn per_release_operator_sets_follow_the_tokenizer() {
     assert_eq!(kinds("2.7.18", "`1`")[0], "BACKTICK");
     assert!(!lexes("3.0a1", "`1`"));
     // `@` arrived in 2.4 (decorators); `as` and `with` became keywords in 2.6.
-    assert!(!lexes("2.2", "@") && lexes("2.7.18", "@"));
+    assert!(!lexes("2.2", "@") && lexes("2.4", "@") && lexes("2.7.18", "@"));
     assert_eq!(kinds("2.2", "with")[0], "NAME");
+    assert_eq!(kinds("2.4", "with")[0], "NAME");
+    assert_eq!(kinds("2.6", "with")[0], "KEYWORD");
     assert_eq!(kinds("2.7.18", "with")[0], "KEYWORD");
 }
 

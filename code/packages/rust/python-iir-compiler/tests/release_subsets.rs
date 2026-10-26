@@ -1,5 +1,6 @@
-//! LANG84 stage **I(py-int-print)** and, since phase 7c slice 1,
-//! **I(py2-int-print)**, for every Python release that claims them.
+//! LANG84 stage **I(py-int-print)** and, since phase 7c slices 1 and 3,
+//! **I(py2-int-print)** and **I(py-float-print)**, for every Python release
+//! that claims them.
 //!
 //! Stage I means: every corpus case of the subset that applies to the
 //! release compiles to IIR that validates and passes C7, and every negative
@@ -34,8 +35,11 @@ use python_iir_compiler::{
 };
 
 /// Each subset's claiming releases, in `releases.csv` order.
-const PY3_RELEASES: [&str; 5] = ["3.0a1", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"];
-const PY2_RELEASES: [&str; 2] = ["2.2", "2.7.18"];
+const PY3_RELEASES: [&str; 7] = ["3.0a1", "3.6.0", "3.5.10", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"];
+const PY2_RELEASES: [&str; 4] = ["2.2", "2.4", "2.6", "2.7.18"];
+/// `py-float-print` (phase 7c slice 3): the `py3` profile's releases, all of
+/// Python 3 but 3.0a1 (whose `str(float)` is `%.12g`).
+const PY_FLOAT_RELEASES: [&str; 6] = ["3.6.0", "3.5.10", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"];
 
 #[test]
 fn profiles_match_the_inventory() {
@@ -48,11 +52,15 @@ fn profiles_match_the_inventory() {
         assert_eq!(claims, profile_for(release).is_some(), "{release}: a profile exactly when iir_status claims");
         profiled += usize::from(claims);
         if let Some(profile) = profile_for(release) {
-            // A release claims exactly its profile's subset.
-            assert_eq!(row["iir_status"], profile.subset, "{release}: iir_status vs profile subset");
+            // A release claims exactly its profile's subsets, at I and at B,
+            // and its grammar covers the widest of them.
+            let subsets = profile.subsets.join(";");
+            assert_eq!(row["iir_status"], subsets, "{release}: iir_status vs profile subsets");
+            assert_eq!(row["backend_status"], subsets, "{release}: backend_status vs profile subsets");
+            assert_eq!(row["grammar_subset"], profile.subset(), "{release}: grammar_subset");
         }
     }
-    assert_eq!(profiled, 7, "2.2, 2.7.18, 3.0a1, 3.11.17, 3.12.3, 3.13.16 and 3.16.0a1");
+    assert_eq!(profiled, 11, "2.2, 2.4, 2.6, 2.7.18, 3.0a1, 3.5.10, 3.6.0, 3.11.17, 3.12.3, 3.13.16 and 3.16.0a1");
 }
 
 /// LANG84 C4.4: the default is an exact row that claims an IIR subset. It
@@ -83,13 +91,19 @@ fn the_default_release_claims_py_int_print_on_the_backends() {
 #[test]
 fn py_int_print_corpus_holds_on_every_claiming_release() {
     let (checked, trapped) = corpus_holds("py-int-print", &PY3_RELEASES, 30);
-    assert!(checked >= 5 * 30 && trapped >= 4 * 9, "{checked} {trapped}");
+    assert!(checked >= 7 * 30 && trapped >= 7 * 9, "{checked} {trapped}");
+}
+
+#[test]
+fn py_float_print_corpus_holds_on_every_claiming_release() {
+    let (checked, trapped) = corpus_holds("py-float-print", &PY_FLOAT_RELEASES, 24);
+    assert!(checked >= 6 * 24 && trapped >= 6 * 5, "{checked} {trapped}");
 }
 
 #[test]
 fn py2_int_print_corpus_holds_on_every_claiming_release() {
-    let (checked, trapped) = corpus_holds("py2-int-print", &PY2_RELEASES, 30);
-    assert!(checked >= 2 * 30 && trapped >= 2 * 9, "{checked} {trapped}");
+    let (checked, trapped) = corpus_holds("py2-int-print", &PY2_RELEASES, 40);
+    assert!(checked >= 4 * 40 && trapped >= 4 * 10, "{checked} {trapped}");
 }
 
 /// Stage I for one subset: every case on every claiming release, as its
@@ -142,8 +156,11 @@ fn corpus_holds(subset: &str, expected_releases: &[&str], min_cases: usize) -> (
 /// IIR is identical for every case they all accept.
 #[test]
 fn claiming_releases_form_one_iir_identity_class() {
-    assert!(identity_classes_hold("py-int-print", 4) >= 18);
-    assert!(identity_classes_hold("py2-int-print", 2) >= 19);
+    assert!(identity_classes_hold("py-int-print", 5) >= 18);
+    // `pep3127_literals` is accepted by 2.6 and 2.7.18 only.
+    assert!(identity_classes_hold("py2-int-print", 2) >= 24);
+    // `float_underscores` is refused by 3.5.10 only.
+    assert!(identity_classes_hold("py-float-print", 5) >= 13);
 }
 
 /// Every positive case of `subset` compiles to the same IIR on every
@@ -185,11 +202,14 @@ fn python_2_and_python_3_disagree_where_the_languages_do() {
     };
     assert_eq!(category("print 1\n", "3.13.16").as_deref(), Some("Parse"));
     assert_eq!(category("print(1, 2)\n", "2.7.18").as_deref(), Some("Parse"));
-    assert_eq!(category("print(7 / 2)\n", "3.13.16").as_deref(), Some("Unsupported"));
+    // True division: a float on the py-float-print releases, refused on
+    // 3.0a1 (profile `py30`), floor division on Python 2.
+    assert_eq!(category("print(7 / 2)\n", "3.0a1").as_deref(), Some("Unsupported"));
     let run = |source: &str, release: &str| {
         run_module(compile_source_at(source, Some(release), "t", &budgets).unwrap()).unwrap().stdout
     };
     assert_eq!(run("print 7 / 2\n", "2.2"), "3\n");
+    assert_eq!(run("print(7 / 2)\n", "3.13.16"), "3.5\n");
     assert_eq!(run("print(-7 // 2)\n", "3.0a1"), "-4\n");
     // `print(-7 / 2)` is the Python 2 *statement* `print (-7 / 2)`.
     assert_eq!(run("print(-7 / 2)\n", "2.7.18"), "-4\n");
@@ -201,6 +221,53 @@ fn python_2_and_python_3_disagree_where_the_languages_do() {
     };
     assert_eq!(iir("print 9 / 4\n"), iir("print 9 // 4\n"));
     assert_eq!(iir("print 9 / -1\n"), iir("print 9 // -1\n"));
+}
+
+/// Phase 7c slice 2: a leading `0` is octal in Python 2 and an error in
+/// Python 3; `0o`/`0b` arrived in 2.6 (PEP 3127); an `L` suffix is a long,
+/// which prints without the `L`; and every spelling of one value lowers to
+/// the same IIR, because the decoder, not the IIR, knows the spelling.
+#[test]
+fn python_2_integer_literals_follow_each_release() {
+    let budgets = FrontendBudgets::default();
+    let category = |source: &str, release: &str| {
+        compile_source_at(source, Some(release), "t", &budgets).err().map(|e| e.category().to_string())
+    };
+    let run = |source: &str, release: &str| {
+        run_module(compile_source_at(source, Some(release), "t", &budgets).unwrap()).unwrap().stdout
+    };
+    for release in PY2_RELEASES {
+        assert_eq!(run("print 010\n", release), "8\n", "{release}");
+        assert_eq!(run("print 0x1F + 1L\n", release), "32\n", "{release}");
+        assert_eq!(run("print 0XFFFFFFFFFFFFFFFl / 16\n", release), "72057594037927935\n", "{release}");
+        // i64::MAX in octal is accepted; one more is a long outside i64.
+        assert_eq!(run("print 0777777777777777777777L\n", release), "9223372036854775807\n", "{release}");
+        assert_eq!(category("print 01000000000000000000000\n", release).as_deref(), Some("Unsupported"));
+        assert_eq!(category("print 0x8000000000000000\n", release).as_deref(), Some("Unsupported"));
+        assert_eq!(category("print 09\n", release).as_deref(), Some("Lex"), "{release}");
+    }
+    for (release, has_pep3127) in [("2.2", false), ("2.4", false), ("2.6", true), ("2.7.18", true)] {
+        for source in ["print 0o17\n", "print 0b1111\n", "print 0O17L\n"] {
+            if has_pep3127 {
+                assert_eq!(run(source, release), "15\n", "{release} {source:?}");
+            } else {
+                assert_eq!(category(source, release).as_deref(), Some("Lex"), "{release} {source:?}");
+            }
+        }
+    }
+    // Python 3 never reads a leading zero as octal, and has no `L`.
+    for release in PY3_RELEASES {
+        assert_eq!(category("print(010)\n", release).as_deref(), Some("Lex"), "{release}");
+        assert_eq!(category("print(1L)\n", release).as_deref(), Some("Lex"), "{release}");
+    }
+    let iir = |source: &str| {
+        let mut module = compile_source_at(source, Some("2.7.18"), "t", &budgets).unwrap();
+        module.release = None;
+        format!("{module:?}")
+    };
+    for spelling in ["8", "010", "0x8", "0o10", "0b1000", "8L", "0010l", "0X08L"] {
+        assert_eq!(iir(&format!("print {spelling}\n")), iir("print 8\n"), "{spelling}");
+    }
 }
 
 /// Every phase-7a release has a profile, so a paired release can never be
@@ -251,7 +318,14 @@ fn host_for(release: &str) -> Option<&'static str> {
 /// that is absent or on another version is skipped, loudly.
 #[test]
 fn corpus_agrees_with_the_host_cpython_oracles() {
-    let dir = corpus_dir(SUBSET);
+    for subset in [SUBSET, "py-float-print"] {
+        corpus_agrees_with_the_host_cpython_oracles_on(subset);
+    }
+}
+
+/// The oracle for one Python 3 subset's corpus.
+fn corpus_agrees_with_the_host_cpython_oracles_on(subset: &str) {
+    let dir = corpus_dir(subset);
     let mut agreed = 0;
     for release in ["3.11.17", "3.12.3", "3.13.16"] {
         let host = host_for(release).unwrap();
@@ -266,7 +340,7 @@ fn corpus_agrees_with_the_host_cpython_oracles() {
             eprintln!("SKIP {release} oracle: `{host}` is {version}");
             continue;
         }
-        for case in corpus(SUBSET) {
+        for case in corpus(subset) {
             // The file path as one argument: no shell, no interpolation.
             let out = Command::new(host).arg("-I").arg(dir.join(format!("{}.py", case.name))).output().unwrap();
             // Windows Python prints in text mode ("\r\n"); the `.expect` files
@@ -289,8 +363,7 @@ fn corpus_agrees_with_the_host_cpython_oracles() {
                             panic!("{version}: {} printed {stdout:?}, not {want:?} first", case.name)
                         });
                         let next = rest.lines().next().unwrap_or_default();
-                        let value: i128 = next.parse().unwrap_or_else(|_| panic!("{}: {next:?}", case.name));
-                        assert!(i64::try_from(value).is_err(), "{version}: {} stays in i64: {value}", case.name);
+                        assert!(beyond_i64(next), "{version}: {} printed {next:?}, inside i64", case.name);
                         assert!(case.cite.contains(next), "{}.cite must record CPython's {next}", case.name);
                     }
                     Some(other) => panic!("{}: no CPython oracle mapping for {other}", case.name),
@@ -311,19 +384,57 @@ fn corpus_agrees_with_the_host_cpython_oracles() {
             }
         }
         agreed += 1;
-        eprintln!("CPython {version} oracle: the corpus agrees");
+        eprintln!("CPython {version} oracle: the {subset} corpus agrees");
     }
-    eprintln!("{agreed} host oracle(s) ran");
+    eprintln!("{agreed} host oracle(s) ran on {subset}");
+}
+
+/// What CPython prints where the subset traps `Trap.Overflow`: an integer
+/// outside `i64` (`py-int-print`), or the float of one (`py-float-print`,
+/// where the overflowing int meets a float), at least 2^63 in magnitude.
+fn beyond_i64(printed: &str) -> bool {
+    match printed.parse::<i128>() {
+        Ok(value) => i64::try_from(value).is_err(),
+        Err(_) => printed.parse::<f64>().is_ok_and(|value| value.abs() >= 9_223_372_036_854_775_808.0),
+    }
+}
+
+/// 3.0a1's profile (`py30`) has no floats: its `str(float)` is `%.12g`
+/// (`PREC_STR`), which no LANG83 writer produces. So true division and a
+/// float are refused there, whether its own lexer saw the float or a tree
+/// from a 3.13.16 parse is handed to it.
+#[test]
+fn release_3_0a1_refuses_floats_and_true_division() {
+    let budgets = FrontendBudgets::default();
+    let category = |source: &str, release: &str| {
+        compile_source_at(source, Some(release), "t", &budgets).err().map(|e| e.category().to_string())
+    };
+    assert_eq!(category("print(7 / 2)\n", "3.0a1").as_deref(), Some("Unsupported"));
+    // Its pair never lexed a float: `1.5` is INT DOT INT, a parse error.
+    assert_eq!(category("print(1.5)\n", "3.0a1").as_deref(), Some("Parse"));
+    assert_eq!(category("print(1e3)\n", "3.0a1").as_deref(), Some("Lex"));
+    // A FLOAT token from another release's grammar is refused by the profile.
+    let tree = coding_adventures_python_parser::parse_python_at("print(1.5)\n", Some("3.13.16"), &budgets)
+        .unwrap()
+        .ast;
+    let error = python_iir_compiler::compile_cst(&tree, Some("3.0a1"), "t").unwrap_err();
+    assert_eq!(error.category(), "Unsupported", "{error}");
+    assert!(error.to_string().contains("floats are not in py-int-print"), "{error}");
+    for release in PY_FLOAT_RELEASES {
+        assert!(category("print(7 / 2)\n", release).is_none(), "{release}");
+    }
 }
 
 /// `py2-int-print` has no host `python2`, so its `.expect` files rest on
 /// the tags' own source (each `.cite` says so). As an independent check of
 /// the arithmetic, every positive case is translated to Python 3 and run on
 /// the host `python3`: `print X` becomes `print(X)`, a bare `print` becomes
-/// `print()`, and classic `/` becomes `//`. That translation is exact for
+/// `print()`, classic `/` becomes `//`, an old-style octal `010` becomes
+/// `0o10`, and an `L` suffix is dropped. That translation is exact for
 /// this subset, because on ints Python 2's `/` and `//` both floor
 /// (`i_divmod`) and Python 2 promotes past the C long exactly where Python 3's
-/// unbounded int keeps going. So:
+/// unbounded int keeps going, and a Python 2 long is Python 3's int (which
+/// `str()` prints without an `L`, as Python 2's `long_str` does). So:
 ///
 /// - a case without a trap must print its `.expect`;
 /// - a `Trap.DivZero` case must print the prefix and raise
@@ -368,7 +479,7 @@ fn py2_corpus_agrees_with_host_python3_after_translation() {
         }
         agreed += 1;
     }
-    assert!(agreed >= 19, "{agreed}");
+    assert!(agreed >= 24, "{agreed}");
 }
 
 /// The translation described above, for this corpus's shapes only: one or
@@ -398,7 +509,9 @@ fn translate_py2_to_py3(source: &str) -> String {
     for line in logical {
         for statement in line.split(';').map(str::trim).filter(|s| !s.is_empty()) {
             let expression = statement.strip_prefix("print").expect("every py2 corpus statement is a print").trim();
-            // Classic `/` -> `//`, leaving an existing `//` alone.
+            // Classic `/` -> `//`, leaving an existing `//` alone; integer
+            // literals through `py3_literal`. A literal starts at a digit
+            // (the corpus has no names, so a digit never ends a name).
             let mut floor = String::new();
             let mut chars = expression.chars().peekable();
             while let Some(c) = chars.next() {
@@ -407,6 +520,13 @@ fn translate_py2_to_py3(source: &str) -> String {
                         chars.next();
                     }
                     floor.push_str("//");
+                } else if c.is_ascii_digit() {
+                    let mut literal = String::from(c);
+                    while let Some(&next) = chars.peek().filter(|n| n.is_ascii_alphanumeric()) {
+                        literal.push(next);
+                        chars.next();
+                    }
+                    floor.push_str(&py3_literal(&literal));
                 } else {
                     floor.push(c);
                 }
@@ -415,4 +535,35 @@ fn translate_py2_to_py3(source: &str) -> String {
         }
     }
     out
+}
+
+/// One Python 2 integer literal spelled for Python 3, with the same value:
+/// the `l`/`L` suffix goes (Python 3's int is Python 2's long), and an
+/// old-style octal `0NNN` gets the `0o` prefix PEP 3127 requires. Hex,
+/// `0o` and `0b` literals are already Python 3 spellings.
+fn py3_literal(literal: &str) -> String {
+    let body = literal.strip_suffix(['l', 'L']).unwrap_or(literal);
+    match body.as_bytes() {
+        [b'0', rest @ ..] if !rest.is_empty() && rest.iter().all(u8::is_ascii_digit) => format!("0o{}", &body[1..]),
+        _ => body.to_string(),
+    }
+}
+
+#[test]
+fn the_translation_keeps_every_literal_value() {
+    for (python2, python3) in [
+        ("010", "0o10"),
+        ("00", "0o0"),
+        ("0", "0"),
+        ("0L", "0"),
+        ("7l", "7"),
+        ("0777L", "0o777"),
+        ("0x1F", "0x1F"),
+        ("0XffL", "0Xff"),
+        ("0o17", "0o17"),
+        ("0b101L", "0b101"),
+    ] {
+        assert_eq!(py3_literal(python2), python3, "{python2}");
+    }
+    assert_eq!(translate_py2_to_py3("print 010 / 3; print -7L\nprint\n"), "print(0o10 // 3)\nprint(-7)\nprint()\n");
 }

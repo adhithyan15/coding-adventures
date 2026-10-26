@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C320-sena",
+    "language": "gujarati",
+    "chapter": 320,
+    "sequence": 17800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:990198a7849056c0"
+  },
+  "findings": []
+}

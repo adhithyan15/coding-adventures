@@ -1,0 +1,11 @@
+{
+  "id": "SA-C392-asvasayati",
+  "pathSegment": "SA-PATH-392-SAHAYAKA392",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-392-SAHAYAKA392",
+      "order": 2
+    }
+  ]
+}

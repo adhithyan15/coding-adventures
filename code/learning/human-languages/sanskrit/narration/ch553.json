@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 553,
+  "title": "If Only",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:baf23efad0e92959",
+  "lessons": [
+    {
+      "id": "SA-C553-skhalanam",
+      "sequence": 31610,
+      "title": "स्खलनम् (skhalanam) — a slip",
+      "headword": "स्खलनम्",
+      "romanization": "skhalanam",
+      "gloss": "a slip",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:354df91c9b9bddc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for makes use of, then the Sanskrit for helpful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्खलनम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्खलनम् — skhalanam — \"a slip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि स्खलनं न अभविष्यत्, तर्हि सः विजेता अभविष्यत्। yadi skhalanaṃ na abhaviṣyat, tarhi saḥ vijetā abhaviṣyat. If there had been no slip, he would have been the victor."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्खलनम् (skhalanam) comes from the root √skhal, \"to stumble, to trip\", with the ending -ana; MW gives skhalana as stumbling, tripping, faltering (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skhalanam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *skhalanam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skhalanam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *skhalanam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi skhalanaṃ na abhaviṣyat, tarhi saḥ vijetā abhaviṣyat. — If there had been no slip, he would have been the victor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi skhalanaṃ na abhaviṣyat, tarhi saḥ vijetā abhaviṣyat.* — If there had been no slip, he would have been the victor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for makes use of, then the Sanskrit for helpful, then say skhalanam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for makes use of, then the Sanskrit for helpful, then say *skhalanam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्खलनम् (skhalanam) mean? (\"A slip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C553-hanta",
+      "sequence": 31620,
+      "title": "हन्त (hanta) — come now; alas",
+      "headword": "हन्त",
+      "romanization": "hanta",
+      "gloss": "come now; alas",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d3a8d320adc0f5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for helpful, then the Sanskrit for a slip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हन्त",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हन्त — hanta — \"come now; alas\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हन्त, यदि अहं ह्यः अगमिष्यम्, तर्हि तम् अद्रक्ष्यम्। hanta, yadi ahaṃ hyaḥ agamiṣyam, tarhi tam adrakṣyam. Alas, if I had gone yesterday, I would have seen him."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हन्त (hanta) is the particle MW gives for urging and for asking attention, \"come, see\", and in later use for grief, joy or pity; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hanta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hanta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hanta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hanta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hanta, yadi ahaṃ hyaḥ agamiṣyam, tarhi tam adrakṣyam. — Alas, if I had gone yesterday, I would have seen him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hanta, yadi ahaṃ hyaḥ agamiṣyam, tarhi tam adrakṣyam.* — Alas, if I had gone yesterday, I would have seen him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for helpful, then the Sanskrit for a slip, then say hanta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for helpful, then the Sanskrit for a slip, then say *hanta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हन्त (hanta) mean? (\"Come now; alas\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C553-pariraksati",
+      "sequence": 31630,
+      "title": "परिरक्षति (parirakṣati) — guards well; rescues",
+      "headword": "परिरक्षति",
+      "romanization": "parirakṣati",
+      "gloss": "guards well; rescues",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ab5d053e7bfa1f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a slip, then the Sanskrit for come now."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परिरक्षति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिरक्षति — parirakṣati — \"guards well; rescues\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि रक्षकः न आगमिष्यत्, तर्हि कः बालं पर्यरक्षिष्यत्? yadi rakṣakaḥ na āgamiṣyat, tarhi kaḥ bālaṃ paryarakṣiṣyat? If the guard had not come, who would have saved the child?"
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः बालं परिरक्षितवान्, saḥ bālaṃ parirakṣitavān."
+            },
+            {
+              "kind": "speech",
+              "text": "Future: परिरक्षिष्यति, parirakṣiṣyati."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिरक्षति (parirakṣati) is built on pari, \"all round\", and the root √rakṣ, \"to protect\", which also gives rakṣati; MW gives parirakṣ as to guard well, to rescue, to save (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parirakṣati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parirakṣati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parirakṣati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parirakṣati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi rakṣakaḥ na āgamiṣyat, tarhi kaḥ bālaṃ paryarakṣiṣyat? — If the guard had not come, who would have saved the child?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi rakṣakaḥ na āgamiṣyat, tarhi kaḥ bālaṃ paryarakṣiṣyat?* — If the guard had not come, who would have saved the child?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a slip, then the Sanskrit for come now, then say parirakṣati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a slip, then the Sanskrit for come now, then say *parirakṣati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परिरक्षति (parirakṣati) mean? (\"Guards well; rescues\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C553-viparyayah",
+      "sequence": 31640,
+      "title": "विपर्ययः (viparyayaḥ) — a reversal; a mix-up",
+      "headword": "विपर्ययः",
+      "romanization": "viparyayaḥ",
+      "gloss": "a reversal; a mix-up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b419dd5d3b7c9a96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for come now, then the Sanskrit for guards well."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विपर्ययः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विपर्ययः — viparyayaḥ — \"a reversal; a mix-up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि दिशायाः विपर्ययः न अभविष्यत्, तर्हि अहं समये आगमिष्यम्। yadi diśāyāḥ viparyayaḥ na abhaviṣyat, tarhi ahaṃ samaye āgamiṣyam. If I had not mixed up the direction, I would have come on time."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विपर्ययः (viparyayaḥ) is built on vi, pari and the root √i, \"to go\": a going round the wrong way; MW gives viparyaya as reversed, inverted, contrary (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viparyayaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viparyayaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viparyayaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viparyayaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi diśāyāḥ viparyayaḥ na abhaviṣyat, tarhi ahaṃ samaye āgamiṣyam. — If I had not mixed up the direction, I would have come on time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi diśāyāḥ viparyayaḥ na abhaviṣyat, tarhi ahaṃ samaye āgamiṣyam.* — If I had not mixed up the direction, I would have come on time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for come now, then the Sanskrit for guards well, then say viparyayaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for come now, then the Sanskrit for guards well, then say *viparyayaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विपर्ययः (viparyayaḥ) mean? (\"A reversal; a mix-up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C553-upalambhah",
+      "sequence": 31650,
+      "title": "उपालम्भः (upālambhaḥ) — a reproach",
+      "headword": "उपालम्भः",
+      "romanization": "upālambhaḥ",
+      "gloss": "a reproach",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89f60a1b0b322f43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for guards well, then the Sanskrit for a reversal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपालम्भः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपालम्भः — upālambhaḥ — \"a reproach\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि अहं सत्यम् अवदिष्यम्, तर्हि उपालम्भः न अभविष्यत्। yadi ahaṃ satyam avadiṣyam, tarhi upālambhaḥ na abhaviṣyat. If I had told the truth, there would have been no reproach."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपालम्भः (upālambhaḥ) is built on upa, ā and the root √labh, \"to take hold of\", which also gives labhate; MW lists upālambha under upālabh, \"to censure, to reproach\", and gives it as reproach, censure, finding fault (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upālambhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upālambhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upālambhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upālambhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi ahaṃ satyam avadiṣyam, tarhi upālambhaḥ na abhaviṣyat. — If I had told the truth, there would have been no reproach.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi ahaṃ satyam avadiṣyam, tarhi upālambhaḥ na abhaviṣyat.* — If I had told the truth, there would have been no reproach.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for guards well, then the Sanskrit for a reversal, then say upālambhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for guards well, then the Sanskrit for a reversal, then say *upālambhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपालम्भः (upālambhaḥ) mean? (\"A reproach\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

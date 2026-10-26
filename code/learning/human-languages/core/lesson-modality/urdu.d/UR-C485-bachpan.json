@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C485-bachpan",
+    "language": "urdu",
+    "chapter": 485,
+    "sequence": 28300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70003ac76c461fd8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C363-andesha",
+    "language": "urdu",
+    "chapter": 363,
+    "sequence": 21640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3daacfbe0ba1ab40"
+  },
+  "findings": []
+}

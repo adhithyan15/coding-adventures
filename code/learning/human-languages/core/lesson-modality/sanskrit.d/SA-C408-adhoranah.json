@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C408-adhoranah",
+    "language": "sanskrit",
+    "chapter": 408,
+    "sequence": 23730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29e28ffcb09d2efd"
+  },
+  "findings": []
+}

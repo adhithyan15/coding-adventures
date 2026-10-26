@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C291-apaharan",
+    "language": "gujarati",
+    "chapter": 291,
+    "sequence": 16300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ff91d585c61d285"
+  },
+  "findings": []
+}

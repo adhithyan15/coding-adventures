@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:0b133b30dacf9970",
+  "lessonIds": [
+    "SA-C286-cauryam",
+    "SA-C286-yamikah",
+    "SA-C286-apaharati",
+    "SA-C286-saksi",
+    "SA-C286-palayate"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch286.txt",
+  "json": "sanskrit/narration/ch286.json",
+  "textHash": "fnv1a64:bc13d26001f9b3c1",
+  "jsonHash": "fnv1a64:e705e261d850494c",
+  "findings": []
+}

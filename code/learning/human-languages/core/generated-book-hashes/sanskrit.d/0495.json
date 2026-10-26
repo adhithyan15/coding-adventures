@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:7fec7fb671965fe4",
+  "lessonIds": [
+    "SA-C495-kisorah",
+    "SA-C495-yauvanam",
+    "SA-C495-praudhah",
+    "SA-C495-varayati",
+    "SA-C495-brahmacari"
+  ],
+  "tex": "sanskrit/book/chapters/ch495-growing-up.tex"
+}

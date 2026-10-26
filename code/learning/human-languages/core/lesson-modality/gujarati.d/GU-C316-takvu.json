@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C316-takvu",
+    "language": "gujarati",
+    "chapter": 316,
+    "sequence": 17620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0d9157834623958"
+  },
+  "findings": []
+}

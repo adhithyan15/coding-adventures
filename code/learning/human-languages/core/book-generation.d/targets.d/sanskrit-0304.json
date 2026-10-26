@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 304,
+  "output": "sanskrit/book/chapters/ch304-trapped.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

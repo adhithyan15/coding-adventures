@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 470,
+  "output": "sanskrit/book/chapters/ch470-inside-the-body.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

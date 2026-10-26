@@ -1,0 +1,11 @@
+{
+  "id": "GU-C476-anidra",
+  "pathSegment": "GU-PATH-476-NINDAR476",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-476-NINDAR476",
+      "order": 4
+    }
+  ]
+}

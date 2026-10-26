@@ -1,0 +1,11 @@
+{
+  "id": "UR-C293-bahna",
+  "pathSegment": "UR-PATH-293-SAILAB293",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-293-SAILAB293",
+      "order": 1
+    }
+  ]
+}

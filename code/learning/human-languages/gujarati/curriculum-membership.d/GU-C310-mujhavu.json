@@ -1,0 +1,11 @@
+{
+  "id": "GU-C310-mujhavu",
+  "pathSegment": "GU-PATH-310-TUKDI310",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-310-TUKDI310",
+      "order": 3
+    }
+  ]
+}

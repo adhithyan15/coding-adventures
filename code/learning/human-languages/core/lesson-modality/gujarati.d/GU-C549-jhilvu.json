@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C549-jhilvu",
+    "language": "gujarati",
+    "chapter": 549,
+    "sequence": 30490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c83234031a2e29e6"
+  },
+  "findings": []
+}

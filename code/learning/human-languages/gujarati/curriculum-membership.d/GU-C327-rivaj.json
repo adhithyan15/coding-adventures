@@ -1,0 +1,11 @@
+{
+  "id": "GU-C327-rivaj",
+  "pathSegment": "GU-PATH-327-UTSAV327",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-327-UTSAV327",
+      "order": 3
+    }
+  ]
+}

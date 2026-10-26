@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 333,
+  "output": "sanskrit/book/chapters/ch333-the-curse-and-the-boon.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

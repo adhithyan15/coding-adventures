@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Papers, Cards and Fees",
+  "label": "ch:ur-papers-cards-and-fees",
+  "canDo": "I can deal with papers, cards, tokens and fees at a bank.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C421-karansi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can deal with papers, cards, tokens and fees at a bank.",
+    "assesses": [
+      "UR-LEX-C421-KAGHAZ421-03",
+      "UR-LEX-C421-KAGHAZ421-04",
+      "UR-LEX-C421-KAGHAZ421-05"
+    ]
+  }
+}

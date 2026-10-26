@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C432-jhaverat",
+    "language": "gujarati",
+    "chapter": 432,
+    "sequence": 24010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63c3adcf9a6b90b4"
+  },
+  "findings": []
+}

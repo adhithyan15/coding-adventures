@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:fa3c17582c3c6ede",
+  "lessonIds": [
+    "UR-C400-vatan",
+    "UR-C400-pardes",
+    "UR-C400-ajnabi",
+    "UR-C400-guzarna",
+    "UR-C400-vapasi"
+  ],
+  "tex": "urdu/book/chapters/ch400-far-from-home.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:997aeffaa34ba131",
+  "lessonIds": [
+    "GU-C473-jagh",
+    "GU-C473-taliyu",
+    "GU-C473-duti",
+    "GU-C473-pindi",
+    "GU-C473-bagal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch473.txt",
+  "json": "gujarati/narration/ch473.json",
+  "textHash": "fnv1a64:a5ccc70b06805d14",
+  "jsonHash": "fnv1a64:19570605057f4bbe",
+  "findings": []
+}

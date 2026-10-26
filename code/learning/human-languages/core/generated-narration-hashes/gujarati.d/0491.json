@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:c3a2ed295cbe02ac",
+  "lessonIds": [
+    "GU-C491-jamai",
+    "GU-C491-salo",
+    "GU-C491-banevi",
+    "GU-C491-vevai",
+    "GU-C491-vevan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch491.txt",
+  "json": "gujarati/narration/ch491.json",
+  "textHash": "fnv1a64:1b4e0e9c49e60ef2",
+  "jsonHash": "fnv1a64:e66432e28afd1845",
+  "findings": []
+}

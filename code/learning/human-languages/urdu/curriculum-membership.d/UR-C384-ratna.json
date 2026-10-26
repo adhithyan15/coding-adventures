@@ -1,0 +1,11 @@
+{
+  "id": "UR-C384-ratna",
+  "pathSegment": "UR-PATH-384-TARBIYAT384",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-384-TARBIYAT384",
+      "order": 4
+    }
+  ]
+}

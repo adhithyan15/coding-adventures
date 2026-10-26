@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-288-APARADHA288",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report a crime and say what the charge depends on.",
+  "prerequisites": []
+}

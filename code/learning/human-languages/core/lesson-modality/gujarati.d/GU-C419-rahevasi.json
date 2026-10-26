@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C419-rahevasi",
+    "language": "gujarati",
+    "chapter": 419,
+    "sequence": 23360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bfde95683b4fe62"
+  },
+  "findings": []
+}

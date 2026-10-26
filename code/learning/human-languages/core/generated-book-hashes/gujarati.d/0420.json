@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:691577773fe2affd",
+  "lessonIds": [
+    "GU-C420-kamad",
+    "GU-C420-naliyu",
+    "GU-C420-vad",
+    "GU-C420-thabhlo",
+    "GU-C420-chavu"
+  ],
+  "tex": "gujarati/book/chapters/ch420-small-houses-and-fences.tex"
+}

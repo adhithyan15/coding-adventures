@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C347-ullanghan",
+    "language": "gujarati",
+    "chapter": 347,
+    "sequence": 19420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:677ebfb05ef37e2c"
+  },
+  "findings": []
+}

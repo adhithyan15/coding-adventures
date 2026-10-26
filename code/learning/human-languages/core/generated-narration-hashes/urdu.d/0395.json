@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:ca9e93dcc0b08e38",
+  "lessonIds": [
+    "UR-C395-tayar",
+    "UR-C395-pankchar",
+    "UR-C395-takkar",
+    "UR-C395-helmet",
+    "UR-C395-pichakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch395.txt",
+  "json": "urdu/narration/ch395.json",
+  "textHash": "fnv1a64:872bf695894312a4",
+  "jsonHash": "fnv1a64:8359a881c478536a",
+  "findings": []
+}

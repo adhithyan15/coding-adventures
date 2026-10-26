@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C534-mohra",
+    "language": "urdu",
+    "chapter": 534,
+    "sequence": 31060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c6fd120b1c3b187"
+  },
+  "findings": []
+}

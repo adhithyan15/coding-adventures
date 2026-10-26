@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C387-saras",
+    "language": "gujarati",
+    "chapter": 387,
+    "sequence": 21490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cb7daa0c8f8b9ee"
+  },
+  "findings": []
+}

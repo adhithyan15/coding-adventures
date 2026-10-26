@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:a550e7cc9f8d4f90",
+  "lessonIds": [
+    "GU-C285-cor",
+    "GU-C285-cori",
+    "GU-C285-nasvu",
+    "GU-C285-pakadvu",
+    "GU-C285-loko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch285.txt",
+  "json": "gujarati/narration/ch285.json",
+  "textHash": "fnv1a64:fbc1bd6fa0655297",
+  "jsonHash": "fnv1a64:5be1221556993459",
+  "findings": []
+}

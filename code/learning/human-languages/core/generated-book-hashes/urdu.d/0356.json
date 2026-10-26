@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:cb04675f7c388964",
+  "lessonIds": [
+    "UR-C356-islah",
+    "UR-C356-meyar",
+    "UR-C356-saliqa",
+    "UR-C356-sudharna",
+    "UR-C356-nikharna"
+  ],
+  "tex": "urdu/book/chapters/ch356-making-things-better.tex"
+}

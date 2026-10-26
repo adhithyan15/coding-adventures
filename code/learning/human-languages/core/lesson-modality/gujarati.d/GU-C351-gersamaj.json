@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C351-gersamaj",
+    "language": "gujarati",
+    "chapter": 351,
+    "sequence": 19630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:448106440542a40d"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:a66b7655dde5db28",
+  "lessonIds": [
+    "UR-C414-gard",
+    "UR-C414-avara",
+    "UR-C414-bhaunkna",
+    "UR-C414-ghurrana",
+    "UR-C414-bhagana"
+  ],
+  "tex": "urdu/book/chapters/ch414-guards-and-street-dogs.tex"
+}

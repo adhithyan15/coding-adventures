@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:4014ccf77e676bec",
+  "lessonIds": [
+    "GU-C479-madu",
+    "GU-C479-lakvo",
+    "GU-C479-acki",
+    "GU-C479-gath",
+    "GU-C479-patharivas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch479.txt",
+  "json": "gujarati/narration/ch479.json",
+  "textHash": "fnv1a64:b821ade0d9227026",
+  "jsonHash": "fnv1a64:caba5f0448680dfd",
+  "findings": []
+}

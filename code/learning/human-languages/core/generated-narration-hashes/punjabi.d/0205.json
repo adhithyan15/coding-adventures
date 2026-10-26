@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:5bef36ad969d8157",
+  "lessonIds": [
+    "PA-C205-fine-return",
+    "PA-C205-sabh",
+    "PA-C205-sabh-review",
+    "PA-C205-everything-fine",
+    "PA-C205-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch205.txt",
+  "json": "punjabi/narration/ch205.json",
+  "textHash": "fnv1a64:dd049a40f7602820",
+  "jsonHash": "fnv1a64:2310456e706b137a",
+  "findings": []
+}

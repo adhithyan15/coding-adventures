@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 425,
+  "title": "Monuments and Onlookers",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:58aa107a63e639c4",
+  "lessons": [
+    {
+      "id": "SA-C425-adbhutah",
+      "sequence": 24580,
+      "title": "अद्भुतः (adbhutaḥ) — marvellous; wonderful",
+      "headword": "अद्भुतः",
+      "romanization": "adbhutaḥ",
+      "gloss": "marvellous; wonderful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64adf16ecad891f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a view, then the Sanskrit for strolls."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अद्भुतः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अद्भुतः — adbhutaḥ — \"marvellous; wonderful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मम यात्रायाः अनुभवः अद्भुतः अस्ति। mama yātrāyāḥ anubhavaḥ adbhutaḥ asti. The experience of my journey is marvellous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अद्भुतः (adbhutaḥ) is the word MW gives for wonderful, marvellous; MW gives no sure derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adbhutaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adbhutaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adbhutaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adbhutaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mama yātrāyāḥ anubhavaḥ adbhutaḥ asti. — The experience of my journey is marvellous.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mama yātrāyāḥ anubhavaḥ adbhutaḥ asti.* — The experience of my journey is marvellous.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a view, then the Sanskrit for strolls, then say adbhutaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a view, then the Sanskrit for strolls, then say *adbhutaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अद्भुतः (adbhutaḥ) mean? (\"Marvellous; wonderful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C425-smarakam",
+      "sequence": 24590,
+      "title": "स्मारकम् (smārakam) — a memorial",
+      "headword": "स्मारकम्",
+      "romanization": "smārakam",
+      "gloss": "a memorial",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:589d445ba9e841a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for strolls, then the Sanskrit for marvellous."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्मारकम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्मारकम् — smārakam — \"a memorial\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नगरस्य मध्ये एकं स्मारकम् अस्ति। nagarasya madhye ekaṃ smārakam asti. In the middle of the city there is a memorial."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्मारकम् (smārakam) is built on the causative of the root √smṛ, \"to remember\", which also gives smarati, \"remembers\": MW gives smāraka as recalling, reminding of, and a memorial is its use as a noun in modern Sanskrit (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smārakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *smārakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smārakam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *smārakam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagarasya madhye ekaṃ smārakam asti. — In the middle of the city there is a memorial.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagarasya madhye ekaṃ smārakam asti.* — In the middle of the city there is a memorial.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for strolls, then the Sanskrit for marvellous, then say smārakam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for strolls, then the Sanskrit for marvellous, then say *smārakam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्मारकम् (smārakam) mean? (\"A memorial\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C425-preksakah",
+      "sequence": 24600,
+      "title": "प्रेक्षकः (prekṣakaḥ) — an onlooker; a spectator",
+      "headword": "प्रेक्षकः",
+      "romanization": "prekṣakaḥ",
+      "gloss": "an onlooker; a spectator",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7ebaf8d7df839ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for marvellous, then the Sanskrit for a memorial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रेक्षकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रेक्षकः — prekṣakaḥ — \"an onlooker; a spectator\"."
+            },
+            {
+              "kind": "speech",
+              "text": "स्मारकस्य समीपे प्रेक्षकाः सन्ति। smārakasya samīpe prekṣakāḥ santi. There are onlookers near the memorial."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रेक्षकः (prekṣakaḥ) is built from pra, \"forth\", and the root √īkṣ, \"to see\", with the agent ending -aka; MW gives prekṣaka as a spectator, a member of an audience (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prekṣakaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prekṣakaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prekṣakaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prekṣakaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smārakasya samīpe prekṣakāḥ santi. — There are onlookers near the memorial.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *smārakasya samīpe prekṣakāḥ santi.* — There are onlookers near the memorial.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for marvellous, then the Sanskrit for a memorial, then say prekṣakaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for marvellous, then the Sanskrit for a memorial, then say *prekṣakaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रेक्षकः (prekṣakaḥ) mean? (\"An onlooker; a spectator\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C425-gavaksah",
+      "sequence": 24610,
+      "title": "गवाक्षः (gavākṣaḥ) — a round window",
+      "headword": "गवाक्षः",
+      "romanization": "gavākṣaḥ",
+      "gloss": "a round window",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e8171700772a1b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a memorial, then the Sanskrit for an onlooker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गवाक्षः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गवाक्षः — gavākṣaḥ — \"a round window\"."
+            },
+            {
+              "kind": "speech",
+              "text": "राज्ञी गवाक्षात् नगरं पश्यति। rājñī gavākṣāt nagaraṃ paśyati. The queen looks out at the city from the round window."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गवाक्षः (gavākṣaḥ) is built from go, \"a bull\", and akṣa, \"an eye\": a bull's eye, as MW glosses it; MW gives gavākṣa as an air-hole, a round window (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gavākṣaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gavākṣaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gavākṣaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gavākṣaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājñī gavākṣāt nagaraṃ paśyati. — The queen looks out at the city from the round window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājñī gavākṣāt nagaraṃ paśyati.* — The queen looks out at the city from the round window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a memorial, then the Sanskrit for an onlooker, then say gavākṣaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a memorial, then the Sanskrit for an onlooker, then say *gavākṣaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गवाक्षः (gavākṣaḥ) mean? (\"A round window\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C425-smaraniyah",
+      "sequence": 24620,
+      "title": "स्मरणीयः (smaraṇīyaḥ) — memorable",
+      "headword": "स्मरणीयः",
+      "romanization": "smaraṇīyaḥ",
+      "gloss": "memorable",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab40409c7c1a463a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an onlooker, then the Sanskrit for a round window."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्मरणीयः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्मरणीयः — smaraṇīyaḥ — \"memorable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मम तीर्थयात्रा स्मरणीया अस्ति। mama tīrthayātrā smaraṇīyā asti. My pilgrimage is memorable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्मरणीयः (smaraṇīyaḥ) is built on the root √smṛ, \"to remember\", which also gives smarati, \"remembers\", with the ending -anīya; MW gives smaraṇīya as to be remembered, memorable (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smaraṇīyaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *smaraṇīyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smaraṇīyaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *smaraṇīyaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mama tīrthayātrā smaraṇīyā asti. — My pilgrimage is memorable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mama tīrthayātrā smaraṇīyā asti.* — My pilgrimage is memorable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an onlooker, then the Sanskrit for a round window, then say smaraṇīyaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an onlooker, then the Sanskrit for a round window, then say *smaraṇīyaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्मरणीयः (smaraṇīyaḥ) mean? (\"Memorable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R425-review-418-425",
+      "sequence": 24630,
+      "title": "Looking back: from Nets, Shells and Pearls to Monuments and Onlookers",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Nets, Shells and Pearls to Monuments and Onlookers",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c033a34f1dfbadb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for a net and a fishhook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a net, a fishhook, an oyster shell, a pearl, coral",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a net, a fishhook, an oyster shell, a pearl, coral]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an oblong reservoir, a spring of water, a lotus pool, a water channel, a puddle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an oblong reservoir, a spring of water, a lotus pool, a water channel, a puddle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a roadside water shed, gives a drink to, a mirage, comes upon, refreshes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a roadside water shed, gives a drink to, a mirage, comes upon, refreshes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hamlet, a suburb, a town square, a mansion, converses",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hamlet, a suburb, a town square, a mansion, converses]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a town wall, a town gate, a moat, a tunnel, a ditch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a town wall, a town gate, a moat, a tunnel, a ditch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an entrance, an exit, opposite, a gap, a gatekeeper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an entrance, an exit, opposite, a gap, a gatekeeper]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tours, worth seeing, delightful, a view, strolls",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tours, worth seeing, delightful, a view, strolls]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marvellous, a memorial, an onlooker, a round window, memorable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: marvellous, a memorial, an onlooker, a round window, memorable]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A net? (जालम्, jālam.) A fishhook? (बडिशम्, baḍiśam.) An oyster shell? (शुक्तिः, śuktiḥ.) A pearl? (मौक्तिकम्, mauktikam.) Coral? (प्रवालम्, pravālam.) An oblong reservoir? (वापी, vāpī.) A spring of water? (उत्सः, utsaḥ.) A lotus pool? (पुष्करिणी, puṣkariṇī.) A water channel? (कुल्या, kulyā.) A puddle? (पल्वलम्, palvalam.) A roadside water shed? (प्रपा, prapā.) Gives a drink to? (पाययति, pāyayati.) A mirage? (मृगतृष्णा, mṛgatṛṣṇā.) Comes upon? (आसादयति, āsādayati.) Refreshes? (तर्पयति, tarpayati.) A hamlet? (पल्ली, pallī.) A suburb? (उपनगरम्, upanagaram.) A town square? (चत्वरम्, catvaram.) A mansion? (हर्म्यम्, harmyam.) Converses? (सम्भाषते, sambhāṣate.) A town wall? (प्राकारः, prākāraḥ.) A town gate? (गोपुरम्, gopuram.) A moat? (परिखा, parikhā.) A tunnel? (सुरंगा, suraṅgā.) A ditch? (खातम्, khātam.) An entrance? (प्रवेशः, praveśaḥ.) An exit? (निर्गमः, nirgamaḥ.) Opposite? (विपरीतः, viparītaḥ.) A gap? (अन्तरम्, antaram.) A gatekeeper? (द्वारपालः, dvārapālaḥ.) Tours? (पर्यटति, paryaṭati.) Worth seeing? (दर्शनीयः, darśanīyaḥ.) Delightful? (रमणीयः, ramaṇīyaḥ.) A view? (दृश्यम्, dṛśyam.) Strolls? (विहरति, viharati.) Marvellous? (अद्भुतः, adbhutaḥ.) A memorial? (स्मारकम्, smārakam.) An onlooker? (प्रेक्षकः, prekṣakaḥ.) A round window? (गवाक्षः, gavākṣaḥ.) Memorable? (स्मरणीयः, smaraṇīyaḥ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C450-sneh",
+  "pathSegment": "GU-PATH-450-VAHAL450",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-450-VAHAL450",
+      "order": 1
+    }
+  ]
+}

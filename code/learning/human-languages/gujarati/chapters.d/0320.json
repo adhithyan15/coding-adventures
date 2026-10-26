@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "War Comes",
+  "label": "ch:gu-war-comes",
+  "canDo": "I can say who fought whom and how the war began.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C320-akraman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can say who fought whom and how the war began.",
+    "assesses": [
+      "GU-LEX-C320-YUDDH320-03",
+      "GU-LEX-C320-YUDDH320-04",
+      "GU-LEX-C320-YUDDH320-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C370-pratikulah",
+  "pathSegment": "SA-PATH-370-STHITI370",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-370-STHITI370",
+      "order": 4
+    }
+  ]
+}

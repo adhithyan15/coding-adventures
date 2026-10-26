@@ -1,0 +1,21 @@
+{
+  "chapter": 408,
+  "title": "Trips and Rounds",
+  "label": "ch:gu-trips-and-rounds",
+  "canDo": "I can talk about trips, rounds and rests on the way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-R408-review-401-408",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can talk about trips, rounds and rests on the way.",
+    "assesses": [
+      "GU-LEX-C408-ROUNDS408-01",
+      "GU-LEX-C408-ROUNDS408-02",
+      "GU-LEX-C408-ROUNDS408-03",
+      "GU-LEX-C408-ROUNDS408-04",
+      "GU-LEX-C408-ROUNDS408-05"
+    ]
+  }
+}

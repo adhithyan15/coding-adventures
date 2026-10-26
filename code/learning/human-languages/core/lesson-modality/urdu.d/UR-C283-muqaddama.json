@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C283-muqaddama",
+    "language": "urdu",
+    "chapter": 283,
+    "sequence": 17370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8acf8945a6080f4"
+  },
+  "findings": []
+}

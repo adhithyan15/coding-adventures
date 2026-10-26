@@ -1,0 +1,11 @@
+{
+  "id": "GU-C383-madvu",
+  "pathSegment": "GU-PATH-383-PRAYATNA383",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-383-PRAYATNA383",
+      "order": 3
+    }
+  ]
+}

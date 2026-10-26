@@ -1,0 +1,11 @@
+{
+  "id": "SA-C339-vrnite",
+  "pathSegment": "SA-PATH-339-YUVARAJA339",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-339-YUVARAJA339",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C278-bayan",
+  "pathSegment": "UR-PATH-278-THANA278",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-278-THANA278",
+      "order": 4
+    }
+  ]
+}

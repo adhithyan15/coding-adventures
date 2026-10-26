@@ -1,0 +1,11 @@
+{
+  "id": "UR-C523-ampayar",
+  "pathSegment": "UR-PATH-523-STADIUM523",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-523-STADIUM523",
+      "order": 1
+    }
+  ]
+}

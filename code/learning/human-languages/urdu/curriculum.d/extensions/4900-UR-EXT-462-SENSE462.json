@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-462-SENSE462",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether someone acted wisely or naively.",
+  "prerequisites": []
+}

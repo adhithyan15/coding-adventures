@@ -1,0 +1,11 @@
+{
+  "id": "SA-C419-kulya",
+  "pathSegment": "SA-PATH-419-VAPI419",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-419-VAPI419",
+      "order": 3
+    }
+  ]
+}

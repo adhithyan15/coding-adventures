@@ -1,0 +1,11 @@
+{
+  "id": "GU-C501-ojar",
+  "pathSegment": "GU-PATH-501-KARIGAR501",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-501-KARIGAR501",
+      "order": 2
+    }
+  ]
+}

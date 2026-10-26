@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:858cd36054cc183d",
+  "lessonIds": [
+    "GU-C413-taraph",
+    "GU-C413-marg",
+    "GU-C413-par",
+    "GU-C413-dorvu",
+    "GU-C413-cidhvu"
+  ],
+  "tex": "gujarati/book/chapters/ch413-which-way.tex"
+}

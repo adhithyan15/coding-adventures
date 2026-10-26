@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C395-tayar",
+    "language": "urdu",
+    "chapter": 395,
+    "sequence": 23460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ecb60c08d75afc3e"
+  },
+  "findings": []
+}

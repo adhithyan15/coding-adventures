@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C422-lautana",
+    "language": "urdu",
+    "chapter": 422,
+    "sequence": 24880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0962bcd85340b07"
+  },
+  "findings": []
+}

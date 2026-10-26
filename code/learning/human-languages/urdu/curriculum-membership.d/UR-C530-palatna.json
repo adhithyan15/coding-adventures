@@ -1,0 +1,11 @@
+{
+  "id": "UR-C530-palatna",
+  "pathSegment": "UR-PATH-530-MARZI530",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-530-MARZI530",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C427-poshak",
+    "language": "urdu",
+    "chapter": 427,
+    "sequence": 25120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49f4ad88209ef7f9"
+  },
+  "findings": []
+}

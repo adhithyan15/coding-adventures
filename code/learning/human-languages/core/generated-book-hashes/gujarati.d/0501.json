@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:ac8b10e5891ea007",
+  "lessonIds": [
+    "GU-C501-lakdu",
+    "GU-C501-karigar",
+    "GU-C501-ojar",
+    "GU-C501-avadvu",
+    "GU-C501-vyavsay"
+  ],
+  "tex": "gujarati/book/chapters/ch501-the-craftsman-s-bench.tex"
+}

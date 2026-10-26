@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:2c3bfc364a91b41f",
+  "lessonIds": [
+    "UR-C324-sunana",
+    "UR-C324-dastan",
+    "UR-C324-qissa",
+    "UR-C324-paheli",
+    "UR-C324-kahavat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch324.txt",
+  "json": "urdu/narration/ch324.json",
+  "textHash": "fnv1a64:1f2fdefe589a5d92",
+  "jsonHash": "fnv1a64:c71860795a06a66d",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-520-VAGHAR520",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-520-VAGHAR520"
+  ],
+  "after": []
+}

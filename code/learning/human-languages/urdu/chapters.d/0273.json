@@ -1,0 +1,23 @@
+{
+  "chapter": 273,
+  "title": "Comparing, and How Long",
+  "label": "ch:ur-comparing-and-how-long",
+  "canDo": "I can compare two things (bas ṭaiksī se sastī hai, sab se achchhā), and say how long or since when (do sāl se, subah se shām tak, din bhar).",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R273-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete UR-R273-comparing-and-time: compare two things, and say how long.",
+    "assesses": [
+      "UR-GRAMMAR-C273-COMPARISON-01",
+      "UR-GRAMMAR-C273-COMPARISON-02",
+      "UR-LEX-C273-BEHTAR-01",
+      "UR-LEX-C273-SUBAH-01",
+      "UR-SCRIPT-C273-SUAD-01",
+      "UR-GRAMMAR-C273-DURATION-01",
+      "UR-GRAMMAR-C273-DURATION-02"
+    ]
+  }
+}

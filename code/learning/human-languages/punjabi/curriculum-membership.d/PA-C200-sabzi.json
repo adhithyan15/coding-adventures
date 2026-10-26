@@ -1,0 +1,11 @@
+{
+  "id": "PA-C200-sabzi",
+  "pathSegment": "PA-PATH-200-A2-SABZI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-200-A2-SABZI",
+      "order": 1
+    }
+  ]
+}

@@ -12,4 +12,6 @@ precise review request ambiguous and can invalidate later delivery checks.
 Before sending, recording, comparing, or monitoring an exact head, obtain it
 with `git rev-parse HEAD` (or the exact remote ref) and copy that complete
 output. Never infer the remaining hexadecimal digits from an abbreviation;
-correct any mistaken review request before the reviewer begins.
+correct any mistaken review request before the reviewer begins. Resolve every
+new evidence revision before writing the state patch itself, rather than using
+an abbreviated log line as the patch template and checking it afterward.

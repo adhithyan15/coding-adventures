@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:2b25df46516f1e08",
+  "lessonIds": [
+    "SA-C369-bhagyam",
+    "SA-C369-daivam",
+    "SA-C369-akasmat",
+    "SA-C369-upalabhate",
+    "SA-C369-sambhavana"
+  ],
+  "tex": "sanskrit/book/chapters/ch369-luck-and-fate.tex"
+}

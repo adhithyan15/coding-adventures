@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Opening Hours and Rent",
+  "label": "ch:sa-opening-hours-and-rent",
+  "canDo": "I can ask when a place opens and what a room costs.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C429-avakrayah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can ask when a place opens and what a room costs.",
+    "assesses": [
+      "SA-LEX-C429-UDGHATANA429-03",
+      "SA-LEX-C429-UDGHATANA429-04",
+      "SA-LEX-C429-UDGHATANA429-05"
+    ]
+  }
+}

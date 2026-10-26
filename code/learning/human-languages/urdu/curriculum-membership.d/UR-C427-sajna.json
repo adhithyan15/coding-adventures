@@ -1,0 +1,11 @@
+{
+  "id": "UR-C427-sajna",
+  "pathSegment": "UR-PATH-427-POSHAK427",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-427-POSHAK427",
+      "order": 4
+    }
+  ]
+}

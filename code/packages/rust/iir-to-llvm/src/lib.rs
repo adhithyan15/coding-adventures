@@ -319,6 +319,10 @@ const SUPPORTED_OPS: &[&str] = &[
     // `@llvm.s{add,sub,mul}.with.overflow.i64` intrinsics; overflow branches
     // to the same module-local `@__iir_trap` with `Trap.Overflow`.
     "i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_neg_ovf",
+    // LANG83 PR6c — non-trapping IEEE-754 binary64 arithmetic (`fadd` …
+    // `fneg`, which never trap in LLVM's default floating-point environment)
+    // and the sign-bit test (`bitcast` + `lshr 63`).
+    "f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg", "f64_signbit",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -2238,6 +2242,10 @@ fn lower_instr(
         "f64_tan"  => lower_f64_intrinsic(instr, state, out, "f64_tan",  "@tan"),
         // BA-pow — two-argument pow(base, exp) via libm `@pow`.
         "f64_pow" => lower_f64_pow(instr, state, out),
+        // LANG83 PR6c — IEEE arithmetic and the sign bit.
+        "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg" | "f64_signbit" => {
+            lower_f64_ieee(instr, state, out)
+        }
 
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
@@ -3165,6 +3173,48 @@ fn lower_f64_pow(
     let base = resolve_operand(instr.srcs.first(), &state.env, "f64", state.fn_name)?;
     let exp_ = resolve_operand(instr.srcs.get(1), &state.env, "f64", state.fn_name)?;
     out.push_str(&format!("  %{dest} = call double @pow(double {base}, double {exp_})\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower the LANG83 PR6c ops — IEEE-754 binary64 arithmetic that never traps,
+/// and the sign-bit test.
+///
+/// | IIR | LLVM IR |
+/// |-----|---------|
+/// | `f64_add d <- a, b` | `%d = fadd double a, b` |
+/// | `f64_sub d <- a, b` | `%d = fsub double a, b` |
+/// | `f64_mul d <- a, b` | `%d = fmul double a, b` |
+/// | `f64_div d <- a, b` | `%d = fdiv double a, b` |
+/// | `f64_neg d <- a` | `%d = fneg double a` |
+/// | `f64_signbit d <- a` | `%t = bitcast double a to i64` ; `%d = lshr i64 %t, 63` |
+///
+/// Without fast-math flags these instructions are exactly IEEE: `1/0` is
+/// `+Inf`, `0/0` is `NaN`, an overflow is `±Inf`, and nothing traps. `fneg`
+/// (not `fsub -0.0, a`, and never `fsub 0.0, a`, which would turn `-0` into
+/// `+0`) only flips the sign bit. `f64_signbit` is an ordinary `i64`: the
+/// logical shift leaves exactly bit 63, so the result is 0 or 1.
+fn lower_f64_ieee(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    let opname = instr.op.as_str();
+    let dest = require_dest(instr, opname, state.fn_name)?.to_string();
+    let a = resolve_operand(instr.srcs.first(), &state.env, "f64", state.fn_name)?;
+    let binop = match opname {
+        "f64_add" => Some("fadd"),
+        "f64_sub" => Some("fsub"),
+        "f64_mul" => Some("fmul"),
+        "f64_div" => Some("fdiv"),
+        _ => None,
+    };
+    if let Some(inst) = binop {
+        let b = resolve_operand(instr.srcs.get(1), &state.env, "f64", state.fn_name)?;
+        out.push_str(&format!("  %{dest} = {inst} double {a}, {b}\n"));
+    } else if opname == "f64_neg" {
+        out.push_str(&format!("  %{dest} = fneg double {a}\n"));
+    } else {
+        let bits = state.fresh("sgnbits");
+        out.push_str(&format!("  {bits} = bitcast double {a} to i64\n"));
+        out.push_str(&format!("  %{dest} = lshr i64 {bits}, 63\n"));
+    }
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }

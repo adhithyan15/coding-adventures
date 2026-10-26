@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Houses Large and Small",
+  "label": "ch:ur-houses-large-and-small",
+  "canDo": "I can describe houses, from a hut with a thatch to a large house in its compound.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C413-basana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can describe houses, from a hut with a thatch to a large house in its compound.",
+    "assesses": [
+      "UR-LEX-C413-KOTHI413-03",
+      "UR-LEX-C413-KOTHI413-04",
+      "UR-LEX-C413-KOTHI413-05"
+    ]
+  }
+}

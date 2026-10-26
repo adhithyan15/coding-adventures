@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C513-pittal",
+    "language": "gujarati",
+    "chapter": 513,
+    "sequence": 28640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3213866f81615d5"
+  },
+  "findings": []
+}

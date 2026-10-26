@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Envy and Hatred",
+  "label": "ch:gu-envy-and-hatred",
+  "canDo": "I can talk about dislike and envy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C457-angamo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can talk about dislike and envy.",
+    "assesses": [
+      "GU-LEX-C457-NAFRAT457-03",
+      "GU-LEX-C457-NAFRAT457-04",
+      "GU-LEX-C457-NAFRAT457-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C299-sankatam",
+    "language": "sanskrit",
+    "chapter": 299,
+    "sequence": 17670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7e66b62188027a0"
+  },
+  "findings": []
+}

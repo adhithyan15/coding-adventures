@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:30b02f45382f9e75",
+  "lessonIds": [
+    "GU-C453-bivu",
+    "GU-C453-dhak",
+    "GU-C453-thatharvu",
+    "GU-C453-tras",
+    "GU-C453-bhiti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch453.txt",
+  "json": "gujarati/narration/ch453.json",
+  "textHash": "fnv1a64:df7fba2f50b1ec50",
+  "jsonHash": "fnv1a64:ba6e2d78e4cd2706",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C325-angrej",
+    "language": "gujarati",
+    "chapter": 325,
+    "sequence": 18070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d5c5eb04e302e58"
+  },
+  "findings": []
+}

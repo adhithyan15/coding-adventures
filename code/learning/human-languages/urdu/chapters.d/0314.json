@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Ruins of the Past",
+  "label": "ch:ur-ruins-of-the-past",
+  "canDo": "I can describe old ruins and what was found there.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C314-asar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can describe old ruins and what was found there.",
+    "assesses": [
+      "UR-LEX-C314-KHANDAR314-03",
+      "UR-LEX-C314-KHANDAR314-04",
+      "UR-LEX-C314-KHANDAR314-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:a136c9eddd62da31",
+  "lessonIds": [
+    "UR-C474-jarasim",
+    "UR-C474-mutaddi",
+    "UR-C474-infekshan",
+    "UR-C474-khasra",
+    "UR-C474-chechak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch474.txt",
+  "json": "urdu/narration/ch474.json",
+  "textHash": "fnv1a64:479b91b0f9f52ef0",
+  "jsonHash": "fnv1a64:8464b83dc540eec6",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:08cc5689fe761adc",
+  "lessonIds": [
+    "SA-C542-svikarah",
+    "SA-C542-avadharayati",
+    "SA-C542-utkrstah",
+    "SA-C542-rucirah",
+    "SA-C542-tatasthah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch542.txt",
+  "json": "sanskrit/narration/ch542.json",
+  "textHash": "fnv1a64:365b66101c09df51",
+  "jsonHash": "fnv1a64:6f15552fc21b4df6",
+  "findings": []
+}

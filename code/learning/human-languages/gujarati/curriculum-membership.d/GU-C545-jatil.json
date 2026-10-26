@@ -1,0 +1,11 @@
+{
+  "id": "GU-C545-jatil",
+  "pathSegment": "GU-PATH-545-AASAN545",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-545-AASAN545",
+      "order": 1
+    }
+  ]
+}

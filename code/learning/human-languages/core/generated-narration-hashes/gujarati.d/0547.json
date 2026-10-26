@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:e4b31ece60d63d0d",
+  "lessonIds": [
+    "GU-C547-albatt",
+    "GU-C547-hargij",
+    "GU-C547-chata",
+    "GU-C547-balke",
+    "GU-C547-viprit",
+    "GU-R547-review-541-547"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch547.txt",
+  "json": "gujarati/narration/ch547.json",
+  "textHash": "fnv1a64:2df31e6fffacdec1",
+  "jsonHash": "fnv1a64:b3ff86a0fff50a66",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C470-naqahat",
+    "language": "urdu",
+    "chapter": 470,
+    "sequence": 27570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:beeb2a16b64581c0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "One Stage at a Time",
+  "label": "ch:gu-one-stage-at-a-time",
+  "canDo": "I can say what happens if a stage goes well or is left half done.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C529-antim",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can say what happens if a stage goes well or is left half done.",
+    "assesses": [
+      "GU-LEX-C529-TABAKKO529-03",
+      "GU-LEX-C529-TABAKKO529-04",
+      "GU-LEX-C529-TABAKKO529-05"
+    ]
+  }
+}

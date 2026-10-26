@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "Choosing",
+  "label": "ch:gu-choosing",
+  "canDo": "I can say what I would choose and what I would take instead.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C537-rucvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can say what I would choose and what I would take instead.",
+    "assesses": [
+      "GU-LEX-C537-PASANDGI537-03",
+      "GU-LEX-C537-PASANDGI537-04",
+      "GU-LEX-C537-PASANDGI537-05"
+    ]
+  }
+}

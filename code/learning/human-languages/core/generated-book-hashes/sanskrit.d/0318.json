@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:c90a4b58185923b2",
+  "lessonIds": [
+    "SA-C318-sena",
+    "SA-C318-yodhah",
+    "SA-C318-yuddham",
+    "SA-C318-prayati",
+    "SA-C318-yudhyate"
+  ],
+  "tex": "sanskrit/book/chapters/ch318-the-army-marches.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Wires and Switches",
+  "label": "ch:gu-wires-and-switches",
+  "canDo": "I can talk about wires, plugs, switches and bulbs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C517-khosvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about wires, plugs, switches and bulbs.",
+    "assesses": [
+      "GU-LEX-C517-VIJLI517-03",
+      "GU-LEX-C517-VIJLI517-04",
+      "GU-LEX-C517-VIJLI517-05"
+    ]
+  }
+}

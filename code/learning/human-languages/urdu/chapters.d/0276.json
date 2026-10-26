@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "A Theft in the Lane",
+  "label": "ch:ur-a-theft-in-the-lane",
+  "canDo": "I can say what was stolen and who saw it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C276-vardat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can say what was stolen and who saw it.",
+    "assesses": [
+      "UR-LEX-C276-CHORI276-03",
+      "UR-LEX-C276-CHORI276-04",
+      "UR-LEX-C276-CHORI276-05"
+    ]
+  }
+}

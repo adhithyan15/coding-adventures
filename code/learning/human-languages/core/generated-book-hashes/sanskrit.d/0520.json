@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:ade6466a75f4b865",
+  "lessonIds": [
+    "SA-C520-svarah",
+    "SA-C520-ragah",
+    "SA-C520-layah",
+    "SA-C520-ganam",
+    "SA-C520-vadayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch520-learning-a-raga.tex"
+}

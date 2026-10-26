@@ -1,0 +1,21 @@
+{
+  "chapter": 378,
+  "title": "Setting a Goal",
+  "label": "ch:ur-setting-a-goal",
+  "canDo": "I can say what I want to reach and what it will take.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-R378-review-371-378",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can say what I want to reach and what it will take.",
+    "assesses": [
+      "UR-LEX-C378-HADAF378-01",
+      "UR-LEX-C378-HADAF378-02",
+      "UR-LEX-C378-HADAF378-03",
+      "UR-LEX-C378-HADAF378-04",
+      "UR-LEX-C378-HADAF378-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C470-pasijna",
+  "pathSegment": "UR-PATH-470-BREATH470",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-470-BREATH470",
+      "order": 2
+    }
+  ]
+}

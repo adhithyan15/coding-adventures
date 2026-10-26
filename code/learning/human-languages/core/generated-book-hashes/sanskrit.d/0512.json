@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:2a274e5c91cbbbae",
+  "lessonIds": [
+    "SA-C512-churika",
+    "SA-C512-krntati",
+    "SA-C512-curnayati",
+    "SA-C512-surpam",
+    "SA-C512-samyojayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch512-chop-and-grind.tex"
+}

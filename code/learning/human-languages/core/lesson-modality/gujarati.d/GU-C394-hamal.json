@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C394-hamal",
+    "language": "gujarati",
+    "chapter": 394,
+    "sequence": 22050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7ef4a4f4c90de43"
+  },
+  "findings": []
+}

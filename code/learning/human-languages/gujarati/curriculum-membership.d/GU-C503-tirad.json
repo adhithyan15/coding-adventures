@@ -1,0 +1,11 @@
+{
+  "id": "GU-C503-tirad",
+  "pathSegment": "GU-PATH-503-RANDO503",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-503-RANDO503",
+      "order": 3
+    }
+  ]
+}

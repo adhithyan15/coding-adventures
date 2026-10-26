@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C469-hichki",
+    "language": "urdu",
+    "chapter": 469,
+    "sequence": 27490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae37a73d2b7fc15b"
+  },
+  "findings": []
+}

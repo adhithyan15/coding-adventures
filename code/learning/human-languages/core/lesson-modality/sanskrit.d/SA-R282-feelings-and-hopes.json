@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R282-feelings-and-hopes",
+    "language": "sanskrit",
+    "chapter": 282,
+    "sequence": 16540,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:53653bd28034808d"
+  },
+  "findings": []
+}

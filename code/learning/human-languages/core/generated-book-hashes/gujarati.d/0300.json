@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:f3af803669289847",
+  "lessonIds": [
+    "GU-C300-angaro",
+    "GU-C300-dhumado",
+    "GU-C300-jvala",
+    "GU-C300-salgavvu",
+    "GU-C300-dajhvu",
+    "GU-R300-review-293-300"
+  ],
+  "tex": "gujarati/book/chapters/ch300-smoke-from-the-kitchen.tex"
+}

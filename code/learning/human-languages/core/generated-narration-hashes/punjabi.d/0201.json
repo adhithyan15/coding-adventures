@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:f8c45b1f625f2efe",
+  "lessonIds": [
+    "PA-C201-identity-return",
+    "PA-C201-class",
+    "PA-C201-class-review",
+    "PA-C201-class-label",
+    "PA-C201-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch201.txt",
+  "json": "punjabi/narration/ch201.json",
+  "textHash": "fnv1a64:6765a77fc1329543",
+  "jsonHash": "fnv1a64:0c5431f298a35a1a",
+  "findings": []
+}

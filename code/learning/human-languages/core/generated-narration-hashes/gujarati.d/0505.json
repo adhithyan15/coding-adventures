@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:d4fa07de880e6290",
+  "lessonIds": [
+    "GU-C505-kapas",
+    "GU-C505-ru",
+    "GU-C505-retiyo",
+    "GU-C505-katvu",
+    "GU-C505-khadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch505.txt",
+  "json": "gujarati/narration/ch505.json",
+  "textHash": "fnv1a64:092541a95994f19e",
+  "jsonHash": "fnv1a64:1ccee07fde22ab40",
+  "findings": []
+}

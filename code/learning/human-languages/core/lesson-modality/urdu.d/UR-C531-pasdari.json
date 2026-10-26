@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C531-pasdari",
+    "language": "urdu",
+    "chapter": 531,
+    "sequence": 30910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9800af9c0799400"
+  },
+  "findings": []
+}

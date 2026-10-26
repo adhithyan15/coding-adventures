@@ -1,0 +1,11 @@
+{
+  "id": "SA-C315-udvijate",
+  "pathSegment": "SA-PATH-315-VISPHOTA315",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-315-VISPHOTA315",
+      "order": 3
+    }
+  ]
+}

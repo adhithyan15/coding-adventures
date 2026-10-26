@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:c7761520a4442103",
+  "lessonIds": [
+    "UR-C331-sabab",
+    "UR-C331-bunyad",
+    "UR-C331-zimme-dar",
+    "UR-C331-jurna",
+    "UR-C331-vabasta"
+  ],
+  "tex": "urdu/book/chapters/ch331-what-caused-it.tex"
+}

@@ -1,0 +1,7 @@
+packages: .
+tests: True
+
+-- Keep this library and its test executable instrumented without applying
+-- Cabal 3.10's global coverage planner to dependencies with internal libraries.
+package starlark-compiler
+  coverage: True

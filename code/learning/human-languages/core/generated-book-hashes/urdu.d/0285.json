@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:f7ffeda018033779",
+  "lessonIds": [
+    "UR-C285-thokar",
+    "UR-C285-larkharana",
+    "UR-C285-paon",
+    "UR-C285-chhilna",
+    "UR-C285-kharash"
+  ],
+  "tex": "urdu/book/chapters/ch285-a-slip-and-a-fall.tex"
+}

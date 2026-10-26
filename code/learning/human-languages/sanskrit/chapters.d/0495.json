@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Growing Up",
+  "label": "ch:sa-growing-up",
+  "canDo": "I can talk about growing up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C495-brahmacari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can talk about growing up.",
+    "assesses": [
+      "SA-LEX-C495-YAUVANA495-03",
+      "SA-LEX-C495-YAUVANA495-04",
+      "SA-LEX-C495-YAUVANA495-05"
+    ]
+  }
+}

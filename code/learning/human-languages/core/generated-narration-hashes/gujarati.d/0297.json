@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:c76967b9185cdc8d",
+  "lessonIds": [
+    "GU-C297-cetavvu",
+    "GU-C297-savdhan",
+    "GU-C297-udhu",
+    "GU-C297-tolu",
+    "GU-C297-dhakko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch297.txt",
+  "json": "gujarati/narration/ch297.json",
+  "textHash": "fnv1a64:9799095db388be16",
+  "jsonHash": "fnv1a64:4f70f43807b1593b",
+  "findings": []
+}

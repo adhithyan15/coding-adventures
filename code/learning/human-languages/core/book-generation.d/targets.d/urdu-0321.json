@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 321,
+  "output": "urdu/book/chapters/ch321-at-the-fair.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

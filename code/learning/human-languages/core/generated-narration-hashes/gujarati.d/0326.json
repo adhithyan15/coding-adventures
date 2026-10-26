@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:8ba5f68a798d2b0a",
+  "lessonIds": [
+    "GU-C326-jhando",
+    "GU-C326-pharkavvu",
+    "GU-C326-santi",
+    "GU-C326-sarhad",
+    "GU-C326-sthapvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch326.txt",
+  "json": "gujarati/narration/ch326.json",
+  "textHash": "fnv1a64:102ec1582a3103b3",
+  "jsonHash": "fnv1a64:a15cb8e3b5489ad9",
+  "findings": []
+}

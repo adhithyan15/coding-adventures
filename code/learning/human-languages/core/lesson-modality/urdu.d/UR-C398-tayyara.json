@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C398-tayyara",
+    "language": "urdu",
+    "chapter": 398,
+    "sequence": 23620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30f8ef56b89b59a1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C432-jhaverat",
+  "pathSegment": "GU-PATH-432-GOLD432",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-432-GOLD432",
+      "order": 2
+    }
+  ]
+}

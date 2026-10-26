@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C549-skor",
+    "language": "gujarati",
+    "chapter": 549,
+    "sequence": 30480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8b4eb7a62c7e5f7"
+  },
+  "findings": []
+}

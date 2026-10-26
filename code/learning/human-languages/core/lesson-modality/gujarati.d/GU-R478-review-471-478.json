@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R478-review-471-478",
+    "language": "gujarati",
+    "chapter": 478,
+    "sequence": 26630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed680fae9a4ca9aa"
+  },
+  "findings": []
+}

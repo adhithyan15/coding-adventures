@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Stands and Stops",
+  "label": "ch:ur-stands-and-stops",
+  "canDo": "I can find the rickshaw stand and the bus stop, and walk the rest of the way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C392-hanpna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can find the rickshaw stand and the bus stop, and walk the rest of the way.",
+    "assesses": [
+      "UR-LEX-C392-STAND392-03",
+      "UR-LEX-C392-STAND392-04",
+      "UR-LEX-C392-STAND392-05"
+    ]
+  }
+}

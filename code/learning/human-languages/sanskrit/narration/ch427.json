@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 427,
+  "title": "A Night's Lodging",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2b0cac074c25a3d6",
+  "lessons": [
+    {
+      "id": "SA-C427-vasatih",
+      "sequence": 24690,
+      "title": "वसतिः (vasatiḥ) — a night's stay; a lodging for the night",
+      "headword": "वसतिः",
+      "romanization": "vasatiḥ",
+      "gloss": "a night's stay; a lodging for the night",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53137904aa4fa337",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for stays on, then the Sanskrit for a place of refuge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वसतिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वसतिः — vasatiḥ — \"a night's stay; a lodging for the night\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पथिकः ग्रामे वसतिं याचते। pathikaḥ grāme vasatiṃ yācate. The wayfarer asks for a night's stay in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वसतिः (vasatiḥ) is built on the root √vas, \"to dwell, to stay\", which also gives vasati, \"dwells\"; MW gives the noun vasati as staying, especially overnight, a dwelling (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vasatiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vasatiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vasatiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vasatiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pathikaḥ grāme vasatiṃ yācate. — The wayfarer asks for a night's stay in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pathikaḥ grāme vasatiṃ yācate.* — The wayfarer asks for a night's stay in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for stays on, then the Sanskrit for a place of refuge, then say vasatiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for stays on, then the Sanskrit for a place of refuge, then say *vasatiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वसतिः (vasatiḥ) mean? (\"A night's stay; a lodging for the night\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C427-patamandapah",
+      "sequence": 24700,
+      "title": "पटमण्डपः (paṭamaṇḍapaḥ) — a tent",
+      "headword": "पटमण्डपः",
+      "romanization": "paṭamaṇḍapaḥ",
+      "gloss": "a tent",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94b9226035d7b2a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a place of refuge, then the Sanskrit for a night's stay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पटमण्डपः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पटमण्डपः — paṭamaṇḍapaḥ — \"a tent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पर्वते वयं पटमण्डपे स्वपिमः। parvate vayaṃ paṭamaṇḍape svapimaḥ. On the mountain we sleep in a tent."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पटमण्डपः (paṭamaṇḍapaḥ) is built from paṭa, \"cloth, canvas\", and maṇḍapa, \"a pavilion, an open hall\"; MW gives the compound as a canvas house, a tent (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭamaṇḍapaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭamaṇḍapaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭamaṇḍapaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭamaṇḍapaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parvate vayaṃ paṭamaṇḍape svapimaḥ. — On the mountain we sleep in a tent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parvate vayaṃ paṭamaṇḍape svapimaḥ.* — On the mountain we sleep in a tent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a place of refuge, then the Sanskrit for a night's stay, then say paṭamaṇḍapaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a place of refuge, then the Sanskrit for a night's stay, then say *paṭamaṇḍapaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पटमण्डपः (paṭamaṇḍapaḥ) mean? (\"A tent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C427-nivesah",
+      "sequence": 24710,
+      "title": "निवेशः (niveśaḥ) — an encampment; a halting place",
+      "headword": "निवेशः",
+      "romanization": "niveśaḥ",
+      "gloss": "an encampment; a halting place",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34a4546d1324d30e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a night's stay, then the Sanskrit for a tent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निवेशः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निवेशः — niveśaḥ — \"an encampment; a halting place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सार्थस्य निवेशः नद्याः तीरे अस्ति। sārthasya niveśaḥ nadyāḥ tīre asti. The caravan's encampment is on the riverbank."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निवेशः (niveśaḥ) is built from ni, \"down, in\", and the root √viś, \"to enter, to settle\"; MW gives niveśa as settling in a place, encamping, halting, and a dwelling or camp (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niveśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niveśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niveśaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niveśaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārthasya niveśaḥ nadyāḥ tīre asti. — The caravan's encampment is on the riverbank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārthasya niveśaḥ nadyāḥ tīre asti.* — The caravan's encampment is on the riverbank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a night's stay, then the Sanskrit for a tent, then say niveśaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a night's stay, then the Sanskrit for a tent, then say *niveśaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निवेशः (niveśaḥ) mean? (\"An encampment; a halting place\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C427-astrnati",
+      "sequence": 24720,
+      "title": "आस्तृणाति (āstṛṇāti) — spreads out",
+      "headword": "आस्तृणाति",
+      "romanization": "āstṛṇāti",
+      "gloss": "spreads out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0512f8c8e50c1bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a tent, then the Sanskrit for an encampment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आस्तृणाति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आस्तृणाति — āstṛṇāti — \"spreads out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पथिकः भूमौ कम्बलम् आस्तृणाति। pathikaḥ bhūmau kambalam āstṛṇāti. The wayfarer spreads a blanket on the ground."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः कम्बलम् आस्तीर्णवान्, saḥ kambalam āstīrṇavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आस्तृणाति (āstṛṇāti) is built from ā and the root √stṛ, \"to spread, to strew\", which also gives āstaraṇa, \"a carpet, a spread\"; MW gives ā-stṛ as to spread or strew over, with the participle āstīrṇa, \"spread\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āstṛṇāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āstṛṇāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āstṛṇāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āstṛṇāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pathikaḥ bhūmau kambalam āstṛṇāti. — The wayfarer spreads a blanket on the ground.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pathikaḥ bhūmau kambalam āstṛṇāti.* — The wayfarer spreads a blanket on the ground.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a tent, then the Sanskrit for an encampment, then say āstṛṇāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a tent, then the Sanskrit for an encampment, then say *āstṛṇāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आस्तृणाति (āstṛṇāti) mean? (\"Spreads out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C427-prabudhyate",
+      "sequence": 24730,
+      "title": "प्रबुध्यते (prabudhyate) — wakes up",
+      "headword": "प्रबुध्यते",
+      "romanization": "prabudhyate",
+      "gloss": "wakes up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3434a3781c5065e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an encampment, then the Sanskrit for spreads out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रबुध्यते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रबुध्यते — prabudhyate — \"wakes up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पथिकः प्रातः प्रबुध्यते। pathikaḥ prātaḥ prabudhyate. The wayfarer wakes up in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः प्रातः प्रबुद्धवान्, saḥ prātaḥ prabuddhavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रबुध्यते (prabudhyate) is built from pra, \"forth\", and the root √budh, \"to wake, to know\", which also gives budhyate, \"understands\"; MW gives pra-budh as to wake up, with the participle prabuddha, \"awakened\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prabudhyate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prabudhyate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prabudhyate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prabudhyate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pathikaḥ prātaḥ prabudhyate. — The wayfarer wakes up in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pathikaḥ prātaḥ prabudhyate.* — The wayfarer wakes up in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an encampment, then the Sanskrit for spreads out, then say prabudhyate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an encampment, then the Sanskrit for spreads out, then say *prabudhyate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रबुध्यते (prabudhyate) mean? (\"Wakes up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C204-payoff",
+    "language": "punjabi",
+    "chapter": 204,
+    "sequence": 11110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d67547c08314684"
+  },
+  "findings": []
+}

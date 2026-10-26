@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C333-maqsad",
+    "language": "urdu",
+    "chapter": 333,
+    "sequence": 20100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91ad865f6221ac41"
+  },
+  "findings": []
+}

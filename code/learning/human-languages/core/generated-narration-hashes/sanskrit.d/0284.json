@@ -1,0 +1,18 @@
+{
+  "language": "sanskrit",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:d9e712a1913c6bd6",
+  "lessonIds": [
+    "SA-C284-yadi-tarhi",
+    "SA-C284-yadi-varsa-bhavisyati",
+    "SA-C284-anyatha",
+    "SA-R284-if-and-otherwise"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch284.txt",
+  "json": "sanskrit/narration/ch284.json",
+  "textHash": "fnv1a64:be75645f4f0e193e",
+  "jsonHash": "fnv1a64:68f9055280c9ac84",
+  "findings": []
+}

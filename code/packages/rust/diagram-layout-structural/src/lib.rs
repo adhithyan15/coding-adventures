@@ -27,6 +27,7 @@ const COLS: usize = 3;
 const GROUP_PAD: f64 = 24.0;
 const GROUP_HEADER_H: f64 = 32.0;
 const TITLE_H: f64 = 44.0;
+const TITLE_LINE_H: f64 = 24.0;
 const ROUTE_CLEARANCE: f64 = 12.0;
 const ROUTE_BEND_COST: f64 = 8.0;
 const SELF_RELATIONSHIP_GAP: f64 = 48.0;
@@ -157,9 +158,10 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         None => layout_nodes(diagram),
     };
     apply_alignments(&mut nodes, diagram);
-    if diagram.title.is_some() {
+    if let Some(title) = &diagram.title {
+        let title_height = structural_title_height(title);
         for node in &mut nodes {
-            node.y += TITLE_H;
+            node.y += title_height;
         }
     }
     let groups = layout_groups(diagram, &nodes);
@@ -175,16 +177,22 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         canvas_h = canvas_h.max(position.y + ROW_H + COMP_PAD);
     }
     LayoutedStructuralDiagram {
+        kind: diagram.kind.clone(),
         width: canvas_w,
         height: canvas_h,
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         architecture_config: diagram.architecture_config.clone(),
+        render_config: diagram.render_config.clone(),
         groups,
         nodes,
         relationships: rels,
     }
+}
+
+fn structural_title_height(title: &str) -> f64 {
+    TITLE_H + title.split('\n').count().saturating_sub(1) as f64 * TITLE_LINE_H
 }
 
 fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDiagram) {
@@ -256,12 +264,19 @@ fn node_width(node: &StructuralNode, architecture_config: Option<&ArchitectureCo
         .compartments
         .iter()
         .flat_map(|c| c.entries.iter())
-        .map(|e| e.len())
+        .flat_map(|entry| entry.split('\n'))
+        .map(str::len)
         .max()
         .unwrap_or(0);
     // Approximate 8 px/char + padding; header is the label
     let char_width = style.font_size * 0.57;
-    let text_w = (node.label.len().max(max_entry) as f64 * char_width + 24.0).ceil();
+    let label_width = node
+        .label
+        .split('\n')
+        .map(str::len)
+        .max()
+        .unwrap_or(0);
+    let text_w = (label_width.max(max_entry) as f64 * char_width + 24.0).ceil();
     let minimum_width = architecture_config.map_or(MIN_NODE_W, |config| {
         MIN_NODE_W * config.icon_size / 80.0
     });
@@ -273,17 +288,37 @@ fn node_height(node: &StructuralNode, architecture_config: Option<&ArchitectureC
         return 18.0 * architecture_config.map_or(1.0, |config| config.icon_size / 80.0);
     }
     let font_size = structural_style(node, architecture_config).font_size;
-    let header_height = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
+    let header_height = node_header_height(node, architecture_config, font_size);
+    let row_height = ROW_H.max(font_size * 1.4);
+    let mut h = header_height;
+    for comp in &node.compartments {
+        let line_count = comp
+            .entries
+            .iter()
+            .map(|entry| entry.split('\n').count())
+            .sum::<usize>();
+        h += COMP_PAD + line_count as f64 * row_height + COMP_PAD;
+    }
+    h
+}
+
+fn node_header_height(
+    node: &StructuralNode,
+    architecture_config: Option<&ArchitectureConfig>,
+    font_size: f64,
+) -> f64 {
+    let base_height = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
         architecture_config.map_or(72.0, |config| config.icon_size * 0.9).max(font_size * 2.4)
     } else {
         HEADER_H.max(font_size * 2.4)
     };
-    let row_height = ROW_H.max(font_size * 1.4);
-    let mut h = header_height;
-    for comp in &node.compartments {
-        h += COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
+    let label_lines = node.label.split('\n').count();
+    if label_lines > 1 {
+        let stereotype_lines = usize::from(node.stereotype.is_some());
+        base_height.max((label_lines + stereotype_lines) as f64 * font_size * 1.4 + 16.0)
+    } else {
+        base_height
     }
-    h
 }
 
 fn architecture_icon_name(node: &StructuralNode) -> Option<&str> {
@@ -355,15 +390,15 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
         // Build layouted compartments.
         let style = structural_style(node, architecture_config);
         let row_height = ROW_H.max(style.font_size * 1.4);
-        let mut y_off = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
-            architecture_config.map_or(72.0, |config| config.icon_size * 0.9)
-                .max(style.font_size * 2.4)
-        } else {
-            HEADER_H.max(style.font_size * 2.4)
-        };
+        let mut y_off = node_header_height(node, architecture_config, style.font_size);
         let mut comps: Vec<LayoutedCompartment> = Vec::new();
         for comp in &node.compartments {
-            let ch = COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
+            let line_count = comp
+                .entries
+                .iter()
+                .map(|entry| entry.split('\n').count())
+                .sum::<usize>();
+            let ch = COMP_PAD + line_count as f64 * row_height + COMP_PAD;
             comps.push(LayoutedCompartment {
                 y_offset: y_off,
                 height: ch,
@@ -654,6 +689,14 @@ struct StructuralBounds {
     height: f64,
 }
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum AutomaticSide {
+    Left,
+    Right,
+    Top,
+    Bottom,
+}
+
 impl StructuralBounds {
     fn expanded(self, amount: f64) -> Self {
         Self {
@@ -711,6 +754,45 @@ fn closest_sides(a: StructuralBounds, b: StructuralBounds) -> (Point, Point) {
                 },
             )
         }
+    }
+}
+
+fn automatic_side(bounds: StructuralBounds, point: &Point) -> AutomaticSide {
+    if point.x == bounds.x {
+        AutomaticSide::Left
+    } else if point.x == bounds.x + bounds.width {
+        AutomaticSide::Right
+    } else if point.y == bounds.y {
+        AutomaticSide::Top
+    } else {
+        AutomaticSide::Bottom
+    }
+}
+
+fn fan_out_point(
+    bounds: StructuralBounds,
+    side: AutomaticSide,
+    slot: usize,
+    slot_count: usize,
+) -> Point {
+    let fraction = (slot + 1) as f64 / (slot_count + 1) as f64;
+    match side {
+        AutomaticSide::Left => Point {
+            x: bounds.x,
+            y: bounds.y + bounds.height * fraction,
+        },
+        AutomaticSide::Right => Point {
+            x: bounds.x + bounds.width,
+            y: bounds.y + bounds.height * fraction,
+        },
+        AutomaticSide::Top => Point {
+            x: bounds.x + bounds.width * fraction,
+            y: bounds.y,
+        },
+        AutomaticSide::Bottom => Point {
+            x: bounds.x + bounds.width * fraction,
+            y: bounds.y + bounds.height,
+        },
     }
 }
 
@@ -930,8 +1012,61 @@ fn relationship_path(
         (StructuralRouting::Orthogonal, Some(from_port), Some(to_port)) => {
             obstacle_avoiding_orthogonal_path(from, to, from_port, to_port, obstacles)
         }
+        (StructuralRouting::Direct, None, None)
+            if !obstacles.is_empty()
+                && (from.x == to.x || from.y == to.y)
+                && !path_is_clear(&[from.clone(), to.clone()], obstacles) =>
+        {
+            let (from_port, to_port) = if from.y == to.y {
+                if from.x < to.x {
+                    (StructuralPort::Right, StructuralPort::Left)
+                } else {
+                    (StructuralPort::Left, StructuralPort::Right)
+                }
+            } else if from.y < to.y {
+                (StructuralPort::Bottom, StructuralPort::Top)
+            } else {
+                (StructuralPort::Top, StructuralPort::Bottom)
+            };
+            obstacle_avoiding_direct_path(from, to, from_port, to_port, obstacles)
+        }
         _ => vec![from, to],
     }
+}
+
+fn obstacle_avoiding_direct_path(
+    from: Point,
+    to: Point,
+    from_port: StructuralPort,
+    to_port: StructuralPort,
+    obstacles: &[StructuralBounds],
+) -> Vec<Point> {
+    let from_lead = port_lead(&from, from_port);
+    let to_lead = port_lead(&to, to_port);
+    let mut points = vec![from, from_lead.clone()];
+    if port_is_horizontal(from_port) {
+        let lane = obstacles
+            .iter()
+            .map(|obstacle| obstacle.y + obstacle.height)
+            .fold(0.0, f64::max)
+            + ROUTE_CLEARANCE;
+        points.extend([
+            Point { x: from_lead.x, y: lane },
+            Point { x: to_lead.x, y: lane },
+        ]);
+    } else {
+        let lane = obstacles
+            .iter()
+            .map(|obstacle| obstacle.x + obstacle.width)
+            .fold(0.0, f64::max)
+            + ROUTE_CLEARANCE;
+        points.extend([
+            Point { x: lane, y: from_lead.y },
+            Point { x: lane, y: to_lead.y },
+        ]);
+    }
+    points.extend([to_lead, to]);
+    simplify_orthogonal_path(points)
 }
 
 fn self_relationship_path(bounds: StructuralBounds) -> Vec<Point> {
@@ -1124,6 +1259,65 @@ fn relationship_obstacles(
         .collect()
 }
 
+fn automatic_endpoint_side(
+    relationship: &diagram_ir::StructuralRelationship,
+    endpoint_id: &str,
+    diagram: &StructuralDiagram,
+    nodes: &[LayoutedStructuralNode],
+    groups: &[LayoutedStructuralGroup],
+) -> Option<AutomaticSide> {
+    if relationship.from == relationship.to {
+        return None;
+    }
+    let from = find_node(nodes, &relationship.from)?;
+    let to = find_node(nodes, &relationship.to)?;
+    let from_bounds = relationship_endpoint_bounds(
+        from,
+        relationship.from_group,
+        diagram,
+        groups,
+    );
+    let to_bounds = relationship_endpoint_bounds(to, relationship.to_group, diagram, groups);
+    let (from_point, to_point) = closest_sides(from_bounds, to_bounds);
+    if endpoint_id == relationship.from && relationship.from_port.is_none() {
+        Some(automatic_side(from_bounds, &from_point))
+    } else if endpoint_id == relationship.to && relationship.to_port.is_none() {
+        Some(automatic_side(to_bounds, &to_point))
+    } else {
+        None
+    }
+}
+
+fn fanned_automatic_endpoint(
+    diagram: &StructuralDiagram,
+    relationship_index: usize,
+    endpoint_id: &str,
+    bounds: StructuralBounds,
+    point: Point,
+    nodes: &[LayoutedStructuralNode],
+    groups: &[LayoutedStructuralGroup],
+) -> Point {
+    let side = automatic_side(bounds, &point);
+    let matching = diagram
+        .relationships
+        .iter()
+        .enumerate()
+        .filter_map(|(index, relationship)| {
+            (automatic_endpoint_side(relationship, endpoint_id, diagram, nodes, groups)
+                == Some(side))
+            .then_some(index)
+        })
+        .collect::<Vec<_>>();
+    if matching.len() < 3 {
+        return point;
+    }
+    let slot = matching
+        .iter()
+        .position(|index| *index == relationship_index)
+        .expect("current relationship must be in its endpoint fan-out group");
+    fan_out_point(bounds, side, slot, matching.len())
+}
+
 fn layout_relationships(
     diagram: &StructuralDiagram,
     nodes: &[LayoutedStructuralNode],
@@ -1139,22 +1333,61 @@ fn layout_relationships(
             let a_bounds = relationship_endpoint_bounds(a, rel.from_group, diagram, groups);
             let b_bounds = relationship_endpoint_bounds(b, rel.to_group, diagram, groups);
             let (default_p0, default_p1) = closest_sides(a_bounds, b_bounds);
-            let p0 = rel.from_port.map_or(default_p0, |port| point_on_port(a_bounds, port));
-            let p1 = rel.to_port.map_or(default_p1, |port| point_on_port(b_bounds, port));
+            let route_p0 = rel
+                .from_port
+                .map_or(default_p0.clone(), |port| point_on_port(a_bounds, port));
+            let route_p1 = rel
+                .to_port
+                .map_or(default_p1.clone(), |port| point_on_port(b_bounds, port));
+            let p0 = rel.from_port.map_or_else(
+                || {
+                    fanned_automatic_endpoint(
+                        diagram,
+                        relationship_index,
+                        &rel.from,
+                        a_bounds,
+                        default_p0,
+                        nodes,
+                        groups,
+                    )
+                },
+                |port| point_on_port(a_bounds, port),
+            );
+            let p1 = rel.to_port.map_or_else(
+                || {
+                    fanned_automatic_endpoint(
+                        diagram,
+                        relationship_index,
+                        &rel.to,
+                        b_bounds,
+                        default_p1,
+                        nodes,
+                        groups,
+                    )
+                },
+                |port| point_on_port(b_bounds, port),
+            );
             let obstacles =
                 relationship_obstacles(diagram, &rel.from, &rel.to, nodes, groups);
             let points = if rel.from == rel.to && !rel.from_group && !rel.to_group {
                 self_relationship_path(a_bounds)
             } else {
+                let mut points = relationship_path(
+                    route_p0,
+                    route_p1,
+                    rel.routing,
+                    rel.from_port,
+                    rel.to_port,
+                    &obstacles,
+                );
+                if let Some(first) = points.first_mut() {
+                    *first = p0;
+                }
+                if let Some(last) = points.last_mut() {
+                    *last = p1;
+                }
                 offset_parallel_relationship(
-                    relationship_path(
-                        p0,
-                        p1,
-                        rel.routing,
-                        rel.from_port,
-                        rel.to_port,
-                        &obstacles,
-                    ),
+                    points,
                     parallel_relationship_lane(diagram, relationship_index),
                 )
             };
@@ -1216,6 +1449,7 @@ mod tests {
         StructuralDiagram {
             kind: StructuralKind::Class,
             architecture_config: None,
+            render_config: Default::default(),
             title: Some("Domain".into()),
             accessibility_title: None,
             accessibility_description: None,
@@ -1349,6 +1583,363 @@ mod tests {
             layout.relationships[0].label.as_ref().map(|label| &label.0),
             layout.relationships[1].label.as_ref().map(|label| &label.0)
         );
+    }
+
+    #[test]
+    fn direct_cycle_relationship_routes_around_intervening_nodes() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes[0].id = "A".into();
+        diagram.nodes[0].label = "A".into();
+        diagram.nodes[1].id = "B".into();
+        diagram.nodes[1].label = "B".into();
+        let mut node_c = diagram.nodes[1].clone();
+        node_c.id = "C".into();
+        node_c.label = "C".into();
+        diagram.nodes.push(node_c);
+        let mut relationship = diagram.relationships[0].clone();
+        relationship.from = "A".into();
+        relationship.to = "B".into();
+        let mut second = relationship.clone();
+        second.from = "B".into();
+        second.to = "C".into();
+        let mut back = relationship.clone();
+        back.from = "C".into();
+        back.to = "A".into();
+        diagram.relationships = vec![relationship, second, back];
+
+        let layout = layout_structural_diagram(&diagram);
+        let middle = layout.nodes.iter().find(|node| node.id == "B").expect("B");
+        let back = layout
+            .relationships
+            .iter()
+            .find(|relationship| relationship.from_id == "C" && relationship.to_id == "A")
+            .expect("C to A relationship");
+
+        assert!(back.points.len() >= 5);
+        assert!(back.points.iter().any(|point| point.y > middle.y + middle.height));
+    }
+
+    #[test]
+    fn automatic_relationships_fan_out_across_a_shared_node_side() {
+        let mut diagram = two_class_diagram();
+        diagram.relationships.push(diagram.relationships[0].clone());
+        diagram.relationships.push(diagram.relationships[0].clone());
+
+        let layout = layout_structural_diagram(&diagram);
+        let endpoints = layout
+            .relationships
+            .iter()
+            .map(|relationship| {
+                relationship
+                    .points
+                    .last()
+                    .expect("relationship endpoint")
+                    .y
+            })
+            .collect::<Vec<_>>();
+
+        assert_ne!(endpoints[0], endpoints[1]);
+        assert_ne!(endpoints[1], endpoints[2]);
+    }
+
+    #[test]
+    fn long_entity_and_attribute_names_reserve_distinct_node_widths() {
+        let mut diagram = two_class_diagram();
+        diagram.nodes[0].label = "PRIVATE_FINANCIAL_INSTITUTION".into();
+        diagram.nodes[0].compartments[0].entries =
+            vec!["officer_of_firm: bool".into()];
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert!(layout.nodes[0].width > layout.nodes[1].width);
+        assert!(layout.nodes[1].x >= layout.nodes[0].x + layout.nodes[0].width + COL_GAP);
+    }
+
+    #[test]
+    fn mixed_special_topology_keeps_isolated_and_connected_nodes_distinct() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        let template = diagram.nodes[0].clone();
+        diagram.nodes = ["CUSTOMER", "1", "u", "1.5", "2.5"]
+            .into_iter()
+            .map(|id| StructuralNode { id: id.into(), label: id.into(), ..template.clone() })
+            .collect();
+        let template = diagram.relationships[0].clone();
+        diagram.relationships = [("CUSTOMER", "1"), ("1", "u"), ("u", "2.5")]
+            .into_iter()
+            .map(|(from, to)| StructuralRelationship {
+                from: from.into(),
+                to: to.into(),
+                ..template.clone()
+            })
+            .collect();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes.len(), 5);
+        assert_eq!(layout.relationships.len(), 3);
+        for (index, left) in layout.nodes.iter().enumerate() {
+            for right in &layout.nodes[index + 1..] {
+                let separated = left.x + left.width <= right.x
+                    || right.x + right.width <= left.x
+                    || left.y + left.height <= right.y
+                    || right.y + right.height <= left.y;
+                assert!(separated, "{} overlaps {}", left.id, right.id);
+            }
+        }
+    }
+
+    #[test]
+    fn entity_alias_keyword_substrings_reserve_label_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "p".into();
+        diagram.nodes[0].label = "Photograph".into();
+        diagram.nodes[0].compartments[0].entries =
+            vec!["jobId: varchar(12)".into(), "dateCreated: date".into()];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes.len(), 1);
+        assert_eq!(layout.nodes[0].header, "Photograph");
+        assert!(layout.nodes[0].width >= 168.0);
+        assert!(layout.nodes[0].height > 0.0);
+    }
+
+    #[test]
+    fn disconnected_nodes_and_recursive_relationship_share_layout_safely() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        let template = diagram.nodes[0].clone();
+        diagram.nodes = ["DEAD_PARROT", "HERMIT", "RECLUSE", "SOCIALITE"]
+            .into_iter()
+            .map(|id| StructuralNode { id: id.into(), label: id.into(), ..template.clone() })
+            .collect();
+        let template = diagram.relationships[0].clone();
+        diagram.relationships = vec![
+            StructuralRelationship {
+                from: "SOCIALITE".into(),
+                to: "SOCIALITE".into(),
+                label: Some("interacts with".into()),
+                ..template.clone()
+            },
+            StructuralRelationship {
+                from: "RECLUSE".into(),
+                to: "SOCIALITE".into(),
+                label: Some("avoids".into()),
+                ..template
+            },
+        ];
+
+        let layout = layout_structural_diagram(&diagram);
+        let socialite = layout.nodes.iter().find(|node| node.id == "SOCIALITE").expect("SOCIALITE");
+        let recursive = layout
+            .relationships
+            .iter()
+            .find(|relationship| relationship.from_id == "SOCIALITE" && relationship.to_id == "SOCIALITE")
+            .expect("recursive relationship");
+
+        assert_eq!(layout.nodes.len(), 4);
+        assert_eq!(recursive.points.len(), 5);
+        assert!(recursive.points.iter().any(|point| point.x > socialite.x + socialite.width));
+        assert!(recursive.points.iter().any(|point| point.y > socialite.y + socialite.height));
+    }
+
+    #[test]
+    fn constrained_attribute_rows_reserve_backend_neutral_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "CUSTOMER".into();
+        diagram.nodes[0].label = "CUSTOMER".into();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "customer_number: int [PK, FK] - comment1".into(),
+            "customer_status_start_datetime: datetime [PK, UK, FK]".into(),
+            "customer_status_end_datetime: datetime [PK, UK] - comment3".into(),
+            "customer_firstname: string".into(),
+            "customer_lastname: string - comment5".into(),
+        ];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 5);
+        assert!(layout.nodes[0].width > 400.0);
+        assert!(layout.nodes[0].height > 100.0);
+    }
+
+    #[test]
+    fn key_prefix_attribute_names_remain_visible_rows() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "BOOK".into();
+        diagram.nodes[0].label = "BOOK".into();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "fk_title: int [FK]".into(),
+            "pk_author: string [PK]".into(),
+            "uk_address: string [UK]".into(),
+            "pk_price: float [PK] - comment".into(),
+        ];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 4);
+        assert!(layout.nodes[0].width > 240.0);
+        assert!(layout.nodes[0].height > 80.0);
+    }
+
+    #[test]
+    fn embedded_numeric_attribute_names_reserve_rows() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "ENTITY".into();
+        diagram.nodes[0].label = "ENTITY".into();
+        diagram.nodes[0].compartments[0].entries =
+            vec!["name1: string".into(), "value2: int".into()];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 2);
+        assert!(layout.nodes[0].height > 60.0);
+    }
+
+    #[test]
+    fn key_prefix_attribute_types_reserve_rows() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "ENTITY".into();
+        diagram.nodes[0].label = "ENTITY".into();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "primary: PKType".into(),
+            "foreign: fk_type".into(),
+            "alias: string? [UK]".into(),
+        ];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 3);
+        assert!(layout.nodes[0].height > 70.0);
+    }
+
+    #[test]
+    fn multiline_attribute_comments_reserve_each_semantic_line() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "ENTITY".into();
+        diagram.nodes[0].label = "ENTITY".into();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "first: string - Primary\nidentifier".into(),
+            "second: string - Second\nline".into(),
+            "third: string [PK] - Third\nline".into(),
+        ];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 3);
+        assert!(layout.nodes[0].height > 130.0);
+        assert!(layout.nodes[0].width < 300.0);
+    }
+
+    #[test]
+    fn multiline_entity_aliases_reserve_header_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "ENTITY".into();
+        diagram.nodes[0].label = "Primary\nEntity".into();
+        diagram.nodes[0].compartments[0].entries = vec!["id: string [PK]".into()];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+        let node = &layout.nodes[0];
+
+        assert!(node.compartments[0].y_offset > 50.0);
+        assert!(node.height > 90.0);
+        assert_eq!(node.header, "Primary\nEntity");
+    }
+
+    #[test]
+    fn multiline_titles_reserve_vertical_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.nodes.truncate(1);
+        diagram.relationships.clear();
+        diagram.title = Some("Domain\nModel\nAcross\nLines".into());
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.title.as_deref(), Some("Domain\nModel\nAcross\nLines"));
+        assert!(layout.nodes[0].y > 120.0);
+        assert!(layout.height > 190.0);
+    }
+
+    #[test]
+    fn unicode_symbol_er_text_reserves_layout_space() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes[0].id = "_**testẽζ➕Ø😀㌕ぼ**_".into();
+        diagram.nodes[0].label = "_**testẽζ➕Ø😀㌕ぼ**_".into();
+        diagram.nodes[0].compartments[0].entries = vec!["_age_: int".into()];
+        diagram.nodes[1].id = "person".into();
+        diagram.nodes[1].label = "😀".into();
+        diagram.nodes[1].compartments[0].entries =
+            vec!["*first*Name: string".into(), "_**last**Name_: string".into()];
+        diagram.relationships[0].from = "person".into();
+        diagram.relationships[0].to = "_**testẽζ➕Ø😀㌕ぼ**_".into();
+        diagram.relationships[0].label = Some("__hẽ😀__".into());
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[1].compartments[0].rows.len(), 2);
+        assert!(layout.nodes[0].width > 180.0);
+        assert_eq!(
+            layout.relationships[0]
+                .label
+                .as_ref()
+                .map(|(_, label)| label.as_str()),
+            Some("__hẽ😀__")
+        );
+    }
+
+    #[test]
+    fn numeric_entity_boundaries_layout_distinct_targets() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes[0].id = "a".into();
+        diagram.nodes[0].label = "a".into();
+        diagram.nodes[0].compartments.clear();
+        diagram.nodes[1].id = "1".into();
+        diagram.nodes[1].label = "1".into();
+        diagram.nodes[1].compartments.clear();
+        let mut twelve = diagram.nodes[1].clone();
+        twelve.id = "12".into();
+        twelve.label = "12".into();
+        diagram.nodes.push(twelve);
+        diagram.relationships[0].from = "a".into();
+        diagram.relationships[0].to = "1".into();
+        diagram.relationships[0].from_mult = Some("0..*".into());
+        diagram.relationships[0].to_mult = Some("1".into());
+        diagram.relationships[0].label = Some("label".into());
+        let mut second = diagram.relationships[0].clone();
+        second.to = "12".into();
+        diagram.relationships.push(second);
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes.len(), 3);
+        assert_eq!(layout.relationships.len(), 2);
+        assert!(layout.nodes.iter().any(|node| node.id == "1"));
+        assert!(layout.nodes.iter().any(|node| node.id == "12"));
     }
 
     #[test]

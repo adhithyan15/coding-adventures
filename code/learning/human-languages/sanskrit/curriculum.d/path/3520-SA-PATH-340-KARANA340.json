@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-340-KARANA340",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "SA-EXT-340-KARANA340"
+  ],
+  "after": []
+}

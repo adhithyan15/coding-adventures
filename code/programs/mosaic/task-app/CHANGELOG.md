@@ -6,6 +6,37 @@ All notable changes to the `task-app` web program are documented here.
 
 ### Fixed
 
+- Preserve Qt timeline labels' authored 150-pixel non-shrinking width (#18305),
+  without changing shared styles or claiming general flex support.
+
+Entries added after `task-app-v0.5.12` accumulate here until the next version is
+cut.
+
+### Changed
+
+- The `mosaic-pkg-toolkit` dependency pin moves from 0.15.0 to 0.16.0, the
+  toolkit's current version (Journal already pins it). 0.16.0 only adds
+  `RecordList`; nothing TaskApp uses changed, so no source or output changes.
+
+## [0.5.12] - 2026-10-25
+
+### Fixed
+
+- Preserve the Qt navigation rail's authored 236-pixel non-shrinking width
+  under horizontal layout pressure (#18250), without changing shared styles
+  or claiming general flex support.
+
+## [0.5.11] - 2026-10-25
+
+### Fixed
+
+- Preserve version-specific changelog details, multiline bullets, and subsection
+  headings in generated release notes instead of listing only categories (#18197).
+
+## [0.5.10] - 2026-10-24
+
+### Fixed
+
 - Preserve the 260-pixel board-column minimum in both themes and across Qt's
   repeated-column delegate wrapper (#18030). Unsupported flex-shrink remains
   reported; the style-drop budget and release artifact coverage are unchanged.
@@ -19,9 +50,6 @@ All notable changes to the `task-app` web program are documented here.
 ### Changed
 
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
-
-Entries added after `task-app-v0.5.9` accumulate here until the next version is
-cut.
 
 ## [0.5.9] - 2026-10-22
 

@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-278-THANA278",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "UR-EXT-278-THANA278"
+  ],
+  "after": []
+}

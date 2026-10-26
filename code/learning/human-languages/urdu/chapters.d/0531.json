@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Trust and a Good Name",
+  "label": "ch:ur-trust-and-a-good-name",
+  "canDo": "I can talk about promises and trust.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C531-nibhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can talk about promises and trust.",
+    "assesses": [
+      "UR-LEX-C531-QAUL531-03",
+      "UR-LEX-C531-QAUL531-04",
+      "UR-LEX-C531-QAUL531-05"
+    ]
+  }
+}

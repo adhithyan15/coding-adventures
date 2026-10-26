@@ -1,0 +1,24 @@
+{
+  "chapter": 268,
+  "title": "What I Think, and Why",
+  "label": "ch:ur-what-i-think-and-why",
+  "canDo": "I can say what I think (mujhe lagtā hai ki …, mere khayāl meṅ …) and give a reason (kyūṅki …, … kī vajah se).",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-R268-opinion-and-reason",
+    "kind": "production",
+    "summary": "Complete UR-R268-opinion-and-reason: say what you think, and why.",
+    "assesses": [
+      "UR-LEX-C268-LAGNA-01",
+      "UR-LEX-C268-KHAYAL-01",
+      "UR-LEX-C268-GHALAT-01",
+      "UR-SCRIPT-C268-GHAIN-01",
+      "UR-GRAMMAR-C268-OPINION-01",
+      "UR-GRAMMAR-C268-OPINION-02",
+      "UR-GRAMMAR-C268-REASON-01",
+      "UR-GRAMMAR-C268-REASON-02"
+    ]
+  }
+}

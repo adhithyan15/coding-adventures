@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C524-tadbir",
+    "language": "urdu",
+    "chapter": 524,
+    "sequence": 30560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36eeea3bc18d6b60"
+  },
+  "findings": []
+}

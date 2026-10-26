@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:3e6ba2a8e87f73c6",
+  "lessonIds": [
+    "SA-C404-prantaram",
+    "SA-C404-kantarah",
+    "SA-C404-desatanam",
+    "SA-C404-niliyate",
+    "SA-C404-sunyah"
+  ],
+  "tex": "sanskrit/book/chapters/ch404-lonely-roads-and-wild-places.tex"
+}

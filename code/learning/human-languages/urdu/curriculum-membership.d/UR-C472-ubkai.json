@@ -1,0 +1,11 @@
+{
+  "id": "UR-C472-ubkai",
+  "pathSegment": "UR-PATH-472-STOMACH472",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-472-STOMACH472",
+      "order": 3
+    }
+  ]
+}

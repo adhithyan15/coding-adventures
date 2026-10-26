@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 305,
+  "title": "When the Earth Shook",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:450d0ef7c6f8910d",
+  "lessons": [
+    {
+      "id": "GU-C305-halvu",
+      "sequence": 17020,
+      "title": "હલવું (halvũ) — to shake; to move",
+      "headword": "હલવું",
+      "romanization": "halvũ",
+      "gloss": "to shake; to move",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc276ca9c7ce43b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a calamity, then the Gujarati for a crisis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: હલવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હલવું — halvũ — \"to shake; to move\"."
+            },
+            {
+              "kind": "speech",
+              "text": "રાત્રે અચાનક ધરતી હલી. rātre acānak dhartī halī. Suddenly in the night the ground shook."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે મકાન હલ્યું, te makān halyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હલવું (halvũ) comes from hallati, \"moves, shakes\", a form CDIAL reconstructs, where it lists Gujarati hālvũ, \"to move, shake\" (CDIAL 14018). હલાવવું, to stir, is its causative: you shake a thing, but the ground હલે છે by itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "halvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *halvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "halvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *halvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātre acānak dhartī halī. — Suddenly in the night the ground shook.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātre acānak dhartī halī.* — Suddenly in the night the ground shook.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a calamity, then the Gujarati for a crisis, then say halvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a calamity, then the Gujarati for a crisis, then say *halvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does હલવું (halvũ) mean? (\"To shake; to move\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C305-dhaglo",
+      "sequence": 17030,
+      "title": "ઢગલો (ḍhaglo) — a heap",
+      "headword": "ઢગલો",
+      "romanization": "ḍhaglo",
+      "gloss": "a heap",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6479ac53e2d74aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a crisis, then the Gujarati for to shake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઢગલો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઢગલો — ḍhaglo — \"a heap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ભૂકંપ પછી રસ્તા પર પથ્થરનો ઢગલો હતો. bhūkamp pachī rastā par paththarno ḍhaglo hato. After the earthquake there was a heap of stones on the road."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઢગલો (ḍhaglo) comes from ḍhikka, a form CDIAL reconstructs, where it lists Gujarati ḍhaglo, \"a heap\" (CDIAL 5585). It is masculine: પથ્થરનો ઢગલો, a heap of stones."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhaglo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhaglo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhaglo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhaglo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūkamp pachī rastā par paththarno ḍhaglo hato. — After the earthquake there was a heap of stones on the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūkamp pachī rastā par paththarno ḍhaglo hato.* — After the earthquake there was a heap of stones on the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a crisis, then the Gujarati for to shake, then say ḍhaglo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a crisis, then the Gujarati for to shake, then say *ḍhaglo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઢગલો (ḍhaglo) mean? (\"A heap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C305-dhasvu",
+      "sequence": 17040,
+      "title": "ધસવું (dhasvũ) — to give way; to cave in",
+      "headword": "ધસવું",
+      "romanization": "dhasvũ",
+      "gloss": "to give way; to cave in",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f18e32985e8d7a7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to shake, then the Gujarati for a heap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ધસવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધસવું — dhasvũ — \"to give way; to cave in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ભૂકંપમાં જૂનું મકાન ધસી પડ્યું. bhūkampmā̃ jūnũ makān dhasī paḍyũ. The old building caved in during the earthquake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે મકાન ધસી પડ્યું, te makān dhasī paḍyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધસવું (dhasvũ) is inherited from Sanskrit dhváṁsati, \"falls to pieces\", and CDIAL lists the Gujarati verb, \"to push through, be undermined\" (CDIAL 6896). With પડવું it is a building giving way: ધસી પડ્યું."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhasvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhasvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhasvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhasvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūkampmā̃ jūnũ makān dhasī paḍyũ. — The old building caved in during the earthquake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūkampmā̃ jūnũ makān dhasī paḍyũ.* — The old building caved in during the earthquake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to shake, then the Gujarati for a heap, then say dhasvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to shake, then the Gujarati for a heap, then say *dhasvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ધસવું (dhasvũ) mean? (\"To give way; to cave in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C305-datavu",
+      "sequence": 17050,
+      "title": "દટાવું (daṭāvũ) — to be buried (under something)",
+      "headword": "દટાવું",
+      "romanization": "daṭāvũ",
+      "gloss": "to be buried (under something)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ead3572ae6fc074a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a heap, then the Gujarati for to give way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: દટાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દટાવું — daṭāvũ — \"to be buried (under something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ભૂકંપમાં ઘણા લોકો મકાનો નીચે દટાઈ ગયા. bhūkampmā̃ ghaṇā loko makāno nīce daṭāī gayā. In the earthquake many people were buried under buildings."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે માણસ દટાઈ ગયો, te māṇas daṭāī gayo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દટાવું (daṭāvũ) is the intransitive partner of dāṭvũ, to bury, which CDIAL lists under draṭ, \"press\", a form it reconstructs (CDIAL 6618): to be pressed down out of sight. People and things દટાઈ જાય છે under earth or fallen walls."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṭāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṭāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṭāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṭāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūkampmā̃ ghaṇā loko makāno nīce daṭāī gayā. — In the earthquake many people were buried under buildings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūkampmā̃ ghaṇā loko makāno nīce daṭāī gayā.* — In the earthquake many people were buried under buildings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a heap, then the Gujarati for to give way, then say daṭāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a heap, then the Gujarati for to give way, then say *daṭāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does દટાવું (daṭāvũ) mean? (\"To be buried (under something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C305-katmal",
+      "sequence": 17060,
+      "title": "કાટમાળ (kāṭmāḷ) — rubble",
+      "headword": "કાટમાળ",
+      "romanization": "kāṭmāḷ",
+      "gloss": "rubble",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13b9214fa83daf62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to give way, then the Gujarati for to be buried."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કાટમાળ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાટમાળ — kāṭmāḷ — \"rubble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "લોકોએ કાટમાળ નીચેથી એક બાળકને કાઢ્યું. lokoe kāṭmāḷ nīcethī ek bāḷakne kāḍhyũ. People pulled a child out from under the rubble."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાટમાળ (kāṭmāḷ) No dictionary we use records an older form, so its history is not settled. It is what is left of a building that has fallen: broken walls, stones and wood."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭmāḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭmāḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭmāḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭmāḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokoe kāṭmāḷ nīcethī ek bāḷakne kāḍhyũ. — People pulled a child out from under the rubble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokoe kāṭmāḷ nīcethī ek bāḷakne kāḍhyũ.* — People pulled a child out from under the rubble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to give way, then the Gujarati for to be buried, then say kāṭmāḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to give way, then the Gujarati for to be buried, then say *kāṭmāḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કાટમાળ (kāṭmāḷ) mean? (\"Rubble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C431-jaththabandh",
+    "language": "gujarati",
+    "chapter": 431,
+    "sequence": 23970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:624e499c09d635a3"
+  },
+  "findings": []
+}

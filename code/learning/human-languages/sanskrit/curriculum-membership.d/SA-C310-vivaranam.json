@@ -1,0 +1,11 @@
+{
+  "id": "SA-C310-vivaranam",
+  "pathSegment": "SA-PATH-310-GHATANA310",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-310-GHATANA310",
+      "order": 2
+    }
+  ]
+}

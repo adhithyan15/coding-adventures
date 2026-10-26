@@ -1,0 +1,11 @@
+{
+  "id": "GU-C301-sidi",
+  "pathSegment": "GU-PATH-301-IMARAT301",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-301-IMARAT301",
+      "order": 1
+    }
+  ]
+}

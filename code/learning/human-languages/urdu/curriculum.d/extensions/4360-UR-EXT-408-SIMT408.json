@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-408-SIMT408",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say which direction a place lies in.",
+  "prerequisites": []
+}

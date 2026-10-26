@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C530-laddukah",
+    "language": "sanskrit",
+    "chapter": 530,
+    "sequence": 30450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a72f60dfb31ca01a"
+  },
+  "findings": []
+}

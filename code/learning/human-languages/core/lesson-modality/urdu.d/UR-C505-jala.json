@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C505-jala",
+    "language": "urdu",
+    "chapter": 505,
+    "sequence": 29570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19926255741a045f"
+  },
+  "findings": []
+}

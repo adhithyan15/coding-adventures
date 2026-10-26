@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C522-chinvu",
+    "language": "gujarati",
+    "chapter": 522,
+    "sequence": 29090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a08013aae3e6b70"
+  },
+  "findings": []
+}

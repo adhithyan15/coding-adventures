@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:8d3f8bb3531fd12b",
+  "lessonIds": [
+    "GU-C520-vagharvu",
+    "GU-C520-satalvu",
+    "GU-C520-capti",
+    "GU-C520-chatvu",
+    "GU-C520-bhujvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch520.txt",
+  "json": "gujarati/narration/ch520.json",
+  "textHash": "fnv1a64:f3cbea178664863b",
+  "jsonHash": "fnv1a64:a8e71f74ca202269",
+  "findings": []
+}

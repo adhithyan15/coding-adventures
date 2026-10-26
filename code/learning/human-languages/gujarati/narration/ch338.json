@@ -1,0 +1,919 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 338,
+  "title": "A Book Comes Out",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:cca5d8e2f5571181",
+  "lessons": [
+    {
+      "id": "GU-C338-granth",
+      "sequence": 18710,
+      "title": "ગ્રંથ (granth) — a tome; a great book",
+      "headword": "ગ્રંથ",
+      "romanization": "granth",
+      "gloss": "a tome; a great book",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7570bf7fa8e94e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for the hero (of a story), then the Gujarati for a reader."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગ્રંથ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગ્રંથ — granth — \"a tome; a great book\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પુસ્તકાલયમાં એક પ્રાચીન ગ્રંથ છે. pustakālaymā̃ ek prācīn granth che. There is an ancient tome in the library."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગ્રંથ (granth) is a tatsama, Sanskrit grantha, \"a knot\", and then \"a book\", once leaves tied together (CDIAL 4350). It is a large or important book."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "granth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *granth*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "granth, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *granth*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustakālaymā̃ ek prācīn granth che. — There is an ancient tome in the library.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustakālaymā̃ ek prācīn granth che.* — There is an ancient tome in the library.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for the hero (of a story), then the Gujarati for a reader, then say granth again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for the hero (of a story), then the Gujarati for a reader, then say *granth* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગ્રંથ (granth) mean? (\"A tome; a great book\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C338-samayik",
+      "sequence": 18720,
+      "title": "સામયિક (sāmayik) — a magazine",
+      "headword": "સામયિક",
+      "romanization": "sāmayik",
+      "gloss": "a magazine",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4ec896c7bc86c63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a reader, then the Gujarati for a tome."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સામયિક",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સામયિક — sāmayik — \"a magazine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ સામયિક દરેક મહિને આવે છે. ā sāmayik darek mahine āve che. This magazine comes out every month."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સામયિક (sāmayik) is a tatsama, Sanskrit sāmayika, \"seasonable, timely\" (Monier-Williams); the sense of a magazine that comes out at set times is the modern language's."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāmayik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāmayik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāmayik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāmayik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā sāmayik darek mahine āve che. — This magazine comes out every month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā sāmayik darek mahine āve che.* — This magazine comes out every month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a reader, then the Gujarati for a tome, then say sāmayik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a reader, then the Gujarati for a tome, then say *sāmayik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સામયિક (sāmayik) mean? (\"A magazine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C338-chapavvu",
+      "sequence": 18730,
+      "title": "છપાવવું (chapāvvũ) — to get (something) printed; to publish",
+      "headword": "છપાવવું",
+      "romanization": "chapāvvũ",
+      "gloss": "to get (something) printed; to publish",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d2507f0ca701ef2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a tome, then the Gujarati for a magazine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: છપાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છપાવવું — chapāvvũ — \"to get (something) printed; to publish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "લેખકે પોતાની નવલકથા છપાવી. lekhke potānī navalkathā chapāvī. The author had his novel published."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે પુસ્તક છપાવ્યું, teṇe pustak chapāvyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છપાવવું (chapāvvũ) is the causative of છાપવું, to print, from chapp, \"press, cover\", a form CDIAL reconstructs (CDIAL 4994): to have a printer print it. The long ā of છાપવું shortens in the longer verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chapāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chapāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chapāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chapāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lekhke potānī navalkathā chapāvī. — The author had his novel published.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lekhke potānī navalkathā chapāvī.* — The author had his novel published.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a tome, then the Gujarati for a magazine, then say chapāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a tome, then the Gujarati for a magazine, then say *chapāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does છપાવવું (chapāvvũ) mean? (\"To get (something) printed; to publish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C338-bhajavvu",
+      "sequence": 18740,
+      "title": "ભજવવું (bhajavvũ) — to perform (a play or a part)",
+      "headword": "ભજવવું",
+      "romanization": "bhajavvũ",
+      "gloss": "to perform (a play or a part)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28d397c25a496d20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a magazine, then the Gujarati for to publish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભજવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભજવવું — bhajavvũ — \"to perform (a play or a part)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અરુણે નાટકમાં રાજાનું પાત્ર ભજવ્યું. Aruṇe nāṭakmā̃ rājānũ pātra bhajavyũ. Arun played the king in the play."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે નાટક ભજવ્યું, teṇe nāṭak bhajavyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભજવવું (bhajavvũ) No dictionary we use records an older form, so its history is not settled. Actors નાટક ભજવે છે, put on a play, and each પાત્ર ભજવે છે, plays a part."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhajavvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhajavvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhajavvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhajavvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇe nāṭakmā̃ rājānũ pātra bhajavyũ. — Arun played the king in the play.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇe nāṭakmā̃ rājānũ pātra bhajavyũ.* — Arun played the king in the play.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a magazine, then the Gujarati for to publish, then say bhajavvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a magazine, then the Gujarati for to publish, then say *bhajavvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભજવવું (bhajavvũ) mean? (\"To perform (a play or a part)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C338-adbhut",
+      "sequence": 18750,
+      "title": "અદ્ભુત (adbhut) — wonderful",
+      "headword": "અદ્ભુત",
+      "romanization": "adbhut",
+      "gloss": "wonderful",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ce7dc40ec349026",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to publish, then the Gujarati for to perform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અદ્ભુત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અદ્ભુત — adbhut — \"wonderful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ નવલકથા અદ્ભુત છે. ā navalkathā adbhut che. This novel is wonderful."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અદ્ભુત (adbhut) is a tatsama, Sanskrit adbhuta, \"wonderful, marvellous\" (CDIAL 240). It does not change for gender: અદ્ભુત નવલકથા, અદ્ભુત ગીત."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adbhut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adbhut*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adbhut, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adbhut*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā navalkathā adbhut che. — This novel is wonderful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā navalkathā adbhut che.* — This novel is wonderful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to publish, then the Gujarati for to perform, then say adbhut again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to publish, then the Gujarati for to perform, then say *adbhut* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અદ્ભુત (adbhut) mean? (\"Wonderful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R338-review-332-338",
+      "sequence": 18760,
+      "title": "Looking back: from Once Upon a Time to A Book Comes Out",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Once Upon a Time to A Book Comes Out",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8677cdeab3635e35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for a legend and god."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a legend, god, a demon, a goddess, a boon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a legend, god, a demon, a goddess, a boon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fairy, magic, a miracle, vanished, to appear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fairy, magic, a miracle, vanished, to appear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a treasure, a python, greed, to tempt, to wander",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a treasure, a python, greed, to tempt, to wander]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a holy man, a curse, a moral, a proverb, to recite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a holy man, a curse, a moral, a proverb, to recite]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an author, a poet, to compose, an autobiography, imagination",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an author, a poet, to compose, an autobiography, imagination]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a page, a chapter (of a book), a character, the hero (of a story), a reader",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a page, a chapter (of a book), a character, the hero (of a story), a reader]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tome, a magazine, to publish, to perform, wonderful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tome, a magazine, to publish, to perform, wonderful]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A legend? (દંતકથા, dantakthā.) God? (ભગવાન, bhagvān.) A demon? (દૈત્ય, daitya.) A goddess? (દેવી, devī.) A boon? (વરદાન, vardān.) A fairy? (પરી, parī.) Magic? (જાદુ, jādu.) A miracle? (ચમત્કાર, camatkār.) Vanished? (ગાયબ, gāyab.) To appear? (દેખાવું, dekhāvũ.) A treasure? (ખજાનો, khajāno.) A python? (અજગર, ajgar.) Greed? (લોભ, lobh.) To tempt? (લલચાવવું, lalcāvvũ.) To wander? (ભટકવું, bhaṭakvũ.) A holy man? (સાધુ, sādhu.) A curse? (શ્રાપ, śrāp.) A moral? (બોધ, bodh.) A proverb? (કહેવત, kahevat.) To recite? (સંભળાવવું, sambhaḷāvvũ.) An author? (લેખક, lekhak.) A poet? (કવિ, kavi.) To compose? (રચવું, racvũ.) An autobiography? (આત્મકથા, ātmakthā.) Imagination? (કલ્પના, kalpanā.) A page? (પાનું, pānũ.) A chapter (of a book)? (પ્રકરણ, prakaraṇ.) A character? (પાત્ર, pātra.) The hero (of a story)? (નાયક, nāyak.) A reader? (વાચક, vācak.) A tome? (ગ્રંથ, granth.) A magazine? (સામયિક, sāmayik.) To publish? (છપાવવું, chapāvvũ.) To perform? (ભજવવું, bhajavvũ.) Wonderful? (અદ્ભુત, adbhut.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R338-review-final-338",
+      "sequence": 18770,
+      "title": "A Book Comes Out — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d4277fce778b696",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for a tome and a magazine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tome, a magazine, to publish, to perform, wonderful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tome, a magazine, to publish, to perform, wonderful]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A tome? (ગ્રંથ, granth.) A magazine? (સામયિક, sāmayik.) To publish? (છપાવવું, chapāvvũ.) To perform? (ભજવવું, bhajavvũ.) Wonderful? (અદ્ભુત, adbhut.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

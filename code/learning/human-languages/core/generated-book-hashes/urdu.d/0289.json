@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:fada092478713cc1",
+  "lessonIds": [
+    "UR-C289-sairan",
+    "UR-C289-amla",
+    "UR-C289-bujhna",
+    "UR-C289-pighalna",
+    "UR-C289-harbarana"
+  ],
+  "tex": "urdu/book/chapters/ch289-putting-the-fire-out.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:fa9f92eb3bcc7782",
+  "lessonIds": [
+    "UR-C469-dakar",
+    "UR-C469-hichki",
+    "UR-C469-khankarna",
+    "UR-C469-balgham",
+    "UR-C469-nazla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch469.txt",
+  "json": "urdu/narration/ch469.json",
+  "textHash": "fnv1a64:be8393ea9caaf4af",
+  "jsonHash": "fnv1a64:74fe7ace2663798f",
+  "findings": []
+}

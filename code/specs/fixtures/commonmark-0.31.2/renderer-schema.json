@@ -1,0 +1,256 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:coding-adventures:commonmark-renderer-v1",
+  "title": "Portable TE00 CommonMark renderer vectors",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "limits", "cases"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "profile": {"const": "commonmark-renderer-v1"},
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_ast_nodes", "max_ast_depth", "max_children", "max_ast_text_bytes", "max_html_bytes"],
+      "properties": {
+        "max_ast_nodes": {"const": 256},
+        "max_ast_depth": {"const": 32},
+        "max_children": {"const": 64},
+        "max_ast_text_bytes": {"const": 8192},
+        "max_html_bytes": {"const": 32768}
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {"$ref": "#/$defs/case"}
+    }
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "suppress_raw_html", "ast", "expected_html"],
+      "properties": {
+        "id": {
+          "enum": [
+            "empty-document",
+            "headings-all-levels",
+            "paragraph-escaping-and-breaks",
+            "inline-emphasis-strong-code",
+            "code-blocks",
+            "nested-blockquote",
+            "tight-unordered-list",
+            "loose-ordered-list-start",
+            "thematic-break",
+            "link-image-attributes",
+            "dangerous-destinations",
+            "url-and-email-autolinks",
+            "raw-html-enabled",
+            "raw-html-suppressed",
+            "non-html-raw-skipped",
+            "mixed-block-order"
+          ]
+        },
+        "suppress_raw_html": {"type": "boolean"},
+        "ast": {"$ref": "#/$defs/document"},
+        "expected_html": {"type": "string", "maxLength": 32768}
+      }
+    },
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "children"],
+      "properties": {
+        "type": {"const": "document"},
+        "children": {"type": "array", "maxItems": 64, "items": {"$ref": "#/$defs/block"}}
+      }
+    },
+    "block": {
+      "oneOf": [
+        {"$ref": "#/$defs/heading"},
+        {"$ref": "#/$defs/paragraph"},
+        {"$ref": "#/$defs/code_block"},
+        {"$ref": "#/$defs/blockquote"},
+        {"$ref": "#/$defs/list"},
+        {"$ref": "#/$defs/list_item"},
+        {"$ref": "#/$defs/thematic_break"},
+        {"$ref": "#/$defs/raw_block"}
+      ]
+    },
+    "inline": {
+      "oneOf": [
+        {"$ref": "#/$defs/text"},
+        {"$ref": "#/$defs/emphasis"},
+        {"$ref": "#/$defs/strong"},
+        {"$ref": "#/$defs/code_span"},
+        {"$ref": "#/$defs/link"},
+        {"$ref": "#/$defs/image"},
+        {"$ref": "#/$defs/autolink"},
+        {"$ref": "#/$defs/raw_inline"},
+        {"$ref": "#/$defs/hard_break"},
+        {"$ref": "#/$defs/soft_break"}
+      ]
+    },
+    "heading": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "level", "children"],
+      "properties": {
+        "type": {"const": "heading"},
+        "level": {"type": "integer", "minimum": 1, "maximum": 6},
+        "children": {"type": "array", "maxItems": 64, "items": {"$ref": "#/$defs/inline"}}
+      }
+    },
+    "paragraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "children"],
+      "properties": {
+        "type": {"const": "paragraph"},
+        "children": {"type": "array", "maxItems": 64, "items": {"$ref": "#/$defs/inline"}}
+      }
+    },
+    "code_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "language", "value"],
+      "properties": {
+        "type": {"const": "code_block"},
+        "language": {"oneOf": [{"type": "null"}, {"type": "string", "minLength": 1, "maxLength": 128}]},
+        "value": {"type": "string", "maxLength": 8192}
+      }
+    },
+    "blockquote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "children"],
+      "properties": {
+        "type": {"const": "blockquote"},
+        "children": {"type": "array", "maxItems": 64, "items": {"$ref": "#/$defs/block"}}
+      }
+    },
+    "list": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "ordered", "start", "tight", "children"],
+      "properties": {
+        "type": {"const": "list"},
+        "ordered": {"type": "boolean"},
+        "start": {"oneOf": [{"type": "null"}, {"type": "integer"}]},
+        "tight": {"type": "boolean"},
+        "children": {"type": "array", "maxItems": 64, "items": {"$ref": "#/$defs/list_item"}}
+      }
+    },
+    "list_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "children"],
+      "properties": {
+        "type": {"const": "list_item"},
+        "children": {"type": "array", "maxItems": 64, "items": {"$ref": "#/$defs/block"}}
+      }
+    },
+    "thematic_break": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {"type": {"const": "thematic_break"}}
+    },
+    "raw_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "format", "value"],
+      "properties": {
+        "type": {"const": "raw_block"},
+        "format": {"type": "string", "minLength": 1, "maxLength": 64},
+        "value": {"type": "string", "maxLength": 8192}
+      }
+    },
+    "text": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "value"],
+      "properties": {"type": {"const": "text"}, "value": {"type": "string", "maxLength": 8192}}
+    },
+    "emphasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "children"],
+      "properties": {
+        "type": {"const": "emphasis"},
+        "children": {"type": "array", "maxItems": 64, "items": {"$ref": "#/$defs/inline"}}
+      }
+    },
+    "strong": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "children"],
+      "properties": {
+        "type": {"const": "strong"},
+        "children": {"type": "array", "maxItems": 64, "items": {"$ref": "#/$defs/inline"}}
+      }
+    },
+    "code_span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "value"],
+      "properties": {"type": {"const": "code_span"}, "value": {"type": "string", "maxLength": 8192}}
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "destination", "title", "children"],
+      "properties": {
+        "type": {"const": "link"},
+        "destination": {"type": "string", "maxLength": 8192},
+        "title": {"oneOf": [{"type": "null"}, {"type": "string", "maxLength": 8192}]},
+        "children": {"type": "array", "maxItems": 64, "items": {"$ref": "#/$defs/inline"}}
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "destination", "title", "alt"],
+      "properties": {
+        "type": {"const": "image"},
+        "destination": {"type": "string", "maxLength": 8192},
+        "title": {"oneOf": [{"type": "null"}, {"type": "string", "maxLength": 8192}]},
+        "alt": {"type": "string", "maxLength": 8192}
+      }
+    },
+    "autolink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "destination", "isEmail"],
+      "properties": {
+        "type": {"const": "autolink"},
+        "destination": {"type": "string", "maxLength": 8192},
+        "isEmail": {"type": "boolean"}
+      }
+    },
+    "raw_inline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "format", "value"],
+      "properties": {
+        "type": {"const": "raw_inline"},
+        "format": {"type": "string", "minLength": 1, "maxLength": 64},
+        "value": {"type": "string", "maxLength": 8192}
+      }
+    },
+    "hard_break": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {"type": {"const": "hard_break"}}
+    },
+    "soft_break": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {"type": {"const": "soft_break"}}
+    }
+  }
+}

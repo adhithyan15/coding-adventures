@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:629117cd978e70c1",
+  "lessonIds": [
+    "UR-C347-muamala",
+    "UR-C347-samjhauta",
+    "UR-C347-tanaza",
+    "UR-C347-ulajhna",
+    "UR-C347-chherna"
+  ],
+  "tex": "urdu/book/chapters/ch347-the-issue-at-hand.tex"
+}

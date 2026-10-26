@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:ec96c2d23c7e123c",
+  "lessonIds": [
+    "UR-C367-mahz",
+    "UR-C367-qaida",
+    "UR-C367-khilaf-varzi",
+    "UR-C367-shiq",
+    "UR-C367-nafiz-hona"
+  ],
+  "tex": "urdu/book/chapters/ch367-formal-conditions.tex"
+}

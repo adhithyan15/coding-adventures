@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R446-review-final-446",
+    "language": "gujarati",
+    "chapter": 446,
+    "sequence": 24770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce0cfc00e71ba71f"
+  },
+  "findings": []
+}

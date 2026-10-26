@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:3032b47b684efbd2",
+  "lessonIds": [
+    "GU-C444-thad",
+    "GU-C444-chal",
+    "GU-C444-kali",
+    "GU-C444-jhumkhu",
+    "GU-C444-mahekvu"
+  ],
+  "tex": "gujarati/book/chapters/ch444-trunks-bark-and-buds.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:a4f89426e26fb5b2",
+  "lessonIds": [
+    "GU-C534-jugar",
+    "GU-C534-satto",
+    "GU-C534-hod",
+    "GU-C534-lotri",
+    "GU-C534-joganujog"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch534.txt",
+  "json": "gujarati/narration/ch534.json",
+  "textHash": "fnv1a64:feb9b2415c74f4b8",
+  "jsonHash": "fnv1a64:ef478c199f179c27",
+  "findings": []
+}

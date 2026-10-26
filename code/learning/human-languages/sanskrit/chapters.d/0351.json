@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "Right and Wrong",
+  "label": "ch:sa-right-and-wrong",
+  "canDo": "I can say what a good person should and should not do.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C351-maryada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can say what a good person should and should not do.",
+    "assesses": [
+      "SA-LEX-C351-VIVEKA351-03",
+      "SA-LEX-C351-VIVEKA351-04",
+      "SA-LEX-C351-VIVEKA351-05"
+    ]
+  }
+}

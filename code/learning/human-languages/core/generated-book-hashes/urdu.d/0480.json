@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:a0d6d2f1ef4829a1",
+  "lessonIds": [
+    "UR-C480-iyadat-karna",
+    "UR-C480-timardari",
+    "UR-C480-nigahdasht",
+    "UR-C480-litana",
+    "UR-C480-orhana"
+  ],
+  "tex": "urdu/book/chapters/ch480-looking-after-someone.tex"
+}

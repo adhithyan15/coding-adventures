@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Praise and Blame",
+  "label": "ch:ur-praise-and-blame",
+  "canDo": "I can say who was praised and who was blamed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C355-jhelna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can say who was praised and who was blamed.",
+    "assesses": [
+      "UR-LEX-C355-TARIF355-03",
+      "UR-LEX-C355-TARIF355-04",
+      "UR-LEX-C355-TARIF355-05"
+    ]
+  }
+}

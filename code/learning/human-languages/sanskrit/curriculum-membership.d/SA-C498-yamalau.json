@@ -1,0 +1,11 @@
+{
+  "id": "SA-C498-yamalau",
+  "pathSegment": "SA-PATH-498-AGRAJA498",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-498-AGRAJA498",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C342-matbhed",
+  "pathSegment": "GU-PATH-342-VIVAD342",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-342-VIVAD342",
+      "order": 2
+    }
+  ]
+}

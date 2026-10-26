@@ -1,0 +1,11 @@
+{
+  "id": "GU-C402-kandaktar",
+  "pathSegment": "GU-PATH-402-CART402",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-402-CART402",
+      "order": 3
+    }
+  ]
+}

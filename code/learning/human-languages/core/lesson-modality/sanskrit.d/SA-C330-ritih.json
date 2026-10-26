@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C330-ritih",
+    "language": "sanskrit",
+    "chapter": 330,
+    "sequence": 19260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31ad05ddde10ba9d"
+  },
+  "findings": []
+}

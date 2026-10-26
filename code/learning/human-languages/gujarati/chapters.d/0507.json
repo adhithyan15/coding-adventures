@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Needle and Thread",
+  "label": "ch:gu-needle-and-thread",
+  "canDo": "I can talk about threading a needle, mending and embroidery.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C507-bharatkam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can talk about threading a needle, mending and embroidery.",
+    "assesses": [
+      "GU-LEX-C507-BHARAT507-03",
+      "GU-LEX-C507-BHARAT507-04",
+      "GU-LEX-C507-BHARAT507-05"
+    ]
+  }
+}

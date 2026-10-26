@@ -1,0 +1,11 @@
+{
+  "id": "GU-C552-gajavvu",
+  "pathSegment": "GU-PATH-552-MANCH552",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-552-MANCH552",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C428-uchinu",
+  "pathSegment": "GU-PATH-428-DEBT428",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-428-DEBT428",
+      "order": 2
+    }
+  ]
+}

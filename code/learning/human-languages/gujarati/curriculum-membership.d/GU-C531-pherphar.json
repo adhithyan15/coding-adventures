@@ -1,0 +1,11 @@
+{
+  "id": "GU-C531-pherphar",
+  "pathSegment": "GU-PATH-531-JHANJHAT531",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-531-JHANJHAT531",
+      "order": 3
+    }
+  ]
+}

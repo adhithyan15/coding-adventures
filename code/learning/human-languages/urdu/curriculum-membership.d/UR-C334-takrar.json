@@ -1,0 +1,11 @@
+{
+  "id": "UR-C334-takrar",
+  "pathSegment": "UR-PATH-334-BAHAS334",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-334-BAHAS334",
+      "order": 3
+    }
+  ]
+}

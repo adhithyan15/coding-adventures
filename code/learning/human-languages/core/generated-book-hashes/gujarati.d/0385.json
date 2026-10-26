@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:ee1ec2e8cbc67f6a",
+  "lessonIds": [
+    "GU-C385-puraskar",
+    "GU-C385-kadar",
+    "GU-C385-mahentanu",
+    "GU-C385-pamvu",
+    "GU-C385-navajvu",
+    "GU-R385-review-379-385"
+  ],
+  "tex": "gujarati/book/chapters/ch385-rewards.tex"
+}

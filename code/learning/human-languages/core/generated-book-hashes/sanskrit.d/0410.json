@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:a5a7ae4ce535cee1",
+  "lessonIds": [
+    "SA-C410-chidram",
+    "SA-C410-ksarati",
+    "SA-C410-sithilah",
+    "SA-C410-vidirnah",
+    "SA-C410-gharsati"
+  ],
+  "tex": "sanskrit/book/chapters/ch410-breakdowns.tex"
+}

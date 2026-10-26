@@ -1,0 +1,11 @@
+{
+  "id": "PA-C202-yatri",
+  "pathSegment": "PA-PATH-202-A2-YATRI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-202-A2-YATRI",
+      "order": 1
+    }
+  ]
+}

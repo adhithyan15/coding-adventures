@@ -1,0 +1,11 @@
+{
+  "id": "SA-R471-review-464-471",
+  "pathSegment": "SA-PATH-471-MASTISKA471",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-471-MASTISKA471",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "A Movement for Freedom",
+  "label": "ch:ur-a-movement-for-freedom",
+  "canDo": "I can tell how a freedom movement grew.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C313-saunpna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can tell how a freedom movement grew.",
+    "assesses": [
+      "UR-LEX-C313-TEHRIK313-03",
+      "UR-LEX-C313-TEHRIK313-04",
+      "UR-LEX-C313-TEHRIK313-05"
+    ]
+  }
+}

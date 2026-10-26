@@ -1,0 +1,11 @@
+{
+  "id": "SA-C385-pratidvandvi",
+  "pathSegment": "SA-PATH-385-SPARDHA385",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-385-SPARDHA385",
+      "order": 1
+    }
+  ]
+}

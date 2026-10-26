@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:cef61c580757236b",
+  "lessonIds": [
+    "GU-C386-astha",
+    "GU-C386-asro",
+    "GU-C386-agrah",
+    "GU-C386-adhin",
+    "GU-C386-jhukvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch386.txt",
+  "json": "gujarati/narration/ch386.json",
+  "textHash": "fnv1a64:6a407a2ef5672305",
+  "jsonHash": "fnv1a64:9923dce5a9863661",
+  "findings": []
+}

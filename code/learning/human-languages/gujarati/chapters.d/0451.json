@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Holding Close",
+  "label": "ch:gu-holding-close",
+  "canDo": "I can say how a child holds on to its mother.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C451-capvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can say how a child holds on to its mother.",
+    "assesses": [
+      "GU-LEX-C451-VALAG451-03",
+      "GU-LEX-C451-VALAG451-04",
+      "GU-LEX-C451-VALAG451-05"
+    ]
+  }
+}

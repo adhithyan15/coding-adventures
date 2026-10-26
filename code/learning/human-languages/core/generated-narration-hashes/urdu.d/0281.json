@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:daad68e201581947",
+  "lessonIds": [
+    "UR-C281-thagna",
+    "UR-C281-dhoka",
+    "UR-C281-rishvat",
+    "UR-C281-badmash",
+    "UR-C281-jali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch281.txt",
+  "json": "urdu/narration/ch281.json",
+  "textHash": "fnv1a64:1ff32a03ab49690b",
+  "jsonHash": "fnv1a64:6095a30b47abe01b",
+  "findings": []
+}

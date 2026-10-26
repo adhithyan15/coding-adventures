@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C455-khami",
+    "language": "urdu",
+    "chapter": 455,
+    "sequence": 26760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c396ab067f3ba3a"
+  },
+  "findings": []
+}

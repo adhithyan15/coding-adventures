@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:7369ee76a1251d69",
+  "lessonIds": [
+    "GU-C522-khayni",
+    "GU-C522-khadvu",
+    "GU-C522-chinvu",
+    "GU-C522-palaalvu",
+    "GU-C522-dalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch522-pound-grate-and-soak.tex"
+}

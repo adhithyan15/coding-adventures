@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:22a72cd8fbbc4653",
+  "lessonIds": [
+    "UR-C373-bikharna",
+    "UR-C373-mitna",
+    "UR-C373-dantna",
+    "UR-C373-dhalna",
+    "UR-C373-adhura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch373.txt",
+  "json": "urdu/narration/ch373.json",
+  "textHash": "fnv1a64:0f6e245afea5e8f5",
+  "jsonHash": "fnv1a64:1bb7be37d7d0a172",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER YAML front-matter title vertical slice",
+  "fixtures": [
+    {
+      "name": "upstream-simple-diagram-with-title",
+      "source": "---\ntitle: simple ER diagram\n---\nerDiagram\nCUSTOMER ||--o{ ORDER : places\nORDER ||--|{ LINE-ITEM : contains"
+    }
+  ]
+}

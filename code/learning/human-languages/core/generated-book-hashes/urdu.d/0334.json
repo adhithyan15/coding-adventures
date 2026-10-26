@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:da2277a9f5c000dc",
+  "lessonIds": [
+    "UR-C334-bahas-karna",
+    "UR-C334-dalil",
+    "UR-C334-tokna",
+    "UR-C334-takrar",
+    "UR-C334-mantiq"
+  ],
+  "tex": "urdu/book/chapters/ch334-a-heated-argument.tex"
+}

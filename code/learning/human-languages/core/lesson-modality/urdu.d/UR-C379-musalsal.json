@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C379-musalsal",
+    "language": "urdu",
+    "chapter": 379,
+    "sequence": 22490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:653904161c1d31c9"
+  },
+  "findings": []
+}

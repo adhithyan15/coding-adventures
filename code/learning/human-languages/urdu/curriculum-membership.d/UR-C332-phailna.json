@@ -1,0 +1,11 @@
+{
+  "id": "UR-C332-phailna",
+  "pathSegment": "UR-PATH-332-NUQSAN332",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-332-NUQSAN332",
+      "order": 4
+    }
+  ]
+}

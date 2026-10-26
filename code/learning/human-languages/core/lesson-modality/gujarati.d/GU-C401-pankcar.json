@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C401-pankcar",
+    "language": "gujarati",
+    "chapter": 401,
+    "sequence": 22420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:568ee1afe77df445"
+  },
+  "findings": []
+}

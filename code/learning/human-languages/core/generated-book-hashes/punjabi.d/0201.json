@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:5f332d7789aac74c",
+  "lessonIds": [
+    "PA-C201-identity-return",
+    "PA-C201-class",
+    "PA-C201-class-review",
+    "PA-C201-class-label",
+    "PA-C201-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch201-this-is-a-class.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C526-fauri",
+  "pathSegment": "UR-PATH-526-MIAD526",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-526-MIAD526",
+      "order": 2
+    }
+  ]
+}

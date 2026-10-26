@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:afaa79a864668e72",
+  "lessonIds": [
+    "UR-C463-barbarana",
+    "UR-C463-gap",
+    "UR-C463-chup",
+    "UR-C463-sargoshi-karna",
+    "UR-C463-gung",
+    "UR-R463-review-456-463"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch463.txt",
+  "json": "urdu/narration/ch463.json",
+  "textHash": "fnv1a64:7d1bfa734087e3a4",
+  "jsonHash": "fnv1a64:bbcbcc07c0e477e3",
+  "findings": []
+}

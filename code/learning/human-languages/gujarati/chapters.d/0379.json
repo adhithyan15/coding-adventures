@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Very, Extremely",
+  "label": "ch:gu-very-extremely",
+  "canDo": "I can say how strong something will be.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C379-keval",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can say how strong something will be.",
+    "assesses": [
+      "GU-LEX-C379-ATYANT379-03",
+      "GU-LEX-C379-ATYANT379-04",
+      "GU-LEX-C379-ATYANT379-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C283-saza",
+    "language": "urdu",
+    "chapter": 283,
+    "sequence": 17380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d51a5c6dd0452360"
+  },
+  "findings": []
+}

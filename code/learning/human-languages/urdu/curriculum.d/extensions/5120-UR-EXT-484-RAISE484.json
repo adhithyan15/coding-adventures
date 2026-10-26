@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-484-RAISE484",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how a child was brought up.",
+  "prerequisites": []
+}

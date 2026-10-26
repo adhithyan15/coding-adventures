@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C394-draivar",
+    "language": "urdu",
+    "chapter": 394,
+    "sequence": 23420,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:220f3d678c816363"
+  },
+  "findings": []
+}

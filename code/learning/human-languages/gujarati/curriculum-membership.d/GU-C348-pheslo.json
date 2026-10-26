@@ -1,0 +1,11 @@
+{
+  "id": "GU-C348-pheslo",
+  "pathSegment": "GU-PATH-348-KES348",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-348-KES348",
+      "order": 3
+    }
+  ]
+}

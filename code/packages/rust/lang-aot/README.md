@@ -29,8 +29,12 @@ their checked total stays within `2^53 - 1` units, so every path value remains
 an exact binary64 integer; the budget is tracked through parentheses and
 supported wrappers and applied per conditional path. Exact whole-number
 factors may also scale the sign-rooted integer transform through magnitude
-`2^53`, including exact additive composition; fractional factors, denominator
-roots, repeated roots, and oversized products stay conservative. A non-unit
+`2^53`, including exact additive composition. Independently bounded dynamic
+sign-rooted transforms may multiply while their checked complete product stays
+within that limit. They may add or subtract while their checked complete sum
+stays within the same limit. Fractional factors, denominator roots, other
+non-multiplying multiple roots, and oversized products or sums stay
+conservative. A non-unit
 static divisor is accepted only when it divides
 every possible exact integer value of the sign-rooted transform. Static
 whole-number factors may precede the sign-rooted numerator, including exact
@@ -66,11 +70,13 @@ sign root. Two dynamic roots, path-dependent signs, and effectful selectors
 remain conservative.
 Checked exact-integer normalizers may provide the sign-rooted transform's
 nonnegative exponent when the complete right-associative exponent chain stays
-inside the established unroll cap. Unproven exponents remain conservative.
-Positive variable-free whole-number powers may raise the exact sign-rooted integer
-transform within the existing exponent-unroll cap while checked exponentiation
-remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
-stay conservative. Integer `div` by a variable-free nonzero whole number may
+inside the established unroll cap. A zero result proves the power is exactly
+one; unproven exponents remain conservative.
+Nonnegative variable-free whole-number powers may raise the exact sign-rooted
+integer transform within the existing exponent-unroll cap while checked
+exponentiation remains within `2^53`; zero produces exact one, while negative,
+dynamic, deeper, and oversized powers stay conservative. Integer `div` by a
+variable-free nonzero whole number may
 reduce the exact transform with a truncation-toward-zero bound, including
 composition through later powers, remainders, and exact real division; zero,
 dynamic, and sign-rooted divisors remain outside this composed proof. Integer
@@ -854,6 +860,14 @@ way:
 There is no shared helper library. The conformance suite checks a 90-value
 table on every executable column against host `python3` and `node`.
 
+Since LANG83 PR6c the eight IEEE backends lower `f64_add`, `f64_sub`,
+`f64_mul`, `f64_div` and `f64_neg`, which never trap (`1/0` is `Infinity`,
+`0/0` is `NaN`, `-0` survives), and all nine lower `f64_signbit` (0/1). BEAM
+refuses the arithmetic at compile time with `UnsupportedOps`, because an
+Erlang float has no infinities or NaN. The conformance suite runs the IEEE
+edge table, the sign bit and an aliased-destination case on every executable
+column.
+
 ## Limitations
 
 - **Host-targets-host only.** Same V1 policy as `twig-aot`.  Use the
@@ -1364,19 +1378,42 @@ has so far and stops with `Trap.Overflow`: a stated divergence, with bignum
 promotion left for later. A zero divisor stops it with `Trap.DivZero`, like
 `ZeroDivisionError`.
 
-Fifty-three `lang_matrix` Python rows declare all eight executable columns:
+One hundred `lang_matrix` integer Python rows declare all eight executable columns:
 every accepted case of `code/grammars/python/corpus/py-int-print/` on the
 default 3.13.16 (eighteen), and, since phase 7b slice 2, every case each
 IIR-identity class representative of `python-iir-compiler`'s release sweep
-accepts: 3.0a1 (seventeen; it refuses `int_underscores`) and 3.12.3
-(eighteen; its class also holds 3.13.16, 3.11.17 and 3.16.0a1). So they
-prove stage B for all five releases (`release_inventory.py check --matrix`),
+accepts: 3.0a1 (seventeen; it refuses `int_underscores`, and its class also
+holds 3.5.10) and 3.6.0 (eighteen; its class also holds 3.12.3, 3.13.16,
+3.11.17 and 3.16.0a1). Since phase 7c the Python 2 corpus
+(`corpus/py2-int-print/`) runs on its two class representatives: 2.2
+(twenty-three; its class also holds 2.4) and 2.6 (twenty-four, including
+the PEP 3127 `0o`/`0b` case; its class also holds 2.7.18). So they prove
+stage B for all eleven releases (`release_inventory.py check --matrix`),
 and `python_rows_run_their_corpus_case` checks that they are exactly the
 sweep's boundary set in `code/grammars/python/release_classes.csv`. Nine
 cases are `StdoutThenTrap` rows, which check the output written before the
 trap *and* the kind each column reports. LANG79's
 float pilot (`python_iir_compiler::compile_source`) is a separate API and is
 not reachable from `lang-aot`.
+
+**Floats (phase 7c slice 3).** On 3.5.10 and later (the `py3` profile) the
+same entry point also compiles `py-float-print`: float literals, `/` as true
+division and `int`/`float` mixing, printed as Python `repr`:
+
+| Python | IIR |
+|---|---|
+| `1.5`, `.5`, `1e16` | `const x : f64` |
+| an `int` operand of a float op | `int_to_real` |
+| `+ - *` with a float, `/` | `f64_add`, `f64_sub`, `f64_mul`, `f64_div` (PR6c, IEEE, never trap) |
+| `/` by a known `±0` | `trap "Trap.DivZero"` before the division |
+| `-a` (float) | `f64_neg` |
+| `print(a)` (float) | `write_f64_py`, `putchar 10` |
+
+38 rows run `code/grammars/python/corpus/py-float-print/` on 3.13.16 and
+on its two class representatives, 3.6.0 and 3.5.10 (which refuses `_` in
+a float). The five literal-only rows declare all eight columns; the other
+33 declare `IEEE_COLUMNS`, because BEAM refuses the `f64_*` arithmetic at
+compile time (`UnsupportedOps`).
 
 Since phase 7b, `--lang python@<release>` selects any profiled release of
 `code/grammars/python/releases.csv` exactly, through the same release API as
@@ -1388,6 +1425,7 @@ lang-aot prog.py --lang python@3.0a1 --emit=llvm-ir
 
 | Request | Result |
 |---|---|
-| `python`, `python@3.0a1`, `python@3.11.17`, `python@3.12.3`, `python@3.13.16`, `python@3.16.0a1` | compiled on that release (`python` is `3.13.16`) |
+| `python`, `python@3.0a1`, `python@3.5.10`, `python@3.6.0`, `python@3.11.17`, `python@3.12.3`, `python@3.13.16`, `python@3.16.0a1` | compiled on that release (`python` is `3.13.16`) |
+| `python@2.2`, `python@2.4`, `python@2.6`, `python@2.7.18` | compiled on that release as Python 2 (`py2-int-print`: `print 010 / 3`) |
 | `python@3.13` | `UnknownRelease`, nearest inventory IDs suggested |
 | `python@3.12.2` | `ReleaseNotAvailable` (no grammar pair: `grammar_stage none`) |

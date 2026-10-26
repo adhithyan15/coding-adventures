@@ -1,0 +1,11 @@
+{
+  "id": "GU-C356-svatantra",
+  "pathSegment": "GU-PATH-356-BANDHARAN356",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-356-BANDHARAN356",
+      "order": 1
+    }
+  ]
+}

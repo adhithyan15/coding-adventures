@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:b7f9fae1b9c48b10",
+  "lessonIds": [
+    "UR-C524-fehrist",
+    "UR-C524-musavvada",
+    "UR-C524-chhapvana",
+    "UR-C524-tadbir",
+    "UR-C524-banvana"
+  ],
+  "tex": "urdu/book/chapters/ch524-making-a-plan.tex"
+}

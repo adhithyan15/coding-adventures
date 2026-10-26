@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C468-dambh",
+    "language": "gujarati",
+    "chapter": 468,
+    "sequence": 26090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd86db24324e06fc"
+  },
+  "findings": []
+}

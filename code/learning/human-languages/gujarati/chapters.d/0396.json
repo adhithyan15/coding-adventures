@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "The Guard's Lantern",
+  "label": "ch:gu-the-guard-s-lantern",
+  "canDo": "I can talk about the guard, the bell and the chain on a train.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C396-ghant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can talk about the guard, the bell and the chain on a train.",
+    "assesses": [
+      "GU-LEX-C396-GUARD396-03",
+      "GU-LEX-C396-GUARD396-04",
+      "GU-LEX-C396-GUARD396-05"
+    ]
+  }
+}

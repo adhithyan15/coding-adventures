@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "More and Less",
+  "label": "ch:ur-more-and-less",
+  "canDo": "I can say how much will be enough if things go to plan.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C376-had",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can say how much will be enough if things go to plan.",
+    "assesses": [
+      "UR-LEX-C376-MIQDAR376-03",
+      "UR-LEX-C376-MIQDAR376-04",
+      "UR-LEX-C376-MIQDAR376-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C346-bhalai",
+  "pathSegment": "UR-PATH-346-KHIDMAT346",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-346-KHIDMAT346",
+      "order": 3
+    }
+  ]
+}

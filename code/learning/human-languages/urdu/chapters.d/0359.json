@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Even So",
+  "label": "ch:ur-even-so",
+  "canDo": "I can say what happened in spite of something.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C359-jhukna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can say what happened in spite of something.",
+    "assesses": [
+      "UR-LEX-C359-BAVUJUD359-03",
+      "UR-LEX-C359-BAVUJUD359-04",
+      "UR-LEX-C359-BAVUJUD359-05"
+    ]
+  }
+}

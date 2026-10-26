@@ -490,6 +490,11 @@ describe("the real corpus", () => {
   // weather). The two sets left, ਟ ਠ ਡ (chapter 3) and ੜ ਘ ਦ (chapter 7), sit in
   // chapters whose R1 retrievals are one to three lessons apart, so a word
   // inserted there pushes older atoms out of R1.
+  //
+  // Sanskrit's unread inventory fell 8 -> 4 when its B1 core (chapters 276-283)
+  // gave घ, ढ, औ and ई full letter lessons, each right after the word that
+  // holds it: घटते, दृढः, औषधम्, ईदृशः. The four left are ऊ, ऐ and झ, which no
+  // word of the track uses yet, and ळ, which is Vedic.
   it("measures every non-Latin track", () => {
     expect(report.tracks.map((entry) => entry.language)).toEqual(Object.keys(CEILINGS));
   });

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C400-vatan",
+    "language": "urdu",
+    "chapter": 400,
+    "sequence": 23710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9b8aa0d1478c523"
+  },
+  "findings": []
+}

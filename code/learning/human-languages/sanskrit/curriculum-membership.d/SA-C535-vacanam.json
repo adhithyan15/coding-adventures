@@ -1,0 +1,11 @@
+{
+  "id": "SA-C535-vacanam",
+  "pathSegment": "SA-PATH-535-SATYASANDHA535",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-535-SATYASANDHA535",
+      "order": 4
+    }
+  ]
+}

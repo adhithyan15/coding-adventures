@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-416-NAVIKA416",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "SA-EXT-416-NAVIKA416"
+  ],
+  "after": []
+}

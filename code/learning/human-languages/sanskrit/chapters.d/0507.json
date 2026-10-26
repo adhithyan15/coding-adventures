@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Metal and Gold",
+  "label": "ch:sa-metal-and-gold",
+  "canDo": "I can describe how a smith melts, shapes and polishes metal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C507-bhusanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can describe how a smith melts, shapes and polishes metal.",
+    "assesses": [
+      "SA-LEX-C507-BHASTRA507-03",
+      "SA-LEX-C507-BHASTRA507-04",
+      "SA-LEX-C507-BHASTRA507-05"
+    ]
+  }
+}

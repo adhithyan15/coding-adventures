@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "Swords and Shields",
+  "label": "ch:gu-swords-and-shields",
+  "canDo": "I can name the weapons of an old war and say how they were used.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C321-vidhvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can name the weapons of an old war and say how they were used.",
+    "assesses": [
+      "GU-LEX-C321-TALVAR321-03",
+      "GU-LEX-C321-TALVAR321-04",
+      "GU-LEX-C321-TALVAR321-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:21326343ea358ebb",
+  "lessonIds": [
+    "UR-C429-nami",
+    "UR-C429-thand",
+    "UR-C429-jara",
+    "UR-C429-sikurna",
+    "UR-C429-akarna"
+  ],
+  "tex": "urdu/book/chapters/ch429-damp-and-cold.tex"
+}

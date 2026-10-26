@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C455-rudan",
+    "language": "gujarati",
+    "chapter": 455,
+    "sequence": 25450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:749ec88973090ab5"
+  },
+  "findings": []
+}

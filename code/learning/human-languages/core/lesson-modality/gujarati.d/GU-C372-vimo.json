@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C372-vimo",
+    "language": "gujarati",
+    "chapter": 372,
+    "sequence": 20690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de2a31fdc4b980e7"
+  },
+  "findings": []
+}

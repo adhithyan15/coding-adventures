@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:3be9f4ef28e63316",
+  "lessonIds": [
+    "SA-C457-smayate",
+    "SA-C457-upahasati",
+    "SA-C457-parihasah",
+    "SA-C457-attahasah",
+    "SA-C457-vinodah"
+  ],
+  "tex": "sanskrit/book/chapters/ch457-laughter-and-jokes.tex"
+}

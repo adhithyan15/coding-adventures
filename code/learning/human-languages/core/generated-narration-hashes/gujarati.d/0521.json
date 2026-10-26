@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:ea4dc29d9b1be549",
+  "lessonIds": [
+    "GU-C521-melvan",
+    "GU-C521-jamavvu",
+    "GU-C521-valovvu",
+    "GU-C521-ubhravu",
+    "GU-C521-phinvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch521.txt",
+  "json": "gujarati/narration/ch521.json",
+  "textHash": "fnv1a64:67d69de6ff468464",
+  "jsonHash": "fnv1a64:807be1666ad07412",
+  "findings": []
+}

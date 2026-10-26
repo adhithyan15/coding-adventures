@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:0be554219ecbe8d8",
+  "lessonIds": [
+    "UR-C384-tarbiyat",
+    "UR-C384-farakh-dil",
+    "UR-C384-adab",
+    "UR-C384-lad",
+    "UR-C384-ratna"
+  ],
+  "tex": "urdu/book/chapters/ch384-values-passed-on.tex"
+}

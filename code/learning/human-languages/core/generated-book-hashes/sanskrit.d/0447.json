@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:95d776c6b56283c0",
+  "lessonIds": [
+    "SA-C447-kedarah",
+    "SA-C447-sasyam",
+    "SA-C447-urvara",
+    "SA-C447-lunati",
+    "SA-C447-avacinoti",
+    "SA-R447-review-441-447",
+    "SA-R447-review-final-447"
+  ],
+  "tex": "sanskrit/book/chapters/ch447-fields-on-the-way-home.tex"
+}

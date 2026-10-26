@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C339-paristhiti",
+    "language": "gujarati",
+    "chapter": 339,
+    "sequence": 19030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c20d0d3faec15c7a"
+  },
+  "findings": []
+}

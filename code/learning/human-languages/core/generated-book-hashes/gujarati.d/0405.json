@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:dd75c5a74a5c1c22",
+  "lessonIds": [
+    "GU-C405-udan",
+    "GU-C405-paylat",
+    "GU-C405-get",
+    "GU-C405-sutkes",
+    "GU-C405-cakravo"
+  ],
+  "tex": "gujarati/book/chapters/ch405-flights-and-gates.tex"
+}

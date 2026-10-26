@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Being Careful",
+  "label": "ch:ur-being-careful",
+  "canDo": "I can say what could happen if we are careless.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C536-emarjansi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can say what could happen if we are careless.",
+    "assesses": [
+      "UR-LEX-C536-MOHTAT536-03",
+      "UR-LEX-C536-MOHTAT536-04",
+      "UR-LEX-C536-MOHTAT536-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C345-khulaso",
+  "pathSegment": "GU-PATH-345-KHULASO345",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-345-KHULASO345",
+      "order": 1
+    }
+  ]
+}

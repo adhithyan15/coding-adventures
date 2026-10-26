@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:238f8cf26abf40f4",
+  "lessonIds": [
+    "SA-C524-spardha",
+    "SA-C524-praksipati",
+    "SA-C524-vijeta",
+    "SA-C524-parajitah",
+    "SA-C524-praharati"
+  ],
+  "tex": "sanskrit/book/chapters/ch524-the-big-match.tex"
+}

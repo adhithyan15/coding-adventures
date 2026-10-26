@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "The Carpenter's Bench",
+  "label": "ch:ur-the-carpenter-s-bench",
+  "canDo": "I can say how a carpenter cuts and fixes wood.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C497-retna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can say how a carpenter cuts and fixes wood.",
+    "assesses": [
+      "UR-LEX-C497-TAKHTA497-03",
+      "UR-LEX-C497-TAKHTA497-04",
+      "UR-LEX-C497-TAKHTA497-05"
+    ]
+  }
+}

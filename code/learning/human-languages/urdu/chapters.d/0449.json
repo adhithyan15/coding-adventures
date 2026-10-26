@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Affection",
+  "label": "ch:ur-affection",
+  "canDo": "I can say how someone shows their love.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C449-ishq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can say how someone shows their love.",
+    "assesses": [
+      "UR-LEX-C449-LOVE449-03",
+      "UR-LEX-C449-LOVE449-04",
+      "UR-LEX-C449-LOVE449-05"
+    ]
+  }
+}

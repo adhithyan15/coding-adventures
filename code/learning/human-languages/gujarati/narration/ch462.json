@@ -1,0 +1,842 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 462,
+  "title": "A Lively Child",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:993c3ba9ccc3f98d",
+  "lessons": [
+    {
+      "id": "GU-C462-cancal",
+      "sequence": 25760,
+      "title": "ચંચળ (cancaḷ) — never still; fickle",
+      "headword": "ચંચળ",
+      "romanization": "cancaḷ",
+      "gloss": "never still; fickle",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abbd19dcf1ec7468",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for charity, then the Gujarati for a donation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચંચળ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચંચળ — cancaḷ — \"never still; fickle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "નાનો ભત્રીજો ઘણો ચંચળ છે. nāno bhatrījo ghaṇo cancaḷ che. My little nephew is never still."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચંચળ (cancaḷ) is a tatsama, Sanskrit cañcala, \"moving to and fro, unsteady\", as Monier-Williams records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cancaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cancaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cancaḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cancaḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāno bhatrījo ghaṇo cancaḷ che. — My little nephew is never still.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāno bhatrījo ghaṇo cancaḷ che.* — My little nephew is never still.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for charity, then the Gujarati for a donation, then say cancaḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for charity, then the Gujarati for a donation, then say *cancaḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચંચળ (cancaḷ) mean? (\"Never still; fickle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C462-tophani",
+      "sequence": 25770,
+      "title": "તોફાની (tophānī) — naughty",
+      "headword": "તોફાની",
+      "romanization": "tophānī",
+      "gloss": "naughty",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a863afccb4ce340c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a donation, then the Gujarati for never still."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: તોફાની",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તોફાની — tophānī — \"naughty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તોફાની છોકરાએ મારું રમકડું તોડ્યું. tophānī chokrāe mārũ ramakḍũ toḍyũ. The naughty boy broke my toy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તોફાની (tophānī) is built on તોફાન (tophān), \"a storm\", traced to Arabic ṭūfān, \"a flood\", through Persian; with -ī it names a child who stirs up a storm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tophānī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tophānī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tophānī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tophānī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tophānī chokrāe mārũ ramakḍũ toḍyũ. — The naughty boy broke my toy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tophānī chokrāe mārũ ramakḍũ toḍyũ.* — The naughty boy broke my toy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a donation, then the Gujarati for never still, then say tophānī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a donation, then the Gujarati for never still, then say *tophānī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does તોફાની (tophānī) mean? (\"Naughty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C462-capal",
+      "sequence": 25780,
+      "title": "ચપળ (capaḷ) — nimble; quick",
+      "headword": "ચપળ",
+      "romanization": "capaḷ",
+      "gloss": "nimble; quick",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:497e04a251c016e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for never still, then the Gujarati for naughty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચપળ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચપળ — capaḷ — \"nimble; quick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ખિસકોલી ઘણી ચપળ હોય છે. khiskolī ghaṇī capaḷ hoy che. Squirrels are very nimble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચપળ (capaḷ) is a tatsama, Sanskrit capala, \"moving, trembling, unsteady\", as Monier-Williams records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "capaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *capaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "capaḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *capaḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiskolī ghaṇī capaḷ hoy che. — Squirrels are very nimble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiskolī ghaṇī capaḷ hoy che.* — Squirrels are very nimble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for never still, then the Gujarati for naughty, then say capaḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for never still, then the Gujarati for naughty, then say *capaḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચપળ (capaḷ) mean? (\"Nimble; quick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C462-mojilu",
+      "sequence": 25790,
+      "title": "મોજીલું (mojīlũ) — fun-loving",
+      "headword": "મોજીલું",
+      "romanization": "mojīlũ",
+      "gloss": "fun-loving",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:042b64a8089324b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for naughty, then the Gujarati for nimble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મોજીલું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મોજીલું — mojīlũ — \"fun-loving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારો મોજીલો ભાઈ હંમેશા ગીતો ગાય છે. māro mojīlo bhāī hammeśā gīto gāy che. My fun-loving brother is always singing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મોજીલું (mojīlũ) is built on moj, \"fun, high spirits\", which is usually traced to Arabic mawj, \"a wave\", with the adjective ending -īlũ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mojīlũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mojīlũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mojīlũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mojīlũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māro mojīlo bhāī hammeśā gīto gāy che. — My fun-loving brother is always singing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māro mojīlo bhāī hammeśā gīto gāy che.* — My fun-loving brother is always singing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for naughty, then the Gujarati for nimble, then say mojīlũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for naughty, then the Gujarati for nimble, then say *mojīlũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મોજીલું (mojīlũ) mean? (\"Fun-loving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C462-vanthvu",
+      "sequence": 25800,
+      "title": "વંઠવું (vanṭhvũ) — to go astray; to be spoilt",
+      "headword": "વંઠવું",
+      "romanization": "vanṭhvũ",
+      "gloss": "to go astray; to be spoilt",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45f91f5ffb95419d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for nimble, then the Gujarati for fun-loving."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વંઠવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વંઠવું — vanṭhvũ — \"to go astray; to be spoilt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ખરાબ દોસ્તોને લીધે દીકરો વંઠી ગયો. kharāb dostone līdhe dīkro vanṭhī gayo. Because of bad friends the son went astray."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે વંઠી ગયો, te vanṭhī gayo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વંઠવું (vanṭhvũ) is inherited: CDIAL lists the Gujarati verb, \"to be dissipated\", under Sanskrit vaṇṭa, \"tailless, unmarried\" (CDIAL 11236)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vanṭhvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vanṭhvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vanṭhvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vanṭhvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharāb dostone līdhe dīkro vanṭhī gayo. — Because of bad friends the son went astray.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharāb dostone līdhe dīkro vanṭhī gayo.* — Because of bad friends the son went astray.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for nimble, then the Gujarati for fun-loving, then say vanṭhvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for nimble, then the Gujarati for fun-loving, then say *vanṭhvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વંઠવું (vanṭhvũ) mean? (\"To go astray; to be spoilt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R462-review-455-462",
+      "sequence": 25810,
+      "title": "Looking back: from A Heavy Heart to A Lively Child",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from A Heavy Heart to A Lively Child",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fe8d08ec710d322",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for gloomy and anguish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gloomy, anguish, a sigh, to make someone cry, weeping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gloomy, anguish, a sigh, to make someone cry, weeping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be hurt, unwelcome, a taunt, disregard, a knock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be hurt, unwelcome, a taunt, disregard, a knock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hatred, to despise, contempt, envy, dislike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hatred, to despise, contempt, envy, dislike]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pain of separation, solitude, deserted, to crave, to come to mind",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pain of separation, solitude, deserted, to crave, to come to mind]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tender, harsh, cruel, good-hearted, to soften with pity",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tender, harsh, cruel, good-hearted, to soften with pity]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trusting, sly, shrewd, deceit, to cajole",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: trusting, sly, shrewd, deceit, to cajole]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miserly, wasteful with money, penniless, charity, a donation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: miserly, wasteful with money, penniless, charity, a donation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "never still, naughty, nimble, fun-loving, to go astray",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: never still, naughty, nimble, fun-loving, to go astray]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Gloomy? (ગમગીન, gamgīn.) Anguish? (વ્યથા, vyathā.) A sigh? (નિસાસો, nisāso.) To make someone cry? (રડાવવું, raḍāvvũ.) Weeping? (રુદન, rudan.) To be hurt? (દુભાવું, dubhāvũ.) Unwelcome? (માઠું, māṭhũ.) A taunt? (મહેણું, maheṇũ.) Disregard? (અવગણના, avgaṇnā.) A knock? (ઠેસ, ṭhes.) Hatred? (નફરત, naphrat.) To despise? (ધિક્કારવું, dhikkārvũ.) Contempt? (તિરસ્કાર, tiraskār.) Envy? (અદેખાઈ, adekhāī.) Dislike? (અણગમો, aṇgamo.) The pain of separation? (વિરહ, virah.) Solitude? (એકાંત, ekā̃t.) Deserted? (સૂનું, sūnũ.) To crave? (તરસવું, tarasvũ.) To come to mind? (સાંભરવું, sā̃bharvũ.) Tender? (કોમળ, komaḷ.) Harsh? (કઠોર, kaṭhor.) Cruel? (ક્રૂર, krūr.) Good-hearted? (ભલું, bhalũ.) To soften with pity? (પીગળવું, pīgaḷvũ.) Trusting? (ભોળું, bhoḷũ.) Sly? (લુચ્ચું, luccũ.) Shrewd? (ચાલાક, cālāk.) Deceit? (કપટ, kapaṭ.) To cajole? (ફોસલાવવું, phoslāvvũ.) Miserly? (કૃપણ, kṛpaṇ.) Wasteful with money? (ઉડાઉ, uḍāu.) Penniless? (કંગાળ, kangāḷ.) Charity? (સખાવત, sakhāvat.) A donation? (દાન, dān.) Never still? (ચંચળ, cancaḷ.) Naughty? (તોફાની, tophānī.) Nimble? (ચપળ, capaḷ.) Fun-loving? (મોજીલું, mojīlũ.) To go astray? (વંઠવું, vanṭhvũ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

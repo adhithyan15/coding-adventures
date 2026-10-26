@@ -1,0 +1,11 @@
+{
+  "id": "UR-C519-qavvali",
+  "pathSegment": "UR-PATH-519-DHOL519",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-519-DHOL519",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C515-kanu",
+  "pathSegment": "GU-PATH-515-POPDO515",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-515-POPDO515",
+      "order": 2
+    }
+  ]
+}

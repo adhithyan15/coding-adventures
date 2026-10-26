@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Milk and Butter",
+  "label": "ch:sa-milk-and-butter",
+  "canDo": "I can talk about churning, straining and ghee.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C513-snigdhah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about churning, straining and ghee.",
+    "assesses": [
+      "SA-LEX-C513-MATHNATI513-03",
+      "SA-LEX-C513-MATHNATI513-04",
+      "SA-LEX-C513-MATHNATI513-05"
+    ]
+  }
+}

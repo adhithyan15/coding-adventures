@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C281-rishvat",
+    "language": "urdu",
+    "chapter": 281,
+    "sequence": 17270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43423eb2f75ba260"
+  },
+  "findings": []
+}

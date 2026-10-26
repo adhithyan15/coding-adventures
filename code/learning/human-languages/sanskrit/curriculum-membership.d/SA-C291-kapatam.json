@@ -1,0 +1,11 @@
+{
+  "id": "SA-C291-kapatam",
+  "pathSegment": "SA-PATH-291-VANCANA291",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-291-VANCANA291",
+      "order": 3
+    }
+  ]
+}

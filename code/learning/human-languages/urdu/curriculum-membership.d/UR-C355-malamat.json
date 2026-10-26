@@ -1,0 +1,11 @@
+{
+  "id": "UR-C355-malamat",
+  "pathSegment": "UR-PATH-355-TARIF355",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-355-TARIF355",
+      "order": 2
+    }
+  ]
+}

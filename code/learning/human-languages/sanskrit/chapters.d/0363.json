@@ -1,0 +1,21 @@
+{
+  "chapter": 363,
+  "title": "Studying a Subject",
+  "label": "ch:sa-studying-a-subject",
+  "canDo": "I can say what I study and how I practise it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-R363-review-356-363",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can say what I study and how I practise it.",
+    "assesses": [
+      "SA-LEX-C363-ADHYAYANA363-01",
+      "SA-LEX-C363-ADHYAYANA363-02",
+      "SA-LEX-C363-ADHYAYANA363-03",
+      "SA-LEX-C363-ADHYAYANA363-04",
+      "SA-LEX-C363-ADHYAYANA363-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 370,
+  "title": "Haste and Care",
+  "label": "ch:ur-haste-and-care",
+  "canDo": "I can warn someone what will happen if they rush.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-R370-review-363-370",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can warn someone what will happen if they rush.",
+    "assesses": [
+      "UR-LEX-C370-JALDBAZI370-01",
+      "UR-LEX-C370-JALDBAZI370-02",
+      "UR-LEX-C370-JALDBAZI370-03",
+      "UR-LEX-C370-JALDBAZI370-04",
+      "UR-LEX-C370-JALDBAZI370-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:ad0c56c6ef3a10be",
+  "lessonIds": [
+    "GU-C363-akdo",
+    "GU-C363-gantari",
+    "GU-C363-taran",
+    "GU-C363-sankhya",
+    "GU-C363-ghatadvu"
+  ],
+  "tex": "gujarati/book/chapters/ch363-what-the-figures-say.tex"
+}

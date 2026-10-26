@@ -1,0 +1,11 @@
+{
+  "id": "SA-C390-anubhavati",
+  "pathSegment": "SA-PATH-390-LAKSHANA390",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-390-LAKSHANA390",
+      "order": 4
+    }
+  ]
+}

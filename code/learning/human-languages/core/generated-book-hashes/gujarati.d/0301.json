@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:5a1be6ae69111ae7",
+  "lessonIds": [
+    "GU-C301-imarat",
+    "GU-C301-sidi",
+    "GU-C301-guglavu",
+    "GU-C301-phatvu",
+    "GU-C301-dhadako"
+  ],
+  "tex": "gujarati/book/chapters/ch301-a-building-on-fire.tex"
+}

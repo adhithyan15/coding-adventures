@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C552-abhinay",
+    "language": "gujarati",
+    "chapter": 552,
+    "sequence": 30620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10afc30e0422ca94"
+  },
+  "findings": []
+}

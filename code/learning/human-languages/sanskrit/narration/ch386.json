@@ -1,0 +1,849 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 386,
+  "title": "Success",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6444947ac4ea1271",
+  "lessons": [
+    {
+      "id": "SA-C386-siddhih",
+      "sequence": 22350,
+      "title": "सिद्धिः (siddhiḥ) — an accomplishment",
+      "headword": "सिद्धिः",
+      "romanization": "siddhiḥ",
+      "gloss": "an accomplishment",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fc6d15dfd9749ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for rewards (with a prize), then the Sanskrit for excellence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सिद्धिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिद्धिः — siddhiḥ — \"an accomplishment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि प्रयत्नः दृढः, तर्हि सिद्धिः अवश्यं भविष्यति। yadi prayatnaḥ dṛḍhaḥ, tarhi siddhiḥ avaśyaṃ bhaviṣyati. If the effort is firm, success will surely come."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिद्धिः (siddhiḥ) comes from the root √sidh, \"to succeed\"; MW gives siddhi \"accomplishment, performance, fulfilment, success\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi prayatnaḥ dṛḍhaḥ, tarhi siddhiḥ avaśyaṃ bhaviṣyati. — If the effort is firm, success will surely come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi prayatnaḥ dṛḍhaḥ, tarhi siddhiḥ avaśyaṃ bhaviṣyati.* — If the effort is firm, success will surely come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for rewards (with a prize), then the Sanskrit for excellence, then say siddhiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for rewards (with a prize), then the Sanskrit for excellence, then say *siddhiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सिद्धिः (siddhiḥ) mean? (\"An accomplishment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C386-sidhyati",
+      "sequence": 22360,
+      "title": "सिध्यति (sidhyati) — succeeds; comes off",
+      "headword": "सिध्यति",
+      "romanization": "sidhyati",
+      "gloss": "succeeds; comes off",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a69503c7e9b9732c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for excellence, then the Sanskrit for an accomplishment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सिध्यति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिध्यति — sidhyati — \"succeeds; comes off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि योजना सिध्यति, तर्हि जनाः प्रसन्नाः भविष्यन्ति। yadi yojanā sidhyati, tarhi janāḥ prasannāḥ bhaviṣyanti. If the plan comes off, people will be pleased."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): कार्यं सिद्धवत्, kāryaṃ siddhavat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिध्यति (sidhyati) comes from the root √sidh, \"to be accomplished, to succeed\"; MW gives siddha \"accomplished, fulfilled, gained\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sidhyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sidhyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sidhyati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sidhyati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi yojanā sidhyati, tarhi janāḥ prasannāḥ bhaviṣyanti. — If the plan comes off, people will be pleased.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi yojanā sidhyati, tarhi janāḥ prasannāḥ bhaviṣyanti.* — If the plan comes off, people will be pleased.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for excellence, then the Sanskrit for an accomplishment, then say sidhyati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for excellence, then the Sanskrit for an accomplishment, then say *sidhyati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सिध्यति (sidhyati) mean? (\"Succeeds; comes off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C386-arjayati",
+      "sequence": 22370,
+      "title": "अर्जयति (arjayati) — earns; acquires",
+      "headword": "अर्जयति",
+      "romanization": "arjayati",
+      "gloss": "earns; acquires",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfaf67cd918ceec7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an accomplishment, then the Sanskrit for comes off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अर्जयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अर्जयति — arjayati — \"earns; acquires\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः प्रतिदिनं कार्यं करोति, तर्हि धनम् अर्जयति। yadi saḥ pratidinaṃ kāryaṃ karoti, tarhi dhanam arjayati. If he works every day, he earns money."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः बहु धनम् अर्जितवान्, saḥ bahu dhanam arjitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अर्जयति (arjayati) comes from the root √ṛj, \"to procure\", in its causative form; MW gives the senses \"to procure, to acquire, to obtain\" and arjita \"acquired, gained, earned\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arjayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arjayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arjayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arjayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saḥ pratidinaṃ kāryaṃ karoti, tarhi dhanam arjayati. — If he works every day, he earns money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saḥ pratidinaṃ kāryaṃ karoti, tarhi dhanam arjayati.* — If he works every day, he earns money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an accomplishment, then the Sanskrit for comes off, then say arjayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an accomplishment, then the Sanskrit for comes off, then say *arjayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अर्जयति (arjayati) mean? (\"Earns; acquires\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C386-abhyudayah",
+      "sequence": 22380,
+      "title": "अभ्युदयः (abhyudayaḥ) — a rise in fortune; prosperity",
+      "headword": "अभ्युदयः",
+      "romanization": "abhyudayaḥ",
+      "gloss": "a rise in fortune; prosperity",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b6a0b152fc49ea8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for comes off, then the Sanskrit for earns."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अभ्युदयः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अभ्युदयः — abhyudayaḥ — \"a rise in fortune; prosperity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि शान्तिः अस्ति, तर्हि देशस्य अभ्युदयः भविष्यति। yadi śāntiḥ asti, tarhi deśasya abhyudayaḥ bhaviṣyati. If there is peace, the country will prosper."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अभ्युदयः (abhyudayaḥ) is built on abhi, ud and the root √i, \"to go\"; MW gives abhy-udaya \"sunrise\" and \"elevation, increase, prosperity\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhyudayaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhyudayaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhyudayaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhyudayaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi śāntiḥ asti, tarhi deśasya abhyudayaḥ bhaviṣyati. — If there is peace, the country will prosper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi śāntiḥ asti, tarhi deśasya abhyudayaḥ bhaviṣyati.* — If there is peace, the country will prosper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for comes off, then the Sanskrit for earns, then say abhyudayaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for comes off, then the Sanskrit for earns, then say *abhyudayaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अभ्युदयः (abhyudayaḥ) mean? (\"A rise in fortune; prosperity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C386-samrddhih",
+      "sequence": 22390,
+      "title": "समृद्धिः (samṛddhiḥ) — prosperity",
+      "headword": "समृद्धिः",
+      "romanization": "samṛddhiḥ",
+      "gloss": "prosperity",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e1b2bc4f0268f03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for earns, then the Sanskrit for a rise in fortune."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: समृद्धिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समृद्धिः — samṛddhiḥ — \"prosperity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि व्यापारः वर्धते, तर्हि नगरे समृद्धिः भविष्यति। yadi vyāpāraḥ vardhate, tarhi nagare samṛddhiḥ bhaviṣyati. If trade grows, there will be prosperity in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समृद्धिः (samṛddhiḥ) is built on sam and the root √ṛdh, \"to thrive\"; MW gives sam-ṛddhi \"great prosperity or success, growth, welfare\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samṛddhiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samṛddhiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samṛddhiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samṛddhiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi vyāpāraḥ vardhate, tarhi nagare samṛddhiḥ bhaviṣyati. — If trade grows, there will be prosperity in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi vyāpāraḥ vardhate, tarhi nagare samṛddhiḥ bhaviṣyati.* — If trade grows, there will be prosperity in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for earns, then the Sanskrit for a rise in fortune, then say samṛddhiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for earns, then the Sanskrit for a rise in fortune, then say *samṛddhiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does समृद्धिः (samṛddhiḥ) mean? (\"Prosperity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R386-review-380-386",
+      "sequence": 22400,
+      "title": "Looking back: from How Much to Success",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from How Much to Success",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:235b664793e96b33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for a quantity and an amount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a quantity, an amount, moderate, as much as one likes, expands",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a quantity, an amount, moderate, as much as one likes, expands]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "generally, especially, in every way, repeatedly, sums up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: generally, especially, in every way, repeatedly, sums up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "benefit, welfare, the better course, rests, receives with honour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: benefit, welfare, the better course, rests, receives with honour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a resolve, an ambition, longs for, a heartfelt wish, more and more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a resolve, an ambition, longs for, a heartfelt wish, more and more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perseverance, constancy, as far as one can, carries out, encourages",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: perseverance, constancy, as far as one can, carries out, encourages]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "competes, a rival, a winner, rewards (with a prize), excellence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: competes, a rival, a winner, rewards (with a prize), excellence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an accomplishment, comes off, earns, a rise in fortune, prosperity",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an accomplishment, comes off, earns, a rise in fortune, prosperity]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A quantity? (मात्रा, mātrā.) An amount? (परिमाणम्, parimāṇam.) Moderate? (मध्यमः, madhyamaḥ.) As much as one likes? (यथेष्टम्, yatheṣṭam.) Expands? (विस्तारयति, vistārayati.) Generally? (सामान्यतः, sāmānyataḥ.) Especially? (विशेषतः, viśeṣataḥ.) In every way? (सर्वथा, sarvathā.) Repeatedly? (बहुशः, bahuśaḥ.) Sums up? (संक्षिपति, saṅkṣipati.) Benefit? (हितम्, hitam.) Welfare? (कल्याणम्, kalyāṇam.) The better course? (श्रेयः, śreyaḥ.) Rests? (विश्राम्यति, viśrāmyati.) Receives with honour? (सत्करोति, satkaroti.) A resolve? (संकल्पः, saṅkalpaḥ.) An ambition? (आकांक्षा, ākāṅkṣā.) Longs for? (आकांक्षति, ākāṅkṣati.) A heartfelt wish? (अभिलाषः, abhilāṣaḥ.) More and more? (उत्तरोत्तरम्, uttarottaram.) Perseverance? (उद्यमः, udyamaḥ.) Constancy? (धृतिः, dhṛtiḥ.) As far as one can? (यथाशक्ति, yathāśakti.) Carries out? (अनुतिष्ठति, anutiṣṭhati.) Encourages? (प्रोत्साहयति, protsāhayati.) Competes? (स्पर्धते, spardhate.) A rival? (प्रतिद्वन्द्वी, pratidvandvī.) A winner? (जेता, jetā.) Rewards (with a prize)? (पुरस्करोति, puraskaroti.) Excellence? (उत्कर्षः, utkarṣaḥ.) An accomplishment? (सिद्धिः, siddhiḥ.) Comes off? (सिध्यति, sidhyati.) Earns? (अर्जयति, arjayati.) A rise in fortune? (अभ्युदयः, abhyudayaḥ.) Prosperity? (समृद्धिः, samṛddhiḥ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

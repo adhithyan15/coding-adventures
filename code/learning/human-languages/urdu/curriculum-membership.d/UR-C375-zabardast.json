@@ -1,0 +1,11 @@
+{
+  "id": "UR-C375-zabardast",
+  "pathSegment": "UR-PATH-375-BAHUT375",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-375-BAHUT375",
+      "order": 3
+    }
+  ]
+}

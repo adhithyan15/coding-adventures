@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:2c0d1d821b86e814",
+  "lessonIds": [
+    "UR-C278-darogha",
+    "UR-C278-riport",
+    "UR-C278-darj-karna",
+    "UR-C278-havalat",
+    "UR-C278-bayan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch278.txt",
+  "json": "urdu/narration/ch278.json",
+  "textHash": "fnv1a64:cbda218692d44ce5",
+  "jsonHash": "fnv1a64:0401b6a374f0afa7",
+  "findings": []
+}

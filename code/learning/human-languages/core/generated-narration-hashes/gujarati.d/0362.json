@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:5cda2d68e22107b3",
+  "lessonIds": [
+    "GU-C362-sansodhan",
+    "GU-C362-prayog",
+    "GU-C362-paddhati",
+    "GU-C362-namuno",
+    "GU-C362-taravvu",
+    "GU-R362-review-355-362"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch362.txt",
+  "json": "gujarati/narration/ch362.json",
+  "textHash": "fnv1a64:ec2e0d096e229e1f",
+  "jsonHash": "fnv1a64:694a939b57638d4b",
+  "findings": []
+}

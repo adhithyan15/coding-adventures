@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Fasting and Meditation",
+  "label": "ch:sa-fasting-and-meditation",
+  "canDo": "I can say what I do to stay well.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C486-brahmamuhurtah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can say what I do to stay well.",
+    "assesses": [
+      "SA-LEX-C486-UPAVASA486-03",
+      "SA-LEX-C486-UPAVASA486-04",
+      "SA-LEX-C486-UPAVASA486-05"
+    ]
+  }
+}

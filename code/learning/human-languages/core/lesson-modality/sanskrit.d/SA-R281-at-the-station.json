@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R281-at-the-station",
+    "language": "sanskrit",
+    "chapter": 281,
+    "sequence": 16500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:837e717f0096c557"
+  },
+  "findings": []
+}

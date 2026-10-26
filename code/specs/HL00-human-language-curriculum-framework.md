@@ -541,6 +541,26 @@ sliced into few-minute, spaced-repetition-scheduled, car-consumable pieces.
 Cousin webs, cultural notes, Grammar Lens sections, and gender tags all
 appear in both.
 
+### Publication integrity
+
+The complete set of book PDFs is built and tested before any main-branch
+publication. A publishing run may replace the always-current Pages catalog
+only when its source commit descends from the source of the catalog already
+there; an older or divergent rerun must fail before writing either Pages or a
+release. An exact-source replay leaves Pages alone. The source is established
+from the latest commit touching the books catalog, not from the tip of the
+shared `gh-pages` branch, which other sites also update.
+
+A run's release tag is stable across attempts. Before replaying a release,
+verify its tag, source commit, exact PDF names, sizes, and SHA-256 digests
+against the downloaded build artifact. A matching immutable release is left
+untouched; missing or mismatched integrity data fails closed. Create or verify
+the release before advancing Pages, so a release permission failure cannot
+publish a catalog that claims a release which was never made. Repository code
+may perform this preflight only with read permission; the narrow write-token
+job runs publishing actions, not code from the checkout. These safeguards do
+not replace the full-book build or its required pull-request gate.
+
 ## Roadmap Shape
 
 Each language track has a `roadmap.md`: a chapter skeleton (the word/phrase

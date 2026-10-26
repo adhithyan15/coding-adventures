@@ -1,0 +1,11 @@
+{
+  "id": "UR-C332-zariya",
+  "pathSegment": "UR-PATH-332-NUQSAN332",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-332-NUQSAN332",
+      "order": 1
+    }
+  ]
+}

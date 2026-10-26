@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:fa8519aadc434a2c",
+  "lessonIds": [
+    "UR-C317-id",
+    "UR-C317-hilal",
+    "UR-C317-mehndi",
+    "UR-C317-jagmagana",
+    "UR-C317-raunaq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch317.txt",
+  "json": "urdu/narration/ch317.json",
+  "textHash": "fnv1a64:973b7f3efca1cae9",
+  "jsonHash": "fnv1a64:8925c27e909355a4",
+  "findings": []
+}

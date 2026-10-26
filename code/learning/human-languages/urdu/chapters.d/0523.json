@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "At the Stadium",
+  "label": "ch:ur-at-the-stadium",
+  "canDo": "I can talk about the crowd and the score at a game.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C523-phandna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about the crowd and the score at a game.",
+    "assesses": [
+      "UR-LEX-C523-STADIUM523-03",
+      "UR-LEX-C523-STADIUM523-04",
+      "UR-LEX-C523-STADIUM523-05"
+    ]
+  }
+}

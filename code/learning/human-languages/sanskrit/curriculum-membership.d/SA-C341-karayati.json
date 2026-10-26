@@ -1,0 +1,11 @@
+{
+  "id": "SA-C341-karayati",
+  "pathSegment": "SA-PATH-341-PRAYOJANA341",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-341-PRAYOJANA341",
+      "order": 4
+    }
+  ]
+}

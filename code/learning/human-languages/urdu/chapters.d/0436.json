@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Nature",
+  "label": "ch:ur-nature",
+  "canDo": "I can talk about the natural world: scent, buds, petals and flowers that fade.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C436-murjhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can talk about the natural world: scent, buds, petals and flowers that fade.",
+    "assesses": [
+      "UR-LEX-C436-QUDRAT436-03",
+      "UR-LEX-C436-QUDRAT436-04",
+      "UR-LEX-C436-QUDRAT436-05"
+    ]
+  }
+}

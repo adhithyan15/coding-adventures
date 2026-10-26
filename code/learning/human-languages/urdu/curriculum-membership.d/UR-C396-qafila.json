@@ -1,0 +1,11 @@
+{
+  "id": "UR-C396-qafila",
+  "pathSegment": "UR-PATH-396-SHAHRAH396",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-396-SHAHRAH396",
+      "order": 3
+    }
+  ]
+}

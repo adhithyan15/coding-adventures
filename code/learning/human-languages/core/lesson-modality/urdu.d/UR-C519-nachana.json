@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C519-nachana",
+    "language": "urdu",
+    "chapter": 519,
+    "sequence": 30320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adf0a25126f92a6c"
+  },
+  "findings": []
+}

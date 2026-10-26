@@ -1,0 +1,21 @@
+{
+  "chapter": 400,
+  "title": "Scooters and Helmets",
+  "label": "ch:gu-scooters-and-helmets",
+  "canDo": "I can talk about riding a scooter safely.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-R400-review-393-400",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can talk about riding a scooter safely.",
+    "assesses": [
+      "GU-LEX-C400-SCOOTER400-01",
+      "GU-LEX-C400-SCOOTER400-02",
+      "GU-LEX-C400-SCOOTER400-03",
+      "GU-LEX-C400-SCOOTER400-04",
+      "GU-LEX-C400-SCOOTER400-05"
+    ]
+  }
+}

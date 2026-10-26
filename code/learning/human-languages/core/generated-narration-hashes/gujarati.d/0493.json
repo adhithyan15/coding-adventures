@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:040d784655fe6cb7",
+  "lessonIds": [
+    "GU-C493-pedhi",
+    "GU-C493-purvaj",
+    "GU-C493-bujhurg",
+    "GU-C493-parivar",
+    "GU-C493-santan",
+    "GU-R493-review-487-493"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch493.txt",
+  "json": "gujarati/narration/ch493.json",
+  "textHash": "fnv1a64:e189c80b7bbbfb45",
+  "jsonHash": "fnv1a64:51e066e4769d254d",
+  "findings": []
+}
