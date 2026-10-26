@@ -1262,3 +1262,143 @@ func TestValidateBuildFilesAllowsEqualsInsideArguments(t *testing.T) {
 		t.Fatalf("expected plain commands to pass, got %v", err)
 	}
 }
+
+func TestValidateWindowsBuildLinesRejectsPowerShellAndBatchSyntax(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "rust/powershell", relPath: "code/packages/rust/powershell", lang: "rust"},
+		{name: "rust/batch", relPath: "code/packages/rust/batch", lang: "rust"},
+		{name: "rust/fine", relPath: "code/packages/rust/fine", lang: "rust"},
+	})
+	for _, pkg := range pkgs {
+		writeBuildFile(t, pkg.Path, "BUILD", "cargo test\n")
+		switch filepath.Base(pkg.Path) {
+		case "powershell":
+			writeBuildFile(t, pkg.Path, "BUILD_windows",
+				"$env:CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER = \"rust-lld\"\nSet-Location ../other\ncargo test\n")
+		case "batch":
+			writeBuildFile(t, pkg.Path, "BUILD_windows", "pushd %~dp0..\ncargo test\n")
+		case "fine":
+			writeBuildFile(t, pkg.Path, "BUILD_windows",
+				"# a comment that mentions %~dp0 and $env: is fine\nrem harmless\n@echo off\ncd ../other && npm install --silent\ncargo test\nif errorlevel 1 exit /b 1\n")
+		}
+	}
+
+	problems := validateWindowsBuildLines(pkgs)
+	joined := strings.Join(problems, "\n")
+	if len(problems) != 3 {
+		t.Fatalf("expected 3 problems (2 PowerShell, 1 batch), got %d:\n%s", len(problems), joined)
+	}
+	for _, want := range []string{
+		"rust/powershell (BUILD_windows line 1): PowerShell variable or assignment",
+		"rust/powershell (BUILD_windows line 2): PowerShell command",
+		"rust/batch (BUILD_windows line 1): `%0` / `%~dp0`-style references expand only inside a batch file",
+	} {
+		if !strings.Contains(joined, want) {
+			t.Fatalf("missing %q in:\n%s", want, joined)
+		}
+	}
+	if strings.Contains(joined, "rust/fine") {
+		t.Fatalf("a cmd-compatible BUILD_windows was flagged:\n%s", joined)
+	}
+}
+
+func TestWindowsBuildLineProblemCoversPowerShellShapesAndBatchForms(t *testing.T) {
+	bad := []string{
+		"$env:X = \"y\"",
+		"cargo test $env:FILTER",
+		"exit $LASTEXITCODE",
+		"Remove-Item -Recurse build",
+		"Copy-Item a b",
+		"Import-Module ./build.psm1",
+		"powershell -Command \"echo ok\" && cargo test $env:FILTER",
+		"powershell -File tools\\run.ps1 && Remove-Item -Recurse dist",
+		"cargo test && powershell -Command \"echo ok\" && cargo test $env:FILTER",
+		"bash -c \"npm ci\" && $env:X=1 npm test",
+		"cargo test; Remove-Item x",
+		"npm test; if ($LASTEXITCODE -ne 0) { exit 1 }",
+		"cargo test ${env:FILTER}",
+		"tools\\run.ps1",
+		"npm test; remove-item x",
+		"cargo test \"foo; Remove-Item x",
+		"cargo test $PSScriptRoot",
+		"if ($true) { npm test }",
+		"if (Test-Path x) { npm ci }",
+		"[Environment]::SetEnvironmentVariable('A','B')",
+		"pushd %~dp0..",
+		"cd %~f0",
+		"call %0",
+		"cargo test $env:FILTER && powershell -Command \"echo ok\"",
+	}
+	for _, line := range bad {
+		if windowsBuildLineProblem(line) == "" {
+			t.Errorf("not flagged: %q", line)
+		}
+	}
+	good := []string{
+		"cargo test --package widget",
+		"cd ../dep && npm install --silent",
+		"powershell -NoProfile -Command \"$ErrorActionPreference = 'Stop'; npm test\"",
+		"pwsh -File scripts/build.ps1",
+		"rem harmless",
+		"@echo off",
+		"if errorlevel 1 exit /b 1",
+		"python -m pytest tests/test_100percent.py",
+		"bash -c \"npm ci; echo $?\"",
+		"test-runner --quick",
+		"node -e \"const a = 1; if (a !== 1) throw new Error('x')\"",
+		"copy-tool a b",
+		"(cd ../dep && npm install --silent)",
+		"powershell -NoProfile -Command \"npm ci && npm test; exit $LASTEXITCODE\"",
+		"npm test && powershell -NoProfile -Command \"$p = 1; exit $LASTEXITCODE\"",
+	}
+	for _, line := range good {
+		if problem := windowsBuildLineProblem(line); problem != "" {
+			t.Errorf("flagged %q: %s", line, problem)
+		}
+	}
+}
+
+func TestValidateWindowsBuildLinesSeesPastAByteOrderMark(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "rust/bom", relPath: "code/packages/rust/bom", lang: "rust"},
+	})
+	writeBuildFile(t, pkgs[0].Path, "BUILD", "cargo test\n")
+	writeBuildFile(t, pkgs[0].Path, "BUILD_windows", "\xEF\xBB\xBF$ErrorActionPreference = 'Stop'\r\ncargo test\r\n")
+	problems := validateWindowsBuildLines(pkgs)
+	if len(problems) != 1 || !strings.Contains(problems[0], "line 1") {
+		t.Fatalf("expected the BOM-prefixed line 1 to be flagged, got %v", problems)
+	}
+}
+
+func TestValidateWindowsBuildLinesRefusesASymlink(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "rust/link", relPath: "code/packages/rust/link", lang: "rust"},
+	})
+	writeBuildFile(t, pkgs[0].Path, "BUILD", "cargo test\n")
+	target := filepath.Join(pkgs[0].Path, "elsewhere")
+	if err := os.WriteFile(target, []byte("cargo test\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(target, filepath.Join(pkgs[0].Path, "BUILD_windows")); err != nil {
+		t.Skipf("symlinks unavailable: %v", err)
+	}
+	problems := validateWindowsBuildLines(pkgs)
+	if len(problems) != 1 || !strings.Contains(problems[0], "not a regular file") {
+		t.Fatalf("expected the symlink to be refused, got %v", problems)
+	}
+}
