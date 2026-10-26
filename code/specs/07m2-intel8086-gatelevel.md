@@ -37,6 +37,19 @@ are clocked into the listed DFFs. Memory writes clock exactly eight selected
 cells. A byte cache mirrors the memory Q bus for efficient observation but is
 not an additional architectural store.
 
+The HALT register's latched Q output is the sole architectural halt authority.
+Snapshots, checked and legacy execution control, result construction, restore,
+and fault rollback read or clock that Q bit directly. The historical public
+`halted: bool` field remains only as a source-compatible observation mirror:
+execution operations repair it from Q before use and refresh it after clocking
+Q, while caller mutation of the mirror cannot clock or otherwise alter the
+machine. New callers must use `halted()` to observe the authoritative value.
+
+`physical_storage_inventory()` reports the memory, register/FLAGS, HALT, and
+port-latch DFF counts by inspecting the concrete storage containers owned by
+the machine. Its independently summed total must equal `FLIP_FLOP_COUNT`; the
+topology constant cannot serve as its own implementation evidence.
+
 ## Gate networks
 
 1. Addition and address changes use fixed ripple chains of full adders.
@@ -74,7 +87,9 @@ compatibility; new code should use their checked counterparts.
 
 Acceptance requires:
 
-- exact topology tests for all 8,392,922 DFFs;
+- independently inventoried exact-topology tests for all 8,392,922 DFFs;
+- deliberate compatibility-mirror divergence, restore, halt-source, result,
+  and fault-rollback tests that prove HALT Q remains authoritative;
 - the functional package's 461 deterministic full-state vectors, including all
   256 first bytes, every dense group extension, every effective-address mode,
   and focused prefix/string/control/stack/I/O cases;

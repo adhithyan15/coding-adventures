@@ -71,6 +71,13 @@ architecture/core introduction era, not a claim about a particular chip.
 
 ## Discovered follow-up work
 
+### Gate-integrity audit queue
+
+| Priority | Target | Finding / next action |
+|---:|---|---|
+| P0 in progress | Intel 8086 gate HALT storage | The existing one-bit `StateRegister` is clocked only from a public host boolean, so the mirror is currently authoritative while the claimed HALT DFF Q is write-only. Make Q the execution/snapshot/restore/result/fault authority, preserve the public boolean only as a synchronized compatibility observer, route HLT and every protocol/error halt source through one clock helper, and publish an inventory derived from the concrete memory, register/FLAGS, HALT, and port storage. |
+| P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. |
+
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
