@@ -45,8 +45,29 @@ fn delegated_trace_is_non_committing_until_candidate_commit() {
     assert_eq!(core.get_state(), authoritative);
 
     let candidate = integration::settle(trace.state_after).unwrap();
-    integration::commit(&mut core, &candidate);
+    integration::commit(&mut core, &candidate).unwrap();
     assert_eq!(core.read_register(0).unwrap(), 7);
+}
+
+#[test]
+fn post_settle_external_mutation_is_rejected_before_any_dff_clock() {
+    let mut core = CortexM3GateLevel::new();
+    core.load(&encoding::program(&[encoding::movs(0, 7)]), ORIGIN)
+        .unwrap();
+    let authoritative_q = core.get_state();
+
+    // This is the exact external-consumer hazard: settle a valid snapshot,
+    // then use the public compatibility seam to invalidate it before commit.
+    let mut candidate = integration::settle(authoritative_q.clone()).unwrap();
+    candidate.state_mut().pc = 1;
+    assert!(matches!(
+        integration::commit(&mut core, &candidate),
+        Err(CortexM3Error::InvalidState { .. })
+    ));
+
+    // The complete DFF-derived Q snapshot is unchanged, so validation ran
+    // before memory or any register/control bit could be clocked.
+    assert_eq!(core.get_state(), authoritative_q);
 }
 
 #[test]

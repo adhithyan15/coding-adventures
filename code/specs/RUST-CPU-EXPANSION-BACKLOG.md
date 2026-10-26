@@ -46,7 +46,7 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
 | P0 | Arm Cortex-M0 | merged | PR #18296 | Conflict reconciliation in progress; squash auto-merge remains armed. |
 | P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
-| P0 | Arm Cortex-M7 | merged | repair in review | Gate cell implements Spec 07an2 with 524,956 authoritative DFFs, exhaustive DSP truth tables, hostile compiled-backend proofs, and typed allocation rollback. A final audit found that the shared M3 integration candidate remained mutable after settle while commit was infallible; the bounded repair makes commit revalidate before any DFF clock and adds an external-consumer regression. |
+| P0 | Arm Cortex-M7 | merged | local repair complete | Gate cell implements Spec 07an2 with 524,956 authoritative DFFs, exhaustive DSP truth tables, hostile compiled-backend proofs, and typed allocation rollback. The shared M3 integration commit is now fallible and revalidates its publicly mutable candidate before any DFF clock; the external-consumer regression proves a hostile post-settle mutation preserves the complete authoritative Q snapshot. |
 
 ## P0 gate-integrity repair queue
 

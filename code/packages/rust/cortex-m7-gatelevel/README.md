@@ -28,9 +28,10 @@ assert_eq!(result.final_state.core.registers[0], 9);
 ```
 
 The lifecycle preallocates every complete-state buffer before transitions,
-reports typed allocation failures, validates settled inherited and GE
-candidates before commit, and rolls back whole `run` and `execute` calls on
-fault. Caches, TCM, buses, timing, NVIC, MPU, FPU, debug, and vendor
-peripherals remain explicit later CPU/SoC cells.
+reports typed allocation failures, revalidates settled inherited state at the
+final fallible commit boundary before clocking inherited or GE DFFs, and rolls
+back whole `run` and `execute` calls on fault. Caches, TCM, buses, timing,
+NVIC, MPU, FPU, debug, and vendor peripherals remain explicit later CPU/SoC
+cells.
 
-The completion suite reports 93.93% package-source line coverage (696/741).
+The completion suite reports 93.94% package-source line coverage (697/742).

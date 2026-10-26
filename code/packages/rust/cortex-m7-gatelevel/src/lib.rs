@@ -171,7 +171,7 @@ impl CortexM7GateLevel {
         }
         let ge = state.ge;
         let candidate = integration::settle(state.core)?;
-        integration::commit(&mut self.core, &candidate);
+        integration::commit(&mut self.core, &candidate)?;
         clock_ge(&mut self.ge, ge);
         Ok(())
     }
@@ -269,7 +269,7 @@ impl CortexM7GateLevel {
             trace.state_before.registers,
         );
         let candidate = integration::settle(trace.state_after)?;
-        integration::commit(&mut self.core, &candidate);
+        integration::commit(&mut self.core, &candidate)?;
         trace.state_after = candidate.into_state();
         clock_ge(&mut self.ge, ge_after);
         Ok(StepTrace {
@@ -358,7 +358,7 @@ impl CortexM7GateLevel {
             ge: ge_before,
         };
         let candidate = integration::settle(after)?;
-        integration::commit(&mut self.core, &candidate);
+        integration::commit(&mut self.core, &candidate)?;
         let after = candidate.into_state();
         clock_ge(&mut self.ge, ge_after);
         Ok(StepTrace {
@@ -452,7 +452,8 @@ impl CortexM7GateLevel {
 
     fn rollback(&mut self, state: CortexM3State, ge: u8) {
         let candidate = integration::settle(state).expect("captured Q snapshot is valid");
-        integration::commit(&mut self.core, &candidate);
+        integration::commit(&mut self.core, &candidate)
+            .expect("settled rollback snapshot remains valid until commit");
         clock_ge(&mut self.ge, ge);
     }
 

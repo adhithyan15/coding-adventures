@@ -8,6 +8,9 @@
   independently decoded QADD, QSUB, SADD8, and UADD8 networks.
 - Add sticky-Q, per-lane GE, APSR transport, IT control, exact traces, typed
   atomic lifecycle, deterministic allocation failure, and whole-run rollback.
+- Make the inherited candidate commit boundary fallible and revalidate after
+  any public post-settle mutation before the first DFF clock.
 - Add exhaustive operand-field and byte-lane truth tables, functional-oracle
   differentials, and hostile compiled-backend dependency proofs.
-- Reach 93.93% package-source line coverage (696 of 741 lines).
+- Reach 93.94% package-source line coverage (697 of 742 lines) after the final
+  candidate-boundary repair.

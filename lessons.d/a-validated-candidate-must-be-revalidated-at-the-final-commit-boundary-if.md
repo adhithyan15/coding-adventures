@@ -12,5 +12,3 @@ value immutable or make commit fallible and revalidate immediately before its
 first side effect. Exercise the actual external API sequence—settle, mutate to
 an invalid state, commit—and compare the complete Q snapshot to prove rejection
 happens before any clock.
-
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.

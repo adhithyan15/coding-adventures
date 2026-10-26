@@ -30,11 +30,12 @@ IT, CBZ/CBNZ, wide moves and memory transfers, division, bit operations,
 table branches, exclusive transfers, barriers, low-power/event behavior,
 BASEPRI, FAULTMASK, and special-register views. Release differential tests
 compare every implemented decode subfamily with the functional oracle. The
-completion baseline is 92.12% combined Rust line coverage (2,323/2,506).
+completion baseline is 92.06% combined Rust line coverage (2,343/2,545).
 
 Repository gate companions can compose this engine through the narrow
 `integration` module. It snapshots into caller-preallocated memory, derives
 delegated traces without clocking Q, validates opaque candidates before an
-explicit commit, exposes deterministic allocation checkpoints, and derives
-the physical inventory from the live DFF containers. It never exposes mutable
-access to those containers.
+explicit fallible commit, revalidates publicly mutable candidate values at
+that final boundary, exposes deterministic allocation checkpoints, and
+derives the physical inventory from the live DFF containers. It never exposes
+mutable access to the authoritative DFF containers.

@@ -119,7 +119,11 @@ pub fn storage_inventory(core: &CortexM3GateLevel) -> StorageInventory {
     }
 }
 
-/// Validated settled state awaiting an explicit DFF commit.
+/// Settled state awaiting an explicit DFF commit.
+///
+/// `state_mut` remains available for repository gate companions that append
+/// their own mux results after the initial settle pass.  Consequently the
+/// final commit boundary revalidates the complete value before clocking Q.
 #[derive(Debug)]
 pub struct Candidate(CortexM3State);
 
@@ -130,7 +134,8 @@ impl Candidate {
     }
 
     /// Candidate values are not authoritative storage.  Composed gate engines
-    /// may settle their additional mux results here before validation/commit.
+    /// may settle their additional mux results here before final validation and
+    /// commit.
     pub fn state_mut(&mut self) -> &mut CortexM3State {
         &mut self.0
     }
@@ -203,7 +208,13 @@ pub fn delegated_step_from(
     engine::step_state_preallocated(state, before_memory, validation_memory)
 }
 
-/// Clock a previously validated candidate into authoritative DFF storage.
-pub fn commit(core: &mut CortexM3GateLevel, candidate: &Candidate) {
+/// Revalidate and atomically clock a candidate into authoritative DFF storage.
+///
+/// Validation deliberately occurs here even though [`settle`] already checked
+/// the original value.  Public candidate mutation is a compatibility seam for
+/// composed gate engines, and no stale validation may authorize DFF clocks.
+pub fn commit(core: &mut CortexM3GateLevel, candidate: &Candidate) -> Result<(), CortexM3Error> {
+    engine::validate_state(&candidate.0)?;
     core.commit_transition(&candidate.0);
+    Ok(())
 }
