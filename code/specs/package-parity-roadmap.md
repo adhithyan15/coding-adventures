@@ -18279,7 +18279,7 @@ pending maintenance items.
 
 Prepare the package locally on branch `codex/parity-swift-hash-map-20261026`
 from exact origin/main `d096a82430b2aa67f768361c65001e8d13dcb2dd`.
-Implementation head `cc87e38ad95b9e6076abbf307ebe69ce66e5a49d`
+Implementation head `a04423e471cbcbd6e59f8e22738e98eefa658739`
 contains the complete package, tests, docs, capability declaration, build
 fronts, and changelogs. The owner remains `pending`: the Haskell Windows-front
 owner is already the sole local `in_progress` selection, and hosted slots are
@@ -18289,9 +18289,12 @@ occupied by #18293 at `c7b1e98687d3c762a98a9beed61ad71f586ca484`,
 claim independent final review.
 
 The bounded Swift contract uses a closed byte-or-UTF-8 key representation and
-closed DT17 FNV-1a, Murmur3, or explicitly keyed SipHash configuration. It
-implements separate chaining and linear probing without Swift's randomized
-Hasher, caller callbacks, host coercion, or ambient entropy. Updates are
+closed DT17 FNV-1a, Murmur3, or explicitly keyed SipHash configuration. String
+identity is exact UTF-8 byte identity rather than Swift's canonical-equivalence
+`String` equality, so composed and decomposed spellings remain distinct and
+equality always agrees with the hash input. It implements separate chaining
+and linear probing without Swift's randomized Hasher, caller callbacks, host
+coercion, or ambient entropy. Updates are
 persistent values; keys and structural exports are copied while reference-
 typed values are truthfully documented as shallow. Chaining grows only above
 load 1.0, probing grows only above load 0.75, capacity growth is checked and
@@ -18300,10 +18303,12 @@ nil membership is distinct from absence. Iteration is deterministic physical
 storage order only for an identical strategy, hash, capacity, and operation
 history; it does not claim insertion order.
 
-Swift 6.3.1 passes all 15 focused tests, a deterministic 300-operation semantic
-trace under both strategies, the native BUILD front, release compilation, and
-a separate release-mode consumer that imports only `HashMap`. Production
-`HashMap.swift` coverage is 96.71% of 304 lines and 95.54% of 157 regions.
+Swift 6.3.1 passes all 17 focused tests, including composed/decomposed
+coexistence, lookup, overwrite, and removal under both collision strategies; a
+deterministic 300-operation semantic trace under both strategies; the native
+BUILD front; release compilation; and a separate release-mode consumer that
+imports only `HashMap`. Production `HashMap.swift` coverage is 96.86% of 318
+lines, 95.71% of 163 regions, and 97.30% of 37 functions.
 Swift format lint, the empty capability schema, strict JSON, root changelog
 heading digest, 1,602 lesson shards, and the 1,549-owner unique, dependency-
 complete, acyclic state graph with no merged-to-unfinished edges pass. Across
