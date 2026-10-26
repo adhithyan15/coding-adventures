@@ -511,6 +511,13 @@
       "sourceHash": "fnv1a64:3f2f22b5f0bde421",
       "svgHash": "fnv1a64:a05f899ad3ef13fa",
       "svg": "chinese/book/figures/ZH-W28-xi-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W30-hen",
+      "sourceHash": "fnv1a64:9e77cde6887afa4e",
+      "svgHash": "fnv1a64:76d9d1445e3756d8",
+      "svg": "chinese/book/figures/ZH-W30-hen-filmstrip.svg"
     }
   ]
 }
