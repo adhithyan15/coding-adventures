@@ -9,18 +9,24 @@
   PR7c-js / PR7c-py each compiler prints a float with its own module-local
   helper over `f64_class` / `f64_digits` / `f64_exp10`, so nothing emits them.
 - New `op_registry::language_name_violation(name)` and `LANGUAGE_TOKENS`
-  (LANG83 PR7's "no-language-names" rule): the name is split on `_` and `.`,
-  and a part that is a language token (`py`, `python`, `js`, `ecma`, `rb`,
-  `ruby`, `pl`, `perl`, `lisp`, `scheme`, `twig`, `basic`, `algol`, `cobol`,
-  `fortran`, …) or that reads as a language's exception class (it ends in
-  `error` or `exception`, like `ReferenceError`) is refused.
+  (LANG83 PR7's "no-language-names" rule): the name is split into words on
+  `_`, `.` and `-` and at camelCase boundaries (`toJSString` → `to`, `JS`,
+  `String`; the whole part is checked too, so `TypeScript` is one word), and
+  a word that is a language token, ignoring case and trailing digits
+  (`py`, `python`, `cpython`, `js`, `ecma`, `node`, `ts`, `typescript`,
+  `rb`, `ruby`, `pl`, `perl`, `php`, `lisp`, `scheme`, `clojure`, `twig`,
+  `basic`, `algol`, `cobol`, `fortran`, `ocaml`, `scala`, …) or that reads
+  as a language's exception class (it ends in `error` or `exception`, like
+  `ReferenceError`) is refused.
 - Tests: `no_registry_name_or_trap_kind_names_a_language` runs the rule over
   every registry name and every trap kind;
   `the_language_name_rule_rejects_the_retired_names` pins that
   `write_f64_py`, `write_f64_js`, `py_print_float`, `Trap.ReferenceError`,
   `Ruby.ZeroDivisionError` and others are caught, unregistered and not trap
-  kinds, while `f64_digits`, `Trap.Unbound`, `equal?` and `adjust_plus` (a
-  token inside a word is not a part) pass. `pr6a_set_is_exactly_the_two_float_writers`
+  kinds, as are `py-print`, `writeF64Py`, `toJSString`, `f64_to_str_js2`,
+  `CPythonRepr` and one name per added token, while `f64_digits`,
+  `Trap.Unbound`, `Trap.ConvRange`, `equal?`, `adjust_plus` (a token inside a
+  word is not a word), `list-nodes`, `toString` and `u8_to_f64` pass. `pr6a_set_is_exactly_the_two_float_writers`
   is removed.
 
 ## Unreleased — LANG83 PR7d — `Trap.Unbound`, and no language trap kinds

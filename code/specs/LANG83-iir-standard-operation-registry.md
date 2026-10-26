@@ -1514,8 +1514,13 @@ column.
     shared parse's frame shrinks from 10 to 8 Y slots, the two the writer
     alone read.
 - *The no-language-names test.* `op_registry::language_name_violation`
-  splits a name on `_` and `.` and refuses a part that is in
-  `LANGUAGE_TOKENS` (ignoring case) or ends in `error` or `exception`.
+  splits a name into words, on `_`, `.` and `-` and at camelCase
+  boundaries (the whole part is checked too, so `TypeScript` is caught), and
+  refuses a word that is in `LANGUAGE_TOKENS` (ignoring case and trailing
+  digits, so `python3` and `js2` are caught) or ends in `error` or
+  `exception`. The tokens include the runtimes a writer might name instead
+  of the language (`node`, `cpython`) and `ts`, `typescript`, `php`,
+  `ocaml`, `clojure`, `scala`.
   `no_registry_name_or_trap_kind_names_a_language` runs it over every
   `STANDARD_OPS` name and every `exception_kind` name, and
   `the_language_name_rule_rejects_the_retired_names` pins `write_f64_py`,
@@ -1604,7 +1609,8 @@ anything still emits it.
    `CALL_BUILTIN_F64` if nothing else uses it. Add the
    **no-language-names test** to `op_registry`: every `STANDARD_OPS` name,
    every vm-core default builtin, every lang-aot harness builtin and every
-   `exception_kind` name is split on `_` and `.`, and no part may be a
+   `exception_kind` name is split into words (on `_` and `.`; as landed,
+   also `-` and camelCase boundaries), and no word may be a
    language token (`py`, `python`, `js`, `javascript`, `ecma`, `rb`,
    `ruby`, `pl`, `perl`, `lisp`, `scheme`, `twig`, `basic`, `algol`,
    `cobol`, `fortran`, …) or a known language exception class

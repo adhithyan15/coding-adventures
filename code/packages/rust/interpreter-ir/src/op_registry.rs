@@ -95,7 +95,8 @@
 //! The IIR is a language-neutral machine. **No registry op, builtin or trap
 //! kind may name a source language** or carry one language's semantics.
 //! [`language_name_violation`] enforces the *name* half: it splits a name on
-//! `_` and `.` and refuses any part that is a language token
+//! `_`, `.`, `-` and camelCase boundaries and refuses any word that is a
+//! language token, ignoring trailing digits
 //! ([`LANGUAGE_TOKENS`]) or shaped like a language's exception class (a part
 //! ending in `error` or `exception`, such as `ReferenceError`):
 //!
@@ -522,50 +523,97 @@ pub fn name_rule_violation(name: &str) -> Option<String> {
 }
 
 /// The source-language tokens no IIR vocabulary name may contain (LANG83
-/// PR7, "The principle"). A name is split on `_` and `.`; a part equal to one
-/// of these, ignoring case, names a language.
+/// PR7, "The principle"). A name is split into words (see
+/// [`language_name_violation`]); a word equal to one of these, ignoring case
+/// and trailing digits, names a language.
 ///
-/// Languages the repository compiles, their common abbreviations, and the
-/// families the spec lists. It cannot be complete. It covers the spelling a
-/// writer reaches for first (`_py`, `_js`, `_rb`, `_pl`) and the languages
-/// with a frontend here whose names are not also ordinary words: `Oct`,
-/// `Nib`, `REDUCE` and `Derive` are left out, because `i64_to_oct` or
-/// `vec_reduce` would be neutral ops.
+/// Languages the repository compiles, their common abbreviations, the
+/// families the spec lists, and the runtimes a writer might name instead of
+/// the language (`node`, `cpython`). It cannot be complete. It covers the
+/// spelling a writer reaches for first (`_py`, `_js`, `_ts`, `_rb`, `_pl`)
+/// and the languages with a frontend here whose names are not also ordinary
+/// words: `Oct`, `Nib`, `REDUCE` and `Derive` are left out, because
+/// `i64_to_oct` or `vec_reduce` would be neutral ops.
 pub const LANGUAGE_TOKENS: &[&str] = &[
-    "py", "python", "python2", "python3", "js", "javascript", "ecma", "ecmascript", "rb", "ruby",
-    "pl", "perl", "lisp", "scheme", "twig", "mccarthy", "basic", "algol", "cobol", "fortran",
-    "flowmatic", "brainfuck", "macsyma", "maxima", "wolfram", "mathematica", "lua", "elixir",
-    "erlang", "haskell", "swift", "csharp", "java", "kotlin", "golang", "rust", "smalltalk",
-    "pascal",
+    "py", "python", "python2", "python3", "cpython", "js", "javascript", "ecma", "ecmascript",
+    "node", "ts", "typescript", "rb", "ruby", "pl", "perl", "php", "lisp", "scheme", "clojure",
+    "twig", "mccarthy", "basic", "algol", "cobol", "fortran", "flowmatic", "brainfuck", "macsyma",
+    "maxima", "wolfram", "mathematica", "lua", "elixir", "erlang", "haskell", "ocaml", "swift",
+    "csharp", "java", "kotlin", "scala", "golang", "rust", "smalltalk", "pascal",
 ];
+
+/// The words of an IIR vocabulary name, for [`language_name_violation`]:
+/// the parts between `_`, `.` and `-`, each followed by its camelCase words
+/// when it has more than one.
+///
+/// | name | words |
+/// |------|-------|
+/// | `write_f64_py` | `write`, `f64`, `py` |
+/// | `Trap.DivZero` | `Trap`, `DivZero`, `Div`, `Zero` |
+/// | `toJSString` | `toJSString`, `to`, `JS`, `String` |
+/// | `py-print` | `py`, `print` |
+///
+/// A camelCase boundary falls before an upper-case letter that follows a
+/// lower-case letter or digit (`toJS` → `to` `JS`), or that follows an
+/// upper-case letter and precedes a lower-case one (`JSString` → `JS`
+/// `String`). The whole part is kept too, so `TypeScript` is caught as one
+/// word although neither `Type` nor `Script` is a language.
+fn name_words(name: &str) -> Vec<&str> {
+    let mut words = Vec::new();
+    for part in name.split(['_', '.', '-']).filter(|part| !part.is_empty()) {
+        words.push(part);
+        let bytes = part.as_bytes();
+        let mut start = 0;
+        let mut camel = Vec::new();
+        for i in 1..bytes.len() {
+            let (prev, cur) = (bytes[i - 1], bytes[i]);
+            let next_lower = bytes.get(i + 1).is_some_and(u8::is_ascii_lowercase);
+            let boundary = cur.is_ascii_uppercase()
+                && (prev.is_ascii_lowercase() || prev.is_ascii_digit() || (prev.is_ascii_uppercase() && next_lower));
+            if boundary {
+                camel.push(&part[start..i]);
+                start = i;
+            }
+        }
+        if !camel.is_empty() {
+            camel.push(&part[start..]);
+            words.extend(camel);
+        }
+    }
+    words
+}
 
 /// The language-neutrality violation for an IIR vocabulary name — a registry
 /// op or builtin, a VM builtin, or a trap kind — or `None` if it names no
 /// source language.
 ///
-/// The name is split on `_` and `.`, and each part is checked, ignoring case:
+/// The name is split into words — on `_`, `.` and `-`, and at camelCase
+/// boundaries (see `name_words`) — and each word is checked, ignoring case
+/// and any trailing digits (`python3` → `python`, `js2` → `js`):
 ///
-/// | Part | Verdict | Example |
+/// | Word | Verdict | Example |
 /// |------|---------|---------|
-/// | a [`LANGUAGE_TOKENS`] entry | names a language | `write_f64_py`, `Ruby.ZeroDivisionError` |
+/// | a [`LANGUAGE_TOKENS`] entry | names a language | `write_f64_py`, `Ruby.ZeroDivisionError`, `toJSString`, `py-print`, `rb2` |
 /// | ends in `error` or `exception` | a language's exception class; a trap kind names a *condition* instead | `Trap.ReferenceError`, `NameError` |
 /// | anything else | neutral | `f64_digits`, `Trap.Unbound`, `equal?` |
 ///
 /// Splitting first matters: `print_str` contains no language although `str`
 /// and `print` might look like source words, and `js` inside `adjust` is not
-/// a part at all.
+/// a word at all.
 ///
 /// ```
 /// use interpreter_ir::op_registry::language_name_violation;
 /// assert!(language_name_violation("f64_digits").is_none());
 /// assert!(language_name_violation("Trap.Unbound").is_none());
 /// assert!(language_name_violation("write_f64_py").unwrap().contains("\"py\""));
+/// assert!(language_name_violation("writeF64Js").unwrap().contains("\"Js\""));
 /// assert!(language_name_violation("Trap.ReferenceError").unwrap().contains("exception class"));
 /// ```
 pub fn language_name_violation(name: &str) -> Option<String> {
-    name.split(['_', '.']).filter(|part| !part.is_empty()).find_map(|part| {
+    name_words(name).into_iter().find_map(|part| {
         let lower = part.to_ascii_lowercase();
-        if LANGUAGE_TOKENS.contains(&lower.as_str()) {
+        let stem = lower.trim_end_matches(|c: char| c.is_ascii_digit());
+        if LANGUAGE_TOKENS.contains(&lower.as_str()) || LANGUAGE_TOKENS.contains(&stem) {
             Some(format!(
                 "{name:?} contains {part:?}, a source language's name: the IIR is \
                  language-neutral (LANG83 PR7), so the compiler of that language must \
@@ -700,9 +748,48 @@ mod tests {
         // Case does not matter; empty parts (`__x`) are skipped.
         assert!(language_name_violation("Write_F64_PY").is_some());
         assert!(language_name_violation("__python_helper").is_some());
+        // `-` separates words, camelCase boundaries do too, and a trailing
+        // version number does not hide a language.
+        for bad in [
+            "py-print",
+            "writeF64Py",
+            "toJSString",
+            "JSONtoRuby",
+            "TypeScript.cast",
+            "f64_to_str_js2",
+            "ruby3_hash",
+            "node_write",
+            "ts_number",
+            "php_echo",
+            "ocaml_compare",
+            "clojure_seq",
+            "scala_match",
+            "cpython_repr",
+            "CPythonRepr",
+        ] {
+            assert!(language_name_violation(bad).is_some(), "{bad} names a language");
+        }
         // Neutral names pass, including ones whose letters merely contain a
         // token (`adjust` holds "js", `plus` holds "pl"): only whole parts count.
-        for ok in ["f64_digits", "i64_div_floor", "putchar", "print_str", "Trap.Unbound", "Trap.DivZero", "equal?", "adjust_plus", "+"] {
+        // Splitting at camelCase and digits must not invent a token either:
+        // `f64` is `f`, `DivZero` is `Div` `Zero`, `nodes` and `tsc` are not
+        // `node` and `ts`.
+        for ok in [
+            "f64_digits",
+            "i64_div_floor",
+            "putchar",
+            "print_str",
+            "Trap.Unbound",
+            "Trap.DivZero",
+            "Trap.ConvRange",
+            "equal?",
+            "adjust_plus",
+            "+",
+            "list-nodes",
+            "toString",
+            "u8_to_f64",
+            "PutChar",
+        ] {
             assert!(language_name_violation(ok).is_none(), "{ok} is neutral");
         }
     }

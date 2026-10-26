@@ -96,9 +96,10 @@ There is no float writer. PR6a's `write_f64_py` / `write_f64_js` printed an `f64
 in Python's or JavaScript's layout; LANG83 PR7e removed them, because the IIR
 names no source language. A compiler prints a float with a module-local helper
 built from `f64_class`, `f64_digits`, `f64_exp10`, integer ops and `putchar`.
-`op_registry::language_name_violation` keeps it that way: it splits a name on `_`
-and `.` and refuses a part that is a language token (`py`, `js`, `ruby`, …) or
-reads as an exception class (`ReferenceError`). A test runs it over every registry
+`op_registry::language_name_violation` keeps it that way: it splits a name on `_`,
+`.`, `-` and camelCase boundaries and refuses a word that is a language token
+(`py`, `js`, `ts`, `ruby`, `node`, …, ignoring trailing digits) or reads as an
+exception class (`ReferenceError`). A test runs it over every registry
 name and trap kind; vm-core and `lang-aot` run it over their builtins.
 
 ```rust
