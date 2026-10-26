@@ -1032,6 +1032,7 @@ members = [
     "m68k-encoder",
     "m68k-backend",
     "motorola6809-simulator",
+    "motorola6809-gatelevel",
     "intel8080-encoder",
     "intel8080-backend",
     "mips-r2000-simulator",
