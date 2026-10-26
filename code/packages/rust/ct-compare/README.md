@@ -35,13 +35,17 @@ This crate replaces the early exit with an XOR accumulator:
 
 ```rust
 let mut acc = 0u8;
-for i in 0..a.len() { acc |= a[i] ^ b[i]; }
-black_box(acc) == 0
+for i in 0..a.len() {
+    // The implementation performs volatile reads of both bytes and `acc`,
+    // followed by a volatile write of the combined difference.
+    accumulate_volatile(&mut acc, &a[i], &b[i]);
+}
+read_accumulator(&acc) == 0
 ```
 
-Every iteration does the same work regardless of which byte differs,
-and `black_box` stops the optimiser from reasoning about the loop and
-folding it back into an early-exit equivalent.
+Every iteration retains observable input reads and an accumulator write
+regardless of which byte differs. A release-optimized LLVM-IR regression gate
+rejects builds where the volatile operations disappear.
 
 ## What It Does NOT Do
 
@@ -78,17 +82,21 @@ Part of the D18 Chief-of-Staff Vault crypto stack. Used by Poly1305
 AEAD decryption, HMAC verification, Argon2id password verification,
 and Vault unlock-key comparison.
 
-Self-contained: no runtime dependencies. `#![deny(unsafe_code)]`.
+Self-contained: no runtime dependencies. Two private safe wrappers contain the
+audited volatile-pointer operations; public callers never handle pointers or
+invoke `unsafe`.
 
 ## Implementation Notes
 
 - `#[inline(never)]` on the public functions. Inlining them into
   callers could let the optimiser specialise per-caller in ways that
   reintroduce data-dependent behaviour.
-- `black_box` is used on every boolean result. It is the
-  standard-library primitive for "treat this value as opaque to the
-  optimiser" — without it, a sufficiently aggressive pass could in
-  principle detect that the loop is equivalent to a short-circuit.
+- `ct_eq` and `ct_eq_fixed` use volatile reads for both input bytes and their
+  accumulator plus a volatile accumulator write on every iteration. This is a
+  compiler-observability boundary, not a claim to defeat cache, speculative,
+  power-analysis, or other hardware side channels.
+- An integration test compiles the crate at optimization level 3 and inspects
+  optimized LLVM IR for the volatile equality-loop operations.
 - `ct_select_bytes` builds a byte mask `0u8.wrapping_sub(choice as u8)`
   (`0xFF` or `0x00`) and applies `b ^ ((a ^ b) & mask)` per byte. No
   conditional branches, no early exits.

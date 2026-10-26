@@ -1,0 +1,25 @@
+---
+category: Cryptography & security review
+---
+
+# A final optimizer barrier does not preserve every constant-time comparison iteration
+
+A comparison loop accumulated byte differences normally and passed only the
+final accumulator through `black_box`. That barrier hid the final value, but it
+did not make each earlier input read observable. Once the accumulator reached
+`0xff`, an optimizer could prove that later ordinary reads could not change the
+result and remove them, reintroducing data-dependent work despite the
+source-level full scan.
+
+For repository constant-work comparisons, preserve the boundary at every
+iteration. The fix uses volatile reads of both input bytes and the accumulator,
+plus a volatile accumulator write, behind small audited safe wrappers. Add a
+release-optimized LLVM-IR regression test that fails if those volatile
+operations disappear or the scan lowers to `memcmp`/`bcmp`; functional tests
+alone cannot detect this class of optimizer rewrite.
+
+Keep the claim narrow. Volatile operations establish compiler-observable work;
+they do not establish resistance to cache, speculative-execution, power, or
+other hardware side channels. Before replacing a reviewed comparison
+dependency, security-review the repository primitive and its optimized output
+first, then migrate consumers in a separate slice.
