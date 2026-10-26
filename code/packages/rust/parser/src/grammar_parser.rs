@@ -416,14 +416,15 @@ pub const DEFAULT_MAX_RULE_DEPTH: usize = 128;
 /// of *distinct* nodes) and refuses a tree larger than this many nodes per
 /// input token, or [`MAX_TREE_NODES_FLOOR`], whichever is larger.
 ///
-/// Why 256: measured over the test suites of 22 grammar crates (JavaScript,
+/// Why 64: measured over the test suites of 22 grammar crates (JavaScript,
 /// TypeScript, Python, Ruby, Perl, C, Java, C#, Haskell, SQL, Verilog,
 /// ALGOL, COBOL, Twig and others; 3,142 parses, inputs up to 100,003
 /// tokens), the largest owned tree had 10.3 nodes per input token, and no
-/// input over 100 tokens passed 9.5. 256 is a 25× margin over that, while
-/// an exponential expansion still fails at once instead of exhausting
-/// memory.
-pub const MAX_TREE_NODES_PER_TOKEN: usize = 256;
+/// input over 100 tokens passed 9.5. 64 is a 6× margin over that. It also
+/// bounds what a crafted (non-exponential) grammar can make the copy
+/// allocate to about 64 owned nodes, a few KiB, per token, while an
+/// exponential expansion still fails at once instead of exhausting memory.
+pub const MAX_TREE_NODES_PER_TOKEN: usize = 64;
 
 /// The smallest tree budget, whatever the input length: a short input may
 /// legitimately produce a tree of a few hundred wrappers (an empty program
