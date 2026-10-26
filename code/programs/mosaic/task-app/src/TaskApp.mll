@@ -534,6 +534,14 @@ layout TaskApp {
             // Every notes-* slot/emit is a straight pass-through to the
             // package — TaskApp adds no shaping of its own, see Notes.mil
             // for the contract and task-app-notes-ui-v1.md for the scope.
+            //
+            // The one thing TaskApp adds is a refused Save's reason (E5),
+            // composed above the package as Journal composes `draft-error`
+            // above DraftEditor. Nothing was written; any other event
+            // clears it.
+            If ( when: slot: note-error ) {
+              Text [ note-error ] ( content : slot: note-error )
+            }
             pkg::mosaic-pkg-notes::Notes (
               notes-title : slot: notes-title ,
               note-rows : slot: note-rows ,
