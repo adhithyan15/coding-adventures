@@ -223,9 +223,15 @@ count against the track's letter-anchoring ratchet.
 135 words (37 verbs) on the pre-A1 nodes, five a chapter, and 30 characters written
 (他 们 妈 男 叫 来 这 那 吃 饭 喝 水 买 多 少 去 车 天 今 星 期 年 明 点 午 晚 手 说 话 想), each
 right after the word that first shows it. Words whose characters are not written yet
-are taught by ear with pinyin headwords. Pre-A1 headwords 54 -> 189 and verbs 0 -> 37;
-the second half (chapters 58-84, 24 more characters) takes the track to pre-A1
-attained.
+are taught by ear with pinyin headwords. Pre-A1 headwords 54 -> 189 and verbs 0 -> 37.
+
+## The pre-A1 vocabulary, second half *(delivered, chapters 58-84)*
+
+135 more words (34 verbs) and 24 more characters written (机 白 长 快 电 打 起 门 问 气 雨 马
+山 做 火 开 下 进 客 乐 会 前 课 里). Chinese attains pre-A1: 324 headwords, 71 verbs, all
+seven pre-A1 spine nodes. Next: the A1 core (location with 在, 没, 想 / 要, 会 / 能,
+everyday actions and things, qualities, 因为 … 所以, measure words and 两), whose
+characters to write are re-picked now that stage 2 writes 这 吃 喝 去 今 会 想.
 
 ## Part II onward — cumulative pre-A1 to C2 build *(planned)*
 

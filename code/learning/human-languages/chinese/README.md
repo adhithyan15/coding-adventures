@@ -148,6 +148,15 @@ words are headed in characters the reader has written; the other 94 are taught b
 ear with pinyin headwords, as in chapter 30, and change to characters once their
 characters are written.
 
+**Chapters 58-84** are the second half: 135 more words (34 verbs), from things you
+carry, clothes and colours through the phone, asking for help, the weather,
+animals, meals and tastes, getting about and the station, visiting, celebrating,
+parting and thanks, school, jobs and the city, to running late and doing things
+together. Twenty-four more characters are written (机 白 长 快 电 打 起 门 问 气 雨 马
+山 做 火 开 下 进 客 乐 会 前 课 里), 55 in all since chapter 30. With them Chinese
+attains pre-A1 on the level gate: 324 headwords and 71 verbs, all seven pre-A1
+spine nodes realized.
+
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) records the original authored-and-planned path
