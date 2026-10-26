@@ -350,9 +350,9 @@ public struct SipHash24: HashFunction {
 
 // MARK: - Quality analysis
 
-/// Measure the fraction of meaningful output bits changed by one-bit input
-/// mutations. Samples are explicit so the operation remains deterministic and
-/// never obtains ambient entropy.
+/// Measure the fraction of the declared low-order output bits changed by
+/// one-bit input mutations. Samples are explicit so the operation remains
+/// deterministic and never obtains ambient entropy.
 public func avalancheScore(
     hashFunction: ([UInt8]) -> UInt64,
     outputBits: Int,
@@ -363,6 +363,9 @@ public func avalancheScore(
     }
     guard !samples.isEmpty else { throw HashFunctionError.emptySamples }
 
+    let outputMask = outputBits == 64
+        ? UInt64.max
+        : (UInt64(1) << outputBits) - 1
     var changedBits = 0.0
     var examinedBits = 0.0
     for (sampleIndex, sample) in samples.enumerated() {
@@ -372,7 +375,8 @@ public func avalancheScore(
             for bitOffset in 0..<8 {
                 var flipped = sample
                 flipped[byteIndex] ^= UInt8(1 << bitOffset)
-                changedBits += Double((original ^ hashFunction(flipped)).nonzeroBitCount)
+                let changed = (original ^ hashFunction(flipped)) & outputMask
+                changedBits += Double(changed.nonzeroBitCount)
                 examinedBits += Double(outputBits)
             }
         }

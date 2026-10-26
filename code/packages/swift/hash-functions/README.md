@@ -81,8 +81,9 @@ let chiSquared = try distributionTest(
 ```
 
 `avalancheScore` flips every bit of every non-empty sample and returns the
-fraction of meaningful output bits that changed. `distributionTest` returns
-the chi-squared statistic for the requested buckets.
+fraction of the declared low-order output bits that changed; higher bits are
+ignored. `distributionTest` returns the chi-squared statistic for the requested
+buckets.
 
 ## Design and safety
 

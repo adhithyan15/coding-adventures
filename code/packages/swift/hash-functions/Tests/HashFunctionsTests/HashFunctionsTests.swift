@@ -172,6 +172,24 @@ final class HashFunctionsTests: XCTestCase {
         XCTAssertGreaterThan(first, 0.35)
         XCTAssertLessThan(first, 0.65)
 
+        XCTAssertEqual(
+            try avalancheScore(
+                hashFunction: { $0[0] == 0 ? 0 : UInt64.max },
+                outputBits: 1,
+                samples: [[0]]
+            ),
+            1,
+            "bits above the declared output width are not meaningful"
+        )
+        XCTAssertEqual(
+            try avalancheScore(
+                hashFunction: { $0[0] == 0 ? 0 : UInt64.max },
+                outputBits: 64,
+                samples: [[0]]
+            ),
+            1
+        )
+
         XCTAssertThrowsError(
             try avalancheScore(hashFunction: { _ in 0 }, outputBits: 0, samples: samples)
         ) { error in
