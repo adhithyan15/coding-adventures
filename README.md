@@ -118,12 +118,12 @@ transistors --> gates --> arithmetic --> CPU/microarchitecture --> ISA
 
 The repo includes transistor and gate models, ALUs, caches, branch prediction,
 pipelines, processor cores, and simulators for architectures including ARM,
-ARM1, RISC-V, WASM, Intel 4004/8008, JVM, and CLR. Thirty-four Rust packages
-model processors at gate level, from the Manchester Baby, EDSAC, the IAS machine,
-and the PDP-8 through the Z80, 6502, 6800/6809, 8085, VAX-11/780, IBM System/360,
-and OpenRISC 1000 to ARMv7, AArch64, and x86-64; several have a functional
-simulator beside the gate-level model so the two can be compared. Several browser
-visualizers make those layers interactive.
+ARM1, RISC-V, IBM System/370, WASM, Intel 4004/8008, JVM, and CLR. Thirty-four
+Rust packages model processors at gate level, from the Manchester Baby, EDSAC,
+the IAS machine, and the PDP-8 through the Z80, 6502, 6800/6809, 8085,
+VAX-11/780, IBM System/360, and OpenRISC 1000 to ARMv7, AArch64, and x86-64;
+several have a functional simulator beside the gate-level model so the two can
+be compared. Several browser visualizers make those layers interactive.
 
 Start with the [architecture overview](./code/specs/00-architecture.md),
 [deep CPU architecture](./code/specs/D00-deep-cpu-architecture.md), and

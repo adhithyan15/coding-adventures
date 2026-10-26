@@ -133,9 +133,23 @@ impl Case {
         ops
     }
 
-    /// `true` if `backend` lowers every registry operation the case uses.
+    /// `true` if `backend` lowers every registry operation the case uses,
+    /// and can hold every constant the case writes.
+    ///
+    /// The second half is BEAM's alone: an Erlang float is always finite, so
+    /// `validate_for_beam` refuses a `±Infinity`/`NaN` constant even though
+    /// `const` itself is lowered. Before that check, BEAM compiled the
+    /// float-table cases into modules its loader could not read.
     fn lowered_on(&self, backend: Backend) -> bool {
         self.registry_ops().iter().all(|op| backend.op_support(op).is_lowered())
+            && !(backend == Backend::Beam && self.has_non_finite_float_const())
+    }
+
+    /// Whether any `const` in the case's module is a non-finite `f64`.
+    fn has_non_finite_float_const(&self) -> bool {
+        self.module().functions.iter().flat_map(|f| f.instructions.iter()).any(|i| {
+            i.op == "const" && matches!(i.srcs.first(), Some(Operand::Float(x)) if !x.is_finite())
+        })
     }
 }
 
@@ -1779,4 +1793,19 @@ fn print_i64_and_putchar_share_one_ordered_stream() {
         assert!(ran.contains(&column), "{column} must run the ordered-stream case");
     }
     eprintln!("LANG83 print_i64 + putchar ordering proven on {ran:?}");
+}
+
+/// BEAM refuses the float-table modules at compile time instead of building
+/// a `.beam` whose literal table holds `inf`/`nan`, which no Erlang loader
+/// reads. A table with only finite values still compiles.
+#[test]
+fn beam_refuses_non_finite_float_constants() {
+    for writer in ["write_f64_py", "write_f64_js"] {
+        match compile_on(Backend::Beam, float_table_program(writer)) {
+            Err(e) => assert!(e.to_string().contains("non-finite float"), "{writer}: {e}"),
+            Ok(()) => panic!("{writer}: BEAM compiled a module holding inf/nan constants"),
+        }
+    }
+    let finite = program(vec![int("nl", 10), real("x", 1.5), builtin("write_f64_py", "x"), builtin("putchar", "nl")]);
+    compile_on(Backend::Beam, finite).expect("finite float constants compile on BEAM");
 }
