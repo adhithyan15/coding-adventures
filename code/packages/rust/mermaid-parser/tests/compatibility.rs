@@ -269,6 +269,14 @@ const ER_ALIAS_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-alias-line-breaks-11.16.1-visual-corpus.json"
 ));
+const ER_TITLE_LINE_BREAKS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-title-line-breaks-11.16.1-corpus.json"
+));
+const ER_TITLE_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-title-line-breaks-11.16.1-visual-corpus.json"
+));
 const ER_UNICODE_SYMBOLS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-unicode-symbols-11.16.1-corpus.json"
@@ -3109,6 +3117,27 @@ fn pinned_er_alias_breaks_reach_semantic_ir() {
     assert_eq!(diagram.nodes[0].label, "Primary\nEntity");
     assert_eq!(diagram.nodes[1].label, "Second\nEntity");
     assert_eq!(diagram.nodes[2].label, "Third\nEntity");
+}
+
+#[test]
+fn pinned_er_title_breaks_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_TITLE_LINE_BREAKS_CORPUS)
+        .expect("ER title line-break corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_TITLE_LINE_BREAKS_VISUAL_CORPUS)
+        .expect("ER title line-break visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER title line-break source"),
+    )
+    .expect("ER title line-break fixture must parse");
+
+    assert_eq!(
+        diagram.title.as_deref(),
+        Some("Domain\nModel\nAcross\nLines")
+    );
 }
 
 #[test]
