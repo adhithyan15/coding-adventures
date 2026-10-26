@@ -2,6 +2,32 @@
 
 Status: specified before implementation; native implementation and CI pending.
 
+## Initial local implementation checkpoint
+
+Core C17 network, full native backpropagation/atomic SGD/exact fit, public NN47
+schema loading and owned JSON output are implemented. Initial GCC and Clang
+ASan/UBSan each pass 943 checks; cl and clang-cl pass those same checks through
+the existing shared harness. Initial gcov measures 96.07% library lines (407),
+98.74% branches executed and 78.66% branches taken. Expanded GCC now passes
+1019 checks including complete native serialized resumes versus independent
+uninterrupted fresh baselines at 3001/3002. All 55 shared checkpoints run through
+the real schema loader (3 accept/52 reject, six null cases); XOR reaches loss
+0.0002330712337828205 at 3000. An actual CMake install plus separate find_package
+consumer compile/link/run verifies prediction/training/checkpoint resume.
+
+The fixed native XOR command and shell-free validator execute five real children
+and compare every checkpoint parameter, prediction, loss and exact step against
+fresh uninterrupted baselines through 3002. Five validator regression tests
+exercise fixed argv/cwd/stdin/timeout, malformed receipts and full state drift.
+The expanded native suite also passes 1019 checks under cl and clang-cl.
+Real command tests, including oversized input and schema-valid wrong dataset
+dimensions, also pass Clang ASan/UBSan. Command gcov is 100% lines (45), 100%
+branches executed and 93.75% branches taken; Python validator coverage is 95%.
+Final boundary expansion, docs/trace, BUILD command execution, CI Windows selection integration,
+final independent review, publication and exact-head CI remain pending. No
+six-native interchange or repository CI completion is claimed. Shape-specific
+commands must check loaded input/output widths BEFORE passing fixed C buffers.
+
 ## Reassessment after the C JSON prerequisite
 
 NN47 PR #18261 merged exact head `26bacfea3fd2` as `65aaf912bc7` after all
