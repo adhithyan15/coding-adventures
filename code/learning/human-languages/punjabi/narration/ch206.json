@@ -4,7 +4,7 @@
   "chapter": 206,
   "title": "They Went",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a0f093ffec26205a",
+  "sourceHash": "fnv1a64:5deb01fc4b19497f",
   "lessons": [
     {
       "id": "PA-C206-go-return",
@@ -235,7 +235,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:74c86d457c6cdf80",
+      "sourceHash": "fnv1a64:d14fba5d130516d4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -264,7 +264,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say ਗਏ (gae), the whole “went” form you just learned."
+              "text": "Say ਗਏ (gae), the whole “went” form from the previous lesson."
             }
           ]
         },

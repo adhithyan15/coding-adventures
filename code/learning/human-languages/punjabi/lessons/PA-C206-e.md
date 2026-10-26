@@ -37,7 +37,7 @@ reviews_of: [PA-C206-gae]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-GRAM-GAE-206] -->
 
-[PAUSE 2s] Say **ਗਏ**, the whole “went” form you just learned.
+[PAUSE 2s] Say **ਗਏ**, the whole “went” form from the previous lesson.
 
 ## Script you'll notice: ਏ
 <!-- hl-knowledge: introduces=[PA-SCRIPT-RECOG-E-206]; assesses=[PA-GRAM-GAE-206] -->

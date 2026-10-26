@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 206,
-  "sourceHash": "fnv1a64:a0f093ffec26205a",
+  "sourceHash": "fnv1a64:5deb01fc4b19497f",
   "lessonIds": [
     "PA-C206-go-return",
     "PA-C206-gae",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "punjabi/narration/ch206.txt",
   "json": "punjabi/narration/ch206.json",
-  "textHash": "fnv1a64:2f5043442c592522",
-  "jsonHash": "fnv1a64:2dcbfcbf280b3830",
+  "textHash": "fnv1a64:d892a90709dc534a",
+  "jsonHash": "fnv1a64:c99da72610b728dc",
   "findings": []
 }
