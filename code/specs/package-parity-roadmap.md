@@ -18051,9 +18051,9 @@ owner rather than a claim of this branch.
 The local implementation now returns explicit Go and Rust errors, uses the
 finite-segment convex-hull bound and a left-first iterative stack, and consumes
 all nine neutral rows. Go passes 22 top-level Bezier2D tests plus their dynamic
-subtests under race detection at 95.3% statement coverage; formatting, vet,
+subtests under race detection at 95.1% statement coverage; formatting, vet,
 and build pass. Its downstream Arc2D suite remains green at 96.8%. Rust passes
-23 Bezier2D tests at 96.08% source-line, 96.00% region, and 98.04% function
+23 Bezier2D tests at 96.02% source-line, 96.06% region, and 98.08% function
 coverage; formatting, strict all-target clippy, and release
 build pass. Its downstream Arc2D suite retains 20 tests and doc tests. A full
 tracked-tree search finds no external Go or Rust flattening callers requiring
@@ -18062,8 +18062,9 @@ migration.
 Independent review found that globally scaling both the chord and point
 vectors erased a `1e-16` perpendicular offset beside a `1e308` chord. The
 corrected distance calculation scales only the chord, uses compensated finite
-products, rounds nonzero magnitudes outward, and carries direct mixed-scale
-public-API regressions in both lanes. The root changelog shard now uses its
+products, widens for floating error, rounds nonzero magnitudes outward, and
+carries direct mixed-scale public-API regressions in both lanes. The root
+changelog shard now uses its
 heading-derived `HARDEN-GO-AND-RUST-BEZIER-FLATTENING` slug and `08c0edc5`
 digest. The exact neutral oracle validates all nine cases and its seven tests
 pass. The sparse focused planner selects the two changed Bezier2D packages and

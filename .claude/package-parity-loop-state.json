@@ -20729,13 +20729,13 @@
       "started_at": "2026-10-25T22:12:00-07:00",
       "base_revision": "d555c1091cd9aa134e6eb4b702938772f7487231",
       "implementation_revision": "ca58059299168a47f67e0075000422800807a4e8",
-      "correction_revision": "2c20cf6e4a3e7669949e7be4cb1aed3010f1d711",
-      "validation_revision": "2c20cf6e4a3e7669949e7be4cb1aed3010f1d711",
+      "correction_revision": "8ce8a0557ade7a9f2c7fa044a200f5a87d1ae301",
+      "validation_revision": "8ce8a0557ade7a9f2c7fa044a200f5a87d1ae301",
       "package_paths": [
         "code/packages/go/bezier2d",
         "code/packages/rust/bezier2d"
       ],
-      "validation_notes": "Local implementation is complete but remains unpublished while shared fixture-selector integration in PR #18293 is pending. Both public APIs now return explicit errors, consume all nine neutral rows dynamically, use the finite-segment control bound and a left-first iterative stack, and fail atomically for invalid tolerance, non-finite control or derived geometry, depth 32, or 65,535 subdivisions. Independent review found that scaling both the chord and point vectors erased a 1e-16 perpendicular offset beside a 1e308 chord; correction 2c20cf6e4a3e7669949e7be4cb1aed3010f1d711 now uses chord-only scaling, compensated finite products, and outward-rounded magnitudes, with public-API regression tests in both lanes. The same correction gives the root changelog shard its heading-derived slug and digest. Current-main reconciliation at d555c1091cd9aa134e6eb4b702938772f7487231 is complete. Fresh native, coverage, planner, state, and lesson receipts are recorded in the roadmap; the 1,548-item state graph is unique, dependency-complete, and acyclic, and 1,587 lesson shards validate with zero problems. Publication remains blocked on PR #18293, followed by a fresh rebase, selector validation, and independent exact-head correctness/security review."
+      "validation_notes": "Local implementation is complete but remains unpublished while shared fixture-selector integration in PR #18293 is pending. Both public APIs now return explicit errors, consume all nine neutral rows dynamically, use the finite-segment control bound and a left-first iterative stack, and fail atomically for invalid tolerance, non-finite control or derived geometry, depth 32, or 65,535 subdivisions. Independent review found that scaling both the chord and point vectors erased a 1e-16 perpendicular offset beside a 1e308 chord; correction 8ce8a0557ade7a9f2c7fa044a200f5a87d1ae301 now uses chord-only scaling, compensated finite products, explicit floating-error widening, and outward-rounded magnitudes, with public-API regression tests in both lanes. The same correction series gives the root changelog shard its heading-derived slug and digest. Current-main reconciliation at d555c1091cd9aa134e6eb4b702938772f7487231 is complete. Fresh native, coverage, planner, state, and lesson receipts are recorded in the roadmap; the 1,548-item state graph is unique, dependency-complete, and acyclic, and 1,587 lesson shards validate with zero problems. Publication remains blocked on PR #18293, followed by a fresh rebase, selector validation, and independent exact-head correctness/security review."
     },
     {
       "id": "geometry-bezier2d-go-rust-trig-dependency-contract",
