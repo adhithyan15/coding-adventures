@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:6e9ba35785af24e0",
+  "lessonIds": [
+    "SA-C499-pitrsvasa",
+    "SA-C499-matrsvasa",
+    "SA-C499-bhratrjah",
+    "SA-C499-bhagineyah",
+    "SA-C499-dauhitrah"
+  ],
+  "tex": "sanskrit/book/chapters/ch499-aunts-and-nephews.tex"
+}

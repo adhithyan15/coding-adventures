@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:09205ea8e7537ddb",
+  "lessonIds": [
+    "SA-C550-vantayati",
+    "SA-C550-pratyekam",
+    "SA-C550-dayah",
+    "SA-C550-viniyunkte",
+    "SA-C550-vitaranam"
+  ],
+  "tex": "sanskrit/book/chapters/ch550-sharing-out.tex"
+}

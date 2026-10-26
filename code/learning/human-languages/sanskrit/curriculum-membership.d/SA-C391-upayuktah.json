@@ -1,0 +1,11 @@
+{
+  "id": "SA-C391-upayuktah",
+  "pathSegment": "SA-PATH-391-PARAMA391",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-391-PARAMA391",
+      "order": 3
+    }
+  ]
+}

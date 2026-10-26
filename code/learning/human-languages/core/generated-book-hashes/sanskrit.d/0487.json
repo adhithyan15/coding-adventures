@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:726d7606ea1fe184",
+  "lessonIds": [
+    "SA-C487-dantadhavanam",
+    "SA-C487-prasadhanam",
+    "SA-C487-anjanam",
+    "SA-C487-angaragah",
+    "SA-C487-paridadhati",
+    "SA-R487-review-480-487"
+  ],
+  "tex": "sanskrit/book/chapters/ch487-getting-ready.tex"
+}

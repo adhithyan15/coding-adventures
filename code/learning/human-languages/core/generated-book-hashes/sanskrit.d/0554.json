@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:9ac80128f494b48a",
+  "lessonIds": [
+    "SA-C554-sambhavati",
+    "SA-C554-dirghadarsi",
+    "SA-C554-abhipraiti",
+    "SA-C554-ayatih",
+    "SA-C554-arambhah"
+  ],
+  "tex": "sanskrit/book/chapters/ch554-looking-ahead.tex"
+}

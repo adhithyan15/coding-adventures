@@ -9,6 +9,12 @@ memory bits, 560 register/PC/SR bits, and one halt latch. Memory packs stable Q
 values because a completed master/slave clock state is fully determined by Q;
 each simulator write reconstructs and clocks both latch phases.
 
+Those stable Q outputs are the only architectural state authority. The public
+`rf.d`, `rf.a`, `rf.pc`, `rf.sr`, and `halted` fields remain available for
+source compatibility as synchronized observers; execution never consumes
+them. Use register accessors, `get_state`, `restore`, and `halted()` for
+architectural reads and writes.
+
 ## Architecture
 
 The Motorola 68000 was a landmark 16/32-bit processor introduced in 1979.
@@ -114,7 +120,7 @@ let steps = cpu.execute(&[
 ], 1000);
 assert_eq!(cpu.rf.d[0], 8);
 assert_eq!(cpu.rf.flag_c(), 0);
-assert!(cpu.halted);
+assert!(cpu.halted());
 ```
 
 ## Covered instructions
@@ -140,7 +146,10 @@ assert!(cpu.halted);
 `run_loaded_checked`, and `run_checked` share the functional simulator's owned
 `M68kState`, traces, results, and typed errors. Failures are atomic. The gate
 CPU is differentially checked against all 82 committed Python-oracle full-state
-vectors in addition to its component and instruction tests.
+vectors in addition to its component and instruction tests. A concrete storage
+inventory independently derives the memory, D/A register, PC, SR, and HALT DFF
+counts; deliberate compatibility-observer divergence tests cover snapshots,
+steps, restores, runs/results, and typed-fault rollback.
 
 ## Limitations
 

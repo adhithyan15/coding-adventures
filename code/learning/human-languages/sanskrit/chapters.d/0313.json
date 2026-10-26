@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Trouble in the Town",
+  "label": "ch:sa-trouble-in-the-town",
+  "canDo": "I can tell how trouble broke out and was calmed.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C313-samayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can tell how trouble broke out and was calmed.",
+    "assesses": [
+      "SA-LEX-C313-UPADRAVA313-03",
+      "SA-LEX-C313-UPADRAVA313-04",
+      "SA-LEX-C313-UPADRAVA313-05"
+    ]
+  }
+}

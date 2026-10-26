@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:b6be212adf9091d1",
+  "lessonIds": [
+    "SA-C537-pasakah",
+    "SA-C537-harayati",
+    "SA-C537-vancakah",
+    "SA-C537-lubdhah",
+    "SA-C537-dyutakarah"
+  ],
+  "tex": "sanskrit/book/chapters/ch537-a-game-of-chance.tex"
+}

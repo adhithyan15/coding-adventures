@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:f048042f5c4f4732",
+  "lessonIds": [
+    "SA-C517-caturangam",
+    "SA-C517-prahelika",
+    "SA-C517-kridakah",
+    "SA-C517-gulika",
+    "SA-C517-putrika",
+    "SA-R517-review-510-517"
+  ],
+  "tex": "sanskrit/book/chapters/ch517-games-at-home.tex"
+}

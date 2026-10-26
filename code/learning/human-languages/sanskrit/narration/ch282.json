@@ -1,0 +1,595 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 282,
+  "title": "How I Feel, and What I Hope For",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:a422aec9de6b9710",
+  "lessons": [
+    {
+      "id": "SA-C282-aham-prasannah-asmi",
+      "sequence": 16510,
+      "title": "अहं प्रसन्नः अस्मि (ahaṃ prasannaḥ asmi) — how I feel",
+      "headword": "अहं प्रसन्नः अस्मि",
+      "romanization": "ahaṃ prasannaḥ asmi",
+      "gloss": "I am pleased — the feeling agrees with the one who speaks",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e3b56963ce05b61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I am ill\". (ahaṃ rugṇaḥ asmi.) And a woman? (ahaṃ rugṇā asmi.) Feelings work the same way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the feeling follows the speaker",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अहं प्रसन्नः अस्मि। ahaṃ prasannaḥ asmi. — \"I am pleased.\""
+            },
+            {
+              "kind": "speech",
+              "text": "अहं प्रसन्ना अस्मि। ahaṃ prasannā asmi. — \"I am pleased.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The first is a man speaking, the second a woman: the word for the feeling takes the speaker's gender, -aḥ or -ā."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा भीता अस्ति। mīrā bhītā asti. — \"Mira is afraid.\""
+            },
+            {
+              "kind": "speech",
+              "text": "अरुणः श्रान्तः अस्ति। aruṇaḥ śrāntaḥ asti. — \"Arun is tired.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ते कुपिताः सन्ति। te kupitāḥ santi. — \"They are angry.\""
+            },
+            {
+              "kind": "speech",
+              "text": "सन्ति (santi) is \"are\", for several."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: happy, and what I like",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुखी (sukhī), \"happy\", and दुःखी (duḥkhī), \"unhappy\", end in -ī for a man."
+            },
+            {
+              "kind": "speech",
+              "text": "अद्य अहं सुखी अस्मि। adya ahaṃ sukhī asmi. — \"Today I am happy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "What you like keeps the frame you know, with मह्यम् (mahyam), \"to me\":"
+            },
+            {
+              "kind": "speech",
+              "text": "मह्यं संगीतं रोचते। mahyaṃ saṅgītaṃ rocate. — \"I like music.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A feeling with its reason:"
+            },
+            {
+              "kind": "speech",
+              "text": "अहं प्रसन्नः अस्मि, ahaṃ prasannaḥ asmi, यतः अरुणः आगतवान्। yataḥ aruṇaḥ āgatavān. — \"I am pleased, because Arun has come.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I am afraid\" — ahaṃ bhītaḥ asmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I am afraid\" — *ahaṃ bhītaḥ asmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I am tired\" — ahaṃ śrāntaḥ asmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I am tired\" — *ahaṃ śrāntaḥ asmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I am angry\" — ahaṃ kupitaḥ asmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I am angry\" — *ahaṃ kupitaḥ asmi*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C282-aham-prasannah-asmi-r1",
+              "prompt": "Say that you are tired today, then that Mira is pleased because Arun has come.",
+              "assesses": [
+                "SA-GRAMMAR-C282-FEELING-01",
+                "SA-GRAMMAR-C282-FEELING-02"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "adya ahaṃ śrāntaḥ asmi; mīrā prasannā asti, yataḥ aruṇaḥ āgatavān",
+                "अद्य अहं श्रान्तः अस्मि। मीरा प्रसन्ना अस्ति, यतः अरुणः आगतवान्।",
+                "अद्य अहं श्रान्ता अस्मि। मीरा प्रसन्ना अस्ति, यतः अरुणः आगतवान्।"
+              ],
+              "feedback": {
+                "correct": "śrāntaḥ or śrāntā for you; prasannā for Mira.",
+                "incorrect": "The feeling takes the gender of the one who feels it: Mira is prasannā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I am pleased\", said by a woman? (अहं प्रसन्ना अस्मि.) \"Mira is afraid\"? (मीरा भीता अस्ति.) \"I like music\"? (मह्यं संगीतं रोचते.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C282-bhavitum-icchami",
+      "sequence": 16520,
+      "title": "भवितुम् इच्छामि (bhavitum icchāmi) — what I want to become",
+      "headword": "भवितुम् इच्छामि",
+      "romanization": "bhavitum icchāmi",
+      "gloss": "I want to become — -tum with icchāmi, and mama svapnaḥ asti, my dream is",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c890b3cce72aba71",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I am pleased\". (ahaṃ prasannaḥ asmi.) Then \"I want to go\". (ahaṃ gantum icchāmi.) Now say what you want to become."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भवितुम् इच्छामि",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अहं वैद्यः भवितुम् इच्छामि। ahaṃ vaidyaḥ bhavitum icchāmi. — \"I want to become a doctor.\""
+            },
+            {
+              "kind": "speech",
+              "text": "भवितुम् (bhavitum) is the -tum form of भवति: \"to become\". What you become stays in the same case as you: वैद्यः, like अहम्."
+            },
+            {
+              "kind": "speech",
+              "text": "सः अध्यापकः भवितुम् इच्छति। saḥ adhyāpakaḥ bhavitum icchati. — \"He wants to become a teacher.\""
+            },
+            {
+              "kind": "speech",
+              "text": "अहं नगरं गन्तुम् इच्छामि। ahaṃ nagaraṃ gantum icchāmi. — \"I want to go to the city.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: मम स्वप्नः अस्ति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मम स्वप्नः अस्ति (mama svapnaḥ asti), \"my dream is\", opens a hope; यत् gives what it is:"
+            },
+            {
+              "kind": "speech",
+              "text": "मम स्वप्नः अस्ति, mama svapnaḥ asti, यत् अहं वैद्यः भविष्यामि। yat ahaṃ vaidyaḥ bhaviṣyāmi. — \"My dream is that I will become a doctor.\""
+            },
+            {
+              "kind": "speech",
+              "text": "मीरायाः स्वप्नः अस्ति, mīrāyāḥ svapnaḥ asti, यत् सा नगरं गमिष्यति। yat sā nagaraṃ gamiṣyati. — \"Mira's dream is that she will go to the city.\""
+            },
+            {
+              "kind": "speech",
+              "text": "मीरायाः (mīrāyāḥ) is \"Mira's\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to become a doctor\" — ahaṃ vaidyaḥ bhavitum icchāmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to become a doctor\" — *ahaṃ vaidyaḥ bhavitum icchāmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to become a teacher\" — aham adhyāpakaḥ bhavitum icchāmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to become a teacher\" — *aham adhyāpakaḥ bhavitum icchāmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to become a student\" — ahaṃ chātraḥ bhavitum icchāmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to become a student\" — *ahaṃ chātraḥ bhavitum icchāmi*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C282-bhavitum-icchami-r1",
+              "prompt": "Say that you want to become a teacher, then that your dream is that you will go to the city.",
+              "assesses": [
+                "SA-GRAMMAR-C282-AMBITION-01",
+                "SA-GRAMMAR-C282-AMBITION-02"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "aham adhyāpakaḥ bhavitum icchāmi; mama svapnaḥ asti, yat ahaṃ nagaraṃ gamiṣyāmi",
+                "अहम् अध्यापकः भवितुम् इच्छामि। मम स्वप्नः अस्ति, यत् अहं नगरं गमिष्यामि।"
+              ],
+              "feedback": {
+                "correct": "bhavitum icchāmi for the wish; mama svapnaḥ asti, yat … for the dream.",
+                "incorrect": "To become: bhavitum, with icchāmi. A dream: mama svapnaḥ asti, yat …."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"To become\"? (भवितुम्.) \"He wants to become a teacher\"? (सः अध्यापकः भवितुम् इच्छति.) \"My dream is that …\"? (मम स्वप्नः अस्ति, यत् …)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C282-utsukah",
+      "sequence": 16530,
+      "title": "उत्सुकः (utsukaḥ) — eager",
+      "headword": "उत्सुकः",
+      "romanization": "utsukaḥ",
+      "gloss": "eager",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba813b6f2b012b9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I want to become a doctor\". (ahaṃ vaidyaḥ bhavitum icchāmi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उत्सुकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्सुकः — utsukaḥ — \"eager\". Like every feeling, it takes the gender of the one who feels it: उत्सुका (utsukā) for a woman."
+            },
+            {
+              "kind": "speech",
+              "text": "अहम् उत्सुकः अस्मि। aham utsukaḥ asmi. — \"I am eager.\""
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा उत्सुका अस्ति। mīrā utsukā asti. — \"Mira is eager.\""
+            },
+            {
+              "kind": "speech",
+              "text": "अहं नगरं द्रष्टुम् उत्सुकः अस्मि। ahaṃ nagaraṃ draṣṭum utsukaḥ asmi. — \"I am eager to see the city.\""
+            },
+            {
+              "kind": "speech",
+              "text": "द्रष्टुम् (draṣṭum), \"to see\", is the -tum form of पश्यति, from the root √dṛś of द्रक्ष्यति."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्सुकः (utsukaḥ) is built from उत् (ut), \"apart\", and सु (su), \"well\", with the ending -ka, as Monier-Williams takes it apart; he gives its senses as restless and uneasy, then eager and longing for something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsukaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsukaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The children are eager\" — bālāḥ utsukāḥ santi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The children are eager\" — *bālāḥ utsukāḥ santi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I am eager to see the city\" — ahaṃ nagaraṃ draṣṭum utsukaḥ asmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I am eager to see the city\" — *ahaṃ nagaraṃ draṣṭum utsukaḥ asmi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उत्सुकः (utsukaḥ) mean? (\"Eager\".) \"Mira is eager\"? (मीरा उत्सुका अस्ति.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R282-feelings-and-hopes",
+      "sequence": 16540,
+      "title": "Review — feelings and hopes",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "how you feel and what you hope to become",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:53653bd28034808d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my bag is lost\" and \"one ticket, please\". (mama syūtaḥ naṣṭaḥ, ekaṃ yānapatraṃ dadātu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I am pleased today, because Mira has come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I am pleased today, because Mira has come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mira is tired, and Arun is afraid.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Mira is tired, and Arun is afraid.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I like music.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I like music.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I want to become a teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I want to become a teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My dream is that I will see the city. I am eager.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My dream is that I will see the city. I am eager.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "श्रान्ता: a man or a woman? (A woman.) भवितुम् is the -tum form of which verb? (भवति.) Now the other way round: \"I am eager\", said by a woman? (अहम् उत्सुका अस्मि.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

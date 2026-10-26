@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-318-SENA318",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "SA-EXT-318-SENA318"
+  ],
+  "after": []
+}

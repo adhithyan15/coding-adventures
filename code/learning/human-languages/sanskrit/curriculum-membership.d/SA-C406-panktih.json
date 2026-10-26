@@ -1,0 +1,11 @@
+{
+  "id": "SA-C406-panktih",
+  "pathSegment": "SA-PATH-406-ADHIROHA406",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-406-ADHIROHA406",
+      "order": 3
+    }
+  ]
+}

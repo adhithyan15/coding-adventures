@@ -1,0 +1,11 @@
+{
+  "id": "SA-C508-istaka",
+  "pathSegment": "SA-PATH-508-NIRMANA508",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-508-NIRMANA508",
+      "order": 0
+    }
+  ]
+}

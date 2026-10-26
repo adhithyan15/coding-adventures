@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C415-avartah",
+    "language": "sanskrit",
+    "chapter": 415,
+    "sequence": 24080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b57153b1e017f5ce"
+  },
+  "findings": []
+}

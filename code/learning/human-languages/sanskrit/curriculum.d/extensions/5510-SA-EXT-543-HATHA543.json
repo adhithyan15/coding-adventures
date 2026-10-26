@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-543-HATHA543",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether someone acts freely, stubbornly or helplessly.",
+  "prerequisites": []
+}

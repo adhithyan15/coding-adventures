@@ -1,0 +1,21 @@
+{
+  "chapter": 279,
+  "title": "Advice, and What Follows",
+  "label": "ch:sa-advice-and-what-follows",
+  "canDo": "I can give advice (bhavān vaidyaṃ gacchet, tvaṃ paṭheḥ) and say what follows from a reason (ataḥ, tasmāt).",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-R279-advice-and-what-follows",
+    "kind": "production",
+    "summary": "Complete SA-R279-advice-and-what-follows: give advice and say what follows from a reason.",
+    "assesses": [
+      "SA-GRAMMAR-C279-SHOULD-01",
+      "SA-GRAMMAR-C279-SHOULD-02",
+      "SA-GRAMMAR-C279-SO-01",
+      "SA-GRAMMAR-C279-SO-02",
+      "SA-LEX-C279-UPADESAH-01"
+    ]
+  }
+}

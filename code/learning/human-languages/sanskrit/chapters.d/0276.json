@@ -1,0 +1,22 @@
+{
+  "chapter": 276,
+  "title": "What Happened, and What Was Going On",
+  "label": "ch:sa-what-happened-and-what-was-going-on",
+  "canDo": "I can say what someone did, with the past that follows the doer (saḥ gatavān, sā gatavatī), and what was going on at the time (saḥ paṭhati sma; yadā … tadā …).",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-R276-what-happened",
+    "kind": "production",
+    "summary": "Complete SA-R276-what-happened: say what happened and what was going on when it happened.",
+    "assesses": [
+      "SA-GRAMMAR-C276-PAST-TAVAT-01",
+      "SA-GRAMMAR-C276-PAST-TAVAT-02",
+      "SA-GRAMMAR-C276-ONGOING-PAST-01",
+      "SA-GRAMMAR-C276-ONGOING-PAST-02",
+      "SA-LEX-C276-GHATATE-01",
+      "SA-SCRIPT-RECOG-226"
+    ]
+  }
+}

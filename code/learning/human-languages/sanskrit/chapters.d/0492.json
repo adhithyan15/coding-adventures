@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "A New Baby",
+  "label": "ch:sa-a-new-baby",
+  "canDo": "I can talk about the birth of a baby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C492-dola",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can talk about the birth of a baby.",
+    "assesses": [
+      "SA-LEX-C492-JANMA492-03",
+      "SA-LEX-C492-JANMA492-04",
+      "SA-LEX-C492-JANMA492-05"
+    ]
+  }
+}

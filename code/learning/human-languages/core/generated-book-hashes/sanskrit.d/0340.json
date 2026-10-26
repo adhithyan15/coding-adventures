@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:a131cd90a3566a5c",
+  "lessonIds": [
+    "SA-C340-nimittam",
+    "SA-C340-prabhavah",
+    "SA-C340-abhavah",
+    "SA-C340-utpadyate",
+    "SA-C340-janayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch340-why-it-happened.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C474-mamsam",
+    "language": "sanskrit",
+    "chapter": 474,
+    "sequence": 27360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6dff9f9af817c56c"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "A Committee Meets",
+  "label": "ch:sa-a-committee-meets",
+  "canDo": "I can say who heads a committee and what it decides.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C357-nirdisati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can say who heads a committee and what it decides.",
+    "assesses": [
+      "SA-LEX-C357-SAMITI357-03",
+      "SA-LEX-C357-SAMITI357-04",
+      "SA-LEX-C357-SAMITI357-05"
+    ]
+  }
+}

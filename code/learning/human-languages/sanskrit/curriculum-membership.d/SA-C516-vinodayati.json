@@ -1,0 +1,11 @@
+{
+  "id": "SA-C516-vinodayati",
+  "pathSegment": "SA-PATH-516-AVAKASA516",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-516-AVAKASA516",
+      "order": 2
+    }
+  ]
+}

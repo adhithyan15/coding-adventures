@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C379-vardhayati",
+    "language": "sanskrit",
+    "chapter": 379,
+    "sequence": 22030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ffd83d7bfe9ff16"
+  },
+  "findings": []
+}

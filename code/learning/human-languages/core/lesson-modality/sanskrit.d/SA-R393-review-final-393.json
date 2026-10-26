@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R393-review-final-393",
+    "language": "sanskrit",
+    "chapter": 393,
+    "sequence": 22770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e31a8e532fe1bad4"
+  },
+  "findings": []
+}

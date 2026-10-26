@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:c14c47e535929a0f",
+  "lessonIds": [
+    "SA-C507-bhastra",
+    "SA-C507-sandamsah",
+    "SA-C507-vilapayati",
+    "SA-C507-dhamati",
+    "SA-C507-bhusanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch507-metal-and-gold.tex"
+}

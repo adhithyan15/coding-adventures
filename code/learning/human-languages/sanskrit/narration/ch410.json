@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 410,
+  "title": "Breakdowns",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:74cadb4987ecfa0b",
+  "lessons": [
+    {
+      "id": "SA-C410-chidram",
+      "sequence": 23820,
+      "title": "छिद्रम् (chidram) — a hole",
+      "headword": "छिद्रम्",
+      "romanization": "chidram",
+      "gloss": "a hole",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e24fd3379384a67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for sets spinning, then the Sanskrit for a wheel track."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छिद्रम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छिद्रम् — chidram — \"a hole\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मम स्यूते छिद्रम् अस्ति। mama syūte chidram asti. There is a hole in my bag."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छिद्रम् (chidram) comes from the root √chid, \"to cut, to split\", which also gives chinatti, \"cuts\"; MW gives chidra as torn, pierced and, as a noun, a hole (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chidram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chidram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chidram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chidram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mama syūte chidram asti. — There is a hole in my bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mama syūte chidram asti.* — There is a hole in my bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for sets spinning, then the Sanskrit for a wheel track, then say chidram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for sets spinning, then the Sanskrit for a wheel track, then say *chidram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छिद्रम् (chidram) mean? (\"A hole\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C410-ksarati",
+      "sequence": 23830,
+      "title": "क्षरति (kṣarati) — leaks; trickles out",
+      "headword": "क्षरति",
+      "romanization": "kṣarati",
+      "gloss": "leaks; trickles out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd25b6885579e1fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a wheel track, then the Sanskrit for a hole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्षरति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्षरति — kṣarati — \"leaks; trickles out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छिद्रात् तैलं क्षरति। chidrāt tailaṃ kṣarati. Oil leaks from the hole."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): तैलं छिद्रात् क्षरितवत्, tailaṃ chidrāt kṣaritavat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्षरति (kṣarati) comes from the root √kṣar, \"to flow, to stream\"; MW gives kṣarati as to flow, trickle or drip, and KRM gives the participle kṣarita (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣarati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣarati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣarati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣarati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chidrāt tailaṃ kṣarati. — Oil leaks from the hole.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chidrāt tailaṃ kṣarati.* — Oil leaks from the hole.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a wheel track, then the Sanskrit for a hole, then say kṣarati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a wheel track, then the Sanskrit for a hole, then say *kṣarati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क्षरति (kṣarati) mean? (\"Leaks; trickles out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C410-sithilah",
+      "sequence": 23840,
+      "title": "शिथिलः (śithilaḥ) — loose; slack",
+      "headword": "शिथिलः",
+      "romanization": "śithilaḥ",
+      "gloss": "loose; slack",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7406988c59176b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a hole, then the Sanskrit for leaks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिथिलः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिथिलः — śithilaḥ — \"loose; slack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अक्षस्य कीलः शिथिलः अस्ति। akṣasya kīlaḥ śithilaḥ asti. The axle's pin is loose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिथिलः (śithilaḥ) comes from the root √śrath, \"to loosen\", by way of śithira, \"loose\", of which MW gives it as a collateral form; MW gives śithila as loose, slack, untied (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śithilaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śithilaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śithilaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śithilaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akṣasya kīlaḥ śithilaḥ asti. — The axle's pin is loose.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akṣasya kīlaḥ śithilaḥ asti.* — The axle's pin is loose.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a hole, then the Sanskrit for leaks, then say śithilaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a hole, then the Sanskrit for leaks, then say *śithilaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिथिलः (śithilaḥ) mean? (\"Loose; slack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C410-vidirnah",
+      "sequence": 23850,
+      "title": "विदीर्णः (vidīrṇaḥ) — split; burst open",
+      "headword": "विदीर्णः",
+      "romanization": "vidīrṇaḥ",
+      "gloss": "split; burst open",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d79bf92a998fcd6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for leaks, then the Sanskrit for loose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विदीर्णः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विदीर्णः — vidīrṇaḥ — \"split; burst open\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शकटस्य फलकं विदीर्णम् अस्ति। śakaṭasya phalakaṃ vidīrṇam asti. The cart's plank is split."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विदीर्णः (vidīrṇaḥ) is built from vi, \"apart\", and the root √dṝ, \"to burst, to split\"; MW gives vidīrṇa as rent asunder, split, burst open (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidīrṇaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidīrṇaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidīrṇaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidīrṇaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śakaṭasya phalakaṃ vidīrṇam asti. — The cart's plank is split.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śakaṭasya phalakaṃ vidīrṇam asti.* — The cart's plank is split.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for leaks, then the Sanskrit for loose, then say vidīrṇaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for leaks, then the Sanskrit for loose, then say *vidīrṇaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विदीर्णः (vidīrṇaḥ) mean? (\"Split; burst open\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C410-gharsati",
+      "sequence": 23860,
+      "title": "घर्षति (gharṣati) — rubs against; scrapes",
+      "headword": "घर्षति",
+      "romanization": "gharṣati",
+      "gloss": "rubs against; scrapes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0dd2e790faa0b90a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for loose, then the Sanskrit for split open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घर्षति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घर्षति — gharṣati — \"rubs against; scrapes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चक्रं भित्तिं घर्षति। cakraṃ bhittiṃ gharṣati. The wheel scrapes the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): चक्रं भित्तिं घृष्टवत्, cakraṃ bhittiṃ ghṛṣṭavat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घर्षति (gharṣati) comes from the root √ghṛṣ, \"to rub, to grind\"; MW gives the participle ghṛṣṭa, \"rubbed, grazed\"; it lives on as Hindi ghisnā, \"to rub\" (MW; CDIAL 4450)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharṣati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharṣati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharṣati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharṣati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakraṃ bhittiṃ gharṣati. — The wheel scrapes the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakraṃ bhittiṃ gharṣati.* — The wheel scrapes the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for loose, then the Sanskrit for split open, then say gharṣati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for loose, then the Sanskrit for split open, then say *gharṣati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घर्षति (gharṣati) mean? (\"Rubs against; scrapes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

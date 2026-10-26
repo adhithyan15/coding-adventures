@@ -1,0 +1,11 @@
+{
+  "id": "SA-C422-parikha",
+  "pathSegment": "SA-PATH-422-PRAKARA422",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-422-PRAKARA422",
+      "order": 2
+    }
+  ]
+}

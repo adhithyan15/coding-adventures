@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C303-durbhiksam",
+    "language": "sanskrit",
+    "chapter": 303,
+    "sequence": 17870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f30abb447d08ad1"
+  },
+  "findings": []
+}

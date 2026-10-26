@@ -1,0 +1,11 @@
+{
+  "id": "SA-C371-pratyavartate",
+  "pathSegment": "SA-PATH-371-VIKALPA371",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-371-VIKALPA371",
+      "order": 1
+    }
+  ]
+}

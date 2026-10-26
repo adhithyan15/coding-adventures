@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C374-avahitah",
+    "language": "sanskrit",
+    "chapter": 374,
+    "sequence": 21740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff7addece96e38c0"
+  },
+  "findings": []
+}

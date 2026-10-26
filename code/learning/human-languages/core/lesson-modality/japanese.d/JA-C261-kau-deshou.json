@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C261-kau-deshou",
+    "language": "japanese",
+    "chapter": 261,
+    "sequence": 15590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23cffe59d2740fc0"
+  },
+  "findings": []
+}

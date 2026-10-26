@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-277-NARRATE277",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can tell events in order, with -tvā and -ya (gatvā, āgatya) and first, then, in the end (prathamam, tataḥ, ante), and follow a short story told that way.",
+  "prerequisites": [
+    "SA-EXT-276-NARRATE276"
+  ]
+}

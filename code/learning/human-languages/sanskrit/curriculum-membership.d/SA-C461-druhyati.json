@@ -1,0 +1,11 @@
+{
+  "id": "SA-C461-druhyati",
+  "pathSegment": "SA-PATH-461-SATPURUSA461",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-461-SATPURUSA461",
+      "order": 4
+    }
+  ]
+}

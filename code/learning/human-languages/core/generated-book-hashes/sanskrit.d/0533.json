@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:710aa1a3a42353eb",
+  "lessonIds": [
+    "SA-C533-antarayah",
+    "SA-C533-avarodhah",
+    "SA-C533-stambhayati",
+    "SA-C533-apasarayati",
+    "SA-C533-kastam",
+    "SA-R533-review-526-533"
+  ],
+  "tex": "sanskrit/book/chapters/ch533-something-in-the-way.tex"
+}

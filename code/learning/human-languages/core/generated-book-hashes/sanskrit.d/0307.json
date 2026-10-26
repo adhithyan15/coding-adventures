@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:32da7c0f618dacc4",
+  "lessonIds": [
+    "SA-C307-viyogah",
+    "SA-C307-asru",
+    "SA-C307-milati",
+    "SA-C307-anathah",
+    "SA-C307-ksemah"
+  ],
+  "tex": "sanskrit/book/chapters/ch307-lost-and-found.tex"
+}

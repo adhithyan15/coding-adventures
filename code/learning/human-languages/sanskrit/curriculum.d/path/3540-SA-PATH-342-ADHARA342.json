@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-342-ADHARA342",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "SA-EXT-342-ADHARA342"
+  ],
+  "after": []
+}

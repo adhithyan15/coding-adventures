@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Calm and Composure",
+  "label": "ch:sa-calm-and-composure",
+  "canDo": "I can say how someone stays calm.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C456-ekantah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can say how someone stays calm.",
+    "assesses": [
+      "SA-LEX-C456-SAMA456-03",
+      "SA-LEX-C456-SAMA456-04",
+      "SA-LEX-C456-SAMA456-05"
+    ]
+  }
+}

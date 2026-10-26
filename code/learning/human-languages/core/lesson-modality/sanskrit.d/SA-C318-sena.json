@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C318-sena",
+    "language": "sanskrit",
+    "chapter": 318,
+    "sequence": 18640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1934ef9933ae2a9"
+  },
+  "findings": []
+}

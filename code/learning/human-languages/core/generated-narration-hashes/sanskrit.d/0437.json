@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:e3199efe80d6f025",
+  "lessonIds": [
+    "SA-C437-pravrt",
+    "SA-C437-asarah",
+    "SA-C437-sikarah",
+    "SA-C437-binduh",
+    "SA-C437-galati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch437.txt",
+  "json": "sanskrit/narration/ch437.json",
+  "textHash": "fnv1a64:3d7bb51c9aea6170",
+  "jsonHash": "fnv1a64:87787bd4b460443b",
+  "findings": []
+}

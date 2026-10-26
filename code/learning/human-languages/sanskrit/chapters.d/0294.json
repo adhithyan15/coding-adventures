@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "A Crash on the Road",
+  "label": "ch:sa-a-crash-on-the-road",
+  "canDo": "I can say how an accident on the road happened.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C294-murchati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say how an accident on the road happened.",
+    "assesses": [
+      "SA-LEX-C294-SANGHATTA294-03",
+      "SA-LEX-C294-SANGHATTA294-04",
+      "SA-LEX-C294-SANGHATTA294-05"
+    ]
+  }
+}

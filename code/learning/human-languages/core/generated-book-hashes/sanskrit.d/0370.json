@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:43bda8bc26240aec",
+  "lessonIds": [
+    "SA-C370-sthitih",
+    "SA-C370-avastha",
+    "SA-C370-parinamati",
+    "SA-C370-anukulah",
+    "SA-C370-pratikulah"
+  ],
+  "tex": "sanskrit/book/chapters/ch370-as-things-stand.tex"
+}

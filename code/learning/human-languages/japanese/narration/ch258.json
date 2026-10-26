@@ -1,0 +1,1079 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 258,
+  "title": "How It Felt, and What I Hope For",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:8217ae52709b4b61",
+  "lessons": [
+    {
+      "id": "JA-C258-tanoshikatta",
+      "sequence": 15410,
+      "title": "たのしかった / うれしかった (tanoshikatta / ureshikatta) — how it felt",
+      "headword": "たのしかった / うれしかった",
+      "romanization": "tanoshikatta / ureshikatta",
+      "gloss": "it was fun, I was glad — the i-adjective past -katta, and na-adjectives with deshita",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c99d68521591c068",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"fun\" and \"glad\". (tanoshii, ureshii.) Then \"a trip\". (ryokō.) Today they move into the past."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -かった",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りょこうは たのしかったです。 ryokō wa tanoshikatta desu. — \"The trip was fun.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective carries its own past: the last い becomes かった, and です stays as it is to keep the sentence polite. たのしい gives たのしかった (tanoshikatta), うれしい gives うれしかった (ureshikatta)."
+            },
+            {
+              "kind": "speech",
+              "text": "うれしかったです。 ureshikatta desu. — \"I was glad.\""
+            },
+            {
+              "kind": "speech",
+              "text": "きのうは さむかったです。 kinō wa samukatta desu. — \"It was cold yesterday.\""
+            },
+            {
+              "kind": "speech",
+              "text": "いい takes its past from よい, another form of the same word: よかった (yokatta), \"it was good\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えいがは よかったです。 eiga wa yokatta desu. — \"The film was good.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -くなかった, and でした",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "\"Was not\" comes from the -くない you know: おもしろくない becomes おもしろくなかった (omoshirokunakatta)."
+            },
+            {
+              "kind": "speech",
+              "text": "えいがは おもしろくなかったです。 eiga wa omoshirokunakatta desu. — \"The film was not interesting.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective keeps the noun's way: でした (deshita) after it."
+            },
+            {
+              "kind": "speech",
+              "text": "うみは しずかでした。 umi wa shizuka deshita. — \"The sea was calm.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは げんきでした。 chichi wa genki deshita. — \"My father was well.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It was cold yesterday\" — kinō wa samukatta desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It was cold yesterday\" — *kinō wa samukatta desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It was hot yesterday\" — kinō wa atsukatta desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It was hot yesterday\" — *kinō wa atsukatta desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It was cool yesterday\" — kinō wa suzushikatta desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It was cool yesterday\" — *kinō wa suzushikatta desu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C258-tanoshikatta-say",
+              "prompt": "Say that the trip was fun.",
+              "assesses": [
+                "JA-GRAMMAR-C258-FEELING-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ryokō wa tanoshikatta desu",
+                "りょこうは たのしかったです。",
+                "ryokou wa tanoshikatta desu",
+                "tanoshikatta desu"
+              ],
+              "feedback": {
+                "correct": "tanoshikatta: the last i of tanoshii turned into katta.",
+                "incorrect": "Turn the last i of tanoshii into katta: tanoshikatta desu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It was sad\"? (かなしかったです.) \"It was good\"? (よかったです.) \"It was not fun\"? (たのしくなかったです.) \"It was quiet\"? (しずかでした.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C258-shourai",
+      "sequence": 15420,
+      "title": "しょうらい (shōrai) — the future; one's prospects",
+      "headword": "しょうらい",
+      "romanization": "shōrai",
+      "gloss": "the future; one's prospects",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccb251a2f43c9e65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"next year\" and \"worry\". (rainen, shinpai.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょうらい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうらい — shōrai — \"the future\", the years ahead of you: further off than らいねん."
+            },
+            {
+              "kind": "speech",
+              "text": "しょうらいが しんぱいです。 shōrai ga shinpai desu. — \"I worry about the future.\""
+            },
+            {
+              "kind": "speech",
+              "text": "しょうらい りょこうに いく つもりです。 shōrai ryokō ni iku tsumori desu. — \"In the future I plan to travel.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうらい (shōrai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shō, which KANJIDIC2 glosses \"from now on\" among other senses, and rai, \"come\" (Middle Chinese loj), the rai of らいねん (KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict glosses the word \"future; (future) prospects\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōrai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōrai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I worry about the future\" — shōrai ga shinpai desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I worry about the future\" — *shōrai ga shinpai desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In the future I plan to travel\" — shōrai ryokō ni iku tsumori desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In the future I plan to travel\" — *shōrai ryokō ni iku tsumori desu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C258-shourai-say",
+              "prompt": "Say the Japanese for 'the future', the years ahead.",
+              "assesses": [
+                "JA-LEX-C258-SHOURAI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "shōrai",
+                "しょうらい",
+                "shourai",
+                "shorai"
+              ],
+              "feedback": {
+                "correct": "Right: shōrai, the years ahead.",
+                "incorrect": "'The future' is shōrai."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"The future\"? (しょうらい, shōrai.) Nearer, \"next year\"? (らいねん.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C258-naritai",
+      "sequence": 15430,
+      "title": "〜に なりたいです (ni naritai desu) — what I want to become",
+      "headword": "〜に なりたいです",
+      "romanization": "ni naritai desu",
+      "gloss": "I want to become — naru with -tai, and yume wa … koto desu",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ced7baff223e4ddb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my elder brother became a teacher\". (ani wa sensei ni narimashita.) Then \"a doctor\". (isha.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 〜に なりたいです",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いしゃに なりたいです。 isha ni naritai desu. — \"I want to become a doctor.\""
+            },
+            {
+              "kind": "speech",
+              "text": "なる takes -たい, as いく does in いきたい: なりたい (naritai), \"want to become\". です makes it polite."
+            },
+            {
+              "kind": "speech",
+              "text": "しょうらい せんせいに なりたいです。 shōrai sensei ni naritai desu. — \"In the future I want to become a teacher.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective takes に too:"
+            },
+            {
+              "kind": "speech",
+              "text": "日本語が じょうずに なりたいです。 nihongo ga jōzu ni naritai desu. — \"I want to get good at Japanese.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: ゆめは 〜ことです",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こと (koto) is \"a thing, a matter\". After the dictionary form of a verb it turns the action into a thing, and ゆめは (yume wa), \"my dream is\", can name it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ゆめは 日本に すむ ことです。 yume wa nihon ni sumu koto desu. — \"My dream is to live in Japan.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ゆめは うみの ちかくに すむ ことです。 yume wa umi no chikaku ni sumu koto desu. — \"My dream is to live near the sea.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to become a teacher\" — sensei ni naritai desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to become a teacher\" — *sensei ni naritai desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to become a nurse\" — kangoshi ni naritai desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to become a nurse\" — *kangoshi ni naritai desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to become a singer\" — kashu ni naritai desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to become a singer\" — *kashu ni naritai desu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C258-naritai-say",
+              "prompt": "Say that you want to become a doctor.",
+              "assesses": [
+                "JA-GRAMMAR-C258-AMBITION-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "isha ni naritai desu",
+                "いしゃに なりたいです。",
+                "いしゃに なりたいです"
+              ],
+              "feedback": {
+                "correct": "naritai desu: naru with -tai, and ni for the doctor.",
+                "incorrect": "Isha ni, then naritai desu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I want to become a doctor\"? (いしゃに なりたいです.) \"My dream is to live in Japan\"? (ゆめは 日本に すむ ことです.) What does こと do after a verb? (It makes the action a thing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C258-itta-koto",
+      "sequence": 15440,
+      "title": "いった ことが あります (itta koto ga arimasu) — I have done it before",
+      "headword": "いった ことが あります",
+      "romanization": "itta koto ga arimasu",
+      "gloss": "I have been there — -ta koto ga arimasu, for what you have done at least once",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:035ccd59d082eee1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my dream is to live in Japan\". (yume wa nihon ni sumu koto desu.) Then say \"once\". (ichido.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -た ことが あります",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "日本に いった ことが あります。 nihon ni itta koto ga arimasu. — \"I have been to Japan.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The plain past, こと, then が あります (ga arimasu): \"there is the matter of having gone\". It says you have done something at least once, at some time in your life."
+            },
+            {
+              "kind": "speech",
+              "text": "すしを たべた ことが あります。 sushi o tabeta koto ga arimasu. — \"I have eaten sushi.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: ありますか, and いちども",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To ask, か goes at the end:"
+            },
+            {
+              "kind": "speech",
+              "text": "うみで およいだ ことが ありますか。 umi de oyoida koto ga arimasu ka. — \"Have you ever swum in the sea?\""
+            },
+            {
+              "kind": "speech",
+              "text": "For \"never\", いちども (ichido mo), \"not even once\", and ありません:"
+            },
+            {
+              "kind": "speech",
+              "text": "いちども およいだ ことが ありません。 ichido mo oyoida koto ga arimasen. — \"I have never swum.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have eaten sushi\" — sushi o tabeta koto ga arimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have eaten sushi\" — *sushi o tabeta koto ga arimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have eaten tempura\" — tenpura o tabeta koto ga arimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have eaten tempura\" — *tenpura o tabeta koto ga arimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have eaten natto\" — nattō o tabeta koto ga arimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have eaten natto\" — *nattō o tabeta koto ga arimasu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C258-itta-koto-say",
+              "prompt": "Say that you have been to Japan.",
+              "assesses": [
+                "JA-GRAMMAR-C258-TA-KOTO-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "nihon ni itta koto ga arimasu",
+                "日本に いった ことが あります。",
+                "にほんに いった ことが あります",
+                "itta koto ga arimasu"
+              ],
+              "feedback": {
+                "correct": "itta koto ga arimasu: the plain past, koto, ga arimasu.",
+                "incorrect": "The plain past itta, then koto ga arimasu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I have been there\"? (いった ことが あります (itta koto ga arimasu).) \"Have you ever swum?\" (およいだ ことが ありますか.) \"I have never swum\"? (いちども およいだ ことが ありません.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C258-imamade",
+      "sequence": 15450,
+      "title": "今まで (imamade) — until now",
+      "headword": "今まで",
+      "romanization": "imamade",
+      "gloss": "until now",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:3379a100e4d36337",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "You'll want to know: 今まで"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know: 今まで."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"now\". (ima.) Then \"I have never swum\". (ichido mo oyoida koto ga arimasen.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 今まで",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "今まで — imamade — \"until now\", \"so far\": いま, \"now\", with まで, \"as far as\"."
+            },
+            {
+              "kind": "speech",
+              "text": "今まで いちども いった ことが ありません。 imamade ichido mo itta koto ga arimasen. — \"I have never been there until now.\""
+            },
+            {
+              "kind": "speech",
+              "text": "今まで ちかくに すんでいました。 imamade chikaku ni sunde imashita. — \"Until now I lived nearby.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The first sign is new: the kanji for いま, read いま (ima) here. The next lesson writes it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "今まで (imamade) is a native Japanese word (wago), inherited rather than borrowed from Chinese: いま (ima), \"now\", written with its kanji and read the native way, and まで (made), \"as far as\". JMdict glosses it \"until now; so far\", and KANJIDIC2 gives いま as the kanji's native reading (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imamade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imamade*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have never been there until now\" — imamade ichido mo itta koto ga arimasen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have never been there until now\" — *imamade ichido mo itta koto ga arimasen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have never eaten it until now\" — imamade ichido mo tabeta koto ga arimasen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have never eaten it until now\" — *imamade ichido mo tabeta koto ga arimasen*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C258-imamade-say",
+              "prompt": "Say the Japanese for 'until now'.",
+              "assesses": [
+                "JA-LEX-C258-IMAMADE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "imamade",
+                "今まで",
+                "いままで",
+                "ima made"
+              ],
+              "feedback": {
+                "correct": "Right: imamade, now and as far as.",
+                "incorrect": "'Until now' is imamade."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Until now\"? (今まで, imamade.) How is its first sign read? (いま, ima.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W258-ima-kanji",
+      "sequence": 15460,
+      "title": "今 (ima) — now, four strokes",
+      "headword": "今",
+      "romanization": "ima",
+      "gloss": "the four-stroke kanji for now, read ima in 今まで",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:16f00bd1ee0b52b0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say imamade, until now. Then call up 人: two strokes, the left one first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "今 — ima."
+            },
+            {
+              "kind": "speech",
+              "text": "Its parts:"
+            },
+            {
+              "kind": "speech",
+              "text": "人 (a roof) on top."
+            },
+            {
+              "kind": "speech",
+              "text": "a short bar."
+            },
+            {
+              "kind": "speech",
+              "text": "a bar turning down to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "Four strokes, three lifts:"
+            },
+            {
+              "kind": "speech",
+              "text": "draw the falling stroke on the left of the roof, from the top down to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the falling stroke on the right of the roof, down to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the short bar under the roof from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the lower bar from left to right, then without lifting turn down to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "The roof is 人, in its order, left then right, but here the second stroke starts at the very top and both spread wide. Here it is read いま (ima), as in 今まで (imamade); this lesson asks only for that reading."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Find 今 (ima) in 今まで and say imamade."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy 今 three times, saying ima at each one."
+            },
+            {
+              "kind": "speech",
+              "text": "Find it once more, in 今まで ちかくに すんでいました (imamade chikaku ni sunde imashita), and say the line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which sign is its roof? (人, left stroke first.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: KanjiVG stroke-order data: KanjiVG, kanji/04eca.svg, kanji 今 (ima) (U+4ECA), 4 stroke paths kvg:04eca-s1 to s4 (Ulrich Apel and contributors, CC BY-SA 3.0). Only the order and direction are taken from it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-W258-ima-kanji-strokes",
+              "prompt": "How many strokes does the kanji read ima have?",
+              "assesses": [
+                "JA-SCRIPT-KANJI-IMA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "four",
+                "4",
+                "four strokes"
+              ],
+              "feedback": {
+                "correct": "Four: the two sides of the roof, a short bar, and a bar that turns down.",
+                "incorrect": "Four strokes: two for the roof, then two bars, the last turning down."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R258-how-it-felt",
+      "sequence": 15470,
+      "title": "Review — how it felt, and what I hope for",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "how a trip felt, what you hope to become and what you have done before",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a7732f122d01626",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the trip was fun\". (ryokō wa tanoshikatta desu.) Then \"I want to become a teacher\". (sensei ni naritai desu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It was cold yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It was cold yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The film was not interesting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The film was not interesting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In the future I want to become a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In the future I want to become a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My dream is to live near the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My dream is to live near the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Have you ever eaten sushi?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Have you ever eaten sushi?]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R258-how-it-felt-say",
+              "prompt": "Say that until now you have never been to Japan.",
+              "assesses": [
+                "JA-GRAMMAR-C258-TA-KOTO-02",
+                "JA-LEX-C258-IMAMADE-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "imamade ichido mo nihon ni itta koto ga arimasen",
+                "今まで いちども 日本に いった ことが ありません。",
+                "imamade nihon ni itta koto ga arimasen"
+              ],
+              "feedback": {
+                "correct": "imamade ichido mo … koto ga arimasen: never, up to now.",
+                "incorrect": "Imamade, ichido mo, then itta koto ga arimasen."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I was glad\"? (うれしかったです.) \"It was good\"? (よかったです.) \"I want to become\"? (〜に なりたいです (ni naritai desu).) \"I have done it\"? (-た ことが あります.) \"Until now\"? (今まで (imamade).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:031d7cebd00512e6",
+  "lessonIds": [
+    "SA-C338-punyam",
+    "SA-C338-papam",
+    "SA-C338-svargah",
+    "SA-C338-narakah",
+    "SA-C338-bhunkte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch338.txt",
+  "json": "sanskrit/narration/ch338.json",
+  "textHash": "fnv1a64:92bd493a20cfd78c",
+  "jsonHash": "fnv1a64:de6d31fa992bab0b",
+  "findings": []
+}

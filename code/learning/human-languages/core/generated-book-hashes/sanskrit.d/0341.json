@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:781456f5b2f46215",
+  "lessonIds": [
+    "SA-C341-prayojanam",
+    "SA-C341-uddesyam",
+    "SA-C341-upayogah",
+    "SA-C341-prerayati",
+    "SA-C341-karayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch341-what-it-is-for.tex"
+}

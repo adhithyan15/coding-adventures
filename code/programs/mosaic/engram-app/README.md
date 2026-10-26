@@ -120,7 +120,13 @@ editing, and save/delete/cancel controls.
   single-threaded and a deferred answer has no other thread to reach.
 - The web, Electron, and native host adapters persist raw Engram state snapshots
   across launches. Set `ENGRAM_SNAPSHOT_PATH` to override the storage file; by
-  default host shells use `~/.engram/mosaic-snapshot.v1.json`.
+  default host shells use `~/.engram/mosaic-snapshot.v1.json`. If a snapshot
+  fails to load, the host copies it aside before saving the demo deck in its
+  place. The copy goes to the first free name of `<snapshot>.corrupt`,
+  `.corrupt.1` … `.corrupt.9` (on the web, `localStorage` keys starting with
+  `engram.snapshot.v1.corrupt`), and never replaces an earlier one. If the
+  copy fails or all ten are taken, the host saves nothing for the rest of the
+  session, so a snapshot is never overwritten.
 - Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells
   expose the same Engram host contract slots, collection events, card-browser
   events, rating events, and Anki-style review action events as the shared Rust
@@ -205,6 +211,33 @@ The runtime-install step is not optional: the emitted `src/engram-host.ts` impor
 itself lives in `engram-wasm/js`. Without it the build fails with
 `Could not resolve "./engram-mosaic-host-wasm"`. That step previously existed only
 in `build-all.ps1`, which cannot run on a Linux CI runner.
+
+## Upgrade fixture
+
+`fixtures/release-upgrade-v0.4.0.json` is a collection with one deck and one
+card, captured by running the v0.4.0 release's own adapter and stored in the
+shared [Mosaic release state gate](../../../specs/mosaic-release-state-gate-v1.md)
+format. It is what a v0.4.0 user's state file looks like, so it is the thing
+every later build must still open:
+
+- `engram-mosaic-app`'s `the_v0_4_0_release_fixture_survives_the_upgrade`
+  restores it as a version-1 snapshot, checks the deck and card, and checks the
+  fixture's JSON-pointer expectations against both the v1 state and the v3
+  bytes the current adapter re-persists.
+- `code/scripts/mosaic_release_state_gate.py` materializes it into the host's
+  envelope and verifies a live state file against it:
+
+  ```bash
+  python3 code/scripts/mosaic_release_state_gate.py materialize \
+    --fixture code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json \
+    --output "$state_file"
+  # ...launch the new build...
+  python3 code/scripts/mosaic_release_state_gate.py verify \
+    --fixture code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json \
+    --state "$state_file"
+  ```
+
+Never edit its `state` by hand; recapture it from a release tag instead.
 
 ## Pinned npm dependencies
 

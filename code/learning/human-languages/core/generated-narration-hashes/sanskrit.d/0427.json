@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:2b0cac074c25a3d6",
+  "lessonIds": [
+    "SA-C427-vasatih",
+    "SA-C427-patamandapah",
+    "SA-C427-nivesah",
+    "SA-C427-astrnati",
+    "SA-C427-prabudhyate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch427.txt",
+  "json": "sanskrit/narration/ch427.json",
+  "textHash": "fnv1a64:51b96d6b0cb786a1",
+  "jsonHash": "fnv1a64:b69a385ab59a1287",
+  "findings": []
+}

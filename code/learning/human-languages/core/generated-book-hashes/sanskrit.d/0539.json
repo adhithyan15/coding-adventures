@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:93cc62636cec184c",
+  "lessonIds": [
+    "SA-C539-apramattah",
+    "SA-C539-anavadhanam",
+    "SA-C539-jagarukah",
+    "SA-C539-asankate",
+    "SA-C539-samraksati"
+  ],
+  "tex": "sanskrit/book/chapters/ch539-being-careful.tex"
+}

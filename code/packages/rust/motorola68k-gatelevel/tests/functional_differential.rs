@@ -44,14 +44,16 @@ fn complete_functional_oracle_corpus_matches_gate_transitions() {
 
     for vector in vectors {
         let mut cpu = Cpu68K::new();
-        cpu.mem[..vector.program.len()].copy_from_slice(&vector.program);
-        cpu.rf.d = vector.d;
-        cpu.rf.a = vector.a;
-        cpu.rf.pc = 0;
-        cpu.rf.sr = vector.sr;
+        let mut prepared = cpu.get_state();
+        prepared.memory[..vector.program.len()].copy_from_slice(&vector.program);
+        prepared.d = vector.d;
+        prepared.a = vector.a;
+        prepared.pc = 0;
+        prepared.sr = vector.sr;
         for [address, value] in vector.memory {
-            cpu.mem[address] = value as u8;
+            prepared.memory[address] = value as u8;
         }
+        cpu.restore(&prepared).expect("valid generated setup");
 
         if vector.error.is_some() {
             let initial = cpu.get_state();
@@ -65,7 +67,7 @@ fn complete_functional_oracle_corpus_matches_gate_transitions() {
             continue;
         }
         for _ in 0..vector.steps {
-            if cpu.halted {
+            if cpu.halted() {
                 break;
             }
             cpu.step();

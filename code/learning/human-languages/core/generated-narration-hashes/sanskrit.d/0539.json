@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:fc2e5345c5f7ea3a",
+  "lessonIds": [
+    "SA-C539-apramattah",
+    "SA-C539-anavadhanam",
+    "SA-C539-jagarukah",
+    "SA-C539-asankate",
+    "SA-C539-samraksati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch539.txt",
+  "json": "sanskrit/narration/ch539.json",
+  "textHash": "fnv1a64:78fd5fe30233ac96",
+  "jsonHash": "fnv1a64:7deb375610937bb1",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:050271b67b9e89a7",
+  "lessonIds": [
+    "SA-C429-udghatayati",
+    "SA-C429-ghatika",
+    "SA-C429-avasathah",
+    "SA-C429-argalah",
+    "SA-C429-avakrayah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch429.txt",
+  "json": "sanskrit/narration/ch429.json",
+  "textHash": "fnv1a64:a41abe980e681734",
+  "jsonHash": "fnv1a64:60f99d231fee8b01",
+  "findings": []
+}

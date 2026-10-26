@@ -1,0 +1,11 @@
+{
+  "id": "SA-C459-adarah",
+  "pathSegment": "SA-PATH-459-ADARA459",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-459-ADARA459",
+      "order": 3
+    }
+  ]
+}

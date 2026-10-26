@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:b9f4cda99757a9a9",
+  "lessonIds": [
+    "SA-C420-prapa",
+    "SA-C420-payayati",
+    "SA-C420-mrgatrsna",
+    "SA-C420-asadayati",
+    "SA-C420-tarpayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch420.txt",
+  "json": "sanskrit/narration/ch420.json",
+  "textHash": "fnv1a64:e900af8253859c19",
+  "jsonHash": "fnv1a64:df806e8e8d8a7849",
+  "findings": []
+}

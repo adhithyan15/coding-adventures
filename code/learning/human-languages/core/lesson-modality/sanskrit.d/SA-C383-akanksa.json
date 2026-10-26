@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C383-akanksa",
+    "language": "sanskrit",
+    "chapter": 383,
+    "sequence": 22210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efd569bc5158efa9"
+  },
+  "findings": []
+}

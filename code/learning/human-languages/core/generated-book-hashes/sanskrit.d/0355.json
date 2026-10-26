@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:ef51687a61bf57ef",
+  "lessonIds": [
+    "SA-C355-samsad",
+    "SA-C355-sadasyah",
+    "SA-C355-pratinidhih",
+    "SA-C355-adhyaksah",
+    "SA-C355-mantrayate",
+    "SA-R355-review-348-355"
+  ],
+  "tex": "sanskrit/book/chapters/ch355-the-assembly.tex"
+}

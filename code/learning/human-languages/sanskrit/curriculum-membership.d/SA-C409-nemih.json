@@ -1,0 +1,11 @@
+{
+  "id": "SA-C409-nemih",
+  "pathSegment": "SA-PATH-409-CAKRA409",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-409-CAKRA409",
+      "order": 1
+    }
+  ]
+}

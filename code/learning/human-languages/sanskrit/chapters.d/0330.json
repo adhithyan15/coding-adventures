@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Old Customs",
+  "label": "ch:sa-old-customs",
+  "canDo": "I can explain an old custom and how it is kept.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C330-tilakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can explain an old custom and how it is kept.",
+    "assesses": [
+      "SA-LEX-C330-PARAMPARA330-03",
+      "SA-LEX-C330-PARAMPARA330-04",
+      "SA-LEX-C330-PARAMPARA330-05"
+    ]
+  }
+}

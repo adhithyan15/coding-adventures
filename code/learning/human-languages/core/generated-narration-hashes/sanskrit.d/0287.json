@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:07a671d219975bef",
+  "lessonIds": [
+    "SA-C287-anudhavati",
+    "SA-C287-vegah",
+    "SA-C287-upasarpati",
+    "SA-C287-jagarti",
+    "SA-C287-kolahalah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch287.txt",
+  "json": "sanskrit/narration/ch287.json",
+  "textHash": "fnv1a64:4049785617c5180b",
+  "jsonHash": "fnv1a64:bc27810c6739179a",
+  "findings": []
+}

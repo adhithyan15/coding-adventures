@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Lost and Found",
+  "label": "ch:sa-lost-and-found",
+  "canDo": "I can tell how a family was separated and found again.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C307-ksemah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can tell how a family was separated and found again.",
+    "assesses": [
+      "SA-LEX-C307-VIYOGA307-03",
+      "SA-LEX-C307-VIYOGA307-04",
+      "SA-LEX-C307-VIYOGA307-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:ee2f5195a89f205a",
+  "lessonIds": [
+    "SA-C345-pratyayah",
+    "SA-C345-saksyam",
+    "SA-C345-tathyam",
+    "SA-C345-sadhayati",
+    "SA-C345-niscayah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch345.txt",
+  "json": "sanskrit/narration/ch345.json",
+  "textHash": "fnv1a64:00e0f1c489df8785",
+  "jsonHash": "fnv1a64:0383fdd7410adc56",
+  "findings": []
+}

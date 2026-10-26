@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C494-anujanati",
+    "language": "sanskrit",
+    "chapter": 494,
+    "sequence": 28380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f40f3b564b528249"
+  },
+  "findings": []
+}

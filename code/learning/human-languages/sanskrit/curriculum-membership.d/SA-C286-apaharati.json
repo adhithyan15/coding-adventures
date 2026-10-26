@@ -1,0 +1,11 @@
+{
+  "id": "SA-C286-apaharati",
+  "pathSegment": "SA-PATH-286-CAURYA286",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-286-CAURYA286",
+      "order": 2
+    }
+  ]
+}

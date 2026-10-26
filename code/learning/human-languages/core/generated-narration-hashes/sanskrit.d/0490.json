@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:ec73ddf9fdf2ec75",
+  "lessonIds": [
+    "SA-C490-gaurah",
+    "SA-C490-ayuh",
+    "SA-C490-palitah",
+    "SA-C490-valih",
+    "SA-C490-rupam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch490.txt",
+  "json": "sanskrit/narration/ch490.json",
+  "textHash": "fnv1a64:74c155834d30225d",
+  "jsonHash": "fnv1a64:7b4527306127ad89",
+  "findings": []
+}

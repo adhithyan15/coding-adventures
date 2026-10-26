@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:551a8b6cc2ad18e8",
+  "lessonIds": [
+    "SA-C316-samrat",
+    "SA-C316-simhasanam",
+    "SA-C316-isvarah",
+    "SA-C316-rajyam",
+    "SA-C316-sasti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch316.txt",
+  "json": "sanskrit/narration/ch316.json",
+  "textHash": "fnv1a64:d46061c6b41126e6",
+  "jsonHash": "fnv1a64:680f57651a948f68",
+  "findings": []
+}

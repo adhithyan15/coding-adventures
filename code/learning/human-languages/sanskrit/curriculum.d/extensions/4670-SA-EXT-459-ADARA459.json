@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-459-ADARA459",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether someone was respected or slighted.",
+  "prerequisites": []
+}

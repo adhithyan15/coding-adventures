@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:44be703098865f7f",
+  "lessonIds": [
+    "SA-C316-samrat",
+    "SA-C316-simhasanam",
+    "SA-C316-isvarah",
+    "SA-C316-rajyam",
+    "SA-C316-sasti"
+  ],
+  "tex": "sanskrit/book/chapters/ch316-kings-and-emperors.tex"
+}

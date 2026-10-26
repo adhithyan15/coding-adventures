@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "The Army Marches",
+  "label": "ch:sa-the-army-marches",
+  "canDo": "I can tell how an army set out and fought.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C318-yudhyate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can tell how an army set out and fought.",
+    "assesses": [
+      "SA-LEX-C318-SENA318-03",
+      "SA-LEX-C318-SENA318-04",
+      "SA-LEX-C318-SENA318-05"
+    ]
+  }
+}
