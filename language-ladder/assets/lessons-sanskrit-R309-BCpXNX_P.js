@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R309-review-302-309
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 18220
+chapter: 309
+type: review
+headword: (dialogue)
+gloss: a review of the words from The Water Rose to The Morning News
+concept_tag: REVIEW
+prerequisites: [SA-C302-jalaughah, SA-C302-plavayati, SA-C302-pravahah, SA-C302-nimajjati, SA-C302-kramasah, SA-C303-durbhiksam, SA-C303-mahamari, SA-C303-ksinah, SA-C303-vyapnoti, SA-C303-mlayati, SA-C304-rasih, SA-C304-artah, SA-C304-krosati, SA-C304-vilapati, SA-C304-nihsarayati, SA-C305-uddharati, SA-C305-pranah, SA-C305-sahasam, SA-C305-avatarayati, SA-C305-trayate, SA-C306-sibiram, SA-C306-asrayah, SA-C306-danam, SA-C306-saranarthi, SA-C306-santvayati, SA-C307-viyogah, SA-C307-asru, SA-C307-milati, SA-C307-anathah, SA-C307-ksemah, SA-C308-samuhah, SA-C308-upakaroti, SA-C308-vibhajati, SA-C308-data, SA-C308-sahayah, SA-C309-vrttantah, SA-C309-prasarayati, SA-C309-akarnayati, SA-C309-mukhyah, SA-C309-vartaharah]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C302-JALAUGHA302-01, SA-LEX-C302-JALAUGHA302-02, SA-LEX-C302-JALAUGHA302-03, SA-LEX-C302-JALAUGHA302-04, SA-LEX-C302-JALAUGHA302-05, SA-LEX-C303-DURBHIKSHA303-01, SA-LEX-C303-DURBHIKSHA303-02, SA-LEX-C303-DURBHIKSHA303-03, SA-LEX-C303-DURBHIKSHA303-04, SA-LEX-C303-DURBHIKSHA303-05, SA-LEX-C304-RASHI304-01, SA-LEX-C304-RASHI304-02, SA-LEX-C304-RASHI304-03, SA-LEX-C304-RASHI304-04, SA-LEX-C304-RASHI304-05, SA-LEX-C305-UDDHARANA305-01, SA-LEX-C305-UDDHARANA305-02, SA-LEX-C305-UDDHARANA305-03, SA-LEX-C305-UDDHARANA305-04, SA-LEX-C305-UDDHARANA305-05, SA-LEX-C306-SHIBIRA306-01, SA-LEX-C306-SHIBIRA306-02, SA-LEX-C306-SHIBIRA306-03, SA-LEX-C306-SHIBIRA306-04, SA-LEX-C306-SHIBIRA306-05, SA-LEX-C307-VIYOGA307-01, SA-LEX-C307-VIYOGA307-02, SA-LEX-C307-VIYOGA307-03, SA-LEX-C307-VIYOGA307-04, SA-LEX-C307-VIYOGA307-05, SA-LEX-C308-SAMUHA308-01, SA-LEX-C308-SAMUHA308-02, SA-LEX-C308-SAMUHA308-03, SA-LEX-C308-SAMUHA308-04, SA-LEX-C308-SAMUHA308-05, SA-LEX-C309-VRITTANTA309-01, SA-LEX-C309-VRITTANTA309-02, SA-LEX-C309-VRITTANTA309-03, SA-LEX-C309-VRITTANTA309-04, SA-LEX-C309-VRITTANTA309-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C302-JALAUGHA302-01, SA-LEX-C302-JALAUGHA302-02, SA-LEX-C302-JALAUGHA302-03, SA-LEX-C302-JALAUGHA302-04, SA-LEX-C302-JALAUGHA302-05, SA-LEX-C303-DURBHIKSHA303-01, SA-LEX-C303-DURBHIKSHA303-02, SA-LEX-C303-DURBHIKSHA303-03, SA-LEX-C303-DURBHIKSHA303-04, SA-LEX-C303-DURBHIKSHA303-05, SA-LEX-C304-RASHI304-01, SA-LEX-C304-RASHI304-02, SA-LEX-C304-RASHI304-03, SA-LEX-C304-RASHI304-04, SA-LEX-C304-RASHI304-05, SA-LEX-C305-UDDHARANA305-01, SA-LEX-C305-UDDHARANA305-02, SA-LEX-C305-UDDHARANA305-03, SA-LEX-C305-UDDHARANA305-04, SA-LEX-C305-UDDHARANA305-05, SA-LEX-C306-SHIBIRA306-01, SA-LEX-C306-SHIBIRA306-02, SA-LEX-C306-SHIBIRA306-03, SA-LEX-C306-SHIBIRA306-04, SA-LEX-C306-SHIBIRA306-05, SA-LEX-C307-VIYOGA307-01, SA-LEX-C307-VIYOGA307-02, SA-LEX-C307-VIYOGA307-03, SA-LEX-C307-VIYOGA307-04, SA-LEX-C307-VIYOGA307-05, SA-LEX-C308-SAMUHA308-01, SA-LEX-C308-SAMUHA308-02, SA-LEX-C308-SAMUHA308-03, SA-LEX-C308-SAMUHA308-04, SA-LEX-C308-SAMUHA308-05, SA-LEX-C309-VRITTANTA309-01, SA-LEX-C309-VRITTANTA309-02, SA-LEX-C309-VRITTANTA309-03, SA-LEX-C309-VRITTANTA309-04, SA-LEX-C309-VRITTANTA309-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C302-jalaughah, SA-C302-plavayati, SA-C302-pravahah, SA-C302-nimajjati, SA-C302-kramasah, SA-C303-durbhiksam, SA-C303-mahamari, SA-C303-ksinah, SA-C303-vyapnoti, SA-C303-mlayati, SA-C304-rasih, SA-C304-artah, SA-C304-krosati, SA-C304-vilapati, SA-C304-nihsarayati, SA-C305-uddharati, SA-C305-pranah, SA-C305-sahasam, SA-C305-avatarayati, SA-C305-trayate, SA-C306-sibiram, SA-C306-asrayah, SA-C306-danam, SA-C306-saranarthi, SA-C306-santvayati, SA-C307-viyogah, SA-C307-asru, SA-C307-milati, SA-C307-anathah, SA-C307-ksemah, SA-C308-samuhah, SA-C308-upakaroti, SA-C308-vibhajati, SA-C308-data, SA-C308-sahayah, SA-C309-vrttantah, SA-C309-prasarayati, SA-C309-akarnayati, SA-C309-mukhyah, SA-C309-vartaharah]
+---
+
+# Looking back: from The Water Rose to The Morning News
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C302-JALAUGHA302-01, SA-LEX-C302-JALAUGHA302-02] -->
+
+[PAUSE 3s] Say the Sanskrit for a flood and floods.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C302-JALAUGHA302-01, SA-LEX-C302-JALAUGHA302-02, SA-LEX-C302-JALAUGHA302-03, SA-LEX-C302-JALAUGHA302-04, SA-LEX-C302-JALAUGHA302-05, SA-LEX-C303-DURBHIKSHA303-01, SA-LEX-C303-DURBHIKSHA303-02, SA-LEX-C303-DURBHIKSHA303-03, SA-LEX-C303-DURBHIKSHA303-04, SA-LEX-C303-DURBHIKSHA303-05, SA-LEX-C304-RASHI304-01, SA-LEX-C304-RASHI304-02, SA-LEX-C304-RASHI304-03, SA-LEX-C304-RASHI304-04, SA-LEX-C304-RASHI304-05, SA-LEX-C305-UDDHARANA305-01, SA-LEX-C305-UDDHARANA305-02, SA-LEX-C305-UDDHARANA305-03, SA-LEX-C305-UDDHARANA305-04, SA-LEX-C305-UDDHARANA305-05, SA-LEX-C306-SHIBIRA306-01, SA-LEX-C306-SHIBIRA306-02, SA-LEX-C306-SHIBIRA306-03, SA-LEX-C306-SHIBIRA306-04, SA-LEX-C306-SHIBIRA306-05, SA-LEX-C307-VIYOGA307-01, SA-LEX-C307-VIYOGA307-02, SA-LEX-C307-VIYOGA307-03, SA-LEX-C307-VIYOGA307-04, SA-LEX-C307-VIYOGA307-05, SA-LEX-C308-SAMUHA308-01, SA-LEX-C308-SAMUHA308-02, SA-LEX-C308-SAMUHA308-03, SA-LEX-C308-SAMUHA308-04, SA-LEX-C308-SAMUHA308-05, SA-LEX-C309-VRITTANTA309-01, SA-LEX-C309-VRITTANTA309-02, SA-LEX-C309-VRITTANTA309-03, SA-LEX-C309-VRITTANTA309-04, SA-LEX-C309-VRITTANTA309-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a flood, floods, a current, goes under, by degrees]
+- [YOU SAY: a famine, an epidemic, wasted away, spreads through, withers]
+- [YOU SAY: a heap, in distress, shouts, laments, brings out]
+- [YOU SAY: rescues, life, daring, brings down, saves]
+- [YOU SAY: a camp, shelter, a donation, a refugee, comforts]
+- [YOU SAY: a separation, a tear, meets, orphaned, safety]
+- [YOU SAY: a group, does a kindness, shares out, a donor, a helper]
+- [YOU SAY: an account, broadcasts, listens to, main, a news reporter]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C302-JALAUGHA302-01, SA-LEX-C302-JALAUGHA302-02, SA-LEX-C302-JALAUGHA302-03, SA-LEX-C302-JALAUGHA302-04, SA-LEX-C302-JALAUGHA302-05, SA-LEX-C303-DURBHIKSHA303-01, SA-LEX-C303-DURBHIKSHA303-02, SA-LEX-C303-DURBHIKSHA303-03, SA-LEX-C303-DURBHIKSHA303-04, SA-LEX-C303-DURBHIKSHA303-05, SA-LEX-C304-RASHI304-01, SA-LEX-C304-RASHI304-02, SA-LEX-C304-RASHI304-03, SA-LEX-C304-RASHI304-04, SA-LEX-C304-RASHI304-05, SA-LEX-C305-UDDHARANA305-01, SA-LEX-C305-UDDHARANA305-02, SA-LEX-C305-UDDHARANA305-03, SA-LEX-C305-UDDHARANA305-04, SA-LEX-C305-UDDHARANA305-05, SA-LEX-C306-SHIBIRA306-01, SA-LEX-C306-SHIBIRA306-02, SA-LEX-C306-SHIBIRA306-03, SA-LEX-C306-SHIBIRA306-04, SA-LEX-C306-SHIBIRA306-05, SA-LEX-C307-VIYOGA307-01, SA-LEX-C307-VIYOGA307-02, SA-LEX-C307-VIYOGA307-03, SA-LEX-C307-VIYOGA307-04, SA-LEX-C307-VIYOGA307-05, SA-LEX-C308-SAMUHA308-01, SA-LEX-C308-SAMUHA308-02, SA-LEX-C308-SAMUHA308-03, SA-LEX-C308-SAMUHA308-04, SA-LEX-C308-SAMUHA308-05, SA-LEX-C309-VRITTANTA309-01, SA-LEX-C309-VRITTANTA309-02, SA-LEX-C309-VRITTANTA309-03, SA-LEX-C309-VRITTANTA309-04, SA-LEX-C309-VRITTANTA309-05] -->
+
+[PAUSE 3s] A flood? (**जलौघः**, *jalaughaḥ*.) Floods? (**प्लावयति**, *plāvayati*.) A current? (**प्रवाहः**, *pravāhaḥ*.) Goes under? (**निमज्जति**, *nimajjati*.) By degrees? (**क्रमशः**, *kramaśaḥ*.) A famine? (**दुर्भिक्षम्**, *durbhikṣam*.) An epidemic? (**महामारी**, *mahāmārī*.) Wasted away? (**क्षीणः**, *kṣīṇaḥ*.) Spreads through? (**व्याप्नोति**, *vyāpnoti*.) Withers? (**म्लायति**, *mlāyati*.) A heap? (**राशिः**, *rāśiḥ*.) In distress? (**आर्तः**, *ārtaḥ*.) Shouts? (**क्रोशति**, *krośati*.) Laments? (**विलपति**, *vilapati*.) Brings out? (**निःसारयति**, *niḥsārayati*.) Rescues? (**उद्धरति**, *uddharati*.) Life? (**प्राणाः**, *prāṇāḥ*.) Daring? (**साहसम्**, *sāhasam*.) Brings down? (**अवतारयति**, *avatārayati*.) Saves? (**त्रायते**, *trāyate*.) A camp? (**शिबिरम्**, *śibiram*.) Shelter? (**आश्रयः**, *āśrayaḥ*.) A donation? (**दानम्**, *dānam*.) A refugee? (**शरणार्थी**, *śaraṇārthī*.) Comforts? (**सान्त्वयति**, *sāntvayati*.) A separation? (**वियोगः**, *viyogaḥ*.) A tear? (**अश्रु**, *aśru*.) Meets? (**मिलति**, *milati*.) Orphaned? (**अनाथः**, *anāthaḥ*.) Safety? (**क्षेमः**, *kṣemaḥ*.) A group? (**समूहः**, *samūhaḥ*.) Does a kindness? (**उपकरोति**, *upakaroti*.) Shares out? (**विभजति**, *vibhajati*.) A donor? (**दाता**, *dātā*.) A helper? (**सहायः**, *sahāyaḥ*.) An account? (**वृत्तान्तः**, *vṛttāntaḥ*.) Broadcasts? (**प्रसारयति**, *prasārayati*.) Listens to? (**आकर्णयति**, *ākarṇayati*.) Main? (**मुख्यः**, *mukhyaḥ*.) A news reporter? (**वार्ताहरः**, *vārtāharaḥ*.)
+`;export{t};

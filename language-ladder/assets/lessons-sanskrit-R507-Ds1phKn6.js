@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R509-review-502-509
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 29400
+chapter: 509
+type: review
+headword: (dialogue)
+gloss: a review of the words from In the Workshop to Something Needs Mending
+concept_tag: REVIEW
+prerequisites: [SA-C502-karmasala, SA-C502-taksakah, SA-C502-taksati, SA-C502-krakacah, SA-C502-tankah, SA-C503-sahakari, SA-C503-daksah, SA-C503-parisramah, SA-C503-niyokta, SA-C503-niyunkte, SA-C504-avedanam, SA-C504-niyuktih, SA-C504-pratibha, SA-C504-upajivati, SA-C504-pravinah, SA-C505-mrd, SA-C505-mrnmayah, SA-C505-mrdnati, SA-C505-apakah, SA-C505-akarah, SA-C506-vayati, SA-C506-tantuh, SA-C506-ranjakah, SA-C506-ranjayati, SA-C506-saucikah, SA-C507-bhastra, SA-C507-sandamsah, SA-C507-vilapayati, SA-C507-dhamati, SA-C507-bhusanam, SA-C508-istaka, SA-C508-cinoti, SA-C508-nirmanam, SA-C508-sandadhati, SA-C508-sudha, SA-C509-jarjarah, SA-C509-slathah, SA-C509-randhram, SA-C509-syandate, SA-C509-jirnoddharah]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C502-KARMASALA502-01, SA-LEX-C502-KARMASALA502-02, SA-LEX-C502-KARMASALA502-03, SA-LEX-C502-KARMASALA502-04, SA-LEX-C502-KARMASALA502-05, SA-LEX-C503-SAHAKARI503-01, SA-LEX-C503-SAHAKARI503-02, SA-LEX-C503-SAHAKARI503-03, SA-LEX-C503-SAHAKARI503-04, SA-LEX-C503-SAHAKARI503-05, SA-LEX-C504-AVEDANA504-01, SA-LEX-C504-AVEDANA504-02, SA-LEX-C504-AVEDANA504-03, SA-LEX-C504-AVEDANA504-04, SA-LEX-C504-AVEDANA504-05, SA-LEX-C505-MRD505-01, SA-LEX-C505-MRD505-02, SA-LEX-C505-MRD505-03, SA-LEX-C505-MRD505-04, SA-LEX-C505-MRD505-05, SA-LEX-C506-VAYATI506-01, SA-LEX-C506-VAYATI506-02, SA-LEX-C506-VAYATI506-03, SA-LEX-C506-VAYATI506-04, SA-LEX-C506-VAYATI506-05, SA-LEX-C507-BHASTRA507-01, SA-LEX-C507-BHASTRA507-02, SA-LEX-C507-BHASTRA507-03, SA-LEX-C507-BHASTRA507-04, SA-LEX-C507-BHASTRA507-05, SA-LEX-C508-NIRMANA508-01, SA-LEX-C508-NIRMANA508-02, SA-LEX-C508-NIRMANA508-03, SA-LEX-C508-NIRMANA508-04, SA-LEX-C508-NIRMANA508-05, SA-LEX-C509-JARJARA509-01, SA-LEX-C509-JARJARA509-02, SA-LEX-C509-JARJARA509-03, SA-LEX-C509-JARJARA509-04, SA-LEX-C509-JARJARA509-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C502-KARMASALA502-01, SA-LEX-C502-KARMASALA502-02, SA-LEX-C502-KARMASALA502-03, SA-LEX-C502-KARMASALA502-04, SA-LEX-C502-KARMASALA502-05, SA-LEX-C503-SAHAKARI503-01, SA-LEX-C503-SAHAKARI503-02, SA-LEX-C503-SAHAKARI503-03, SA-LEX-C503-SAHAKARI503-04, SA-LEX-C503-SAHAKARI503-05, SA-LEX-C504-AVEDANA504-01, SA-LEX-C504-AVEDANA504-02, SA-LEX-C504-AVEDANA504-03, SA-LEX-C504-AVEDANA504-04, SA-LEX-C504-AVEDANA504-05, SA-LEX-C505-MRD505-01, SA-LEX-C505-MRD505-02, SA-LEX-C505-MRD505-03, SA-LEX-C505-MRD505-04, SA-LEX-C505-MRD505-05, SA-LEX-C506-VAYATI506-01, SA-LEX-C506-VAYATI506-02, SA-LEX-C506-VAYATI506-03, SA-LEX-C506-VAYATI506-04, SA-LEX-C506-VAYATI506-05, SA-LEX-C507-BHASTRA507-01, SA-LEX-C507-BHASTRA507-02, SA-LEX-C507-BHASTRA507-03, SA-LEX-C507-BHASTRA507-04, SA-LEX-C507-BHASTRA507-05, SA-LEX-C508-NIRMANA508-01, SA-LEX-C508-NIRMANA508-02, SA-LEX-C508-NIRMANA508-03, SA-LEX-C508-NIRMANA508-04, SA-LEX-C508-NIRMANA508-05, SA-LEX-C509-JARJARA509-01, SA-LEX-C509-JARJARA509-02, SA-LEX-C509-JARJARA509-03, SA-LEX-C509-JARJARA509-04, SA-LEX-C509-JARJARA509-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C502-karmasala, SA-C502-taksakah, SA-C502-taksati, SA-C502-krakacah, SA-C502-tankah, SA-C503-sahakari, SA-C503-daksah, SA-C503-parisramah, SA-C503-niyokta, SA-C503-niyunkte, SA-C504-avedanam, SA-C504-niyuktih, SA-C504-pratibha, SA-C504-upajivati, SA-C504-pravinah, SA-C505-mrd, SA-C505-mrnmayah, SA-C505-mrdnati, SA-C505-apakah, SA-C505-akarah, SA-C506-vayati, SA-C506-tantuh, SA-C506-ranjakah, SA-C506-ranjayati, SA-C506-saucikah, SA-C507-bhastra, SA-C507-sandamsah, SA-C507-vilapayati, SA-C507-dhamati, SA-C507-bhusanam, SA-C508-istaka, SA-C508-cinoti, SA-C508-nirmanam, SA-C508-sandadhati, SA-C508-sudha, SA-C509-jarjarah, SA-C509-slathah, SA-C509-randhram, SA-C509-syandate, SA-C509-jirnoddharah]
+---
+
+# Looking back: from In the Workshop to Something Needs Mending
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C502-KARMASALA502-01, SA-LEX-C502-KARMASALA502-02] -->
+
+[PAUSE 3s] Say the Sanskrit for a workshop and a carpenter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C502-KARMASALA502-01, SA-LEX-C502-KARMASALA502-02, SA-LEX-C502-KARMASALA502-03, SA-LEX-C502-KARMASALA502-04, SA-LEX-C502-KARMASALA502-05, SA-LEX-C503-SAHAKARI503-01, SA-LEX-C503-SAHAKARI503-02, SA-LEX-C503-SAHAKARI503-03, SA-LEX-C503-SAHAKARI503-04, SA-LEX-C503-SAHAKARI503-05, SA-LEX-C504-AVEDANA504-01, SA-LEX-C504-AVEDANA504-02, SA-LEX-C504-AVEDANA504-03, SA-LEX-C504-AVEDANA504-04, SA-LEX-C504-AVEDANA504-05, SA-LEX-C505-MRD505-01, SA-LEX-C505-MRD505-02, SA-LEX-C505-MRD505-03, SA-LEX-C505-MRD505-04, SA-LEX-C505-MRD505-05, SA-LEX-C506-VAYATI506-01, SA-LEX-C506-VAYATI506-02, SA-LEX-C506-VAYATI506-03, SA-LEX-C506-VAYATI506-04, SA-LEX-C506-VAYATI506-05, SA-LEX-C507-BHASTRA507-01, SA-LEX-C507-BHASTRA507-02, SA-LEX-C507-BHASTRA507-03, SA-LEX-C507-BHASTRA507-04, SA-LEX-C507-BHASTRA507-05, SA-LEX-C508-NIRMANA508-01, SA-LEX-C508-NIRMANA508-02, SA-LEX-C508-NIRMANA508-03, SA-LEX-C508-NIRMANA508-04, SA-LEX-C508-NIRMANA508-05, SA-LEX-C509-JARJARA509-01, SA-LEX-C509-JARJARA509-02, SA-LEX-C509-JARJARA509-03, SA-LEX-C509-JARJARA509-04, SA-LEX-C509-JARJARA509-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a workshop, a carpenter, pares, a saw, a chisel]
+- [YOU SAY: a colleague, adroit, hard work, an employer, employs]
+- [YOU SAY: an application, a post, talent, lives by, skilled]
+- [YOU SAY: clay, earthen, kneads, a kiln, a shape]
+- [YOU SAY: weaves, a strand, a dyer, dyes, a tailor]
+- [YOU SAY: a bellows, tongs, melts down, blows on a fire, an ornament]
+- [YOU SAY: a brick, piles up, construction, mends, lime plaster]
+- [YOU SAY: rickety, slack, an opening, trickles, a repair]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C502-KARMASALA502-01, SA-LEX-C502-KARMASALA502-02, SA-LEX-C502-KARMASALA502-03, SA-LEX-C502-KARMASALA502-04, SA-LEX-C502-KARMASALA502-05, SA-LEX-C503-SAHAKARI503-01, SA-LEX-C503-SAHAKARI503-02, SA-LEX-C503-SAHAKARI503-03, SA-LEX-C503-SAHAKARI503-04, SA-LEX-C503-SAHAKARI503-05, SA-LEX-C504-AVEDANA504-01, SA-LEX-C504-AVEDANA504-02, SA-LEX-C504-AVEDANA504-03, SA-LEX-C504-AVEDANA504-04, SA-LEX-C504-AVEDANA504-05, SA-LEX-C505-MRD505-01, SA-LEX-C505-MRD505-02, SA-LEX-C505-MRD505-03, SA-LEX-C505-MRD505-04, SA-LEX-C505-MRD505-05, SA-LEX-C506-VAYATI506-01, SA-LEX-C506-VAYATI506-02, SA-LEX-C506-VAYATI506-03, SA-LEX-C506-VAYATI506-04, SA-LEX-C506-VAYATI506-05, SA-LEX-C507-BHASTRA507-01, SA-LEX-C507-BHASTRA507-02, SA-LEX-C507-BHASTRA507-03, SA-LEX-C507-BHASTRA507-04, SA-LEX-C507-BHASTRA507-05, SA-LEX-C508-NIRMANA508-01, SA-LEX-C508-NIRMANA508-02, SA-LEX-C508-NIRMANA508-03, SA-LEX-C508-NIRMANA508-04, SA-LEX-C508-NIRMANA508-05, SA-LEX-C509-JARJARA509-01, SA-LEX-C509-JARJARA509-02, SA-LEX-C509-JARJARA509-03, SA-LEX-C509-JARJARA509-04, SA-LEX-C509-JARJARA509-05] -->
+
+[PAUSE 3s] A workshop? (**कर्मशाला**, *karmaśālā*.) A carpenter? (**तक्षकः**, *takṣakaḥ*.) Pares? (**तक्षति**, *takṣati*.) A saw? (**क्रकचः**, *krakacaḥ*.) A chisel? (**टंकः**, *ṭaṅkaḥ*.) A colleague? (**सहकारी**, *sahakārī*.) Adroit? (**दक्षः**, *dakṣaḥ*.) Hard work? (**परिश्रमः**, *pariśramaḥ*.) An employer? (**नियोक्ता**, *niyoktā*.) Employs? (**नियुंक्ते**, *niyuṅkte*.) An application? (**आवेदनम्**, *āvedanam*.) A post? (**नियुक्तिः**, *niyuktiḥ*.) Talent? (**प्रतिभा**, *pratibhā*.) Lives by? (**उपजीवति**, *upajīvati*.) Skilled? (**प्रवीणः**, *pravīṇaḥ*.) Clay? (**मृद्**, *mṛd*.) Earthen? (**मृन्मयः**, *mṛnmayaḥ*.) Kneads? (**मृद्नाति**, *mṛdnāti*.) A kiln? (**आपाकः**, *āpākaḥ*.) A shape? (**आकारः**, *ākāraḥ*.) Weaves? (**वयति**, *vayati*.) A strand? (**तन्तुः**, *tantuḥ*.) A dyer? (**रञ्जकः**, *rañjakaḥ*.) Dyes? (**रञ्जयति**, *rañjayati*.) A tailor? (**सौचिकः**, *saucikaḥ*.) A bellows? (**भस्त्रा**, *bhastrā*.) Tongs? (**सन्दंशः**, *sandaṃśaḥ*.) Melts down? (**विलापयति**, *vilāpayati*.) Blows on a fire? (**धमति**, *dhamati*.) An ornament? (**भूषणम्**, *bhūṣaṇam*.) A brick? (**इष्टका**, *iṣṭakā*.) Piles up? (**चिनोति**, *cinoti*.) Construction? (**निर्माणम्**, *nirmāṇam*.) Mends? (**सन्दधाति**, *sandadhāti*.) Lime plaster? (**सुधा**, *sudhā*.) Rickety? (**जर्जरः**, *jarjaraḥ*.) Slack? (**श्लथः**, *ślathaḥ*.) An opening? (**रन्ध्रम्**, *randhram*.) Trickles? (**स्यन्दते**, *syandate*.) A repair? (**जीर्णोद्धारः**, *jīrṇoddhāraḥ*.)
+`;export{t};

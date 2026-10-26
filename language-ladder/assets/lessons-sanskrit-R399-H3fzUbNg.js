@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R401-review-394-401
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23400
+chapter: 401
+type: review
+headword: (dialogue)
+gloss: a review of the words from Setting Out on Pilgrimage to Monks and Monasteries
+concept_tag: REVIEW
+prerequisites: [SA-C394-tirthayatra, SA-C394-pratisthate, SA-C394-patheyam, SA-C394-yati, SA-C394-kamandaluh, SA-C395-sarthah, SA-C395-sarthavahah, SA-C395-anuyati, SA-C395-aprcchate, SA-C395-parivrajakah, SA-C396-dhvanati, SA-C396-darsanam, SA-C396-pratima, SA-C396-garbhagrham, SA-C396-bhaktah, SA-C397-jvalayati, SA-C397-dipasikha, SA-C397-karpurah, SA-C397-stotram, SA-C397-stauti, SA-C398-ghattah, SA-C398-avagahate, SA-C398-sangamah, SA-C398-pavanah, SA-C398-proksati, SA-C399-hradah, SA-C399-snapayati, SA-C399-divyah, SA-C399-toranam, SA-C399-pataka, SA-C400-parikramati, SA-C400-japamala, SA-C400-rudraksah, SA-C400-rathayatra, SA-C400-aharati, SA-C401-bhiksuh, SA-C401-viharah, SA-C401-bhiksa, SA-C401-upasakah, SA-C401-caityam]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C394-TIRTHA394-01, SA-LEX-C394-TIRTHA394-02, SA-LEX-C394-TIRTHA394-03, SA-LEX-C394-TIRTHA394-04, SA-LEX-C394-TIRTHA394-05, SA-LEX-C395-SARTHA395-01, SA-LEX-C395-SARTHA395-02, SA-LEX-C395-SARTHA395-03, SA-LEX-C395-SARTHA395-04, SA-LEX-C395-SARTHA395-05, SA-LEX-C396-DARSHANA396-01, SA-LEX-C396-DARSHANA396-02, SA-LEX-C396-DARSHANA396-03, SA-LEX-C396-DARSHANA396-04, SA-LEX-C396-DARSHANA396-05, SA-LEX-C397-DIPA397-01, SA-LEX-C397-DIPA397-02, SA-LEX-C397-DIPA397-03, SA-LEX-C397-DIPA397-04, SA-LEX-C397-DIPA397-05, SA-LEX-C398-GHATTA398-01, SA-LEX-C398-GHATTA398-02, SA-LEX-C398-GHATTA398-03, SA-LEX-C398-GHATTA398-04, SA-LEX-C398-GHATTA398-05, SA-LEX-C399-HRADA399-01, SA-LEX-C399-HRADA399-02, SA-LEX-C399-HRADA399-03, SA-LEX-C399-HRADA399-04, SA-LEX-C399-HRADA399-05, SA-LEX-C400-PARIKRAMA400-01, SA-LEX-C400-PARIKRAMA400-02, SA-LEX-C400-PARIKRAMA400-03, SA-LEX-C400-PARIKRAMA400-04, SA-LEX-C400-PARIKRAMA400-05, SA-LEX-C401-BHIKSHU401-01, SA-LEX-C401-BHIKSHU401-02, SA-LEX-C401-BHIKSHU401-03, SA-LEX-C401-BHIKSHU401-04, SA-LEX-C401-BHIKSHU401-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C394-TIRTHA394-01, SA-LEX-C394-TIRTHA394-02, SA-LEX-C394-TIRTHA394-03, SA-LEX-C394-TIRTHA394-04, SA-LEX-C394-TIRTHA394-05, SA-LEX-C395-SARTHA395-01, SA-LEX-C395-SARTHA395-02, SA-LEX-C395-SARTHA395-03, SA-LEX-C395-SARTHA395-04, SA-LEX-C395-SARTHA395-05, SA-LEX-C396-DARSHANA396-01, SA-LEX-C396-DARSHANA396-02, SA-LEX-C396-DARSHANA396-03, SA-LEX-C396-DARSHANA396-04, SA-LEX-C396-DARSHANA396-05, SA-LEX-C397-DIPA397-01, SA-LEX-C397-DIPA397-02, SA-LEX-C397-DIPA397-03, SA-LEX-C397-DIPA397-04, SA-LEX-C397-DIPA397-05, SA-LEX-C398-GHATTA398-01, SA-LEX-C398-GHATTA398-02, SA-LEX-C398-GHATTA398-03, SA-LEX-C398-GHATTA398-04, SA-LEX-C398-GHATTA398-05, SA-LEX-C399-HRADA399-01, SA-LEX-C399-HRADA399-02, SA-LEX-C399-HRADA399-03, SA-LEX-C399-HRADA399-04, SA-LEX-C399-HRADA399-05, SA-LEX-C400-PARIKRAMA400-01, SA-LEX-C400-PARIKRAMA400-02, SA-LEX-C400-PARIKRAMA400-03, SA-LEX-C400-PARIKRAMA400-04, SA-LEX-C400-PARIKRAMA400-05, SA-LEX-C401-BHIKSHU401-01, SA-LEX-C401-BHIKSHU401-02, SA-LEX-C401-BHIKSHU401-03, SA-LEX-C401-BHIKSHU401-04, SA-LEX-C401-BHIKSHU401-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C394-tirthayatra, SA-C394-pratisthate, SA-C394-patheyam, SA-C394-yati, SA-C394-kamandaluh, SA-C395-sarthah, SA-C395-sarthavahah, SA-C395-anuyati, SA-C395-aprcchate, SA-C395-parivrajakah, SA-C396-dhvanati, SA-C396-darsanam, SA-C396-pratima, SA-C396-garbhagrham, SA-C396-bhaktah, SA-C397-jvalayati, SA-C397-dipasikha, SA-C397-karpurah, SA-C397-stotram, SA-C397-stauti, SA-C398-ghattah, SA-C398-avagahate, SA-C398-sangamah, SA-C398-pavanah, SA-C398-proksati, SA-C399-hradah, SA-C399-snapayati, SA-C399-divyah, SA-C399-toranam, SA-C399-pataka, SA-C400-parikramati, SA-C400-japamala, SA-C400-rudraksah, SA-C400-rathayatra, SA-C400-aharati, SA-C401-bhiksuh, SA-C401-viharah, SA-C401-bhiksa, SA-C401-upasakah, SA-C401-caityam]
+---
+
+# Looking back: from Setting Out on Pilgrimage to Monks and Monasteries
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C394-TIRTHA394-01, SA-LEX-C394-TIRTHA394-02] -->
+
+[PAUSE 3s] Say the Sanskrit for a pilgrimage and starts on a journey.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C394-TIRTHA394-01, SA-LEX-C394-TIRTHA394-02, SA-LEX-C394-TIRTHA394-03, SA-LEX-C394-TIRTHA394-04, SA-LEX-C394-TIRTHA394-05, SA-LEX-C395-SARTHA395-01, SA-LEX-C395-SARTHA395-02, SA-LEX-C395-SARTHA395-03, SA-LEX-C395-SARTHA395-04, SA-LEX-C395-SARTHA395-05, SA-LEX-C396-DARSHANA396-01, SA-LEX-C396-DARSHANA396-02, SA-LEX-C396-DARSHANA396-03, SA-LEX-C396-DARSHANA396-04, SA-LEX-C396-DARSHANA396-05, SA-LEX-C397-DIPA397-01, SA-LEX-C397-DIPA397-02, SA-LEX-C397-DIPA397-03, SA-LEX-C397-DIPA397-04, SA-LEX-C397-DIPA397-05, SA-LEX-C398-GHATTA398-01, SA-LEX-C398-GHATTA398-02, SA-LEX-C398-GHATTA398-03, SA-LEX-C398-GHATTA398-04, SA-LEX-C398-GHATTA398-05, SA-LEX-C399-HRADA399-01, SA-LEX-C399-HRADA399-02, SA-LEX-C399-HRADA399-03, SA-LEX-C399-HRADA399-04, SA-LEX-C399-HRADA399-05, SA-LEX-C400-PARIKRAMA400-01, SA-LEX-C400-PARIKRAMA400-02, SA-LEX-C400-PARIKRAMA400-03, SA-LEX-C400-PARIKRAMA400-04, SA-LEX-C400-PARIKRAMA400-05, SA-LEX-C401-BHIKSHU401-01, SA-LEX-C401-BHIKSHU401-02, SA-LEX-C401-BHIKSHU401-03, SA-LEX-C401-BHIKSHU401-04, SA-LEX-C401-BHIKSHU401-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a pilgrimage, starts on a journey, food for the journey, travels, an ascetic's water-pot]
+- [YOU SAY: a caravan, a caravan leader, goes along with, takes leave, a wandering ascetic]
+- [YOU SAY: rings out, a sight of the deity, an image of a deity, an inner sanctum, a devotee]
+- [YOU SAY: kindles, a lamp's flame, camphor, a hymn of praise, sings the praises of]
+- [YOU SAY: a bathing ghat, plunges into, a confluence, purifying, sprinkles over]
+- [YOU SAY: a deep pool, gives a bath to, divine, an arched gateway, a pennant]
+- [YOU SAY: walks around, prayer beads, a rudraksha bead, a chariot procession, fetches]
+- [YOU SAY: a mendicant monk, a Buddhist monastery, alms, a lay follower, a memorial shrine]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C394-TIRTHA394-01, SA-LEX-C394-TIRTHA394-02, SA-LEX-C394-TIRTHA394-03, SA-LEX-C394-TIRTHA394-04, SA-LEX-C394-TIRTHA394-05, SA-LEX-C395-SARTHA395-01, SA-LEX-C395-SARTHA395-02, SA-LEX-C395-SARTHA395-03, SA-LEX-C395-SARTHA395-04, SA-LEX-C395-SARTHA395-05, SA-LEX-C396-DARSHANA396-01, SA-LEX-C396-DARSHANA396-02, SA-LEX-C396-DARSHANA396-03, SA-LEX-C396-DARSHANA396-04, SA-LEX-C396-DARSHANA396-05, SA-LEX-C397-DIPA397-01, SA-LEX-C397-DIPA397-02, SA-LEX-C397-DIPA397-03, SA-LEX-C397-DIPA397-04, SA-LEX-C397-DIPA397-05, SA-LEX-C398-GHATTA398-01, SA-LEX-C398-GHATTA398-02, SA-LEX-C398-GHATTA398-03, SA-LEX-C398-GHATTA398-04, SA-LEX-C398-GHATTA398-05, SA-LEX-C399-HRADA399-01, SA-LEX-C399-HRADA399-02, SA-LEX-C399-HRADA399-03, SA-LEX-C399-HRADA399-04, SA-LEX-C399-HRADA399-05, SA-LEX-C400-PARIKRAMA400-01, SA-LEX-C400-PARIKRAMA400-02, SA-LEX-C400-PARIKRAMA400-03, SA-LEX-C400-PARIKRAMA400-04, SA-LEX-C400-PARIKRAMA400-05, SA-LEX-C401-BHIKSHU401-01, SA-LEX-C401-BHIKSHU401-02, SA-LEX-C401-BHIKSHU401-03, SA-LEX-C401-BHIKSHU401-04, SA-LEX-C401-BHIKSHU401-05] -->
+
+[PAUSE 3s] A pilgrimage? (**तीर्थयात्रा**, *tīrthayātrā*.) Starts on a journey? (**प्रतिष्ठते**, *pratiṣṭhate*.) Food for the journey? (**पाथेयम्**, *pātheyam*.) Travels? (**याति**, *yāti*.) An ascetic's water-pot? (**कमण्डलुः**, *kamaṇḍaluḥ*.) A caravan? (**सार्थः**, *sārthaḥ*.) A caravan leader? (**सार्थवाहः**, *sārthavāhaḥ*.) Goes along with? (**अनुयाति**, *anuyāti*.) Takes leave? (**आपृच्छते**, *āpṛcchate*.) A wandering ascetic? (**परिव्राजकः**, *parivrājakaḥ*.) Rings out? (**ध्वनति**, *dhvanati*.) A sight of the deity? (**दर्शनम्**, *darśanam*.) An image of a deity? (**प्रतिमा**, *pratimā*.) An inner sanctum? (**गर्भगृहम्**, *garbhagṛham*.) A devotee? (**भक्तः**, *bhaktaḥ*.) Kindles? (**ज्वालयति**, *jvālayati*.) A lamp's flame? (**दीपशिखा**, *dīpaśikhā*.) Camphor? (**कर्पूरः**, *karpūraḥ*.) A hymn of praise? (**स्तोत्रम्**, *stotram*.) Sings the praises of? (**स्तौति**, *stauti*.) A bathing ghat? (**घट्टः**, *ghaṭṭaḥ*.) Plunges into? (**अवगाहते**, *avagāhate*.) A confluence? (**संगमः**, *saṅgamaḥ*.) Purifying? (**पावनः**, *pāvanaḥ*.) Sprinkles over? (**प्रोक्षति**, *prokṣati*.) A deep pool? (**ह्रदः**, *hradaḥ*.) Gives a bath to? (**स्नापयति**, *snāpayati*.) Divine? (**दिव्यः**, *divyaḥ*.) An arched gateway? (**तोरणम्**, *toraṇam*.) A pennant? (**पताका**, *patākā*.) Walks around? (**परिक्रामति**, *parikrāmati*.) Prayer beads? (**जपमाला**, *japamālā*.) A rudraksha bead? (**रुद्राक्षः**, *rudrākṣaḥ*.) A chariot procession? (**रथयात्रा**, *rathayātrā*.) Fetches? (**आहरति**, *āharati*.) A mendicant monk? (**भिक्षुः**, *bhikṣuḥ*.) A Buddhist monastery? (**विहारः**, *vihāraḥ*.) Alms? (**भिक्षा**, *bhikṣā*.) A lay follower? (**उपासकः**, *upāsakaḥ*.) A memorial shrine? (**चैत्यम्**, *caityam*.)
+`;export{t};

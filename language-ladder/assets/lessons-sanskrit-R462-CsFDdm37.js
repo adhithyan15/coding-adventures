@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R463-review-456-463
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 26810
+chapter: 463
+type: review
+headword: (dialogue)
+gloss: a review of the words from Calm and Composure to Courage and Fear
+concept_tag: REVIEW
+prerequisites: [SA-C456-ksubhyati, SA-C456-prasadayati, SA-C456-samahitah, SA-C456-mardayati, SA-C456-ekantah, SA-C457-smayate, SA-C457-upahasati, SA-C457-parihasah, SA-C457-attahasah, SA-C457-vinodah, SA-C458-darpah, SA-C458-slaghate, SA-C458-adambarah, SA-C458-uddhatah, SA-C458-vinitah, SA-C459-avajna, SA-C459-avamanyate, SA-C459-tiraskaroti, SA-C459-adarah, SA-C459-manah, SA-C460-svabhavah, SA-C460-sabhyah, SA-C460-pravartate, SA-C460-gunah, SA-C460-dustah, SA-C461-mahatma, SA-C461-khalah, SA-C461-saujanyam, SA-C461-nisthurah, SA-C461-druhyati, SA-C462-sathah, SA-C462-kutilah, SA-C462-apalapati, SA-C462-visvasaniyah, SA-C462-visvasaghatah, SA-C463-bhisayate, SA-C463-vihvalah, SA-C463-bhiruh, SA-C463-trasyati, SA-C463-pragalbhah]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C456-SAMA456-01, SA-LEX-C456-SAMA456-02, SA-LEX-C456-SAMA456-03, SA-LEX-C456-SAMA456-04, SA-LEX-C456-SAMA456-05, SA-LEX-C457-HASA457-01, SA-LEX-C457-HASA457-02, SA-LEX-C457-HASA457-03, SA-LEX-C457-HASA457-04, SA-LEX-C457-HASA457-05, SA-LEX-C458-DARPA458-01, SA-LEX-C458-DARPA458-02, SA-LEX-C458-DARPA458-03, SA-LEX-C458-DARPA458-04, SA-LEX-C458-DARPA458-05, SA-LEX-C459-ADARA459-01, SA-LEX-C459-ADARA459-02, SA-LEX-C459-ADARA459-03, SA-LEX-C459-ADARA459-04, SA-LEX-C459-ADARA459-05, SA-LEX-C460-SVABHAVA460-01, SA-LEX-C460-SVABHAVA460-02, SA-LEX-C460-SVABHAVA460-03, SA-LEX-C460-SVABHAVA460-04, SA-LEX-C460-SVABHAVA460-05, SA-LEX-C461-SATPURUSA461-01, SA-LEX-C461-SATPURUSA461-02, SA-LEX-C461-SATPURUSA461-03, SA-LEX-C461-SATPURUSA461-04, SA-LEX-C461-SATPURUSA461-05, SA-LEX-C462-SATHA462-01, SA-LEX-C462-SATHA462-02, SA-LEX-C462-SATHA462-03, SA-LEX-C462-SATHA462-04, SA-LEX-C462-SATHA462-05, SA-LEX-C463-PARAKRAMA463-01, SA-LEX-C463-PARAKRAMA463-02, SA-LEX-C463-PARAKRAMA463-03, SA-LEX-C463-PARAKRAMA463-04, SA-LEX-C463-PARAKRAMA463-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C456-SAMA456-01, SA-LEX-C456-SAMA456-02, SA-LEX-C456-SAMA456-03, SA-LEX-C456-SAMA456-04, SA-LEX-C456-SAMA456-05, SA-LEX-C457-HASA457-01, SA-LEX-C457-HASA457-02, SA-LEX-C457-HASA457-03, SA-LEX-C457-HASA457-04, SA-LEX-C457-HASA457-05, SA-LEX-C458-DARPA458-01, SA-LEX-C458-DARPA458-02, SA-LEX-C458-DARPA458-03, SA-LEX-C458-DARPA458-04, SA-LEX-C458-DARPA458-05, SA-LEX-C459-ADARA459-01, SA-LEX-C459-ADARA459-02, SA-LEX-C459-ADARA459-03, SA-LEX-C459-ADARA459-04, SA-LEX-C459-ADARA459-05, SA-LEX-C460-SVABHAVA460-01, SA-LEX-C460-SVABHAVA460-02, SA-LEX-C460-SVABHAVA460-03, SA-LEX-C460-SVABHAVA460-04, SA-LEX-C460-SVABHAVA460-05, SA-LEX-C461-SATPURUSA461-01, SA-LEX-C461-SATPURUSA461-02, SA-LEX-C461-SATPURUSA461-03, SA-LEX-C461-SATPURUSA461-04, SA-LEX-C461-SATPURUSA461-05, SA-LEX-C462-SATHA462-01, SA-LEX-C462-SATHA462-02, SA-LEX-C462-SATHA462-03, SA-LEX-C462-SATHA462-04, SA-LEX-C462-SATHA462-05, SA-LEX-C463-PARAKRAMA463-01, SA-LEX-C463-PARAKRAMA463-02, SA-LEX-C463-PARAKRAMA463-03, SA-LEX-C463-PARAKRAMA463-04, SA-LEX-C463-PARAKRAMA463-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C456-ksubhyati, SA-C456-prasadayati, SA-C456-samahitah, SA-C456-mardayati, SA-C456-ekantah, SA-C457-smayate, SA-C457-upahasati, SA-C457-parihasah, SA-C457-attahasah, SA-C457-vinodah, SA-C458-darpah, SA-C458-slaghate, SA-C458-adambarah, SA-C458-uddhatah, SA-C458-vinitah, SA-C459-avajna, SA-C459-avamanyate, SA-C459-tiraskaroti, SA-C459-adarah, SA-C459-manah, SA-C460-svabhavah, SA-C460-sabhyah, SA-C460-pravartate, SA-C460-gunah, SA-C460-dustah, SA-C461-mahatma, SA-C461-khalah, SA-C461-saujanyam, SA-C461-nisthurah, SA-C461-druhyati, SA-C462-sathah, SA-C462-kutilah, SA-C462-apalapati, SA-C462-visvasaniyah, SA-C462-visvasaghatah, SA-C463-bhisayate, SA-C463-vihvalah, SA-C463-bhiruh, SA-C463-trasyati, SA-C463-pragalbhah]
+---
+
+# Looking back: from Calm and Composure to Courage and Fear
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C456-SAMA456-01, SA-LEX-C456-SAMA456-02] -->
+
+[PAUSE 3s] Say the Sanskrit for is shaken and appeases.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C456-SAMA456-01, SA-LEX-C456-SAMA456-02, SA-LEX-C456-SAMA456-03, SA-LEX-C456-SAMA456-04, SA-LEX-C456-SAMA456-05, SA-LEX-C457-HASA457-01, SA-LEX-C457-HASA457-02, SA-LEX-C457-HASA457-03, SA-LEX-C457-HASA457-04, SA-LEX-C457-HASA457-05, SA-LEX-C458-DARPA458-01, SA-LEX-C458-DARPA458-02, SA-LEX-C458-DARPA458-03, SA-LEX-C458-DARPA458-04, SA-LEX-C458-DARPA458-05, SA-LEX-C459-ADARA459-01, SA-LEX-C459-ADARA459-02, SA-LEX-C459-ADARA459-03, SA-LEX-C459-ADARA459-04, SA-LEX-C459-ADARA459-05, SA-LEX-C460-SVABHAVA460-01, SA-LEX-C460-SVABHAVA460-02, SA-LEX-C460-SVABHAVA460-03, SA-LEX-C460-SVABHAVA460-04, SA-LEX-C460-SVABHAVA460-05, SA-LEX-C461-SATPURUSA461-01, SA-LEX-C461-SATPURUSA461-02, SA-LEX-C461-SATPURUSA461-03, SA-LEX-C461-SATPURUSA461-04, SA-LEX-C461-SATPURUSA461-05, SA-LEX-C462-SATHA462-01, SA-LEX-C462-SATHA462-02, SA-LEX-C462-SATHA462-03, SA-LEX-C462-SATHA462-04, SA-LEX-C462-SATHA462-05, SA-LEX-C463-PARAKRAMA463-01, SA-LEX-C463-PARAKRAMA463-02, SA-LEX-C463-PARAKRAMA463-03, SA-LEX-C463-PARAKRAMA463-04, SA-LEX-C463-PARAKRAMA463-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: is shaken, appeases, composed, massages, a secluded place]
+- [YOU SAY: smiles, laughs at, a jest, a loud laugh, amusement]
+- [YOU SAY: haughtiness, boasts, bombast, arrogant, modest]
+- [YOU SAY: contempt, despises, insults, regard, self-respect]
+- [YOU SAY: temperament, refined, conducts himself, a virtue, wicked]
+- [YOU SAY: a great soul, a scoundrel, goodness, heartless, bears malice]
+- [YOU SAY: deceitful, devious, explains away, trustworthy, a betrayal of trust]
+- [YOU SAY: frightens, distraught, timid, trembles with fear, bold]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C456-SAMA456-01, SA-LEX-C456-SAMA456-02, SA-LEX-C456-SAMA456-03, SA-LEX-C456-SAMA456-04, SA-LEX-C456-SAMA456-05, SA-LEX-C457-HASA457-01, SA-LEX-C457-HASA457-02, SA-LEX-C457-HASA457-03, SA-LEX-C457-HASA457-04, SA-LEX-C457-HASA457-05, SA-LEX-C458-DARPA458-01, SA-LEX-C458-DARPA458-02, SA-LEX-C458-DARPA458-03, SA-LEX-C458-DARPA458-04, SA-LEX-C458-DARPA458-05, SA-LEX-C459-ADARA459-01, SA-LEX-C459-ADARA459-02, SA-LEX-C459-ADARA459-03, SA-LEX-C459-ADARA459-04, SA-LEX-C459-ADARA459-05, SA-LEX-C460-SVABHAVA460-01, SA-LEX-C460-SVABHAVA460-02, SA-LEX-C460-SVABHAVA460-03, SA-LEX-C460-SVABHAVA460-04, SA-LEX-C460-SVABHAVA460-05, SA-LEX-C461-SATPURUSA461-01, SA-LEX-C461-SATPURUSA461-02, SA-LEX-C461-SATPURUSA461-03, SA-LEX-C461-SATPURUSA461-04, SA-LEX-C461-SATPURUSA461-05, SA-LEX-C462-SATHA462-01, SA-LEX-C462-SATHA462-02, SA-LEX-C462-SATHA462-03, SA-LEX-C462-SATHA462-04, SA-LEX-C462-SATHA462-05, SA-LEX-C463-PARAKRAMA463-01, SA-LEX-C463-PARAKRAMA463-02, SA-LEX-C463-PARAKRAMA463-03, SA-LEX-C463-PARAKRAMA463-04, SA-LEX-C463-PARAKRAMA463-05] -->
+
+[PAUSE 3s] Is shaken? (**क्षुभ्यति**, *kṣubhyati*.) Appeases? (**प्रसादयति**, *prasādayati*.) Composed? (**समाहितः**, *samāhitaḥ*.) Massages? (**मर्दयति**, *mardayati*.) A secluded place? (**एकान्तः**, *ekāntaḥ*.) Smiles? (**स्मयते**, *smayate*.) Laughs at? (**उपहसति**, *upahasati*.) A jest? (**परिहासः**, *parihāsaḥ*.) A loud laugh? (**अट्टहासः**, *aṭṭahāsaḥ*.) Amusement? (**विनोदः**, *vinodaḥ*.) Haughtiness? (**दर्पः**, *darpaḥ*.) Boasts? (**श्लाघते**, *ślāghate*.) Bombast? (**आडम्बरः**, *āḍambaraḥ*.) Arrogant? (**उद्धतः**, *uddhataḥ*.) Modest? (**विनीतः**, *vinītaḥ*.) Contempt? (**अवज्ञा**, *avajñā*.) Despises? (**अवमन्यते**, *avamanyate*.) Insults? (**तिरस्करोति**, *tiraskaroti*.) Regard? (**आदरः**, *ādaraḥ*.) Self-respect? (**मानः**, *mānaḥ*.) Temperament? (**स्वभावः**, *svabhāvaḥ*.) Refined? (**सभ्यः**, *sabhyaḥ*.) Conducts himself? (**प्रवर्तते**, *pravartate*.) A virtue? (**गुणः**, *guṇaḥ*.) Wicked? (**दुष्टः**, *duṣṭaḥ*.) A great soul? (**महात्मा**, *mahātmā*.) A scoundrel? (**खलः**, *khalaḥ*.) Goodness? (**सौजन्यम्**, *saujanyam*.) Heartless? (**निष्ठुरः**, *niṣṭhuraḥ*.) Bears malice? (**द्रुह्यति**, *druhyati*.) Deceitful? (**शठः**, *śaṭhaḥ*.) Devious? (**कुटिलः**, *kuṭilaḥ*.) Explains away? (**अपलपति**, *apalapati*.) Trustworthy? (**विश्वसनीयः**, *viśvasanīyaḥ*.) A betrayal of trust? (**विश्वासघातः**, *viśvāsaghātaḥ*.) Frightens? (**भीषयते**, *bhīṣayate*.) Distraught? (**विह्वलः**, *vihvalaḥ*.) Timid? (**भीरुः**, *bhīruḥ*.) Trembles with fear? (**त्रस्यति**, *trasyati*.) Bold? (**प्रगल्भः**, *pragalbhaḥ*.)
+`;export{t};

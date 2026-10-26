@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R517-review-510-517
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 29810
+chapter: 517
+type: review
+headword: (dialogue)
+gloss: a review of the words from Clearing the Clutter to Games at Home
+concept_tag: REVIEW
+prerequisites: [SA-C510-avakarah, SA-C510-utsarayati, SA-C510-vyavasthapayati, SA-C510-punjah, SA-C510-sammarjanam, SA-C511-kastham, SA-C511-tapayati, SA-C511-uttarayati, SA-C511-pakah, SA-C511-bhrjjati, SA-C512-churika, SA-C512-krntati, SA-C512-curnayati, SA-C512-surpam, SA-C512-samyojayati, SA-C513-mathnati, SA-C513-manthah, SA-C513-ghrtam, SA-C513-galayati, SA-C513-snigdhah, SA-C514-parivesayati, SA-C514-bhojayati, SA-C514-asnati, SA-C514-ucchistam, SA-C514-pidhanam, SA-C515-svadah, SA-C515-svaduh, SA-C515-amah, SA-C515-pakvah, SA-C515-cusati, SA-C516-manoranjanam, SA-C516-hasyam, SA-C516-vinodayati, SA-C516-sangrahah, SA-C516-rucih, SA-C517-caturangam, SA-C517-prahelika, SA-C517-kridakah, SA-C517-gulika, SA-C517-putrika]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C510-AVAKARA510-01, SA-LEX-C510-AVAKARA510-02, SA-LEX-C510-AVAKARA510-03, SA-LEX-C510-AVAKARA510-04, SA-LEX-C510-AVAKARA510-05, SA-LEX-C511-KASTHA511-01, SA-LEX-C511-KASTHA511-02, SA-LEX-C511-KASTHA511-03, SA-LEX-C511-KASTHA511-04, SA-LEX-C511-KASTHA511-05, SA-LEX-C512-CHURIKA512-01, SA-LEX-C512-CHURIKA512-02, SA-LEX-C512-CHURIKA512-03, SA-LEX-C512-CHURIKA512-04, SA-LEX-C512-CHURIKA512-05, SA-LEX-C513-MATHNATI513-01, SA-LEX-C513-MATHNATI513-02, SA-LEX-C513-MATHNATI513-03, SA-LEX-C513-MATHNATI513-04, SA-LEX-C513-MATHNATI513-05, SA-LEX-C514-PARIVESAYATI514-01, SA-LEX-C514-PARIVESAYATI514-02, SA-LEX-C514-PARIVESAYATI514-03, SA-LEX-C514-PARIVESAYATI514-04, SA-LEX-C514-PARIVESAYATI514-05, SA-LEX-C515-SVADA515-01, SA-LEX-C515-SVADA515-02, SA-LEX-C515-SVADA515-03, SA-LEX-C515-SVADA515-04, SA-LEX-C515-SVADA515-05, SA-LEX-C516-AVAKASA516-01, SA-LEX-C516-AVAKASA516-02, SA-LEX-C516-AVAKASA516-03, SA-LEX-C516-AVAKASA516-04, SA-LEX-C516-AVAKASA516-05, SA-LEX-C517-CATURANGA517-01, SA-LEX-C517-CATURANGA517-02, SA-LEX-C517-CATURANGA517-03, SA-LEX-C517-CATURANGA517-04, SA-LEX-C517-CATURANGA517-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C510-AVAKARA510-01, SA-LEX-C510-AVAKARA510-02, SA-LEX-C510-AVAKARA510-03, SA-LEX-C510-AVAKARA510-04, SA-LEX-C510-AVAKARA510-05, SA-LEX-C511-KASTHA511-01, SA-LEX-C511-KASTHA511-02, SA-LEX-C511-KASTHA511-03, SA-LEX-C511-KASTHA511-04, SA-LEX-C511-KASTHA511-05, SA-LEX-C512-CHURIKA512-01, SA-LEX-C512-CHURIKA512-02, SA-LEX-C512-CHURIKA512-03, SA-LEX-C512-CHURIKA512-04, SA-LEX-C512-CHURIKA512-05, SA-LEX-C513-MATHNATI513-01, SA-LEX-C513-MATHNATI513-02, SA-LEX-C513-MATHNATI513-03, SA-LEX-C513-MATHNATI513-04, SA-LEX-C513-MATHNATI513-05, SA-LEX-C514-PARIVESAYATI514-01, SA-LEX-C514-PARIVESAYATI514-02, SA-LEX-C514-PARIVESAYATI514-03, SA-LEX-C514-PARIVESAYATI514-04, SA-LEX-C514-PARIVESAYATI514-05, SA-LEX-C515-SVADA515-01, SA-LEX-C515-SVADA515-02, SA-LEX-C515-SVADA515-03, SA-LEX-C515-SVADA515-04, SA-LEX-C515-SVADA515-05, SA-LEX-C516-AVAKASA516-01, SA-LEX-C516-AVAKASA516-02, SA-LEX-C516-AVAKASA516-03, SA-LEX-C516-AVAKASA516-04, SA-LEX-C516-AVAKASA516-05, SA-LEX-C517-CATURANGA517-01, SA-LEX-C517-CATURANGA517-02, SA-LEX-C517-CATURANGA517-03, SA-LEX-C517-CATURANGA517-04, SA-LEX-C517-CATURANGA517-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C510-avakarah, SA-C510-utsarayati, SA-C510-vyavasthapayati, SA-C510-punjah, SA-C510-sammarjanam, SA-C511-kastham, SA-C511-tapayati, SA-C511-uttarayati, SA-C511-pakah, SA-C511-bhrjjati, SA-C512-churika, SA-C512-krntati, SA-C512-curnayati, SA-C512-surpam, SA-C512-samyojayati, SA-C513-mathnati, SA-C513-manthah, SA-C513-ghrtam, SA-C513-galayati, SA-C513-snigdhah, SA-C514-parivesayati, SA-C514-bhojayati, SA-C514-asnati, SA-C514-ucchistam, SA-C514-pidhanam, SA-C515-svadah, SA-C515-svaduh, SA-C515-amah, SA-C515-pakvah, SA-C515-cusati, SA-C516-manoranjanam, SA-C516-hasyam, SA-C516-vinodayati, SA-C516-sangrahah, SA-C516-rucih, SA-C517-caturangam, SA-C517-prahelika, SA-C517-kridakah, SA-C517-gulika, SA-C517-putrika]
+---
+
+# Looking back: from Clearing the Clutter to Games at Home
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C510-AVAKARA510-01, SA-LEX-C510-AVAKARA510-02] -->
+
+[PAUSE 3s] Say the Sanskrit for rubbish and clears away.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C510-AVAKARA510-01, SA-LEX-C510-AVAKARA510-02, SA-LEX-C510-AVAKARA510-03, SA-LEX-C510-AVAKARA510-04, SA-LEX-C510-AVAKARA510-05, SA-LEX-C511-KASTHA511-01, SA-LEX-C511-KASTHA511-02, SA-LEX-C511-KASTHA511-03, SA-LEX-C511-KASTHA511-04, SA-LEX-C511-KASTHA511-05, SA-LEX-C512-CHURIKA512-01, SA-LEX-C512-CHURIKA512-02, SA-LEX-C512-CHURIKA512-03, SA-LEX-C512-CHURIKA512-04, SA-LEX-C512-CHURIKA512-05, SA-LEX-C513-MATHNATI513-01, SA-LEX-C513-MATHNATI513-02, SA-LEX-C513-MATHNATI513-03, SA-LEX-C513-MATHNATI513-04, SA-LEX-C513-MATHNATI513-05, SA-LEX-C514-PARIVESAYATI514-01, SA-LEX-C514-PARIVESAYATI514-02, SA-LEX-C514-PARIVESAYATI514-03, SA-LEX-C514-PARIVESAYATI514-04, SA-LEX-C514-PARIVESAYATI514-05, SA-LEX-C515-SVADA515-01, SA-LEX-C515-SVADA515-02, SA-LEX-C515-SVADA515-03, SA-LEX-C515-SVADA515-04, SA-LEX-C515-SVADA515-05, SA-LEX-C516-AVAKASA516-01, SA-LEX-C516-AVAKASA516-02, SA-LEX-C516-AVAKASA516-03, SA-LEX-C516-AVAKASA516-04, SA-LEX-C516-AVAKASA516-05, SA-LEX-C517-CATURANGA517-01, SA-LEX-C517-CATURANGA517-02, SA-LEX-C517-CATURANGA517-03, SA-LEX-C517-CATURANGA517-04, SA-LEX-C517-CATURANGA517-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: rubbish, clears away, puts in order, a pile, a thorough cleaning]
+- [YOU SAY: firewood, makes hot, takes down, cooking, roasts]
+- [YOU SAY: a knife, cuts up, grinds to powder, a winnowing basket, combines]
+- [YOU SAY: churns, a churning stick, ghee, strains, oily]
+- [YOU SAY: serves food, feeds, dines, leftovers, a lid]
+- [YOU SAY: a flavour, tasty, raw, ripe, sucks]
+- [YOU SAY: entertainment, fun, amuses, a collection, a liking]
+- [YOU SAY: chess, a riddle, a player, a marble, a doll]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C510-AVAKARA510-01, SA-LEX-C510-AVAKARA510-02, SA-LEX-C510-AVAKARA510-03, SA-LEX-C510-AVAKARA510-04, SA-LEX-C510-AVAKARA510-05, SA-LEX-C511-KASTHA511-01, SA-LEX-C511-KASTHA511-02, SA-LEX-C511-KASTHA511-03, SA-LEX-C511-KASTHA511-04, SA-LEX-C511-KASTHA511-05, SA-LEX-C512-CHURIKA512-01, SA-LEX-C512-CHURIKA512-02, SA-LEX-C512-CHURIKA512-03, SA-LEX-C512-CHURIKA512-04, SA-LEX-C512-CHURIKA512-05, SA-LEX-C513-MATHNATI513-01, SA-LEX-C513-MATHNATI513-02, SA-LEX-C513-MATHNATI513-03, SA-LEX-C513-MATHNATI513-04, SA-LEX-C513-MATHNATI513-05, SA-LEX-C514-PARIVESAYATI514-01, SA-LEX-C514-PARIVESAYATI514-02, SA-LEX-C514-PARIVESAYATI514-03, SA-LEX-C514-PARIVESAYATI514-04, SA-LEX-C514-PARIVESAYATI514-05, SA-LEX-C515-SVADA515-01, SA-LEX-C515-SVADA515-02, SA-LEX-C515-SVADA515-03, SA-LEX-C515-SVADA515-04, SA-LEX-C515-SVADA515-05, SA-LEX-C516-AVAKASA516-01, SA-LEX-C516-AVAKASA516-02, SA-LEX-C516-AVAKASA516-03, SA-LEX-C516-AVAKASA516-04, SA-LEX-C516-AVAKASA516-05, SA-LEX-C517-CATURANGA517-01, SA-LEX-C517-CATURANGA517-02, SA-LEX-C517-CATURANGA517-03, SA-LEX-C517-CATURANGA517-04, SA-LEX-C517-CATURANGA517-05] -->
+
+[PAUSE 3s] Rubbish? (**अवकरः**, *avakaraḥ*.) Clears away? (**उत्सारयति**, *utsārayati*.) Puts in order? (**व्यवस्थापयति**, *vyavasthāpayati*.) A pile? (**पुञ्जः**, *puñjaḥ*.) A thorough cleaning? (**सम्मार्जनम्**, *sammārjanam*.) Firewood? (**काष्ठम्**, *kāṣṭham*.) Makes hot? (**तापयति**, *tāpayati*.) Takes down? (**उत्तारयति**, *uttārayati*.) Cooking? (**पाकः**, *pākaḥ*.) Roasts? (**भृज्जति**, *bhṛjjati*.) A knife? (**छुरिका**, *churikā*.) Cuts up? (**कृन्तति**, *kṛntati*.) Grinds to powder? (**चूर्णयति**, *cūrṇayati*.) A winnowing basket? (**शूर्पम्**, *śūrpam*.) Combines? (**संयोजयति**, *saṃyojayati*.) Churns? (**मथ्नाति**, *mathnāti*.) A churning stick? (**मन्थः**, *manthaḥ*.) Ghee? (**घृतम्**, *ghṛtam*.) Strains? (**गालयति**, *gālayati*.) Oily? (**स्निग्धः**, *snigdhaḥ*.) Serves food? (**परिवेषयति**, *pariveṣayati*.) Feeds? (**भोजयति**, *bhojayati*.) Dines? (**अश्नाति**, *aśnāti*.) Leftovers? (**उच्छिष्टम्**, *ucchiṣṭam*.) A lid? (**पिधानम्**, *pidhānam*.) A flavour? (**स्वादः**, *svādaḥ*.) Tasty? (**स्वादुः**, *svāduḥ*.) Raw? (**आमः**, *āmaḥ*.) Ripe? (**पक्वः**, *pakvaḥ*.) Sucks? (**चूषति**, *cūṣati*.) Entertainment? (**मनोरञ्जनम्**, *manorañjanam*.) Fun? (**हास्यम्**, *hāsyam*.) Amuses? (**विनोदयति**, *vinodayati*.) A collection? (**संग्रहः**, *saṅgrahaḥ*.) A liking? (**रुचिः**, *ruciḥ*.) Chess? (**चतुरंगम्**, *caturaṅgam*.) A riddle? (**प्रहेलिका**, *prahelikā*.) A player? (**क्रीडकः**, *krīḍakaḥ*.) A marble? (**गुलिका**, *gulikā*.) A doll? (**पुत्रिका**, *putrikā*.)
+`;export{t};

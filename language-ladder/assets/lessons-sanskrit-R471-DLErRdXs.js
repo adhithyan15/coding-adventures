@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R471-review-464-471
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27220
+chapter: 471
+type: review
+headword: (dialogue)
+gloss: a review of the words from Talkers and Quiet Ones to Head and Face
+concept_tag: REVIEW
+prerequisites: [SA-C464-vacalah, SA-C464-mitabhasi, SA-C464-sambodhayati, SA-C464-akrosati, SA-C464-pralapah, SA-C465-cancalah, SA-C465-udasinah, SA-C465-pramadyati, SA-C465-avadhanam, SA-C465-udyami, SA-C466-medha, SA-C466-muhyati, SA-C466-unmadah, SA-C466-balisah, SA-C466-bodhah, SA-C467-sistah, SA-C467-upahasah, SA-C467-dhrstah, SA-C467-catuh, SA-C467-priyamvadah, SA-C468-lolupah, SA-C468-pratyupakarah, SA-C468-apakarah, SA-C468-smarayati, SA-C468-krtavedi, SA-C469-indriyam, SA-C469-drstih, SA-C469-sparsah, SA-C469-gandhah, SA-C469-jighrati, SA-C470-phupphusah, SA-C470-yakrt, SA-C470-vrkkah, SA-C470-amasayah, SA-C470-svasiti, SA-C471-mastiskah, SA-C471-kapalam, SA-C471-smasru, SA-C471-paksma, SA-C471-mundayati]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C464-VACALA464-01, SA-LEX-C464-VACALA464-02, SA-LEX-C464-VACALA464-03, SA-LEX-C464-VACALA464-04, SA-LEX-C464-VACALA464-05, SA-LEX-C465-UDYAMIN465-01, SA-LEX-C465-UDYAMIN465-02, SA-LEX-C465-UDYAMIN465-03, SA-LEX-C465-UDYAMIN465-04, SA-LEX-C465-UDYAMIN465-05, SA-LEX-C466-MEDHA466-01, SA-LEX-C466-MEDHA466-02, SA-LEX-C466-MEDHA466-03, SA-LEX-C466-MEDHA466-04, SA-LEX-C466-MEDHA466-05, SA-LEX-C467-SISTA467-01, SA-LEX-C467-SISTA467-02, SA-LEX-C467-SISTA467-03, SA-LEX-C467-SISTA467-04, SA-LEX-C467-SISTA467-05, SA-LEX-C468-KRTAVEDIN468-01, SA-LEX-C468-KRTAVEDIN468-02, SA-LEX-C468-KRTAVEDIN468-03, SA-LEX-C468-KRTAVEDIN468-04, SA-LEX-C468-KRTAVEDIN468-05, SA-LEX-C469-INDRIYA469-01, SA-LEX-C469-INDRIYA469-02, SA-LEX-C469-INDRIYA469-03, SA-LEX-C469-INDRIYA469-04, SA-LEX-C469-INDRIYA469-05, SA-LEX-C470-PHUPPHUSA470-01, SA-LEX-C470-PHUPPHUSA470-02, SA-LEX-C470-PHUPPHUSA470-03, SA-LEX-C470-PHUPPHUSA470-04, SA-LEX-C470-PHUPPHUSA470-05, SA-LEX-C471-MASTISKA471-01, SA-LEX-C471-MASTISKA471-02, SA-LEX-C471-MASTISKA471-03, SA-LEX-C471-MASTISKA471-04, SA-LEX-C471-MASTISKA471-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C464-VACALA464-01, SA-LEX-C464-VACALA464-02, SA-LEX-C464-VACALA464-03, SA-LEX-C464-VACALA464-04, SA-LEX-C464-VACALA464-05, SA-LEX-C465-UDYAMIN465-01, SA-LEX-C465-UDYAMIN465-02, SA-LEX-C465-UDYAMIN465-03, SA-LEX-C465-UDYAMIN465-04, SA-LEX-C465-UDYAMIN465-05, SA-LEX-C466-MEDHA466-01, SA-LEX-C466-MEDHA466-02, SA-LEX-C466-MEDHA466-03, SA-LEX-C466-MEDHA466-04, SA-LEX-C466-MEDHA466-05, SA-LEX-C467-SISTA467-01, SA-LEX-C467-SISTA467-02, SA-LEX-C467-SISTA467-03, SA-LEX-C467-SISTA467-04, SA-LEX-C467-SISTA467-05, SA-LEX-C468-KRTAVEDIN468-01, SA-LEX-C468-KRTAVEDIN468-02, SA-LEX-C468-KRTAVEDIN468-03, SA-LEX-C468-KRTAVEDIN468-04, SA-LEX-C468-KRTAVEDIN468-05, SA-LEX-C469-INDRIYA469-01, SA-LEX-C469-INDRIYA469-02, SA-LEX-C469-INDRIYA469-03, SA-LEX-C469-INDRIYA469-04, SA-LEX-C469-INDRIYA469-05, SA-LEX-C470-PHUPPHUSA470-01, SA-LEX-C470-PHUPPHUSA470-02, SA-LEX-C470-PHUPPHUSA470-03, SA-LEX-C470-PHUPPHUSA470-04, SA-LEX-C470-PHUPPHUSA470-05, SA-LEX-C471-MASTISKA471-01, SA-LEX-C471-MASTISKA471-02, SA-LEX-C471-MASTISKA471-03, SA-LEX-C471-MASTISKA471-04, SA-LEX-C471-MASTISKA471-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C464-vacalah, SA-C464-mitabhasi, SA-C464-sambodhayati, SA-C464-akrosati, SA-C464-pralapah, SA-C465-cancalah, SA-C465-udasinah, SA-C465-pramadyati, SA-C465-avadhanam, SA-C465-udyami, SA-C466-medha, SA-C466-muhyati, SA-C466-unmadah, SA-C466-balisah, SA-C466-bodhah, SA-C467-sistah, SA-C467-upahasah, SA-C467-dhrstah, SA-C467-catuh, SA-C467-priyamvadah, SA-C468-lolupah, SA-C468-pratyupakarah, SA-C468-apakarah, SA-C468-smarayati, SA-C468-krtavedi, SA-C469-indriyam, SA-C469-drstih, SA-C469-sparsah, SA-C469-gandhah, SA-C469-jighrati, SA-C470-phupphusah, SA-C470-yakrt, SA-C470-vrkkah, SA-C470-amasayah, SA-C470-svasiti, SA-C471-mastiskah, SA-C471-kapalam, SA-C471-smasru, SA-C471-paksma, SA-C471-mundayati]
+---
+
+# Looking back: from Talkers and Quiet Ones to Head and Face
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C464-VACALA464-01, SA-LEX-C464-VACALA464-02] -->
+
+[PAUSE 3s] Say the Sanskrit for talkative and of few words.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C464-VACALA464-01, SA-LEX-C464-VACALA464-02, SA-LEX-C464-VACALA464-03, SA-LEX-C464-VACALA464-04, SA-LEX-C464-VACALA464-05, SA-LEX-C465-UDYAMIN465-01, SA-LEX-C465-UDYAMIN465-02, SA-LEX-C465-UDYAMIN465-03, SA-LEX-C465-UDYAMIN465-04, SA-LEX-C465-UDYAMIN465-05, SA-LEX-C466-MEDHA466-01, SA-LEX-C466-MEDHA466-02, SA-LEX-C466-MEDHA466-03, SA-LEX-C466-MEDHA466-04, SA-LEX-C466-MEDHA466-05, SA-LEX-C467-SISTA467-01, SA-LEX-C467-SISTA467-02, SA-LEX-C467-SISTA467-03, SA-LEX-C467-SISTA467-04, SA-LEX-C467-SISTA467-05, SA-LEX-C468-KRTAVEDIN468-01, SA-LEX-C468-KRTAVEDIN468-02, SA-LEX-C468-KRTAVEDIN468-03, SA-LEX-C468-KRTAVEDIN468-04, SA-LEX-C468-KRTAVEDIN468-05, SA-LEX-C469-INDRIYA469-01, SA-LEX-C469-INDRIYA469-02, SA-LEX-C469-INDRIYA469-03, SA-LEX-C469-INDRIYA469-04, SA-LEX-C469-INDRIYA469-05, SA-LEX-C470-PHUPPHUSA470-01, SA-LEX-C470-PHUPPHUSA470-02, SA-LEX-C470-PHUPPHUSA470-03, SA-LEX-C470-PHUPPHUSA470-04, SA-LEX-C470-PHUPPHUSA470-05, SA-LEX-C471-MASTISKA471-01, SA-LEX-C471-MASTISKA471-02, SA-LEX-C471-MASTISKA471-03, SA-LEX-C471-MASTISKA471-04, SA-LEX-C471-MASTISKA471-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: talkative, of few words, calls out to, reviles, prattle]
+- [YOU SAY: fickle, indifferent, is careless, attention, industrious]
+- [YOU SAY: mental vigour, is bewildered, madness, childish, understanding]
+- [YOU SAY: well-bred, mockery, impudent, flattery, affable]
+- [YOU SAY: greedy, a favour in return, a wrong done, reminds, grateful]
+- [YOU SAY: a sense, eyesight, touch, a smell, smells]
+- [YOU SAY: the lungs, the liver, a kidney, the stomach, breathes]
+- [YOU SAY: the brain, the skull, a beard, an eyelash, shaves]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C464-VACALA464-01, SA-LEX-C464-VACALA464-02, SA-LEX-C464-VACALA464-03, SA-LEX-C464-VACALA464-04, SA-LEX-C464-VACALA464-05, SA-LEX-C465-UDYAMIN465-01, SA-LEX-C465-UDYAMIN465-02, SA-LEX-C465-UDYAMIN465-03, SA-LEX-C465-UDYAMIN465-04, SA-LEX-C465-UDYAMIN465-05, SA-LEX-C466-MEDHA466-01, SA-LEX-C466-MEDHA466-02, SA-LEX-C466-MEDHA466-03, SA-LEX-C466-MEDHA466-04, SA-LEX-C466-MEDHA466-05, SA-LEX-C467-SISTA467-01, SA-LEX-C467-SISTA467-02, SA-LEX-C467-SISTA467-03, SA-LEX-C467-SISTA467-04, SA-LEX-C467-SISTA467-05, SA-LEX-C468-KRTAVEDIN468-01, SA-LEX-C468-KRTAVEDIN468-02, SA-LEX-C468-KRTAVEDIN468-03, SA-LEX-C468-KRTAVEDIN468-04, SA-LEX-C468-KRTAVEDIN468-05, SA-LEX-C469-INDRIYA469-01, SA-LEX-C469-INDRIYA469-02, SA-LEX-C469-INDRIYA469-03, SA-LEX-C469-INDRIYA469-04, SA-LEX-C469-INDRIYA469-05, SA-LEX-C470-PHUPPHUSA470-01, SA-LEX-C470-PHUPPHUSA470-02, SA-LEX-C470-PHUPPHUSA470-03, SA-LEX-C470-PHUPPHUSA470-04, SA-LEX-C470-PHUPPHUSA470-05, SA-LEX-C471-MASTISKA471-01, SA-LEX-C471-MASTISKA471-02, SA-LEX-C471-MASTISKA471-03, SA-LEX-C471-MASTISKA471-04, SA-LEX-C471-MASTISKA471-05] -->
+
+[PAUSE 3s] Talkative? (**वाचालः**, *vācālaḥ*.) Of few words? (**मितभाषी**, *mitabhāṣī*.) Calls out to? (**सम्बोधयति**, *sambodhayati*.) Reviles? (**आक्रोशति**, *ākrośati*.) Prattle? (**प्रलापः**, *pralāpaḥ*.) Fickle? (**चञ्चलः**, *cañcalaḥ*.) Indifferent? (**उदासीनः**, *udāsīnaḥ*.) Is careless? (**प्रमाद्यति**, *pramādyati*.) Attention? (**अवधानम्**, *avadhānam*.) Industrious? (**उद्यमी**, *udyamī*.) Mental vigour? (**मेधा**, *medhā*.) Is bewildered? (**मुह्यति**, *muhyati*.) Madness? (**उन्मादः**, *unmādaḥ*.) Childish? (**बालिशः**, *bāliśaḥ*.) Understanding? (**बोधः**, *bodhaḥ*.) Well-bred? (**शिष्टः**, *śiṣṭaḥ*.) Mockery? (**उपहासः**, *upahāsaḥ*.) Impudent? (**धृष्टः**, *dhṛṣṭaḥ*.) Flattery? (**चाटुः**, *cāṭuḥ*.) Affable? (**प्रियंवदः**, *priyaṃvadaḥ*.) Greedy? (**लोलुपः**, *lolupaḥ*.) A favour in return? (**प्रत्युपकारः**, *pratyupakāraḥ*.) A wrong done? (**अपकारः**, *apakāraḥ*.) Reminds? (**स्मारयति**, *smārayati*.) Grateful? (**कृतवेदी**, *kṛtavedī*.) A sense? (**इन्द्रियम्**, *indriyam*.) Eyesight? (**दृष्टिः**, *dṛṣṭiḥ*.) Touch? (**स्पर्शः**, *sparśaḥ*.) A smell? (**गन्धः**, *gandhaḥ*.) Smells? (**जिघ्रति**, *jighrati*.) The lungs? (**फुप्फुसः**, *phupphusaḥ*.) The liver? (**यकृत्**, *yakṛt*.) A kidney? (**वृक्कः**, *vṛkkaḥ*.) The stomach? (**आमाशयः**, *āmāśayaḥ*.) Breathes? (**श्वसिति**, *śvasiti*.) The brain? (**मस्तिष्कः**, *mastiṣkaḥ*.) The skull? (**कपालम्**, *kapālam*.) A beard? (**श्मश्रु**, *śmaśru*.) An eyelash? (**पक्ष्म**, *pakṣma*.) Shaves? (**मुण्डयति**, *muṇḍayati*.)
+`;export{t};

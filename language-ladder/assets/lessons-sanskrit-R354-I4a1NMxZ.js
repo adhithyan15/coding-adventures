@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R355-review-348-355
+spine_node: SPINE-GIVE-REASONS
+sequence: 20810
+chapter: 355
+type: review
+headword: (dialogue)
+gloss: a review of the words from Fair and Unfair to The Assembly
+concept_tag: REVIEW
+prerequisites: [SA-C348-sosanam, SA-C348-nyayyah, SA-C348-vidhih, SA-C348-paksapatah, SA-C348-ullanghayati, SA-C349-nyayalayah, SA-C349-prativadi, SA-C349-aparadhyati, SA-C349-nigrhnati, SA-C349-sapathah, SA-C350-bandhanam, SA-C350-muktih, SA-C350-nirdharayati, SA-C350-pratyarpayati, SA-C350-prayascittam, SA-C351-satkarma, SA-C351-vivekah, SA-C351-anuvartate, SA-C351-anusarati, SA-C351-maryada, SA-C352-himsa, SA-C352-sahisnuh, SA-C352-apakaroti, SA-C352-anugrhnati, SA-C352-ksama, SA-C353-sasanam, SA-C353-adhitisthati, SA-C353-rastram, SA-C353-sasakah, SA-C353-adesah, SA-C354-nagarikah, SA-C354-janata, SA-C354-samajah, SA-C354-svatantrah, SA-C354-sanghatayati, SA-C355-samsad, SA-C355-sadasyah, SA-C355-pratinidhih, SA-C355-adhyaksah, SA-C355-mantrayate]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C348-AUCITYA348-01, SA-LEX-C348-AUCITYA348-02, SA-LEX-C348-AUCITYA348-03, SA-LEX-C348-AUCITYA348-04, SA-LEX-C348-AUCITYA348-05, SA-LEX-C349-NYAYALAYA349-01, SA-LEX-C349-NYAYALAYA349-02, SA-LEX-C349-NYAYALAYA349-03, SA-LEX-C349-NYAYALAYA349-04, SA-LEX-C349-NYAYALAYA349-05, SA-LEX-C350-MUKTI350-01, SA-LEX-C350-MUKTI350-02, SA-LEX-C350-MUKTI350-03, SA-LEX-C350-MUKTI350-04, SA-LEX-C350-MUKTI350-05, SA-LEX-C351-VIVEKA351-01, SA-LEX-C351-VIVEKA351-02, SA-LEX-C351-VIVEKA351-03, SA-LEX-C351-VIVEKA351-04, SA-LEX-C351-VIVEKA351-05, SA-LEX-C352-AHIMSA352-01, SA-LEX-C352-AHIMSA352-02, SA-LEX-C352-AHIMSA352-03, SA-LEX-C352-AHIMSA352-04, SA-LEX-C352-AHIMSA352-05, SA-LEX-C353-SHASANA353-01, SA-LEX-C353-SHASANA353-02, SA-LEX-C353-SHASANA353-03, SA-LEX-C353-SHASANA353-04, SA-LEX-C353-SHASANA353-05, SA-LEX-C354-NAGARIKA354-01, SA-LEX-C354-NAGARIKA354-02, SA-LEX-C354-NAGARIKA354-03, SA-LEX-C354-NAGARIKA354-04, SA-LEX-C354-NAGARIKA354-05, SA-LEX-C355-SANSAD355-01, SA-LEX-C355-SANSAD355-02, SA-LEX-C355-SANSAD355-03, SA-LEX-C355-SANSAD355-04, SA-LEX-C355-SANSAD355-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C348-AUCITYA348-01, SA-LEX-C348-AUCITYA348-02, SA-LEX-C348-AUCITYA348-03, SA-LEX-C348-AUCITYA348-04, SA-LEX-C348-AUCITYA348-05, SA-LEX-C349-NYAYALAYA349-01, SA-LEX-C349-NYAYALAYA349-02, SA-LEX-C349-NYAYALAYA349-03, SA-LEX-C349-NYAYALAYA349-04, SA-LEX-C349-NYAYALAYA349-05, SA-LEX-C350-MUKTI350-01, SA-LEX-C350-MUKTI350-02, SA-LEX-C350-MUKTI350-03, SA-LEX-C350-MUKTI350-04, SA-LEX-C350-MUKTI350-05, SA-LEX-C351-VIVEKA351-01, SA-LEX-C351-VIVEKA351-02, SA-LEX-C351-VIVEKA351-03, SA-LEX-C351-VIVEKA351-04, SA-LEX-C351-VIVEKA351-05, SA-LEX-C352-AHIMSA352-01, SA-LEX-C352-AHIMSA352-02, SA-LEX-C352-AHIMSA352-03, SA-LEX-C352-AHIMSA352-04, SA-LEX-C352-AHIMSA352-05, SA-LEX-C353-SHASANA353-01, SA-LEX-C353-SHASANA353-02, SA-LEX-C353-SHASANA353-03, SA-LEX-C353-SHASANA353-04, SA-LEX-C353-SHASANA353-05, SA-LEX-C354-NAGARIKA354-01, SA-LEX-C354-NAGARIKA354-02, SA-LEX-C354-NAGARIKA354-03, SA-LEX-C354-NAGARIKA354-04, SA-LEX-C354-NAGARIKA354-05, SA-LEX-C355-SANSAD355-01, SA-LEX-C355-SANSAD355-02, SA-LEX-C355-SANSAD355-03, SA-LEX-C355-SANSAD355-04, SA-LEX-C355-SANSAD355-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C348-sosanam, SA-C348-nyayyah, SA-C348-vidhih, SA-C348-paksapatah, SA-C348-ullanghayati, SA-C349-nyayalayah, SA-C349-prativadi, SA-C349-aparadhyati, SA-C349-nigrhnati, SA-C349-sapathah, SA-C350-bandhanam, SA-C350-muktih, SA-C350-nirdharayati, SA-C350-pratyarpayati, SA-C350-prayascittam, SA-C351-satkarma, SA-C351-vivekah, SA-C351-anuvartate, SA-C351-anusarati, SA-C351-maryada, SA-C352-himsa, SA-C352-sahisnuh, SA-C352-apakaroti, SA-C352-anugrhnati, SA-C352-ksama, SA-C353-sasanam, SA-C353-adhitisthati, SA-C353-rastram, SA-C353-sasakah, SA-C353-adesah, SA-C354-nagarikah, SA-C354-janata, SA-C354-samajah, SA-C354-svatantrah, SA-C354-sanghatayati, SA-C355-samsad, SA-C355-sadasyah, SA-C355-pratinidhih, SA-C355-adhyaksah, SA-C355-mantrayate]
+---
+
+# Looking back: from Fair and Unfair to The Assembly
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C348-AUCITYA348-01, SA-LEX-C348-AUCITYA348-02] -->
+
+[PAUSE 3s] Say the Sanskrit for exploitation and fair.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C348-AUCITYA348-01, SA-LEX-C348-AUCITYA348-02, SA-LEX-C348-AUCITYA348-03, SA-LEX-C348-AUCITYA348-04, SA-LEX-C348-AUCITYA348-05, SA-LEX-C349-NYAYALAYA349-01, SA-LEX-C349-NYAYALAYA349-02, SA-LEX-C349-NYAYALAYA349-03, SA-LEX-C349-NYAYALAYA349-04, SA-LEX-C349-NYAYALAYA349-05, SA-LEX-C350-MUKTI350-01, SA-LEX-C350-MUKTI350-02, SA-LEX-C350-MUKTI350-03, SA-LEX-C350-MUKTI350-04, SA-LEX-C350-MUKTI350-05, SA-LEX-C351-VIVEKA351-01, SA-LEX-C351-VIVEKA351-02, SA-LEX-C351-VIVEKA351-03, SA-LEX-C351-VIVEKA351-04, SA-LEX-C351-VIVEKA351-05, SA-LEX-C352-AHIMSA352-01, SA-LEX-C352-AHIMSA352-02, SA-LEX-C352-AHIMSA352-03, SA-LEX-C352-AHIMSA352-04, SA-LEX-C352-AHIMSA352-05, SA-LEX-C353-SHASANA353-01, SA-LEX-C353-SHASANA353-02, SA-LEX-C353-SHASANA353-03, SA-LEX-C353-SHASANA353-04, SA-LEX-C353-SHASANA353-05, SA-LEX-C354-NAGARIKA354-01, SA-LEX-C354-NAGARIKA354-02, SA-LEX-C354-NAGARIKA354-03, SA-LEX-C354-NAGARIKA354-04, SA-LEX-C354-NAGARIKA354-05, SA-LEX-C355-SANSAD355-01, SA-LEX-C355-SANSAD355-02, SA-LEX-C355-SANSAD355-03, SA-LEX-C355-SANSAD355-04, SA-LEX-C355-SANSAD355-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: exploitation, fair, a precept, partiality, breaks (a rule)]
+- [YOU SAY: a court of law, a defendant, does wrong, restrains, an oath]
+- [YOU SAY: captivity, release, settles (a question), gives back, atonement]
+- [YOU SAY: a virtuous act, discernment, conforms to, abides by, the bounds of propriety]
+- [YOU SAY: violence, tolerant, does harm to, shows favour to, forbearance]
+- [YOU SAY: government, presides over, a nation, a governor, an official order]
+- [YOU SAY: a citizen (of a country), the public, society, independent, organizes]
+- [YOU SAY: a parliament, a member, a representative, a president, consults]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C348-AUCITYA348-01, SA-LEX-C348-AUCITYA348-02, SA-LEX-C348-AUCITYA348-03, SA-LEX-C348-AUCITYA348-04, SA-LEX-C348-AUCITYA348-05, SA-LEX-C349-NYAYALAYA349-01, SA-LEX-C349-NYAYALAYA349-02, SA-LEX-C349-NYAYALAYA349-03, SA-LEX-C349-NYAYALAYA349-04, SA-LEX-C349-NYAYALAYA349-05, SA-LEX-C350-MUKTI350-01, SA-LEX-C350-MUKTI350-02, SA-LEX-C350-MUKTI350-03, SA-LEX-C350-MUKTI350-04, SA-LEX-C350-MUKTI350-05, SA-LEX-C351-VIVEKA351-01, SA-LEX-C351-VIVEKA351-02, SA-LEX-C351-VIVEKA351-03, SA-LEX-C351-VIVEKA351-04, SA-LEX-C351-VIVEKA351-05, SA-LEX-C352-AHIMSA352-01, SA-LEX-C352-AHIMSA352-02, SA-LEX-C352-AHIMSA352-03, SA-LEX-C352-AHIMSA352-04, SA-LEX-C352-AHIMSA352-05, SA-LEX-C353-SHASANA353-01, SA-LEX-C353-SHASANA353-02, SA-LEX-C353-SHASANA353-03, SA-LEX-C353-SHASANA353-04, SA-LEX-C353-SHASANA353-05, SA-LEX-C354-NAGARIKA354-01, SA-LEX-C354-NAGARIKA354-02, SA-LEX-C354-NAGARIKA354-03, SA-LEX-C354-NAGARIKA354-04, SA-LEX-C354-NAGARIKA354-05, SA-LEX-C355-SANSAD355-01, SA-LEX-C355-SANSAD355-02, SA-LEX-C355-SANSAD355-03, SA-LEX-C355-SANSAD355-04, SA-LEX-C355-SANSAD355-05] -->
+
+[PAUSE 3s] Exploitation? (**शोषणम्**, *śoṣaṇam*.) Fair? (**न्याय्यः**, *nyāyyaḥ*.) A precept? (**विधिः**, *vidhiḥ*.) Partiality? (**पक्षपातः**, *pakṣapātaḥ*.) Breaks (a rule)? (**उल्लंघयति**, *ullaṅghayati*.) A court of law? (**न्यायालयः**, *nyāyālayaḥ*.) A defendant? (**प्रतिवादी**, *prativādī*.) Does wrong? (**अपराध्यति**, *aparādhyati*.) Restrains? (**निगृह्णाति**, *nigṛhṇāti*.) An oath? (**शपथः**, *śapathaḥ*.) Captivity? (**बन्धनम्**, *bandhanam*.) Release? (**मुक्तिः**, *muktiḥ*.) Settles (a question)? (**निर्धारयति**, *nirdhārayati*.) Gives back? (**प्रत्यर्पयति**, *pratyarpayati*.) Atonement? (**प्रायश्चित्तम्**, *prāyaścittam*.) A virtuous act? (**सत्कर्म**, *satkarma*.) Discernment? (**विवेकः**, *vivekaḥ*.) Conforms to? (**अनुवर्तते**, *anuvartate*.) Abides by? (**अनुसरति**, *anusarati*.) The bounds of propriety? (**मर्यादा**, *maryādā*.) Violence? (**हिंसा**, *hiṃsā*.) Tolerant? (**सहिष्णुः**, *sahiṣṇuḥ*.) Does harm to? (**अपकरोति**, *apakaroti*.) Shows favour to? (**अनुगृह्णाति**, *anugṛhṇāti*.) Forbearance? (**क्षमा**, *kṣamā*.) Government? (**शासनम्**, *śāsanam*.) Presides over? (**अधितिष्ठति**, *adhitiṣṭhati*.) A nation? (**राष्ट्रम्**, *rāṣṭram*.) A governor? (**शासकः**, *śāsakaḥ*.) An official order? (**आदेशः**, *ādeśaḥ*.) A citizen (of a country)? (**नागरिकः**, *nāgarikaḥ*.) The public? (**जनता**, *janatā*.) Society? (**समाजः**, *samājaḥ*.) Independent? (**स्वतन्त्रः**, *svatantraḥ*.) Organizes? (**संघटयति**, *saṅghaṭayati*.) A parliament? (**संसद्**, *saṃsad*.) A member? (**सदस्यः**, *sadasyaḥ*.) A representative? (**प्रतिनिधिः**, *pratinidhiḥ*.) A president? (**अध्यक्षः**, *adhyakṣaḥ*.) Consults? (**मन्त्रयते**, *mantrayate*.)
+`;export{t};

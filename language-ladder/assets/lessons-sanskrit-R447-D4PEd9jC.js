@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R447-review-441-447
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 25760
+chapter: 447
+type: review
+headword: (dialogue)
+gloss: a review of the words from Bad Weather to Fields on the Way Home
+concept_tag: REVIEW
+prerequisites: [SA-C441-durdinam, SA-C441-sajalah, SA-C441-ativrstih, SA-C441-tuhinam, SA-C441-avrnoti, SA-C442-suryodayah, SA-C442-udeti, SA-C442-prakasate, SA-C442-ksitijam, SA-C442-vibhati, SA-C443-suryastah, SA-C443-astam-gacchati, SA-C443-godhulih, SA-C443-tamisra, SA-C443-naktam, SA-C444-purnima, SA-C444-amavasya, SA-C444-suklapaksah, SA-C444-krsnapaksah, SA-C444-rajate, SA-C445-ulka, SA-C445-dhruvah, SA-C445-grahanam, SA-C445-diva, SA-C445-yapayati, SA-C446-adhityaka, SA-C446-sikharam, SA-C446-gulmah, SA-C446-kusah, SA-C446-pallavah, SA-C447-kedarah, SA-C447-sasyam, SA-C447-urvara, SA-C447-lunati, SA-C447-avacinoti]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C441-DURDINA441-01, SA-LEX-C441-DURDINA441-02, SA-LEX-C441-DURDINA441-03, SA-LEX-C441-DURDINA441-04, SA-LEX-C441-DURDINA441-05, SA-LEX-C442-UDAYA442-01, SA-LEX-C442-UDAYA442-02, SA-LEX-C442-UDAYA442-03, SA-LEX-C442-UDAYA442-04, SA-LEX-C442-UDAYA442-05, SA-LEX-C443-ASTA443-01, SA-LEX-C443-ASTA443-02, SA-LEX-C443-ASTA443-03, SA-LEX-C443-ASTA443-04, SA-LEX-C443-ASTA443-05, SA-LEX-C444-CANDRA444-01, SA-LEX-C444-CANDRA444-02, SA-LEX-C444-CANDRA444-03, SA-LEX-C444-CANDRA444-04, SA-LEX-C444-CANDRA444-05, SA-LEX-C445-ULKA445-01, SA-LEX-C445-ULKA445-02, SA-LEX-C445-ULKA445-03, SA-LEX-C445-ULKA445-04, SA-LEX-C445-ULKA445-05, SA-LEX-C446-SHIKHARA446-01, SA-LEX-C446-SHIKHARA446-02, SA-LEX-C446-SHIKHARA446-03, SA-LEX-C446-SHIKHARA446-04, SA-LEX-C446-SHIKHARA446-05, SA-LEX-C447-KEDARA447-01, SA-LEX-C447-KEDARA447-02, SA-LEX-C447-KEDARA447-03, SA-LEX-C447-KEDARA447-04, SA-LEX-C447-KEDARA447-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C441-DURDINA441-01, SA-LEX-C441-DURDINA441-02, SA-LEX-C441-DURDINA441-03, SA-LEX-C441-DURDINA441-04, SA-LEX-C441-DURDINA441-05, SA-LEX-C442-UDAYA442-01, SA-LEX-C442-UDAYA442-02, SA-LEX-C442-UDAYA442-03, SA-LEX-C442-UDAYA442-04, SA-LEX-C442-UDAYA442-05, SA-LEX-C443-ASTA443-01, SA-LEX-C443-ASTA443-02, SA-LEX-C443-ASTA443-03, SA-LEX-C443-ASTA443-04, SA-LEX-C443-ASTA443-05, SA-LEX-C444-CANDRA444-01, SA-LEX-C444-CANDRA444-02, SA-LEX-C444-CANDRA444-03, SA-LEX-C444-CANDRA444-04, SA-LEX-C444-CANDRA444-05, SA-LEX-C445-ULKA445-01, SA-LEX-C445-ULKA445-02, SA-LEX-C445-ULKA445-03, SA-LEX-C445-ULKA445-04, SA-LEX-C445-ULKA445-05, SA-LEX-C446-SHIKHARA446-01, SA-LEX-C446-SHIKHARA446-02, SA-LEX-C446-SHIKHARA446-03, SA-LEX-C446-SHIKHARA446-04, SA-LEX-C446-SHIKHARA446-05, SA-LEX-C447-KEDARA447-01, SA-LEX-C447-KEDARA447-02, SA-LEX-C447-KEDARA447-03, SA-LEX-C447-KEDARA447-04, SA-LEX-C447-KEDARA447-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C441-durdinam, SA-C441-sajalah, SA-C441-ativrstih, SA-C441-tuhinam, SA-C441-avrnoti, SA-C442-suryodayah, SA-C442-udeti, SA-C442-prakasate, SA-C442-ksitijam, SA-C442-vibhati, SA-C443-suryastah, SA-C443-astam-gacchati, SA-C443-godhulih, SA-C443-tamisra, SA-C443-naktam, SA-C444-purnima, SA-C444-amavasya, SA-C444-suklapaksah, SA-C444-krsnapaksah, SA-C444-rajate, SA-C445-ulka, SA-C445-dhruvah, SA-C445-grahanam, SA-C445-diva, SA-C445-yapayati, SA-C446-adhityaka, SA-C446-sikharam, SA-C446-gulmah, SA-C446-kusah, SA-C446-pallavah, SA-C447-kedarah, SA-C447-sasyam, SA-C447-urvara, SA-C447-lunati, SA-C447-avacinoti]
+---
+
+# Looking back: from Bad Weather to Fields on the Way Home
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C441-DURDINA441-01, SA-LEX-C441-DURDINA441-02] -->
+
+[PAUSE 3s] Say the Sanskrit for a day of bad weather and rain-laden.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C441-DURDINA441-01, SA-LEX-C441-DURDINA441-02, SA-LEX-C441-DURDINA441-03, SA-LEX-C441-DURDINA441-04, SA-LEX-C441-DURDINA441-05, SA-LEX-C442-UDAYA442-01, SA-LEX-C442-UDAYA442-02, SA-LEX-C442-UDAYA442-03, SA-LEX-C442-UDAYA442-04, SA-LEX-C442-UDAYA442-05, SA-LEX-C443-ASTA443-01, SA-LEX-C443-ASTA443-02, SA-LEX-C443-ASTA443-03, SA-LEX-C443-ASTA443-04, SA-LEX-C443-ASTA443-05, SA-LEX-C444-CANDRA444-01, SA-LEX-C444-CANDRA444-02, SA-LEX-C444-CANDRA444-03, SA-LEX-C444-CANDRA444-04, SA-LEX-C444-CANDRA444-05, SA-LEX-C445-ULKA445-01, SA-LEX-C445-ULKA445-02, SA-LEX-C445-ULKA445-03, SA-LEX-C445-ULKA445-04, SA-LEX-C445-ULKA445-05, SA-LEX-C446-SHIKHARA446-01, SA-LEX-C446-SHIKHARA446-02, SA-LEX-C446-SHIKHARA446-03, SA-LEX-C446-SHIKHARA446-04, SA-LEX-C446-SHIKHARA446-05, SA-LEX-C447-KEDARA447-01, SA-LEX-C447-KEDARA447-02, SA-LEX-C447-KEDARA447-03, SA-LEX-C447-KEDARA447-04, SA-LEX-C447-KEDARA447-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a day of bad weather, rain-laden, too much rain, hoarfrost, veils]
+- [YOU SAY: sunrise, rises in the sky, grows bright, the horizon, dawns]
+- [YOU SAY: sunset, sets in the west, dusk, a dark night, by night]
+- [YOU SAY: the full-moon day, the new-moon night, the bright fortnight, the dark fortnight, gleams]
+- [YOU SAY: a shooting star, the pole star, an eclipse, by day, passes the time]
+- [YOU SAY: a plateau, a summit, a thicket, kusha grass, a young shoot]
+- [YOU SAY: a flooded field, a crop, fertile land, reaps a crop, picks fruit]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C441-DURDINA441-01, SA-LEX-C441-DURDINA441-02, SA-LEX-C441-DURDINA441-03, SA-LEX-C441-DURDINA441-04, SA-LEX-C441-DURDINA441-05, SA-LEX-C442-UDAYA442-01, SA-LEX-C442-UDAYA442-02, SA-LEX-C442-UDAYA442-03, SA-LEX-C442-UDAYA442-04, SA-LEX-C442-UDAYA442-05, SA-LEX-C443-ASTA443-01, SA-LEX-C443-ASTA443-02, SA-LEX-C443-ASTA443-03, SA-LEX-C443-ASTA443-04, SA-LEX-C443-ASTA443-05, SA-LEX-C444-CANDRA444-01, SA-LEX-C444-CANDRA444-02, SA-LEX-C444-CANDRA444-03, SA-LEX-C444-CANDRA444-04, SA-LEX-C444-CANDRA444-05, SA-LEX-C445-ULKA445-01, SA-LEX-C445-ULKA445-02, SA-LEX-C445-ULKA445-03, SA-LEX-C445-ULKA445-04, SA-LEX-C445-ULKA445-05, SA-LEX-C446-SHIKHARA446-01, SA-LEX-C446-SHIKHARA446-02, SA-LEX-C446-SHIKHARA446-03, SA-LEX-C446-SHIKHARA446-04, SA-LEX-C446-SHIKHARA446-05, SA-LEX-C447-KEDARA447-01, SA-LEX-C447-KEDARA447-02, SA-LEX-C447-KEDARA447-03, SA-LEX-C447-KEDARA447-04, SA-LEX-C447-KEDARA447-05] -->
+
+[PAUSE 3s] A day of bad weather? (**दुर्दिनम्**, *durdinam*.) Rain-laden? (**सजलः**, *sajalaḥ*.) Too much rain? (**अतिवृष्टिः**, *ativṛṣṭiḥ*.) Hoarfrost? (**तुहिनम्**, *tuhinam*.) Veils? (**आवृणोति**, *āvṛṇoti*.) Sunrise? (**सूर्योदयः**, *sūryodayaḥ*.) Rises in the sky? (**उदेति**, *udeti*.) Grows bright? (**प्रकाशते**, *prakāśate*.) The horizon? (**क्षितिजम्**, *kṣitijam*.) Dawns? (**विभाति**, *vibhāti*.) Sunset? (**सूर्यास्तः**, *sūryāstaḥ*.) Sets in the west? (**अस्तं गच्छति**, *astaṃ gacchati*.) Dusk? (**गोधूलिः**, *godhūliḥ*.) A dark night? (**तमिस्रा**, *tamisrā*.) By night? (**नक्तम्**, *naktam*.) The full-moon day? (**पूर्णिमा**, *pūrṇimā*.) The new-moon night? (**अमावास्या**, *amāvāsyā*.) The bright fortnight? (**शुक्लपक्षः**, *śuklapakṣaḥ*.) The dark fortnight? (**कृष्णपक्षः**, *kṛṣṇapakṣaḥ*.) Gleams? (**राजते**, *rājate*.) A shooting star? (**उल्का**, *ulkā*.) The pole star? (**ध्रुवः**, *dhruvaḥ*.) An eclipse? (**ग्रहणम्**, *grahaṇam*.) By day? (**दिवा**, *divā*.) Passes the time? (**यापयति**, *yāpayati*.) A plateau? (**अधित्यका**, *adhityakā*.) A summit? (**शिखरम्**, *śikharam*.) A thicket? (**गुल्मः**, *gulmaḥ*.) Kusha grass? (**कुशः**, *kuśaḥ*.) A young shoot? (**पल्लवः**, *pallavaḥ*.) A flooded field? (**केदारः**, *kedāraḥ*.) A crop? (**सस्यम्**, *sasyam*.) Fertile land? (**उर्वरा**, *urvarā*.) Reaps a crop? (**लुनाति**, *lunāti*.) Picks fruit? (**अवचिनोति**, *avacinoti*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R447-review-final-447
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 25770
+chapter: 447
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [SA-C447-kedarah, SA-C447-sasyam, SA-C447-urvara, SA-C447-lunati, SA-C447-avacinoti]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C447-KEDARA447-01, SA-LEX-C447-KEDARA447-02, SA-LEX-C447-KEDARA447-03, SA-LEX-C447-KEDARA447-04, SA-LEX-C447-KEDARA447-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C447-KEDARA447-01, SA-LEX-C447-KEDARA447-02, SA-LEX-C447-KEDARA447-03, SA-LEX-C447-KEDARA447-04, SA-LEX-C447-KEDARA447-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C447-kedarah, SA-C447-sasyam, SA-C447-urvara, SA-C447-lunati, SA-C447-avacinoti]
+---
+
+# Fields on the Way Home — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C447-KEDARA447-01, SA-LEX-C447-KEDARA447-02] -->
+
+[PAUSE 3s] Say the Sanskrit for a flooded field and a crop.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C447-KEDARA447-01, SA-LEX-C447-KEDARA447-02, SA-LEX-C447-KEDARA447-03, SA-LEX-C447-KEDARA447-04, SA-LEX-C447-KEDARA447-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a flooded field, a crop, fertile land, reaps a crop, picks fruit]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C447-KEDARA447-01, SA-LEX-C447-KEDARA447-02, SA-LEX-C447-KEDARA447-03, SA-LEX-C447-KEDARA447-04, SA-LEX-C447-KEDARA447-05] -->
+
+[PAUSE 3s] A flooded field? (**केदारः**, *kedāraḥ*.) A crop? (**सस्यम्**, *sasyam*.) Fertile land? (**उर्वरा**, *urvarā*.) Reaps a crop? (**लुनाति**, *lunāti*.) Picks fruit? (**अवचिनोति**, *avacinoti*.)
+`;export{t as n,r as t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R371-review-364-371
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 21630
+chapter: 371
+type: review
+headword: (dialogue)
+gloss: a review of the words from Ask an Expert to Other Options
+concept_tag: REVIEW
+prerequisites: [SA-C364-visesajnah, SA-C364-vimarsah, SA-C364-tika, SA-C364-nibandhah, SA-C364-nirupayati, SA-C365-siddhantah, SA-C365-tattvam, SA-C365-prajna, SA-C365-jijnasa, SA-C365-upalaksayati, SA-C366-niskarsah, SA-C366-samiksa, SA-C366-ganana, SA-C366-vicarayati, SA-C366-niscinoti, SA-C367-sambhavah, SA-C367-sambhavayati, SA-C367-dhruvam, SA-C367-ksipram, SA-C367-apeksate, SA-C368-sanka, SA-C368-tarkayati, SA-C368-asamsate, SA-C368-anumanam, SA-C368-kila, SA-C369-bhagyam, SA-C369-daivam, SA-C369-akasmat, SA-C369-upalabhate, SA-C369-sambhavana, SA-C370-sthitih, SA-C370-avastha, SA-C370-parinamati, SA-C370-anukulah, SA-C370-pratikulah, SA-C371-vikalpah, SA-C371-pratyavartate, SA-C371-vilambate, SA-C371-avadhih, SA-C371-upakramate]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C364-VISHESHAJNA364-01, SA-LEX-C364-VISHESHAJNA364-02, SA-LEX-C364-VISHESHAJNA364-03, SA-LEX-C364-VISHESHAJNA364-04, SA-LEX-C364-VISHESHAJNA364-05, SA-LEX-C365-SIDDHANTA365-01, SA-LEX-C365-SIDDHANTA365-02, SA-LEX-C365-SIDDHANTA365-03, SA-LEX-C365-SIDDHANTA365-04, SA-LEX-C365-SIDDHANTA365-05, SA-LEX-C366-NISHKARSHA366-01, SA-LEX-C366-NISHKARSHA366-02, SA-LEX-C366-NISHKARSHA366-03, SA-LEX-C366-NISHKARSHA366-04, SA-LEX-C366-NISHKARSHA366-05, SA-LEX-C367-SAMBHAVA367-01, SA-LEX-C367-SAMBHAVA367-02, SA-LEX-C367-SAMBHAVA367-03, SA-LEX-C367-SAMBHAVA367-04, SA-LEX-C367-SAMBHAVA367-05, SA-LEX-C368-SHANKA368-01, SA-LEX-C368-SHANKA368-02, SA-LEX-C368-SHANKA368-03, SA-LEX-C368-SHANKA368-04, SA-LEX-C368-SHANKA368-05, SA-LEX-C369-BHAGYA369-01, SA-LEX-C369-BHAGYA369-02, SA-LEX-C369-BHAGYA369-03, SA-LEX-C369-BHAGYA369-04, SA-LEX-C369-BHAGYA369-05, SA-LEX-C370-STHITI370-01, SA-LEX-C370-STHITI370-02, SA-LEX-C370-STHITI370-03, SA-LEX-C370-STHITI370-04, SA-LEX-C370-STHITI370-05, SA-LEX-C371-VIKALPA371-01, SA-LEX-C371-VIKALPA371-02, SA-LEX-C371-VIKALPA371-03, SA-LEX-C371-VIKALPA371-04, SA-LEX-C371-VIKALPA371-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C364-VISHESHAJNA364-01, SA-LEX-C364-VISHESHAJNA364-02, SA-LEX-C364-VISHESHAJNA364-03, SA-LEX-C364-VISHESHAJNA364-04, SA-LEX-C364-VISHESHAJNA364-05, SA-LEX-C365-SIDDHANTA365-01, SA-LEX-C365-SIDDHANTA365-02, SA-LEX-C365-SIDDHANTA365-03, SA-LEX-C365-SIDDHANTA365-04, SA-LEX-C365-SIDDHANTA365-05, SA-LEX-C366-NISHKARSHA366-01, SA-LEX-C366-NISHKARSHA366-02, SA-LEX-C366-NISHKARSHA366-03, SA-LEX-C366-NISHKARSHA366-04, SA-LEX-C366-NISHKARSHA366-05, SA-LEX-C367-SAMBHAVA367-01, SA-LEX-C367-SAMBHAVA367-02, SA-LEX-C367-SAMBHAVA367-03, SA-LEX-C367-SAMBHAVA367-04, SA-LEX-C367-SAMBHAVA367-05, SA-LEX-C368-SHANKA368-01, SA-LEX-C368-SHANKA368-02, SA-LEX-C368-SHANKA368-03, SA-LEX-C368-SHANKA368-04, SA-LEX-C368-SHANKA368-05, SA-LEX-C369-BHAGYA369-01, SA-LEX-C369-BHAGYA369-02, SA-LEX-C369-BHAGYA369-03, SA-LEX-C369-BHAGYA369-04, SA-LEX-C369-BHAGYA369-05, SA-LEX-C370-STHITI370-01, SA-LEX-C370-STHITI370-02, SA-LEX-C370-STHITI370-03, SA-LEX-C370-STHITI370-04, SA-LEX-C370-STHITI370-05, SA-LEX-C371-VIKALPA371-01, SA-LEX-C371-VIKALPA371-02, SA-LEX-C371-VIKALPA371-03, SA-LEX-C371-VIKALPA371-04, SA-LEX-C371-VIKALPA371-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C364-visesajnah, SA-C364-vimarsah, SA-C364-tika, SA-C364-nibandhah, SA-C364-nirupayati, SA-C365-siddhantah, SA-C365-tattvam, SA-C365-prajna, SA-C365-jijnasa, SA-C365-upalaksayati, SA-C366-niskarsah, SA-C366-samiksa, SA-C366-ganana, SA-C366-vicarayati, SA-C366-niscinoti, SA-C367-sambhavah, SA-C367-sambhavayati, SA-C367-dhruvam, SA-C367-ksipram, SA-C367-apeksate, SA-C368-sanka, SA-C368-tarkayati, SA-C368-asamsate, SA-C368-anumanam, SA-C368-kila, SA-C369-bhagyam, SA-C369-daivam, SA-C369-akasmat, SA-C369-upalabhate, SA-C369-sambhavana, SA-C370-sthitih, SA-C370-avastha, SA-C370-parinamati, SA-C370-anukulah, SA-C370-pratikulah, SA-C371-vikalpah, SA-C371-pratyavartate, SA-C371-vilambate, SA-C371-avadhih, SA-C371-upakramate]
+---
+
+# Looking back: from Ask an Expert to Other Options
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C364-VISHESHAJNA364-01, SA-LEX-C364-VISHESHAJNA364-02] -->
+
+[PAUSE 3s] Say the Sanskrit for an expert and deliberation.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C364-VISHESHAJNA364-01, SA-LEX-C364-VISHESHAJNA364-02, SA-LEX-C364-VISHESHAJNA364-03, SA-LEX-C364-VISHESHAJNA364-04, SA-LEX-C364-VISHESHAJNA364-05, SA-LEX-C365-SIDDHANTA365-01, SA-LEX-C365-SIDDHANTA365-02, SA-LEX-C365-SIDDHANTA365-03, SA-LEX-C365-SIDDHANTA365-04, SA-LEX-C365-SIDDHANTA365-05, SA-LEX-C366-NISHKARSHA366-01, SA-LEX-C366-NISHKARSHA366-02, SA-LEX-C366-NISHKARSHA366-03, SA-LEX-C366-NISHKARSHA366-04, SA-LEX-C366-NISHKARSHA366-05, SA-LEX-C367-SAMBHAVA367-01, SA-LEX-C367-SAMBHAVA367-02, SA-LEX-C367-SAMBHAVA367-03, SA-LEX-C367-SAMBHAVA367-04, SA-LEX-C367-SAMBHAVA367-05, SA-LEX-C368-SHANKA368-01, SA-LEX-C368-SHANKA368-02, SA-LEX-C368-SHANKA368-03, SA-LEX-C368-SHANKA368-04, SA-LEX-C368-SHANKA368-05, SA-LEX-C369-BHAGYA369-01, SA-LEX-C369-BHAGYA369-02, SA-LEX-C369-BHAGYA369-03, SA-LEX-C369-BHAGYA369-04, SA-LEX-C369-BHAGYA369-05, SA-LEX-C370-STHITI370-01, SA-LEX-C370-STHITI370-02, SA-LEX-C370-STHITI370-03, SA-LEX-C370-STHITI370-04, SA-LEX-C370-STHITI370-05, SA-LEX-C371-VIKALPA371-01, SA-LEX-C371-VIKALPA371-02, SA-LEX-C371-VIKALPA371-03, SA-LEX-C371-VIKALPA371-04, SA-LEX-C371-VIKALPA371-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an expert, deliberation, a commentary, an essay, investigates]
+- [YOU SAY: a principle, reality, wisdom, curiosity, notices]
+- [YOU SAY: a conclusion, a review, a calculation, considers, ascertains]
+- [YOU SAY: a possibility, thinks likely, for certain, swiftly, expects]
+- [YOU SAY: a misgiving, conjectures, hopes for, an inference, so they say]
+- [YOU SAY: luck, fate, by accident, comes by, a likelihood]
+- [YOU SAY: a situation, a state of things, turns into, favourable, adverse]
+- [YOU SAY: an option, turns back, is late, a time limit, sets about]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C364-VISHESHAJNA364-01, SA-LEX-C364-VISHESHAJNA364-02, SA-LEX-C364-VISHESHAJNA364-03, SA-LEX-C364-VISHESHAJNA364-04, SA-LEX-C364-VISHESHAJNA364-05, SA-LEX-C365-SIDDHANTA365-01, SA-LEX-C365-SIDDHANTA365-02, SA-LEX-C365-SIDDHANTA365-03, SA-LEX-C365-SIDDHANTA365-04, SA-LEX-C365-SIDDHANTA365-05, SA-LEX-C366-NISHKARSHA366-01, SA-LEX-C366-NISHKARSHA366-02, SA-LEX-C366-NISHKARSHA366-03, SA-LEX-C366-NISHKARSHA366-04, SA-LEX-C366-NISHKARSHA366-05, SA-LEX-C367-SAMBHAVA367-01, SA-LEX-C367-SAMBHAVA367-02, SA-LEX-C367-SAMBHAVA367-03, SA-LEX-C367-SAMBHAVA367-04, SA-LEX-C367-SAMBHAVA367-05, SA-LEX-C368-SHANKA368-01, SA-LEX-C368-SHANKA368-02, SA-LEX-C368-SHANKA368-03, SA-LEX-C368-SHANKA368-04, SA-LEX-C368-SHANKA368-05, SA-LEX-C369-BHAGYA369-01, SA-LEX-C369-BHAGYA369-02, SA-LEX-C369-BHAGYA369-03, SA-LEX-C369-BHAGYA369-04, SA-LEX-C369-BHAGYA369-05, SA-LEX-C370-STHITI370-01, SA-LEX-C370-STHITI370-02, SA-LEX-C370-STHITI370-03, SA-LEX-C370-STHITI370-04, SA-LEX-C370-STHITI370-05, SA-LEX-C371-VIKALPA371-01, SA-LEX-C371-VIKALPA371-02, SA-LEX-C371-VIKALPA371-03, SA-LEX-C371-VIKALPA371-04, SA-LEX-C371-VIKALPA371-05] -->
+
+[PAUSE 3s] An expert? (**विशेषज्ञः**, *viśeṣajñaḥ*.) Deliberation? (**विमर्शः**, *vimarśaḥ*.) A commentary? (**टीका**, *ṭīkā*.) An essay? (**निबन्धः**, *nibandhaḥ*.) Investigates? (**निरूपयति**, *nirūpayati*.) A principle? (**सिद्धान्तः**, *siddhāntaḥ*.) Reality? (**तत्त्वम्**, *tattvam*.) Wisdom? (**प्रज्ञा**, *prajñā*.) Curiosity? (**जिज्ञासा**, *jijñāsā*.) Notices? (**उपलक्षयति**, *upalakṣayati*.) A conclusion? (**निष्कर्षः**, *niṣkarṣaḥ*.) A review? (**समीक्षा**, *samīkṣā*.) A calculation? (**गणना**, *gaṇanā*.) Considers? (**विचारयति**, *vicārayati*.) Ascertains? (**निश्चिनोति**, *niścinoti*.) A possibility? (**सम्भवः**, *sambhavaḥ*.) Thinks likely? (**सम्भावयति**, *sambhāvayati*.) For certain? (**ध्रुवम्**, *dhruvam*.) Swiftly? (**क्षिप्रम्**, *kṣipram*.) Expects? (**अपेक्षते**, *apekṣate*.) A misgiving? (**शंका**, *śaṅkā*.) Conjectures? (**तर्कयति**, *tarkayati*.) Hopes for? (**आशंसते**, *āśaṃsate*.) An inference? (**अनुमानम्**, *anumānam*.) So they say? (**किल**, *kila*.) Luck? (**भाग्यम्**, *bhāgyam*.) Fate? (**दैवम्**, *daivam*.) By accident? (**अकस्मात्**, *akasmāt*.) Comes by? (**उपलभते**, *upalabhate*.) A likelihood? (**सम्भावना**, *sambhāvanā*.) A situation? (**स्थितिः**, *sthitiḥ*.) A state of things? (**अवस्था**, *avasthā*.) Turns into? (**परिणमति**, *pariṇamati*.) Favourable? (**अनुकूलः**, *anukūlaḥ*.) Adverse? (**प्रतिकूलः**, *pratikūlaḥ*.) An option? (**विकल्पः**, *vikalpaḥ*.) Turns back? (**प्रत्यावर्तते**, *pratyāvartate*.) Is late? (**विलम्बते**, *vilambate*.) A time limit? (**अवधिः**, *avadhiḥ*.) Sets about? (**उपक्रमते**, *upakramate*.)
+`;export{t};

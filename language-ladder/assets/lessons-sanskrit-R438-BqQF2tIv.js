@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R440-review-434-440
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 25400
+chapter: 440
+type: review
+headword: (dialogue)
+gloss: a review of the words from Loans and Deposits to Snow and Cold
+concept_tag: REVIEW
+prerequisites: [SA-C434-uttamarnah, SA-C434-adhamarnah, SA-C434-kusidam, SA-C434-niksepah, SA-C434-niryatayati, SA-C435-kapardakah, SA-C435-niskah, SA-C435-dinarah, SA-C435-vinimayah, SA-C435-bhandagaram, SA-C436-abhram, SA-C436-vrstih, SA-C436-pravarsati, SA-C436-klidyati, SA-C436-picchilah, SA-C437-pravrt, SA-C437-asarah, SA-C437-sikarah, SA-C437-binduh, SA-C437-galati, SA-C438-atapah, SA-C438-nidaghah, SA-C438-prakharah, SA-C438-svedah, SA-C438-dipyate, SA-C439-pavanah, SA-C439-prabhanjanah, SA-C439-prabalah, SA-C439-andolayati, SA-C439-mandanilah, SA-C440-himapatah, SA-C440-kantha, SA-C440-viliyate, SA-C440-sankucati, SA-C440-pravarah]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C434-RNA434-01, SA-LEX-C434-RNA434-02, SA-LEX-C434-RNA434-03, SA-LEX-C434-RNA434-04, SA-LEX-C434-RNA434-05, SA-LEX-C435-DINARA435-01, SA-LEX-C435-DINARA435-02, SA-LEX-C435-DINARA435-03, SA-LEX-C435-DINARA435-04, SA-LEX-C435-DINARA435-05, SA-LEX-C436-ABHRA436-01, SA-LEX-C436-ABHRA436-02, SA-LEX-C436-ABHRA436-03, SA-LEX-C436-ABHRA436-04, SA-LEX-C436-ABHRA436-05, SA-LEX-C437-PRAVRSH437-01, SA-LEX-C437-PRAVRSH437-02, SA-LEX-C437-PRAVRSH437-03, SA-LEX-C437-PRAVRSH437-04, SA-LEX-C437-PRAVRSH437-05, SA-LEX-C438-NIDAGHA438-01, SA-LEX-C438-NIDAGHA438-02, SA-LEX-C438-NIDAGHA438-03, SA-LEX-C438-NIDAGHA438-04, SA-LEX-C438-NIDAGHA438-05, SA-LEX-C439-PAVANA439-01, SA-LEX-C439-PAVANA439-02, SA-LEX-C439-PAVANA439-03, SA-LEX-C439-PAVANA439-04, SA-LEX-C439-PAVANA439-05, SA-LEX-C440-HIMA440-01, SA-LEX-C440-HIMA440-02, SA-LEX-C440-HIMA440-03, SA-LEX-C440-HIMA440-04, SA-LEX-C440-HIMA440-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C434-RNA434-01, SA-LEX-C434-RNA434-02, SA-LEX-C434-RNA434-03, SA-LEX-C434-RNA434-04, SA-LEX-C434-RNA434-05, SA-LEX-C435-DINARA435-01, SA-LEX-C435-DINARA435-02, SA-LEX-C435-DINARA435-03, SA-LEX-C435-DINARA435-04, SA-LEX-C435-DINARA435-05, SA-LEX-C436-ABHRA436-01, SA-LEX-C436-ABHRA436-02, SA-LEX-C436-ABHRA436-03, SA-LEX-C436-ABHRA436-04, SA-LEX-C436-ABHRA436-05, SA-LEX-C437-PRAVRSH437-01, SA-LEX-C437-PRAVRSH437-02, SA-LEX-C437-PRAVRSH437-03, SA-LEX-C437-PRAVRSH437-04, SA-LEX-C437-PRAVRSH437-05, SA-LEX-C438-NIDAGHA438-01, SA-LEX-C438-NIDAGHA438-02, SA-LEX-C438-NIDAGHA438-03, SA-LEX-C438-NIDAGHA438-04, SA-LEX-C438-NIDAGHA438-05, SA-LEX-C439-PAVANA439-01, SA-LEX-C439-PAVANA439-02, SA-LEX-C439-PAVANA439-03, SA-LEX-C439-PAVANA439-04, SA-LEX-C439-PAVANA439-05, SA-LEX-C440-HIMA440-01, SA-LEX-C440-HIMA440-02, SA-LEX-C440-HIMA440-03, SA-LEX-C440-HIMA440-04, SA-LEX-C440-HIMA440-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C434-uttamarnah, SA-C434-adhamarnah, SA-C434-kusidam, SA-C434-niksepah, SA-C434-niryatayati, SA-C435-kapardakah, SA-C435-niskah, SA-C435-dinarah, SA-C435-vinimayah, SA-C435-bhandagaram, SA-C436-abhram, SA-C436-vrstih, SA-C436-pravarsati, SA-C436-klidyati, SA-C436-picchilah, SA-C437-pravrt, SA-C437-asarah, SA-C437-sikarah, SA-C437-binduh, SA-C437-galati, SA-C438-atapah, SA-C438-nidaghah, SA-C438-prakharah, SA-C438-svedah, SA-C438-dipyate, SA-C439-pavanah, SA-C439-prabhanjanah, SA-C439-prabalah, SA-C439-andolayati, SA-C439-mandanilah, SA-C440-himapatah, SA-C440-kantha, SA-C440-viliyate, SA-C440-sankucati, SA-C440-pravarah]
+---
+
+# Looking back: from Loans and Deposits to Snow and Cold
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C434-RNA434-01, SA-LEX-C434-RNA434-02] -->
+
+[PAUSE 3s] Say the Sanskrit for a creditor and a debtor.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C434-RNA434-01, SA-LEX-C434-RNA434-02, SA-LEX-C434-RNA434-03, SA-LEX-C434-RNA434-04, SA-LEX-C434-RNA434-05, SA-LEX-C435-DINARA435-01, SA-LEX-C435-DINARA435-02, SA-LEX-C435-DINARA435-03, SA-LEX-C435-DINARA435-04, SA-LEX-C435-DINARA435-05, SA-LEX-C436-ABHRA436-01, SA-LEX-C436-ABHRA436-02, SA-LEX-C436-ABHRA436-03, SA-LEX-C436-ABHRA436-04, SA-LEX-C436-ABHRA436-05, SA-LEX-C437-PRAVRSH437-01, SA-LEX-C437-PRAVRSH437-02, SA-LEX-C437-PRAVRSH437-03, SA-LEX-C437-PRAVRSH437-04, SA-LEX-C437-PRAVRSH437-05, SA-LEX-C438-NIDAGHA438-01, SA-LEX-C438-NIDAGHA438-02, SA-LEX-C438-NIDAGHA438-03, SA-LEX-C438-NIDAGHA438-04, SA-LEX-C438-NIDAGHA438-05, SA-LEX-C439-PAVANA439-01, SA-LEX-C439-PAVANA439-02, SA-LEX-C439-PAVANA439-03, SA-LEX-C439-PAVANA439-04, SA-LEX-C439-PAVANA439-05, SA-LEX-C440-HIMA440-01, SA-LEX-C440-HIMA440-02, SA-LEX-C440-HIMA440-03, SA-LEX-C440-HIMA440-04, SA-LEX-C440-HIMA440-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a creditor, a debtor, money lent at interest, a deposit, pays back]
+- [YOU SAY: a cowrie shell, a gold piece, a dinar, barter, a storehouse]
+- [YOU SAY: a bank of cloud, rainfall, starts to pour, gets soaked, slippery]
+- [YOU SAY: the rainy season, a downpour, drizzle, a drop, drips]
+- [YOU SAY: sunshine, the hot season, scorching, sweat, blazes]
+- [YOU SAY: a breeze, a tempest, violent, sets swaying, a gentle breeze]
+- [YOU SAY: a snowfall, a patched garment, melts, huddles up, a cloak]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C434-RNA434-01, SA-LEX-C434-RNA434-02, SA-LEX-C434-RNA434-03, SA-LEX-C434-RNA434-04, SA-LEX-C434-RNA434-05, SA-LEX-C435-DINARA435-01, SA-LEX-C435-DINARA435-02, SA-LEX-C435-DINARA435-03, SA-LEX-C435-DINARA435-04, SA-LEX-C435-DINARA435-05, SA-LEX-C436-ABHRA436-01, SA-LEX-C436-ABHRA436-02, SA-LEX-C436-ABHRA436-03, SA-LEX-C436-ABHRA436-04, SA-LEX-C436-ABHRA436-05, SA-LEX-C437-PRAVRSH437-01, SA-LEX-C437-PRAVRSH437-02, SA-LEX-C437-PRAVRSH437-03, SA-LEX-C437-PRAVRSH437-04, SA-LEX-C437-PRAVRSH437-05, SA-LEX-C438-NIDAGHA438-01, SA-LEX-C438-NIDAGHA438-02, SA-LEX-C438-NIDAGHA438-03, SA-LEX-C438-NIDAGHA438-04, SA-LEX-C438-NIDAGHA438-05, SA-LEX-C439-PAVANA439-01, SA-LEX-C439-PAVANA439-02, SA-LEX-C439-PAVANA439-03, SA-LEX-C439-PAVANA439-04, SA-LEX-C439-PAVANA439-05, SA-LEX-C440-HIMA440-01, SA-LEX-C440-HIMA440-02, SA-LEX-C440-HIMA440-03, SA-LEX-C440-HIMA440-04, SA-LEX-C440-HIMA440-05] -->
+
+[PAUSE 3s] A creditor? (**उत्तमर्णः**, *uttamarṇaḥ*.) A debtor? (**अधमर्णः**, *adhamarṇaḥ*.) Money lent at interest? (**कुसीदम्**, *kusīdam*.) A deposit? (**निक्षेपः**, *nikṣepaḥ*.) Pays back? (**निर्यातयति**, *niryātayati*.) A cowrie shell? (**कपर्दकः**, *kapardakaḥ*.) A gold piece? (**निष्कः**, *niṣkaḥ*.) A dinar? (**दीनारः**, *dīnāraḥ*.) Barter? (**विनिमयः**, *vinimayaḥ*.) A storehouse? (**भाण्डागारम्**, *bhāṇḍāgāram*.) A bank of cloud? (**अभ्रम्**, *abhram*.) Rainfall? (**वृष्टिः**, *vṛṣṭiḥ*.) Starts to pour? (**प्रवर्षति**, *pravarṣati*.) Gets soaked? (**क्लिद्यति**, *klidyati*.) Slippery? (**पिच्छिलः**, *picchilaḥ*.) The rainy season? (**प्रावृट्**, *prāvṛṭ*.) A downpour? (**आसारः**, *āsāraḥ*.) Drizzle? (**शीकरः**, *śīkaraḥ*.) A drop? (**बिन्दुः**, *binduḥ*.) Drips? (**गलति**, *galati*.) Sunshine? (**आतपः**, *ātapaḥ*.) The hot season? (**निदाघः**, *nidāghaḥ*.) Scorching? (**प्रखरः**, *prakharaḥ*.) Sweat? (**स्वेदः**, *svedaḥ*.) Blazes? (**दीप्यते**, *dīpyate*.) A breeze? (**पवनः**, *pavanaḥ*.) A tempest? (**प्रभञ्जनः**, *prabhañjanaḥ*.) Violent? (**प्रबलः**, *prabalaḥ*.) Sets swaying? (**आन्दोलयति**, *āndolayati*.) A gentle breeze? (**मन्दानिलः**, *mandānilaḥ*.) A snowfall? (**हिमपातः**, *himapātaḥ*.) A patched garment? (**कन्था**, *kanthā*.) Melts? (**विलीयते**, *vilīyate*.) Huddles up? (**संकुचति**, *saṅkucati*.) A cloak? (**प्रावारः**, *prāvāraḥ*.)
+`;export{t};

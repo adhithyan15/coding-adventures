@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R325-review-318-325
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 19040
+chapter: 325
+type: review
+headword: (dialogue)
+gloss: a review of the words from The Army Marches to Weapons of Old
+concept_tag: REVIEW
+prerequisites: [SA-C318-sena, SA-C318-yodhah, SA-C318-yuddham, SA-C318-prayati, SA-C318-yudhyate, SA-C319-vijayah, SA-C319-parajayah, SA-C319-bandi, SA-C319-apasarati, SA-C319-abhibhavati, SA-C320-praja, SA-C320-dasah, SA-C320-viplavah, SA-C320-niskasayati, SA-C320-svatantryam, SA-C321-abhisekah, SA-C321-purohitah, SA-C321-mantrah, SA-C321-abhisincati, SA-C321-uccarayati, SA-C322-purvajah, SA-C322-vamsah, SA-C322-kulam, SA-C322-samsthapayati, SA-C322-pravartayati, SA-C323-stupah, SA-C323-praciram, SA-C323-atitam, SA-C323-utkhanati, SA-C323-aviskaroti, SA-C324-pura, SA-C324-itivrttam, SA-C324-puranam, SA-C324-anusmarati, SA-C324-kirtayati, SA-C325-gada, SA-C325-sulam, SA-C325-tunirah, SA-C325-sarathih, SA-C325-vidhyati]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C318-SENA318-01, SA-LEX-C318-SENA318-02, SA-LEX-C318-SENA318-03, SA-LEX-C318-SENA318-04, SA-LEX-C318-SENA318-05, SA-LEX-C319-VIJAYA319-01, SA-LEX-C319-VIJAYA319-02, SA-LEX-C319-VIJAYA319-03, SA-LEX-C319-VIJAYA319-04, SA-LEX-C319-VIJAYA319-05, SA-LEX-C320-VIPLAVA320-01, SA-LEX-C320-VIPLAVA320-02, SA-LEX-C320-VIPLAVA320-03, SA-LEX-C320-VIPLAVA320-04, SA-LEX-C320-VIPLAVA320-05, SA-LEX-C321-ABHISHEKA321-01, SA-LEX-C321-ABHISHEKA321-02, SA-LEX-C321-ABHISHEKA321-03, SA-LEX-C321-ABHISHEKA321-04, SA-LEX-C321-ABHISHEKA321-05, SA-LEX-C322-PURVAJA322-01, SA-LEX-C322-PURVAJA322-02, SA-LEX-C322-PURVAJA322-03, SA-LEX-C322-PURVAJA322-04, SA-LEX-C322-PURVAJA322-05, SA-LEX-C323-STUPA323-01, SA-LEX-C323-STUPA323-02, SA-LEX-C323-STUPA323-03, SA-LEX-C323-STUPA323-04, SA-LEX-C323-STUPA323-05, SA-LEX-C324-PURA324-01, SA-LEX-C324-PURA324-02, SA-LEX-C324-PURA324-03, SA-LEX-C324-PURA324-04, SA-LEX-C324-PURA324-05, SA-LEX-C325-GADA325-01, SA-LEX-C325-GADA325-02, SA-LEX-C325-GADA325-03, SA-LEX-C325-GADA325-04, SA-LEX-C325-GADA325-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C318-SENA318-01, SA-LEX-C318-SENA318-02, SA-LEX-C318-SENA318-03, SA-LEX-C318-SENA318-04, SA-LEX-C318-SENA318-05, SA-LEX-C319-VIJAYA319-01, SA-LEX-C319-VIJAYA319-02, SA-LEX-C319-VIJAYA319-03, SA-LEX-C319-VIJAYA319-04, SA-LEX-C319-VIJAYA319-05, SA-LEX-C320-VIPLAVA320-01, SA-LEX-C320-VIPLAVA320-02, SA-LEX-C320-VIPLAVA320-03, SA-LEX-C320-VIPLAVA320-04, SA-LEX-C320-VIPLAVA320-05, SA-LEX-C321-ABHISHEKA321-01, SA-LEX-C321-ABHISHEKA321-02, SA-LEX-C321-ABHISHEKA321-03, SA-LEX-C321-ABHISHEKA321-04, SA-LEX-C321-ABHISHEKA321-05, SA-LEX-C322-PURVAJA322-01, SA-LEX-C322-PURVAJA322-02, SA-LEX-C322-PURVAJA322-03, SA-LEX-C322-PURVAJA322-04, SA-LEX-C322-PURVAJA322-05, SA-LEX-C323-STUPA323-01, SA-LEX-C323-STUPA323-02, SA-LEX-C323-STUPA323-03, SA-LEX-C323-STUPA323-04, SA-LEX-C323-STUPA323-05, SA-LEX-C324-PURA324-01, SA-LEX-C324-PURA324-02, SA-LEX-C324-PURA324-03, SA-LEX-C324-PURA324-04, SA-LEX-C324-PURA324-05, SA-LEX-C325-GADA325-01, SA-LEX-C325-GADA325-02, SA-LEX-C325-GADA325-03, SA-LEX-C325-GADA325-04, SA-LEX-C325-GADA325-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C318-sena, SA-C318-yodhah, SA-C318-yuddham, SA-C318-prayati, SA-C318-yudhyate, SA-C319-vijayah, SA-C319-parajayah, SA-C319-bandi, SA-C319-apasarati, SA-C319-abhibhavati, SA-C320-praja, SA-C320-dasah, SA-C320-viplavah, SA-C320-niskasayati, SA-C320-svatantryam, SA-C321-abhisekah, SA-C321-purohitah, SA-C321-mantrah, SA-C321-abhisincati, SA-C321-uccarayati, SA-C322-purvajah, SA-C322-vamsah, SA-C322-kulam, SA-C322-samsthapayati, SA-C322-pravartayati, SA-C323-stupah, SA-C323-praciram, SA-C323-atitam, SA-C323-utkhanati, SA-C323-aviskaroti, SA-C324-pura, SA-C324-itivrttam, SA-C324-puranam, SA-C324-anusmarati, SA-C324-kirtayati, SA-C325-gada, SA-C325-sulam, SA-C325-tunirah, SA-C325-sarathih, SA-C325-vidhyati]
+---
+
+# Looking back: from The Army Marches to Weapons of Old
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C318-SENA318-01, SA-LEX-C318-SENA318-02] -->
+
+[PAUSE 3s] Say the Sanskrit for an army and a warrior.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C318-SENA318-01, SA-LEX-C318-SENA318-02, SA-LEX-C318-SENA318-03, SA-LEX-C318-SENA318-04, SA-LEX-C318-SENA318-05, SA-LEX-C319-VIJAYA319-01, SA-LEX-C319-VIJAYA319-02, SA-LEX-C319-VIJAYA319-03, SA-LEX-C319-VIJAYA319-04, SA-LEX-C319-VIJAYA319-05, SA-LEX-C320-VIPLAVA320-01, SA-LEX-C320-VIPLAVA320-02, SA-LEX-C320-VIPLAVA320-03, SA-LEX-C320-VIPLAVA320-04, SA-LEX-C320-VIPLAVA320-05, SA-LEX-C321-ABHISHEKA321-01, SA-LEX-C321-ABHISHEKA321-02, SA-LEX-C321-ABHISHEKA321-03, SA-LEX-C321-ABHISHEKA321-04, SA-LEX-C321-ABHISHEKA321-05, SA-LEX-C322-PURVAJA322-01, SA-LEX-C322-PURVAJA322-02, SA-LEX-C322-PURVAJA322-03, SA-LEX-C322-PURVAJA322-04, SA-LEX-C322-PURVAJA322-05, SA-LEX-C323-STUPA323-01, SA-LEX-C323-STUPA323-02, SA-LEX-C323-STUPA323-03, SA-LEX-C323-STUPA323-04, SA-LEX-C323-STUPA323-05, SA-LEX-C324-PURA324-01, SA-LEX-C324-PURA324-02, SA-LEX-C324-PURA324-03, SA-LEX-C324-PURA324-04, SA-LEX-C324-PURA324-05, SA-LEX-C325-GADA325-01, SA-LEX-C325-GADA325-02, SA-LEX-C325-GADA325-03, SA-LEX-C325-GADA325-04, SA-LEX-C325-GADA325-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an army, a warrior, a war, sets out, fights]
+- [YOU SAY: a victory, a defeat, a captive, retreats, overpowers]
+- [YOU SAY: the subjects, a slave, a revolt, drives out, freedom]
+- [YOU SAY: a coronation, a family priest, a sacred verse, anoints, pronounces]
+- [YOU SAY: an ancestor, a family line, a clan, founds, introduces]
+- [YOU SAY: a stupa, a rampart, the past, digs up, brings to light]
+- [YOU SAY: long ago, a chronicle, an ancient tale, calls to mind, tells of]
+- [YOU SAY: a mace, a spear, a quiver, a charioteer, pierces]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C318-SENA318-01, SA-LEX-C318-SENA318-02, SA-LEX-C318-SENA318-03, SA-LEX-C318-SENA318-04, SA-LEX-C318-SENA318-05, SA-LEX-C319-VIJAYA319-01, SA-LEX-C319-VIJAYA319-02, SA-LEX-C319-VIJAYA319-03, SA-LEX-C319-VIJAYA319-04, SA-LEX-C319-VIJAYA319-05, SA-LEX-C320-VIPLAVA320-01, SA-LEX-C320-VIPLAVA320-02, SA-LEX-C320-VIPLAVA320-03, SA-LEX-C320-VIPLAVA320-04, SA-LEX-C320-VIPLAVA320-05, SA-LEX-C321-ABHISHEKA321-01, SA-LEX-C321-ABHISHEKA321-02, SA-LEX-C321-ABHISHEKA321-03, SA-LEX-C321-ABHISHEKA321-04, SA-LEX-C321-ABHISHEKA321-05, SA-LEX-C322-PURVAJA322-01, SA-LEX-C322-PURVAJA322-02, SA-LEX-C322-PURVAJA322-03, SA-LEX-C322-PURVAJA322-04, SA-LEX-C322-PURVAJA322-05, SA-LEX-C323-STUPA323-01, SA-LEX-C323-STUPA323-02, SA-LEX-C323-STUPA323-03, SA-LEX-C323-STUPA323-04, SA-LEX-C323-STUPA323-05, SA-LEX-C324-PURA324-01, SA-LEX-C324-PURA324-02, SA-LEX-C324-PURA324-03, SA-LEX-C324-PURA324-04, SA-LEX-C324-PURA324-05, SA-LEX-C325-GADA325-01, SA-LEX-C325-GADA325-02, SA-LEX-C325-GADA325-03, SA-LEX-C325-GADA325-04, SA-LEX-C325-GADA325-05] -->
+
+[PAUSE 3s] An army? (**सेना**, *senā*.) A warrior? (**योधः**, *yodhaḥ*.) A war? (**युद्धम्**, *yuddham*.) Sets out? (**प्रयाति**, *prayāti*.) Fights? (**युध्यते**, *yudhyate*.) A victory? (**विजयः**, *vijayaḥ*.) A defeat? (**पराजयः**, *parājayaḥ*.) A captive? (**बन्दी**, *bandī*.) Retreats? (**अपसरति**, *apasarati*.) Overpowers? (**अभिभवति**, *abhibhavati*.) The subjects? (**प्रजा**, *prajā*.) A slave? (**दासः**, *dāsaḥ*.) A revolt? (**विप्लवः**, *viplavaḥ*.) Drives out? (**निष्कासयति**, *niṣkāsayati*.) Freedom? (**स्वातन्त्र्यम्**, *svātantryam*.) A coronation? (**अभिषेकः**, *abhiṣekaḥ*.) A family priest? (**पुरोहितः**, *purohitaḥ*.) A sacred verse? (**मन्त्रः**, *mantraḥ*.) Anoints? (**अभिषिञ्चति**, *abhiṣiñcati*.) Pronounces? (**उच्चारयति**, *uccārayati*.) An ancestor? (**पूर्वजः**, *pūrvajaḥ*.) A family line? (**वंशः**, *vaṃśaḥ*.) A clan? (**कुलम्**, *kulam*.) Founds? (**संस्थापयति**, *saṃsthāpayati*.) Introduces? (**प्रवर्तयति**, *pravartayati*.) A stupa? (**स्तूपः**, *stūpaḥ*.) A rampart? (**प्राचीरम्**, *prācīram*.) The past? (**अतीतम्**, *atītam*.) Digs up? (**उत्खनति**, *utkhanati*.) Brings to light? (**आविष्करोति**, *āviṣkaroti*.) Long ago? (**पुरा**, *purā*.) A chronicle? (**इतिवृत्तम्**, *itivṛttam*.) An ancient tale? (**पुराणम्**, *purāṇam*.) Calls to mind? (**अनुस्मरति**, *anusmarati*.) Tells of? (**कीर्तयति**, *kīrtayati*.) A mace? (**गदा**, *gadā*.) A spear? (**शूलम्**, *śūlam*.) A quiver? (**तूणीरः**, *tūṇīraḥ*.) A charioteer? (**सारथिः**, *sārathiḥ*.) Pierces? (**विध्यति**, *vidhyati*.)
+`;export{t};

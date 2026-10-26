@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R363-review-356-363
+spine_node: SPINE-GIVE-REASONS
+sequence: 21220
+chapter: 363
+type: review
+headword: (dialogue)
+gloss: a review of the words from Notices from an Office to Studying a Subject
+concept_tag: REVIEW
+prerequisites: [SA-C356-vijnapayati, SA-C356-niyojayati, SA-C356-anumodate, SA-C356-vibhagah, SA-C356-prastavah, SA-C357-samitih, SA-C357-parisad, SA-C357-pramukhah, SA-C357-sacivah, SA-C357-nirdisati, SA-C358-acarah, SA-C358-silam, SA-C358-sajjanah, SA-C358-sanmargah, SA-C358-adriyate, SA-C359-tyagah, SA-C359-paropakarah, SA-C359-svarthah, SA-C359-trsna, SA-C359-samarpayati, SA-C360-yasah, SA-C360-pratistha, SA-C360-ahankarah, SA-C360-apamanah, SA-C360-pratarayati, SA-C361-sraddha, SA-C361-nistha, SA-C361-dambhah, SA-C361-krtaghnah, SA-C361-pratisrnoti, SA-C362-anusandhanam, SA-C362-prayogah, SA-C362-anvesanam, SA-C362-aveksate, SA-C362-udbhavayati, SA-C363-adhyayanam, SA-C363-visayah, SA-C363-sastram, SA-C363-adhite, SA-C363-abhyasyati]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C356-VIJNAPANA356-01, SA-LEX-C356-VIJNAPANA356-02, SA-LEX-C356-VIJNAPANA356-03, SA-LEX-C356-VIJNAPANA356-04, SA-LEX-C356-VIJNAPANA356-05, SA-LEX-C357-SAMITI357-01, SA-LEX-C357-SAMITI357-02, SA-LEX-C357-SAMITI357-03, SA-LEX-C357-SAMITI357-04, SA-LEX-C357-SAMITI357-05, SA-LEX-C358-ACHARA358-01, SA-LEX-C358-ACHARA358-02, SA-LEX-C358-ACHARA358-03, SA-LEX-C358-ACHARA358-04, SA-LEX-C358-ACHARA358-05, SA-LEX-C359-TYAGA359-01, SA-LEX-C359-TYAGA359-02, SA-LEX-C359-TYAGA359-03, SA-LEX-C359-TYAGA359-04, SA-LEX-C359-TYAGA359-05, SA-LEX-C360-YASHAS360-01, SA-LEX-C360-YASHAS360-02, SA-LEX-C360-YASHAS360-03, SA-LEX-C360-YASHAS360-04, SA-LEX-C360-YASHAS360-05, SA-LEX-C361-SHRADDHA361-01, SA-LEX-C361-SHRADDHA361-02, SA-LEX-C361-SHRADDHA361-03, SA-LEX-C361-SHRADDHA361-04, SA-LEX-C361-SHRADDHA361-05, SA-LEX-C362-ANUSANDHANA362-01, SA-LEX-C362-ANUSANDHANA362-02, SA-LEX-C362-ANUSANDHANA362-03, SA-LEX-C362-ANUSANDHANA362-04, SA-LEX-C362-ANUSANDHANA362-05, SA-LEX-C363-ADHYAYANA363-01, SA-LEX-C363-ADHYAYANA363-02, SA-LEX-C363-ADHYAYANA363-03, SA-LEX-C363-ADHYAYANA363-04, SA-LEX-C363-ADHYAYANA363-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C356-VIJNAPANA356-01, SA-LEX-C356-VIJNAPANA356-02, SA-LEX-C356-VIJNAPANA356-03, SA-LEX-C356-VIJNAPANA356-04, SA-LEX-C356-VIJNAPANA356-05, SA-LEX-C357-SAMITI357-01, SA-LEX-C357-SAMITI357-02, SA-LEX-C357-SAMITI357-03, SA-LEX-C357-SAMITI357-04, SA-LEX-C357-SAMITI357-05, SA-LEX-C358-ACHARA358-01, SA-LEX-C358-ACHARA358-02, SA-LEX-C358-ACHARA358-03, SA-LEX-C358-ACHARA358-04, SA-LEX-C358-ACHARA358-05, SA-LEX-C359-TYAGA359-01, SA-LEX-C359-TYAGA359-02, SA-LEX-C359-TYAGA359-03, SA-LEX-C359-TYAGA359-04, SA-LEX-C359-TYAGA359-05, SA-LEX-C360-YASHAS360-01, SA-LEX-C360-YASHAS360-02, SA-LEX-C360-YASHAS360-03, SA-LEX-C360-YASHAS360-04, SA-LEX-C360-YASHAS360-05, SA-LEX-C361-SHRADDHA361-01, SA-LEX-C361-SHRADDHA361-02, SA-LEX-C361-SHRADDHA361-03, SA-LEX-C361-SHRADDHA361-04, SA-LEX-C361-SHRADDHA361-05, SA-LEX-C362-ANUSANDHANA362-01, SA-LEX-C362-ANUSANDHANA362-02, SA-LEX-C362-ANUSANDHANA362-03, SA-LEX-C362-ANUSANDHANA362-04, SA-LEX-C362-ANUSANDHANA362-05, SA-LEX-C363-ADHYAYANA363-01, SA-LEX-C363-ADHYAYANA363-02, SA-LEX-C363-ADHYAYANA363-03, SA-LEX-C363-ADHYAYANA363-04, SA-LEX-C363-ADHYAYANA363-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C356-vijnapayati, SA-C356-niyojayati, SA-C356-anumodate, SA-C356-vibhagah, SA-C356-prastavah, SA-C357-samitih, SA-C357-parisad, SA-C357-pramukhah, SA-C357-sacivah, SA-C357-nirdisati, SA-C358-acarah, SA-C358-silam, SA-C358-sajjanah, SA-C358-sanmargah, SA-C358-adriyate, SA-C359-tyagah, SA-C359-paropakarah, SA-C359-svarthah, SA-C359-trsna, SA-C359-samarpayati, SA-C360-yasah, SA-C360-pratistha, SA-C360-ahankarah, SA-C360-apamanah, SA-C360-pratarayati, SA-C361-sraddha, SA-C361-nistha, SA-C361-dambhah, SA-C361-krtaghnah, SA-C361-pratisrnoti, SA-C362-anusandhanam, SA-C362-prayogah, SA-C362-anvesanam, SA-C362-aveksate, SA-C362-udbhavayati, SA-C363-adhyayanam, SA-C363-visayah, SA-C363-sastram, SA-C363-adhite, SA-C363-abhyasyati]
+---
+
+# Looking back: from Notices from an Office to Studying a Subject
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C356-VIJNAPANA356-01, SA-LEX-C356-VIJNAPANA356-02] -->
+
+[PAUSE 3s] Say the Sanskrit for notifies and appoints.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C356-VIJNAPANA356-01, SA-LEX-C356-VIJNAPANA356-02, SA-LEX-C356-VIJNAPANA356-03, SA-LEX-C356-VIJNAPANA356-04, SA-LEX-C356-VIJNAPANA356-05, SA-LEX-C357-SAMITI357-01, SA-LEX-C357-SAMITI357-02, SA-LEX-C357-SAMITI357-03, SA-LEX-C357-SAMITI357-04, SA-LEX-C357-SAMITI357-05, SA-LEX-C358-ACHARA358-01, SA-LEX-C358-ACHARA358-02, SA-LEX-C358-ACHARA358-03, SA-LEX-C358-ACHARA358-04, SA-LEX-C358-ACHARA358-05, SA-LEX-C359-TYAGA359-01, SA-LEX-C359-TYAGA359-02, SA-LEX-C359-TYAGA359-03, SA-LEX-C359-TYAGA359-04, SA-LEX-C359-TYAGA359-05, SA-LEX-C360-YASHAS360-01, SA-LEX-C360-YASHAS360-02, SA-LEX-C360-YASHAS360-03, SA-LEX-C360-YASHAS360-04, SA-LEX-C360-YASHAS360-05, SA-LEX-C361-SHRADDHA361-01, SA-LEX-C361-SHRADDHA361-02, SA-LEX-C361-SHRADDHA361-03, SA-LEX-C361-SHRADDHA361-04, SA-LEX-C361-SHRADDHA361-05, SA-LEX-C362-ANUSANDHANA362-01, SA-LEX-C362-ANUSANDHANA362-02, SA-LEX-C362-ANUSANDHANA362-03, SA-LEX-C362-ANUSANDHANA362-04, SA-LEX-C362-ANUSANDHANA362-05, SA-LEX-C363-ADHYAYANA363-01, SA-LEX-C363-ADHYAYANA363-02, SA-LEX-C363-ADHYAYANA363-03, SA-LEX-C363-ADHYAYANA363-04, SA-LEX-C363-ADHYAYANA363-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: notifies, appoints, approves of, a department, a proposal]
+- [YOU SAY: a committee, a council, foremost, a secretary, directs]
+- [YOU SAY: conduct, character, a good person, the right path, holds in regard]
+- [YOU SAY: renunciation, helping others, self-interest, craving, dedicates]
+- [YOU SAY: glory, standing, arrogance, an insult, misleads]
+- [YOU SAY: faith, steadfastness, hypocrisy, ungrateful, gives one's word]
+- [YOU SAY: research, an experiment, an inquiry, inspects, devises]
+- [YOU SAY: studying, a topic, a branch of learning, studies, practises]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C356-VIJNAPANA356-01, SA-LEX-C356-VIJNAPANA356-02, SA-LEX-C356-VIJNAPANA356-03, SA-LEX-C356-VIJNAPANA356-04, SA-LEX-C356-VIJNAPANA356-05, SA-LEX-C357-SAMITI357-01, SA-LEX-C357-SAMITI357-02, SA-LEX-C357-SAMITI357-03, SA-LEX-C357-SAMITI357-04, SA-LEX-C357-SAMITI357-05, SA-LEX-C358-ACHARA358-01, SA-LEX-C358-ACHARA358-02, SA-LEX-C358-ACHARA358-03, SA-LEX-C358-ACHARA358-04, SA-LEX-C358-ACHARA358-05, SA-LEX-C359-TYAGA359-01, SA-LEX-C359-TYAGA359-02, SA-LEX-C359-TYAGA359-03, SA-LEX-C359-TYAGA359-04, SA-LEX-C359-TYAGA359-05, SA-LEX-C360-YASHAS360-01, SA-LEX-C360-YASHAS360-02, SA-LEX-C360-YASHAS360-03, SA-LEX-C360-YASHAS360-04, SA-LEX-C360-YASHAS360-05, SA-LEX-C361-SHRADDHA361-01, SA-LEX-C361-SHRADDHA361-02, SA-LEX-C361-SHRADDHA361-03, SA-LEX-C361-SHRADDHA361-04, SA-LEX-C361-SHRADDHA361-05, SA-LEX-C362-ANUSANDHANA362-01, SA-LEX-C362-ANUSANDHANA362-02, SA-LEX-C362-ANUSANDHANA362-03, SA-LEX-C362-ANUSANDHANA362-04, SA-LEX-C362-ANUSANDHANA362-05, SA-LEX-C363-ADHYAYANA363-01, SA-LEX-C363-ADHYAYANA363-02, SA-LEX-C363-ADHYAYANA363-03, SA-LEX-C363-ADHYAYANA363-04, SA-LEX-C363-ADHYAYANA363-05] -->
+
+[PAUSE 3s] Notifies? (**विज्ञापयति**, *vijñāpayati*.) Appoints? (**नियोजयति**, *niyojayati*.) Approves of? (**अनुमोदते**, *anumodate*.) A department? (**विभागः**, *vibhāgaḥ*.) A proposal? (**प्रस्तावः**, *prastāvaḥ*.) A committee? (**समितिः**, *samitiḥ*.) A council? (**परिषद्**, *pariṣad*.) Foremost? (**प्रमुखः**, *pramukhaḥ*.) A secretary? (**सचिवः**, *sacivaḥ*.) Directs? (**निर्दिशति**, *nirdiśati*.) Conduct? (**आचारः**, *ācāraḥ*.) Character? (**शीलम्**, *śīlam*.) A good person? (**सज्जनः**, *sajjanaḥ*.) The right path? (**सन्मार्गः**, *sanmārgaḥ*.) Holds in regard? (**आद्रियते**, *ādriyate*.) Renunciation? (**त्यागः**, *tyāgaḥ*.) Helping others? (**परोपकारः**, *paropakāraḥ*.) Self-interest? (**स्वार्थः**, *svārthaḥ*.) Craving? (**तृष्णा**, *tṛṣṇā*.) Dedicates? (**समर्पयति**, *samarpayati*.) Glory? (**यशः**, *yaśaḥ*.) Standing? (**प्रतिष्ठा**, *pratiṣṭhā*.) Arrogance? (**अहंकारः**, *ahaṅkāraḥ*.) An insult? (**अपमानः**, *apamānaḥ*.) Misleads? (**प्रतारयति**, *pratārayati*.) Faith? (**श्रद्धा**, *śraddhā*.) Steadfastness? (**निष्ठा**, *niṣṭhā*.) Hypocrisy? (**दम्भः**, *dambhaḥ*.) Ungrateful? (**कृतघ्नः**, *kṛtaghnaḥ*.) Gives one's word? (**प्रतिशृणोति**, *pratiśṛṇoti*.) Research? (**अनुसन्धानम्**, *anusandhānam*.) An experiment? (**प्रयोगः**, *prayogaḥ*.) An inquiry? (**अन्वेषणम्**, *anveṣaṇam*.) Inspects? (**अवेक्षते**, *avekṣate*.) Devises? (**उद्भावयति**, *udbhāvayati*.) Studying? (**अध्ययनम्**, *adhyayanam*.) A topic? (**विषयः**, *viṣayaḥ*.) A branch of learning? (**शास्त्रम्**, *śāstram*.) Studies? (**अधीते**, *adhīte*.) Practises? (**अभ्यस्यति**, *abhyasyati*.)
+`;export{t};

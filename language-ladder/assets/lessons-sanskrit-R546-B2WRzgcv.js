@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R548-review-542-548
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 31400
+chapter: 548
+type: review
+headword: (dialogue)
+gloss: a review of the words from Making Up One's Mind to Fears and Reassurance
+concept_tag: REVIEW
+prerequisites: [SA-C542-svikarah, SA-C542-avadharayati, SA-C542-utkrstah, SA-C542-rucirah, SA-C542-tatasthah, SA-C543-sveccha, SA-C543-vivasah, SA-C543-hathah, SA-C543-agrahah, SA-C543-svayam, SA-C544-parasparam, SA-C544-yugapat, SA-C544-mithah, SA-C544-prthak, SA-C544-samprati, SA-C545-anukramah, SA-C545-yathakramam, SA-C545-rte, SA-C545-adau, SA-C545-alocayati, SA-C546-santustah, SA-C546-nispannah, SA-C546-udbhavati, SA-C546-praptih, SA-C546-vipakah, SA-C547-utthanam, SA-C547-avanatih, SA-C547-patanam, SA-C547-arohah, SA-C547-ucchalati, SA-C548-visvasayati, SA-C548-durdasa, SA-C548-santvana, SA-C548-akulah, SA-C548-saranam]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C542-UTKRSTA542-01, SA-LEX-C542-UTKRSTA542-02, SA-LEX-C542-UTKRSTA542-03, SA-LEX-C542-UTKRSTA542-04, SA-LEX-C542-UTKRSTA542-05, SA-LEX-C543-HATHA543-01, SA-LEX-C543-HATHA543-02, SA-LEX-C543-HATHA543-03, SA-LEX-C543-HATHA543-04, SA-LEX-C543-HATHA543-05, SA-LEX-C544-PARASPARA544-01, SA-LEX-C544-PARASPARA544-02, SA-LEX-C544-PARASPARA544-03, SA-LEX-C544-PARASPARA544-04, SA-LEX-C544-PARASPARA544-05, SA-LEX-C545-ANUKRAMA545-01, SA-LEX-C545-ANUKRAMA545-02, SA-LEX-C545-ANUKRAMA545-03, SA-LEX-C545-ANUKRAMA545-04, SA-LEX-C545-ANUKRAMA545-05, SA-LEX-C546-VIPAKA546-01, SA-LEX-C546-VIPAKA546-02, SA-LEX-C546-VIPAKA546-03, SA-LEX-C546-VIPAKA546-04, SA-LEX-C546-VIPAKA546-05, SA-LEX-C547-UTTHANA547-01, SA-LEX-C547-UTTHANA547-02, SA-LEX-C547-UTTHANA547-03, SA-LEX-C547-UTTHANA547-04, SA-LEX-C547-UTTHANA547-05, SA-LEX-C548-SANTVANA548-01, SA-LEX-C548-SANTVANA548-02, SA-LEX-C548-SANTVANA548-03, SA-LEX-C548-SANTVANA548-04, SA-LEX-C548-SANTVANA548-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C542-UTKRSTA542-01, SA-LEX-C542-UTKRSTA542-02, SA-LEX-C542-UTKRSTA542-03, SA-LEX-C542-UTKRSTA542-04, SA-LEX-C542-UTKRSTA542-05, SA-LEX-C543-HATHA543-01, SA-LEX-C543-HATHA543-02, SA-LEX-C543-HATHA543-03, SA-LEX-C543-HATHA543-04, SA-LEX-C543-HATHA543-05, SA-LEX-C544-PARASPARA544-01, SA-LEX-C544-PARASPARA544-02, SA-LEX-C544-PARASPARA544-03, SA-LEX-C544-PARASPARA544-04, SA-LEX-C544-PARASPARA544-05, SA-LEX-C545-ANUKRAMA545-01, SA-LEX-C545-ANUKRAMA545-02, SA-LEX-C545-ANUKRAMA545-03, SA-LEX-C545-ANUKRAMA545-04, SA-LEX-C545-ANUKRAMA545-05, SA-LEX-C546-VIPAKA546-01, SA-LEX-C546-VIPAKA546-02, SA-LEX-C546-VIPAKA546-03, SA-LEX-C546-VIPAKA546-04, SA-LEX-C546-VIPAKA546-05, SA-LEX-C547-UTTHANA547-01, SA-LEX-C547-UTTHANA547-02, SA-LEX-C547-UTTHANA547-03, SA-LEX-C547-UTTHANA547-04, SA-LEX-C547-UTTHANA547-05, SA-LEX-C548-SANTVANA548-01, SA-LEX-C548-SANTVANA548-02, SA-LEX-C548-SANTVANA548-03, SA-LEX-C548-SANTVANA548-04, SA-LEX-C548-SANTVANA548-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C542-svikarah, SA-C542-avadharayati, SA-C542-utkrstah, SA-C542-rucirah, SA-C542-tatasthah, SA-C543-sveccha, SA-C543-vivasah, SA-C543-hathah, SA-C543-agrahah, SA-C543-svayam, SA-C544-parasparam, SA-C544-yugapat, SA-C544-mithah, SA-C544-prthak, SA-C544-samprati, SA-C545-anukramah, SA-C545-yathakramam, SA-C545-rte, SA-C545-adau, SA-C545-alocayati, SA-C546-santustah, SA-C546-nispannah, SA-C546-udbhavati, SA-C546-praptih, SA-C546-vipakah, SA-C547-utthanam, SA-C547-avanatih, SA-C547-patanam, SA-C547-arohah, SA-C547-ucchalati, SA-C548-visvasayati, SA-C548-durdasa, SA-C548-santvana, SA-C548-akulah, SA-C548-saranam]
+---
+
+# Looking back: from Making Up One's Mind to Fears and Reassurance
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C542-UTKRSTA542-01, SA-LEX-C542-UTKRSTA542-02] -->
+
+[PAUSE 3s] Say the Sanskrit for acceptance and makes sure.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C542-UTKRSTA542-01, SA-LEX-C542-UTKRSTA542-02, SA-LEX-C542-UTKRSTA542-03, SA-LEX-C542-UTKRSTA542-04, SA-LEX-C542-UTKRSTA542-05, SA-LEX-C543-HATHA543-01, SA-LEX-C543-HATHA543-02, SA-LEX-C543-HATHA543-03, SA-LEX-C543-HATHA543-04, SA-LEX-C543-HATHA543-05, SA-LEX-C544-PARASPARA544-01, SA-LEX-C544-PARASPARA544-02, SA-LEX-C544-PARASPARA544-03, SA-LEX-C544-PARASPARA544-04, SA-LEX-C544-PARASPARA544-05, SA-LEX-C545-ANUKRAMA545-01, SA-LEX-C545-ANUKRAMA545-02, SA-LEX-C545-ANUKRAMA545-03, SA-LEX-C545-ANUKRAMA545-04, SA-LEX-C545-ANUKRAMA545-05, SA-LEX-C546-VIPAKA546-01, SA-LEX-C546-VIPAKA546-02, SA-LEX-C546-VIPAKA546-03, SA-LEX-C546-VIPAKA546-04, SA-LEX-C546-VIPAKA546-05, SA-LEX-C547-UTTHANA547-01, SA-LEX-C547-UTTHANA547-02, SA-LEX-C547-UTTHANA547-03, SA-LEX-C547-UTTHANA547-04, SA-LEX-C547-UTTHANA547-05, SA-LEX-C548-SANTVANA548-01, SA-LEX-C548-SANTVANA548-02, SA-LEX-C548-SANTVANA548-03, SA-LEX-C548-SANTVANA548-04, SA-LEX-C548-SANTVANA548-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: acceptance, makes sure, excellent, pleasing, neutral]
+- [YOU SAY: free will, helpless, obstinacy, insistence, by oneself]
+- [YOU SAY: each other, at the same time, together, separately, at present]
+- [YOU SAY: a sequence, in due order, except, at first, reviews]
+- [YOU SAY: satisfied, completed, arises, an attainment, a consequence]
+- [YOU SAY: a rise, a decline, a fall, a climb, springs up]
+- [YOU SAY: inspires confidence, a sorry plight, consolation, flustered, a refuge]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C542-UTKRSTA542-01, SA-LEX-C542-UTKRSTA542-02, SA-LEX-C542-UTKRSTA542-03, SA-LEX-C542-UTKRSTA542-04, SA-LEX-C542-UTKRSTA542-05, SA-LEX-C543-HATHA543-01, SA-LEX-C543-HATHA543-02, SA-LEX-C543-HATHA543-03, SA-LEX-C543-HATHA543-04, SA-LEX-C543-HATHA543-05, SA-LEX-C544-PARASPARA544-01, SA-LEX-C544-PARASPARA544-02, SA-LEX-C544-PARASPARA544-03, SA-LEX-C544-PARASPARA544-04, SA-LEX-C544-PARASPARA544-05, SA-LEX-C545-ANUKRAMA545-01, SA-LEX-C545-ANUKRAMA545-02, SA-LEX-C545-ANUKRAMA545-03, SA-LEX-C545-ANUKRAMA545-04, SA-LEX-C545-ANUKRAMA545-05, SA-LEX-C546-VIPAKA546-01, SA-LEX-C546-VIPAKA546-02, SA-LEX-C546-VIPAKA546-03, SA-LEX-C546-VIPAKA546-04, SA-LEX-C546-VIPAKA546-05, SA-LEX-C547-UTTHANA547-01, SA-LEX-C547-UTTHANA547-02, SA-LEX-C547-UTTHANA547-03, SA-LEX-C547-UTTHANA547-04, SA-LEX-C547-UTTHANA547-05, SA-LEX-C548-SANTVANA548-01, SA-LEX-C548-SANTVANA548-02, SA-LEX-C548-SANTVANA548-03, SA-LEX-C548-SANTVANA548-04, SA-LEX-C548-SANTVANA548-05] -->
+
+[PAUSE 3s] Acceptance? (**स्वीकारः**, *svīkāraḥ*.) Makes sure? (**अवधारयति**, *avadhārayati*.) Excellent? (**उत्कृष्टः**, *utkṛṣṭaḥ*.) Pleasing? (**रुचिरः**, *ruciraḥ*.) Neutral? (**तटस्थः**, *taṭasthaḥ*.) Free will? (**स्वेच्छा**, *svecchā*.) Helpless? (**विवशः**, *vivaśaḥ*.) Obstinacy? (**हठः**, *haṭhaḥ*.) Insistence? (**आग्रहः**, *āgrahaḥ*.) By oneself? (**स्वयम्**, *svayam*.) Each other? (**परस्परम्**, *parasparam*.) At the same time? (**युगपत्**, *yugapat*.) Together? (**मिथः**, *mithaḥ*.) Separately? (**पृथक्**, *pṛthak*.) At present? (**सम्प्रति**, *samprati*.) A sequence? (**अनुक्रमः**, *anukramaḥ*.) In due order? (**यथाक्रमम्**, *yathākramam*.) Except? (**ऋते**, *ṛte*.) At first? (**आदौ**, *ādau*.) Reviews? (**आलोचयति**, *ālocayati*.) Satisfied? (**सन्तुष्टः**, *santuṣṭaḥ*.) Completed? (**निष्पन्नः**, *niṣpannaḥ*.) Arises? (**उद्भवति**, *udbhavati*.) An attainment? (**प्राप्तिः**, *prāptiḥ*.) A consequence? (**विपाकः**, *vipākaḥ*.) A rise? (**उत्थानम्**, *utthānam*.) A decline? (**अवनतिः**, *avanatiḥ*.) A fall? (**पतनम्**, *patanam*.) A climb? (**आरोहः**, *ārohaḥ*.) Springs up? (**उच्छलति**, *ucchalati*.) Inspires confidence? (**विश्वासयति**, *viśvāsayati*.) A sorry plight? (**दुर्दशा**, *durdaśā*.) Consolation? (**सान्त्वना**, *sāntvanā*.) Flustered? (**आकुलः**, *ākulaḥ*.) A refuge? (**शरणम्**, *śaraṇam*.)
+`;export{t};
