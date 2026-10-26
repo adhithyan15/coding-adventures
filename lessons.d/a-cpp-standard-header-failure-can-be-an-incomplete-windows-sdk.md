@@ -2,7 +2,7 @@
 category: Cross-platform & Windows BUILD_windows
 ---
 
-# A C++ standard-header failure can be an incomplete Windows SDK
+# A Cpp standard-header failure can be an incomplete Windows SDK
 
 NN50's actual MSVC build reached the installed compiler, then failed in MSVC
 `yvals.h` because `crtdbg.h` was absent. Inspection of the installed Windows Kit

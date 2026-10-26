@@ -2,7 +2,7 @@
 category: CI & GitHub Actions
 ---
 
-# C++ toolchain selection does not guarantee a Windows build entry
+# Cpp toolchain selection does not guarantee a Windows build entry
 
 NN50 executed the actual CI matrix planner with the dependency-aware affected
 package `cpp/bounded-json` and `NEEDS_CPP=true`. The resulting matrix contained
