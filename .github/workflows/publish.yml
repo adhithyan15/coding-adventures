@@ -82,8 +82,11 @@ jobs:
       # on main are published.
       - name: Require the tagged commit to be on main
         run: |
-          git fetch --no-tags --filter=blob:none origin main
-          if ! git merge-base --is-ancestor "$GITHUB_SHA" FETCH_HEAD; then
+          # Fully qualified: a bare `main` would prefer a tag named main over
+          # the branch (git resolves refs/tags/ before refs/heads/), and
+          # anyone who can push tags could point that tag at their commit.
+          git fetch --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" refs/remotes/origin/main; then
             echo "::error::The release tag's commit ($GITHUB_SHA) is not on main; refusing to publish."
             exit 1
           fi
