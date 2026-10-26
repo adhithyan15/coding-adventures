@@ -122,7 +122,7 @@ particular die. A functional cell must merge before its paired gate cell.
 | RCPU-075 / RCPU-076 | 2009 | ARM Cortex-M0 | Ready | Public ARMv6-M architecture; distinct microcontroller lifecycle |
 | RCPU-077 / RCPU-078 | 2019 | Microwatt / PowerISA | Ready | Open core and public ISA sources |
 | RCPU-079 / RCPU-080 | 2020 | LoongArch base integer ISA | Research | Confirm stable public specification and bounded initial profile |
-| RCPU-081 / RCPU-082 | 1976 | RCA CDP1802 | Complete: `cdp1802-simulator` | Gate Spec 07bc2 complete locally; `cdp1802-gatelevel` implementation active |
+| RCPU-081 / RCPU-082 | 1976 | RCA CDP1802 | Complete locally: `cdp1802-simulator`, `cdp1802-gatelevel` | Gate Spec 07bc2 independently reviewed; exact 524,667-DFF state, 255 accepted-transition differential, 36 release tests plus one doctest, five compiler-valid hostile fixtures, strict checks, and 88.24% line coverage (1,268/1,437); exact-head review remains before publication |
 
 Apple M5/M6 are intentionally not queued as distinct microarchitectures: the
 public AArch64 ISA can be simulated by the existing AArch64 family, but there

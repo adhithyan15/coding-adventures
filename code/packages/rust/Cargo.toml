@@ -50,6 +50,7 @@ members = [
     "cortex-m4-simulator",
     "cortex-m7-simulator",
     "cdp1802-simulator",
+    "cdp1802-gatelevel",
     "armv7a-gatelevel",
     "armv7a-simulator",
     "armv7-gatelevel",
