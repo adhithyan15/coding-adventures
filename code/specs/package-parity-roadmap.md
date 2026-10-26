@@ -18052,3 +18052,30 @@ of scope.
 ## October 25: serial Haskell opcode-provider recovery
 
 PR #18174 actually merged as `bd533925647b7fbac74eba35e611a8ba3930757f`; PR #18147 previously merged its frozen16 adoption. The unpublished67 draft remains separate. Earlier three-slot and draft-publication statements above are historical. Existing PR #18183 is now the sole active implementation. Its original `231de32b` head is preserved locally while its net change is carefully rebased onto `9000beddee61a136cf5c0c6c5787f81d3d717834`. Actual CI fails before compilation in Cabal3.10.3.0 coverage planning for vector0.13.2; preserve coverage and inert metadata APIs while validating a package-local repair. Local native13tests/all359records, productionHPC100percent expressions/alternatives, Go15packages/84.6percentcoverage, vet/build, realplanner14-packageclosure and metadata/parity checks pass. Runtime source80a01 passed independent review; final documentation delta and fresh hosted CI remain required. See [the exact recovery evidence](../packages/haskell/starlark-compiler/VALIDATION.md).
+
+## October 25, 2026: Swift hash-functions preparation
+
+The dependency-ready backlog was reprioritized while the three hosted parity
+slots remain occupied. `swift-hash-functions-lane-parity` ranks ahead of the
+independent Python gradient-descent build-front and Swift paint-vm capability-
+manifest repairs because this one pure package immediately unlocks three Swift
+data-structure leaves and then the hash-set/store dependency chain. Its sole
+prerequisite, the DT17 vector correction, merged in PR #16923.
+
+Preparation starts from exact origin/main
+`20ba82cbe644174616d85b05a314c8395772ad8f` on branch
+`codex/parity-swift-hash-functions-20261025` and stays local-only until a hosted
+slot opens. The bounded tranche implements FNV-1a 32/64, DJB2, MurmurHash3-32,
+and SipHash-2-4, plus the established polynomial-rolling compatibility helper,
+protocol adapters, UTF-8 conveniences, deterministic analysis helpers, native
+tests and coverage, empty capabilities, and both build fronts. SipHash is pinned
+to all 64 upstream reference vectors. Avalanche analysis accepts explicit
+caller samples and therefore acquires no operating-system randomness.
+
+The governing spec review found and fixes one latent SipHash pseudocode typo:
+the fourth initialization word is the standard `0x7465646279746573`, already
+used by mature package lanes and required by the reference vectors, rather than
+the misspelled value previously printed in DT17. It also makes the established
+polynomial helper and entropy-free portable analysis rule explicit. This owner
+does not claim downstream Swift package execution, filesystem, process,
+environment, network, clock, credential, or other host authority.

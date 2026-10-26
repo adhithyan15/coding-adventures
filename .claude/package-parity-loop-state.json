@@ -14199,12 +14199,14 @@
     {
       "id": "swift-hash-functions-lane-parity",
       "title": "Implement the portable hash-functions package in Swift",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction"
       ],
-      "branch": null,
+      "branch": "codex/parity-swift-hash-functions-20261025",
       "pr_number": null,
+      "selection_revision": "20ba82cbe644174616d85b05a314c8395772ad8f",
+      "selection_notes": "Selected from exact origin/main 20ba82cbe644174616d85b05a314c8395772ad8f after the refreshed ready-owner prioritization placed it ahead of the independent Python gradient-descent build-front and Swift paint-vm capability-manifest leaves. Its sole prerequisite is merged, and one bounded pure Swift package unlocks the explicit Swift hash-map, Bloom-filter, and HyperLogLog children before the hash-set/store chain. Preparation remains local-only while the operator-authorized three-PR ceiling is full. The implementation owns the four DT17 families, the established polynomial-rolling compatibility extension, all 64 upstream SipHash-2-4 vectors, caller-supplied deterministic avalanche samples, empty capabilities, native SwiftPM tests and coverage, and truthful Unix and Windows fronts. It claims no ambient entropy, filesystem, network, process, environment, clock, credential, or downstream execution authority.",
       "notes": "First exact Swift high-consensus child materialized by the post-#14615 lane audit. Implement the existing deterministic hash-functions contract with package-native tests, empty capabilities, and no host authority. This dependency-shaped root unlocks the explicit Swift bloom-filter, hash-map, hash-set, and HyperLogLog children. The store engine remains separately gated on hash-map, hash-set, HyperLogLog, skip-list, protocol IR, and the neutral injected-clock contract. The remaining non-CT Swift high-consensus gaps stay owned by the selection-blocked classifier until decomposed into exact children.",
       "validation_plan": "swift-hash-foundation-native-validation-preparation.md: fourDT17 core families, explicit polynomial compatibility decision, upstream64 SipHash vectors, deterministic caller samples instead of OS randomness, native RED/full SwiftPM/Sources coverage/truthful fronts; actual SDK/link/native execution still unqualified despite resolved tool paths. Three direct pure leaves; no absent downstream execution claim.",
       "postmerge_preparation_evidence": [
