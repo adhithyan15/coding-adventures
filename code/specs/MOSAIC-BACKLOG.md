@@ -291,7 +291,7 @@ exist.
 | PR-1 | Missing components: Chip, StatusPill, Icon, Legend, ValidatedField, InlineEditForm, Composer, StatusPanel, Toolbar, and the L3 task components | **real**. #14415, #14011 | feature | L |
 | PR-2 | Toolkit `Button` has no a11y-label slot (and SegmentedControl also needs `selected`) | **real**. #15421 | a11y | S/M |
 | PR-3 | `HostLink` has no current-page state (`Nav.mll:6` marks it visually only); no arrow-key roving focus | **real**. #15458 (S–M), #15457 (M) | feature | S–M, M |
-| PR-4 | Publishing the `mosaic-pkg-*` crates (all 24 say `publish = false`) | decision. #14014 | decision | M |
+| PR-4 | Publishing the `mosaic-pkg-*` packages (all 24 harness crates say `publish = false`) | **specified, awaiting decision** in [`mosaic-package-publishing-v1.md`](mosaic-package-publishing-v1.md) (proposed 2026-10-26). The `Cargo.toml` files are smoke-test harnesses (`mosaic-pkg-toolkit-smoke` 0.1.0), not the packages, so `publish = false` stays; the proposal is `.mospkg` source archives on immutable GitHub Releases tagged `<package>-v<semver>`, with real `[dependencies]` version semantics, a lockfile and a verified cache. Its §11 lists the maintainer's open questions. #14014 | decision | M |
 | PR-5 | UI48 environment observer for the React, HTML and Web Component backends | **real**: ENV1–ENV4 are done on all 5 native backends. #14003 | feature | M |
 | PR-6 | Adopt `HostNavigationSplit` in notes, note-type-editor and spice-workbench; UI29-6 still says "draft" | **real**. #15481 follow-up | feature | S |
 | PR-7 | Qt releases cover macOS only (`engram_release.py:527`) | **real**. #14223 | feature | M–L |
@@ -313,8 +313,9 @@ UI90 §5.5 is the token contract the import lands on.
 
 - **UI88 §6, rich card content.** Blocks EN-2, EN-3 and Journal photos
   (JO-3).
-- **Publishing (PR-4).** Should the `mosaic-pkg-*` crates be published, and
-  under what policy? Blocks MB-10's downloadable demos.
+- **Publishing (PR-4).** Should the `mosaic-pkg-*` packages be published, and
+  under what policy? Blocks MB-10's downloadable demos. Options, a proposed
+  answer and the open questions are in `mosaic-package-publishing-v1.md`.
 - **Signing (TR-6).** Per platform: sign, notarize, or record "unsigned, no
   credentials".
 - **Flutter topbar (TR-5).** Should the topbar wrap or flex below 1600 px?
