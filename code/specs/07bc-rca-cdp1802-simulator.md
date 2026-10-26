@@ -1,5 +1,9 @@
 # Layer 07bc — RCA CDP1802 Functional Simulator
 
+**Status:** independently reviewed; implementation authorized. The exact
+reviewed spec-only head is
+`9b59e29f4f87e1d3260facf3623d2c16c9e4c117`.
+
 ## 1. Status, sources, and profile
 
 This specification defines a checked instruction-level model of the RCA
