@@ -8,6 +8,9 @@
   adapter, installed-image, trace, and transaction state.
 - Add checked atomic load, restore, step, bounded run, execute, helper, and
   allocation-failure behavior.
+- Pin the completion matrix for reset and every typed fault, ordinary and
+  post-progress allocation rollback, self-modifying fetches, stack aliases and
+  wrapping, all four instruction byte lanes, and interrupt deassert/reaccept.
 - Add 256 isolated full-memory instruction boundaries and four multistep,
   external-bus, and interrupt scenarios produced by checksum-pinned upstream
   VHDL under GHDL, plus independent Rust and Python semantic consumers.

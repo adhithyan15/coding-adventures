@@ -86,14 +86,31 @@ fn reset_load_snapshot_restore_and_helper_contracts_are_complete() {
 
     let saved = cpu.snapshot().unwrap();
     cpu.reset();
+    assert_eq!(
+        cpu.snapshot().unwrap(),
+        ZpuSimulator::try_new().unwrap().snapshot().unwrap()
+    );
     cpu.restore(saved.clone()).unwrap();
     assert_eq!(cpu.snapshot().unwrap(), saved);
+    let before_invalid_restore = cpu.snapshot().unwrap();
     let mut invalid = saved;
     invalid.sp = 3;
     assert!(matches!(
         cpu.restore(invalid),
         Err(ZpuError::InvalidState { .. })
     ));
+    assert_eq!(cpu.snapshot().unwrap(), before_invalid_restore);
+
+    let before_helper_faults = cpu.snapshot().unwrap();
+    assert_eq!(
+        cpu.write_internal_word(2, 0xdead_beef),
+        Err(ZpuError::MisalignedAddress { address: 2 })
+    );
+    assert_eq!(
+        cpu.write_external_word(0x7ffc, 0xdead_beef),
+        Err(ZpuError::AddressOutOfRange { address: 0x7ffc })
+    );
+    assert_eq!(cpu.snapshot().unwrap(), before_helper_faults);
 }
 
 #[test]
@@ -257,9 +274,65 @@ fn internal_and_external_load_store_are_big_endian_and_transactional() {
 }
 
 #[test]
+fn byte_lane_self_modification_and_stack_alias_boundaries_are_exact() {
+    let mut lanes = ZpuSimulator::new();
+    lanes.load(&[0x01, 0x03, 0x0b, 0x0e], 0).unwrap();
+    for (pc, raw) in [0x01_u8, 0x03, 0x0b, 0x0e].into_iter().enumerate() {
+        let trace = lanes.step().unwrap();
+        assert_eq!(trace.pc_before, pc as u16);
+        assert_eq!(trace.raw, Some(raw));
+        assert_eq!(trace.mnemonic, "NOP");
+    }
+
+    let mut modified = ZpuSimulator::new();
+    modified
+        .load(&[0x0c, 0x04, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b], 0)
+        .unwrap();
+    let mut state = modified.snapshot().unwrap();
+    state.sp = 0x0100;
+    modified.restore(state).unwrap();
+    modified.write_internal_word(0x0100, 4).unwrap();
+    modified.write_internal_word(0x0104, 0x0000_0004).unwrap();
+    modified.write_internal_word(0x0108, 4).unwrap();
+    assert_eq!(modified.step().unwrap().internal_access.unwrap().address, 4);
+    assert_eq!(modified.step().unwrap().pc_after, 4);
+    let fetched_replacement = modified.step().unwrap();
+    assert_eq!(fetched_replacement.raw, Some(0x00));
+    assert!(fetched_replacement.break_after);
+
+    let mut load_alias = loaded(0x08);
+    let mut state = load_alias.snapshot().unwrap();
+    state.sp = 0x0100;
+    load_alias.restore(state).unwrap();
+    load_alias.write_internal_word(0x0100, 0x0100).unwrap();
+    let alias_trace = load_alias.step().unwrap();
+    assert_eq!(alias_trace.internal_access.unwrap().address, 0x0100);
+    assert_eq!(alias_trace.top_after, 0x0100);
+
+    for destination in [0x0100_u32, 0x0104] {
+        let mut store_alias = loaded(0x0c);
+        let mut state = store_alias.snapshot().unwrap();
+        state.sp = 0x0100;
+        store_alias.restore(state).unwrap();
+        store_alias
+            .write_internal_word(0x0100, destination)
+            .unwrap();
+        store_alias
+            .write_internal_word(0x0104, 0x1122_3344)
+            .unwrap();
+        let trace = store_alias.step().unwrap();
+        assert_eq!(trace.internal_access.unwrap().address, destination as u16);
+        assert_eq!(
+            store_alias.read_internal_word(destination).unwrap(),
+            0x1122_3344
+        );
+    }
+}
+
+#[test]
 fn interrupt_is_preflighted_masked_by_idim_and_level_rearmed() {
     let mut cpu = ZpuSimulator::new();
-    let mut image = vec![0x0b; 0x22];
+    let mut image = vec![0x0b; 0x24];
     image[0] = 0x81;
     cpu.load(&image, 0).unwrap();
     cpu.set_interrupt_level(true);
@@ -273,6 +346,21 @@ fn interrupt_is_preflighted_masked_by_idim_and_level_rearmed() {
     assert_eq!(sustained.raw, Some(0x0b));
     cpu.set_interrupt_level(false);
     assert!(!cpu.step().unwrap().in_interrupt_after);
+    cpu.set_interrupt_level(true);
+    let reaccepted = cpu.step().unwrap();
+    assert_eq!(reaccepted.raw, None);
+    assert_eq!(reaccepted.pc_after, INTERRUPT_VECTOR);
+    assert!(reaccepted.in_interrupt_after);
+
+    let mut wrapping = ZpuSimulator::new();
+    wrapping.load(&image, 0).unwrap();
+    let mut wrapping_state = wrapping.snapshot().unwrap();
+    wrapping_state.sp = 0;
+    wrapping.restore(wrapping_state).unwrap();
+    wrapping.set_interrupt_level(true);
+    let wrapped = wrapping.step().unwrap();
+    assert_eq!(wrapped.sp_after, 0x7ffc);
+    assert_eq!(wrapping.read_internal_word(0x7ffc).unwrap(), 0);
 
     let mut masked = ZpuSimulator::new();
     masked.load(&[0x81, 0x82, 0x0b], 0).unwrap();
@@ -294,6 +382,11 @@ fn interrupt_is_preflighted_masked_by_idim_and_level_rearmed() {
 
 #[test]
 fn break_run_execute_and_limits_are_atomic() {
+    let mut unloaded = ZpuSimulator::new();
+    let unloaded_before = unloaded.snapshot().unwrap();
+    assert_eq!(unloaded.step(), Err(ZpuError::NoProgramLoaded));
+    assert_eq!(unloaded.snapshot().unwrap(), unloaded_before);
+
     let mut cpu = ZpuSimulator::new();
     cpu.load(&[0x0b, 0x00, 0x0b], 0).unwrap();
     let result = cpu.run(2).unwrap();
@@ -303,9 +396,9 @@ fn break_run_execute_and_limits_are_atomic() {
     assert!(cpu.step().unwrap().break_before);
 
     let mut limit = loaded(0x0b);
-    let before = limit.snapshot().unwrap();
+    let limit_before = limit.snapshot().unwrap();
     assert_eq!(limit.run(0), Err(ZpuError::StepLimit { limit: 0 }));
-    assert_eq!(limit.snapshot().unwrap(), before);
+    assert_eq!(limit.snapshot().unwrap(), limit_before);
     assert_eq!(
         limit.run(65),
         Err(ZpuError::TraceLimit {
@@ -313,7 +406,16 @@ fn break_run_execute_and_limits_are_atomic() {
             limit: 64
         })
     );
-    assert_eq!(limit.snapshot().unwrap(), before);
+    assert_eq!(limit.snapshot().unwrap(), limit_before);
+
+    let mut positive_progress = ZpuSimulator::new();
+    positive_progress.load(&[0x0b, 0x0b], 0).unwrap();
+    let positive_before = positive_progress.snapshot().unwrap();
+    assert_eq!(
+        positive_progress.run(1),
+        Err(ZpuError::StepLimit { limit: 1 })
+    );
+    assert_eq!(positive_progress.snapshot().unwrap(), positive_before);
 
     let mut execute = ZpuSimulator::new();
     execute.write_internal_word(0, 0xfeed_face).unwrap();
@@ -344,6 +446,15 @@ fn deterministic_allocation_failures_preserve_exact_entry_state() {
         assert_eq!(snapshot.snapshot(), Err(ZpuError::AllocationFailed));
         snapshot.fail_allocation_after(None);
         assert_eq!(snapshot.snapshot().unwrap(), before);
+    }
+
+    for checkpoint in 0..=1 {
+        let mut load = loaded(0x02);
+        let before = load.snapshot().unwrap();
+        load.fail_allocation_after(Some(checkpoint));
+        assert_eq!(load.load(&[0x0b], 0), Err(ZpuError::AllocationFailed));
+        load.fail_allocation_after(None);
+        assert_eq!(load.snapshot().unwrap(), before);
     }
 
     let mut cpu = loaded(0x0b);
@@ -378,4 +489,21 @@ fn deterministic_allocation_failures_preserve_exact_entry_state() {
         ZpuError::AllocationFailed
     );
     assert_eq!(execute.snapshot().unwrap(), before);
+
+    for checkpoint in 0..=17 {
+        let mut execute = loaded(0x02);
+        let before = execute.snapshot().unwrap();
+        execute.fail_allocation_after(Some(checkpoint));
+        assert_eq!(
+            execute.execute(&[0x0b, 0x00], 0, 2).unwrap_err().source,
+            ZpuError::AllocationFailed,
+            "checkpoint {checkpoint}"
+        );
+        execute.fail_allocation_after(None);
+        assert_eq!(
+            execute.snapshot().unwrap(),
+            before,
+            "checkpoint {checkpoint}"
+        );
+    }
 }
