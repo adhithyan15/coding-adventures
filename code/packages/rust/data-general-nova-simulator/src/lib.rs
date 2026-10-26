@@ -568,7 +568,9 @@ fn decode_transport(program: &[u8]) -> Result<Vec<u16>, NovaError> {
         });
     }
     Ok(program
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|bytes| u16::from_be_bytes([bytes[0], bytes[1]]))
         .collect())
 }
