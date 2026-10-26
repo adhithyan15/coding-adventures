@@ -105,24 +105,27 @@ The four mask bits select general-register bytes from most significant to
 least significant. Selected bytes are compared, in order, with consecutive
 storage bytes. Unselected register bytes consume no storage. Condition code is
 0 when all selected bytes are equal, 1 when the first unequal register byte is
-low, and 2 when it is high. A zero mask performs no storage access and sets
-condition code 0.
+low, and 2 when it is high. A zero mask compares no data and sets condition
+code 0, but the effective address still designates a one-byte storage operand
+for checked address validation, as required by the architecture.
 
 ### Store Characters under Mask — `STCM` (`BE`, RS)
 
 The mask selects register bytes from most significant to least significant.
 Selected bytes are stored consecutively from the effective address;
-unselected bytes consume no storage. A zero mask performs no storage access.
-Condition code is unchanged.
+unselected bytes consume no storage. With a zero mask this deterministic model
+does not rewrite the byte, but still validates the architecturally designated
+one-byte storage operand. Condition code is unchanged.
 
 ### Insert Characters under Mask — `ICM` (`BF`, RS)
 
 Selected register bytes, from most significant to least significant, receive
 consecutive storage bytes; unselected register bytes remain unchanged. A zero
-mask performs no storage access and sets condition code 0. Otherwise condition
-code is 0 when every inserted bit is zero, 1 when the leftmost inserted bit is
-one, and 2 when that bit is zero but some inserted bit is one. Condition code
-3 is not produced.
+mask inserts no data and sets condition code 0, but still validates the
+architecturally designated one-byte storage operand. Otherwise condition code
+is 0 when every inserted bit is zero, 1 when the leftmost inserted bit is one,
+and 2 when that bit is zero but some inserted bit is one. Condition code 3 is
+not produced.
 
 ## Traces and errors
 
