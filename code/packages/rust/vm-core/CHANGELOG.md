@@ -1,5 +1,12 @@
 # Changelog — vm-core
 
+## Unreleased — `real_to_i64_checked` is public
+
+- `dispatch::real_to_i64_checked` is now `pub`. jit-core's
+  `F64_TO_I64_TRUNC` / `F64_TO_I64_FLOOR` call it, so the generic JIT
+  accepts exactly the range the interpreter tier accepts and fails with the
+  same `VMError::Custom` text. There is one copy of the rule, not two.
+
 ## [0.33.0] — 2026-10-26 (VM-wide register-slot budget; private name map)
 
 - **Fix (pre-existing): a recursive `store_reg` could pin ~768 MiB.**
