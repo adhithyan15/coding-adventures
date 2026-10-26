@@ -8,4 +8,4 @@
 - Add typed atomic lifecycle faults, fallible bounded complete-state traces,
   and exact functional-oracle differential coverage for every implemented
   instruction subfamily.
-- Reach 90.99% combined Rust line coverage (1,474 of 1,620 lines).
+- Reach 91.19% combined Rust line coverage (1,500 of 1,645 lines).

@@ -25,4 +25,4 @@ assert_eq!(result.final_state.registers[0], 7);
 The package retains complete before/after state traces under a fixed 8 MiB
 budget, uses typed atomic faults, and validates complete state on restore.
 Release differential tests cover every implemented decode subfamily. The
-completion baseline is 90.99% combined Rust line coverage (1,474/1,620).
+completion baseline is 91.19% combined Rust line coverage (1,500/1,645).
