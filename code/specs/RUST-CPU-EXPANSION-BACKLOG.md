@@ -52,6 +52,18 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | Arm Cortex-M33 | PR #18326 | blocked on functional | Functional cell is published with squash auto-merge armed. |
 | P0 | DEC PDP-10 KA10 | in progress | blocked on functional | Spec 07aq and the checked bounded functional cell are under local completion review. |
 
+## P0 gate-integrity repair queue
+
+Independent review of the completed architecture matrix found a recurring
+storage-authority defect: some packages counted DFF banks in their physical
+topology while executing from parallel public host fields. These repairs
+outrank new architecture cells because a shadow bank makes the published gate
+claim unsound even when ISA differentials remain green.
+
+| Priority | Target | Status | Required boundary |
+|---:|---|---|---|
+| P0 | Motorola 68000 gate | local complete | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
+
 ## Independent functional queue
 
 This queue is re-costed after every merge or discovery. Dates indicate the
