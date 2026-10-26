@@ -1,5 +1,33 @@
 # Changelog
 
+## 2026-10-26 — Mosaic manifest dependencies and repository-wide Mosaic guards
+
+- The resolver reads `mosaic-package.toml` for language-`mosaic` packages
+  (`code/packages/mosaic/*`, `code/programs/mosaic/*`). Keys of the root
+  `[dependencies]` table (and `[dependencies.<name>]` sub-table headers)
+  resolve within the Mosaic scope by directory basename or `[package].name`,
+  libraries winning over programs. Before this, Mosaic packages had no edges,
+  so bumping or editing `mosaic-pkg-toolkit` never re-ran task-app, engram-app,
+  journal-app or the packages built on it. Requirement strings, comments,
+  `[components]` exports, `[host_assets].dependencies` third-party
+  coordinates, external names and self-references never create edges;
+  multi-line values are tracked by bracket depth (`internal/resolver/mosaic.go`).
+- New `repository_inputs.go`: a table of *repository input consumers*,
+  packages whose tests walk the whole tree. Its first entry selects
+  `rust/mosaic-package-resolver` (`every_repository_requirement_is_satisfied`
+  and the layout-binding guard) for any changed `mosaic-package.toml`,
+  `.mil`, `.mll` or `.msl` under `code/`. Both the dry-run/build path and
+  every per-platform plan add the consumer and its prerequisites but not its
+  dependents; seeding it as a changed package instead measured 72 affected
+  packages for a one-line `.mll` edit. Raw Git paths, no stat (deletions
+  select), `-language` honored, and a missing consumer fails the plan.
+- Measured on the repository with `-dry-run -diff-base origin/main`: a
+  toolkit version bump went from 1 to 35 affected packages, an app `.mll`
+  edit from 1 to 19, both now including the guard and neither including the
+  guard's dependents (artifact builder, emitters); a Python/Go-only change is
+  identical (168 → 168). Mosaic-only changes now also request the Rust
+  toolchain in the plan, because the guard is a Rust crate.
+
 ## 2026-10-24 — BUILD_windows PowerShell and batch lines are rejected
 
 - `validateWindowsBuildLines` rejects `BUILD_windows` lines that only work in

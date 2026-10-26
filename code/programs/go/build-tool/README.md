@@ -530,6 +530,31 @@ DUPLICATE_PACKAGE_IDENTITY: package=unknown/demo paths=code/packages/alpha/demo,
 The diagnostic contains sorted repository-relative paths, never the checkout
 root, and the CLI returns exit code `2`.
 
+### Mosaic packages and the repository-wide Mosaic guards
+
+Mosaic packages (`code/packages/mosaic/*`, `code/programs/mosaic/*`) are
+ordinary graph nodes: the resolver reads the keys of the root
+`[dependencies]` table of each `mosaic-package.toml` and resolves them,
+within the Mosaic scope, by directory basename or `[package].name`. Editing
+or bumping `mosaic-pkg-toolkit` therefore re-runs every Mosaic package and app
+that requires it. Requirement strings, `[components]` exports and unrelated
+tables such as `[host_assets].dependencies` never create edges.
+
+Some tests read the whole tree rather than their own directory. These
+*repository input consumers* are listed in `repository_inputs.go` together
+with the changed paths that select them. Today there is one:
+`rust/mosaic-package-resolver`, whose `every_repository_requirement_is_satisfied`
+and layout-binding guards walk every `mosaic-package.toml` and `.mll` under
+`code/`. Any changed `mosaic-package.toml`, `.mil`, `.mll` or `.msl` under
+`code/` selects it. A consumer is added to the affected set with its
+prerequisites but **without its dependents**: its code did not change, only
+the data it reads, and seeding it as a changed package would rebuild 72
+packages (every emitter, the artifact builder, mosaic-compile, ...) for a
+one-line layout edit. Selection uses raw Git paths (deletions count), honors
+`-language`, and fails the plan if the consumer is missing from discovery.
+It applies to Git-diff mode only; `-force` and the hash fallback already
+build everything they consider changed.
+
 ## Architecture
 
 The tool is organized into seven internal packages, each responsible for one phase of the build pipeline:
@@ -537,7 +562,8 @@ The tool is organized into seven internal packages, each responsible for one pha
 1. **discovery** -- Recursively walks for `BUILD` files to find packages
 2. **resolver** -- Parses ecosystem metadata including `pyproject.toml`,
    `.gemspec`, `go.mod`, `Cargo.toml`, `package.json`, `mix.exs`, `.rockspec`,
-   `pubspec.yaml`, Cabal files, Gradle files, and .NET project references
+   `pubspec.yaml`, Cabal files, Gradle files, .NET project references, and
+   `mosaic-package.toml`
 3. **hasher** -- SHA256 hashing for change detection
 4. **cache** -- JSON-based build cache (read/write with atomic saves)
 5. **executor** -- Parallel execution with goroutines + semaphore
