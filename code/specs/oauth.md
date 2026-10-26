@@ -1673,6 +1673,19 @@ secret handling. Reviewed fixed-output HMAC-SHA-256/HMAC-SHA-384 and HKDF
 execution remain prerequisites before the label framing can derive traffic
 keys or IVs. Concrete HTTPS remains unavailable.
 
+The repository-owned `sha256` prerequisite must also be hardened before it can
+underpin that fixed-output HMAC boundary. Its one-shot and streaming digest
+paths must share fixed-memory 512-bit block processing, reject a total message
+whose encoded bit length would overflow FIPS 180-4's 64-bit field before
+mutating retained state, and preserve the existing infallible streaming update
+as an explicit compatibility wrapper around the checked operation. Digest
+snapshots must remain non-destructive, cloning must not allocate, and retained
+state plus temporary schedules and padding must be scrubbed at their ownership
+boundaries. This hardening supplies only SHA-256: it does not implement HMAC,
+HKDF, TLS transcript or key scheduling, record protection, handshake
+processing, certificate validation, trust, revocation, I/O, HTTP, OAuth
+transport, or any network effect. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
