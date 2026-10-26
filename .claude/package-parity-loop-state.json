@@ -23091,7 +23091,7 @@
           "haskell_capabilities": 6,
           "parity_reporter": 10
         },
-        "lesson_shards": 1541,
+        "lesson_shards": 1573,
         "final_structural_parity": {
           "identities": 1562,
           "slots": 4850,

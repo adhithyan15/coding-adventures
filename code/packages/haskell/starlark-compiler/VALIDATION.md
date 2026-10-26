@@ -59,7 +59,7 @@ required. The prior production HPC measurements below remain source-identical.
   from two changed packages, and passes both orphan gates with **37 existing
   pending exemptions**. Planning is not native execution of those fourteen.
 - Python checks: **19 CI-registry**, **6 Haskell-capability** and **10 parity
-  reporter** tests pass. Lesson validation: **1,541 shards, zero problems**.
+  reporter** tests pass. Lesson validation: **1,573 shards, zero problems**.
 - Final structural parity: **1,562 identities / 4,850 slots / fifteen established
   lanes**, no collisions or unknown buckets; OCaml remains emerging with five
   packages. Inventory is not native qualification.
