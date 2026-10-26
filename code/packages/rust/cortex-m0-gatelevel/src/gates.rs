@@ -22,6 +22,7 @@ pub fn u32_to_bits(value: u32) -> [u8; 32] {
 #[must_use]
 pub fn bits_to_u8(bits: &[u8]) -> u8 {
     bits.iter()
+        .take(8)
         .enumerate()
         .fold(0, |value, (bit, q)| value | (*q << bit))
 }
@@ -29,6 +30,7 @@ pub fn bits_to_u8(bits: &[u8]) -> u8 {
 #[must_use]
 pub fn bits_to_u16(bits: &[u8]) -> u16 {
     bits.iter()
+        .take(16)
         .enumerate()
         .fold(0, |value, (bit, q)| value | (u16::from(*q) << bit))
 }
@@ -36,14 +38,15 @@ pub fn bits_to_u16(bits: &[u8]) -> u16 {
 #[must_use]
 pub fn bits_to_u32(bits: &[u8]) -> u32 {
     bits.iter()
+        .take(32)
         .enumerate()
         .fold(0, |value, (bit, q)| value | (u32::from(*q) << bit))
 }
 
 /// Gate equality against a constant over the selected low-width input.
 #[must_use]
-pub fn selected(value: u32, expected: u32, width: usize) -> u8 {
-    debug_assert!(width <= 32);
+pub(crate) fn selected(value: u32, expected: u32, width: usize) -> u8 {
+    assert!((1..=32).contains(&width), "selection width must be 1..=32");
     let value = u32_to_bits(value);
     let expected = u32_to_bits(expected);
     (0..width).fold(1, |line, bit| {
@@ -53,7 +56,11 @@ pub fn selected(value: u32, expected: u32, width: usize) -> u8 {
 }
 
 #[must_use]
-pub fn field(value: u32, offset: usize, width: usize) -> u32 {
+pub(crate) fn field(value: u32, offset: usize, width: usize) -> u32 {
+    assert!(
+        offset <= 32 && width <= 32 && offset.saturating_add(width) <= 32,
+        "field must fit in 32 bits"
+    );
     let bits = u32_to_bits(value);
     bits_to_u32(&std::array::from_fn::<_, 32, _>(|output| {
         if output < width && offset + output < 32 {
@@ -218,8 +225,8 @@ pub fn rotate_right_32(mut value: u32, amount: u32) -> u32 {
 }
 
 #[must_use]
-pub fn sign_extend(value: u32, width: usize) -> u32 {
-    debug_assert!((1..=32).contains(&width));
+pub(crate) fn sign_extend(value: u32, width: usize) -> u32 {
+    assert!((1..=32).contains(&width), "sign width must be 1..=32");
     let input = u32_to_bits(value);
     let sign = input[width - 1];
     bits_to_u32(&std::array::from_fn::<_, 32, _>(|bit| {

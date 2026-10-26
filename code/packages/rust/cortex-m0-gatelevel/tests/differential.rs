@@ -139,14 +139,13 @@ fn topology_and_combinational_networks_are_exact() {
             assert_eq!(gates::multiply_32(left, right), left.wrapping_mul(right));
         }
     }
-    assert_eq!(gates::sign_extend(0x80, 8), 0xffff_ff80);
     assert_eq!(gates::reverse_bytes(0x1122_3344), 0x4433_2211);
     assert_eq!(gates::reverse_halfwords(0x1122_3344), 0x2211_4433);
     assert_eq!(gates::bits_to_u8(&gates::u8_to_bits(0xa5)), 0xa5);
     assert_eq!(gates::bits_to_u16(&gates::u16_to_bits(0xa55a)), 0xa55a);
-    assert_eq!(gates::field(0x1234_5678, 8, 8), 0x56);
-    assert_eq!(gates::selected(0b101, 0b101, 3), 1);
-    assert_eq!(gates::selected(0b101, 0b001, 3), 0);
+    assert_eq!(gates::bits_to_u8(&[1; 64]), u8::MAX);
+    assert_eq!(gates::bits_to_u16(&[1; 64]), u16::MAX);
+    assert_eq!(gates::bits_to_u32(&[1; 64]), u32::MAX);
     assert_eq!(gates::select_32(7, 9, 0), 7);
     assert_eq!(gates::select_32(7, 9, 1), 9);
     assert_eq!(gates::byte_changed(0x55, 0x55), 0);
