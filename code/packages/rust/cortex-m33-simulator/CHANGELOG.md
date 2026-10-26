@@ -14,4 +14,4 @@
 - Apply ALLNS only while the SAU is disabled, reduce overlapping region matches
   to the most-secure attribute, and distinguish Secure data access from Secure
   instruction fetch so ordinary Non-secure code requires an explicit checked
-  transition.
+  transition whose target must also own a complete minimum Thumb fetch range.

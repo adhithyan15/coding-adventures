@@ -110,6 +110,18 @@ fn sau_configuration_rejects_privilege_and_shape_errors_atomically() {
 
 #[test]
 fn security_transitions_swap_banked_control_and_require_attributed_targets() {
+    let mut allns = CortexM33Simulator::new(true);
+    allns.set_sau_control(false, true).unwrap();
+    let allns_before = allns.get_state().unwrap();
+    assert_eq!(
+        allns.branch_non_secure(0x1_0000, true),
+        Err(CortexM33Error::Core(CortexM3Error::DataOutOfRange {
+            address: 0x1_0000,
+            width: 2,
+        }))
+    );
+    assert_eq!(allns.get_state().unwrap(), allns_before);
+
     let mut cpu = CortexM33Simulator::new(true);
     cpu.set_sau_control(true, false).unwrap();
     cpu.configure_sau_region(0, region(0x8000, 0x8fff, false))

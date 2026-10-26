@@ -329,6 +329,11 @@ impl CortexM33Simulator {
                 reason: "only Secure code may initiate a Non-secure branch",
             });
         }
+        // ALLNS classifies the address space when the SAU is disabled, but it
+        // does not expand this simulator's owned memory.  Settle the minimum
+        // Thumb fetch range before swapping banks or writing LR/PC so an
+        // attributed but unowned target remains a typed, atomic fault.
+        checked_owned_range(target, 2)?;
         if target & 1 != 0 || self.attribute(target) != SecurityAttribute::NonSecure {
             return Err(CortexM33Error::InvalidSecurityTransition {
                 reason: "target must select attributed Non-secure Thumb code",
