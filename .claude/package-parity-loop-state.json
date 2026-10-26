@@ -16,16 +16,17 @@
       "external-approval"
     ]
   },
-  "active_pr": 18183,
+  "active_pr": 18293,
   "active_prs": [
-    18183,
     18293,
     18312
   ],
   "last_ci_action": {
+    "observed_at": "2026-10-26T08:35:36Z",
     "pr_number": 18183,
-    "head": "e04acc841ef2de4f61a56b5ae671a3927c81a38f",
-    "action": "Exact macOS job121277004429 failed during dependency linking on runner-image20261013.0424.1: SDK27 arm64e.x1 unsupported by default linker. Same-PR command-local Darwin CLT selection at52471c9a02f passes shell routing/exit/isolation tests and actual GHC9.4.8/Cabal3.10.3.0 Windows BUILD. Independent exact-final-source review and fresh hosted native CI required; no auto-merge enrollment."
+    "head_revision": "17c40bca2a27f31ee1366bf123ab01978618c6fd",
+    "action": "Verified every exact-head check terminal acceptable and the reviewed head conflict-free, confirmed guarded squash auto-merge as ab25faef874fdc7788b37eabc19b87b7c1c79835, removed the completed Haskell worktree and local branch, and reprioritized the reviewed Python gradient-descent front for the freed hosted slot.",
+    "manual_merge": false
   },
   "last_inventory": {
     "revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
@@ -16513,7 +16514,7 @@
     {
       "id": "python-gradient-descent-build-front-coverage",
       "title": "Add tested BUILD fronts for Python gradient-descent",
-      "status": "in-progress",
+      "status": "in_progress",
       "depends_on": [],
       "branch": "codex/parity-python-gradient-descent-front-20261025",
       "pr_number": null,
