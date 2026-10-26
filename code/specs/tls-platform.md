@@ -535,6 +535,43 @@ alert processing, certificate validation, trust-root selection, revocation,
 I/O, socket access, HTTP, or OAuth authorization. It is not a TLS connector and
 does not make concrete HTTPS available.
 
+The next package is `tls13-cipher-suite-policy`. It is an allocation-free,
+immutable registry and caller allowlist for the three RFC 8446 suites targeted
+by the current repository-owned primitives:
+
+| Wire ID | Cipher suite | AEAD | HKDF hash | Key | IV | Tag | Maximum records per traffic key |
+|---------|--------------|------|-----------|-----|----|-----|---------------------------------|
+| `0x1301` | `TLS_AES_128_GCM_SHA256` | AES-128-GCM | SHA-256 | 16 bytes | 12 bytes | 16 bytes | `2^24` |
+| `0x1302` | `TLS_AES_256_GCM_SHA384` | AES-256-GCM | SHA-384 | 32 bytes | 12 bytes | 16 bytes | `2^24` |
+| `0x1303` | `TLS_CHACHA20_POLY1305_SHA256` | ChaCha20-Poly1305 | SHA-256 | 32 bytes | 12 bytes | 16 bytes | `u64::MAX` |
+
+RFC 8446 appendix B.4 supplies the exact suite identifiers and the AEAD/hash
+pairing. The algorithm specifications supply the fixed key, nonce, and tag
+lengths. The AES-GCM ceiling is a conservative integer bound below RFC 8446
+section 5.5's `2^24.5` full-size-record limit. RFC 8446 states that the TLS
+record sequence wraps before ChaCha20-Poly1305 reaches its safety limit, so the
+registry uses the nonce package's conservative maximum record count and never
+permits an increment to wrap.
+
+The standard descriptors cannot be caller-modified. The caller instead
+constructs policy from a non-empty, duplicate-free list of `(suite, record
+limit)` entries. Every limit is nonzero and no greater than its descriptor's
+maximum. Exact wire selection must name both a known suite and a suite allowed
+by that policy. Success returns one validated selection that retains the suite,
+AEAD, hash, key length, IV length, tag length, and caller-selected record limit
+together. Later composition must consume that one selection for key derivation,
+`tls13-record-nonce` policy, and AEAD routing rather than accepting detached
+caller-provided parameters.
+
+This package is algorithm and key *policy*, not an algorithm implementation or
+handshake. It does not inspect repository crypto crates, assert their production
+suitability, negotiate a suite, derive or store key material, create nonce
+state, encrypt, authenticate, decrypt, update traffic keys, parse handshake or
+alert messages, validate certificates, select roots, check revocation, perform
+I/O, open sockets, authorize HTTP or OAuth, or make concrete HTTPS available.
+The RFC 8446 CCM suites remain unsupported until separately reviewed
+repository-owned AEAD implementations and record limits are available.
+
 ---
 
 ## Test Strategy
