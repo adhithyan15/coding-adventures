@@ -18879,6 +18879,190 @@ style FocusField {
         assert!(error.contains("accent-panel") && error.contains("accent-label"));
     }
 
+    /// The layout each `KEYWORD_LITERAL_PROPS` entry is proven in: its enum
+    /// value, and a node using it at that position. A new table entry with
+    /// no fixture here fails the test below.
+    fn keyword_literal_fixture(tag: &str, prop: &str) -> Option<(&'static str, &'static str)> {
+        Some(match (tag, prop) {
+            ("Text", "a11y-role") => (
+                "heading",
+                r#"Text [ p ] ( content: "x" , a11y-role: heading )"#,
+            ),
+            ("Box", "table-cell-role") => (
+                "data",
+                r#"HostTable [ t ] { HostTableBody { Row [ r ] { Box [ p ] ( table-cell-role: data ) { Text ( content: "x" ) } } } }"#,
+            ),
+            ("Text", "table-cell-role") => (
+                "data",
+                r#"HostTable [ t ] { HostTableBody { Row [ r ] { Text [ p ] ( content: "x" , table-cell-role: data ) } } }"#,
+            ),
+            ("HostScroll", "axis") => (
+                "horizontal",
+                r#"HostScroll [ p ] ( axis: horizontal ) { Text ( content: "s" ) }"#,
+            ),
+            ("HostNavigationSplit", "collapse") => (
+                "auto",
+                r#"HostNavigationSplit [ p ] ( pane-title: "P" , collapse: auto ) { Column [ a ] { } Column [ b ] { } }"#,
+            ),
+            ("Path", "kind") => (
+                "line",
+                "Path [ p ] ( kind: line , x1: 0 , y1: 0 , x2: 1 , y2: 1 )",
+            ),
+            ("HostTable", "dir") => (
+                "rtl",
+                r#"HostTable [ p ] ( dir: rtl ) { HostTableBody { Row [ r ] { Box ( table-cell-role: data ) { Text ( content: "x" ) } } } }"#,
+            ),
+            ("HostLink", "target") => (
+                "new-tab",
+                r#"HostLink [ p ] ( label: "x" , target: new-tab )"#,
+            ),
+            _ => return None,
+        })
+    }
+
+    /// The lines of emitted `source` that use `name` (or its camelCase form)
+    /// as a variable. Not a use: the `For` header that binds it (React
+    /// `.map((name, …`, SwiftUI `{ name in`, HTML `as="name"`), a member or
+    /// enum case after `.`, an element name after `<` or `</`, and anything
+    /// inside a double-quoted string or on a comment line.
+    fn variable_uses(source: &str, name: &str) -> Vec<String> {
+        let camel = moslayout_style_camel(name);
+        let mut uses = Vec::new();
+        for line in source.lines() {
+            let trimmed = line.trim_start();
+            if trimmed.starts_with("//") || trimmed.starts_with("<!--") {
+                continue;
+            }
+            let words: &[&str] = if camel == name {
+                &[name]
+            } else {
+                &[name, camel.as_str()]
+            };
+            for &word in words {
+                let mut from = 0;
+                while let Some(found) = line[from..].find(word) {
+                    let at = from + found;
+                    from = at + word.len();
+                    let before = line[..at].chars().next_back();
+                    let after = line[from..].chars().next();
+                    let is_word = |c: Option<char>| {
+                        c.is_some_and(|c| c.is_alphanumeric() || c == '_' || c == '-')
+                    };
+                    if is_word(before) || is_word(after) {
+                        continue;
+                    }
+                    let quoted = line[..at].matches('"').count() % 2 == 1;
+                    let header = line[from..].starts_with(", _idx)")
+                        || line[from..].trim_start().starts_with("in")
+                            && line[..at].trim_end().ends_with('{');
+                    if quoted || header || matches!(before, Some('.' | '<' | '/')) {
+                        continue;
+                    }
+                    uses.push(line.trim().to_string());
+                }
+            }
+        }
+        uses
+    }
+
+    fn moslayout_style_camel(name: &str) -> String {
+        let mut out = String::new();
+        let mut upper = false;
+        for ch in name.chars() {
+            if ch == '-' {
+                upper = true;
+            } else if upper {
+                out.extend(ch.to_uppercase());
+                upper = false;
+            } else {
+                out.push(ch);
+            }
+        }
+        out
+    }
+
+    /// `moslayout_compiler::KEYWORD_LITERAL_PROPS` is the resolver's list of
+    /// positions where a bare NAME is an enum value and never a variable
+    /// (E6 F1, security review round 2). Prove it on React, SwiftUI and
+    /// HTML: each entry is built inside a `For` that binds a variable with
+    /// the entry's own value as its name, so a backend that read the value
+    /// as a variable would reference the loop variable. None may.
+    ///
+    /// The control is a position every one of the three reads as a
+    /// variable (`HostButton ( label: zqprobe )`), so the detector is shown
+    /// to work on each backend. A backend that does not support a primitive
+    /// at all (SwiftUI has no `Path`) cannot misread it, and is skipped.
+    #[test]
+    fn keyword_literal_props_are_literal_on_react_swiftui_and_html() {
+        let backends = [
+            (Backend::React, "react", "tsx"),
+            (Backend::SwiftUI, "swiftui", "swift"),
+            (Backend::Html, "html", "html"),
+        ];
+        let build = |value: &str, node: &str, backend: Backend, dir: &str, ext: &str| {
+            let workspace = TempDir::new().unwrap();
+            let root = workspace.path().join("kwlit");
+            write_package_manifest(&root, "kwlit", &["Probe"], &[]);
+            write_component_sources(
+                &root,
+                "Probe",
+                "component Probe { slot items : list<text> ; }",
+                &format!(
+                    "layout Probe {{ Column [ root ] {{\n  For ( each: slot: items , as: {value} ) {{\n    {node}\n  }}\n}} }}"
+                ),
+                "style Probe { }",
+            );
+            let out = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: root,
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: false,
+                theme: None,
+            })
+            .map(|_| fs::read_to_string(out.path().join(dir).join(format!("Probe.{ext}"))).unwrap())
+        };
+
+        for &(backend, dir, ext) in &backends {
+            let control = build(
+                "zqprobe",
+                "HostButton [ p ] ( label: zqprobe )",
+                backend,
+                dir,
+                ext,
+            )
+            .unwrap_or_else(|e| panic!("{dir} control build: {e}"));
+            assert!(
+                !variable_uses(&control, "zqprobe").is_empty(),
+                "{dir}: the detector must see `label: zqprobe` read as a variable:\n{control}"
+            );
+        }
+
+        let mut proven = 0;
+        for &(tag, prop) in moslayout_compiler::KEYWORD_LITERAL_PROPS {
+            let (value, node) = keyword_literal_fixture(tag, prop).unwrap_or_else(|| {
+                panic!("no fixture for KEYWORD_LITERAL_PROPS entry ({tag}, {prop})")
+            });
+            for &(backend, dir, ext) in &backends {
+                let source = match build(value, node, backend, dir, ext) {
+                    Ok(source) => source,
+                    Err(e) if e.to_string().contains("not yet supported") => continue,
+                    Err(e) => panic!("({tag}, {prop}) on {dir}: {e}"),
+                };
+                let uses = variable_uses(&source, value);
+                assert!(
+                    uses.is_empty(),
+                    "({tag}, {prop}): {dir} reads `{value}` as a variable: {uses:?}"
+                );
+                proven += 1;
+            }
+        }
+        assert!(
+            proven >= moslayout_compiler::KEYWORD_LITERAL_PROPS.len() * 2,
+            "too few entries were built to prove anything ({proven})"
+        );
+    }
+
     #[test]
     fn token_overrides_apply_to_parent_and_dependency_styles() {
         let workspace = TempDir::new().unwrap();

@@ -128,6 +128,13 @@ When a package component is loaded, its own names are checked too:
   the result is `UndeclaredExpressionIdentifier`. Without this check,
   `If ( when: ( hint > 0 ) )` with no `slot hint` would compile, and after
   inlining would read the consumer's `hint`.
+- **Bare NAME prop values.** `Text ( content: title )` lowers to a
+  variable on React (`{title}`) and HTML (`{{title}}`), so a bare NAME is
+  checked like an expression name. Exempt are `true`/`false`, the kernel's
+  enum positions (`moslayout_compiler::KEYWORD_LITERAL_PROPS`, such as
+  `axis: both` or `a11y-role: heading`), and, at a call site, a value bound
+  to a `one-of` slot. A bare NAME that names one of the component's own
+  slots becomes `slot: <name>`, so it takes the call site's binding.
 - **The child-mount slot.** It may be read only at the mount. A read
   anywhere else is `ChildMountSlotReferenced`, because nothing ever binds
   that slot by prop.

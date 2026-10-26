@@ -62,6 +62,34 @@ What changed:
   errors are kept, and `Multiple { errors, omitted }` counts the rest:
   "… and N more". Load errors are deduplicated through a set keyed by
   (variant, package, component), not a linear scan of every error.
+- **Bare NAME prop values (security review round 2, MEDIUM).** A bare NAME
+  value is a `Keyword` in the IR, and neither the scope check nor
+  substitution looked at it. But React and HTML lower it to a variable in
+  most positions (`Text ( content: x )` becomes `{x}` / `{{x}}`). Three
+  results:
+  - a package could read any consumer variable on purpose
+    (`content: authToken`);
+  - a component's own `content: title` showed the consumer's `title` even
+    when the call site bound `title`;
+  - `content: children` read the mount slot.
+
+  It is now checked like a bare expression name, except when it is a
+  literal: `true`/`false`, a `moslayout_compiler::KEYWORD_LITERAL_PROPS`
+  position, a `For`'s `as:`/`index:`, or a call-site value bound to a
+  `one-of` slot. The `one-of` case uses the mounted component's `.mil`,
+  through the new `interface_slots`, which compiles only the interface, so
+  a cycle cannot recurse. A bare NAME naming the component's own slot is
+  rewritten to `slot: <name>` when the component loads, so substitution
+  binds it.
+- **Callee-scope limits (round 2, LOW).**
+  - Callee-scope errors are capped at `MAX_REPORTED_ERRORS`, and the rest
+    are counted as omitted.
+  - An error quotes at most 200 characters of an expression.
+  - Slot lookups use a map built once per component.
+  - A failed load is cached per (package, component).
+- **Known follow-up.** A callee's `For` binding can still capture names
+  from outside the callee: consumer values bound into it, and
+  caller-authored children spliced under the loop.
 - **A binding counts only under the slot's kebab-case name.** A
   `bodyValue:` binding never filled a `slot: body-value` prop, so it does
   not satisfy the check either.
@@ -94,6 +122,16 @@ What changed:
   - `For` shadowing;
   - the kebab-aware tokenizer;
   - the cap on the error list.
+- Round-2 tests:
+  - a bare NAME naming nothing is rejected (deliberate read);
+  - a bare NAME naming an own slot takes the binding or the default
+    (accidental capture);
+  - a bare NAME naming the mount slot is rejected;
+  - enum values, booleans and loop bindings are left alone, even where a
+    slot or loop variable has the same name;
+  - bare NAMEs at a nested call site follow the mounted slot's type;
+  - callee-scope errors are capped and expressions quoted in part;
+  - a failed load is cached.
 
 ### Added — a component can be mounted more than once (UI34 §5 step 4)
 
