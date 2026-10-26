@@ -90,7 +90,7 @@ merged, while Cortex-M33 is already in review.
 | 12 | ARM7TDMI | published ARMv4T manuals | Complete locally: bounded ARMv4T ARM/Thumb integer core; all 31 physical GPRs and five SPSRs; pipeline-visible PC, bank/state exchange, checked memory and full-span control targets; exact transactional traces/lifecycle; 39 release tests; and 88.30% line coverage (1,389/1,573). Gate partner and SoC composition remain queued. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
-| 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: functional merged; gate Spec 07bc2 independently reviewed; independent gate decoder/executor, repository-gate ALU/control, exact 524,667-DFF state, complete 255-transition functional differential, explicit I/O/DMA/interrupt seams, five compiler-valid hostile structural fixtures, typed atomic lifecycle, 36 release tests plus one doctest, and 92.35% line coverage (1,255/1,359). Exact-head review remains before publication. |
+| 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: functional merged; gate Spec 07bc2 independently reviewed; independent gate decoder/executor with gate-authoritative legality/family/control predicates, repository-gate ALU/control, exact 524,667-DFF state, exact full-trace/full-state 255-transition and focused lifecycle/bus differentials, explicit I/O/DMA/interrupt seams, eleven compiler-valid hostile structural fixtures, typed atomic lifecycle including post-first-step allocation rollback, 40 release tests plus one doctest, and 95.62% line coverage (1,442/1,508). Exact-head review remains before publication. |
 
 CDP1802 is complete locally from its independently reviewed specification.
 The functional cell covers the complete register matrix, instruction table,
@@ -100,10 +100,11 @@ the requested SoC data-movement simulations. A different reviewer's exact-head
 implementation PASS is the remaining publication gate. The independently
 specified educational gate partner is complete locally.
 Source-backed SoC composition remains a separate follow-up.
-The gate evidence is 36 release tests plus one doctest, including a 256-byte
-decode sweep, all 255 accepted transition differentials, exhaustive
-256x256x2 ALU relations, five compiler-valid hostile fixtures, strict
-Clippy/rustdoc, affected BUILD, and 92.35% line coverage (1,255/1,359).
+The gate evidence is 40 release tests plus one doctest, including a 256-byte
+decode sweep, exact full traces/states for all 255 accepted transitions and
+focused alias/control/bus/lifecycle/fault/allocation matrices, exhaustive
+256x256x2 ALU relations, eleven compiler-valid hostile fixtures, strict
+Clippy/rustdoc, affected BUILD, and 95.62% line coverage (1,442/1,508).
 
 ## Discovered follow-up work
 

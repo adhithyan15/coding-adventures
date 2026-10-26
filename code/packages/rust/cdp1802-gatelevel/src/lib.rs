@@ -407,13 +407,15 @@ impl Cdp1802GateSimulator {
 
     /// Acknowledge an eligible interrupt and clock the candidate atomically.
     pub fn interrupt(&mut self) -> Result<InterruptTransaction, Cdp1802Error> {
-        if self.first_instruction_pending != 0 {
+        let (inhibited, eligible) =
+            gates::interrupt_control(self.first_instruction_pending, self.ie);
+        if inhibited == 1 {
             return Err(Cdp1802Error::InterruptInhibited);
         }
-        if self.ie == 0 {
+        if eligible == 0 {
             return Err(Cdp1802Error::InterruptMasked);
         }
-        let saved_selectors = ((self.x.read() as u8) << 4) | self.p.read() as u8;
+        let saved_selectors = gates::pack_selectors(self.x.read() as u8, self.p.read() as u8);
         self.t.clock(u64::from(saved_selectors));
         self.x.clock(2);
         self.p.clock(1);

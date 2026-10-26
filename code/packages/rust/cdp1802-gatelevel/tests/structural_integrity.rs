@@ -27,7 +27,18 @@ fn validate(root: &Path) -> Result<(), String> {
         "crate::gates::add8(left, right, carry)",
         "state.d = bit_or(state.d, operand)",
         "increment16(pc)",
-        "decode4(opcode >> 4)",
+        "let (high, low) = opcode_lines(opcode);",
+        "and_gate(high[6], low[8]) == 1",
+        "let (high_lines, low_lines) = opcode_lines(opcode);",
+        "let decoded = decode_from_lines(opcode, &high_lines, &low_lines)?;",
+        "if high_lines[0] == 1",
+        "short_control_condition(low, state.q, state.d, state.df, state.ef)",
+        "long_branch_condition(low, state.q, state.d, state.df)",
+        "long_skip_condition(low, state.q, state.d, state.df, state.ie)",
+        "select16(\n        increment16(address)",
+        "gates::interrupt_control(self.first_instruction_pending, self.ie)",
+        "gates::pack_selectors(self.x.read() as u8, self.p.read() as u8)",
+        "if let Err(error) = self.allocation_checkpoint()",
     ] {
         if !combined.contains(required) {
             return Err(format!("required structural path missing: {required}"));
@@ -38,6 +49,11 @@ fn validate(root: &Path) -> Result<(), String> {
         "state.d |= operand",
         "self.q = u8::from(candidate.q)",
         "_detached_gate",
+        "decode(opcode)?",
+        "decode4(opcode >> 4)",
+        "match high",
+        "matches!(low",
+        "condition(take)",
     ] {
         if combined.contains(forbidden) {
             return Err(format!("host-language bypass found: {forbidden}"));
@@ -90,10 +106,10 @@ fn manifest(crate_dir: &Path, include_oracle: bool) -> String {
 }
 
 #[test]
-fn production_structure_passes_and_five_compiler_valid_bypasses_fail() {
+fn production_structure_passes_and_compiler_valid_bypasses_fail() {
     let crate_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     validate(&crate_dir).unwrap();
-    let mutations: [(&str, &str, &str, bool); 5] = [
+    let mutations: [(&str, &str, &str, bool); 11] = [
         (
             "engine.rs",
             "crate::gates::add8(left, right, carry)",
@@ -102,14 +118,32 @@ fn production_structure_passes_and_five_compiler_valid_bypasses_fail() {
         ),
         (
             "engine.rs",
-            "let high = decode4(opcode >> 4)\n        .into_iter()\n        .position(|wire| wire == 1)\n        .expect(\"four-bit decoder is one-hot\") as u8;",
-            "let high = opcode >> 4;",
+            "let (high_lines, low_lines) = opcode_lines(opcode);",
+            "let high_lines = crate::gates::decode4(opcode >> 4);\n    let low_lines = crate::gates::decode4(opcode & 0x0f);",
+            false,
+        ),
+        (
+            "decode.rs",
+            "if and_gate(high[6], low[8]) == 1 {",
+            "if opcode == 0x68 {",
             false,
         ),
         (
             "engine.rs",
-            "let opcode = state.memory[usize::from(pc)];",
-            "let _detached_gate = increment16(pc);\n    let opcode = state.memory[usize::from(pc)];",
+            "let take_wire = short_control_condition(low, state.q, state.d, state.df, state.ef);",
+            "let take_wire = u8::from(state.q || !state.q);",
+            false,
+        ),
+        (
+            "engine.rs",
+            "let take_wire = long_branch_condition(low, state.q, state.d, state.df);",
+            "let take_wire = u8::from(state.q || !state.q);",
+            false,
+        ),
+        (
+            "engine.rs",
+            "let take_wire = long_skip_condition(low, state.q, state.d, state.df, state.ie);",
+            "let take_wire = u8::from(state.ie || !state.ie);",
             false,
         ),
         (
@@ -123,6 +157,24 @@ fn production_structure_passes_and_five_compiler_valid_bypasses_fail() {
             "mod decode;",
             "mod decode;\nuse functional_oracle::Cdp1802Simulator as HostOracle;\nconst _HOST_ORACLE_ALIAS: Option<HostOracle> = None;",
             true,
+        ),
+        (
+            "engine.rs",
+            "let (high_lines, low_lines) = opcode_lines(opcode);",
+            "let _detached_gate = opcode_lines(opcode);\n    let high_lines = crate::gates::decode4(opcode >> 4);\n    let low_lines = crate::gates::decode4(opcode & 0x0f);",
+            false,
+        ),
+        (
+            "lib.rs",
+            "let (inhibited, eligible) =\n            gates::interrupt_control(self.first_instruction_pending, self.ie);",
+            "let inhibited = u8::from(self.first_instruction_pending != 0);\n        let eligible = u8::from(self.first_instruction_pending == 0 && self.ie != 0);",
+            false,
+        ),
+        (
+            "engine.rs",
+            "if let Err(error) = self.allocation_checkpoint() {\n                self.state = rollback;\n                return Err(error);\n            }",
+            "if false {\n                self.state = rollback;\n                return Err(Cdp1802Error::AllocationFailed);\n            }",
+            false,
         ),
     ];
 

@@ -102,6 +102,147 @@ pub fn decode4(value: u8) -> [u8; 16] {
     })
 }
 
+/// Split an instruction byte through fixed wires and settle both one-hot
+/// decoders.  Callers route on these wires; they never decode the nibbles a
+/// second time with host shifts or matches.
+pub fn opcode_lines(opcode: u8) -> ([u8; 16], [u8; 16]) {
+    let bits = bits8(opcode);
+    let low = from_bits8(&bits[..4]);
+    let high = from_bits8(&bits[4..]);
+    (decode4(high), decode4(low))
+}
+
+/// Recover the index of an already-settled one-hot decoder for bounded array
+/// addressing and trace text.  This does not decide legality or family
+/// routing; those decisions consume the lines themselves.
+pub fn one_hot_index(lines: &[u8; 16]) -> u8 {
+    lines
+        .iter()
+        .position(|wire| *wire == 1)
+        .expect("four-bit decoder is one-hot") as u8
+}
+
+pub fn any_line(lines: &[u8; 16], selected: &[usize]) -> u8 {
+    selected
+        .iter()
+        .fold(0, |wire, index| or_gate(wire, lines[*index]))
+}
+
+fn select_predicate(lines: &[u8; 16], predicates: &[u8; 16]) -> u8 {
+    lines
+        .iter()
+        .zip(predicates)
+        .fold(0, |result, (selected, predicate)| {
+            or_gate(result, and_gate(*selected, *predicate))
+        })
+}
+
+/// Gate-settled condition for all sixteen short branch/skip encodings.
+pub fn short_control_condition(low: &[u8; 16], q: bool, d: u8, df: bool, ef: [bool; 4]) -> u8 {
+    let q = u8::from(q);
+    let zero = is_zero(d);
+    let df = u8::from(df);
+    let ef = ef.map(u8::from);
+    select_predicate(
+        low,
+        &[
+            1,
+            q,
+            zero,
+            df,
+            ef[0],
+            ef[1],
+            ef[2],
+            ef[3],
+            0,
+            not_gate(q),
+            not_gate(zero),
+            not_gate(df),
+            not_gate(ef[0]),
+            not_gate(ef[1]),
+            not_gate(ef[2]),
+            not_gate(ef[3]),
+        ],
+    )
+}
+
+/// Gate-settled condition for the seven three-byte long branches.
+pub fn long_branch_condition(low: &[u8; 16], q: bool, d: u8, df: bool) -> u8 {
+    let q = u8::from(q);
+    let zero = is_zero(d);
+    let df = u8::from(df);
+    select_predicate(
+        low,
+        &[
+            1,
+            q,
+            zero,
+            df,
+            0,
+            0,
+            0,
+            0,
+            0,
+            not_gate(q),
+            not_gate(zero),
+            not_gate(df),
+            0,
+            0,
+            0,
+            0,
+        ],
+    )
+}
+
+/// Gate-settled condition for long skip encodings (NOP remains disabled).
+pub fn long_skip_condition(low: &[u8; 16], q: bool, d: u8, df: bool, ie: bool) -> u8 {
+    let q = u8::from(q);
+    let zero = is_zero(d);
+    let df = u8::from(df);
+    select_predicate(
+        low,
+        &[
+            0,
+            0,
+            0,
+            0,
+            0,
+            not_gate(q),
+            not_gate(zero),
+            not_gate(df),
+            1,
+            0,
+            0,
+            0,
+            u8::from(ie),
+            q,
+            zero,
+            df,
+        ],
+    )
+}
+
+/// Settled interrupt control wires. Inhibition has explicit priority; the
+/// eligibility line can rise only when inhibition is clear and IE is set.
+pub fn interrupt_control(first_instruction_pending: u8, ie: u8) -> (u8, u8) {
+    let inhibited = and_gate(first_instruction_pending, 1);
+    let eligible = and_gate(not_gate(inhibited), ie);
+    (inhibited, eligible)
+}
+
+/// Fixed wiring for T=(X<<4)|P without host arithmetic authority.
+pub fn pack_selectors(x: u8, p: u8) -> u8 {
+    let x = bits8(x);
+    let p = bits8(p);
+    from_bits8(&std::array::from_fn::<_, 8, _>(|bit| {
+        if bit < 4 {
+            p[bit]
+        } else {
+            x[bit - 4]
+        }
+    }))
+}
+
 pub fn shift_right(value: u8, carry: bool) -> (u8, bool) {
     let bits = bits8(value);
     let output: [u8; 8] = std::array::from_fn(|bit| {
@@ -124,8 +265,4 @@ pub fn shift_left(value: u8, carry: bool) -> (u8, bool) {
         }
     });
     (from_bits8(&output), bits[7] == 1)
-}
-
-pub fn condition(wire: bool) -> u8 {
-    u8::from(wire)
 }

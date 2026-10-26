@@ -193,11 +193,16 @@ this educational architectural gate claim.
 ## 9. Completion evidence
 
 The completed local cell derives exactly 524,667 DFFs and 3,148,002 storage
-gates from owned containers. Its 36 release tests plus one doctest cover every
-decode byte, all 255 accepted transition differentials, exhaustive 256x256x2
-add/subtract tuples, gate shifts, lifecycle/rollback, all ports, DMA,
-interrupts, and five hostile full temporary crates that compile before the
-validator rejects them. Rustfmt, strict Clippy, rustdoc warnings-as-errors,
-and the package BUILD are green. `cargo llvm-cov` reports 92.35% combined line
-coverage (1,255 of 1,359 lines). Publication still requires an independent
-review of the exact clean reconciled head.
+gates from owned containers. Gate-derived high/low decoder conjunctions are
+the sole legality and family authority, including the unique 0x68 rejection;
+gate-derived settled wires likewise authorize branch, skip, and interrupt
+decisions. Its 40 release tests plus one doctest cover every decode byte, exact
+full traces and states for all 255 accepted transitions and focused alias,
+P/X/N, wrap, self-modification, branch, skip, immediate, port, lifecycle, DMA,
+interrupt, fault, run, execute, and allocation matrices. They also cover
+exhaustive 256x256x2 add/subtract tuples, gate shifts, rollback after a first
+successful private instruction, and eleven hostile full temporary crates that
+compile before the validator rejects them. Rustfmt, strict Clippy, rustdoc
+warnings-as-errors, and the affected BUILD are green. `cargo llvm-cov` reports
+95.62% combined line coverage (1,442 of 1,508 lines). Publication still
+requires an independent review of the exact clean reconciled head.

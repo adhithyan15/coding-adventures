@@ -1,6 +1,8 @@
 //! Exhaustive first-byte classification for the CDP1802.
 
 use crate::engine::Cdp1802Error;
+use crate::gates::{any_line, one_hot_index, opcode_lines};
+use logic_gates::gates::and_gate;
 
 /// Instruction families visible at the functional boundary.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -159,72 +161,165 @@ const fn alu_mnemonic(low: u8) -> &'static str {
 
 /// Decode one first byte. Opcode `0x68` is the only unassigned encoding.
 pub fn decode(opcode: u8) -> Result<DecodedInstruction, Cdp1802Error> {
-    let high = opcode >> 4;
-    let low = opcode & 0x0f;
-    let decoded = match high {
-        0x0 if low == 0 => instruction(opcode, InstructionClass::Idle, None, 1, 2, "IDL"),
-        0x0 => instruction(opcode, InstructionClass::LoadN, Some(low), 1, 2, "LDN"),
-        0x1 => instruction(opcode, InstructionClass::Increment, Some(low), 1, 2, "INC"),
-        0x2 => instruction(opcode, InstructionClass::Decrement, Some(low), 1, 2, "DEC"),
-        0x3 => instruction(
+    let (high, low) = opcode_lines(opcode);
+    decode_from_lines(opcode, &high, &low)
+}
+
+pub(crate) fn decode_from_lines(
+    opcode: u8,
+    high: &[u8; 16],
+    low: &[u8; 16],
+) -> Result<DecodedInstruction, Cdp1802Error> {
+    let low_index = one_hot_index(low);
+    if and_gate(high[6], low[8]) == 1 {
+        return Err(Cdp1802Error::UnknownInstruction { raw: opcode });
+    }
+    let decoded = if and_gate(high[0], low[0]) == 1 {
+        instruction(opcode, InstructionClass::Idle, None, 1, 2, "IDL")
+    } else if high[0] == 1 {
+        instruction(
+            opcode,
+            InstructionClass::LoadN,
+            Some(low_index),
+            1,
+            2,
+            "LDN",
+        )
+    } else if high[1] == 1 {
+        instruction(
+            opcode,
+            InstructionClass::Increment,
+            Some(low_index),
+            1,
+            2,
+            "INC",
+        )
+    } else if high[2] == 1 {
+        instruction(
+            opcode,
+            InstructionClass::Decrement,
+            Some(low_index),
+            1,
+            2,
+            "DEC",
+        )
+    } else if high[3] == 1 {
+        instruction(
             opcode,
             InstructionClass::ShortControl,
             None,
             2,
             2,
-            short_mnemonic(low),
-        ),
-        0x4 => instruction(
+            short_mnemonic(low_index),
+        )
+    } else if high[4] == 1 {
+        instruction(
             opcode,
             InstructionClass::LoadAdvance,
-            Some(low),
+            Some(low_index),
             1,
             2,
             "LDA",
-        ),
-        0x5 => instruction(opcode, InstructionClass::Store, Some(low), 1, 2, "STR"),
-        0x6 if low == 8 => return Err(Cdp1802Error::UnknownInstruction { raw: opcode }),
-        0x6 => instruction(
+        )
+    } else if high[5] == 1 {
+        instruction(
+            opcode,
+            InstructionClass::Store,
+            Some(low_index),
+            1,
+            2,
+            "STR",
+        )
+    } else if high[6] == 1 {
+        instruction(
             opcode,
             InstructionClass::Io,
             None,
             1,
             2,
-            control_mnemonic(low),
-        ),
-        0x7 => instruction(
+            control_mnemonic(low_index),
+        )
+    } else if high[7] == 1 {
+        instruction(
             opcode,
             InstructionClass::Control,
             None,
-            if matches!(low, 0xc | 0xd | 0xf) { 2 } else { 1 },
+            1 + any_line(low, &[0xc, 0xd, 0xf]),
             2,
-            seven_mnemonic(low),
-        ),
-        0x8 => instruction(opcode, InstructionClass::GetLow, Some(low), 1, 2, "GLO"),
-        0x9 => instruction(opcode, InstructionClass::GetHigh, Some(low), 1, 2, "GHI"),
-        0xa => instruction(opcode, InstructionClass::PutLow, Some(low), 1, 2, "PLO"),
-        0xb => instruction(opcode, InstructionClass::PutHigh, Some(low), 1, 2, "PHI"),
-        0xc => {
-            let branch = matches!(low, 0x0..=0x3 | 0x9..=0xb);
-            instruction(
-                opcode,
-                InstructionClass::LongControl,
-                None,
-                if branch { 3 } else { 1 },
-                3,
-                long_mnemonic(low),
-            )
-        }
-        0xd => instruction(opcode, InstructionClass::SetProgram, Some(low), 1, 2, "SEP"),
-        0xe => instruction(opcode, InstructionClass::SetIndex, Some(low), 1, 2, "SEX"),
-        _ => instruction(
+            seven_mnemonic(low_index),
+        )
+    } else if high[8] == 1 {
+        instruction(
+            opcode,
+            InstructionClass::GetLow,
+            Some(low_index),
+            1,
+            2,
+            "GLO",
+        )
+    } else if high[9] == 1 {
+        instruction(
+            opcode,
+            InstructionClass::GetHigh,
+            Some(low_index),
+            1,
+            2,
+            "GHI",
+        )
+    } else if high[10] == 1 {
+        instruction(
+            opcode,
+            InstructionClass::PutLow,
+            Some(low_index),
+            1,
+            2,
+            "PLO",
+        )
+    } else if high[11] == 1 {
+        instruction(
+            opcode,
+            InstructionClass::PutHigh,
+            Some(low_index),
+            1,
+            2,
+            "PHI",
+        )
+    } else if high[12] == 1 {
+        instruction(
+            opcode,
+            InstructionClass::LongControl,
+            None,
+            1 + 2 * any_line(low, &[0x0, 0x1, 0x2, 0x3, 0x9, 0xa, 0xb]),
+            3,
+            long_mnemonic(low_index),
+        )
+    } else if high[13] == 1 {
+        instruction(
+            opcode,
+            InstructionClass::SetProgram,
+            Some(low_index),
+            1,
+            2,
+            "SEP",
+        )
+    } else if high[14] == 1 {
+        instruction(
+            opcode,
+            InstructionClass::SetIndex,
+            Some(low_index),
+            1,
+            2,
+            "SEX",
+        )
+    } else {
+        instruction(
             opcode,
             InstructionClass::Alu,
             None,
-            if matches!(low, 0x8..=0xd | 0xf) { 2 } else { 1 },
+            1 + any_line(low, &[0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xf]),
             2,
-            alu_mnemonic(low),
-        ),
+            alu_mnemonic(low_index),
+        )
     };
     Ok(decoded)
 }

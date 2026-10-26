@@ -9,8 +9,9 @@ transition engine. Production code does not depend on the functional oracle.
 Every mutable bit is authoritative stable-Q storage clocked through repository
 D flip-flops: 524,288 memory bits, 256 register-matrix bits, and 123 selector,
 flag, input, image, interrupt-inhibit, and IDL bits, for exactly **524,667
-DFFs**. Repository gates and ripple networks derive ALU results, DF,
-conditions, selectors, address changes, and write enables.
+DFFs**. Repository gates and ripple networks derive opcode-family legality,
+branch/skip/interrupt predicates, ALU results, DF, selectors, address changes,
+and write enables.
 
 ```rust
 use cdp1802_gatelevel::Cdp1802GateSimulator;
@@ -38,8 +39,12 @@ cargo test -p cdp1802-gatelevel --release --no-fail-fast
 cargo llvm-cov -p cdp1802-gatelevel --release --summary-only
 ```
 
-The release suite differentially covers all first-byte classifications and
-accepted transitions, explicit bus service, lifecycle and allocation rollback,
-exhaustive eight-bit arithmetic, exact topology, and compiler-checked hostile
-anti-bypass mutations. The current evidence is 36 release tests plus one
-doctest and 92.35% combined line coverage (1,255 of 1,359 lines).
+The release suite compares exact full traces and states for every accepted
+first byte plus focused alias, selector, wrap, self-modification, branch, skip,
+immediate, port, lifecycle, DMA, interrupt, fault, run, execute, and allocation
+matrices. Allocation can fail after an earlier private instruction succeeds,
+and run/execute still restore their complete call-entry state. Exhaustive
+eight-bit arithmetic, exact topology, and eleven compiler-checked hostile
+full-crate anti-bypass mutations complete the evidence. The current result is
+40 release tests plus one doctest and 95.62% combined line coverage (1,442 of
+1,508 lines).

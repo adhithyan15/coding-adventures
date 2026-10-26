@@ -17,10 +17,11 @@
 //! # Ok::<(), cdp1802_gatelevel::Cdp1802Error>(())
 //! ```
 
-use crate::decode::decode;
+use crate::decode::decode_from_lines;
 use crate::gates::{
-    bit_and, bit_or, bit_xor, condition, decode4, decrement16, increment16, is_zero, select16,
-    shift_left, shift_right,
+    any_line, bit_and, bit_or, bit_xor, decrement16, increment16, long_branch_condition,
+    long_skip_condition, one_hot_index, opcode_lines, select16, shift_left, shift_right,
+    short_control_condition,
 };
 
 use core::cell::Cell;
@@ -414,6 +415,15 @@ impl Cdp1802Simulator {
             };
             let stopped = trace.idle_after;
             traces.push(trace);
+            // This deterministic checkpoint represents fallible trace/result
+            // construction after the instruction candidate has committed to
+            // the private engine. The enclosing transaction already owns a
+            // fully allocated call-entry snapshot, so failure rolls every
+            // earlier step back without allocating.
+            if let Err(error) = self.allocation_checkpoint() {
+                self.state = rollback;
+                return Err(error);
+            }
             if stopped {
                 let final_state = copy_state_into(
                     &self.state,
@@ -612,7 +622,8 @@ fn execute_one(state: &mut Cdp1802State) -> Result<TransitionMetadata, Cdp1802Er
         return Err(Cdp1802Error::FetchOutsideProgram { pc });
     }
     let opcode = state.memory[usize::from(pc)];
-    let decoded = decode(opcode)?;
+    let (high_lines, low_lines) = opcode_lines(opcode);
+    let decoded = decode_from_lines(opcode, &high_lines, &low_lines)?;
     state.registers[usize::from(state.p)] = increment16(pc);
     let mut metadata = TransitionMetadata {
         raw: [opcode, 0, 0],
@@ -621,47 +632,46 @@ fn execute_one(state: &mut Cdp1802State) -> Result<TransitionMetadata, Cdp1802Er
         cycles: decoded.cycles,
         ..TransitionMetadata::default()
     };
-    let high = decode4(opcode >> 4)
-        .into_iter()
-        .position(|wire| wire == 1)
-        .expect("four-bit decoder is one-hot") as u8;
-    let low = decode4(opcode & 0x0f)
-        .into_iter()
-        .position(|wire| wire == 1)
-        .expect("four-bit decoder is one-hot") as u8;
-    match high {
-        0x0 => execute_zero(state, low, &mut metadata),
-        0x1 => state.registers[usize::from(low)] = increment16(state.registers[usize::from(low)]),
-        0x2 => state.registers[usize::from(low)] = decrement16(state.registers[usize::from(low)]),
-        0x3 => execute_short_control(state, pc, low, &mut metadata)?,
-        0x4 => {
-            let address = state.registers[usize::from(low)];
-            state.d = state.memory[usize::from(address)];
-            state.registers[usize::from(low)] = increment16(address);
-            metadata.memory_access = Some(read_access(address, state.d));
-        }
-        0x5 => {
-            let address = state.registers[usize::from(low)];
-            state.memory[usize::from(address)] = state.d;
-            metadata.memory_access = Some(write_access(address, state.d));
-        }
-        0x6 => execute_io(state, low, &mut metadata),
-        0x7 => execute_control(state, pc, low, &mut metadata)?,
-        0x8 => state.d = state.registers[usize::from(low)] as u8,
-        0x9 => state.d = (state.registers[usize::from(low)] >> 8) as u8,
-        0xa => {
-            let current = state.registers[usize::from(low)];
-            state.registers[usize::from(low)] = (current & 0xff00) | u16::from(state.d);
-        }
-        0xb => {
-            let current = state.registers[usize::from(low)];
-            state.registers[usize::from(low)] = (current & 0x00ff) | (u16::from(state.d) << 8);
-        }
-        0xc => execute_long_control(state, pc, low, &mut metadata)?,
-        0xd => state.p = low,
-        0xe => state.x = low,
-        0xf => execute_alu(state, pc, low, &mut metadata)?,
-        _ => unreachable!("four-bit high nibble"),
+    let low = one_hot_index(&low_lines);
+    if high_lines[0] == 1 {
+        execute_zero(state, low, &mut metadata);
+    } else if high_lines[1] == 1 {
+        state.registers[usize::from(low)] = increment16(state.registers[usize::from(low)]);
+    } else if high_lines[2] == 1 {
+        state.registers[usize::from(low)] = decrement16(state.registers[usize::from(low)]);
+    } else if high_lines[3] == 1 {
+        execute_short_control(state, pc, &low_lines, &mut metadata)?;
+    } else if high_lines[4] == 1 {
+        let address = state.registers[usize::from(low)];
+        state.d = state.memory[usize::from(address)];
+        state.registers[usize::from(low)] = increment16(address);
+        metadata.memory_access = Some(read_access(address, state.d));
+    } else if high_lines[5] == 1 {
+        let address = state.registers[usize::from(low)];
+        state.memory[usize::from(address)] = state.d;
+        metadata.memory_access = Some(write_access(address, state.d));
+    } else if high_lines[6] == 1 {
+        execute_io(state, low, &mut metadata);
+    } else if high_lines[7] == 1 {
+        execute_control(state, pc, low, &mut metadata)?;
+    } else if high_lines[8] == 1 {
+        state.d = state.registers[usize::from(low)] as u8;
+    } else if high_lines[9] == 1 {
+        state.d = (state.registers[usize::from(low)] >> 8) as u8;
+    } else if high_lines[10] == 1 {
+        let current = state.registers[usize::from(low)];
+        state.registers[usize::from(low)] = (current & 0xff00) | u16::from(state.d);
+    } else if high_lines[11] == 1 {
+        let current = state.registers[usize::from(low)];
+        state.registers[usize::from(low)] = (current & 0x00ff) | (u16::from(state.d) << 8);
+    } else if high_lines[12] == 1 {
+        execute_long_control(state, pc, &low_lines, &mut metadata)?;
+    } else if high_lines[13] == 1 {
+        state.p = low;
+    } else if high_lines[14] == 1 {
+        state.x = low;
+    } else {
+        execute_alu(state, pc, low, &mut metadata)?;
     }
     Ok(metadata)
 }
@@ -681,30 +691,19 @@ fn execute_zero(state: &mut Cdp1802State, low: u8, metadata: &mut TransitionMeta
 fn execute_short_control(
     state: &mut Cdp1802State,
     pc: u16,
-    low: u8,
+    low: &[u8; 16],
     metadata: &mut TransitionMetadata,
 ) -> Result<(), Cdp1802Error> {
     let address = state.registers[usize::from(state.p)];
     let operand = fetch_operand(state, pc, address, 2)?;
     metadata.raw[1] = operand;
-    let take = match low {
-        0x0 => true,
-        0x1 => state.q,
-        0x2 => is_zero(state.d) != 0,
-        0x3 => state.df,
-        0x4..=0x7 => state.ef[usize::from(low - 4)],
-        0x8 => false,
-        0x9 => !state.q,
-        0xa => is_zero(state.d) == 0,
-        0xb => !state.df,
-        0xc..=0xf => !state.ef[usize::from(low - 0xc)],
-        _ => unreachable!("four-bit low nibble"),
-    };
+    let take_wire = short_control_condition(low, state.q, state.d, state.df, state.ef);
+    let take = take_wire == 1;
     let selected = usize::from(state.p);
     state.registers[selected] = select16(
         increment16(address),
         (address & 0xff00) | u16::from(operand),
-        condition(take),
+        take_wire,
     );
     metadata.branch_taken = Some(take);
     Ok(())
@@ -814,44 +813,28 @@ fn execute_control(
 fn execute_long_control(
     state: &mut Cdp1802State,
     pc: u16,
-    low: u8,
+    low: &[u8; 16],
     metadata: &mut TransitionMetadata,
 ) -> Result<(), Cdp1802Error> {
-    if matches!(low, 0x0..=0x3 | 0x9..=0xb) {
+    let branch_wire = any_line(low, &[0x0, 0x1, 0x2, 0x3, 0x9, 0xa, 0xb]);
+    if branch_wire == 1 {
         let address = state.registers[usize::from(state.p)];
         let high = fetch_operand(state, pc, address, 3)?;
         let second_address = increment16(address);
         let low_byte = fetch_operand(state, pc, second_address, 3)?;
         metadata.raw[1] = high;
         metadata.raw[2] = low_byte;
-        let take = match low {
-            0x0 => true,
-            0x1 => state.q,
-            0x2 => is_zero(state.d) != 0,
-            0x3 => state.df,
-            0x9 => !state.q,
-            0xa => is_zero(state.d) == 0,
-            0xb => !state.df,
-            _ => unreachable!("long branch opcode"),
-        };
+        let take_wire = long_branch_condition(low, state.q, state.d, state.df);
+        let take = take_wire == 1;
         state.registers[usize::from(state.p)] = select16(
             increment16(increment16(address)),
             (u16::from(high) << 8) | u16::from(low_byte),
-            condition(take),
+            take_wire,
         );
         metadata.branch_taken = Some(take);
-    } else if low != 4 {
-        let take = match low {
-            0x5 => !state.q,
-            0x6 => is_zero(state.d) == 0,
-            0x7 => !state.df,
-            0x8 => true,
-            0xc => state.ie,
-            0xd => state.q,
-            0xe => is_zero(state.d) != 0,
-            0xf => state.df,
-            _ => unreachable!("long skip opcode"),
-        };
+    } else if low[4] == 0 {
+        let take_wire = long_skip_condition(low, state.q, state.d, state.df, state.ie);
+        let take = take_wire == 1;
         let selected = usize::from(state.p);
         let first_address = state.registers[selected];
         let _first_bus_value = state.memory[usize::from(first_address)];
@@ -864,7 +847,7 @@ fn execute_long_control(
         state.registers[selected] = select16(
             first_address,
             increment16(increment16(first_address)),
-            condition(take),
+            take_wire,
         );
         metadata.branch_taken = Some(take);
     }
