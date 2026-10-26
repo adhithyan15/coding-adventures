@@ -248,6 +248,13 @@ macro_rules! python_float_case {
     };
 }
 
+/// The source of one `es-number-log` corpus case (LANG84 phase 6e).
+macro_rules! js_case {
+    ($name:literal) => {
+        include_str!(concat!("../../../../grammars/ecmascript/corpus/es-number-log/", $name, ".js"))
+    };
+}
+
 /// Every executable column, for rows that run on all of them.
 const EVERY_COLUMN: &[Backend] = &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam];
 
@@ -11407,6 +11414,51 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("negative_zero_divisor"), expect: Expect::StdoutThenTrap("0.25", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/negative_zero_divisor") },
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("div_zero_inside_argument"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/div_zero_inside_argument") },
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("overflow_inside_float"), expect: Expect::StdoutThenTrap("1.5", "Trap.Overflow"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/overflow_inside_float") },
+    // LANG84 phase 6e: JavaScript `es-number-log` on every backend, one row per
+    // case on each IIR-identity class representative (es2016, es2021) and on the
+    // default edition (es2020). Expectations are host node v22's stdout
+    // (`<case>.cite`); `javascript_rows_agree_with_the_host_node_oracle` reruns it.
+    // A row with arithmetic uses the PR6c `f64_*` ops, which BEAM refuses at
+    // compile time (`UnsupportedOps`, allowed by stage B), so it lists the seven
+    // IEEE columns; a literal-only row runs on all eight.
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("arithmetic"), expect: Expect::Stdout("3 -3 42"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/arithmetic") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("asi_newlines"), expect: Expect::Stdout("1\n2\n2"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/asi_newlines") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_after_names"), expect: Expect::Stdout("1 3 3"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/division_after_names") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_chain"), expect: Expect::Stdout("2 0.3333333333333333 2.5"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/division_chain") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("empty_log"), expect: Expect::Stdout("42"), backends: EVERY_COLUMN, release: Some("es2016"), case: Some("es-number-log/empty_log") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("float_formatting"), expect: Expect::Stdout("0.30000000000000004 123456789012345680000 0.000001"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/float_formatting") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("infinities_and_nan"), expect: Expect::Stdout("Infinity -Infinity NaN"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/infinities_and_nan") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("lexical_bindings"), expect: Expect::Stdout("2 6 -6"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/lexical_bindings") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("negative_zero"), expect: Expect::Stdout("-0 -0 0"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/negative_zero") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("precedence"), expect: Expect::Stdout("7 9 2"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/precedence") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("radix_literals"), expect: Expect::Stdout("31 5 15"), backends: EVERY_COLUMN, release: Some("es2016"), case: Some("es-number-log/radix_literals") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("trailing_dot_and_legacy"), expect: Expect::Stdout("5 50 1000\n8.5 80 15\n0 0\n5"), backends: EVERY_COLUMN, release: Some("es2016"), case: Some("es-number-log/trailing_dot_and_legacy") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("arithmetic"), expect: Expect::Stdout("3 -3 42"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/arithmetic") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("asi_newlines"), expect: Expect::Stdout("1\n2\n2"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/asi_newlines") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_after_names"), expect: Expect::Stdout("1 3 3"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/division_after_names") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_chain"), expect: Expect::Stdout("2 0.3333333333333333 2.5"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/division_chain") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("empty_log"), expect: Expect::Stdout("42"), backends: EVERY_COLUMN, release: Some("es2020"), case: Some("es-number-log/empty_log") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("float_formatting"), expect: Expect::Stdout("0.30000000000000004 123456789012345680000 0.000001"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/float_formatting") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("infinities_and_nan"), expect: Expect::Stdout("Infinity -Infinity NaN"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/infinities_and_nan") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("lexical_bindings"), expect: Expect::Stdout("2 6 -6"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/lexical_bindings") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("negative_zero"), expect: Expect::Stdout("-0 -0 0"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/negative_zero") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("precedence"), expect: Expect::Stdout("7 9 2"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/precedence") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("radix_literals"), expect: Expect::Stdout("31 5 15"), backends: EVERY_COLUMN, release: Some("es2020"), case: Some("es-number-log/radix_literals") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("trailing_dot_and_legacy"), expect: Expect::Stdout("5 50 1000\n8.5 80 15\n0 0\n5"), backends: EVERY_COLUMN, release: Some("es2020"), case: Some("es-number-log/trailing_dot_and_legacy") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("arithmetic"), expect: Expect::Stdout("3 -3 42"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/arithmetic") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("asi_newlines"), expect: Expect::Stdout("1\n2\n2"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/asi_newlines") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_after_names"), expect: Expect::Stdout("1 3 3"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/division_after_names") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_chain"), expect: Expect::Stdout("2 0.3333333333333333 2.5"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/division_chain") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("empty_log"), expect: Expect::Stdout("42"), backends: EVERY_COLUMN, release: Some("es2021"), case: Some("es-number-log/empty_log") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("float_formatting"), expect: Expect::Stdout("0.30000000000000004 123456789012345680000 0.000001"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/float_formatting") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("infinities_and_nan"), expect: Expect::Stdout("Infinity -Infinity NaN"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/infinities_and_nan") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("lexical_bindings"), expect: Expect::Stdout("2 6 -6"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/lexical_bindings") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("negative_zero"), expect: Expect::Stdout("-0 -0 0"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/negative_zero") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("numeric_separators"), expect: Expect::Stdout("1000000 0.0001"), backends: EVERY_COLUMN, release: Some("es2021"), case: Some("es-number-log/numeric_separators") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("numeric_separators_radix"), expect: Expect::Stdout("255 2 63\n10000000000 0.55 100100000000"), backends: EVERY_COLUMN, release: Some("es2021"), case: Some("es-number-log/numeric_separators_radix") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("precedence"), expect: Expect::Stdout("7 9 2"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/precedence") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("radix_literals"), expect: Expect::Stdout("31 5 15"), backends: EVERY_COLUMN, release: Some("es2021"), case: Some("es-number-log/radix_literals") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("trailing_dot_and_legacy"), expect: Expect::Stdout("5 50 1000\n8.5 80 15\n0 0\n5"), backends: EVERY_COLUMN, release: Some("es2021"), case: Some("es-number-log/trailing_dot_and_legacy") },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -13256,6 +13308,13 @@ fn py_float_text(x: f64) -> String {
 /// The passes are no-ops on programs without those constructs (every non-Twig /
 /// non-dynamic cell), matching how the code-gen pipelines already run them for
 /// every language.
+/// JavaScript's `String(x)`, the text LANG83 PR6a `write_f64_js` writes: the
+/// same formatter vm-core's default builtin uses, so the VM and JIT columns
+/// capture exactly what a standalone run would print.
+fn js_number_text(x: f64) -> String {
+    vm_core::float_format::format_f64(x, vm_core::float_format::FloatLayout::JavaScript)
+}
+
 fn lower_dynamic_for_generic_engine(module: &mut interpreter_ir::IIRModule) {
     iir_builtin_lowering::lower_global_io(module);
     iir_builtin_lowering::lower_closures_to_heap(module);
@@ -13315,6 +13374,20 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     vm.builtins_mut().register("putchar", move |args: &[Value]| {
         let b = (args.first().and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF) as u8;
         bytes.lock().expect("lang-matrix VM putchar buffer poisoned").push(b);
+        Ok(Value::Null)
+    });
+    // LANG83 PR6a `write_f64_js` (JavaScript's `console.log`, LANG84 6e): the
+    // float's `String(x)` text, into the same ordered buffer. vm-core's default
+    // would write to the process stdout, where the harness cannot see it.
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("write_f64_js", move |args: &[Value]| {
+        let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
+            vm_core::errors::VMError::Custom(format!("write_f64_js: expected a float, got {args:?}"))
+        })?;
+        bytes
+            .lock()
+            .expect("lang-matrix VM output buffer poisoned")
+            .extend_from_slice(js_number_text(x).as_bytes());
         Ok(Value::Null)
     });
     // LANG83 PR6a `write_f64_py` (Python's `print` of a float, LANG84 7c
@@ -13465,6 +13538,17 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("write_f64_js", move |args: &[Value]| {
+        let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
+            vm_core::errors::VMError::Custom(format!("write_f64_js: expected a float, got {args:?}"))
+        })?;
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(js_number_text(x).as_bytes());
+        Ok(Value::Null)
+    });
+    let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("write_f64_py", move |args: &[Value]| {
         let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
             vm_core::errors::VMError::Custom(format!("write_f64_py: expected a float, got {args:?}"))
@@ -13544,6 +13628,16 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         Value::Null
     });
     // `CALL_BUILTIN_F64` hands the compiled tier's handler a `Value::Float`.
+    let bytes = Arc::clone(&printed_bytes);
+    backend.register_builtin("write_f64_js", move |args: &[Value]| {
+        // A non-float would be a JIT bug; print a marker no row can match.
+        let text = args
+            .first()
+            .and_then(Value::as_f64)
+            .map_or_else(|| format!("<write_f64_js: not a float: {args:?}>"), js_number_text);
+        bytes.lock().expect("lang-matrix JIT output buffer poisoned").extend_from_slice(text.as_bytes());
+        Value::Null
+    });
     let bytes = Arc::clone(&printed_bytes);
     backend.register_builtin("write_f64_py", move |args: &[Value]| {
         // A non-float would be a JIT bug; print a marker no row can match.
@@ -14664,6 +14758,12 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // the other 33 the seven IEEE columns (BEAM refuses `f64_*`):
         // 100 + 38 rows, 800 + 5 * 8 + 33 * 7 = 1071 cells.
         (Language::Python, 138, 1071),
+        // JavaScript: LANG84 phase 6e's es-number-log corpus on the default
+        // es2020 (12 cases) and the two IIR-identity class representatives,
+        // es2016 (12) and es2021 (14). The 11 literal-only rows run on all
+        // eight columns; the 27 with IEEE arithmetic on the seven IEEE ones
+        // (BEAM refuses `f64_*` at compile time): 11 * 8 + 27 * 7 = 277.
+        (Language::JavaScript, 38, 277),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -29098,4 +29198,272 @@ fn python_rows_run_their_corpus_case() {
         python_rows().len(),
         "every Python row belongs to one subset"
     );
+}
+
+// ---------------------------------------------------------------------------
+// LANG84 phase 6e — JavaScript `es-number-log` on every backend, per release class
+// ---------------------------------------------------------------------------
+
+fn javascript_rows() -> Vec<&'static Prog> {
+    let rows: Vec<_> = PROGRAMS.iter().filter(|p| p.lang == Language::JavaScript).collect();
+    assert!(!rows.is_empty(), "PROGRAMS has no JavaScript rows");
+    rows
+}
+
+/// Does this JavaScript row's module do IEEE arithmetic (a PR6c `f64_*` op,
+/// including the `f64_add` of the `-0` sign test)? Exactly those rows leave
+/// BEAM out of their columns.
+fn javascript_row_uses_ieee_arithmetic(module: &interpreter_ir::IIRModule) -> bool {
+    module
+        .functions
+        .iter()
+        .flat_map(|f| &f.instructions)
+        .any(|i| matches!(i.op.as_str(), "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg"))
+}
+
+/// Every JavaScript row on every backend it declares, as one named test so a
+/// JavaScript regression is reported as one. A runner that returns `None`
+/// while its toolchain is present fails rather than skips.
+#[test]
+fn javascript_rows_run_on_every_available_backend() {
+    let (mut ran, mut skipped) = (0usize, 0usize);
+    for program in javascript_rows() {
+        let module = prog_iir(program, "c7").unwrap_or_else(|e| panic!("{:?}: {e}", program.case));
+        let want = if javascript_row_uses_ieee_arithmetic(&module) { IEEE_COLUMNS } else { EVERY_COLUMN };
+        assert_eq!(program.backends, want, "{:?}@{:?}: its columns", program.case, program.release);
+        for &backend in program.backends {
+            let available = match backend {
+                NativeAot => native_linker_ok(),
+                _ => toolchain_available(backend),
+            };
+            match run(backend, program) {
+                Some(result) => {
+                    assert_cell(backend, program, result);
+                    ran += 1;
+                }
+                None => {
+                    assert!(!available, "JavaScript {backend:?} silently skipped: {:?}", program.case);
+                    skipped += 1;
+                }
+            }
+        }
+    }
+    assert!(ran > 0);
+    eprintln!("JavaScript matrix: {ran} cells executed, {skipped} skipped");
+}
+
+/// The oracle: host node on the v22 line must print each row's stdout. The
+/// compiled programs never run on it. Skips (loudly) without a matching `node`.
+#[test]
+fn javascript_rows_agree_with_the_host_node_oracle() {
+    let version = match Command::new("node").arg("--version").output() {
+        Ok(out) if out.status.success() => String::from_utf8_lossy(&out.stdout).trim().to_string(),
+        _ => {
+            eprintln!("SKIP JavaScript oracle: no `node` on PATH");
+            return;
+        }
+    };
+    if !version.starts_with("v22.") {
+        eprintln!("SKIP JavaScript oracle: node {version} is not the v22 line these rows target");
+        return;
+    }
+    for program in javascript_rows() {
+        // `node -` reads the script from stdin (see `run_host_oracle`).
+        let out = run_host_oracle(Command::new("node").arg("-"), program.src);
+        let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
+        match program.expect {
+            Expect::Stdout(want) => {
+                assert!(out.status.success(), "node {version} failed {:?}", program.case);
+                assert_eq!(stdout.trim(), want, "node {version}: {:?}", program.case);
+            }
+            ref other => panic!("no JavaScript oracle for {other:?}"),
+        }
+    }
+    eprintln!("JavaScript oracle: {} rows agree with node {version}", javascript_rows().len());
+}
+
+/// LANG84 C7.3: every row's module holds only registry ops — the PR6c IEEE
+/// arithmetic and `f64_signbit`, `cmp_gt`, `write_f64_js`, `putchar` — plus
+/// the ungated `const`, the `-0` branch and `ret` of the exit status; no JavaScript-named
+/// builtin survives. Eight backends accept every row's module at compile
+/// time. BEAM accepts exactly the literal-only rows and refuses the others
+/// with `UnsupportedOps` naming only `f64_*` arithmetic — at compile time,
+/// which stage B allows — so its cells are never a run-time failure.
+#[test]
+fn javascript_rows_pass_the_lang83_check_on_all_nine_backends() {
+    let (mut beam_runs, mut beam_refuses) = (0usize, 0usize);
+    for program in javascript_rows() {
+        let module = lang_aot::compile_source_to_iir_at(Language::JavaScript, program.release, program.src, "c7")
+            .unwrap_or_else(|e| panic!("{:?} {:?}: {e}", program.release, program.case));
+        assert_eq!(module.release.as_deref(), program.release, "{:?}", program.case);
+        // CLR cannot execute on every host; its textual IL is emitted on all.
+        lang_aot::compile_iir_to_cil_text(module.clone(), "Main")
+            .unwrap_or_else(|e| panic!("{:?}: CLR lowering failed: {e}", program.case));
+        for instr in module.functions.iter().flat_map(|f| &f.instructions) {
+            match interpreter_ir::op_registry::registry_name(instr) {
+                Some(name) => assert!(
+                    [
+                        "f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg", "f64_signbit", "cmp_gt",
+                        "write_f64_js", "putchar",
+                    ]
+                    .contains(&name),
+                    "{:?}: unexpected registry op {name}",
+                    program.case
+                ),
+                None => assert!(
+                    ["const", "jmp_if_false", "label", "ret"].contains(&instr.op.as_str()),
+                    "{:?}: {instr:?}",
+                    program.case
+                ),
+            }
+        }
+        for backend in lang_aot::op_check::Backend::ALL {
+            let checked = lang_aot::op_check::check_module_for(backend, &module);
+            if backend != lang_aot::op_check::Backend::Beam {
+                checked.unwrap_or_else(|e| panic!("{:?} refused on {}: {e}", program.case, backend.name()));
+                continue;
+            }
+            match (program.backends.contains(&Beam), checked) {
+                (true, Ok(())) => {
+                    // The whole BEAM pipeline lowers it, not just the op check.
+                    lang_aot::compile_iir_to_beam(module.clone(), "c7")
+                        .unwrap_or_else(|e| panic!("{:?}: BEAM lowering failed: {e}", program.case));
+                    beam_runs += 1;
+                }
+                (false, Err(refusal)) => {
+                    assert!(
+                        refusal.refusals.iter().all(|r| r.op.starts_with("f64_") && r.op != "f64_signbit"),
+                        "{:?}: BEAM refused more than IEEE arithmetic: {refusal}",
+                        program.case
+                    );
+                    assert!(matches!(
+                        lang_aot::compile_iir_to_beam(module.clone(), "c7"),
+                        Err(lang_aot::LangAotError::UnsupportedOps(_))
+                    ));
+                    beam_refuses += 1;
+                }
+                (lists_beam, checked) => {
+                    panic!("{:?}: lists BEAM = {lists_beam} but BEAM's op check gave {checked:?}", program.case)
+                }
+            }
+        }
+    }
+    assert!(beam_runs > 0 && beam_refuses > 0, "{beam_runs} BEAM runs, {beam_refuses} refusals");
+}
+
+/// The matrix's JIT column drives `execute_with_jit`, which compiles only
+/// fully typed functions, and a function that prints is not (its
+/// `call_builtin … : void` and the `-0` branch's labels are untyped), so those
+/// cells run on the interpreter tier (see the lesson "A JIT column driven by
+/// execute_with_jit interprets every function that prints"). This test closes
+/// that gap for JavaScript: every row's `main` must compile to JIT bytecode
+/// (float registers may only meet float-aware instructions, so a stray `mov`
+/// or float compare would refuse it) and, run compiled, print the row's
+/// expected stdout.
+#[test]
+fn javascript_rows_compile_and_run_on_the_jit_without_its_interpreter_fallback() {
+    use jit_core::core::JITCore;
+    use jit_core::GenericCirJit;
+    use std::sync::{Arc, Mutex};
+    use vm_core::value::Value;
+    for program in javascript_rows() {
+        let mut module = prog_iir(program, "main").unwrap();
+        lower_dynamic_for_generic_engine(&mut module);
+        let mut vm = vm_core::core::VMCore::new();
+        let backend = GenericCirJit::new();
+        let printed: Arc<Mutex<Vec<u8>>> = Arc::default();
+        let bytes = Arc::clone(&printed);
+        backend.register_builtin("putchar", move |args: &[Value]| {
+            let b = (args.first().and_then(Value::as_i64).unwrap_or(0) & 0xFF) as u8;
+            bytes.lock().expect("JIT output buffer").push(b);
+            Value::Null
+        });
+        let bytes = Arc::clone(&printed);
+        backend.register_builtin("write_f64_js", move |args: &[Value]| {
+            let text = args
+                .first()
+                .and_then(Value::as_f64)
+                .map_or_else(|| format!("<write_f64_js: not a float: {args:?}>"), js_number_text);
+            bytes.lock().expect("JIT output buffer").extend_from_slice(text.as_bytes());
+            Value::Null
+        });
+        let error_slot = Arc::clone(&backend.error);
+        let mut jit = JITCore::new(&mut vm, Box::new(backend));
+        let compiled = jit.compile(&mut vm, &module, "main");
+        assert!(
+            matches!(compiled, Ok(true)) && jit.is_compiled("main"),
+            "{:?}@{:?}: the JIT did not compile main ({compiled:?})",
+            program.case,
+            program.release
+        );
+        // The VM tier has no `write_f64_js`/`putchar` that writes here, so
+        // output in the buffer can only come from the compiled code.
+        jit.execute(&mut vm, &mut module, "main", &[])
+            .unwrap_or_else(|e| panic!("{:?}@{:?}: {e:?}", program.case, program.release));
+        assert!(error_slot.lock().expect("JIT error slot").take().is_none());
+        let stdout = String::from_utf8(printed.lock().unwrap().clone()).unwrap();
+        let Expect::Stdout(want) = program.expect else { panic!("{:?}", program.expect) };
+        assert_eq!(stdout.trim(), want, "{:?}@{:?}", program.case, program.release);
+    }
+}
+
+/// LANG84 6e: a ReferenceError is `trap "Trap.ReferenceError"`, a closed
+/// LANG83 kind (stable id 7), so every column stops with that kind after the
+/// lines already written — the undeclared name and the temporal dead zone
+/// alike. These programs are not `es-number-log` corpus cases (the corpus has
+/// no failing case yet), so they are checked here rather than as `PROGRAMS`
+/// rows; each is node's behaviour (`ReferenceError` after `1`).
+#[test]
+fn javascript_reference_errors_trap_after_output_on_every_available_backend() {
+    let programs = [
+        Prog {
+            lang: Language::JavaScript,
+            ext: "js",
+            src: "console.log(1);\nconsole.log(z);\nconsole.log(2);\n",
+            expect: Expect::StdoutThenTrap("1", "Trap.ReferenceError"),
+            backends: EVERY_COLUMN,
+            release: Some("es2016"),
+            case: None,
+        },
+        Prog {
+            lang: Language::JavaScript,
+            ext: "js",
+            src: "console.log(1);\nconsole.log(a + 1);\nlet a = 2;\n",
+            expect: Expect::StdoutThenTrap("1", "Trap.ReferenceError"),
+            backends: EVERY_COLUMN,
+            release: Some("es2021"),
+            case: None,
+        },
+    ];
+    let mut ran = 0usize;
+    for program in &programs {
+        for &backend in program.backends {
+            let available = match backend {
+                NativeAot => native_linker_ok(),
+                _ => toolchain_available(backend),
+            };
+            match run(backend, program) {
+                Some(result) => {
+                    assert_cell(backend, program, result);
+                    ran += 1;
+                }
+                None => assert!(!available, "JavaScript {backend:?} silently skipped: {:?}", program.src),
+            }
+        }
+        // The trap ends the program: nothing after it is even emitted.
+        let module = prog_iir(program, "main").unwrap();
+        let ops: Vec<_> = module.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        // `main` still ends with its exit status (`const 0`, `ret`).
+        assert_eq!(&ops[ops.len() - 3..], ["trap", "const", "ret"], "{:?}", program.src);
+    }
+    assert!(ran > 0);
+}
+
+/// LANG84 6e: the JavaScript rows are the `es-number-log` corpus on the
+/// default edition (es2020) and on each IIR-identity class representative
+/// (es2016, which refuses the two numeric-separator cases, and es2021),
+/// exactly as `javascript-iir-compiler`'s release sweep records them.
+#[test]
+fn javascript_rows_run_their_corpus_case() {
+    lang84_rows_run_their_corpus_case(&javascript_rows(), "ecmascript", "es-number-log", "js", "es2020");
 }
