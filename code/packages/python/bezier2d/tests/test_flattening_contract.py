@@ -5,9 +5,8 @@ import math
 from pathlib import Path
 
 import pytest
-from point2d import Point
-
 from bezier2d import CubicBezier, QuadraticBezier
+from point2d import Point
 
 FIXTURE_PATH = (
     Path(__file__).resolve().parents[4]
