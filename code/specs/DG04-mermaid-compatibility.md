@@ -151,8 +151,10 @@ semantic IR and layout while lowering without empty label geometry. ER remains
 compatible with integer and decimal entity identifiers as standalone entities,
 attribute owners, and relationship endpoints through semantic IR, layout, and
 paint. Recursive ER relationships preserve a single semantic entity and route
-as an exterior loop with canvas-aware backend-neutral geometry. ER remains
-partial while the rest of the pinned upstream syntax and visual corpus is
+as an exterior loop with canvas-aware backend-neutral geometry. Unicode symbols
+in unquoted entity identifiers, aliases, attribute text, and relationship roles
+survive semantic IR, layout, and backend-neutral paint. ER remains partial while
+the rest of the pinned upstream syntax and visual corpus is
 incomplete.
 
 ## Required New Semantic Families
