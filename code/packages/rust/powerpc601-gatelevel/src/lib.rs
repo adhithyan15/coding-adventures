@@ -6,6 +6,7 @@
 
 pub mod alu;
 pub mod bits;
+pub mod branch;
 mod cpu;
 pub mod decoder;
 mod register_file;

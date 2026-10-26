@@ -42,6 +42,7 @@ members = [
     "array-runtime",
     "arm-simulator",
     "motorola68020-simulator",
+    "cortex-m0-gatelevel",
     "cortex-m0-simulator",
     "cortex-m3-gatelevel",
     "cortex-m3-simulator",
