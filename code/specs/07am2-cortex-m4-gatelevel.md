@@ -84,9 +84,14 @@ every architectural bit.
 The cell is complete only when it:
 
 1. pins the topology to exactly 526,013 DFFs and rejects hidden host-authority
-   storage with compiler-checked hostile fixtures;
-2. proves production independence from `cortex-m4-simulator` and proves the
-   accepted `cortex-m3-gatelevel` machine is the only inherited executor;
+   storage with compiler-checked, full-crate parsed-syntax hostile fixtures;
+2. source-locks production independence from `cortex-m4-simulator` and the
+   accepted `cortex-m3-gatelevel` machine as the only inherited executor. The
+   structural gate must compile and reject hostile mutations that introduce
+   oracle/functional routing, an alternate or duplicated inherited executor,
+   raw host decode or dispatch, host floating arithmetic/conversion, host DSP
+   result/flag/predicate/write-enable decisions, hidden or post-commit
+   architectural mirrors, and dead or duplicate shadow helpers;
 3. exercises every inherited primary decode family and every bounded DSP/FPU
    family, reserved neighbour, flag path, and configuration state;
 4. differentially compares exact result/error, fetched bytes, width, mnemonic,
