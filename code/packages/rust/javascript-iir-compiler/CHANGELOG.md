@@ -11,6 +11,10 @@
   builtin. `the_oracle_matches_host_node` pins the oracle to strings host
   `node` printed. No code change: the compiler has emitted no `write_f64_js`
   since 0.7.0.
+- The same test now runs the values in batches of 100 `console.log`s, and
+  where a host `node` is on `PATH` it runs each batch with `node -e` and
+  compares the bytes too (like python-iir-compiler's sweep does with
+  `python3 -I`), so all 1,200 values are checked against a real engine.
 
 ## Unreleased - ReferenceError traps `Trap.Unbound` (LANG83 PR7d)
 

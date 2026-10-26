@@ -3021,7 +3021,13 @@ mod tests {
     /// PR6a's `write_f64_js` wrote), over the layout's every boundary and a
     /// deterministic sweep of bit patterns. Each value is spelled as a
     /// JavaScript literal with Rust's shortest round-trip `{:e}` form, so
-    /// the program prints exactly that double.
+    /// the program prints exactly that double. The programs are batched (one
+    /// `console.log` per line, each line checked). Each batch is also a valid
+    /// Node program, so where a host `node` is installed it runs the same
+    /// source and must print the same bytes: the oracle is checked against
+    /// a real engine on every value, not only on the hand-picked rows of
+    /// [`the_oracle_matches_host_node`]. (Node's `console.log` of a number
+    /// is `String(x)` except for `-0`, which the sweep never holds.)
     #[test]
     fn write_number_matches_the_pr6a_layout_byte_for_byte() {
         let mut values: Vec<f64> = vec![
@@ -3041,16 +3047,39 @@ mod tests {
                 values.push(x.abs());
             }
         }
-        for x in values {
-            for value in [x, -x] {
-                let literal = format!("{:e}", value.abs());
-                let source = if value < 0.0 {
-                    format!("console.log(-{literal});")
-                } else {
-                    format!("console.log({literal});")
-                };
-                let want = number_to_string_oracle(value);
-                assert_eq!(run_source(&source).unwrap(), format!("{want}\n"), "{source}");
+        let host = std::process::Command::new("node")
+            .args(["-e", ""])
+            .output()
+            .is_ok_and(|out| out.status.success());
+        if !host {
+            eprintln!("SKIP host node half: no `node` on PATH");
+        }
+        let signed: Vec<f64> = values.iter().flat_map(|&x| [x, -x]).collect();
+        assert_eq!(signed.len(), 1_200);
+        let statement = |value: f64| {
+            let literal = format!("{:e}", value.abs());
+            if value < 0.0 {
+                format!("console.log(-{literal});\n")
+            } else {
+                format!("console.log({literal});\n")
+            }
+        };
+        for batch in signed.chunks(100) {
+            let source: String = batch.iter().map(|&x| statement(x)).collect();
+            let want: String = batch.iter().map(|&x| format!("{}\n", number_to_string_oracle(x))).collect();
+            let got = run_source(&source).unwrap();
+            for ((got, want), &x) in got.lines().zip(want.lines()).zip(batch) {
+                assert_eq!(got, want, "{}", statement(x).trim_end());
+            }
+            assert_eq!(got, want);
+            if host {
+                let out = std::process::Command::new("node").args(["-e", &source]).output().unwrap();
+                assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
+                let node = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
+                for ((node, want), &x) in node.lines().zip(want.lines()).zip(batch) {
+                    assert_eq!(node, want, "host node: {}", statement(x).trim_end());
+                }
+                assert_eq!(node, want, "host node");
             }
         }
     }
