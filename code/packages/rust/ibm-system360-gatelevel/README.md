@@ -8,9 +8,12 @@ code, and halt latch—are stored in repository D flip-flops.
 The independent transition engine uses a one-hot opcode decoder, ripple-carry
 address and arithmetic networks, Boolean logical and comparison networks,
 fixed-width shifters, shift/add multiplication, restoring division, and
-fixed-width hexadecimal-floating networks. The functional package is used as
-a fail-closed trace and fault oracle; no gate transition is clocked unless its
-complete settled state agrees with that oracle.
+fixed-width hexadecimal-floating networks. Condition-mask selection,
+zero/nonzero count and target tests, and signed index-branch polarity are
+settled by gate reductions, muxes, and one-hot opcode lines rather than host
+comparisons. The functional package is used as a fail-closed trace and fault
+oracle; no gate transition is clocked unless its complete settled state agrees
+with that oracle.
 
 This is an educational ISA-visible System/360 base processor rather than a
 cycle-accurate reconstruction of a particular model's SLT cards, channels,
