@@ -2,11 +2,12 @@
 # Mermaid 11.16.1 C4 parser grammar.
 
 document = { NEWLINE } HEADER { NEWLINE | statement } EOF ;
-statement = element_stmt | relationship_stmt | boundary_stmt | config_stmt | TITLE | DIRECTION ;
+statement = element_stmt | relationship_stmt | boundary_stmt | config_stmt | metadata_stmt | TITLE | DIRECTION ;
 
 element_stmt = ELEMENT_MACRO arguments ;
 relationship_stmt = RELATION_MACRO arguments ;
 config_stmt = CONFIG_MACRO arguments ;
+metadata_stmt = ACC_TITLE | ACC_DESCR | ACC_DESCR_BLOCK ;
 boundary_stmt = BOUNDARY_MACRO arguments [ NEWLINE ] LBRACE { NEWLINE | statement } RBRACE ;
 
 arguments = LPAREN [ argument ] { COMMA [ argument ] } RPAREN ;
