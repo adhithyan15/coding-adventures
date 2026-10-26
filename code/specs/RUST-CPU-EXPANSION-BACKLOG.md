@@ -77,7 +77,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
-| 12 | ARM7TDMI | published ARMv4T manuals | Complete locally: bounded ARMv4T ARM/Thumb integer core; all 31 physical GPRs and five SPSRs; pipeline-visible PC, bank/state exchange, checked memory and full-span control targets; exact transactional traces/lifecycle; 38 release tests; and 88.10% line coverage (1,385/1,572). Gate partner and SoC composition remain queued. |
+| 12 | ARM7TDMI | published ARMv4T manuals | Complete locally: bounded ARMv4T ARM/Thumb integer core; all 31 physical GPRs and five SPSRs; pipeline-visible PC, bank/state exchange, checked memory and full-span control targets; exact transactional traces/lifecycle; 39 release tests; and 88.30% line coverage (1,389/1,573). Gate partner and SoC composition remain queued. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 
