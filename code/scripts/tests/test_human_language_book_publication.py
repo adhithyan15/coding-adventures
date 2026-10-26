@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
@@ -35,6 +36,17 @@ class PublicationDecisionTests(unittest.TestCase):
         self.assertEqual(publication.parse_pages_source("deploy: " + NEWER), NEWER)
         with self.assertRaises(publication.PublicationError):
             publication.parse_pages_source("deploy: unknown")
+
+    def test_pages_lookup_tracks_any_book_file_not_shared_branch_tip(self) -> None:
+        class Reader(publication.GitHubReader):
+            def get(self, path: str, *, missing_ok: bool = False) -> object:
+                query = parse_qs(urlsplit(path).query)
+                self.assert_path = query["path"]
+                return [{"commit": {"message": "deploy: " + NEWER}}]
+
+        reader = Reader("owner/repo", "read-token")
+        self.assertEqual(reader.pages_source(), NEWER)
+        self.assertEqual(reader.assert_path, ["human-languages/books"])
 
     def test_release_tag_stays_stable_across_attempt_dates(self) -> None:
         tag = "human-languages-v2026.10.26.12125"
@@ -90,6 +102,28 @@ class PublicationDecisionTests(unittest.TestCase):
             release["target_commitish"] = NEWER
             with self.assertRaisesRegex(publication.PublicationError, "asset"):
                 publication.release_should_create(release, tag, NEWER, [pdf])
+
+    def test_workflow_keeps_repo_code_out_of_write_token_job(self) -> None:
+        workflow = (
+            SCRIPTS_DIR.parents[1] / ".github/workflows/human-languages-books.yml"
+        ).read_text(encoding="utf-8")
+        preflight = workflow.split("\n  publication_preflight:", 1)[1].split(
+            "\n  publish:", 1
+        )[0]
+        publish = workflow.split("\n  publish:", 1)[1].split("\n  books-gate:", 1)[0]
+        preflight_code = "\n".join(
+            line for line in preflight.splitlines() if not line.lstrip().startswith("#")
+        )
+        self.assertIn("contents: read", preflight)
+        self.assertNotIn("contents: write", preflight_code)
+        self.assertIn("contents: write", publish)
+        self.assertNotIn("uses: actions/checkout@", publish)
+        self.assertIn("publication_preflight", publish)
+        self.assertLess(
+            publish.index("- name: Publish GitHub Release"),
+            publish.index("- name: Publish books to GitHub Pages"),
+        )
+        self.assertIn("test_human_language_book_publication.py' -v", workflow)
 
 
 if __name__ == "__main__":
