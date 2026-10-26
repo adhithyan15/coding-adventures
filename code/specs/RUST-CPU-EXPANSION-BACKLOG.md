@@ -44,7 +44,7 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | Motorola 6809 | merged | merged | Complete; gate PR #18269 landed. |
 | P0 | OpenRISC 1000 | merged | merged | Complete; gate PR #18276 landed. |
 | P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
-| P0 | Arm Cortex-M0 | merged | PR #18296 | Conflict reconciliation in progress; squash auto-merge remains armed. |
+| P0 | Arm Cortex-M0 | merged | merged | Complete; gate PR #18296 landed. |
 | P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
 
 ## P0 gate-integrity repair queue
@@ -57,8 +57,9 @@ already public.
 
 | Priority | Target | Status | Required boundary |
 |---:|---|---|---|
-| P0 complete locally | x86-64 multiply/divide qualification | ready | The fixed-round multiplier/divider returns gate-qualified wide results; exact signed/unsigned fit boundaries, atomic divide faults, discarded high wires, parsed-syntax anti-bypass fixtures including inactive decoys, duplicate definitions, and exact production module routing, strict checks, all affected builds, and 88.40% line coverage are green. |
-| P0 | Motorola 68000 gate | local complete | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
+| P0 merged | x86-64 multiply/divide qualification | PR #18323 merged | The fixed-round multiplier/divider returns gate-qualified wide results; exact signed/unsigned fit boundaries, atomic divide faults, discarded high wires, parsed-syntax anti-bypass fixtures including inactive decoys, duplicate definitions, and exact production module routing, strict checks, all affected builds, and 88.40% line coverage are green. |
+| P0 merged | Motorola 68000 gate | PR #18316 merged | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
+| P0 selected | ARM1 gate HALT storage | Spec authorized; implementation next | Make the HALT DFF Q output the sole architectural halt authority across observation, reset/load/restore, execute, checked and legacy step/run, and rollback. Add deliberate mirror divergence, physical inventory, lifecycle/differential, and hostile anti-bypass evidence. |
 | P1 audit | Remaining completed gate packages | queued | Search architecturally visible arithmetic, flags, fault qualification, decode, state selection, and storage authority for host-language shortcuts; record and repair one bounded cell at a time. Address/control bookkeeping permitted by the educational boundary is not itself a defect. |
 
 ## Independent functional queue
@@ -66,20 +67,20 @@ already public.
 This queue is re-costed after every merge or discovery. Dates indicate the
 architecture/core introduction era, not a claim about a particular chip.
 
-Cortex-M4 is complete locally and awaiting publication. Its checked Armv7E-M
+Cortex-M4 is merged. Its checked Armv7E-M
 boundary explicitly classifies all 20 inherited Cortex-M3 instruction
 families, differentially witnesses inherited integer, privilege, IT, memory,
 exclusive, branch, power, and lifecycle state, and covers the bounded DSP and
 optional FPv4-SP extension. All 30 release tests, strict Clippy/rustdoc, and
 92.81% line coverage (994/1071) are green. Cortex-M7 and Cortex-M23 are
-merged, while Cortex-M33 is already in review.
+merged, while Cortex-M33 is in open PR #18326.
 
 | Order | Target | Public basis | Planned boundary |
 |---:|---|---|---|
-| 1 | Arm Cortex-M4 (in publication) | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
+| 1 | Arm Cortex-M4 (merged) | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
 | 2 | Arm Cortex-M7 (merged) | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
 | 3 | Arm Cortex-M23 (merged) | Armv8-M manuals | Bounded baseline/security-state cell complete; exclusive encodings and exceptions remain follow-up work. |
-| 4 | Arm Cortex-M33 (in review) | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
+| 4 | Arm Cortex-M33 (PR #18326) | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
 | 7 | IBM System/370 | published Principles of Operation | Local functional cell complete: owned checked state and lifecycle, the complete modeled System/360 surface through a private adapter, and source-backed MVCL/CLCL/CLM/STCM/ICM semantics, including one-byte zero-mask validation for CLM/ICM and the architecturally exception-free zero-mask STCM. Fourteen tests, strict checks, and 98.78% line coverage (568/575) are green; gate partner follows only after merge. |
@@ -97,13 +98,13 @@ merged, while Cortex-M33 is already in review.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
-| P1 complete locally | AArch64 gate 32-bit carry authority | The 32-bit ADD/SUB flag path now takes carry and overflow directly from exact-width ripple networks; host sum comparisons are gone. Width-edge tests, all seven topology/datapath tests, six lifecycle suites, all 836 Python differential vectors, strict checks, and 97.79% line coverage pass. Follow-up audits still need to cost host decode and fetch assembly separately. |
-| P1 complete locally | PowerPC 601 conditional-branch authority | The host-language BO/CTR/CR predicate is replaced by explicit gate ALU, 32:1 CR mux, polarity, bypass-mux, and final-AND networks. Exhaustive tests cover every BO value and CR selector, both selected-bit polarities, and CTR zero/nonzero boundaries against an independent truth table. Three gate/topology suites, three lifecycle suites, all 239 differential vectors, strict checks, and 94.58% line coverage pass. The counted GPR/LR/CTR/XER/CR/CIA, memory, and HALT storage banks remain private stable-Q authority with no public host-state mirrors. |
-| P1 queued | PowerPC 601 CR/XER update authority | Replace host `Ordering`/Boolean control in CR-field, CR0, CA, and SO propagation with explicit relation wires, masks, muxes, and gates while preserving the public lifecycle. |
+| P1 merged | AArch64 gate 32-bit carry authority | PR #18317 landed. The 32-bit ADD/SUB flag path now takes carry and overflow directly from exact-width ripple networks; host sum comparisons are gone. Width-edge tests, all seven topology/datapath tests, six lifecycle suites, all 836 Python differential vectors, strict checks, and 97.79% line coverage pass. Follow-up audits still need to cost host decode and fetch assembly separately. |
+| P1 merged | PowerPC 601 conditional-branch authority | PR #18319 landed. The host-language BO/CTR/CR predicate is replaced by explicit gate ALU, 32:1 CR mux, polarity, bypass-mux, and final-AND networks. Exhaustive tests cover every BO value and CR selector, both selected-bit polarities, and CTR zero/nonzero boundaries against an independent truth table. Three gate/topology suites, three lifecycle suites, all 239 differential vectors, strict checks, and 94.58% line coverage pass. The counted GPR/LR/CTR/XER/CR/CIA, memory, and HALT storage banks remain private stable-Q authority with no public host-state mirrors. |
+| P1 in PR #18373 | PowerPC 601 CR/XER update authority | The explicit relation/mask/mux/gate authority repair is in publication; do not duplicate it. |
 | P1 queued | PowerPC 601 shift/count/divide authority | Replace host slice moves, iterator leading-zero counting, and conditional restoring-divide selection with fixed gate/mux networks, then audit multiply accumulation and record-form updates as one bounded datapath family at a time. |
-| P0 complete locally | MIPS R2000 gate HALT storage | HALT DFF Q is now the sole architectural halt authority; the public boolean remains only as a source-compatible observation mirror and is repaired by simulator mutations. The published storage inventory derives 524,288 memory bits, 1,120 register bits, and one HALT bit from the owned physical containers. Deliberate mirror-divergence, restore, and typed-fault atomicity tests pass alongside 33 unit tests, the 218-vector differential suite, nine lifecycle/integrity tests, and 20 doctests. Strict Clippy/rustdoc, the six-package affected build, and 94.50% line coverage (1,581/1,673) are green. |
+| P0 merged | MIPS R2000 gate HALT storage | PR #18304 landed. HALT DFF Q is now the sole architectural halt authority; the public boolean remains only as a source-compatible observation mirror and is repaired by simulator mutations. The published storage inventory derives 524,288 memory bits, 1,120 register bits, and one HALT bit from the owned physical containers. Deliberate mirror-divergence, restore, and typed-fault atomicity tests pass alongside 33 unit tests, the 218-vector differential suite, nine lifecycle/integrity tests, and 20 doctests. Strict Clippy/rustdoc, the six-package affected build, and 94.50% line coverage (1,581/1,673) are green. |
 | P1 complete locally | IBM System/360 branch predicates | `BCR`/`BC`, `BALR`, `BCTR`/`BCT`, and `BXH`/`BXLE` now derive their select wires from gate mask muxes, target/count OR reductions, signed comparator condition-code wires, and one-hot opcode lines in both the executor and independent validator. Exhaustive mask/CC/register/count/index truth tables and token-normalized exact-body structural checks cover the complete branch-select, fixed-width-adder, signed-comparator, and top-level dispatch chain, including the exact four-byte router, RR/RX/RS dispatcher shells, complete validation router, branch-validator shell, public `step`/`run`/`execute` bridge, and AST-verified top-level file-backed executor/gates module identity, and reject hostile helper rewrites, dead anchors/dispatch, attributed/aliased/inline or macro-generated routing modules, macro-discarded declaration decoys, delimiter-shaped character-literal confusers, binding shadows, oracle substitution, expectation shadowing, and post-dispatch overwrites. All eleven existing differential/lifecycle suites, strict checks, and 93.01% package-source line coverage (1,662/1,787) pass. |
-| P1 queued | IBM System/360 decode authority | The independent executor dispatches architectural orders with host `match` ranges while the one-hot gate decoder is only checked afterward. Bound a separate repair that makes decoded gate lines authoritative without conflating instruction semantics. |
+| P1 in PR #18376 | IBM System/360 decode authority | The decoded-line authority repair is in publication; do not duplicate it. |
 | P1 queued | IBM System/360 divide qualification | The restoring divider uses gate subtraction per round but host equality detects zero and host `quotient > limit` decides the architectural divide fault. Replace both with exact-width gate reductions/comparison and pin signed fit boundaries. |
 | P1 queued | IBM System/360 DFF transition discipline | Register banks are private stable-Q authority, but main-storage reset and snapshot restore write the packed Q bytes directly despite Spec 07ad2 promising sequential primitives. Decide and enforce a scalable clocked-restore boundary without weakening the topology claim. |
 | P2 queued | IBM System/360 shifts and hexadecimal floating control | Shift movement/count bounds and substantial HFP zero/sign/exponent/normalization control still use host comparisons and native shifts. Split these broad surfaces into independently reviewable gate-network cells. |
