@@ -48,8 +48,14 @@
 % opening bracket. \XeTeXlinebreakskip is the glue put at each such break point;
 % a little stretch lets a justified line share its slack among them. Both settings
 % are local to the snippet's group, so English text and romanization are untouched.
-\newcommand{\ja}[1]{{\japanesefont
-  \XeTeXlinebreaklocale "ja"\XeTeXlinebreakskip=0pt plus 1pt\relax #1}}
+% The settings ride on \japanesefont itself, so \ja keeps the one-line
+% {{\japanesefont #1}} shape the glyph-coverage gate reads to learn which font
+% renders a snippet.
+\NewCommandCopy\hljapanesefontbase\japanesefont
+\RenewDocumentCommand\japanesefont{}{%
+  \hljapanesefontbase
+  \XeTeXlinebreaklocale "ja"\XeTeXlinebreakskip=0pt plus 1pt\relax}
+\newcommand{\ja}[1]{{\japanesefont #1}}
 
 \pdfstringdefDisableCommands{%
   \def\ja#1{#1}% Keep the Japanese text while dropping font-only presentation.
