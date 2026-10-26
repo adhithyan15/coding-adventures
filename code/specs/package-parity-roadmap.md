@@ -18264,3 +18264,23 @@ roadmap, or PaintVmAscii scope. The still-unpublished four-commit series was
 rebased onto that exact tip. Range comparison confirms all four commits are
 patch-identical to the previously validated series; the lifecycle receipt now
 records `de088e2ddfacd2372fab3677d38b969eea602c00` as the exact reconciled base.
+
+## October 26, 2026: Swift PaintVmAscii draft publication
+
+Independent exact-head review passed at
+`0ecc1c018da921308dac726c91dab152d93bf753`. The reviewed branch was pushed
+normally without rewriting that head and opened as draft PR #18367 at
+`2026-10-26T15:52:35Z`. GitHub reports the exact draft head open and mergeable.
+The draft records the durable PR identity only; it must remain draft until this
+lifecycle-only receipt receives separate exact-head review, and no readiness,
+auto-merge, or merge action is authorized here.
+
+After the independent review, unrelated Japanese-book PR #18338 advanced
+origin/main to `eb841de8f43fd001bde8bdc7ece462a008779da0`. It has no path
+overlap with the PaintVmAscii tranche, and a three-way merge-tree check is
+conflict-free, so publication preserves the exact reviewed implementation head
+rather than rewriting it for unrelated content. The other live parity owners
+are #18293 at exact head `c7b1e98687d3c762a98a9beed61ad71f586ca484`
+and #18355 at exact head `f27058ffa18abe1fb7a7167237eb0b761414162f`;
+GitHub reports both open, non-draft, and mergeable. The live parity set is now
+exactly {18293, 18355, 18367}.

@@ -19,7 +19,8 @@
   "active_pr": 18293,
   "active_prs": [
     18293,
-    18355
+    18355,
+    18367
   ],
   "last_ci_action": {
     "observed_at": "2026-10-26T15:37:25Z",
@@ -10250,10 +10251,17 @@
     {
       "id": "paint-vm-ascii-swift-lane-parity",
       "title": "Complete paint-vm-ascii parity in Swift",
-      "status": "in_progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-swift-paint-vm-ascii-capabilities-20261026",
-      "pr_number": null,
+      "pr_number": 18367,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18367",
+      "pr_opened_at": "2026-10-26T15:52:35Z",
+      "publication_head": "0ecc1c018da921308dac726c91dab152d93bf753",
+      "draft_creation_head": "0ecc1c018da921308dac726c91dab152d93bf753",
+      "publication_notes": "Draft PR #18367 opened from exact independently reviewed implementation head 0ecc1c018da921308dac726c91dab152d93bf753. GitHub reports the draft open and mergeable. The durable PR identity is recorded without changing the reviewed implementation head; this lifecycle-only receipt requires separate exact-head review before any normal push, readiness transition, or guarded auto-merge consideration.",
+      "final_review_revision": "0ecc1c018da921308dac726c91dab152d93bf753",
+      "final_review_notes": "Independent exact-head review passed the capability-only scope, empty authority declaration, package and downstream tests, exact planner closure, changelog identity, lifecycle metadata, state graph, lessons, diff hygiene, current-main relationship, and artifact-cleanliness gates with no findings.",
       "prepared_at": "2026-10-26T14:25:33Z",
       "selected_at": "2026-10-26T15:39:02Z",
       "selection_revision": "1bb58a0d7ed8d818d622e69890234d96b6e26b3a",
@@ -16442,8 +16450,8 @@
       "pr_number": 18355,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18355",
       "pr_opened_at": "2026-10-26T13:52:05Z",
-      "publication_head": "2687144fb38e534dc6d308864ef0eb6b1fb97a63",
-      "publication_notes": "GitHub reports PR #18355 open and non-draft at exact head 2687144fb38e534dc6d308864ef0eb6b1fb97a63, but conflicting after Python PR #18324 advanced main. Its separate owner must reconcile and refresh exact-head review and checks; this Swift selection does not alter it.",
+      "publication_head": "f27058ffa18abe1fb7a7167237eb0b761414162f",
+      "publication_notes": "GitHub reports PR #18355 open, non-draft, and mergeable at exact pushed head f27058ffa18abe1fb7a7167237eb0b761414162f after normal main reconciliation. Its separate owner retains exact-head review and hosted-check responsibility; this Swift lifecycle receipt does not alter it.",
       "notes": "Discovered by the post-PR #16133 structural package-root audit. `code/packages/kotlin/micro-qr` has production and test sources plus package documentation but no Gradle package metadata and no BUILD front, so established-lane discovery cannot schedule or validate it. Add lane-consistent Gradle metadata, fail-closed cross-platform BUILD fronts, execution of the existing test suite, capability metadata, and documentation without widening the portable Micro QR contract."
     },
     {
