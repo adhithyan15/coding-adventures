@@ -51,15 +51,17 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 
 ## P0 gate-integrity repair queue
 
-Independent review of the completed architecture matrix found a recurring
-storage-authority defect: some packages counted DFF banks in their physical
-topology while executing from parallel public host fields. These repairs
-outrank new architecture cells because a shadow bank makes the published gate
-claim unsound even when ISA differentials remain green.
+Completed gate packages are re-audited when source inspection finds a host
+operation deciding an architecturally visible datapath result or a public host
+field shadowing physical storage. These bounded
+repairs outrank new completeness work because an existing gate claim is
+already public.
 
 | Priority | Target | Status | Required boundary |
 |---:|---|---|---|
-| P0 | Motorola 68000 gate | merged | Repair PR #18316 landed: all 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. |
+| P0 complete locally | x86-64 multiply/divide qualification | ready | The fixed-round multiplier/divider returns gate-qualified wide results; exact signed/unsigned fit boundaries, atomic divide faults, discarded high wires, parsed-syntax anti-bypass fixtures including inactive decoys, duplicate definitions, and exact production module routing, strict checks, all affected builds, and 88.40% line coverage are green. |
+| P0 | Motorola 68000 gate | local complete | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
+| P1 audit | Remaining completed gate packages | queued | Search architecturally visible arithmetic, flags, fault qualification, decode, state selection, and storage authority for host-language shortcuts; record and repair one bounded cell at a time. Address/control bookkeeping permitted by the educational boundary is not itself a defect. |
 
 ## Independent functional queue
 
