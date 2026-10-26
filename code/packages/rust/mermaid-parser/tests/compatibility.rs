@@ -197,6 +197,14 @@ const ER_USE_MAX_WIDTH_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-use-max-width-11.16.1-visual-corpus.json"
 ));
+const ER_HTML_LABELS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-html-labels-11.16.1-corpus.json"
+));
+const ER_HTML_LABELS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-html-labels-11.16.1-visual-corpus.json"
+));
 const ER_VARIABLE_NODE_WIDTHS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-variable-node-widths-11.16.1-corpus.json"
@@ -2865,6 +2873,25 @@ fn pinned_er_use_max_width_reaches_semantic_ir() {
         assert_eq!(
             diagram.render_config.use_max_width,
             fixture["use_max_width"].as_bool().expect("useMaxWidth expectation")
+        );
+    }
+}
+
+#[test]
+fn pinned_er_html_labels_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_HTML_LABELS_CORPUS)
+        .expect("ER htmlLabels corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_HTML_LABELS_VISUAL_CORPUS)
+        .expect("ER htmlLabels visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+
+    for (index, fixture) in syntax["fixtures"].as_array().expect("ER fixtures").iter().enumerate() {
+        assert_eq!(visual["fixtures"][index], fixture["name"]);
+        let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER source"))
+            .expect("configured ER fixture must parse");
+        assert_eq!(
+            diagram.render_config.html_labels,
+            fixture["html_labels"].as_bool().expect("htmlLabels expectation")
         );
     }
 }
