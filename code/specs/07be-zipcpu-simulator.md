@@ -83,7 +83,9 @@ not a claim that the CPU's 32-bit uniform address space is only 64 KiB.
 
 - two banks of R0–R13, represented without aliases;
 - supervisor and user PC (R15), each a 32-bit byte address;
-- supervisor and user CC (R14), normalized as described below;
+- canonical supervisor and user CC (R14) values, whose complete 32-bit read
+  projections include each bank's software-preserved reserved bits 22:16 and
+  the immutable fields described below;
 - active mode, `Supervisor` or `User`;
 - the sampled external interrupt input;
 - all 65,536 memory bytes; and
@@ -94,16 +96,27 @@ convention, and R0 the link-register convention; none has hidden hardware
 semantics. R14/R15 are not duplicated in a generic array. The active bank is
 selected by mode, while supervisor `MOV` may explicitly address either bank.
 
+The complete CC read contract follows the pinned `zipcore.v` construction
+`{w_cpu_info, stored_cc[22:16], w_[ui]flags}`. Bits 31:23 are the immutable
+profile identity `111010110` (`0xeb00_0000` in place): CPU-present is one,
+multiply and divide are present, FPU is absent, the core is pipelined, bit 26
+is zero, early branching and pipelined bus access are enabled, and CIS is
+absent. Bits 22:16 are separate supervisor/user software-readable and
+software-writable storage. They are architectural state and survive ordinary
+instruction execution, snapshot/restore, faults, bank switches, and interrupt
+transitions rather than being reconstructed from configuration.
+
 The complete low CC contract is: bits 0–3 are per-bank Z/C/N/V; bit 4 is one
 shared SLEEP state visible through either CC; bit 5 is the bank-select/GIE
 value; bit 6 is user STEP and reads zero in supervisor CC and while user mode
 is active; bit 7 is supervisor break-enable or user break status; bits 8–12 are
 illegal/trap/bus-error/divide-zero/FPU status; bit 13 is permanently zero
 because CIS is absent; bits 14–15 are write-only cache-clear commands and
-always read zero; bits 16–31 read zero. Supervisor CC always reads GIE clear
-and user CC always reads GIE set. The trap indication is shared as the manual
-requires. FPU status remains zero in this no-FPU profile. A write to CC is
-filtered by current privilege and these fixed/read-only rules before commit;
+always read zero. Supervisor CC always reads GIE clear and user CC always
+reads GIE set. The trap indication is shared as the manual requires. FPU
+status remains zero in this no-FPU profile. A write to CC stores bits 22:16 in
+the selected bank, ignores attempts to alter bits 31:23, and filters the low
+fields by current privilege and these fixed/read-only rules before commit;
 cache-clear bits are accepted no-ops because caches are absent. User software
 cannot create supervisor SLEEP: clearing GIE wins over setting SLEEP.
 
@@ -118,15 +131,21 @@ and the mode-derived GIE values are canonical restore invariants.
 
 The CPU has no separate architectural halt latch in this profile. Supervisor
 SLEEP is the HALT state; user SLEEP is WAIT. The sampled interrupt is part of
-state so snapshots and replay are deterministic. `new` and successful `load`
-choose zero for all unspecified power-on registers and memory, select
-supervisor mode, normalize both CC values, set supervisor PC to zero, and
-clear the interrupt sample. `reset` restores that CPU state while preserving
-memory and valid installed-image metadata. `restore` validates the entire
-candidate before committing: both PCs are word-aligned, mode agrees with the
-active-bank rule, fixed/read-only CC bits and the shared trap value are
+state so snapshots and replay are deterministic. `new` chooses zero for all
+unspecified power-on registers, both banks' writable CC fields including bits
+22:16, both PCs, memory, and the interrupt sample, selects supervisor mode,
+and exposes the immutable CPU-info projection on CC reads. `reset` restores
+that CPU state, including both PCs and both reserved fields to zero, while
+preserving memory and valid installed-image metadata. A successful `load`
+first establishes the same deterministic reset state, then clears memory,
+installs the image, sets supervisor PC to `origin`, and leaves user PC zero.
+`restore` validates the entire candidate before committing: both PCs are
+word-aligned, mode agrees with the active-bank rule, each CC has the exact
+`0xeb00_0000` CPU-info projection, bits 15:13 have their canonical read-zero
+values, its remaining fixed low fields and the shared trap value are
 canonical, and image metadata is either `(None, 0)` or a nonempty aligned
-nonwrapping span wholly inside memory.
+nonwrapping span wholly inside memory. Snapshots and complete-state equality
+include both banks' reserved fields.
 
 ## 3. Transport, memory, and exact transactions
 
@@ -234,8 +253,12 @@ ordinary Z/C/N/V result. The active PC reads as the current instruction
 address plus four; an inactive-bank PC read through supervisor MOV reads that
 bank's retained value without the pipeline offset. Any PC register used as B
 still scales its encoded immediate by four. A destination of PC changes
-control flow only after all validation and clears result bits 1:0, matching
-the pinned PC write path; a non-PC instruction advances the active PC by four.
+control flow after validating only the current instruction's operands and
+effects and clears result bits 1:0, matching the pinned PC write path. It does
+not synchronously probe the destination against owned memory or the installed
+image. The PC write commits, and only the following step applies ordinary
+fetch classification at that address. A non-PC instruction advances the
+active PC by four.
 Same-register cases, both PC-as-source forms, CC-as-source or destination, MOV
 across banks, and destination-bank/mode changes capture all inputs before any
 write.
@@ -305,7 +328,8 @@ Fault/decision priority at an instruction boundary is fixed:
    validate the full four bytes against the image;
 5. capture raw bytes, classify bit 31/opcode/options/reserved fields, and only
    then evaluate the condition;
-6. capture operands and validate a taken PC target or complete data access;
+6. capture operands, form any taken PC value with bits 1:0 cleared, and
+   validate only a complete data access performed by the current instruction;
 7. select one architectural interrupt/fault/normal transition, construct all
    effects and the trace, preflight final retention, and commit once.
 
@@ -315,6 +339,14 @@ address/alignment/range check. For an executed memory operation, alignment
 outranks responder range; either maps to the same architectural bus-error
 class but the trace retains the exact failed request. No lower-priority
 destination or flag effect leaks into a fault transition.
+
+A legal taken PC write commits without probing its destination. The next
+step alone reports `FetchOutsideProgram` when the aligned target is within
+owned memory but outside the installed image, or performs the architectural
+illegal-fetch/bus transition when the target lies outside owned memory. Thus
+`step` exposes the committed transfer before that later classification. A
+multi-step `run` still obeys its own all-or-nothing host-error contract if the
+following fetch becomes a typed `FetchOutsideProgram`.
 
 ## 8. Checked lifecycle, errors, and allocation seams
 
@@ -342,9 +374,10 @@ seams at meaningful boundaries: state/memory clone, load copy, snapshot and
 restore staging, fetched-byte retention, mnemonic/effect construction, trace
 construction and retention, run result/final-state construction, and execute
 wrapping. A seam after at least one successful candidate instruction exists
-in both `run` and `execute`. Every typed failure preserves all 32 registers,
-normalized CC state, mode, interrupt input, memory, image metadata, and
-terminal condition bit-for-bit. Tests must prove that each named seam reaches
+in both `run` and `execute`. Every typed failure preserves all 32 register
+projections, both banks' seven software-preserved CC bits, every dynamic low
+CC field, mode, interrupt input, memory, image metadata, and terminal
+condition bit-for-bit. Tests must prove that each named seam reaches
 a real production allocation or narrow the contract before implementation;
 dead test-only counters are forbidden.
 
@@ -374,12 +407,17 @@ The required matrices are:
 4. byte/half/word big-endian loads and stores, every alignment residue,
    memory endpoints, out-of-range responder faults, PC/CC destinations,
    all overlap/read-before-write cases, and self-modifying trace retention;
-5. every CC writable/read-only/fixed bit in supervisor and user mode, RTU,
-   trap, WAIT, HALT, STEP, shared trap clearing, all fault bits, BREAK-enable,
-   accepted/masked interrupt, and retained-bank PC behavior;
+5. every CC writable/read-only/fixed bit in supervisor and user mode, the
+   exact immutable `0xeb00_0000` CPU-info projection, exhaustive values and
+   bank independence for software-preserved bits 22:16, their reset/load/
+   snapshot/restore/fault preservation, RTU, trap, WAIT, HALT, STEP, shared
+   trap clearing, all fault bits, BREAK-enable, accepted/masked interrupt, and
+   retained-bank PC behavior;
 6. instruction PC at image and owned-memory boundaries, PC as A/B, taken and
    untaken conditional PC writes, low-bit clearing, modulo operand formation,
-   fetch bus error versus fetch-outside-image, and terminal transitions;
+   committed out-of-image and out-of-memory targets followed by next-step
+   fetch classification, fetch bus error versus fetch-outside-image, and
+   terminal transitions;
 7. exact full-state and ordered-transaction comparison for every common case
    against both upstream corpora, while manual-only host lifecycle errors and
    wrapper-bound external-break behavior use independent hand oracles; and
