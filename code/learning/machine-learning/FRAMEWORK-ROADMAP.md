@@ -77,7 +77,14 @@ the actual open PR and its current-head CI logs, and revisit this ordering:
    passed. Reassess reliability, prerequisites, portability and smallest
    complete delivery: C matrix/math/ISO foundations exist, but C has no native
    JSON parser. [NN47 bounded C JSON](../../specs/NN47-c-bounded-json-foundation.md)
-   precedes a separate C dense implementation and later six-native exchange.
+   merged in [PR #18261](https://github.com/adhithyan15/coding-adventures/pull/18261)
+   at exact head `26bacfea3fd2` (squash `65aaf912bc7`), with actual C package
+   BUILDs on Linux/macOS/Windows, all selected workflows and required roll-up
+   successful. Reassess reliability, prerequisites, portability and smallest
+   delivery: [NN48 native C dense](../../specs/NN48-native-c-dense-framework.md)
+   now builds above matrix/float-math/bounded-json, before separate six-native
+   checkpoint exchange. Generic C-only detection did not retain Windows until
+   NN47's scoped requirement; carry actual platform execution forward.
 5. **P2 — Optional Rust dense C ABI.** Specify ownership, shapes, errors,
    versioning, and resumable state before exposing binding consumers. Keep
    those consumers distinct from the native implementations.
@@ -168,13 +175,16 @@ SGD training, inspection, and portable save/reload/resume.
   processes, not a static registry entry (NN46 merged exact head `ff37a3e44e3`
   in #18252). All twenty directed pairs pass through 3002, with
   five native lanes, zero bindings and 55 actual child executions.
-- [ ] C bounded JSON prerequisite (NN47): owned, strict, resource-bounded C17
+- [x] C bounded JSON prerequisite (NN47): owned, strict, resource-bounded C17
   parser before accepting native dense checkpoints; not training or a binding.
   Implemented locally with 1605 GCC/Clang/MSVC checks, allocator-fault cleanup,
   ASan/UBSan and installed static-library consumer evidence; exact-head CI and
-  merge pending. Confirmed Windows ISO-harness prerequisite repairs retain the
-  existing scheduler and strict flags, with six cardinality regressions.
-- [ ] C native framework.
+  merge complete in #18261 at exact head `26bacfea3fd2`. Actual Linux/macOS/Windows
+  package BUILDs and all applicable checks passed. Confirmed Windows ISO-harness
+  repairs retain the scheduler and strict flags, add explicit clang-cl pedantic
+  diagnostics, and include six cardinality/four flag-policy regressions.
+- [ ] C native framework (NN48): independent dense API/training/typed checkpoint
+  acceptance above matrix, float-math and bounded-json; six-native exchange later.
 - [ ] C++ native framework.
 - [ ] C# native framework.
 - [ ] F# native framework.
