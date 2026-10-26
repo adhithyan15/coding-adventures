@@ -10,6 +10,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const minimumSafe = [43, 8, 1];
+const reviewedMajor = 43;
 
 function numericVersion(value) {
   const match = String(value).match(/^(?:\^|~)?(\d+)\.(\d+)\.(\d+)$/u);
@@ -24,6 +25,11 @@ function atLeast(left, right) {
   return true;
 }
 
+function isReviewedSafeRelease(value) {
+  const version = numericVersion(value);
+  return version[0] === reviewedMajor && atLeast(version, minimumSafe);
+}
+
 const packageJson = JSON.parse(await readFile(
   new URL("./package.json", import.meta.url),
   "utf8",
@@ -34,15 +40,17 @@ const packageLock = JSON.parse(await readFile(
 ));
 
 test("the declared Electron floor excludes GHSA-jr5w-w6x2-84p9", () => {
-  assert.ok(atLeast(
-    numericVersion(packageJson.dependencies.electron),
-    minimumSafe,
-  ));
+  assert.ok(isReviewedSafeRelease(packageJson.dependencies.electron));
 });
 
 test("the lockfile resolves Electron outside the vulnerable range", () => {
-  assert.ok(atLeast(
-    numericVersion(packageLock.packages["node_modules/electron"].version),
-    minimumSafe,
+  assert.ok(isReviewedSafeRelease(
+    packageLock.packages["node_modules/electron"].version,
   ));
+});
+
+test("an unreviewed major transition fails closed", () => {
+  assert.equal(isReviewedSafeRelease("44.0.0"), false);
+  assert.equal(isReviewedSafeRelease("44.9.0"), false);
+  assert.equal(isReviewedSafeRelease("44.9.1"), false);
 });

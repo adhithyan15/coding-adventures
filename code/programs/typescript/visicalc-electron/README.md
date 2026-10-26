@@ -88,7 +88,8 @@ VISICALC_ELECTRON_DEBUG=1 npm run start:dev
 - No preload script (no Node APIs exposed to the renderer)
 - No `webSecurity: false`, no `allowRunningInsecureContent: true`
 - Electron's declared floor is 43.8.1, the first release outside
-  GHSA-jr5w-w6x2-84p9; a package test guards both the declaration and lockfile.
+  GHSA-jr5w-w6x2-84p9 on the reviewed 43.x line; a package test guards both the
+  declaration and lockfile and fails closed on an unreviewed major transition.
 
 These are Electron's defence-in-depth defaults.  The React bundle
 runs in a sandboxed Chromium renderer that cannot reach `fs`,
