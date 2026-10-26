@@ -20,7 +20,7 @@ Completion evidence is 51 release tests, including full inherited functional
 contracts, independent ARM/Thumb full-state and exact-trace differentials,
 exhaustive condition lines, arithmetic/shift/multiply boundaries, a typed
 mid-commit rollback seam, and compiler-checked hostile source mutations. The
-measured release line coverage is 90.62% (2,059/2,272).
+measured release line coverage is 90.74% (2,077/2,289).
 
 ```rust
 use arm7tdmi_gatelevel::{Arm7TdmiGateLevel, InstructionSet};
