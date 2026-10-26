@@ -12,8 +12,12 @@ a LatticeMico System, board, cache-timing model, Wishbone fabric, FPGA timing
 model, or transistor recreation.
 
 The normative architectural source is Lattice Semiconductor,
-*LatticeMico32 Processor Reference Manual*, version 3.8, 7 September 2016:
+*LatticeMico32 Processor Reference Manual*, archive release 3.8, posted
+7 September 2016:
 <https://www.latticesemi.com/-/media/LatticeSemi/Documents/UserManuals/JL/LatticeMico32ProcessorReferenceManual38.ashx?document_id=51739>.
+The archive posting is the version pin; the PDF body retains December 2012 and
+2014 publication metadata, so 7 September 2016 is not presented as its cover
+date.
 The later gate cell's immutable implementation source is the vendor-origin
 Lattice RTL in the M-Labs fork at commit
 [`84b3e3ca0ad9535acaef201c1482342871358b08`](https://github.com/m-labs/lm32/tree/84b3e3ca0ad9535acaef201c1482342871358b08).
@@ -36,7 +40,7 @@ The immutable profile is `Lm32BaseFunctionalV1`:
 | Shifter | pipelined barrel shifter enabled |
 | Multiply / divide | pipelined multiply and multi-cycle unsigned divide/modulus enabled |
 | Sign extension | `sextb` and `sexth` enabled |
-| Interrupts | 32, edge-latched profile |
+| Interrupts | 32, latched-pending profile (`CFG_LEVEL_SENSITIVE_INTERRUPTS` absent) |
 | Bus-error exceptions | enabled |
 | Software debug | `break`, `bret`, DEBA and IE.BIE enabled |
 | Reset bases | EBA=0 and DEBA=0 |
@@ -52,8 +56,9 @@ mutable duplicate configuration state.
 
 - `gpr: [u32; 32]`, including mutable r0, ra, ea, and ba;
 - aligned `pc: u32`;
-- interrupt-enable bits `ie`, `eie`, and `bie`;
-- 32-bit interrupt mask `im`, edge-latched pending bits `ip`, and a 32-bit
+- interrupt-enable bits `ie`, `eie`, and `bie`, plus debug exception-remap bit
+  `dc_re`;
+- 32-bit interrupt mask `im`, latched pending bits `ip`, and a 32-bit
   logical asserted-line sample `interrupt_lines`;
 - 256-byte-aligned exception bases `eba` and `deba`;
 - all 65,536 memory bytes; and
@@ -62,15 +67,16 @@ mutable duplicate configuration state.
 The manual says the GPR values are undefined after hardware reset and directs
 software to initialize r0. Therefore r0 is not hard-wired by this model.
 For reproducibility, `new` and successful `load` choose zero for all GPRs and
-resettable state. `reset` zeros GPRs, PC, IE/IM/IP and sampled interrupt lines,
-restores EBA/DEBA to zero, and preserves memory plus installed-image metadata.
-There is no invented halt latch: LM32 has no architectural halt instruction.
+resettable state. `reset` zeros GPRs, PC, IE/IM/IP, DC.RE and sampled interrupt
+lines, restores EBA/DEBA to zero, and preserves memory plus installed-image
+metadata. There is no invented halt latch: LM32 has no architectural halt
+instruction.
 
 `restore` validates the complete candidate before commit. PC and both base
-registers must be aligned as above; image metadata must describe a nonempty,
-word-aligned, nonwrapping span in owned memory or be the canonical unloaded
-pair `(None, 0)`. No state field is reconstructed from a trace or hidden host
-mirror.
+registers must be aligned as above; `dc_re` is a single Boolean; image metadata
+must describe a nonempty, word-aligned, nonwrapping span in owned memory or be
+the canonical unloaded pair `(None, 0)`. No state field is reconstructed from
+a trace or hidden host mirror.
 
 ## 3. Transport, memory, and transaction traces
 
@@ -102,7 +108,8 @@ Every successful `step` returns one complete `Lm32StepTrace` with:
 - ordered instruction-read and optional data-read/data-write transactions,
   each with address, width, value, byte-enable mask, and success/bus-error;
 - optional interrupt sample and optional exception transition with ID, saved
-  PC register, vector, and IE transition; and
+  PC register, DC.RE value, selected EBA/DEBA base, vector, and IE transition;
+  and
 - the complete post-state.
 
 Instruction timing, stalls, retries, caches, arbitration, and Wishbone signal
@@ -166,15 +173,28 @@ Their correctness deliberately depends on software keeping mutable r0 zero.
 | 0x2 | IP | read pending; writing ones clears corresponding latched bits |
 | 0x6 | CFG | read-only derived profile constant |
 | 0x7 | EBA | read/write; any write with a nonzero low byte stores zero |
-| 0x8 | DC | write-only; zero is an accepted no-op because hardware debug is absent |
+| 0x8 | DC | write-only; every write replaces DC.RE from bit 1; all other bits are ignored in this profile |
 | 0x9 | DEBA | read/write with the same 256-byte alignment rule as EBA |
 | 0xA | CFG2 | read-only derived profile constant |
 
-`rcsr DC` is unsupported. ICC, DCC, and CC are absent because caches and the
-cycle counter are disabled.
+`rcsr DC` is unsupported. DC bit 1 is implemented even though ROM debug,
+hardware debug, single-step, breakpoints, and watchpoints are disabled: bit 0,
+bits 3:2, and every upper bit have no storage or behavior and are ignored on
+write. ICC, DCC, and CC are absent because caches and the cycle counter are
+disabled.
 JTX/JRX, breakpoint/watchpoint, MMU, and all other indices are absent. Reads or
 writes to an absent CSR and writes to read-only CFG/CFG2 are typed atomic
-`UnsupportedCsr` errors; a nonzero DC write is `UnsupportedCsrValue`.
+`UnsupportedCsr` errors.
+
+The functional state follows the manual's EBA rule: the complete low byte is
+zero, and a write with any low-byte bit set stores zero. DEBA uses the same
+256-byte table alignment. The pinned RTL instead defines
+`LM32_EBA_RNG=31:9`, stores only those bits, and therefore has a 512-byte
+physical base granularity. This is a known evidence discrepancy, not an
+implicit equivalence. The functional corpus must include EBA/DEBA values with
+bit 8 set. Before `RCPU-084` can be accepted, its spec must explicitly choose
+and review a manual-visible bit-8 adapter or a revised boundary; it may not
+claim unclassified full-state equality to the raw RTL base registers.
 
 The cache-control no-op behavior of a different hardware configuration is not
 silently borrowed. Configuration registers are validated in decode and
@@ -190,15 +210,18 @@ by zero 5, interrupt 6, and system call 7. Hardware reset is the explicit
 six surfaces are modeled.
 
 A non-debug exception atomically writes the faulting instruction PC to ea,
-copies IE to EIE, clears IE, and sets PC to `EBA + ID*32`. A `break` writes the
+copies IE to EIE, clears IE, and sets PC to
+`(DC.RE ? DEBA : EBA) + ID*32`. This remapping applies to instruction/data bus
+errors, divide by zero, interrupt, and system call. A `break` always writes the
 faulting PC to ba, copies IE to BIE, clears IE, and sets PC to
-`DEBA + 1*32`. `eret` and `bret` restore PC and the corresponding saved enable
-bit. Exception-vector range/alignment is validated before commit; a vector
-that cannot be fetched later is not itself a failed exception transition.
+`DEBA + 1*32`, independent of DC.RE. `eret` and `bret` restore PC and the
+corresponding saved enable bit. Exception-vector range/alignment is validated
+before commit; a vector that cannot be fetched later is not itself a failed
+exception transition.
 
 `set_interrupt_lines(asserted_mask)` is an explicit atomic environment action
 whose bits use logical one for asserted, independent of package-pin polarity.
-Before each instruction boundary the sampled mask is edge-latched into IP.
+Before each instruction boundary the sampled mask is OR-latched into IP.
 If `IE && (IM & IP) != 0`, interrupt ID 6 is taken instead of fetching or
 executing an instruction. IP remains pending until software clears it with
 `wcsr`; a line that stays asserted re-latches on the next boundary. The trace
@@ -232,12 +255,12 @@ and `execute`; both operations restore their exact call-entry states.
 
 Stable typed errors distinguish empty, unaligned, oversized, overflowing, and
 out-of-range images; no image; fetch outside image; misaligned fetch/data/
-control flow; unknown and unsupported instructions; unsupported CSR/value;
+control flow; unknown and unsupported instructions; unsupported CSR;
 invalid restored state; trace limit; zero or exhausted step budget; allocation
 failure; and a source-preserving execute wrapper. Validation, fetch, decode,
 all reads, effects, trace construction, and candidate updates precede commit.
-Every error preserves GPRs, PC, CSRs, interrupt inputs/pending state, memory,
-and installed-image metadata bit-for-bit.
+Every error preserves GPRs, PC, DC.RE, CSRs, interrupt inputs/pending state,
+memory, and installed-image metadata bit-for-bit.
 
 ## 8. Independent decode and differential evidence
 
@@ -259,8 +282,9 @@ reproducible matrices:
 4. every branch predicate true/false, positive/negative maximal offsets,
    aligned/misaligned register targets, call link overlap, PC wrap, and all
    pseudo-instruction equivalences;
-5. every CSR read/write/ignored/reserved-bit rule, EBA/DEBA low-byte-zero rule,
-   CFG/CFG2 exact fields, break/scall/eret/bret, every modeled exception ID,
+5. every CSR read/write/ignored/reserved-bit rule, EBA/DEBA low-byte-zero rule
+   including bit 8, CFG/CFG2 exact fields, DC.RE writes, break/scall/eret/bret,
+   every modeled exception ID through both EBA and DEBA remap states,
    exception priority, and all IE/EIE/BIE transitions;
 6. each of 32 interrupt lines independently and in combinations, masked and
    globally disabled states, clear-versus-reassert behavior, acceptance before
@@ -271,7 +295,7 @@ reproducible matrices:
    family and exception/interrupt surface; and
 8. reset/load/restore/step/run/execute and every typed fault, including
    deterministic allocation failure before work and after prior candidate
-   steps, with exact rollback equality.
+   steps, with exact rollback equality for DC.RE=false and DC.RE=true states.
 
 The pinned RTL corpus may be generated in developer tooling or tests, but it
 must be checked in as bounded vectors and must never become a build-time,
