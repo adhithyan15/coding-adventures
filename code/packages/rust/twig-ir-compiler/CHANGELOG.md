@@ -1,5 +1,9 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- Tests that pin that a quote literal emits no runtime symbol call and that an empty program emits no nil call check the LANG83 PR7f names (`dyn_symbol`, `dyn_nil`) as well as the old ones. The compiler is unchanged.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)

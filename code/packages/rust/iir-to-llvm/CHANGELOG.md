@@ -1,4 +1,9 @@
 # Changelog — iir-to-llvm
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `DYN_BUILTINS`: `dyn_cons` / `dyn_car` / `dyn_cdr` / `dyn_pair_p` / `dyn_null_p` are renamed `dyn_pair_new` / `dyn_pair_first` / `dyn_pair_rest` / `dyn_is_pair` / `dyn_is_nil` (calls to `@__dyn_pair_new` …), and `dyn_tag` → `@__dyn_tag` is new.
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives: `Lowered` for all but `dyn_symbol`, which is `Refused(SYMBOLS_ARE_INTERNED_CONSTANTS)`. `builtin_rows_agree_with_the_builtin_table` now reads both builtin tables (`SUPPORTED_BUILTINS` and `DYN_BUILTINS`).
+
 ## Unreleased — LANG83 PR7e — no float writers
 
 - `write_f64_py` / `write_f64_js` leave `SUPPORTED_BUILTINS` and

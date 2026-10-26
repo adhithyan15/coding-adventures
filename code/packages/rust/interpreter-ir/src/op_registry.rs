@@ -84,6 +84,16 @@
 //! and PR7b's language-neutral float primitives `f64_class`, `f64_digits` and
 //! `f64_exp10` (the shortest round-trip digits as integers, on all nine).
 //!
+//! PR7f adds the **dynamic-value primitives** (`dyn_box_int` … `dyn_symbol`,
+//! family [`OpFamily::Dynamic`]): the tagged-word representation a dynamically
+//! typed language's values share — an integer, nil, a symbol, a boolean or a
+//! two-field heap pair in one 64-bit word. They were the Lisp-vocabulary
+//! builtins `dyn_cons`, `dyn_car`, `dyn_cdr`, `dyn_pair_p`, `dyn_null_p`,
+//! `make_nil` and `make_symbol`, unregistered, until PR7f renamed them. Only
+//! the backends that link the tagged-word runtime lower them (native x86-64
+//! and AArch64, LLVM); the others refuse them, because their value models are
+//! structural (a managed object, an Erlang term, a `vm-core` heap cell).
+//!
 //! PR6a's float writers `write_f64_py` / `write_f64_js` were registered here
 //! until LANG83 PR7e. They printed a float in Python's or JavaScript's layout,
 //! so every backend carried two languages' formatting rules. Each compiler
@@ -112,8 +122,8 @@
 //! compiler's own module-local helpers (`__py_write_float`) are not IIR
 //! vocabulary, so the rule does not apply to them.
 //! Instructions that are not registry entries
-//! (control flow, calls, memory, heap, bitwise, the `dyn_*` lisp builtins, …)
-//! are simply not gated by the registry; their existing validators still apply.
+//! (control flow, calls, memory, heap, bitwise, …) are simply not gated by the
+//! registry; their existing validators still apply.
 //! See `code/specs/LANG83-iir-standard-operation-registry.md` for the full
 //! vocabulary including the families planned for later.
 
@@ -155,6 +165,11 @@ pub enum OpFamily {
     String,
     /// Program-terminating error operations.
     Error,
+    /// LANG83 PR7f: the dynamic-value representation — one tagged machine word
+    /// that is an integer, nil, a symbol, a boolean or a two-field heap pair.
+    /// Representation only: what a value *means* (which values are false, when
+    /// two are equal) is a language's rule, written by its compiler.
+    Dynamic,
 }
 
 /// What a backend does with one registry operation.
@@ -188,6 +203,26 @@ impl OpSupport {
 /// backend.
 pub const NOT_YET_LOWERED_PR1B: &str = "not yet lowered; LANG83 PR1b";
 
+/// Why a backend without the tagged-word runtime refuses the LANG83 PR7f
+/// dynamic-value primitives. Shared so the refusal a user sees is identical
+/// on every such backend.
+///
+/// The primitives are calls into the tagged-word runtime (`dynval_runtime.c`
+/// on the native and LLVM columns). The managed backends, BEAM, `vm-core` and
+/// the generic JIT hold dynamic values structurally instead (a GC object, an
+/// Erlang term, a heap cell): `lang-aot` lowers a frontend's pair builtins to
+/// `alloc` / `field_*` / `is_null` before those backends run, and none of them
+/// lowers a `dyn_*` call.
+pub const NO_TAGGED_WORD_RUNTIME: &str = "this backend holds dynamic values structurally and \
+     does not link the tagged-word runtime the dyn_* primitives call (LANG83 PR7f)";
+
+/// Why the tagged-word backends refuse `dyn_symbol`: a symbol reaches them as
+/// a `const Var(name) : symbol`, which `intern_symbols` turns into a finished
+/// tagged immediate at compile time. No pass or runtime call lowers a symbol
+/// built from a literal at run time.
+pub const SYMBOLS_ARE_INTERNED_CONSTANTS: &str = "symbols reach this backend as interned \
+     `const name : symbol` immediates; a dyn_symbol call is not lowered (LANG83 PR7f)";
+
 /// The `introduced_by` tag of the four operations PR1b will lower.
 pub const LANG83_PR1B: &str = "LANG83 PR1b";
 
@@ -211,6 +246,13 @@ pub const LANG83_PR6C: &str = "LANG83 PR6c";
 /// ops and `putchar`, and no backend needs to know which language that is.
 pub const LANG83_PR7B: &str = "LANG83 PR7b";
 
+/// The `introduced_by` tag of the dynamic-value primitives (LANG83 PR7f):
+/// `dyn_box_int`, `dyn_unbox_int`, `dyn_tag`, `dyn_pair_new`, `dyn_pair_first`,
+/// `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil`, `dyn_nil` and `dyn_symbol`.
+/// Before PR7f they were unregistered builtins with Lisp names (`dyn_cons`,
+/// `dyn_car`, `dyn_cdr`, `dyn_pair_p`, `dyn_null_p`, `make_nil`, `make_symbol`).
+pub const LANG83_PR7F: &str = "LANG83 PR7f";
+
 /// One registered operation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OpSpec {
@@ -226,9 +268,10 @@ pub struct OpSpec {
     /// Whether the operation writes a `dest`.
     pub dest: bool,
     /// One descriptive type per operand: `"int"` (any integer width), `"i64"`,
-    /// `"f64"`, `"num"` (integer or `f64`), `"str"`, `"literal"` (an
-    /// `Operand::Str` compile-time literal) or `"kind"` (an `Operand::Str` trap
-    /// kind from the closed table in `exception_kind`).
+    /// `"f64"`, `"num"` (integer or `f64`), `"str"`, `"dyn"` (a dynamic
+    /// value: one tagged word, LANG83 PR7f), `"literal"` (an `Operand::Str`
+    /// compile-time literal) or `"kind"` (an `Operand::Str` trap kind from the
+    /// closed table in `exception_kind`).
     pub operand_types: &'static [&'static str],
     /// The trap kinds this operation may raise. [`CATCH_ANY`] means "whichever
     /// registered kind its operand names" (only `trap` itself).
@@ -260,6 +303,12 @@ impl OpSpec {
     pub fn is_pr7b(&self) -> bool {
         self.introduced_by == LANG83_PR7B
     }
+
+    /// `true` if this entry is one of the LANG83 PR7f dynamic-value
+    /// primitives (`dyn_box_int` … `dyn_symbol`).
+    pub fn is_pr7f(&self) -> bool {
+        self.introduced_by == LANG83_PR7F
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -281,7 +330,7 @@ const fn spec(
     OpSpec { name, kind, family, arity, dest, operand_types, may_trap, terminator: false, introduced_by }
 }
 
-use OpFamily::{Arithmetic, Comparison, Conversion, Error, Float, Output, String as Str};
+use OpFamily::{Arithmetic, Comparison, Conversion, Dynamic, Error, Float, Output, String as Str};
 use OpKind::{Builtin, Op};
 
 const NO_TRAP: &[&str] = &[];
@@ -298,6 +347,8 @@ const UN_F64: &[&str] = &["f64"];
 const BIN_F64: &[&str] = &["f64", "f64"];
 const BIN_I64: &[&str] = &["i64", "i64"];
 const UN_I64: &[&str] = &["i64"];
+/// One dynamic value: a tagged word (see the PR7f block of [`STANDARD_OPS`]).
+const UN_DYN: &[&str] = &["dyn"];
 
 /// Every standard operation, grouped by family in vocabulary-table order.
 ///
@@ -410,6 +461,47 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     spec("int_to_real", Op, Conversion, 1, true, &["int"], NO_TRAP, "LANG-FULL E8"),
     spec("real_to_int_trunc", Op, Conversion, 1, true, UN_F64, CONV_RANGE_ONLY, "LANG-FULL E8"),
     spec("real_to_int_floor", Op, Conversion, 1, true, UN_F64, CONV_RANGE_ONLY, "LANG-FULL E8"),
+    // ── Dynamic values (LANG83 PR7f) ────────────────────────────────────────
+    // The representation a dynamically typed language's values share: one
+    // tagged 64-bit word (DVAL01). Its low three bits are the tag:
+    //
+    //   tag  value     encoding            dyn_tag
+    //   000  integer   n << 3              0
+    //   001  nil       the whole word 1    1
+    //   010  symbol    (id << 32) | 010    2
+    //   011  false     the whole word 3    3
+    //   101  true      the whole word 5    5
+    //   111  pair      pointer | 111       7
+    //
+    //   dyn_box_int n      an integer (|n| < 2^60) → its dynamic value
+    //   dyn_unbox_int x    a dynamic integer → the integer
+    //   dyn_tag x          x's tag number (table above), as an integer
+    //   dyn_pair_new a b   a fresh, garbage-collected pair of a and b
+    //   dyn_pair_first p   the pair's first field  (p must be a pair)
+    //   dyn_pair_rest p    the pair's second field (p must be a pair)
+    //   dyn_is_pair x      true if x is a pair, as a dynamic boolean
+    //   dyn_is_nil x       true if x is nil, as a dynamic boolean
+    //   dyn_nil            nil
+    //   dyn_symbol "name"  the symbol the literal names (one value per name)
+    //
+    // Representation only. Which values count as false, when two values are
+    // equal and what a program's result exits with are a language's rules;
+    // LANG83 PR7 gives them to that language's compiler, never to an op. They
+    // are Builtins because the tagged-word backends call a runtime function
+    // for each (`__dyn_pair_new`, …), named by the `dyn_` prefix — the one
+    // prefix arm that is meant to capture them (see
+    // `GRANDFATHERED_PREFIXED_NAMES`). `dyn_pair_first`/`rest` of a non-pair
+    // is undefined: a frontend tests with `dyn_is_pair` first.
+    spec("dyn_box_int", Builtin, Dynamic, 1, true, UN_I64, NO_TRAP, LANG83_PR7F),
+    spec("dyn_unbox_int", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_tag", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_pair_new", Builtin, Dynamic, 2, true, &["dyn", "dyn"], NO_TRAP, LANG83_PR7F),
+    spec("dyn_pair_first", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_pair_rest", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_is_pair", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_is_nil", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_nil", Builtin, Dynamic, 0, true, &[], NO_TRAP, LANG83_PR7F),
+    spec("dyn_symbol", Builtin, Dynamic, 1, true, &["literal"], NO_TRAP, LANG83_PR7F),
     // ── Errors ───────────────────────────────────────────────────────────────
     // `trap kind` terminates the program after flushing output. The only
     // terminator in the registry, so it is spelled out instead of `spec(..)`.
@@ -435,9 +527,29 @@ pub const DISPATCH_PREFIXES: &[&str] = &[
 ];
 
 /// Registry names that start with a dispatch prefix *on purpose*: the six
-/// comparisons are exactly the family `cmp_` dispatches.
-pub const GRANDFATHERED_PREFIXED_NAMES: &[&str] =
-    &["cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge"];
+/// comparisons are exactly the family `cmp_` dispatches, and the ten LANG83
+/// PR7f dynamic-value primitives are exactly the family `dyn_` dispatches
+/// (the native backends turn `call_builtin "dyn_<x>"` into a call to the
+/// runtime's `__dyn_<x>`, and only for a name in their builtin table, so an
+/// unregistered `dyn_` name is still refused there).
+pub const GRANDFATHERED_PREFIXED_NAMES: &[&str] = &[
+    "cmp_eq",
+    "cmp_ne",
+    "cmp_lt",
+    "cmp_le",
+    "cmp_gt",
+    "cmp_ge",
+    "dyn_box_int",
+    "dyn_unbox_int",
+    "dyn_tag",
+    "dyn_pair_new",
+    "dyn_pair_first",
+    "dyn_pair_rest",
+    "dyn_is_pair",
+    "dyn_is_nil",
+    "dyn_nil",
+    "dyn_symbol",
+];
 
 // ---------------------------------------------------------------------------
 // Lookups
@@ -458,9 +570,8 @@ pub fn lookup(name: &str) -> Option<&'static OpSpec> {
 /// The registry entry an instruction invokes, if any.
 ///
 /// An Op matches on `instr.op`; a Builtin matches a `call_builtin` whose first
-/// source is `Operand::Var(name)`. A `call_builtin` of a non-registry name (the
-/// lisp `dyn_*` builtins, `getchar`, …) and every non-registry mnemonic return
-/// `None`.
+/// source is `Operand::Var(name)`. A `call_builtin` of a non-registry name
+/// (`getchar`, …) and every non-registry mnemonic return `None`.
 ///
 /// ```
 /// use interpreter_ir::instr::{IIRInstr, Operand};
@@ -795,10 +906,24 @@ mod tests {
     }
 
     #[test]
-    fn grandfathered_names_are_registered_comparisons() {
+    fn grandfathered_names_are_registered_comparisons_or_dynamic_values() {
         for name in GRANDFATHERED_PREFIXED_NAMES {
             let spec = lookup(name).expect("grandfathered name must be registered");
-            assert_eq!(spec.family, OpFamily::Comparison);
+            match spec.family {
+                OpFamily::Comparison => assert!(name.starts_with("cmp_"), "{name}"),
+                // The `dyn_` arm is a call into the tagged-word runtime, so the
+                // family it captures must be Builtins.
+                OpFamily::Dynamic => {
+                    assert!(name.starts_with("dyn_"), "{name}");
+                    assert_eq!(spec.kind, OpKind::Builtin, "{name}");
+                }
+                other => panic!("{name} is grandfathered but is in family {other:?}"),
+            }
+        }
+        // Every dynamic-value primitive is grandfathered, and nothing else
+        // with the prefix is: `dyn_new` (above) is still a violation.
+        for spec in STANDARD_OPS.iter().filter(|s| s.family == OpFamily::Dynamic) {
+            assert!(GRANDFATHERED_PREFIXED_NAMES.contains(&spec.name), "{}", spec.name);
         }
     }
 
@@ -900,6 +1025,51 @@ mod tests {
             assert!(spec.may_trap.is_empty(), "{name} never traps");
             assert!(!crate::opcodes::has_side_effects(name), "{name} is pure");
         }
+    }
+
+    /// LANG83 PR7f: the dynamic-value primitives, under the neutral names
+    /// that replaced the Lisp vocabulary (`dyn_cons`, `dyn_car`, `dyn_cdr`,
+    /// `dyn_pair_p`, `dyn_null_p`, `make_nil`, `make_symbol`, none of which
+    /// is registered).
+    #[test]
+    fn pr7f_set_is_exactly_the_dynamic_value_primitives() {
+        let mut pr7f: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr7f()).map(|s| s.name).collect();
+        pr7f.sort_unstable();
+        assert_eq!(
+            pr7f,
+            [
+                "dyn_box_int",
+                "dyn_is_nil",
+                "dyn_is_pair",
+                "dyn_nil",
+                "dyn_pair_first",
+                "dyn_pair_new",
+                "dyn_pair_rest",
+                "dyn_symbol",
+                "dyn_tag",
+                "dyn_unbox_int",
+            ]
+        );
+        for name in pr7f {
+            let spec = lookup(name).unwrap();
+            assert_eq!(spec.kind, OpKind::Builtin, "{name}");
+            assert_eq!(spec.family, OpFamily::Dynamic, "{name}");
+            assert!(spec.dest, "{name} writes a dest");
+            assert!(spec.may_trap.is_empty(), "{name} names no trap kind");
+            assert!(language_name_violation(name).is_none(), "{name}");
+        }
+        for old in ["dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "make_nil", "make_symbol"] {
+            assert!(lookup(old).is_none(), "{old} is the pre-PR7f name");
+        }
+        // The language-semantic runtime ops are not representation, so they
+        // are never registered (PR7f moves them into the compilers).
+        for semantic in ["dyn_truthy", "dyn_equal", "dyn_not", "dyn_to_exit_code"] {
+            assert!(lookup(semantic).is_none(), "{semantic} is a language's rule, not an op");
+        }
+        assert_eq!(lookup("dyn_nil").unwrap().arity, 0);
+        assert_eq!(lookup("dyn_pair_new").unwrap().operand_types, ["dyn", "dyn"]);
+        assert_eq!(lookup("dyn_box_int").unwrap().operand_types, ["i64"]);
+        assert_eq!(lookup("dyn_symbol").unwrap().operand_types, ["literal"]);
     }
 
     #[test]

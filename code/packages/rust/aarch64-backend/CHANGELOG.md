@@ -1,5 +1,10 @@
 # Changelog — `aarch64-backend`
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives: `Lowered` for all but `dyn_symbol` (a `BL __dyn_<name>` through `V1_BUILTINS`), `Refused(SYMBOLS_ARE_INTERNED_CONSTANTS)` for `dyn_symbol`.
+- `V1_BUILTINS`: `dyn_cons` / `dyn_car` / `dyn_cdr` / `dyn_pair_p` / `dyn_null_p` are renamed `dyn_pair_new` / `dyn_pair_first` / `dyn_pair_rest` / `dyn_is_pair` / `dyn_is_nil`; `dyn_tag` and `dyn_nil` are new rows. Unit tests use the new names.
+
 ## Unreleased — LANG83 PR7e — no float writers
 
 - `write_f64_py` / `write_f64_js` leave the V1 builtin table and

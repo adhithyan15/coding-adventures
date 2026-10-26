@@ -184,9 +184,11 @@ impl RegAlloc {
 // | `input_str`   | `int64_t __twig_input_str(void)` (E4-dyn str handle) | yes |
 // | `exit`        | `void __twig_exit(int32_t)` (noreturn)        | no      |
 // | `alloc_bytes` | `int64_t __twig_alloc_bytes(int64_t n)`       | yes     |
-// | `dyn_cons`  | `uint64_t __dyn_cons(uint64_t, uint64_t)` | yes  |
-// | `dyn_car`   | `uint64_t __dyn_car(uint64_t)`         | yes     |
-// | `dyn_cdr`   | `uint64_t __dyn_cdr(uint64_t)`         | yes     |
+// | `dyn_pair_new`   | `uint64_t __dyn_pair_new(uint64_t, uint64_t)` | yes |
+// | `dyn_pair_first` | `uint64_t __dyn_pair_first(uint64_t)`         | yes |
+// | `dyn_pair_rest`  | `uint64_t __dyn_pair_rest(uint64_t)`          | yes |
+// | `dyn_tag`        | `int64_t __dyn_tag(uint64_t)`                 | yes |
+// | `dyn_nil`        | `uint64_t __dyn_nil(void)`                    | yes |
 // | `str_eq`      | `int64_t __twig_str_eq(int64_t, int64_t)`    | yes     |
 // | `str_cmp`     | `int64_t __twig_str_cmp(int64_t, int64_t)`   | yes     |
 
@@ -219,14 +221,21 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "exit",         n_args: 1, returns: false },
     // LANG76 — heap allocator.  Returns a pointer (treated as i64).
     BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
-    // LANG77 — the shared lisp value runtime (McCarthy Lisp L3b-2b).  These
-    // dispatch to `__dyn_*` in `twig-aot/runtime/dynval_runtime.c`,
-    // which implements `lispy-runtime`'s NaN-box tagged-value model.  Each
-    // takes/returns an opaque 64-bit `LispyValue`.  No backend-specific
-    // logic — the generic `call_builtin` path marshals args + emits the BL.
-    BuiltinSig { name: "dyn_cons",   n_args: 2, returns: true  },
-    BuiltinSig { name: "dyn_car",    n_args: 1, returns: true  },
-    BuiltinSig { name: "dyn_cdr",    n_args: 1, returns: true  },
+    // LANG77 — the shared dynamic-value runtime (McCarthy Lisp L3b-2b).  These
+    // dispatch to `__dyn_*` in `twig-aot/runtime/dynval_runtime.c`, which
+    // implements `dynval-runtime`'s tagged-word value model.  Each takes/returns
+    // an opaque 64-bit tagged word.  No backend-specific logic — the generic
+    // `call_builtin` path marshals args + emits the BL.  LANG83 PR7f
+    // registered the representation primitives under neutral names (they were
+    // `dyn_cons`/`dyn_car`/`dyn_cdr`/`dyn_pair_p`/`dyn_null_p`); each row here
+    // is what `op_support` reports as `Lowered`.
+    BuiltinSig { name: "dyn_pair_new",   n_args: 2, returns: true  },
+    BuiltinSig { name: "dyn_pair_first", n_args: 1, returns: true  },
+    BuiltinSig { name: "dyn_pair_rest",  n_args: 1, returns: true  },
+    // LANG83 PR7f — the tag number (`x & 7`) and the nil singleton.
+    // `int64_t __dyn_tag(uint64_t)`, `uint64_t __dyn_nil(void)`.
+    BuiltinSig { name: "dyn_tag",        n_args: 1, returns: true  },
+    BuiltinSig { name: "dyn_nil",        n_args: 0, returns: true  },
     // LANG77 L3b-2c — unbox a tagged integer to a raw machine word at the
     // program-exit boundary.  `int64_t __dyn_unbox_int(uint64_t)`.
     BuiltinSig { name: "dyn_unbox_int", n_args: 1, returns: true },
@@ -237,8 +246,8 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "dyn_box_int", n_args: 1, returns: true },
     // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
     // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
-    BuiltinSig { name: "dyn_pair_p",    n_args: 1, returns: true },
-    BuiltinSig { name: "dyn_null_p",    n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_is_pair",   n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_is_nil",    n_args: 1, returns: true },
     BuiltinSig { name: "dyn_not",       n_args: 1, returns: true },
     BuiltinSig { name: "dyn_equal",     n_args: 2, returns: true },
     BuiltinSig { name: "dyn_truthy",    n_args: 1, returns: true },
@@ -626,7 +635,7 @@ fn is_definitely_not_ref(ty: &str) -> bool {
 /// and — critically — **`any`**.
 ///
 /// `any` is not a fallback here; it is the *normal* type of every dynamic value.
-/// `__dyn_cons` and friends allocate through `__twig_gc_alloc`, and the whole
+/// `__dyn_pair_new` and friends allocate through `__twig_gc_alloc`, and the whole
 /// dyn-value world is typed `any` by design, so treating `any` as a non-root would
 /// leave every lispy pair unrooted.
 ///
@@ -1477,7 +1486,7 @@ fn emit_instr(
         //     (`print_i64`, `getchar`, `str_eq`, `gc_alloc`, …).
         //   - the **dyn** value runtime (`dynval_runtime.c`) exports `__dyn_<name>`
         //     for the tagged-value builtins, whose IIR names already carry the
-        //     `dyn_` namespace (`dyn_cons` → `__dyn_cons`, `dyn_to_exit_code` →
+        //     `dyn_` namespace (`dyn_pair_new` → `__dyn_pair_new`, `dyn_to_exit_code` →
         //     `__dyn_to_exit_code`). So a `dyn_*` builtin is just `__` + name;
         //     everything else is `__twig_` + name.
         let symbol = if name.starts_with("dyn_") {
@@ -2984,16 +2993,16 @@ mod tests {
         let cir = vec![
             const_u64("h", 7),
             const_u64("t", 9),
-            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]),
-            call_builtin(Some("r"), "dyn_car", &["cell"]),
+            call_builtin(Some("cell"), "dyn_pair_new", &["h", "t"]),
+            call_builtin(Some("r"), "dyn_pair_first", &["cell"]),
             ret_u64("r"),
         ];
         let (bytes, ext) = compile_with_relocs(&ctx("lispy", &[], "u64"), &cir)
             .unwrap_or_else(|e| panic!("lispy runtime calls must lower: {e}"));
         assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
         let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
-        assert!(symbols.contains(&"__dyn_cons"), "missing cons call: {symbols:?}");
-        assert!(symbols.contains(&"__dyn_car"), "missing car call: {symbols:?}");
+        assert!(symbols.contains(&"__dyn_pair_new"), "missing cons call: {symbols:?}");
+        assert!(symbols.contains(&"__dyn_pair_first"), "missing car call: {symbols:?}");
     }
 
     #[test]
@@ -3084,11 +3093,11 @@ mod tests {
     }
 
     #[test]
-    fn dyn_cons_wrong_arity_is_rejected() {
-        // dyn_cons takes exactly 2 args — one arg must be a soft refusal.
+    fn dyn_pair_new_wrong_arity_is_rejected() {
+        // dyn_pair_new takes exactly 2 args — one arg must be a soft refusal.
         let cir = vec![
             const_u64("h", 7),
-            call_builtin(Some("cell"), "dyn_cons", &["h"]),
+            call_builtin(Some("cell"), "dyn_pair_new", &["h"]),
             ret_u64("cell"),
         ];
         assert!(compile(&ctx("bad_cons", &[], "u64"), &cir).is_err());
@@ -3101,8 +3110,8 @@ mod tests {
         let cir = vec![
             const_u64("h", 7 << 3),
             const_u64("t", 9 << 3),
-            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]),
-            call_builtin(Some("boxed"), "dyn_car", &["cell"]),
+            call_builtin(Some("cell"), "dyn_pair_new", &["h", "t"]),
+            call_builtin(Some("boxed"), "dyn_pair_first", &["cell"]),
             call_builtin(Some("r"), "dyn_unbox_int", &["boxed"]),
             ret_u64("r"),
         ];
@@ -3110,7 +3119,7 @@ mod tests {
             .unwrap_or_else(|e| panic!("boxed cons/car/unbox must lower: {e}"));
         assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
         let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
-        for want in ["__dyn_cons", "__dyn_car", "__dyn_unbox_int"] {
+        for want in ["__dyn_pair_new", "__dyn_pair_first", "__dyn_unbox_int"] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
     }
@@ -3121,7 +3130,7 @@ mod tests {
         // dyn_truthy; plus equal? (EQ). All four predicates must lower.
         let cir = vec![
             const_u64("x", 5 << 3),
-            call_builtin(Some("p"), "dyn_pair_p", &["x"]),
+            call_builtin(Some("p"), "dyn_is_pair", &["x"]),
             call_builtin(Some("a"), "dyn_not", &["p"]),
             call_builtin(Some("t"), "dyn_truthy", &["a"]),
             call_builtin(Some("e"), "dyn_equal", &["x", "x"]),
@@ -3132,7 +3141,7 @@ mod tests {
         assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
         let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
         for want in [
-            "__dyn_pair_p", "__dyn_not",
+            "__dyn_is_pair", "__dyn_not",
             "__dyn_truthy", "__dyn_equal",
         ] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");

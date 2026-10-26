@@ -1,5 +1,9 @@
 # Changelog — twig-vm
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- A test that built nil with `call_builtin "make_nil"` uses `dyn_nil`, the name `dynval-runtime`'s binding now resolves (LANG83 PR7f). Doc comments describe the typed `const 0 : ref<LispyPair>` that twig-ir-compiler emits for `nil`.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)

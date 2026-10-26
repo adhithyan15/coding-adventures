@@ -67,7 +67,7 @@ const I31_MIN: i64 = -(1 << 30);
 /// not the scalar concretizer — owns it. Mirrors the `LISP_BUILTINS` list in
 /// `lang-aot::concretize_scalar_any_for_wasm` so the two passes partition the
 /// module's functions with no overlap or gap.
-const LISP_BUILTINS: &[&str] = &["pair?", "not", "equal?", "make_symbol", "make_nil", "null?"];
+const LISP_BUILTINS: &[&str] = &["pair?", "not", "equal?", "dyn_symbol", "dyn_nil", "null?"];
 
 /// The subset of [`LISP_BUILTINS`] whose **value** arguments are lisp values, so
 /// an integer atom flowing into one must be boxed as an `i31ref` (exactly as an

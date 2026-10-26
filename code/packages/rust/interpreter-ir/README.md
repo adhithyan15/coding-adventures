@@ -111,6 +111,40 @@ assert!(language_name_violation("Trap.ReferenceError").is_some());
 assert!(language_name_violation("f64_digits").is_none());
 ```
 
+### Dynamic values (LANG83 PR7f)
+
+The `Dynamic` family is the representation a dynamically typed language's
+values share: one tagged 64-bit word whose low three bits say what it is.
+
+| Builtin | Meaning |
+|---------|---------|
+| `dyn_box_int n` / `dyn_unbox_int x` | an integer ⇄ its dynamic value (`n << 3`) |
+| `dyn_tag x` | the tag number: 0 integer, 1 nil, 2 symbol, 3 false, 5 true, 7 pair |
+| `dyn_pair_new a b` | a fresh, garbage-collected two-field pair |
+| `dyn_pair_first p` / `dyn_pair_rest p` | a pair's fields (`p` must be a pair) |
+| `dyn_is_pair x` / `dyn_is_nil x` | the pair and nil tests, as dynamic booleans |
+| `dyn_nil` | nil |
+| `dyn_symbol "name"` | the symbol a literal names |
+
+They were the unregistered Lisp-vocabulary builtins `dyn_cons`, `dyn_car`,
+`dyn_cdr`, `dyn_pair_p`, `dyn_null_p`, `make_nil` and `make_symbol`. The
+names start with the `dyn_` dispatch prefix on purpose: the native backends'
+`dyn_` arm, which calls the runtime's `__dyn_<name>`, is exactly their lowering
+(`GRANDFATHERED_PREFIXED_NAMES`). Only the backends that link the tagged-word
+runtime lower them (native x86-64 and AArch64, LLVM). The others hold dynamic
+values structurally and refuse them with the shared
+`op_registry::NO_TAGGED_WORD_RUNTIME` reason; `dyn_symbol` is refused
+everywhere (`SYMBOLS_ARE_INTERNED_CONSTANTS`), since a symbol reaches the
+tagged-word backends as an interned `const … : symbol`.
+
+```rust
+use interpreter_ir::op_registry::{lookup, OpFamily, OpKind};
+
+let pair = lookup("dyn_pair_new").unwrap();
+assert_eq!((pair.kind, pair.family, pair.arity), (OpKind::Builtin, OpFamily::Dynamic, 2));
+assert!(lookup("dyn_cons").is_none()); // the pre-PR7f name
+```
+
 `opcodes::may_trap`, `opcodes::trap_kinds` and `opcodes::is_terminator` answer the
 analysis questions the new ops raise; `trap`, `i64_div_floor`, `i64_mod_floor` and
 the four `i64_*_ovf` ops count as side-effecting so dead-code elimination keeps

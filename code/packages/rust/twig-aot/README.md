@@ -56,16 +56,21 @@ two translation units:
   removed the PR6a writers `__twig_write_f64_py` / `__twig_write_f64_js`
   (Python `repr` / JavaScript `toString`), and each compiler now lays a
   float out in its own module.
-- `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):
-  `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`truthy`/`make_symbol`/`nil`
-  plus int box/unbox, implementing `dynval-runtime`'s 3-bit-tagged 64-bit
-  `LispyValue` ABI. This is what lets *any* lisp-family frontend (Twig,
-  McCarthy Lisp, future lisps) compile cons cells and interned symbols to a
-  native binary — it is a language-agnostic primitive, not tied to one
-  frontend.
+- `runtime/dynval_runtime.c` — the **shared dynamic-value model** (LANG77,
+  DVAL01): the LANG83 PR7f primitives `__dyn_box_int` / `__dyn_unbox_int`,
+  `__dyn_tag`, `__dyn_pair_new` / `__dyn_pair_first` / `__dyn_pair_rest`,
+  `__dyn_is_pair` / `__dyn_is_nil`, `__dyn_nil` and `__dyn_symbol` (the
+  native backends call `__dyn_<name>` for a registered `dyn_<name>`),
+  implementing `dynval-runtime`'s 3-bit-tagged 64-bit `LispyValue` ABI. This
+  is what lets *any* dynamically typed frontend (Twig, McCarthy Lisp, the CAS
+  languages) compile pairs and interned symbols to a native binary. The
+  primitives were `__dyn_cons` / `car` / `cdr` / `pair_p` / `null_p` /
+  `make_symbol` before PR7f. The file still holds the Lisp-semantic helpers
+  `__dyn_truthy` / `__dyn_equal` / `__dyn_not` / `__dyn_to_exit_code`, which
+  are not registry operations.
 
 The C lisp runtime and the Rust `dynval-runtime` crate (used by the VM/JIT)
-are two implementations of one documented ABI. The `lispy_runtime_golden`
+are two implementations of one documented ABI. The `dynval_runtime_golden`
 unit test pins the C side to the Rust `pub const`s/constructors so they can
 never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
 
@@ -77,7 +82,7 @@ never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
   `libgc_core_capi.a` and embeds it; each AOT link site writes it to a temp `.a` and
   passes it to the linker alongside the runtime archive, so every emitted binary's
   `__twig_gc_alloc` / `__twig_gc_safepoint` references resolve against one generic
-  collector. `__dyn_cons` still allocates cons cells via `__twig_gc_alloc` — that ABI
+  collector. `__dyn_pair_new` still allocates pairs on the managed heap — that ABI
   is unchanged; only its implementation moved. See `code/specs/AOT00-T1-precise-gc.md`
   and `code/specs/LANG16-gc-core.md`.
 

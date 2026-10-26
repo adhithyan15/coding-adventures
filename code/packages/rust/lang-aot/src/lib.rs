@@ -1017,13 +1017,16 @@ fn concretize_scalar_any_for_llvm(module: &mut IIRModule) {
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
     // model — unlike a `ref<any>` type hint, which only says the value is
-    // dynamic. `(ATOM 7)` reaches here as `dyn_pair_p`/`dyn_not` and has no
+    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair`/`dyn_not` and has no
     // other evidence, so omitting these names silently narrowed a tagged
     // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
-        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
-        "dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "dyn_not", "dyn_equal",
-        "dyn_box_int", "dyn_unbox_int", "dyn_truthy", "dyn_to_exit_code",
+        "cons", "car", "cdr", "pair?", "not", "equal?", "null?",
+        // LANG83 PR7f's registered dynamic-value primitives …
+        "dyn_pair_new", "dyn_pair_first", "dyn_pair_rest", "dyn_is_pair", "dyn_is_nil",
+        "dyn_box_int", "dyn_unbox_int", "dyn_tag", "dyn_nil", "dyn_symbol",
+        // … and the tagged-word runtime's language-semantic calls.
+        "dyn_not", "dyn_equal", "dyn_truthy", "dyn_to_exit_code",
     ];
     let module_uses_lisp = module.functions.iter().any(|func| {
         func.params.iter().any(|(_, t)| is_tagged_boundary_param(t))
@@ -1299,13 +1302,16 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
     // model — unlike a `ref<any>` type hint, which only says the value is
-    // dynamic. `(ATOM 7)` reaches here as `dyn_pair_p`/`dyn_not` and has no
+    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair`/`dyn_not` and has no
     // other evidence, so omitting these names silently narrowed a tagged
     // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
-        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
-        "dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "dyn_not", "dyn_equal",
-        "dyn_box_int", "dyn_unbox_int", "dyn_truthy", "dyn_to_exit_code",
+        "cons", "car", "cdr", "pair?", "not", "equal?", "null?",
+        // LANG83 PR7f's registered dynamic-value primitives …
+        "dyn_pair_new", "dyn_pair_first", "dyn_pair_rest", "dyn_is_pair", "dyn_is_nil",
+        "dyn_box_int", "dyn_unbox_int", "dyn_tag", "dyn_nil", "dyn_symbol",
+        // … and the tagged-word runtime's language-semantic calls.
+        "dyn_not", "dyn_equal", "dyn_truthy", "dyn_to_exit_code",
     ];
     // Concretization is a **whole-module** decision, not a per-function one,
     // because a `call` couples a caller and callee's value models: the caller
@@ -1589,13 +1595,16 @@ fn concretize_scalar_any_for_cil(module: &mut IIRModule, narrow_i64: bool) {
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
     // model — unlike a `ref<any>` type hint, which only says the value is
-    // dynamic. `(ATOM 7)` reaches here as `dyn_pair_p`/`dyn_not` and has no
+    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair`/`dyn_not` and has no
     // other evidence, so omitting these names silently narrowed a tagged
     // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
-        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
-        "dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "dyn_not", "dyn_equal",
-        "dyn_box_int", "dyn_unbox_int", "dyn_truthy", "dyn_to_exit_code",
+        "cons", "car", "cdr", "pair?", "not", "equal?", "null?",
+        // LANG83 PR7f's registered dynamic-value primitives …
+        "dyn_pair_new", "dyn_pair_first", "dyn_pair_rest", "dyn_is_pair", "dyn_is_nil",
+        "dyn_box_int", "dyn_unbox_int", "dyn_tag", "dyn_nil", "dyn_symbol",
+        // … and the tagged-word runtime's language-semantic calls.
+        "dyn_not", "dyn_equal", "dyn_truthy", "dyn_to_exit_code",
     ];
     // Whole-module, not per-function: a `call` couples a caller's and callee's
     // value models. Narrowing `main` while its callee `lambda_0` keeps a tagged

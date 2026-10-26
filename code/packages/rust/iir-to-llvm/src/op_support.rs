@@ -22,8 +22,8 @@
 //!
 //! See `code/specs/LANG83-iir-standard-operation-registry.md`.
 
-use interpreter_ir::op_registry::{support_from_table, OpSupport};
-use OpSupport::Lowered;
+use interpreter_ir::op_registry::{support_from_table, OpSupport, SYMBOLS_ARE_INTERNED_CONSTANTS};
+use OpSupport::{Lowered, Refused};
 
 /// This backend's answer for every LANG83 standard operation.
 pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
@@ -87,6 +87,20 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),
     ("real_to_int_floor", Lowered),
+    // ── Dynamic values (LANG83 PR7f) ────────────────────────────────────────
+    // Calls into the linked tagged-word runtime (`dynval_runtime.c`'s
+    // `__dyn_<name>`), through the builtin table. A symbol is a compile-time
+    // interned immediate here, never a `dyn_symbol` call.
+    ("dyn_box_int", Lowered),
+    ("dyn_unbox_int", Lowered),
+    ("dyn_tag", Lowered),
+    ("dyn_pair_new", Lowered),
+    ("dyn_pair_first", Lowered),
+    ("dyn_pair_rest", Lowered),
+    ("dyn_is_pair", Lowered),
+    ("dyn_is_nil", Lowered),
+    ("dyn_nil", Lowered),
+    ("dyn_symbol", Refused(SYMBOLS_ARE_INTERNED_CONSTANTS)),
     // ── Errors ──────────────────────────────────────────────────────────────
     ("trap", Lowered),
 ];
@@ -120,7 +134,10 @@ mod tests {
     #[test]
     fn builtin_rows_agree_with_the_builtin_table() {
         for spec in STANDARD_OPS.iter().filter(|s| s.kind == OpKind::Builtin) {
-            let in_table = crate::SUPPORTED_BUILTINS.contains(&spec.name);
+            // Two tables: the scalar builtins, and the tagged-word runtime
+            // calls (`DYN_BUILTINS`, LANG83 PR7f's dynamic-value primitives).
+            let in_table =
+                crate::SUPPORTED_BUILTINS.contains(&spec.name) || crate::dyn_builtin(spec.name).is_some();
             assert_eq!(
                 op_support(spec.name).is_lowered(),
                 in_table,

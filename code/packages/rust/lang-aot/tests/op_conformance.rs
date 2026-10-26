@@ -19,6 +19,7 @@
 //! | `float_table_matches_host_python3_and_node` | the PR6a expected strings (the oracle the PR7e helper cases print) are what host `python3` (`repr`) and `node` (`String(x)`) print today, whenever they are installed |
 //! | `harness_builtins_name_no_language` | LANG83 PR7e: no builtin a conformance runner registers names a source language |
 //! | `pr7b_ops_are_lowered_on_every_backend` | LANG83 PR7b: `f64_class`, `f64_digits` and `f64_exp10` are lowered on all nine backends, the PR7b cases run on every executable column, and BEAM compiles the finite ones |
+//! | `pr7f_dynamic_values_run_on_the_tagged_word_backends` | LANG83 PR7f: the dynamic-value primitives are lowered exactly on the three tagged-word backends (native x86-64 and AArch64, LLVM) and refused, before any pass runs, everywhere else; the PR7f case runs on LLVM and native x86-64 whenever they are present |
 //! | `float_digits_table_matches_host_python3` | the PR7b expected digits are host `python3`'s `repr` split at the digits, whenever it is installed |
 //! | `flush_before_trap_is_proven_on_every_executable_column` | a program that writes (unflushed) output and then traps keeps that output, and the trap kind is observed, on every column that can run it |
 //!
@@ -181,6 +182,77 @@ fn print_i64(v: &str) -> IIRInstr {
 }
 fn print_str(v: &str) -> IIRInstr {
     IIRInstr::new("print_str", None, vec![var(v)], "void")
+}
+/// `d = call_builtin name args… : ty` — a builtin with a result (LANG83 PR7f's
+/// dynamic-value primitives are all of this shape).
+fn builtin_to(name: &str, d: &str, args: &[&str], ty: &str) -> IIRInstr {
+    let mut srcs = vec![var(name)];
+    srcs.extend(args.iter().map(|a| var(a)));
+    IIRInstr::new("call_builtin", Some(d.into()), srcs, ty)
+}
+
+/// The dynamic-value type hint (LANG83 PR7f): a tagged word.
+const DYN: &str = "ref<any>";
+
+/// LANG83 PR7f: every dynamic-value primitive but `dyn_symbol`, each result
+/// printed as an integer. Atoms are boxed explicitly with `dyn_box_int`, so
+/// the tagged-word lowering passes have no atom of their own to box.
+///
+/// | line | expression                    | value |
+/// |------|-------------------------------|-------|
+/// | 1    | unbox (first (pair 41 -7))    | 41    |
+/// | 2    | unbox (rest (pair 41 -7))     | -7    |
+/// | 3    | tag (pair …)                  | 7     |
+/// | 4    | tag (box 41)                  | 0     |
+/// | 5    | tag nil                       | 1     |
+/// | 6    | tag (is_nil nil)              | 5 (true)  |
+/// | 7    | tag (is_nil (pair …))         | 3 (false) |
+/// | 8    | tag (is_pair (pair …))        | 5 (true)  |
+/// | 9    | tag (is_pair (box 41))        | 3 (false) |
+/// | 10   | unbox (first (rest (pair 1 (pair 2 nil)))) | 2 |
+fn dynamic_value_program() -> IIRModule {
+    program(vec![
+        int("a", 41),
+        builtin_to("dyn_box_int", "ba", &["a"], DYN),
+        int("b", -7),
+        builtin_to("dyn_box_int", "bb", &["b"], DYN),
+        builtin_to("dyn_pair_new", "p", &["ba", "bb"], DYN),
+        builtin_to("dyn_pair_first", "f", &["p"], DYN),
+        builtin_to("dyn_unbox_int", "uf", &["f"], "i64"),
+        print_i64("uf"),
+        builtin_to("dyn_pair_rest", "r", &["p"], DYN),
+        builtin_to("dyn_unbox_int", "ur", &["r"], "i64"),
+        print_i64("ur"),
+        builtin_to("dyn_tag", "t_pair", &["p"], "i64"),
+        print_i64("t_pair"),
+        builtin_to("dyn_tag", "t_int", &["ba"], "i64"),
+        print_i64("t_int"),
+        builtin_to("dyn_nil", "n", &[], DYN),
+        builtin_to("dyn_tag", "t_nil", &["n"], "i64"),
+        print_i64("t_nil"),
+        builtin_to("dyn_is_nil", "nil_is_nil", &["n"], DYN),
+        builtin_to("dyn_tag", "t1", &["nil_is_nil"], "i64"),
+        print_i64("t1"),
+        builtin_to("dyn_is_nil", "pair_is_nil", &["p"], DYN),
+        builtin_to("dyn_tag", "t2", &["pair_is_nil"], "i64"),
+        print_i64("t2"),
+        builtin_to("dyn_is_pair", "pair_is_pair", &["p"], DYN),
+        builtin_to("dyn_tag", "t3", &["pair_is_pair"], "i64"),
+        print_i64("t3"),
+        builtin_to("dyn_is_pair", "int_is_pair", &["ba"], DYN),
+        builtin_to("dyn_tag", "t4", &["int_is_pair"], "i64"),
+        print_i64("t4"),
+        int("one", 1),
+        builtin_to("dyn_box_int", "b1", &["one"], DYN),
+        int("two", 2),
+        builtin_to("dyn_box_int", "b2", &["two"], DYN),
+        builtin_to("dyn_pair_new", "inner", &["b2", "n"], DYN),
+        builtin_to("dyn_pair_new", "outer", &["b1", "inner"], DYN),
+        builtin_to("dyn_pair_rest", "o_rest", &["outer"], DYN),
+        builtin_to("dyn_pair_first", "o_second", &["o_rest"], DYN),
+        builtin_to("dyn_unbox_int", "second", &["o_second"], "i64"),
+        print_i64("second"),
+    ])
 }
 
 /// `main() -> i64 { <body>; return 0 }` — exit code 0, observable via stdout.
@@ -1374,6 +1446,31 @@ fn cases() -> Vec<Case> {
             },
             expect: Expect::StdoutThenTrap("before", "Trap.User"),
         },
+        // ── Dynamic values (LANG83 PR7f) ────────────────────────────────────
+        Case {
+            name: "dynamic-value pairs, tags, nil and the pair/nil tests (PR7f)",
+            build: dynamic_value_program,
+            expect: Expect::Stdout("41\n-7\n7\n0\n1\n5\n3\n5\n3\n2"),
+        },
+        Case {
+            // No backend lowers a symbol built from a literal: a symbol reaches
+            // the tagged-word backends as an interned `const … : symbol`. So
+            // this case is refused everywhere, before any pass runs.
+            name: "dyn_symbol of a literal is refused at compile time (PR7f)",
+            build: || {
+                program(vec![
+                    IIRInstr::new(
+                        "call_builtin",
+                        Some("s".into()),
+                        vec![var("dyn_symbol"), Operand::Str("A".into())],
+                        DYN,
+                    ),
+                    builtin_to("dyn_tag", "t", &["s"], "i64"),
+                    print_i64("t"),
+                ])
+            },
+            expect: Expect::Stdout("2"),
+        },
         Case {
             // `write_i64`/`putchar` do not flush per call on the native and LLVM
             // columns (libc stdout is block-buffered on a pipe), so this output
@@ -2335,6 +2432,54 @@ fn pr7b_ops_are_lowered_on_every_backend() {
         }
         eprintln!("LANG83 PR7b `{}` proven on {ran:?}", case.name);
     }
+}
+
+/// LANG83 PR7f: the dynamic-value primitives are calls into the tagged-word
+/// runtime, so they are lowered exactly where that runtime is linked (native
+/// x86-64 and AArch64, LLVM) and refused everywhere else, with the shared
+/// reason; `dyn_symbol` is refused everywhere (a symbol is an interned
+/// constant on the tagged-word backends). The case runs, with the expected
+/// output, on LLVM and native x86-64 whenever their toolchains are present,
+/// and every other backend refuses it before any lowering pass.
+#[test]
+fn pr7f_dynamic_values_run_on_the_tagged_word_backends() {
+    use interpreter_ir::op_registry::{NO_TAGGED_WORD_RUNTIME, SYMBOLS_ARE_INTERNED_CONSTANTS};
+    let pr7f: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr7f()).map(|s| s.name).collect();
+    assert_eq!(pr7f.len(), 10, "the PR7f primitives: {pr7f:?}");
+    let tagged = [Backend::X86_64, Backend::Aarch64, Backend::Llvm];
+    for name in &pr7f {
+        for backend in Backend::ALL {
+            let want = match (tagged.contains(&backend), *name) {
+                (true, "dyn_symbol") => OpSupport::Refused(SYMBOLS_ARE_INTERNED_CONSTANTS),
+                (true, _) => OpSupport::Lowered,
+                (false, _) => OpSupport::Refused(NO_TAGGED_WORD_RUNTIME),
+            };
+            assert_eq!(backend.op_support(name), want, "{backend} {name}");
+        }
+    }
+    let corpus = cases();
+    let case = corpus.iter().find(|c| c.name.starts_with("dynamic-value pairs")).expect("the PR7f case");
+    let mut required = Vec::new();
+    if clang_ok() {
+        required.push("Llvm");
+    }
+    if cfg!(target_os = "linux") {
+        required.push("NativeAot");
+    }
+    let ran = execute_everywhere(case);
+    for column in &required {
+        assert!(ran.contains(column), "{}: did not run on {column} (ran {ran:?})", case.name);
+    }
+    for backend in [Backend::Wasm, Backend::Jvm, Backend::Clr, Backend::Beam, Backend::Vm, Backend::Jit] {
+        match compile_on(backend, case.module()) {
+            Err(LangAotError::UnsupportedOps(e)) => {
+                assert_eq!(e.backend, backend);
+                assert!(e.to_string().contains("tagged-word runtime"), "{backend}: {e}");
+            }
+            other => panic!("{backend}: the PR7f case must be refused, got {other:?}"),
+        }
+    }
+    eprintln!("LANG83 PR7f `{}` proven on {ran:?}", case.name);
 }
 
 /// The PR7b review regression really exercises the hazard: its LLVM module

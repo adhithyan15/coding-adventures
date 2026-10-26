@@ -1306,7 +1306,7 @@ fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 // comment above this one explains the tag scheme) — a raw `Value::Int` is a
 // completely legitimate thing to store in, say, a cons cell's car/cdr. This
 // was investigated and found to make a naive `{0,8}`-style *boxed* kind
-// registration (mirroring native-AOT's `__dyn_cons`, via `register_kind`)
+// registration (mirroring native-AOT's `__dyn_pair_new`, via `register_kind`)
 // UNSOUND during AOT00-T9 PR-5 follow-up scouting: marking tolerates a
 // look-alike int fine (`mark_word` tag-strips and validates against
 // `find_header` — safe over-approximation), but *compaction* does not —

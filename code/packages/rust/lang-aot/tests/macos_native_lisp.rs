@@ -6,8 +6,8 @@
 //! the exit code.
 //!
 //! Before W14a these failed at link: the Mach-O object referenced the runtime
-//! helpers by their raw C name (`__dyn_car`), but the archive — built with
-//! the Mach-O C ABI — exports them decorated (`___dyn_car`). `ld` saw the
+//! helpers by their raw C name (`__dyn_pair_first`), but the archive — built with
+//! the Mach-O C ABI — exports them decorated (`___dyn_pair_first`). `ld` saw the
 //! two as different symbols and reported "Undefined symbols for architecture
 //! arm64". `code-packager` now applies the leading-`_` decoration to external
 //! symbols (the same one `_main`/`_twig_globals` already carried), closing the gap

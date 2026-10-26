@@ -29,8 +29,8 @@
 //! lisp value model. We detect that structurally:
 //!
 //! - A `const Int(n) : i64` is **boxed** (`n << 3`) iff its register is used
-//!   as an **argument to a lisp builtin** (`dyn_cons`/`dyn_car`/
-//!   `dyn_cdr`, and the predicates added in later slices). A McCarthy
+//!   as an **argument to a lisp builtin** (`dyn_pair_new`/`dyn_pair_first`/
+//!   `dyn_pair_rest`, and the predicates added in later slices). A McCarthy
 //!   program — which has no machine arithmetic at all — feeds every integer
 //!   into `cons`, so all its integers box. A Twig arithmetic program feeds
 //!   integers into `add`/`print_i64`, never a `dyn_*` call, so none box.
@@ -38,7 +38,7 @@
 //!   frontend) becomes the **nil tag** `0b001`. Only lisp frontends ever
 //!   emit that type hint, so this is unambiguous.
 //! - A register **holds a boxed `LispyValue`** if it is the result of a lisp
-//!   builtin (`dyn_cons`/`car`/`cdr`) or a boxed constant.
+//!   builtin (`dyn_pair_new`/`dyn_pair_first`/`dyn_pair_rest`) or a boxed constant.
 //!
 //! ## The machine boundary: unbox at program exit
 //!
@@ -69,7 +69,7 @@ use std::collections::{HashMap, HashSet};
 /// sentinel). Mirrors `mccarthy-lisp-iir-compiler`'s `REF_PAIR`.
 const REF_PAIR: &str = "ref<LispyPair>";
 /// The two type hints that denote a **boxed `DynValue`** — the language-neutral
-/// tagged word.  `ref<any>` is a heap-typed dynamic value (a `dyn_car`/`dyn_cdr`
+/// tagged word.  `ref<any>` is a heap-typed dynamic value (a `dyn_pair_first`/`dyn_pair_rest`
 /// result, a re-boxed arithmetic result); `any` is the still-abstract dynamic
 /// value (a user-lambda result, a dynamic parameter).  A register produced with
 /// either hint holds a `DynValue` *by what it is*, independent of which
@@ -98,18 +98,32 @@ const INT_MIN_BOXABLE: i64 = -(1 << 60);
 /// atoms — e.g. the `5` in `(ATOM 5)` or `(EQ 5 5)` — must box so their tag
 /// is `000`, not the heap tag a raw int's low bits collide with).
 const LISP_BUILTINS: &[&str] = &[
-    "dyn_cons",
-    "dyn_car",
-    "dyn_cdr",
-    "dyn_pair_p",
+    "dyn_pair_new",
+    "dyn_pair_first",
+    "dyn_pair_rest",
+    "dyn_is_pair",
     // `null?` — its result is a tagged #t/#f (like `pair?`), so it must join
     // `boxed_regs`: this both wraps the cons-walk helpers' `jmp_if_false` with
     // `dyn_truthy` (→ raw 0/1) AND lets a top-level `(null? …)` exit-code through
     // the tagged switch instead of being misread as the nil word.
-    "dyn_null_p",
+    "dyn_is_nil",
     "dyn_not",
     "dyn_equal",
 ];
+
+/// Builtins whose **argument** is a tagged value but whose **result** is a raw
+/// machine integer, so an integer atom flowing in must box (its tag is then
+/// `000`) while the result must not join `boxed_regs`. LANG83 PR7f's
+/// `dyn_tag` is the one: `dyn_tag 5` asks for the tag of the integer 5 (0),
+/// not of the raw word 5 (`0b101`, the `#t` tag), and it answers a plain
+/// integer.
+const LISP_ARG_ONLY_BUILTINS: &[&str] = &["dyn_tag"];
+
+/// `true` if `instr` is a `call_builtin` of a [`LISP_ARG_ONLY_BUILTINS`] name.
+fn is_lisp_arg_only_builtin(instr: &IIRInstr) -> bool {
+    instr.op == "call_builtin"
+        && matches!(instr.srcs.first(), Some(Operand::Var(n)) if LISP_ARG_ONLY_BUILTINS.contains(&n.as_str()))
+}
 
 /// The unbox helper (`__dyn_unbox_int`, arithmetic `>> 3`).
 const UNBOX_BUILTIN: &str = "dyn_unbox_int";
@@ -245,7 +259,7 @@ fn lower_dyn_repr_function(
     // the second half of McCarthy's `ATOM` (= `not(pair?)`, a lisp not). The
     // unconditional rename pass can't tell them apart, so it leaves `not`
     // alone. Here we have enough context: rename `not` → `dyn_not` only when
-    // its argument is the result of a `dyn_*` builtin (e.g. `dyn_pair_p`),
+    // its argument is the result of a `dyn_*` builtin (e.g. `dyn_is_pair`),
     // which is exactly the `ATOM` shape. Twig's `not` (arg is a raw `cmp`
     // result, not a `dyn_*` value) is left for the numeric lowering.
     rename_lisp_not(func);
@@ -262,8 +276,9 @@ fn lower_dyn_repr_function(
     // In both, `srcs[0]` is the callee/name and `srcs[1..]` are the arguments.
     let mut lisp_arg_regs: HashSet<String> = HashSet::new();
     for instr in &func.instructions {
-        let is_lisp_call =
-            lisp_builtin_name(instr).is_some() || is_lisp_function_call(instr, lisp_funcs);
+        let is_lisp_call = lisp_builtin_name(instr).is_some()
+            || is_lisp_arg_only_builtin(instr)
+            || is_lisp_function_call(instr, lisp_funcs);
         if is_lisp_call {
             for src in instr.srcs.iter().skip(1) {
                 if let Operand::Var(v) = src {
@@ -277,14 +292,14 @@ fn lower_dyn_repr_function(
     //
     // Seeds (DVAL01 §3.3 — **producer-agnostic**):
     //   • **any op whose result type is a `DynValue`** (`any` / `ref<any>`) — a
-    //     `dyn_car`/`dyn_cdr` result, a re-boxed `dyn_box_int` arithmetic result,
+    //     `dyn_pair_first`/`dyn_pair_rest` result, a re-boxed `dyn_box_int` arithmetic result,
     //     a user lambda `call` returning the polymorphic `any`, … The register
     //     holds a tagged word because of *what it is*, not because its producer's
     //     name is on a hard-coded lisp allow-list. This is the generalisation
     //     that lets a boxed *arithmetic* result be exit-unboxed like any other
     //     `DynValue` (the concrete failure the dynamic-arithmetic slice hit).
     //   • a lisp-builtin result whose hint is *not* itself `ref<any>` — namely
-    //     `dyn_cons` / nil, typed `ref<LispyPair>` — still seeded by name.
+    //     `dyn_pair_new` / nil, typed `ref<LispyPair>` — still seeded by name.
     //   • the nil sentinel const (`Int(0) : ref<LispyPair>`),
     //   • an integer const that feeds a lisp builtin (a lisp atom).
     //
@@ -308,7 +323,7 @@ fn lower_dyn_repr_function(
             // tagged value, whatever primitive produced it.
             //
             //   • `ref<any>` is **always** a genuine tagged heap value — a
-            //     `dyn_car`/`dyn_cdr` result, a re-boxed `dyn_box_int` arithmetic
+            //     `dyn_pair_first`/`dyn_pair_rest` result, a re-boxed `dyn_box_int` arithmetic
             //     result (E6d-2b). It is *never* a placeholder, so seed it
             //     unconditionally — this is what lets a **Twig** dynamic-arith
             //     result (`(+ (car …) 1)`) be exit-unboxed on the tagged-i64
@@ -596,7 +611,7 @@ fn insert_unbox_before_lisp_rets(
     // rather than `bool` — so keying on the type hint alone misses a top-level
     // `(null? …)` and it wrongly falls to the `unbox_int` path (`5 >> 3 = 0`, i.e.
     // *true* exits as 0). Recognising them by name routes them to `dyn_truthy`.
-    const BOOL_PREDICATES: &[&str] = &["dyn_null_p", "dyn_pair_p", "dyn_not", "dyn_equal"];
+    const BOOL_PREDICATES: &[&str] = &["dyn_is_nil", "dyn_is_pair", "dyn_not", "dyn_equal"];
     let bool_regs: HashSet<String> = func
         .instructions
         .iter()
@@ -743,15 +758,15 @@ mod tests {
         panic!("no const {dest}");
     }
 
-    /// `(CAR (CONS 7 9))`: 7 and 9 feed dyn_cons → boxed; the car result is
+    /// `(CAR (CONS 7 9))`: 7 and 9 feed dyn_pair_new → boxed; the car result is
     /// returned by the entry fn → unboxed.
     #[test]
     fn cons_car_boxes_ints_and_unboxes_result() {
         let mut m = module(vec![
             konst("v0", 7, "i64"),
             konst("v1", 9, "i64"),
-            call_builtin(Some("cell"), "dyn_cons", &["v0", "v1"], "ref<LispyPair>"),
-            call_builtin(Some("r"), "dyn_car", &["cell"], "any"),
+            call_builtin(Some("cell"), "dyn_pair_new", &["v0", "v1"], "ref<LispyPair>"),
+            call_builtin(Some("r"), "dyn_pair_first", &["cell"], "any"),
             ret("r"),
         ]);
         lower_dyn_repr(&mut m);
@@ -773,7 +788,7 @@ mod tests {
     /// DVAL01-3 (§3.3): a boxed **arithmetic** result — a `dyn_box_int` result
     /// typed `ref<any>`, which is deliberately **not** on the `LISP_BUILTINS`
     /// allow-list — is recognised as a `DynValue` by its *result type* and
-    /// exit-unboxed, exactly like a `dyn_car` result. Before the producer-
+    /// exit-unboxed, exactly like a `dyn_pair_first` result. Before the producer-
     /// agnostic seed this register was invisible to the classifier, so the
     /// program returned a tagged word (`n << 3`) instead of the machine exit
     /// code — the exact failure the dynamic-arithmetic slice (E6d-2b) hit.
@@ -812,7 +827,7 @@ mod tests {
         let mut m = module(vec![
             konst("nil", 0, "ref<LispyPair>"),
             // the frontend types the predicate result `any`, not `bool`
-            call_builtin(Some("b"), "dyn_null_p", &["nil"], "any"),
+            call_builtin(Some("b"), "dyn_is_nil", &["nil"], "any"),
             ret("b"),
         ]);
         lower_dyn_repr(&mut m);
@@ -879,7 +894,7 @@ mod tests {
         let mut m = module(vec![
             konst("n", 0, "ref<LispyPair>"),
             konst("v", 5, "i64"),
-            call_builtin(Some("cell"), "dyn_cons", &["v", "n"], "ref<LispyPair>"),
+            call_builtin(Some("cell"), "dyn_pair_new", &["v", "n"], "ref<LispyPair>"),
             ret("cell"),
         ]);
         lower_dyn_repr(&mut m);
@@ -897,7 +912,7 @@ mod tests {
             "any",
             vec![
                 konst("v0", 7, "i64"),
-                call_builtin(Some("cell"), "dyn_cons", &["v0", "v0"], "ref<LispyPair>"),
+                call_builtin(Some("cell"), "dyn_pair_new", &["v0", "v0"], "ref<LispyPair>"),
                 ret("cell"),
             ],
         );
@@ -924,7 +939,7 @@ mod tests {
             call_builtin(Some("r"), "car", &["cell"], "any"),
             ret("r"),
         ]);
-        // Pass 1: rename cons/car → dyn_cons/dyn_car.
+        // Pass 1: rename cons/car → dyn_pair_new/dyn_pair_first.
         crate::heap::lower_heap_builtins_runtime(&mut m);
         // Pass 2: box atoms + unbox result.
         lower_dyn_repr(&mut m);
@@ -933,8 +948,8 @@ mod tests {
         assert_eq!(find_const(&m, "v1"), 9 << 3);
         let instrs = &m.functions[0].instructions;
         // cons/car are now dyn_*.
-        assert_eq!(instrs[2].srcs[0], Operand::Var("dyn_cons".into()));
-        assert_eq!(instrs[3].srcs[0], Operand::Var("dyn_car".into()));
+        assert_eq!(instrs[2].srcs[0], Operand::Var("dyn_pair_new".into()));
+        assert_eq!(instrs[3].srcs[0], Operand::Var("dyn_pair_first".into()));
         // The tail is: unbox(r) ; ret %unbox.
         let last = instrs.last().unwrap();
         assert_eq!(last.op, "ret");
@@ -945,12 +960,12 @@ mod tests {
     // ── L3b-2c-2: ATOM/EQ predicates + COND truthiness ──────────────────
 
     /// `(ATOM 5)` lowers (after the rename) to `not(pair?(5))`. The `5` feeds
-    /// `dyn_pair_p`, so it must box.
+    /// `dyn_is_pair`, so it must box.
     #[test]
     fn predicate_arg_int_is_boxed() {
         let mut m = module(vec![
             konst("v0", 5, "i64"),
-            call_builtin(Some("p"), "dyn_pair_p", &["v0"], "bool"),
+            call_builtin(Some("p"), "dyn_is_pair", &["v0"], "bool"),
             call_builtin(Some("a"), "dyn_not", &["p"], "bool"),
             ret("a"),
         ]);
@@ -964,7 +979,7 @@ mod tests {
     fn tagged_cond_is_wrapped_with_truthy() {
         let mut m = module(vec![
             konst("v0", 5, "i64"),
-            call_builtin(Some("p"), "dyn_pair_p", &["v0"], "bool"),
+            call_builtin(Some("p"), "dyn_is_pair", &["v0"], "bool"),
             call_builtin(Some("a"), "dyn_not", &["p"], "bool"),
             jmp_if_false("a", "L_next"),
             IIRInstr::new("label", None, vec![Operand::Var("L_next".into())], "void"),
@@ -995,8 +1010,8 @@ mod tests {
         let mut int_m = module(vec![
             konst("a", 56, "i64"),
             konst("b", 72, "i64"),
-            call_builtin(Some("p"), "dyn_cons", &["a", "b"], "ref<LispyPair>"),
-            call_builtin(Some("h"), "dyn_car", &["p"], "i64"),
+            call_builtin(Some("p"), "dyn_pair_new", &["a", "b"], "ref<LispyPair>"),
+            call_builtin(Some("h"), "dyn_pair_first", &["p"], "i64"),
             ret("h"),
         ]);
         lower_dyn_repr(&mut int_m);
@@ -1006,7 +1021,7 @@ mod tests {
         // (ATOM 7) = (not (pair? 7)) — a boolean result → truthy, NOT unbox.
         let mut bool_m = module(vec![
             konst("v0", 56, "i64"),
-            call_builtin(Some("p"), "dyn_pair_p", &["v0"], "bool"),
+            call_builtin(Some("p"), "dyn_is_pair", &["v0"], "bool"),
             call_builtin(Some("a"), "dyn_not", &["p"], "bool"),
             ret("a"),
         ]);
@@ -1133,8 +1148,8 @@ mod tests {
         let mut m = module(vec![
             konst("v0", 7, "i64"),
             konst("v1", 9, "i64"),
-            call_builtin(Some("cell"), "dyn_cons", &["v0", "v1"], "ref<LispyPair>"),
-            call_builtin(Some("c"), "dyn_car", &["cell"], "any"),
+            call_builtin(Some("cell"), "dyn_pair_new", &["v0", "v1"], "ref<LispyPair>"),
+            call_builtin(Some("c"), "dyn_pair_first", &["cell"], "any"),
             mov("result", "c"),
             ret("result"),
         ]);
@@ -1172,7 +1187,7 @@ mod tests {
     fn not_after_lispy_result_becomes_lispy_not() {
         let mut m = module(vec![
             konst("v0", 5, "i64"),
-            call_builtin(Some("p"), "dyn_pair_p", &["v0"], "bool"),
+            call_builtin(Some("p"), "dyn_is_pair", &["v0"], "bool"),
             call_builtin(Some("a"), "not", &["p"], "bool"),
             ret("a"),
         ]);
@@ -1225,10 +1240,28 @@ mod tests {
         let huge = (1_i64 << 61) | 1;
         let mut m = module(vec![
             konst("v0", huge, "i64"),
-            call_builtin(Some("cell"), "dyn_cons", &["v0", "v0"], "ref<LispyPair>"),
+            call_builtin(Some("cell"), "dyn_pair_new", &["v0", "v0"], "ref<LispyPair>"),
             ret("cell"),
         ]);
         lower_dyn_repr(&mut m);
         assert_eq!(find_const(&m, "v0"), huge, "out-of-range int must be left raw");
+    }
+
+    /// LANG83 PR7f: `dyn_tag`'s argument is a tagged value (an integer atom
+    /// flowing in boxes, so its tag reads 0, not the `#t` tag the raw `5`
+    /// would show), but its result is a plain integer: it is not boxed, and a
+    /// `ret` of it in the entry function gets no exit coercion.
+    #[test]
+    fn dyn_tag_boxes_its_argument_but_not_its_result() {
+        let mut m = module(vec![
+            konst("v", 5, "i64"),
+            call_builtin(Some("t"), "dyn_tag", &["v"], "i64"),
+            ret("t"),
+        ]);
+        lower_dyn_repr(&mut m);
+        assert_eq!(find_const(&m, "v"), 5 << 3, "the atom must be boxed");
+        assert_eq!(count_builtin(&m, "dyn_unbox_int"), 0, "the tag is already an integer");
+        assert_eq!(count_builtin(&m, "dyn_truthy"), 0);
+        assert_eq!(count_builtin(&m, "dyn_to_exit_code"), 0);
     }
 }

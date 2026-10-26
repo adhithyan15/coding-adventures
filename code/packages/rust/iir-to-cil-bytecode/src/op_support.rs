@@ -24,8 +24,8 @@
 //!
 //! See `code/specs/LANG83-iir-standard-operation-registry.md`.
 
-use interpreter_ir::op_registry::{support_from_table, OpSupport};
-use OpSupport::Lowered;
+use interpreter_ir::op_registry::{support_from_table, OpSupport, NO_TAGGED_WORD_RUNTIME};
+use OpSupport::{Lowered, Refused};
 
 /// This backend's answer for every LANG83 standard operation.
 pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
@@ -89,6 +89,19 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),
     ("real_to_int_floor", Lowered),
+    // ── Dynamic values (LANG83 PR7f) ────────────────────────────────────────
+    // This backend's dynamic values are structural (lang-aot lowers pairs to
+    // `alloc`/`field_*` before it runs); it has no tagged-word runtime.
+    ("dyn_box_int", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_unbox_int", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_tag", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_new", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_first", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_rest", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_is_pair", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_is_nil", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_nil", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_symbol", Refused(NO_TAGGED_WORD_RUNTIME)),
     // ── Errors ──────────────────────────────────────────────────────────────
     ("trap", Lowered),
 ];

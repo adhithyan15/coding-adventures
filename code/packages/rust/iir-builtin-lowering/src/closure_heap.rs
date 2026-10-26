@@ -245,7 +245,7 @@ fn rewrite_closure_ops(
 /// `box`/`unbox` are `<< 3`/`>> 3`, so the *value* round-trips for anything that
 /// fits in 61 bits — including a heap address. But value round-tripping is not
 /// the only property that matters: a cons cell is **traced by the collector**.
-/// `__dyn_cons` registers its cell with a precise kind whose slots the collector
+/// `__dyn_pair_new` registers its cell with a precise kind whose slots the collector
 /// interprets as either a raw word or a tag-stripped pointer. A heap handle is
 /// `addr | 0b111`; shifted left by 3 it becomes `addr*8 | 0b111000`, which
 /// resolves to no live block under either interpretation. The collector would

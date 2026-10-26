@@ -1,5 +1,9 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`: the JVM holds dynamic values as objects (through `lang-aot`'s structural lowering) and links no tagged-word runtime.
+
 ## Unreleased — LANG83 PR7e — no float writers
 
 - `write_f64_py` / `write_f64_js` leave `OP_SUPPORT` and the validator's

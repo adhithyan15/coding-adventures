@@ -5,6 +5,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`. `GenericCirJit` compiles a `call_builtin` only to a handler the embedder registered, and the LANG83 harnesses register no tagged-word runtime (`lang_aot::jit_lisp`'s McCarthy embedding registers its own callbacks; it is not the JIT column). `declared_support_matches_what_generic_jit_compiles` confirms the refusal.
+
 ## Unreleased — LANG83 PR7e — no float writers
 
 - **Breaking:** `write_f64_py` / `write_f64_js` leave `OP_SUPPORT`, and the

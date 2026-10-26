@@ -44,7 +44,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* TWIG-GC (twig_gc.c) — used by __dyn_cons to allocate cons cells on
+/* TWIG-GC (twig_gc.c) — used by __dyn_pair_new to allocate cons cells on
  * the managed heap instead of leaking via calloc. */
 extern int64_t __twig_gc_alloc(int64_t n);
 
@@ -97,9 +97,24 @@ int64_t __dyn_unbox_int(uint64_t v) {
 }
 
 /* The nil singleton.  Provided as a function for the lowering/boundary even
- * though it is a compile-time constant — keeps the backend uniform. */
+ * though it is a compile-time constant — keeps the backend uniform.
+ * (`dyn_nil`, LANG83 PR7f.) */
 uint64_t __dyn_nil(void) {
     return LISPY_NIL;
+}
+
+/* `dyn_tag` (LANG83 PR7f) — the tag number of a value: its low three bits,
+ * from the table at the top of this file.
+ *
+ *   tag(box_int 7) = 0   tag(nil) = 1   tag('A) = 2
+ *   tag(#f)        = 3   tag(#t)  = 5   tag(pair) = 7
+ *
+ * It is the one question a compiler needs to write its own language's rules
+ * over these values (truthiness, structural equality, an exit code): which
+ * kind of value is this?  The rules themselves are the compiler's, not the
+ * runtime's. */
+int64_t __dyn_tag(uint64_t v) {
+    return (int64_t)(v & LISPY_TAG_BITS);
 }
 
 /* ── Cons cells ─────────────────────────────────────────────────────────
@@ -117,7 +132,7 @@ uint64_t __dyn_nil(void) {
  * collected when the cell becomes unreachable.  Out-of-memory returns nil
  * rather than crashing inside the runtime.
  */
-uint64_t __dyn_cons(uint64_t car, uint64_t cdr) {
+uint64_t __dyn_pair_new(uint64_t car, uint64_t cdr) {
     /* Register the cons-cell kind once (its two fields are references at bytes
      * 0 and 8), then allocate the cell under that kind so the compacting collector
      * may RELOCATE it (a kind-0 conservative cell would pin). The runtime is
@@ -144,30 +159,30 @@ uint64_t __dyn_cons(uint64_t car, uint64_t cdr) {
  * Reading car/cdr of a non-pair is undefined (V1 has no type checking — the
  * frontend is responsible for only calling car/cdr on pairs), matching the
  * permissive contract of the rest of the runtime. */
-uint64_t __dyn_car(uint64_t pair) {
+uint64_t __dyn_pair_first(uint64_t pair) {
     uint64_t *cell = (uint64_t *)(uintptr_t)(pair & ~LISPY_TAG_BITS);
     return cell[0];
 }
 
-uint64_t __dyn_cdr(uint64_t pair) {
+uint64_t __dyn_pair_rest(uint64_t pair) {
     uint64_t *cell = (uint64_t *)(uintptr_t)(pair & ~LISPY_TAG_BITS);
     return cell[1];
 }
 
 /* `pair?` — true iff the value is heap-tagged.  Returns a *tagged* boolean
  * (#t/#f), not a C 0/1, so the result is itself a LispyValue. */
-uint64_t __dyn_pair_p(uint64_t v) {
+uint64_t __dyn_is_pair(uint64_t v) {
     return ((v & LISPY_TAG_BITS) == LISPY_TAG_HEAP) ? LISPY_TRUE : LISPY_FALSE;
 }
 
 /* `null?` — true iff the value is the nil sentinel (the empty list).
  *
- * Returns a *tagged* boolean (#t/#f), exactly like `__dyn_pair_p`, so `null?` is
+ * Returns a *tagged* boolean (#t/#f), exactly like `__dyn_is_pair`, so `null?` is
  * a first-class lisp value: `(null? (list))` as a whole program exit-codes as #t
  * (→ 1) through the runtime tag switch, not misread as the nil word.
  *
  * Inside the cons-walk helpers (`length`, `append`, …) the result feeds a
- * `jmp_if_false`; that is safe because the compiler tracks a `dyn_null_p` result
+ * `jmp_if_false`; that is safe because the compiler tracks a `dyn_is_nil` result
  * as a tagged `LispyValue` (it is in `dyn_repr`'s LISP_BUILTINS) and inserts a
  * `dyn_truthy` before the branch — so a tagged #t/#f is normalised to a raw 0/1
  * there. (A raw #t/#f fed straight to `jmp_if_false` would be wrong, since both
@@ -176,7 +191,7 @@ uint64_t __dyn_pair_p(uint64_t v) {
  * It compares against the whole-word LISPY_NIL (1), not 0: nil is a tagged
  * immediate here, so the native `is_null` opcode's zero-test would never match.
  */
-uint64_t __dyn_null_p(uint64_t v) {
+uint64_t __dyn_is_nil(uint64_t v) {
     return (v == LISPY_NIL) ? LISPY_TRUE : LISPY_FALSE;
 }
 
@@ -267,10 +282,10 @@ uint64_t __dyn_equal(uint64_t a, uint64_t b) {
         return LISPY_FALSE;
     }
     /* both pairs — recurse on car and cdr */
-    if (__dyn_equal(__dyn_car(a), __dyn_car(b)) != LISPY_TRUE) {
+    if (__dyn_equal(__dyn_pair_first(a), __dyn_pair_first(b)) != LISPY_TRUE) {
         return LISPY_FALSE;
     }
-    return __dyn_equal(__dyn_cdr(a), __dyn_cdr(b));
+    return __dyn_equal(__dyn_pair_rest(a), __dyn_pair_rest(b));
 }
 
 /* ── Symbol interning ───────────────────────────────────────────────────
@@ -312,7 +327,7 @@ static uint64_t lispy_fnv1a(const char *s, int64_t len) {
     return h;
 }
 
-uint64_t __dyn_make_symbol(const char *name, int64_t len) {
+uint64_t __dyn_symbol(const char *name, int64_t len) {
     if (len < 0) {
         len = 0;
     }

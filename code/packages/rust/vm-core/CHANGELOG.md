@@ -1,5 +1,9 @@
 # Changelog — vm-core
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `op_support` refuses the ten LANG83 PR7f dynamic-value primitives with `NO_TAGGED_WORD_RUNTIME`: the VM's dynamic values are structural heap cells (`alloc` / `field_*`), and it has no handler or default builtin for a `dyn_*` call. `every_standard_op_is_executed` pins that this is the only family the VM refuses.
+
 ## Unreleased — LANG83 PR7e — no float writers
 
 - **Breaking:** the default builtins `write_f64_py` / `write_f64_js` are

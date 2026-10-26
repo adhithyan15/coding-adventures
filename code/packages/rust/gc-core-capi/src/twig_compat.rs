@@ -51,7 +51,7 @@ pub extern "C" fn __twig_gc_alloc(n: i64) -> i64 {
 
 /// `__twig_gc_alloc_pair()` → a 16-byte, 2-word heap cell registered under the
 /// **movable `{0,8}` pair kind** (both words are reference slots), the same
-/// layout `dynval_runtime.c`'s `__dyn_cons` uses for a cons cell.
+/// layout `dynval_runtime.c`'s `__dyn_pair_new` uses for a cons cell.
 ///
 /// The native code generators emit this — instead of the kind-0 `__twig_gc_alloc`
 /// — for the record/union constructor `alloc` op, whose cell is always a
@@ -63,7 +63,7 @@ pub extern "C" fn __twig_gc_alloc(n: i64) -> i64 {
 /// it, instead of pinning it as kind 0 would. A record is thereby a first-class
 /// movable heap object, on par with cons cells, closures, and arrays.
 ///
-/// Unlike `__dyn_cons`, this only *allocates* (returns a **raw**, untagged,
+/// Unlike `__dyn_pair_new`, this only *allocates* (returns a **raw**, untagged,
 /// 16-aligned pointer); the caller's `field_store`s write the two fields. The
 /// payload arrives zeroed, so a collection between the alloc and the stores
 /// traces two null slots — safe.

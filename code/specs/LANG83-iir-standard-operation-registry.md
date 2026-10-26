@@ -1112,7 +1112,7 @@ With helpers, a new language's float output changes no backend at all.
 | `LANGUAGE_TRAP_KINDS` (empty) | `exception_kind.rs`, "Trap semantics" above, LANG84 C7.4 | none | **A language-specific mechanism** (`Ruby.ZeroDivisionError`). Retired in PR7d. A compiler maps a language's error onto a neutral kind. A catchable language exception is a value the frontend builds once AOT00 T2 exceptions land; it is never an IIR trap kind. *Landed:* the table, `LANGUAGE_TRAP_KIND_ID_BASE` and `is_registered_trap_kind` are gone. |
 | `py_float_div`, `py_name_error`, `py_print_float`, `py_print_empty`, `py_print_two_floats`, `py_print_three_floats` | `python-iir-compiler/src/lib.rs`, registered on the VM only by the LANG79 pilot's `compile_source` | the LANG79 pilot path | **Language-specific**, unregistered, VM only. Retired in PR7g: the pilot entry points move onto the release path (`f64_div` with a `b == 0` check that traps `Trap.DivZero`; `trap Trap.Unbound`; the PR7b print helper). |
 | `dyn_truthy`, `dyn_equal`, `dyn_not`, `dyn_to_exit_code` | `iir-builtin-lowering/src/dyn_repr.rs`, lispy-runtime | Twig, McCarthy Lisp (through the `+`/`cons`/`null?` lowering) | **Language-specific semantics in a runtime op.** Lisp truthiness (only nil and `#f` are false), `equal?`'s structural equality and Lisp's exit-code coercion are each one language family's rules. Replaced in PR7f by neutral representation primitives plus compiler-emitted helpers (below). |
-| `dyn_cons`, `dyn_car`, `dyn_cdr`, `dyn_pair_p`, `dyn_null_p`, `make_nil`, `make_symbol` | `dyn_repr.rs`, `heap.rs`, lispy-runtime | Twig, McCarthy Lisp | **Neutral semantics, Lisp vocabulary.** A two-field heap cell and a nil sentinel are a representation, not a language rule. Renamed in PR7f to `dyn_pair_new`, `dyn_pair_first`, `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil`, `dyn_nil` and `dyn_symbol`, then registered. |
+| `dyn_cons`, `dyn_car`, `dyn_cdr`, `dyn_pair_p`, `dyn_null_p`, `make_nil`, `make_symbol` | `dyn_repr.rs`, `heap.rs`, lispy-runtime | Twig, McCarthy Lisp | **Neutral semantics, Lisp vocabulary.** A two-field heap cell and a nil sentinel are a representation, not a language rule. Renamed in PR7f to `dyn_pair_new`, `dyn_pair_first`, `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil`, `dyn_nil` and `dyn_symbol`, then registered. *Landed in PR7f-1,* with the new `dyn_tag` and the existing `dyn_box_int` / `dyn_unbox_int` (see "What PR7f-1 landed"). |
 | Source-level builtin names `+ - * / % = < <= > >= cons car cdr pair? null? equal? not` | emitted as `call_builtin` by twig-ir-compiler, mccarthy-lisp, and the seven CAS frontends (axiom, maple, macsyma, derive, reduce, wolfram, maxima); rewritten by the shared `iir-builtin-lowering` pass | as listed | **Source vocabulary reaching the IIR.** The module is not neutral until that pass runs, and the pass's `is_lisp_function_call` and `rename_lisp_not` know Lisp. PR7f moves the translation into the frontends: the shared pass becomes a compiler-side library those frontends call, and the module they hand to a backend holds registry ops only. |
 | `print_i64`, `putchar`, `getchar`, `print_str`, `write_i64`, `str_*`, `i64_*`, `cmp_*`, `f64_*` arithmetic and math, `int_to_real`, `real_to_int_*`, `trap`, `Trap.Bounds` … `Trap.User` | registry | many | **Neutral.** They stay. `print_i64` appends `\n`, a convenience every integer-printing frontend uses; it is not a language rule. |
 | `input_i64`, `input_more`, `input_str`, `getchar` | lang-aot harnesses, flow-matic and brainfuck compilers | flow-matic, brainfuck | **Neutral but unregistered.** Registered with honest `op_support` in PR7h. |
@@ -1575,6 +1575,82 @@ column.
   the note below. The local Miri script applies because of
   `interpreter-ir`.
 
+**What PR7f-1 landed, and where it diverged from the plan above.**
+
+PR7f is split into three PRs, stacked: PR7f-1 renames and registers the
+representation primitives (no IIR a frontend produces changes, no output
+changes), PR7f-2 moves the language-semantic runtime calls into
+compiler-emitted helpers, and PR7f-3 moves the source-name translation into
+the frontends.
+
+- *The registry.* A new family, `OpFamily::Dynamic`, holds ten Builtins
+  (`introduced_by: "LANG83 PR7f"`):
+
+  | Builtin | Operands → result | Meaning |
+  | --- | --- | --- |
+  | `dyn_box_int` | `i64` → dyn | an integer (`|n| < 2^60`) as a dynamic value, `n << 3` |
+  | `dyn_unbox_int` | dyn → `i64` | a dynamic integer's value, arithmetic `>> 3` |
+  | `dyn_tag` | dyn → `i64` | the low three bits: 0 integer, 1 nil, 2 symbol, 3 false, 5 true, 7 pair |
+  | `dyn_pair_new` | dyn, dyn → dyn | a fresh, garbage-collected pair |
+  | `dyn_pair_first` / `dyn_pair_rest` | dyn → dyn | a pair's fields; undefined for a non-pair |
+  | `dyn_is_pair` / `dyn_is_nil` | dyn → dyn | the pair and nil tests, as the dynamic booleans (words 5 and 3) |
+  | `dyn_nil` | → dyn | nil (the word 1) |
+  | `dyn_symbol` | literal → dyn | the symbol a name denotes |
+
+  `dyn_box_int` and `dyn_unbox_int` keep their names (they were already
+  neutral); `dyn_tag` is new. The operand type `"dyn"` is new.
+  *Divergence:* all ten are **Builtins**, not Ops. Every backend that lowers
+  them does so as a call into the tagged-word runtime, through the builtin
+  table it already has. Their names start with `dyn_`, a dispatch prefix, so
+  they join `GRANDFATHERED_PREFIXED_NAMES`. The native backends' `dyn_` arm
+  (call `__dyn_<name>`) *is* their lowering, and it fires only for a name in
+  the backend's builtin table, so an unregistered `dyn_` name is still
+  refused (`dyn_new` is still a name-rule violation).
+- *Renamed everywhere they are lowered or handled.* `iir-builtin-lowering`'s
+  native runtime-call path (`heap.rs`'s `RUNTIME_RENAMES`, `dyn_repr.rs`,
+  `list_ops.rs`, `closure_heap.rs`, `dynamic_arith.rs`); the x86-64 and
+  AArch64 `V1_BUILTINS`; iir-to-llvm's `DYN_BUILTINS`; `dynval_runtime.c`
+  (`__dyn_cons` … → `__dyn_pair_new` …, `__dyn_make_symbol` →
+  `__dyn_symbol`, and the new `__dyn_tag`); the `dynval-runtime` crate's
+  `extern "C"` functions and its `LispyBinding` names (`make_nil` /
+  `make_symbol` → `dyn_nil` / `dyn_symbol`, which twig-vm resolves);
+  `lang_aot::jit_lisp`'s callbacks; and the tests that name any of them.
+  `lower_dyn_repr` boxes an integer atom flowing into `dyn_tag` (so `dyn_tag
+  5` is 0, not the `#t` tag of the raw word 5) without treating its integer
+  result as tagged.
+- *Support is honest.* Native x86-64 and AArch64 and LLVM, the three
+  backends that link `dynval_runtime.c`, lower all but `dyn_symbol`.
+  `dyn_symbol` is refused there (`SYMBOLS_ARE_INTERNED_CONSTANTS`): a symbol
+  reaches them as `const Var(name) : symbol`, which `intern_symbols` turns
+  into a tagged immediate, and nothing lowers a symbol built at run time.
+  WASM, JVM, CLR, BEAM, the VM and the JIT refuse all ten
+  (`NO_TAGGED_WORD_RUNTIME`): they hold dynamic values structurally
+  (`alloc` / `field_*` / `is_null`, then a GC struct, an object, an Erlang
+  term or a `vm-core` heap cell), and none links the tagged-word runtime.
+  The JIT's `CALL_BUILTIN` would run a registered handler, but the LANG83
+  harnesses register none for these; `jit_lisp`'s McCarthy embedding does,
+  and it is not the JIT column. vm-core's `every_standard_op_is_executed`
+  pins that `Dynamic` is the one family the VM refuses.
+- *Nothing a frontend emits changed.* Twig, McCarthy Lisp and the CAS
+  frontends still emit `cons` / `car` / `null?` …, which pass
+  `check_module_for` ungated and are renamed to the registered names by
+  the tagged-word pipelines afterwards (PR7f-3 moves that translation into
+  the frontends). So no IIR digest and no `lang_matrix` row changed.
+- *Conformance.* One case runs every primitive but `dyn_symbol` — a pair of
+  two boxed integers taken apart, the tags of a pair, an integer and nil,
+  the nil and pair tests on a pair, nil and an integer, and a two-element
+  list — and prints each result; it runs on LLVM and native x86-64. A second
+  case is refused everywhere (`dyn_symbol`). The gate
+  `pr7f_dynamic_values_run_on_the_tagged_word_backends` pins the support
+  matrix and checks that WASM, JVM, CLR, BEAM, the VM and the JIT refuse the
+  case with `UnsupportedOps` before any pass. `dynval_runtime_golden`'s
+  `c_tag_of_every_kind_matches_rust` pins `__dyn_tag` against the Rust tag
+  constants.
+- *Not yet neutral:* the frontends' nil literal is typed `ref<LispyPair>`,
+  a Lisp word in a type hint. Type names are outside the name rule, which
+  covers registry ops, builtins and trap kinds; it is noted here for a
+  later pass.
+
 ### Migration, as a PR sequence
 
 Each PR keeps main green on all nine columns. None removes an op while
@@ -1626,7 +1702,15 @@ anything still emits it.
    frontends. This is the largest slice. It may split per frontend; the
    McCarthy Lisp and CAS compilers are smaller than Twig. Twig's
    `twig-aot` native runtime and lispy-runtime rename their symbols
-   together.
+   together. *Split in three:*
+   - **PR7f-1** — register the ten `Dynamic` primitives and rename the
+     Lisp-vocabulary ones everywhere they are lowered (the native
+     runtime and `dynval-runtime` together). *Landed;* see "What PR7f-1
+     landed" under "Other replacements".
+   - **PR7f-2** — the language-semantic runtime calls (`dyn_truthy`,
+     `dyn_equal`, `dyn_not`, `dyn_to_exit_code`) become module-local
+     helpers built from the primitives.
+   - **PR7f-3** — the source-name translation moves into the frontends.
 8. **PR7g — retire the LANG79 Python pilot builtins** (`py_*`) by putting
    `compile_source` on the release path.
 9. **PR7h — register `getchar`, `input_i64`, `input_more`, `input_str`**

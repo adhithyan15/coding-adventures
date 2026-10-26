@@ -28,6 +28,7 @@
 //! | `f64_add` `f64_sub` `f64_mul` `f64_div` `f64_neg` `f64_signbit` (LANG83 PR6c) | `ADD_F64` … `SIGNBIT_F64` on float registers (the float's bits; IEEE, never a trap); `ret_f64` → `RET_F64` | Lowered |
 //! | `f64_class` `f64_digits` `f64_exp10` (LANG83 PR7b) | `CLASS_F64` / `DIGITS_F64` / `EXP10_F64`: a float register in, an integer register out; the digits are `vm_core::float_format`'s | Lowered |
 //! | `mod`, strings, `f64` math (`f64_sqrt` … `f64_pow`), conversions, `print_str` | — | Refused (interpreter tier only) |
+//! | `dyn_*` (LANG83 PR7f) | `CALL_BUILTIN` only to an embedder-registered handler; the harnesses register no tagged-word runtime | Refused |
 //!
 //! Like every backend's table, this one is name-granular: `add` is `Lowered`
 //! even though the JIT refuses `add` on `f64` operands (type-level refusals stay
@@ -35,7 +36,7 @@
 //! test checks every row against the real compiler: it builds a one-op function
 //! per registry entry, specialises it, and asks `GenericCirJit` to compile it.
 
-use interpreter_ir::op_registry::{support_from_table, OpSupport};
+use interpreter_ir::op_registry::{support_from_table, OpSupport, NO_TAGGED_WORD_RUNTIME};
 use OpSupport::{Lowered, Refused};
 
 /// The reason given for an operation that runs only on the interpreter tier.
@@ -106,6 +107,22 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),
     ("real_to_int_floor", Lowered),
+    // ── Dynamic values (LANG83 PR7f) ────────────────────────────────────────
+    // A `call_builtin` compiles only to a handler the embedder registered, and
+    // the tagged-word runtime is not one the LANG83 harnesses register (the
+    // `lang_matrix` JIT column runs dynamic values structurally, through
+    // `alloc`/`field_*`). `lang_aot::jit_lisp` registers its own callbacks for
+    // McCarthy Lisp; that embedding is not this column.
+    ("dyn_box_int", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_unbox_int", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_tag", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_new", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_first", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_rest", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_is_pair", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_is_nil", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_nil", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_symbol", Refused(NO_TAGGED_WORD_RUNTIME)),
     // ── Errors ──────────────────────────────────────────────────────────────
     ("trap", Lowered),
 ];

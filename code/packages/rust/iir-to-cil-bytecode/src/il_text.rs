@@ -4184,14 +4184,14 @@ mod tests {
     fn unsupported_op_is_rejected_not_emitted() {
         // A `call_builtin` to a name outside the CLR whitelist (only pair?/not/
         // equal? are emittable today) must be rejected explicitly, not emit junk —
-        // e.g. `dyn_cons` is a heap builtin handled structurally, never here.
+        // e.g. `dyn_pair_new` is a heap builtin handled structurally, never here.
         let mut m = scalar_module(1);
         m.functions[0].instructions.insert(
             0,
             IIRInstr::new(
                 "call_builtin",
                 Some("p".into()),
-                vec![Operand::Var("dyn_cons".into())],
+                vec![Operand::Var("dyn_pair_new".into())],
                 "ref<LispyPair>",
             ),
         );

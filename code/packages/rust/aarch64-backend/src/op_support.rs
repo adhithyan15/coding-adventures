@@ -27,8 +27,8 @@
 //!
 //! See `code/specs/LANG83-iir-standard-operation-registry.md`.
 
-use interpreter_ir::op_registry::{support_from_table, OpSupport};
-use OpSupport::Lowered;
+use interpreter_ir::op_registry::{support_from_table, OpSupport, SYMBOLS_ARE_INTERNED_CONSTANTS};
+use OpSupport::{Lowered, Refused};
 
 /// This backend's answer for every LANG83 standard operation.
 pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
@@ -92,6 +92,20 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),
     ("real_to_int_floor", Lowered),
+    // ── Dynamic values (LANG83 PR7f) ────────────────────────────────────────
+    // Calls into the linked tagged-word runtime (`dynval_runtime.c`'s
+    // `__dyn_<name>`), through the builtin table. A symbol is a compile-time
+    // interned immediate here, never a `dyn_symbol` call.
+    ("dyn_box_int", Lowered),
+    ("dyn_unbox_int", Lowered),
+    ("dyn_tag", Lowered),
+    ("dyn_pair_new", Lowered),
+    ("dyn_pair_first", Lowered),
+    ("dyn_pair_rest", Lowered),
+    ("dyn_is_pair", Lowered),
+    ("dyn_is_nil", Lowered),
+    ("dyn_nil", Lowered),
+    ("dyn_symbol", Refused(SYMBOLS_ARE_INTERNED_CONSTANTS)),
     // ── Errors ──────────────────────────────────────────────────────────────
     ("trap", Lowered),
 ];

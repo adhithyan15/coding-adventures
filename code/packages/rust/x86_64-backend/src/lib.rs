@@ -415,14 +415,21 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "exit",         n_args: 1, returns: false },
     // LANG76 — heap allocator.  Returns a pointer (treated as i64).
     BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
-    // LANG77 — the shared lisp value runtime (McCarthy Lisp L3b-2b).  These
-    // dispatch to `__dyn_*` in `twig-aot/runtime/dynval_runtime.c`,
-    // which implements `lispy-runtime`'s NaN-box tagged-value model.  Each
-    // takes/returns an opaque 64-bit `LispyValue`.  No backend-specific
-    // logic — the generic `call_builtin` path marshals args + emits the CALL.
-    BuiltinSig { name: "dyn_cons",   n_args: 2, returns: true  },
-    BuiltinSig { name: "dyn_car",    n_args: 1, returns: true  },
-    BuiltinSig { name: "dyn_cdr",    n_args: 1, returns: true  },
+    // LANG77 — the shared dynamic-value runtime (McCarthy Lisp L3b-2b).  These
+    // dispatch to `__dyn_*` in `twig-aot/runtime/dynval_runtime.c`, which
+    // implements `dynval-runtime`'s tagged-word value model.  Each takes/returns
+    // an opaque 64-bit tagged word.  No backend-specific logic — the generic
+    // `call_builtin` path marshals args + emits the CALL.  LANG83 PR7f
+    // registered the representation primitives under neutral names (they were
+    // `dyn_cons`/`dyn_car`/`dyn_cdr`/`dyn_pair_p`/`dyn_null_p`); each row here
+    // is what `op_support` reports as `Lowered`.
+    BuiltinSig { name: "dyn_pair_new",   n_args: 2, returns: true  },
+    BuiltinSig { name: "dyn_pair_first", n_args: 1, returns: true  },
+    BuiltinSig { name: "dyn_pair_rest",  n_args: 1, returns: true  },
+    // LANG83 PR7f — the tag number (`x & 7`) and the nil singleton.
+    // `int64_t __dyn_tag(uint64_t)`, `uint64_t __dyn_nil(void)`.
+    BuiltinSig { name: "dyn_tag",        n_args: 1, returns: true  },
+    BuiltinSig { name: "dyn_nil",        n_args: 0, returns: true  },
     // LANG77 L3b-2c — unbox a tagged integer to a raw machine word at the
     // program-exit boundary.  `int64_t __dyn_unbox_int(uint64_t)`.
     BuiltinSig { name: "dyn_unbox_int", n_args: 1, returns: true },
@@ -433,8 +440,8 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "dyn_box_int", n_args: 1, returns: true },
     // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
     // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
-    BuiltinSig { name: "dyn_pair_p",    n_args: 1, returns: true },
-    BuiltinSig { name: "dyn_null_p",    n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_is_pair",   n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_is_nil",    n_args: 1, returns: true },
     BuiltinSig { name: "dyn_not",       n_args: 1, returns: true },
     BuiltinSig { name: "dyn_equal",     n_args: 2, returns: true },
     BuiltinSig { name: "dyn_truthy",    n_args: 1, returns: true },
@@ -1304,7 +1311,7 @@ fn emit_instr(
         // **twig** runtime exports `__twig_<name>` (`print_i64`, `getchar`, …),
         // while the **dyn** value runtime (`dynval_runtime.c`) exports
         // `__dyn_<name>` for the tagged-value builtins, whose IIR names already
-        // carry the `dyn_` namespace (`dyn_cons` → `__dyn_cons`).  So a `dyn_*`
+        // carry the `dyn_` namespace (`dyn_pair_new` → `__dyn_pair_new`).  So a `dyn_*`
         // builtin is `__` + name; everything else is `__twig_` + name.
         let symbol = if name.starts_with("dyn_") {
             format!("__{name}")
@@ -2534,12 +2541,12 @@ mod tests {
     /// (negative) offset the register allocator assigned it.
     #[test]
     fn stackmap_names_ref_slot_at_call_site() {
-        // b = dyn_cons(h, t)  [any]  ; then a second call (dyn_car) as a safepoint.
+        // b = dyn_pair_new(h, t)  [any]  ; then a second call (dyn_pair_first) as a safepoint.
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(1)]),
             instr("const_u64", Some("t"), vec![Op::Int(2)]),
-            typed(call_builtin(Some("b"), "dyn_cons", &["h", "t"]), "any"),
-            call_builtin(Some("r"), "dyn_car", &["b"]),
+            typed(call_builtin(Some("b"), "dyn_pair_new", &["h", "t"]), "any"),
+            call_builtin(Some("r"), "dyn_pair_first", &["b"]),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
         let (_bytes, relocs, sm) = compile_function_with_globals_and_stackmap(
@@ -2575,7 +2582,7 @@ mod tests {
     fn stackmap_names_ref_param() {
         let params = [("obj".to_string(), "any".to_string())];
         let ir = vec![
-            call_builtin(Some("r"), "dyn_car", &["obj"]),
+            call_builtin(Some("r"), "dyn_pair_first", &["obj"]),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
         let (_b, _r, sm) = compile_function_with_globals_and_stackmap(
@@ -2592,14 +2599,14 @@ mod tests {
 
     /// A function whose slots are all machine scalars produces records with **empty**
     /// slot lists at its call sites — nothing to root, but the safepoint still exists.
-    /// (`cell` is a `dyn_cons` result but typed `u64` here, so it is a non-reference
+    /// (`cell` is a `dyn_pair_new` result but typed `u64` here, so it is a non-reference
     /// look-alike — excluded from the map exactly as a real integer slot would be.)
     #[test]
     fn stackmap_empty_for_ref_free_function() {
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(1)]),
             instr("const_u64", Some("t"), vec![Op::Int(2)]),
-            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]), // dest defaults to u64
+            call_builtin(Some("cell"), "dyn_pair_new", &["h", "t"]), // dest defaults to u64
             instr("ret_u64", None, vec![Op::Var("cell".into())]),
         ];
         let (_b, _r, sm) = compile_function_with_globals_and_stackmap(
@@ -2664,10 +2671,10 @@ mod tests {
     /// recursive return addresses) compose, and both records name the live reference.
     #[test]
     fn stackmap_records_both_recursive_and_external_safepoints() {
-        // rec(acc: any) -> u64 { r1 = dyn_car(acc); r2 = rec(acc); ret r2 }
+        // rec(acc: any) -> u64 { r1 = dyn_pair_first(acc); r2 = rec(acc); ret r2 }
         let params = [("acc".to_string(), "any".to_string())];
         let ir = vec![
-            call_builtin(Some("r1"), "dyn_car", &["acc"]), // external → PltRel32 safepoint
+            call_builtin(Some("r1"), "dyn_pair_first", &["acc"]), // external → PltRel32 safepoint
             instr("call", Some("r2"), vec![Op::Var("rec".into()), Op::Var("acc".into())]),
             instr("ret_u64", None, vec![Op::Var("r2".into())]),
         ];
@@ -2709,7 +2716,7 @@ mod tests {
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(1)]),
             instr("const_u64", Some("t"), vec![Op::Int(2)]),
-            typed(call_builtin(Some("b"), "dyn_cons", &["h", "t"]), "any"),
+            typed(call_builtin(Some("b"), "dyn_pair_new", &["h", "t"]), "any"),
             instr("ret_u64", None, vec![Op::Var("b".into())]),
         ];
         let plain = compile_function_with_globals(
@@ -2730,8 +2737,8 @@ mod tests {
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(7)]),
             instr("const_u64", Some("t"), vec![Op::Int(9)]),
-            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]),
-            call_builtin(Some("r"), "dyn_car", &["cell"]),
+            call_builtin(Some("cell"), "dyn_pair_new", &["h", "t"]),
+            call_builtin(Some("r"), "dyn_pair_first", &["cell"]),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
         let (bytes, relocs) =
@@ -2739,8 +2746,8 @@ mod tests {
                 .expect("lispy runtime calls must lower");
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
-        assert!(symbols.contains(&"__dyn_cons"), "missing cons call: {symbols:?}");
-        assert!(symbols.contains(&"__dyn_car"), "missing car call: {symbols:?}");
+        assert!(symbols.contains(&"__dyn_pair_new"), "missing cons call: {symbols:?}");
+        assert!(symbols.contains(&"__dyn_pair_first"), "missing car call: {symbols:?}");
     }
 
     #[test]
@@ -3000,11 +3007,11 @@ mod tests {
     }
 
     #[test]
-    fn dyn_cons_wrong_arity_is_rejected() {
-        // dyn_cons takes exactly 2 args; one arg is a soft refusal.
+    fn dyn_pair_new_wrong_arity_is_rejected() {
+        // dyn_pair_new takes exactly 2 args; one arg is a soft refusal.
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(7)]),
-            call_builtin(Some("cell"), "dyn_cons", &["h"]),
+            call_builtin(Some("cell"), "dyn_pair_new", &["h"]),
             instr("ret_u64", None, vec![Op::Var("cell".into())]),
         ];
         assert!(compile_function(&fn_ctx("bad_cons", &[], "u64"), &ir, X86_64Abi::SysV).is_err());
@@ -3017,8 +3024,8 @@ mod tests {
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(7 << 3)]),
             instr("const_u64", Some("t"), vec![Op::Int(9 << 3)]),
-            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]),
-            call_builtin(Some("boxed"), "dyn_car", &["cell"]),
+            call_builtin(Some("cell"), "dyn_pair_new", &["h", "t"]),
+            call_builtin(Some("boxed"), "dyn_pair_first", &["cell"]),
             call_builtin(Some("r"), "dyn_unbox_int", &["boxed"]),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
@@ -3027,7 +3034,7 @@ mod tests {
                 .expect("boxed cons/car/unbox must lower");
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
-        for want in ["__dyn_cons", "__dyn_car", "__dyn_unbox_int"] {
+        for want in ["__dyn_pair_new", "__dyn_pair_first", "__dyn_unbox_int"] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
     }
@@ -3059,7 +3066,7 @@ mod tests {
         // L3b-2c-2: ATOM = not(pair?), normalised via dyn_truthy; plus EQ.
         let ir = vec![
             instr("const_u64", Some("x"), vec![Op::Int(5 << 3)]),
-            call_builtin(Some("p"), "dyn_pair_p", &["x"]),
+            call_builtin(Some("p"), "dyn_is_pair", &["x"]),
             call_builtin(Some("a"), "dyn_not", &["p"]),
             call_builtin(Some("t"), "dyn_truthy", &["a"]),
             call_builtin(Some("e"), "dyn_equal", &["x", "x"]),
@@ -3071,7 +3078,7 @@ mod tests {
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
         for want in [
-            "__dyn_pair_p", "__dyn_not",
+            "__dyn_is_pair", "__dyn_not",
             "__dyn_truthy", "__dyn_equal",
         ] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");

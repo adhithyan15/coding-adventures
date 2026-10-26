@@ -14,7 +14,7 @@
 //!      (int → `>> 3`, `#t`/`#f`/nil → `1`/`0`/`0`, symbol/pair → verbatim).
 //!
 //! **Verified by RUNNING**: emit host IR, link `dynval_runtime.c` + the
-//! `gc-core-capi` staticlib (`dynval_runtime.c`'s `__dyn_cons` calls
+//! `gc-core-capi` staticlib (`dynval_runtime.c`'s `__dyn_pair_new` calls
 //! `__gc_alloc_kind`/`__gc_register_kind`, which only `gc-core-capi` defines —
 //! this file used to link `dynval_runtime.c` alone and fail with "Undefined
 //! symbols for architecture ...: ___gc_alloc_kind"), run with `clang`.

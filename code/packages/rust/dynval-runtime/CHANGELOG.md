@@ -1,5 +1,10 @@
 # Changelog — dynval-runtime
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- The `extern "C"` ABI functions `dyn_cons` / `dyn_car` / `dyn_cdr` / `dyn_make_symbol` are renamed `dyn_pair_new` / `dyn_pair_first` / `dyn_pair_rest` / `dyn_symbol`, the LANG83 PR7f registry names.
+- The `LispyBinding` builtin names `make_nil` / `make_symbol` are renamed `dyn_nil` / `dyn_symbol` (and `builtins::make_nil` / `make_symbol` → `builtins::dyn_nil` / `dyn_symbol`). No frontend emits either: Twig and McCarthy Lisp write nil and symbols as typed constants.
+
 ## [0.7.0] — 2026-07-11 (DVAL01-2 — de-lisp the ABI export symbols)
 
 DVAL01-2: the Rust ABI mirror's `extern "C"` export symbols are de-lisped

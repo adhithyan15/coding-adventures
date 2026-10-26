@@ -582,7 +582,7 @@ fn end_to_end_gc_manages_runtime_strings() {
 /// ```text
 ///   main() -> i64:
 ///       z = dyn_box_int(0)       ; any  — a tagged value to build a cell from
-///       b = dyn_cons(z, z)       ; any  — a REAL heap cons cell → a live reference
+///       b = dyn_pair_new(z, z)       ; any  — a REAL heap cons cell → a live reference
 ///       a = gc_alloc(64)         ; i64  — a heap-address look-alike (garbage)
 ///       <collect>
 ///       lb = gc_live_bytes()
@@ -603,7 +603,7 @@ fn end_to_end_gc_precise_keeps_ref_reclaims_lookalike() {
     fn build(collect: &str, collect_returns: bool) -> IIRModule {
         let mut body = vec![
             // A real, live heap reference in an `any` slot: box a tagged int, then
-            // cons it — `dyn_cons` allocates a cell through the GC and returns a
+            // cons it — `dyn_pair_new` allocates a cell through the GC and returns a
             // tagged `any` pointer, which the stack map names as a root.
             IIRInstr::new("const", Some("z0".into()), vec![Operand::Int(0)], "i64"),
             IIRInstr::new(
@@ -615,7 +615,7 @@ fn end_to_end_gc_precise_keeps_ref_reclaims_lookalike() {
             IIRInstr::new(
                 "call_builtin",
                 Some("b".into()),
-                vec![Operand::Var("dyn_cons".into()), Operand::Var("z".into()), Operand::Var("z".into())],
+                vec![Operand::Var("dyn_pair_new".into()), Operand::Var("z".into()), Operand::Var("z".into())],
                 "any",
             ),
             // A non-reference look-alike (garbage) in an `i64` slot.
@@ -682,7 +682,7 @@ fn end_to_end_gc_precise_keeps_ref_reclaims_lookalike() {
 /// strict generalisation of the precise collect: it keeps every live reference and reclaims
 /// every look-alike, then *additionally* relocates the objects it can prove movable.
 ///
-/// Today every frontend heap object is allocated **kind 0** (`__dyn_cons` → `__twig_gc_alloc`
+/// Today every frontend heap object is allocated **kind 0** (`__dyn_pair_new` → `__twig_gc_alloc`
 /// → `__gc_alloc`), which the collector traces *conservatively* and therefore **pins** — so
 /// nothing is movable yet and the compacting collect degrades to exactly the precise one.
 /// This test pins that guarantee: `gc_collect_compacting` keeps the live cons cell and
@@ -709,7 +709,7 @@ fn end_to_end_gc_compacting_matches_precise() {
             IIRInstr::new(
                 "call_builtin",
                 Some("b".into()),
-                vec![Operand::Var("dyn_cons".into()), Operand::Var("z".into()), Operand::Var("z".into())],
+                vec![Operand::Var("dyn_pair_new".into()), Operand::Var("z".into()), Operand::Var("z".into())],
                 "any",
             ),
             // A non-reference look-alike (garbage) in an `i64` slot.
@@ -769,7 +769,7 @@ fn end_to_end_gc_compacting_matches_precise() {
 /// AOT00-T3 — **the real relocation payoff**: a native program triggers a compaction that
 /// *moves* a live heap object, and the program keeps working through the moved reference.
 ///
-/// A cons cell is now allocated under a registered kind (`__dyn_cons` → `__gc_alloc_kind`
+/// A cons cell is now allocated under a registered kind (`__dyn_pair_new` → `__gc_alloc_kind`
 /// with the ref-field map `{0, 8}`), so it is **movable**: precise-reachable via its `any`
 /// slot (a stack-map root), a registered kind, and — its fields being immediate boxed ints —
 /// with no conservative in-edge to pin it. So:
@@ -777,15 +777,15 @@ fn end_to_end_gc_compacting_matches_precise() {
 /// ```text
 ///   main() -> i64:
 ///       v    = dyn_box_int(42)            ; immediate 42
-///       cell = dyn_cons(v, dyn_box_int(7)); a MOVABLE heap cell, held in an `any` slot
+///       cell = dyn_pair_new(v, dyn_box_int(7)); a MOVABLE heap cell, held in an `any` slot
 ///       _    = gc_collect_compacting()    ; EVACUATES cell → new arena address;
 ///                                         ;   the `any` root slot is rewritten in place
-///       car  = dyn_car(cell)              ; reads the NEW location (slot was fixed up)
+///       car  = dyn_pair_first(cell)              ; reads the NEW location (slot was fixed up)
 ///       ret dyn_unbox_int(car)            ; 42
 /// ```
 ///
 /// Returning **42** proves the cell relocated *and* every reference to it was fixed up: had
-/// the compacting collect moved the cell without rewriting the `any` root slot, `dyn_car`
+/// the compacting collect moved the cell without rewriting the `any` root slot, `dyn_pair_first`
 /// would dereference the freed from-space block — reading garbage or faulting, not 42. The
 /// same program under `gc_collect_precise` (non-moving) also returns 42 (the cell stays put),
 /// so the two agree on the *value* while differing on *where the cell lives*.
@@ -814,7 +814,7 @@ fn end_to_end_gc_compacting_relocates_and_preserves() {
             IIRInstr::new(
                 "call_builtin",
                 Some("cell".into()),
-                vec![Operand::Var("dyn_cons".into()), Operand::Var("v".into()), Operand::Var("w".into())],
+                vec![Operand::Var("dyn_pair_new".into()), Operand::Var("v".into()), Operand::Var("w".into())],
                 "any",
             ),
             // Trigger the collection: under compaction the cell relocates + its root is fixed.
@@ -823,7 +823,7 @@ fn end_to_end_gc_compacting_relocates_and_preserves() {
             IIRInstr::new(
                 "call_builtin",
                 Some("car".into()),
-                vec![Operand::Var("dyn_car".into()), Operand::Var("cell".into())],
+                vec![Operand::Var("dyn_pair_first".into()), Operand::Var("cell".into())],
                 "any",
             ),
             IIRInstr::new(
@@ -872,11 +872,11 @@ fn end_to_end_gc_compacting_relocates_and_preserves() {
 /// ```text
 ///   main() -> i64:
 ///       v    = dyn_box_int(42)
-///       cell = dyn_cons(v, dyn_box_int(7))     ; live cons in an `any` slot (a precise root)
+///       cell = dyn_pair_new(v, dyn_box_int(7))     ; live cons in an `any` slot (a precise root)
 ///       gc_collect_incremental_start()         ; snapshot roots, shade them grey
 ///       _    = gc_collect_incremental_step(1e6) ; one big-budget step completes the mark
 ///       _    = gc_collect_incremental_finish()  ; sweep the unreachable
-///       ret dyn_unbox_int(dyn_car(cell))       ; 42 — the live cell was kept
+///       ret dyn_unbox_int(dyn_pair_first(cell))       ; 42 — the live cell was kept
 /// ```
 ///
 /// A single large-budget `step` finishes marking in one call, so the program needs no IIR
@@ -906,7 +906,7 @@ fn end_to_end_gc_incremental_keeps_live_ref() {
         IIRInstr::new(
             "call_builtin",
             Some("cell".into()),
-            vec![Operand::Var("dyn_cons".into()), Operand::Var("v".into()), Operand::Var("w".into())],
+            vec![Operand::Var("dyn_pair_new".into()), Operand::Var("v".into()), Operand::Var("w".into())],
             "any",
         ),
         // Drive the incremental cycle: start → one big-budget step → finish.
@@ -928,7 +928,7 @@ fn end_to_end_gc_incremental_keeps_live_ref() {
         IIRInstr::new(
             "call_builtin",
             Some("car".into()),
-            vec![Operand::Var("dyn_car".into()), Operand::Var("cell".into())],
+            vec![Operand::Var("dyn_pair_first".into()), Operand::Var("cell".into())],
             "any",
         ),
         IIRInstr::new(
@@ -1132,7 +1132,7 @@ fn backend_pipeline_produces_bytes_for_simple_function() {
 /// This ties the two halves of the Twig-native-GC directive together. Native
 /// closures already compile via `iir-builtin-lowering::lower_closures_to_heap`
 /// (E6d-7a): `alloc_closure(fn, cap0, …)` lowers to a cons chain
-/// `(box(idx) . (cap0 . … . nil))` built with `__dyn_cons` — the *same*
+/// `(box(idx) . (cap0 . … . nil))` built with `__dyn_pair_new` — the *same*
 /// GC-managed, kind-`{0,8}`, precise-and-movable cons cell every list uses — and
 /// `call_closure` lowers to a `call` into a synthesized `__dyn_call_closure`
 /// dispatcher that `car`/`cdr`-walks the captured environment and directly calls
@@ -1195,7 +1195,7 @@ fn end_to_end_closure_captured_env_survives_collect() {
                 "any",
             ),
             // A closure capturing 41. `lower_closures_to_heap` turns this into a
-            // cons chain `(box(idx) . (cap . nil))` built with `__dyn_cons`.
+            // cons chain `(box(idx) . (cap . nil))` built with `__dyn_pair_new`.
             IIRInstr::new(
                 "alloc_closure",
                 Some("clo".into()),
@@ -1303,7 +1303,7 @@ fn end_to_end_closure_captured_env_survives_collect() {
 /// ```text
 ///   main() -> i64:
 ///       v42   = dyn_box_int(42)
-///       child = dyn_cons(v42, nil)      ; a heap child; its car is boxed 42
+///       child = dyn_pair_new(v42, nil)      ; a heap child; its car is boxed 42
 ///       rec   = alloc  (ref<LispyPair>) ; a MOVABLE record cell
 ///       field_store rec, 0, child       ; field 0 = the heap child (a reference)
 ///       field_store rec, 1, nil
@@ -1311,7 +1311,7 @@ fn end_to_end_closure_captured_env_survives_collect() {
 ///                                       ;   rec's root slot and rec's field 0 are
 ///                                       ;   both rewritten to the new addresses
 ///       c0    = field_load rec, 0       ; the child, at its NEW location
-///       ret dyn_unbox_int(dyn_car(c0))  ; 42
+///       ret dyn_unbox_int(dyn_pair_first(c0))  ; 42
 /// ```
 ///
 /// Returning **42** proves three things at once: the record's field 0 was **traced**
@@ -1341,7 +1341,7 @@ fn end_to_end_gc_record_field_traced_and_relocated() {
             // only through the record's field 0.
             IIRInstr::new("const", Some("nil".into()), vec![Operand::Int(0)], "ref<LispyPair>"),
             IIRInstr::new("call_builtin", Some("child".into()),
-                vec![Operand::Var("dyn_cons".into()), Operand::Var("v42".into()), Operand::Var("nil".into())], "any"),
+                vec![Operand::Var("dyn_pair_new".into()), Operand::Var("v42".into()), Operand::Var("nil".into())], "any"),
             // The record cell (generic `alloc` → movable `{0,8}` pair) + its fields.
             {
                 let mut a = IIRInstr::new("alloc", Some("rec".into()), vec![], "ref<LispyPair>");
@@ -1362,7 +1362,7 @@ fn end_to_end_gc_record_field_traced_and_relocated() {
             IIRInstr::new("field_load", Some("c0".into()),
                 vec![Operand::Var("rec".into()), Operand::Int(0)], "any"),
             IIRInstr::new("call_builtin", Some("car".into()),
-                vec![Operand::Var("dyn_car".into()), Operand::Var("c0".into())], "any"),
+                vec![Operand::Var("dyn_pair_first".into()), Operand::Var("c0".into())], "any"),
             IIRInstr::new("call_builtin", Some("r".into()),
                 vec![Operand::Var("dyn_unbox_int".into()), Operand::Var("car".into())], "i64"),
             IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
@@ -1428,7 +1428,7 @@ fn end_to_end_gc_raw_discriminant_word_not_relocated() {
                 vec![Operand::Var("dyn_box_int".into()), Operand::Var("k42".into())], "any"),
             IIRInstr::new("const", Some("nil".into()), vec![Operand::Int(0)], "ref<LispyPair>"),
             IIRInstr::new("call_builtin", Some("child".into()),
-                vec![Operand::Var("dyn_cons".into()), Operand::Var("v42".into()), Operand::Var("nil".into())], "any"),
+                vec![Operand::Var("dyn_pair_new".into()), Operand::Var("v42".into()), Operand::Var("nil".into())], "any"),
             // The {0,8} cell.
             {
                 let mut a = IIRInstr::new("alloc", Some("cell".into()), vec![], "ref<LispyPair>");

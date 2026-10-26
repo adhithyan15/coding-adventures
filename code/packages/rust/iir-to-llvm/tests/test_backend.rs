@@ -1502,13 +1502,13 @@ fn errors_display_without_panic() {
     let _ = format!("{}", IIRLlvmError::UndefinedVariable { function: "f".into(), name: "nope".into() });
 }
 
-/// McCarthy W12b: a tagged-word lisp builtin (`call_builtin "dyn_cons"`) lowers
-/// to a `call i64 @__dyn_cons(i64, i64)` and emits exactly one matching
+/// McCarthy W12b: a tagged-word lisp builtin (`call_builtin "dyn_pair_new"`) lowers
+/// to a `call i64 @__dyn_pair_new(i64, i64)` and emits exactly one matching
 /// `declare`. A lisp heap reference type (`ref<LispyPair>`) is accepted (carried
 /// as a tagged `i64`); a non-lisp `ref<Foo>` is still rejected (see
 /// `validate_rejects_unsupported_type`).
 #[test]
-fn dyn_cons_lowers_to_runtime_call() {
+fn dyn_pair_new_lowers_to_runtime_call() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -1520,7 +1520,7 @@ fn dyn_cons_lowers_to_runtime_call() {
                 "call_builtin",
                 Some("p".into()),
                 vec![
-                    Operand::Var("dyn_cons".into()),
+                    Operand::Var("dyn_pair_new".into()),
                     Operand::Var("a".into()),
                     Operand::Var("b".into()),
                 ],
@@ -1529,19 +1529,19 @@ fn dyn_cons_lowers_to_runtime_call() {
             IIRInstr::new(
                 "call_builtin",
                 Some("h".into()),
-                vec![Operand::Var("dyn_car".into()), Operand::Var("p".into())],
+                vec![Operand::Var("dyn_pair_first".into()), Operand::Var("p".into())],
                 "any",
             ),
             IIRInstr::new("ret", None, vec![Operand::Var("h".into())], "any"),
         ],
     );
     let ll = lower(&module_with(f));
-    assert!(ll.contains("declare i64 @__dyn_cons(i64, i64)"), "cons declare; got:\n{ll}");
-    assert!(ll.contains("declare i64 @__dyn_car(i64)"), "car declare; got:\n{ll}");
-    assert!(ll.contains("= call i64 @__dyn_cons(i64 "), "cons call site; got:\n{ll}");
-    assert!(ll.contains("= call i64 @__dyn_car(i64 "), "car call site; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__dyn_pair_new(i64, i64)"), "cons declare; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__dyn_pair_first(i64)"), "car declare; got:\n{ll}");
+    assert!(ll.contains("= call i64 @__dyn_pair_new(i64 "), "cons call site; got:\n{ll}");
+    assert!(ll.contains("= call i64 @__dyn_pair_first(i64 "), "car call site; got:\n{ll}");
     // Exactly one declare per used builtin (no duplicates from two call sites).
-    assert_eq!(ll.matches("declare i64 @__dyn_cons").count(), 1, "one cons declare");
+    assert_eq!(ll.matches("declare i64 @__dyn_pair_new").count(), 1, "one cons declare");
 }
 
 /// An unknown `dyn_*`-shaped builtin that is NOT in `DYN_BUILTINS` is rejected.

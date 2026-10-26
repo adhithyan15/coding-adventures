@@ -16,7 +16,7 @@
 //!       if !is_nil goto recurse
 //!       ret box 0                           ;; nil ⇒ boxed length 0
 //!     recurse:
-//!       rest = cdr(lst)                     ;; → field_load[1] / dyn_cdr
+//!       rest = cdr(lst)                     ;; → field_load[1] / dyn_pair_rest
 //!       sub  = __dyn_list_length(rest)      ;; recurse (boxed result)
 //!       ret (+ 1 sub)                       ;; DYNAMIC add (E6d-2) → boxed
 //!   }
@@ -30,7 +30,7 @@
 //!       if !(ni == 0) goto recurse          ;; TYPED cmp_eq → raw bool
 //!       ret car(lst)                        ;; base: the n-th element
 //!     recurse:
-//!       rest = cdr(lst)                     ;; → field_load[1] / dyn_cdr
+//!       rest = cdr(lst)                     ;; → field_load[1] / dyn_pair_rest
 //!       ret __dyn_list_ref(rest, box(ni-1)) ;; TYPED sub, re-box for the call
 //!   }
 //! ```

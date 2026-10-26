@@ -3254,7 +3254,7 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     // Phase 0a: lower lispy heap builtins to **runtime calls** (LANG77,
     // McCarthy L3b-2b).  A lisp frontend (McCarthy Lisp, Twig) emits
     // `call_builtin "cons"/"car"/"cdr"`; this rewrite renames them to
-    // `dyn_cons`/`dyn_car`/`dyn_cdr`, which the backends dispatch to
+    // `dyn_pair_new`/`dyn_pair_first`/`dyn_pair_rest`, which the backends dispatch to
     // `__dyn_*` in the linked C lisp runtime
     // (`twig-aot/runtime/dynval_runtime.c`).  Unlike the structural
     // `lower_heap_builtins` (alloc + field_*, used by the managed wasm/jvm/

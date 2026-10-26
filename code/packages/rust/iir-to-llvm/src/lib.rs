@@ -214,7 +214,7 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
         // NON-lisp references (`ref<Foo>`) remain unsupported (no value model).
         "any" => Ok("i64"),
         // A lisp heap reference is carried as a tagged `i64`: `ref<LispyPair>`
-        // (a cons cell) and `ref<any>` (a `dyn_car`/`dyn_cdr` result, or a
+        // (a cons cell) and `ref<any>` (a `dyn_pair_first`/`dyn_pair_rest` result, or a
         // re-boxed `dyn_box_int` arithmetic result — E6d-2b) alike. The runtime
         // owns the cell layout; the backend only moves words and calls `__dyn_*`.
         "ref<any>" => Ok("i64"),
@@ -406,32 +406,36 @@ struct LlvmStringLiteralRef {
     len: usize,
 }
 
-/// McCarthy W12b — the **tagged-word lisp** builtins the LLVM backend lowers to
-/// `call`s into the shared C runtime (`twig-aot/runtime/dynval_runtime.c`), the
-/// same runtime the native AOT backend links. Each entry is
-/// `(iir_name, runtime_symbol, arity)`; every lisp value is a tagged 64-bit word
-/// so the signature is always `i64 (i64 × arity)`. The `dyn_*` IIR names are
-/// produced by `iir_builtin_lowering::lower_heap_builtins_runtime` /
-/// `lower_dyn_repr`; they map to the runtime's `__dyn_*` symbols.
+/// McCarthy W12b — the **tagged-word dynamic-value** builtins the LLVM backend
+/// lowers to `call`s into the shared C runtime
+/// (`twig-aot/runtime/dynval_runtime.c`), the same runtime the native AOT
+/// backend links. Each entry is `(iir_name, runtime_symbol, arity)`; every
+/// dynamic value is a tagged 64-bit word, so the signature is always
+/// `i64 (i64 × arity)`. The registered names (LANG83 PR7f, family `Dynamic`)
+/// map to the runtime's `__dyn_*` symbols by prefixing `__`.
 ///
-/// | iir name         | runtime symbol            | McCarthy primitive            |
-/// |------------------|---------------------------|-------------------------------|
-/// | `dyn_cons`     | `__dyn_cons`       | `CONS` — build a pair `[a|b]`  |
-/// | `dyn_car`/`cdr`| `__dyn_car`/`cdr`  | `CAR`/`CDR`                    |
-/// | `dyn_pair_p`   | `__dyn_pair_p`     | `pair?` (→ `ATOM`)            |
-/// | `dyn_null_p`   | `__dyn_null_p`     | `null?` (empty-list test)     |
-/// | `dyn_equal`    | `__dyn_equal`      | `EQ`                          |
-/// | `dyn_not`      | `__dyn_not`        | logical `not`                 |
-/// | `dyn_truthy`   | `__dyn_truthy`     | `COND` clause test            |
-/// | `dyn_box_int`  | `__dyn_box_int`    | int → tagged word             |
-/// | `dyn_unbox_int`| `__dyn_unbox_int`  | tagged word → int (result)    |
-/// | `dyn_nil`      | `__dyn_nil`        | `()` / nil                    |
+/// | iir name          | runtime symbol      | meaning                              |
+/// |-------------------|---------------------|--------------------------------------|
+/// | `dyn_pair_new`    | `__dyn_pair_new`    | a fresh pair `[a|b]` (Lisp `cons`)   |
+/// | `dyn_pair_first`  | `__dyn_pair_first`  | a pair's first field (`car`)         |
+/// | `dyn_pair_rest`   | `__dyn_pair_rest`   | a pair's second field (`cdr`)        |
+/// | `dyn_is_pair`     | `__dyn_is_pair`     | pair test → dynamic boolean          |
+/// | `dyn_is_nil`      | `__dyn_is_nil`      | nil test → dynamic boolean           |
+/// | `dyn_tag`         | `__dyn_tag`         | the tag number (`x & 7`)             |
+/// | `dyn_box_int`     | `__dyn_box_int`     | int → tagged word                    |
+/// | `dyn_unbox_int`   | `__dyn_unbox_int`   | tagged word → int                    |
+/// | `dyn_nil`         | `__dyn_nil`         | nil                                  |
+/// | `dyn_equal`       | `__dyn_equal`       | `equal?` (unregistered; LANG83 PR7f) |
+/// | `dyn_not`         | `__dyn_not`         | `not` (unregistered)                 |
+/// | `dyn_truthy`      | `__dyn_truthy`      | `COND` test (unregistered)           |
+/// | `dyn_to_exit_code`| `__dyn_to_exit_code`| exit coercion (unregistered)         |
 const DYN_BUILTINS: &[(&str, &str, usize)] = &[
-    ("dyn_cons", "__dyn_cons", 2),
-    ("dyn_car", "__dyn_car", 1),
-    ("dyn_cdr", "__dyn_cdr", 1),
-    ("dyn_pair_p", "__dyn_pair_p", 1),
-    ("dyn_null_p", "__dyn_null_p", 1),
+    ("dyn_pair_new", "__dyn_pair_new", 2),
+    ("dyn_pair_first", "__dyn_pair_first", 1),
+    ("dyn_pair_rest", "__dyn_pair_rest", 1),
+    ("dyn_is_pair", "__dyn_is_pair", 1),
+    ("dyn_is_nil", "__dyn_is_nil", 1),
+    ("dyn_tag", "__dyn_tag", 1),
     ("dyn_equal", "__dyn_equal", 2),
     ("dyn_not", "__dyn_not", 1),
     ("dyn_truthy", "__dyn_truthy", 1),

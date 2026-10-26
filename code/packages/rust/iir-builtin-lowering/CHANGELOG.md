@@ -1,5 +1,11 @@
 # Changelog — iir-builtin-lowering
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- The native runtime-call path (`lower_heap_builtins_runtime`, `lower_dyn_repr`, the list and closure helpers) emits the LANG83 PR7f registry names: `cons` / `car` / `cdr` / `pair?` / `null?` now become `dyn_pair_new` / `dyn_pair_first` / `dyn_pair_rest` / `dyn_is_pair` / `dyn_is_nil` (they were `dyn_cons` / `dyn_car` / `dyn_cdr` / `dyn_pair_p` / `dyn_null_p`). The generated code is otherwise unchanged.
+- `lower_dyn_repr`: `dyn_tag`'s argument is a tagged value, so an integer atom flowing into it boxes, but its integer result never joins `boxed_regs` (`LISP_ARG_ONLY_BUILTINS`; test `dyn_tag_boxes_its_argument_but_not_its_result`).
+- The structural heap pass lowers `call_builtin "dyn_nil"` (was `make_nil`) to `const 0 : ref<LispyPair>`; `lower_dyn_repr_structural`'s lisp-builtin list names `dyn_nil` / `dyn_symbol` (were `make_nil` / `make_symbol`). Nothing emits either today.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)

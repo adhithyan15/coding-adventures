@@ -133,10 +133,10 @@ fn b_to_exit_code(a: &[Value]) -> Value {
 /// compiled path) so the two agree.
 fn register_lispy_builtins(vm: &mut VMCore, backend: &GenericCirJit) {
     for (name, f) in [
-        ("dyn_cons", b_cons as fn(&[Value]) -> Value),
-        ("dyn_car", b_car),
-        ("dyn_cdr", b_cdr),
-        ("dyn_pair_p", b_pair_p),
+        ("dyn_pair_new", b_cons as fn(&[Value]) -> Value),
+        ("dyn_pair_first", b_car),
+        ("dyn_pair_rest", b_cdr),
+        ("dyn_is_pair", b_pair_p),
         ("dyn_not", b_not),
         ("dyn_equal", b_equal),
         ("dyn_truthy", b_truthy),

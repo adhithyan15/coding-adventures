@@ -1,5 +1,10 @@
 # Changelog — `x86_64-backend`
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives: `Lowered` for `dyn_box_int`, `dyn_unbox_int`, `dyn_tag`, `dyn_pair_new`, `dyn_pair_first`, `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil` and `dyn_nil` (each a call to the runtime's `__dyn_<name>` through `V1_BUILTINS`), `Refused(SYMBOLS_ARE_INTERNED_CONSTANTS)` for `dyn_symbol` (a symbol reaches this backend as an interned immediate).
+- `V1_BUILTINS`: the Lisp-vocabulary rows `dyn_cons` / `dyn_car` / `dyn_cdr` / `dyn_pair_p` / `dyn_null_p` are renamed `dyn_pair_new` / `dyn_pair_first` / `dyn_pair_rest` / `dyn_is_pair` / `dyn_is_nil` (calls to the renamed `__dyn_*` runtime symbols), and `dyn_tag` (1 argument) and `dyn_nil` (0 arguments) are new rows. `builtin_rows_agree_with_the_builtin_table` checks the declaration against this table. Unit tests use the new names.
+
 ## Unreleased — LANG83 PR7e — no float writers
 
 - `write_f64_py` / `write_f64_js` leave the V1 builtin table and

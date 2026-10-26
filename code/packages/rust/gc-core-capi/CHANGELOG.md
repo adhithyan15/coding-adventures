@@ -2,6 +2,10 @@
 
 All notable changes to this crate are documented here.
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- Doc comments name `__dyn_pair_new`, the runtime symbol that was `__dyn_cons` before LANG83 PR7f. No code change.
+
 ## Unreleased — frame-pointer requirement documented as enforced
 
 - The `current_fp()` comment in `stack_scan.rs` no longer claims that frame

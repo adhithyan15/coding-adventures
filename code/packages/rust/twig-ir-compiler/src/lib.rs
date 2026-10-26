@@ -670,7 +670,7 @@ mod tests {
         // No runtime make_symbol call for a compile-time-known quote literal.
         assert!(
             !i.iter().any(|x| x.op == "call_builtin"
-                && x.srcs.first() == Some(&Operand::Var("make_symbol".into()))),
+                && matches!(x.srcs.first(), Some(Operand::Var(n)) if n == "make_symbol" || n == "dyn_symbol")),
             "a quote literal must not emit runtime make_symbol",
         );
     }

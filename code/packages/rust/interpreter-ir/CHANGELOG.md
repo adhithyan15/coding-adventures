@@ -1,5 +1,33 @@
 # Changelog — interpreter-ir
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- New registry family `OpFamily::Dynamic` and ten Builtins
+  (`introduced_by: "LANG83 PR7f"`, `LANG83_PR7F`, `OpSpec::is_pr7f`):
+  `dyn_box_int`, `dyn_unbox_int`, `dyn_tag`, `dyn_pair_new`,
+  `dyn_pair_first`, `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil`, `dyn_nil`
+  and `dyn_symbol`. They are the tagged-word value representation that the
+  Lisp-family frontends' values already used; until now the ops were
+  unregistered builtins with Lisp names (`dyn_cons`, `dyn_car`, `dyn_cdr`,
+  `dyn_pair_p`, `dyn_null_p`, `make_nil`, `make_symbol`), renamed in the same
+  PR wherever they are lowered or handled. `dyn_tag` is new: the value's
+  three-bit tag as an integer.
+- New operand type `"dyn"` (a dynamic value) in `OpSpec::operand_types`.
+- `GRANDFATHERED_PREFIXED_NAMES` gains the ten names. Each starts with the
+  `dyn_` dispatch prefix on purpose: the native backends' `dyn_` arm (call
+  the runtime's `__dyn_<name>`) is their lowering, and it fires only for a
+  name in the backend's builtin table, so an unregistered `dyn_` name is
+  still refused. `dyn_new` is still a name-rule violation.
+- New shared refusal reasons `NO_TAGGED_WORD_RUNTIME` (the managed backends,
+  BEAM, vm-core and the generic JIT, whose dynamic values are structural)
+  and `SYMBOLS_ARE_INTERNED_CONSTANTS` (`dyn_symbol` on the tagged-word
+  backends).
+- Tests: `pr7f_set_is_exactly_the_dynamic_value_primitives` pins the set, its
+  shape, that the Lisp names and the language-semantic `dyn_truthy`,
+  `dyn_equal`, `dyn_not` and `dyn_to_exit_code` are unregistered;
+  `grandfathered_names_are_registered_comparisons_or_dynamic_values` replaces
+  `grandfathered_names_are_registered_comparisons`.
+
 ## Unreleased — LANG83 PR7e — no float writers, and no language names
 
 - **Breaking:** `write_f64_py` and `write_f64_js` are removed from
