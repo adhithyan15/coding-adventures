@@ -2,6 +2,10 @@
 
 ## 1. Status, sources, and claim boundary
 
+**Status:** independently reviewed specification; implementation authorized.
+The exact reviewed spec-only head is
+`f191dc6fc2f2c0eacf2b8e414c3018eb13ffa955`.
+
 This cell specifies `cortex-m23-gatelevel`, an educational architectural gate
 companion to the checked `cortex-m23-simulator`. It is deliberately bounded to
 the processor configuration in which the optional Security Extension is
