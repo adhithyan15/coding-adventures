@@ -7,8 +7,9 @@ repository. The package is an instruction-level oracle for a single
 **ESP32-class Xtensa LX6 integer core**, not a cycle-accurate ESP32 and not a
 claim to reproduce a proprietary Tensilica implementation.
 
-**Status:** spec-only, awaiting independent audit. This specification and the
-backlog update must be committed and reviewed before implementation begins.
+**Status:** spec-only corrections complete, pending independent re-audit. This
+specification and the backlog update must pass that re-audit before
+implementation begins.
 
 The public primary sources are:
 
@@ -191,9 +192,8 @@ The included Core Architecture surface is:
   `SUBX2`, `SUBX4`, and `SUBX8`;
 - `AND`, `OR`, `XOR`, `EXTUI`, `MOVEQZ`, `MOVNEZ`, `MOVGEZ`, `MOVLTZ`, and
   `MOVI`;
-- `SLL`, `SLLI`, `SRA`, `SRAI`, `SRC`, `SRL`, `SRLI`, `SSA8L`, `SSAI`,
-  `SSL`, and `SSR` (the big-endian-only `SSA8B` encoding is unsupported in
-  this little-endian profile);
+- `SLL`, `SLLI`, `SRA`, `SRAI`, `SRC`, `SRL`, `SRLI`, `SSA8B`, `SSA8L`,
+  `SSAI`, `SSL`, and `SSR`;
 - `L8UI`, `L16SI`, `L16UI`, `L32I`, `L32R`, `S8I`, `S16I`, and `S32I`;
 - `BALL`, `BANY`, `BNALL`, `BNONE`, `BBC`, `BBS`, `BBCI`, `BBSI`, `BEQ`,
   `BNE`, `BEQI`, `BNEI`, signed `BGE`, `BLT`, `BGEI`, `BLTI`, `BGEZ`,
@@ -211,6 +211,13 @@ the same 32 bits as two's-complement; unsigned relations do not. Operations do
 not synthesize flags. For an instruction whose destination is also a source,
 all inputs are read from the pre-state before any destination is written.
 
+`SSA8B` is part of the Core Architecture even in this little-endian profile;
+its name describes a shift-amount operation, not a selectable processor byte
+order. It writes exactly
+`SAR = 32 - (AR[s][1:0] << 3)`. Thus low source bits `0`, `1`, `2`, and `3`
+produce `SAR` values `32`, `24`, `16`, and `8`, respectively. `SSA8L` retains
+its distinct ISA-defined operation.
+
 ### 5.2 Code Density instructions
 
 The included 16-bit surface is `ADD.N`, `ADDI.N`, `L32I.N`, `S32I.N`,
@@ -218,6 +225,44 @@ The included 16-bit surface is `ADD.N`, `ADDI.N`, `L32I.N`, `S32I.N`,
 The exact immediate maps, scaling, signedness, and forward-only density branch
 offsets follow the ISA instruction descriptions. `ILL.N` is an explicit
 `UnknownInstruction`; `BREAK.N` is `Breakpoint`, not a halt alias.
+
+### 5.3 Reserved encodings and documented undefined operations
+
+The following encoded relations are architecturally reserved and are rejected
+as `UnknownInstruction { raw, width }` during classification, before any
+register-window check or semantic evaluation:
+
+- each included 24-bit conditional-branch format rejects the encoded signed
+  displacement values `-3`, `-2`, `-1`, and `0`;
+- `EXTUI` rejects `sa + op2 > 31`; and
+- `MOV.N` and `MOVSP` reject equal encoded source and destination logical ARs.
+
+These tests are part of exact decoding; they may not be deferred until an
+address, condition, or result is evaluated. Legal neighboring encodings at
+`-4` and `1`, `EXTUI sa + op2 = 31`, and distinct-register `MOV.N`/`MOVSP`
+must remain accepted.
+
+The ISA separately describes the following operations as undefined after a
+valid encoding has been identified. They return
+`UndefinedOperation { raw, width, reason }` atomically:
+
+- `ENTRY` when its source-register field is greater than `3`
+  (`InvalidEntrySource`); this check occurs after the instruction's mandatory
+  `WindowCheck(0, CALLINC, 0)`, matching the ISA operation order;
+- `SLL`, `SRA`, `SRC`, and `SRL` when the pre-state six-bit `SAR` value is
+  greater than `32` (`ShiftAmountOutOfRange`); `SAR = 32` remains valid; and
+- `RETW` or `RETW.N` when the increment encoded by the top two bits of
+  pre-state logical `a0` is zero, or when `m` -- the first set bit among
+  `WindowStart[WindowBase - 1]`, `WindowStart[WindowBase - 2]`, and
+  `WindowStart[WindowBase - 3]` in that priority order -- is nonzero and does
+  not equal that increment (`InvalidReturnWindow`). Index subtraction wraps
+  modulo 16. If all three bits are clear (`m = 0`), the relation is legal and
+  the missing caller window follows `WindowUnderflow { increment }` instead.
+
+`UndefinedReason` is a public non-exhaustive enum with precisely the three
+stable reasons named above for this cell. This distinction prevents
+state-dependent undefined behavior from being hidden behind a generic decoder
+failure while preserving `UnknownInstruction` for raw reserved encodings.
 
 ## 6. Control flow, windows, and loops
 
@@ -241,7 +286,35 @@ at different byte residues.
 The included application-visible window surface is `CALL4/8/12`,
 `CALLX4/8/12`, `ENTRY`, `RETW`, `RETW.N`, and `MOVSP`.
 
-- A windowed call performs its pre-state window check, writes `PS.CALLINC`,
+The fixed profile enables architectural window checking. After exact decode
+and raw-reserved validation, but before reading an AR, evaluating an
+instruction condition, computing an address, checking a documented undefined
+operation, or changing scratch state, every included instruction that refers
+to an AR performs the ISA's lazy pre-semantics `WindowCheck(wr, ws, wt)`.
+For an ordinary encoding, `wr`, `ws`, and `wt` are respectively the high two
+bits (`field[3:2]`) of the `r`, `s`, and `t` AR fields actually referenced by
+that instruction; a field not referenced by the instruction contributes
+zero, even if its raw bits are nonzero. Reads and writes both count as AR
+references. Conditional moves and branches perform this check even when their
+condition will be false.
+
+`WindowCheck` uses the pre-state `WindowBase` and `WindowStart`. It selects the
+first matching overflow in architectural priority: increment `1` when any
+referenced group is nonzero and window `WindowBase + 1` is already active;
+otherwise increment `2` when any referenced group has bit 1 set and window
+`WindowBase + 2` is active; otherwise increment `3` when any referenced group
+equals `3` and window `WindowBase + 3` is active. Window indexes wrap modulo
+16. A match returns `WindowOverflow { increment }` without reading an operand
+or mutating scratch state.
+
+Instructions with ISA-specific checks use their specified groups rather than
+invented operand fields: `CALL4/8/12` and `CALLX4/8/12` use
+`WindowCheck(0, 0, n)` for `n = 1/2/3`; `ENTRY` uses exactly
+`WindowCheck(0, CALLINC, 0)`; and the documented `MOVSP` and `RETW`/`RETW.N`
+availability/underflow rules run after any applicable raw-reserved validation.
+Instructions with no AR reference perform no window check.
+
+- A windowed call performs the exact pre-state check above, writes `PS.CALLINC`,
   stores the encoded return address in the documented outgoing logical
   register, and changes PC. It does not rotate `WindowBase`.
 - `ENTRY` reads its source using the caller mapping, computes the new stack
@@ -261,6 +334,16 @@ is reported as typed `WindowOverflow { increment }` or
 privileged handler-only `ROTW`, `RFWO`, `RFWU`, `L32E`, and `S32E` instructions
 are recognized but return `PrivilegedInstruction`; their encodings must not be
 misreported as unknown or partially executed.
+
+Fault precedence is therefore deterministic: halt and fetch/width failures
+precede decode; raw reserved encodings precede window checks; a lazy
+`WindowOverflow` precedes register reads, false conditions, memory checks, and
+the `UndefinedOperation` cases above; then instruction-specific
+window-underflow/undefined checks precede ordinary semantics. In particular,
+the ISA-ordered `ENTRY WindowCheck(0, CALLINC, 0)` precedes
+`InvalidEntrySource`, while the branch, `EXTUI`, `MOV.N`, and `MOVSP` raw
+reserved relations never reach `WindowCheck`. Every failure preserves all
+physical ARs, window state, special registers, memory, PC, and halt state.
 
 ### 6.3 Zero-overhead loops
 
@@ -352,6 +435,9 @@ least:
   `FetchOutOfRange`;
 - `UnknownInstruction { raw, width }` and
   `UnsupportedOptionInstruction { raw, width }`;
+- `UndefinedOperation { raw, width, reason: UndefinedReason }`, where this
+  cell's reasons are `InvalidEntrySource`, `ShiftAmountOutOfRange`, and
+  `InvalidReturnWindow`;
 - `UnsupportedSpecialRegister { number }`, `PrivilegedInstruction`, and
   `Breakpoint { code }`;
 - `DataOutOfRange { address, width }`;
@@ -374,19 +460,25 @@ The implementation cell is incomplete until independent tests cover:
    deferred-option versus unknown classification.
 2. **Arithmetic/data:** zero, one, sign boundary, signed minimum/maximum,
    carry-discard, aliasing destinations, all immediate extrema, every SAR
-   boundary, signed/unsigned branch disagreements, and all B4 constant-table
-   entries used by immediate branches.
+   boundary including valid `32` and rejected `33..63`, signed/unsigned branch
+   disagreements, all B4 constant-table entries used by immediate branches,
+   and `SSA8B` source-low-bit witnesses `0/1/2/3 -> 32/24/16/8`.
 3. **Memory:** every width, sign extension, little-endian byte order, aligned
    and unaligned access, final valid byte range, every partial-overrun shape,
    literal loads, self-modifying raw-byte capture, and store rollback.
 4. **Control flow:** taken/not-taken witnesses for every branch relation, exact
    branch bases/scales, direct/indirect calls, return links, 1 GiB windowed
    return reconstruction, in-range and invalid targets, next-step target fetch
-   faults, and absence of delay slots.
+   faults, absence of delay slots, and reserved displacement rejection for
+   every value `-3..0` with accepted `-4` and `1` neighbors.
 5. **Physical windows:** all 64 physical ARs, every logical-to-physical mapping,
    wrap at window 15, increments 4/8/12, `ENTRY` caller-read/callee-write
    ordering, `RETW` clearing, `MOVSP`, deliberate hidden-window preservation,
-   and atomic overflow/underflow at each increment.
+   and atomic overflow/underflow at each increment. A table-driven check must
+   cover every included AR-using opcode's actual `r/s/t` reference groups,
+   groups `0/1/2/3`, wraparound, priority `1` before `2` before `3`, ignored
+   non-reference fields, false conditional execution, and the exact
+   `ENTRY WindowCheck(0, CALLINC, 0)` cases for `CALLINC = 0/1/2/3`.
 6. **Loops:** zero/one/two/maximum counts, positive/zero/negative conditional
    setup, 16/24-bit loop bodies, first-instruction alignment boundaries,
    ordinary loopback, taken-branch early exit, `LCOUNT` decrement, replacement
@@ -395,6 +487,14 @@ The implementation cell is incomplete until independent tests cover:
    post-halt behavior, fault rollback after candidate register/window/loop/
    memory changes, whole-run rollback, whole-execute rollback, trace-limit and
    allocation-failure seams, and exact complete-state equality.
+8. **Reserved/undefined precedence:** exhaustive `ENTRY s = 4..15`, every
+   `EXTUI` pair on both sides of `sa + op2 = 31`, same/different-register
+   `MOV.N` and `MOVSP`, all six-bit SAR values for each affected shift, and all
+   RETW increments plus all eight combinations of the three preceding
+   `WindowStart` bits. Combined-fault cases must prove raw reserved decode
+   before `WindowCheck`, `WindowOverflow` before `InvalidEntrySource` and the
+   other `UndefinedOperation`/semantic memory/control checks, and atomic state
+   preservation for every typed result.
 
 Release line coverage for the package must exceed 80%. Completion additionally
 requires Rustfmt, strict Clippy with warnings denied, rustdoc with warnings

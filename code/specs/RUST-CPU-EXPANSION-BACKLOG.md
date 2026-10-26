@@ -79,7 +79,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
-| 14 | Xtensa LX6 | public Tensilica ISA manual plus ESP32 manuals | Spec complete locally as `Esp32Lx6IntegerV1`: little-endian, 64 physical windowed ARs, mixed 16/24-bit core+density, loops, typed problem-state boundary; implementation is next and proprietary/configuration-unknown extensions remain excluded. |
+| 14 | Xtensa LX6 | public Tensilica ISA manual plus ESP32 manuals | Spec corrections complete locally as `Esp32Lx6IntegerV1` and pending independent re-audit: little-endian, 64 physical windowed ARs, mixed 16/24-bit core+density, lazy window checks, loops, and typed reserved/undefined boundaries. Implementation remains blocked on audit; proprietary/configuration-unknown extensions remain excluded. |
 
 ## Discovered follow-up work
 
@@ -108,7 +108,8 @@ architecture/core introduction era, not a claim about a particular chip.
 - Compose the first source-backed SoCs around completed cores (Cortex-M
   microcontroller class and an OpenSPARC/OpenRISC platform), then add gate-level
   interconnect models.
-- Implement the audited Xtensa LX6 spec as one bounded functional cell before
+- Re-audit the corrected public-source Xtensa LX6 spec, then implement it as
+  one bounded functional cell before
   its gate or ESP32-class SoC work. Follow-ups are ordered: publicly specified
   multiply/divide and conditional-store options; exception/interrupt delivery;
   then dual-core memory aliases, cache/MMU boundary, interrupt routing, DMA,
