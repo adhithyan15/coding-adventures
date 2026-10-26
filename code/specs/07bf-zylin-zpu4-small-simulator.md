@@ -1,9 +1,10 @@
 # Layer 07bf — Zylin ZPU4 Small Functional Simulator
 
-**Status:** proposed spec-only `RCPU-087`; duplicate/evidence audit complete;
-independent exact-head review is required before implementation. The dependent
-gate-level cell is `RCPU-088` / Spec 07bf2 and cannot begin until the
-functional oracle merges.
+**Status:** accepted `RCPU-087` implementation candidate; duplicate/evidence
+audit and pre-implementation exact-head review passed. The implemented head
+still requires a different reviewer's exact-clean-head PASS before
+publication. The dependent gate-level cell is `RCPU-088` / Spec 07bf2 and
+cannot begin until the functional oracle merges.
 
 ## 1. Discovery, priority, and authority
 
@@ -12,8 +13,8 @@ configuration of Zylin's 32-bit, zero-operand ZPU stack CPU. It is a CPU plus a
 deterministic external-word-bus adapter. It is not a ZPUino, a board, an SoC,
 a cycle-accurate VHDL simulator, or a transistor recreation.
 
-The discovery audit was reconciled with `origin/main`
-`08d9140e6c0c60f7e74f1a5ad569e9c7cd68e364` on 2026-10-26. Repository
+The discovery audit was reconciled again with `origin/main`
+`39fa7c3ba78e1008ded5a15e7e8c460bd7b5cbc3` on 2026-10-26. Repository
 packages, specifications, history, local/remote branches, worktrees, and every
 open or merged pull request contained no ZPU or Zylin CPU claim. The parallel
 ZipCPU cell already owns Layer 07be and `RCPU-085` / `RCPU-086`; this distinct
