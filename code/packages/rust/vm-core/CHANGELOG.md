@@ -26,6 +26,13 @@
   the laid-out strings and re-read as the same double) and
   `neutral_float_primitives_dispatch`.
 
+## Unreleased — `real_to_i64_checked` is public
+
+- `dispatch::real_to_i64_checked` is now `pub`. jit-core's
+  `F64_TO_I64_TRUNC` / `F64_TO_I64_FLOOR` call it, so the generic JIT
+  accepts exactly the range the interpreter tier accepts and fails with the
+  same `VMError::Custom` text. There is one copy of the rule, not two.
+
 ## [0.31.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

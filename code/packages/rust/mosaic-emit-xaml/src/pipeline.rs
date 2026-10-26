@@ -6229,17 +6229,19 @@ public sealed class __COMPONENT__MosaicTable : Grid
         DependencyProperty.Register(nameof(MosaicTotalRows), typeof(double), typeof(__COMPONENT__MosaicTable), new PropertyMetadata(0.0));
 
     private bool mosaicLoaded, mosaicLayoutPending, mosaicCapturedMaxHeight;
-    private int mosaicGeneration, mosaicCapacity;
+    private int mosaicGeneration, mosaicCapacity, mosaicNavigationRequest;
     private double mosaicViewportHeight, mosaicWheelRemainder;
     private double mosaicAuthoredMaxHeight = double.PositiveInfinity;
 
     public __COMPONENT__MosaicTable()
     {
         PointerWheelChanged += MosaicOnPointerWheelChanged;
+        PointerPressed += (_, _) => CancelKeyboardNavigation();
         Loaded += (_, _) => { mosaicLoaded = true; QueueViewportReport(); };
         Unloaded += (_, _) => {
             mosaicLoaded = false;
             mosaicGeneration++;
+            CancelKeyboardNavigation();
             mosaicLayoutPending = false;
             mosaicCapacity = 0;
             mosaicWheelRemainder = 0;
@@ -6328,6 +6330,20 @@ public sealed class __COMPONENT__MosaicTable : Grid
         return (int)count;
     }
 
+    // A keyboard step addresses exactly one logical row. Unlike wheel input,
+    // fractional metadata must not be rounded: it cannot identify a row whose
+    // selection is safe to dispatch after the window changes.
+    internal static int KeyboardViewportShift(int nextRow, int rows, double offset, double total, int capacity)
+    {
+        if (rows <= 0 || capacity <= 0 || rows > capacity ||
+            !double.IsFinite(offset) || !double.IsFinite(total) ||
+            offset < 0 || total <= 0 || offset != Math.Truncate(offset) || total != Math.Truncate(total) ||
+            total > int.MaxValue || offset > Math.Max(0, total - capacity) || rows > total - offset) return 0;
+        if (nextRow == -1 && offset > 0) return -1;
+        if (nextRow == rows && rows == capacity && offset + rows < total) return 1;
+        return 0;
+    }
+
     internal static int ViewportShift(int delta, double offset, double total, int capacity, ref double remainder)
     {
         if (!double.IsFinite(offset) || !double.IsFinite(total) || offset < 0 || total < 0 || capacity <= 0) { remainder = 0; return 0; }
@@ -6343,6 +6359,7 @@ public sealed class __COMPONENT__MosaicTable : Grid
 
     private void MosaicOnPointerWheelChanged(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
     {
+        CancelKeyboardNavigation();
         if (e.Handled || !MosaicVirtualWindow || !mosaicLoaded || MosaicViewportShift is null) return;
         // A nested table or editor owns its own input. Do not convert its wheel
         // into an outer row-window shift, even if it has reached a boundary.
@@ -6378,6 +6395,56 @@ public sealed class __COMPONENT__MosaicTable : Grid
     protected override AutomationPeer OnCreateAutomationPeer() =>
         new __COMPONENT__MosaicTableAutomationPeer(this);
 
+    internal void CancelKeyboardNavigation() => mosaicNavigationRequest++;
+
+    internal bool NavigateWindowEdge(__COMPONENT__MosaicTableCell source, int nextRow, int column)
+    {
+        if (!mosaicLoaded || !MosaicVirtualWindow || MosaicViewportShift is null ||
+            column < 0 || column >= ColumnCount || !ReferenceEquals(source.FindTable(), this)) return false;
+        var capacity = mosaicCapacity > 0 ? mosaicCapacity : RowCount;
+        var shift = KeyboardViewportShift(nextRow, RowCount, MosaicViewportOffset, MosaicTotalRows, capacity);
+        if (shift == 0) return false;
+        var offset = MosaicViewportOffset;
+        var expected = offset + shift;
+        var logicalRow = offset + nextRow;
+        var request = ++mosaicNavigationRequest;
+        var generation = mosaicGeneration;
+        // Dispatch changes data, not necessarily realization. Confirm the exact
+        // requested offset before addressing any cell in the replacement window.
+        MosaicViewportShift.Invoke(this, shift);
+        Continue(3);
+        return true;
+
+        bool Current() => mosaicLoaded && generation == mosaicGeneration && request == mosaicNavigationRequest;
+        bool OwnsFocus() {
+            var focused = FocusManager.GetFocusedElement(XamlRoot);
+            return focused is null ||
+                (focused is __COMPONENT__MosaicTableCell cell && ReferenceEquals(cell.FindTable(), this));
+        }
+        void Continue(int remaining) {
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => {
+                if (!Current() || !OwnsFocus()) return;
+                if (MosaicViewportOffset != expected) {
+                    // An unchanged offset may be awaiting bindings; any other
+                    // result is a rejected/clamped request, never a new target.
+                    if (MosaicViewportOffset == offset && remaining > 1) Continue(remaining - 1);
+                    return;
+                }
+                UpdateLayout();
+                if (!Current() || !OwnsFocus() || MosaicViewportOffset != expected) return;
+                var row = (int)(logicalRow - expected);
+                var target = row >= 0 && row < RowCount ? FindCell(row, column) : null;
+                if (target is null) { if (remaining > 1) Continue(remaining - 1); return; }
+                if (!target.Focus(FocusState.Keyboard) || !Current() || MosaicViewportOffset != expected) return;
+                target.ActivateKeyboard();
+                DispatcherQueue.TryEnqueue(() => {
+                    if (Current() && OwnsFocus() && MosaicViewportOffset == expected)
+                        ResolveFocusCell(target, row, column)?.Focus(FocusState.Keyboard);
+                });
+            });
+        }
+    }
+
     internal __COMPONENT__MosaicTableCell? FindCell(int row, int column) =>
         FindCellIn(this, row, column);
 
@@ -6396,6 +6463,7 @@ public sealed class __COMPONENT__MosaicTable : Grid
         for (var index = 0; index < count; index++)
         {
             var child = VisualTreeHelper.GetChild(root, index);
+            if (child is __COMPONENT__MosaicTable) continue;
             if (child is __COMPONENT__MosaicTableCell cell && cell.Row == row && cell.Column == column)
                 return cell;
             var nested = FindCellIn(child, row, column);
@@ -6477,6 +6545,8 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
     // Empty/noninteractive cells keep ordinary native focus-only navigation.
     public event EventHandler? MosaicNavigate;
 
+    internal void ActivateKeyboard() => MosaicNavigate?.Invoke(this, EventArgs.Empty);
+
     // Authored containers handle Tapped before it bubbles to this wrapper.
     // Return a callback rather than focus immediately: adapter dispatch may
     // discard this cell. Revalidate the candidate when the callback executes.
@@ -6487,6 +6557,7 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
         if (source is not __COMPONENT__MosaicTableCell cell) return null;
         var table = cell.FindTable();
         if (table is null) return null;
+        table.CancelKeyboardNavigation();
         var row = cell.Row;
         var column = cell.Column;
         return () => table.DispatcherQueue.TryEnqueue(() =>
@@ -6540,6 +6611,9 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
         base.OnKeyDown(e);
         if (e.Handled || !ReferenceEquals(FocusManager.GetFocusedElement(XamlRoot), this)) return;
 
+        var table = FindTable();
+        table?.CancelKeyboardNavigation();
+
         var nextRow = Row;
         var nextColumn = Column;
         switch (e.Key)
@@ -6551,8 +6625,11 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
             default: return;
         }
 
-        var table = FindTable();
         var target = table?.FindCell(nextRow, nextColumn);
+        if (target is null && nextColumn == Column && table?.NavigateWindowEdge(this, nextRow, nextColumn) == true) {
+            e.Handled = true;
+            return;
+        }
         if (target is null || !target.Focus(FocusState.Keyboard)) return;
         e.Handled = true;
         target.MosaicNavigate?.Invoke(target, EventArgs.Empty);
@@ -28807,6 +28884,7 @@ PROJECTION
         let source = source.replace("var owner = new Owner();", "Check(FocusProbe.CheckLookup(), \"focus traversal\"); var owner = new Owner();");
         let source = format!("{source}\n{}", r#"
 class DependencyObject { public List<DependencyObject> Children = new(); }
+class ProbeMosaicTable : FocusProbe { }
 class ProbeMosaicTableCell : DependencyObject { public int Row; public int Column; public FocusProbe? Table; public FocusProbe? FindTable() => Table; }
 static class VisualTreeHelper {
     public static int Visits;
@@ -28818,6 +28896,11 @@ METHODS
     public static bool CheckLookup() {
         var tree = new FocusProbe(); var first = new ProbeMosaicTableCell { Row = 2, Column = 3 };
         tree.Children.Add(first);
+        var nested = new ProbeMosaicTable();
+        nested.Children.Add(new ProbeMosaicTableCell { Row = 4, Column = 4 });
+        tree.Children.Add(nested);
+        if (tree.FindCell(4, 4) is not null) return false;
+        tree.Children.Remove(nested);
         for (int i = 0; i < 1000; i++) tree.Children.Add(new DependencyObject());
         VisualTreeHelper.Visits = 0;
         if (!ReferenceEquals(tree.FindCell(2, 3), first) || VisualTreeHelper.Visits != 1) return false;
@@ -28858,6 +28941,22 @@ MATH
         Check(ViewportCapacity(double.PositiveInfinity, 32, 100) == 0);
         Check(ViewportCapacity(640, double.NaN, 100) == 0);
         Check(ViewportCapacity(640, 0, 100) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15, 100, 20) == -1);
+        Check(KeyboardViewportShift(20, 20, 15, 100, 20) == 1);
+        Check(KeyboardViewportShift(-1, 20, 0, 100, 20) == 0);
+        Check(KeyboardViewportShift(20, 20, 80, 100, 20) == 0);
+        Check(KeyboardViewportShift(19, 20, 15, 100, 20) == 0);
+        Check(KeyboardViewportShift(21, 20, 15, 100, 20) == 0);
+        Check(KeyboardViewportShift(5, 5, 0, 5, 20) == 0);
+        Check(KeyboardViewportShift(5, 5, 15, 100, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15.5, 100, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15, 100.5, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, double.NaN, 100, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15, double.PositiveInfinity, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 81, 100, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15, 100, 0) == 0);
+        Check(KeyboardViewportShift(-1, 21, 15, 100, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15, (double)int.MaxValue + 1, 20) == 0);
         double rest = 0;
         Check(ViewportShift(-10, 0, 100, 20, ref rest) == 0 && rest == .25);
         Check(ViewportShift(-30, 0, 100, 20, ref rest) == 1 && rest == 0);
@@ -28904,6 +29003,110 @@ QUEUE
 }
 "#.replace("QUEUE", &support[queue_start..queue_end]));
         fs::write(dir.join("Program.cs"), source).unwrap();
+        // Execute the emitted continuation with a controllable dispatcher and
+        // focus owner. Stubs isolate scheduling; native acceptance separately
+        // verifies WinUI binding and realization behavior.
+        let edge = emit_native_table_support_source("Edge");
+        let begin = edge.find("    internal void CancelKeyboardNavigation()").unwrap();
+        let end = edge[begin..].find("    internal EdgeMosaicTableCell? FindCell(").unwrap() + begin;
+        let math_begin = edge.find("    internal static int KeyboardViewportShift(").unwrap();
+        let math_end = edge[math_begin..].find("    internal static int ViewportShift(").unwrap() + math_begin;
+        fs::write(dir.join("Edge.cs"), r#"
+namespace Microsoft.UI.Dispatching { enum DispatcherQueuePriority { Low } }
+namespace Mosaic.Generated {
+enum FocusState { Keyboard }
+static class FocusManager {
+    public static object? Focused;
+    public static object? GetFocusedElement(object root) => Focused;
+}
+class EdgeQueue {
+    public bool Accept = true;
+    public Queue<Action> Work = new();
+    public bool TryEnqueue(Action action) { if (!Accept) return false; Work.Enqueue(action); return true; }
+    public bool TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority priority, Action action) => TryEnqueue(action);
+    public void Drain() { int count = 0; while (Work.Count > 0) { if (++count > 10) throw new Exception("unbounded continuation"); Work.Dequeue()(); } }
+}
+class EdgeMosaicTableCell {
+    public EdgeProbe? Table;
+    public int Activations;
+    public bool CanFocus = true;
+    public Action? Activate;
+    public EdgeProbe? FindTable() => Table;
+    public bool Focus(FocusState state) { if (!CanFocus) return false; FocusManager.Focused = this; return true; }
+    public void ActivateKeyboard() { Activations++; Activate?.Invoke(); }
+}
+class EdgeProbe {
+    bool mosaicLoaded = true;
+    int mosaicGeneration, mosaicNavigationRequest, mosaicCapacity = 20;
+    bool MosaicVirtualWindow = true;
+    int ColumnCount = 4, RowCount = 20;
+    double MosaicViewportOffset = 15, MosaicTotalRows = 100;
+    object XamlRoot = new();
+    EdgeQueue DispatcherQueue = new();
+    EventHandler<int>? MosaicViewportShift;
+    EdgeMosaicTableCell? Target;
+    int LastRow = -99, LastColumn = -99, Layouts;
+    void UpdateLayout() { Layouts++; }
+    EdgeMosaicTableCell? FindCell(int row, int column) { LastRow = row; LastColumn = column; return Target; }
+    EdgeMosaicTableCell? ResolveFocusCell(EdgeMosaicTableCell cell, int row, int column) => FindCell(row, column);
+METHODS
+MATH
+    public static void Check() {
+        void Assert(bool ok) { if (!ok) throw new Exception("keyboard edge continuation"); }
+        EdgeProbe New() {
+            var p = new EdgeProbe(); p.Target = new EdgeMosaicTableCell { Table = p };
+            FocusManager.Focused = p.Target;
+            p.MosaicViewportShift = (_, shift) => p.MosaicViewportOffset += shift;
+            return p;
+        }
+        var p = New(); var original = p.Target!;
+        Assert(p.NavigateWindowEdge(original, -1, 1));
+        Assert(original.Activations == 0);
+        p.DispatcherQueue.Drain();
+        Assert(original.Activations == 1 && p.LastRow == 0 && p.LastColumn == 1 && p.MosaicViewportOffset == 14);
+        p = New(); Assert(p.NavigateWindowEdge(p.Target!, 20, 2)); p.DispatcherQueue.Drain();
+        Assert(p.Target!.Activations == 1 && p.LastRow == 19 && p.LastColumn == 2);
+        p = New(); p.MosaicViewportShift = (_, _) => {}; p.NavigateWindowEdge(p.Target!, -1, 1); p.DispatcherQueue.Drain();
+        Assert(p.Target!.Activations == 0 && p.Layouts == 0);
+        p = New(); p.MosaicViewportShift = (_, _) => p.MosaicViewportOffset = 10;
+        p.NavigateWindowEdge(p.Target!, -1, 1); p.DispatcherQueue.Drain(); Assert(p.Target!.Activations == 0);
+        p = New(); p.MosaicViewportShift = (_, shift) => p.DispatcherQueue.TryEnqueue(() => p.MosaicViewportOffset += shift);
+        p.NavigateWindowEdge(p.Target!, -1, 1); p.DispatcherQueue.Drain(); Assert(p.Target!.Activations == 1);
+        p = New(); p.NavigateWindowEdge(p.Target!, -1, 1); p.CancelKeyboardNavigation(); p.DispatcherQueue.Drain(); Assert(p.Target!.Activations == 0);
+        p = New(); p.NavigateWindowEdge(p.Target!, -1, 1); p.mosaicLoaded = false; p.mosaicGeneration++; p.mosaicLoaded = true;
+        p.DispatcherQueue.Drain(); Assert(p.Target!.Activations == 0);
+        p = New(); p.NavigateWindowEdge(p.Target!, -1, 1); FocusManager.Focused = new object();
+        p.DispatcherQueue.Drain(); Assert(p.Target!.Activations == 0);
+        p = New(); p.NavigateWindowEdge(p.Target!, -1, 1); FocusManager.Focused = new EdgeMosaicTableCell { Table = new EdgeProbe() };
+        p.DispatcherQueue.Drain(); Assert(p.Target!.Activations == 0);
+        p = New(); original = p.Target!; p.NavigateWindowEdge(original, -1, 1);
+        p.Target = new EdgeMosaicTableCell { Table = p }; original.Table = null; FocusManager.Focused = null;
+        p.DispatcherQueue.Drain(); Assert(original.Activations == 0 && p.Target.Activations == 1 && ReferenceEquals(FocusManager.Focused, p.Target));
+        p = New(); original = p.Target!;
+        original.Activate = () => { p.Target = new EdgeMosaicTableCell { Table = p }; original.Table = null; FocusManager.Focused = null; };
+        p.NavigateWindowEdge(original, -1, 1); p.DispatcherQueue.Drain();
+        Assert(original.Activations == 1 && p.Target!.Activations == 0 && ReferenceEquals(FocusManager.Focused, p.Target));
+        p = New(); original = p.Target!; p.NavigateWindowEdge(original, -1, 1); p.Target = null;
+        p.DispatcherQueue.TryEnqueue(() => p.Target = new EdgeMosaicTableCell { Table = p });
+        p.DispatcherQueue.Drain(); Assert(original.Activations == 0 && p.Target!.Activations == 1);
+        p = New(); original = p.Target!; p.NavigateWindowEdge(original, -1, 1); p.Target = null;
+        p.DispatcherQueue.Drain(); Assert(original.Activations == 0);
+        p = New(); original = p.Target!; p.NavigateWindowEdge(original, -1, 1); p.NavigateWindowEdge(original, -1, 1);
+        p.DispatcherQueue.Drain(); Assert(original.Activations == 1 && p.MosaicViewportOffset == 13);
+        p = New(); var editor = new object(); original = p.Target!;
+        original.Activate = () => FocusManager.Focused = editor;
+        p.NavigateWindowEdge(original, -1, 1); p.DispatcherQueue.Drain(); Assert(ReferenceEquals(FocusManager.Focused, editor));
+        p = New(); p.DispatcherQueue.Accept = false; p.NavigateWindowEdge(p.Target!, -1, 1); Assert(p.Target!.Activations == 0);
+        p = New(); p.Target!.CanFocus = false; p.NavigateWindowEdge(p.Target, -1, 1); p.DispatcherQueue.Drain(); Assert(p.Target.Activations == 0);
+        p = New(); p.MosaicVirtualWindow = false; Assert(!p.NavigateWindowEdge(p.Target!, -1, 1));
+        p = New(); p.MosaicViewportShift = null; Assert(!p.NavigateWindowEdge(p.Target!, -1, 1));
+        p = New(); Assert(!p.NavigateWindowEdge(p.Target!, -1, 4));
+    }
+}
+}
+"#.replace("METHODS", &edge[begin..end]).replace("MATH", &edge[math_begin..math_end])).unwrap();
+        let program = fs::read_to_string(dir.join("Program.cs")).unwrap();
+        fs::write(dir.join("Program.cs"), program.replace("ViewportProbe.CheckMath();", "EdgeProbe.Check(); ViewportProbe.CheckMath();")).unwrap();
         let disabled = Command::new("dotnet").args(["run", "--project", "Probe.csproj", "-v", "quiet"]).env_remove("MOSAIC_PROFILE_PATH").current_dir(&dir).output().unwrap();
         assert!(disabled.status.success(), "{}{}", String::from_utf8_lossy(&disabled.stdout), String::from_utf8_lossy(&disabled.stderr));
         let output = Command::new("dotnet").args(["run", "--project", "Probe.csproj", "-v", "quiet"]).env("MOSAIC_PROFILE_PATH", "counter-probe").current_dir(&dir).output().unwrap();

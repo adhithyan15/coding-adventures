@@ -1,0 +1,11 @@
+{
+  "id": "JA-C261-kau-deshou",
+  "pathSegment": "JA-PATH-261-CONDITION261",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-261-CONDITION261",
+      "order": 2
+    }
+  ]
+}

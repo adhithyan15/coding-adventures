@@ -103,9 +103,11 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_digits", Lowered),
     ("f64_exp10", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
-    ("int_to_real", Refused(INTERPRETER_TIER_ONLY)),
-    ("real_to_int_trunc", Refused(INTERPRETER_TIER_ONLY)),
-    ("real_to_int_floor", Refused(INTERPRETER_TIER_ONLY)),
+    // `I64_TO_F64` / `F64_TO_I64_TRUNC` / `F64_TO_I64_FLOOR` (LANG83
+    // "Conversions on the JIT"): integer register ↔ float register.
+    ("int_to_real", Lowered),
+    ("real_to_int_trunc", Lowered),
+    ("real_to_int_floor", Lowered),
     // ── Errors ──────────────────────────────────────────────────────────────
     ("trap", Lowered),
 ];
