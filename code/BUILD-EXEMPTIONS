@@ -96,7 +96,6 @@ PENDING code/packages/python/cas-mnewton  # owned by python-cas-mnewton-build-fr
 PENDING code/packages/python/cas-ode  # owned by python-cas-ode-build-front-coverage
 PENDING code/packages/python/cdc6600-simulator  # owned by cdc6600-simulator-two-lane-classification
 PENDING code/packages/python/fpga  # owned by python-block-ram-fpga-build-front-coverage
-PENDING code/packages/python/gradient-descent  # owned by python-gradient-descent-build-front-coverage
 PENDING code/packages/python/intel8051-simulator  # owned by python-intel8051-mips-r2000-sparc-v8-build-front-coverage
 PENDING code/packages/python/mips-r2000-simulator  # owned by python-intel8051-mips-r2000-sparc-v8-build-front-coverage
 PENDING code/packages/python/pdp11-simulator  # owned by pdp11-simulator-two-lane-classification

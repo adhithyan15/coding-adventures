@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C257-noriokureru",
+    "language": "japanese",
+    "chapter": 257,
+    "sequence": 15370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d6dcaea0ebe9b1f"
+  },
+  "findings": []
+}

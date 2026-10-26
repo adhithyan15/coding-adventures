@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R260-if-it-rains",
+    "language": "japanese",
+    "chapter": 260,
+    "sequence": 15560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3d4fc78d22e394b"
+  },
+  "findings": []
+}

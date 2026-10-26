@@ -1,0 +1,11 @@
+{
+  "language": "japanese",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:7764aab169c686f6",
+  "lessonIds": [
+    "JA-C250-mita",
+    "JA-C250-katta",
+    "JA-R250-what-i-did-yesterday"
+  ],
+  "tex": "japanese/book/chapters/ch250-what-i-did-yesterday.tex"
+}

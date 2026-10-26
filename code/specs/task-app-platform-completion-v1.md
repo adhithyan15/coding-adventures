@@ -1,5 +1,15 @@
 # TaskApp platform completion v1
 
+## Selected release checkpoint: v0.5.13 (#18334)
+
+Prepare the compatible patch for the timeline-label floor merged in #18306,
+including the authoritative Unreleased toolkit dependency-pin change. Date the
+changelog 2026-10-26 and preserve substantive Fixed and Changed details.
+Preparation does not publish artifacts: only after merge, dispatch once from
+main, require every existing payload validation, and audit immutable tag,
+source, manifest, assets, and checksums before closing #18334. Artifact coverage
+and unsigned-platform boundaries remain unchanged.
+
 ## Selected fidelity slice: Qt timeline label floor (#18305)
 
 Preserve the existing 150-pixel `tl-name` width and `flex-shrink: 0` intent

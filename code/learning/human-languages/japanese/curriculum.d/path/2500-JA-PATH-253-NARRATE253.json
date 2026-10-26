@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-253-NARRATE253",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-253-NARRATE253"
+  ],
+  "after": []
+}
