@@ -407,6 +407,47 @@ struct FlagUpdate {
     value: u16,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum AllocationSite {
+    CloneState,
+    LoadMemory,
+    FetchBytes,
+    FetchWords,
+    TraceRetention,
+    FinalTraceState,
+}
+
+#[cfg(not(test))]
+fn allocation_seam(_site: AllocationSite) -> Result<(), Msp430Error> {
+    Ok(())
+}
+
+#[cfg(test)]
+thread_local! {
+    static FAIL_NEXT_ALLOCATION: std::cell::Cell<Option<AllocationSite>> = const {
+        std::cell::Cell::new(None)
+    };
+}
+
+#[cfg(test)]
+fn allocation_seam(site: AllocationSite) -> Result<(), Msp430Error> {
+    FAIL_NEXT_ALLOCATION.with(|failure| {
+        if failure.get() == Some(site) {
+            failure.set(None);
+            Err(Msp430Error::AllocationFailure)
+        } else {
+            Ok(())
+        }
+    })
+}
+
+#[cfg(test)]
+fn fail_next_allocation(site: AllocationSite) {
+    FAIL_NEXT_ALLOCATION.with(|failure| {
+        assert!(failure.replace(Some(site)).is_none());
+    });
+}
+
 impl Msp430 {
     /// Construct deterministic zeroed state.
     pub fn new() -> Self {
@@ -432,7 +473,7 @@ impl Msp430 {
     /// Restore a canonical complete state atomically.
     pub fn restore(&mut self, state: &Msp430State) -> Result<(), Msp430Error> {
         validate_state(state)?;
-        self.state = try_clone_state(state)?;
+        self.state = try_clone_state(state, AllocationSite::CloneState)?;
         Ok(())
     }
 
@@ -459,6 +500,7 @@ impl Msp430 {
             });
         }
         let mut memory = Vec::new();
+        allocation_seam(AllocationSite::LoadMemory)?;
         memory
             .try_reserve_exact(MEMORY_SIZE)
             .map_err(|_| Msp430Error::AllocationFailure)?;
@@ -518,7 +560,7 @@ impl Msp430 {
         }
         let pc_before = self.state.registers[0];
         let fetched = self.fetch()?;
-        let mut candidate = try_clone_state(&self.state)?;
+        let mut candidate = try_clone_state(&self.state, AllocationSite::CloneState)?;
         candidate.registers[0] = pc_before.wrapping_add(2);
 
         let mut source_mode = None;
@@ -566,12 +608,16 @@ impl Msp430 {
                 source_mode = Some(src_mode);
                 destination_mode = Some(dst_mode);
             }
-            Instruction::Rrc
-            | Instruction::Swpb
-            | Instruction::Rra
-            | Instruction::Sxt
-            | Instruction::Push
-            | Instruction::Call => {
+            Instruction::Rrc | Instruction::Swpb | Instruction::Rra | Instruction::Sxt => {
+                destination_mode = Some(execute_single(
+                    &mut candidate,
+                    pc_before,
+                    fetched.raw,
+                    fetched.instruction,
+                    &fetched.words[1..],
+                )?);
+            }
+            Instruction::Push | Instruction::Call => {
                 source_mode = Some(execute_single(
                     &mut candidate,
                     pc_before,
@@ -614,7 +660,7 @@ impl Msp430 {
             source_mode,
             destination_mode,
             taken,
-            state: try_clone_state(&candidate)?,
+            state: try_clone_state(&candidate, AllocationSite::FinalTraceState)?,
         };
         self.state = candidate;
         Ok(trace)
@@ -628,8 +674,9 @@ impl Msp430 {
                 maximum: MAX_TRACES,
             });
         }
-        let entry = try_clone_state(&self.state)?;
+        let entry = try_clone_state(&self.state, AllocationSite::CloneState)?;
         let mut traces = Vec::new();
+        allocation_seam(AllocationSite::TraceRetention)?;
         traces
             .try_reserve_exact(max_steps)
             .map_err(|_| Msp430Error::AllocationFailure)?;
@@ -667,7 +714,7 @@ impl Msp430 {
         origin: u16,
         max_steps: usize,
     ) -> Result<Vec<StepTrace>, Msp430Error> {
-        let entry = try_clone_state(&self.state)?;
+        let entry = try_clone_state(&self.state, AllocationSite::CloneState)?;
         self.load(program, origin)?;
         match self.run(max_steps) {
             Ok(traces) => Ok(traces),
@@ -695,10 +742,12 @@ impl Msp430 {
             });
         }
         let mut bytes = Vec::new();
+        allocation_seam(AllocationSite::FetchBytes)?;
         bytes
             .try_reserve_exact(width)
             .map_err(|_| Msp430Error::AllocationFailure)?;
         let mut words = Vec::new();
+        allocation_seam(AllocationSite::FetchWords)?;
         words
             .try_reserve_exact(1 + extensions)
             .map_err(|_| Msp430Error::AllocationFailure)?;
@@ -792,8 +841,9 @@ fn validate_state(state: &Msp430State) -> Result<(), Msp430Error> {
     }
 }
 
-fn try_clone_state(state: &Msp430State) -> Result<Msp430State, Msp430Error> {
+fn try_clone_state(state: &Msp430State, site: AllocationSite) -> Result<Msp430State, Msp430Error> {
     let mut memory = Vec::new();
+    allocation_seam(site)?;
     memory
         .try_reserve_exact(state.memory.len())
         .map_err(|_| Msp430Error::AllocationFailure)?;
@@ -1279,24 +1329,25 @@ fn execute_single(
     };
     let register = (raw & 0xf) as u8;
     let as_bits = ((raw >> 4) & 3) as u8;
-    if register == 0
-        && as_bits == 3
-        && matches!(
-            instruction,
-            Instruction::Rrc | Instruction::Rra | Instruction::Swpb | Instruction::Sxt
-        )
-    {
+    let modifies_operand = matches!(
+        instruction,
+        Instruction::Rrc | Instruction::Rra | Instruction::Swpb | Instruction::Sxt
+    );
+    if modifies_operand && register == 0 && as_bits == 3 {
         return Err(Msp430Error::UnpredictableOperand {
             pc,
             raw,
             reason: "immediate operand for modifying single-operand instruction",
         });
     }
+    if modifies_operand && (register == 3 || (register == 2 && as_bits >= 2)) {
+        return Err(Msp430Error::UnpredictableOperand {
+            pc,
+            raw,
+            reason: "constant-generator operand is source-only",
+        });
+    }
     let mut extensions = Extensions::new(extension_words);
-    let modifies_operand = matches!(
-        instruction,
-        Instruction::Rrc | Instruction::Rra | Instruction::Swpb | Instruction::Sxt
-    );
     let (source, mode, modifying_destination) = if modifies_operand {
         let destination =
             resolve_modifying_operand(state, width, register, as_bits, &mut extensions, pc, raw)?;
@@ -1379,16 +1430,9 @@ fn resolve_modifying_operand(
 ) -> Result<Destination, Msp430Error> {
     check_sr_byte(register, as_bits, width, pc, raw)?;
     let (location, mode, old) = match (register, as_bits) {
-        (3, 0) => (Location::Register(3), AddressingMode::Constant, 0),
-        (3, 1) => (Location::Register(3), AddressingMode::Constant, 1),
-        (3, 2) => (Location::Register(3), AddressingMode::Constant, 2),
-        (3, 3) => (
-            Location::Register(3),
-            AddressingMode::Constant,
-            width.mask(),
-        ),
-        (2, 2) => (Location::Register(2), AddressingMode::Constant, 4),
-        (2, 3) => (Location::Register(2), AddressingMode::Constant, 8),
+        (3, _) | (2, 2 | 3) => {
+            unreachable!("constant-generator modifying operand was rejected")
+        }
         (0, 3) => unreachable!("immediate modifying operand was rejected"),
         (0, 1) => {
             let (extension_address, extension) = extensions.take(state);
@@ -1715,17 +1759,18 @@ mod tests {
                         cpu.write_register(2, SR_C).unwrap();
                         let entry = cpu.snapshot();
                         let result = cpu.step();
-                        let modifying_immediate = register == 0
-                            && as_bits == 3
-                            && matches!(
-                                instruction,
-                                Instruction::Rrc
-                                    | Instruction::Rra
-                                    | Instruction::Swpb
-                                    | Instruction::Sxt
-                            );
+                        let modifying = matches!(
+                            instruction,
+                            Instruction::Rrc
+                                | Instruction::Rra
+                                | Instruction::Swpb
+                                | Instruction::Sxt
+                        );
+                        let modifying_immediate = modifying && register == 0 && as_bits == 3;
+                        let modifying_constant =
+                            modifying && (register == 3 || (register == 2 && as_bits >= 2));
                         let sr_byte = byte && register == 2 && as_bits == 0;
-                        if modifying_immediate || sr_byte {
+                        if modifying_immediate || modifying_constant || sr_byte {
                             assert!(matches!(
                                 result,
                                 Err(Msp430Error::UnpredictableOperand { .. })
@@ -1737,10 +1782,14 @@ mod tests {
                                     "Format II matrix failed: {instruction:?} r={register} As={as_bits} byte={byte}: {error}"
                                 )
                             });
-                            assert_eq!(
-                                trace.source_mode,
-                                Some(expected_source_mode(register, as_bits))
-                            );
+                            let expected_mode = Some(expected_source_mode(register, as_bits));
+                            if modifying {
+                                assert_eq!(trace.source_mode, None);
+                                assert_eq!(trace.destination_mode, expected_mode);
+                            } else {
+                                assert_eq!(trace.source_mode, expected_mode);
+                                assert_eq!(trace.destination_mode, None);
+                            }
                             assert_eq!(
                                 trace.width,
                                 if source_extension(register, as_bits).is_some() {
@@ -1752,6 +1801,60 @@ mod tests {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    #[test]
+    fn format_ii_constant_generator_is_source_only_and_atomic() {
+        let modifying_families = [0x1000, 0x1080, 0x1100, 0x1180];
+        let constant_forms = [(2_u8, 2_u8), (2, 3), (3, 0), (3, 1), (3, 2), (3, 3)];
+        for base in modifying_families {
+            for (register, as_bits) in constant_forms {
+                let raw = single(base, false, as_bits, register);
+                let mut cpu = loaded(&[raw, HALT_WORD]);
+                cpu.write_register(2, SR_C | SR_N | SR_V).unwrap();
+                cpu.write_memory_word(0x4000, 0xa55a).unwrap();
+                let entry = cpu.snapshot();
+                assert!(matches!(
+                    cpu.step(),
+                    Err(Msp430Error::UnpredictableOperand {
+                        reason: "constant-generator operand is source-only",
+                        ..
+                    })
+                ));
+                assert_eq!(cpu.snapshot(), entry, "raw={raw:04x}");
+            }
+        }
+
+        // The adjacent writable forms remain destinations: R2/As=01 is
+        // absolute memory and an ordinary R4 supports all four modes.
+        for (register, as_bits, extension, expected_mode) in [
+            (2_u8, 1_u8, Some(0x4000), AddressingMode::Absolute),
+            (4, 0, None, AddressingMode::Register),
+            (4, 1, Some(0), AddressingMode::Indexed),
+            (4, 2, None, AddressingMode::Indirect),
+            (4, 3, None, AddressingMode::IndirectAutoincrement),
+        ] {
+            let raw = single(0x1000, false, as_bits, register);
+            let mut program = vec![raw];
+            program.extend(extension);
+            program.push(HALT_WORD);
+            let mut cpu = seed_mode_matrix_cpu(&program);
+            let trace = cpu.step().unwrap();
+            assert_eq!(trace.source_mode, None);
+            assert_eq!(trace.destination_mode, Some(expected_mode));
+        }
+
+        // All six generator encodings remain legal sources for PUSH and CALL.
+        for base in [0x1200, 0x1280] {
+            for (register, as_bits) in constant_forms {
+                let raw = single(base, false, as_bits, register);
+                let mut cpu = loaded(&[raw, HALT_WORD]);
+                cpu.write_register(1, 0x4000).unwrap();
+                let trace = cpu.step().unwrap();
+                assert_eq!(trace.source_mode, Some(AddressingMode::Constant));
+                assert_eq!(trace.destination_mode, None);
             }
         }
     }
@@ -2340,6 +2443,69 @@ mod tests {
         assert_eq!(traces.len(), 2);
         assert_eq!(other.read_register(4).unwrap(), 1);
         assert!(other.snapshot().halted);
+    }
+
+    #[test]
+    fn allocation_failure_seams_are_deterministic_and_atomic() {
+        let halt = words(&[HALT_WORD]);
+
+        let mut load_cpu = Msp430::new();
+        load_cpu.write_register(4, 0xa55a).unwrap();
+        load_cpu.write_memory_byte(0x4000, 0x5a);
+        let load_entry = load_cpu.snapshot();
+        fail_next_allocation(AllocationSite::LoadMemory);
+        assert_eq!(
+            load_cpu.load(&halt, 0x0200),
+            Err(Msp430Error::AllocationFailure)
+        );
+        assert_eq!(load_cpu.snapshot(), load_entry);
+
+        let mut restore_cpu = loaded(&[HALT_WORD]);
+        restore_cpu.write_register(4, 0x1111).unwrap();
+        let restore_entry = restore_cpu.snapshot();
+        let mut replacement = Msp430State::default();
+        replacement.registers[4] = 0x2222;
+        fail_next_allocation(AllocationSite::CloneState);
+        assert_eq!(
+            restore_cpu.restore(&replacement),
+            Err(Msp430Error::AllocationFailure)
+        );
+        assert_eq!(restore_cpu.snapshot(), restore_entry);
+
+        for site in [
+            AllocationSite::CloneState,
+            AllocationSite::FetchBytes,
+            AllocationSite::FetchWords,
+            AllocationSite::FinalTraceState,
+        ] {
+            let mut cpu = loaded(&[single(0x1000, false, 0, 4), HALT_WORD]);
+            cpu.write_register(4, 0x8001).unwrap();
+            let entry = cpu.snapshot();
+            fail_next_allocation(site);
+            assert_eq!(cpu.step(), Err(Msp430Error::AllocationFailure));
+            assert_eq!(cpu.snapshot(), entry, "site={site:?}");
+        }
+
+        let mut run_cpu = loaded(&[HALT_WORD]);
+        let run_entry = run_cpu.snapshot();
+        fail_next_allocation(AllocationSite::TraceRetention);
+        assert_eq!(run_cpu.run(1), Err(Msp430Error::AllocationFailure));
+        assert_eq!(run_cpu.snapshot(), run_entry);
+
+        let mut execute_cpu = Msp430::new();
+        execute_cpu.write_register(4, 0xfeed).unwrap();
+        execute_cpu.write_memory_byte(0x4000, 0xaa);
+        let execute_entry = execute_cpu.snapshot();
+        fail_next_allocation(AllocationSite::FinalTraceState);
+        let error = execute_cpu.execute(&halt, 0x0200, 1).unwrap_err();
+        assert!(matches!(
+            error,
+            Msp430Error::ExecutionFailed {
+                source,
+                ..
+            } if *source == Msp430Error::AllocationFailure
+        ));
+        assert_eq!(execute_cpu.snapshot(), execute_entry);
     }
 
     #[test]

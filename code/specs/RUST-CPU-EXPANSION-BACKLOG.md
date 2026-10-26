@@ -90,7 +90,7 @@ merged, while Cortex-M33 is already in review.
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
-| 15 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Functional cell complete locally: source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core; independent review/publication is next. MSP430X, peripherals, clocks, power, and timing stay outside this cell. |
+| 15 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Functional cell repaired locally: source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core, source-only constant-generator enforcement, exact Format II trace roles, and injected allocation rollback; independent re-review/publication is next. MSP430X, peripherals, clocks, power, and timing stay outside this cell. |
 
 MSP430 follows Xtensa rather than displacing an active item. TI's public
 SLAU144K chapter 3 gives a complete classic encoding, addressing, flag, and
@@ -103,10 +103,11 @@ silicon topology nor peripheral behavior is inferred.
 The completed local functional cell exhaustively classifies all 65,536 first
 words, spans every Format I and II register/addressing/width combination, all
 N/Z/C/V jump inputs, exhaustive byte ADD/SUB-with-carry/borrow and packed-BCD
-domains, and typed complete-state lifecycle rollback. Twenty-three release
+domains, source-only constant-generator destinations, and typed complete-state
+lifecycle/allocation rollback. Twenty-five release
 unit tests and one doctest, strict Clippy/rustdoc, the package BUILD, lessons
-validation, and all-target release package-source line coverage of 98.46%
-(1,664/1,690; `cargo llvm-cov -p msp430-simulator --all-targets --release
+validation, and all-target release package-source line coverage of 98.56%
+(1,777/1,803; `cargo llvm-cov -p msp430-simulator --all-targets --release
 --summary-only`) are green.
 
 ## Discovered follow-up work

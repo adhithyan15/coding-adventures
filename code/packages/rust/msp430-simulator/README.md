@@ -5,6 +5,11 @@ pinned to the classic core in the MSP430F2274. It implements all 27 encoded
 classic instruction families, every documented source and destination mode,
 constant generation, little-endian byte/word memory, stack and control flow,
 typed atomic lifecycle operations, and complete post-state traces.
+The R2/R3 constant-generator encodings are source-only: `PUSH` and `CALL`
+accept them, while modifying Format II operations reject them without exposing
+candidate state. Traces likewise distinguish modifying destination modes from
+`PUSH`/`CALL` source modes. Deterministic test-only allocation seams prove
+rollback at clone, load, fetch, retained-trace, and final-state boundaries.
 
 The bounded contract is defined by
 [`07ba-msp430-classic-simulator.md`](../../../specs/07ba-msp430-classic-simulator.md).

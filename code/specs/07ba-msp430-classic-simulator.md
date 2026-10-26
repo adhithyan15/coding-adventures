@@ -7,9 +7,11 @@ This specification defines a checked instruction-level model of the original
 **MSP430F2274**. It is intentionally not an MSP430X, MSP430Xv2, or complete
 MSP430F2274 microcontroller model.
 
-**Status:** bounded functional implementation complete locally; independent
-exact-head implementation review passed at
-`773306da5ffff15ce684842f06ac4c63e12ca5a2`; publication remains pending.
+**Status:** bounded functional implementation repaired locally after a
+post-review constant-generator/trace-role/allocation-evidence audit; a new
+independent exact-head implementation review is required before publication.
+The earlier review at `773306da5ffff15ce684842f06ac4c63e12ca5a2` is
+superseded by this repair.
 The exact reviewed spec-only head was
 `4e750ba3abfc7e3a2dc794c7fc2aefe81bc0554f`.
 
@@ -238,6 +240,11 @@ The included Format II families are `RRC[.B]`, `SWPB`, `RRA[.B]`, `SXT`,
 B/W bit set are `UnknownInstruction`. The manual permits immediate operands
 for `PUSH` and `CALL` but declares immediate `RRC`, `RRA`, `SWPB`, and `SXT`
 unpredictable; those exact forms return `UnpredictableOperand` atomically.
+SLAU144K section 3.2.4 further defines the R2/R3 constant-generator modes as
+source-only. Every R3/As=00..11 and R2/As=10..11 form is therefore legal for
+`PUSH`/`CALL` but is rejected atomically for modifying `RRC`, `RRA`, `SWPB`,
+and `SXT`. The neighboring writable R2/As=00 SR and R2/As=01 absolute forms
+remain destinations subject to the ordinary width and alignment rules.
 
 Stack arithmetic is 16-bit modulo arithmetic. Each word transfer must still be
 even and individually valid. Because the model owns the complete 16-bit
@@ -284,7 +291,9 @@ Every successful step trace contains:
 - exact original fetched bytes in address order and raw word(s);
 - width in bytes (2, 4, or 6);
 - stable uppercase core mnemonic and operand-width marker;
-- source and destination addressing classifications;
+- source and destination addressing classifications: Format I reports both,
+  modifying `RRC`/`RRA`/`SWPB`/`SXT` report only `destination_mode`, and
+  `PUSH`/`CALL` report only `source_mode`;
 - taken/not-taken for jumps; and
 - the complete post-state.
 
@@ -299,6 +308,13 @@ instruction, misaligned instruction/data, unknown instruction, unpredictable
 operand, undefined BCD operand, halted execution, trace limit, exhausted step
 budget, and allocation failure. Errors carry the relevant PC/address/raw
 word/reason and have nonempty stable display text.
+
+Deterministic test-only allocation seams cover complete-state cloning, load
+memory ownership, fetched-byte retention, fetched-word retention, bounded run
+trace retention, and the final complete post-state stored in a trace. Each
+seam fails immediately before its corresponding real fallible reserve/clone
+boundary and is consumed once. Tests require exact complete-state rollback for
+the public operation that observes every injected `AllocationFailure`.
 
 Fault priority is: halted; installed-image/PC fetch validation; complete
 instruction fetch; exact decode and fixed-bit validation; unpredictable or
@@ -346,7 +362,8 @@ The functional cell is complete only when it has all of the following:
    destination `Ad`/register, byte/word width, extension count/order, constant-
    generator value, PC-relative extension base, and representative alias;
 3. Format II matrices for every legal addressing mode, byte/word restriction,
-   immediate-unpredictable form, stack/PC/SP alias order, and exact RETI;
+   immediate-unpredictable and constant-generator-source-only forms, exact
+   source/destination trace roles, stack/PC/SP alias order, and exact RETI;
 4. exhaustive jump conditions over N/Z/C/V and signed displacement boundaries
    -512, -511, -1, 0, +1, +511 (encoded word offsets), including 16-bit wrap;
 5. independent 8- and 16-bit flag oracles for arithmetic/logic/shift, carry and
