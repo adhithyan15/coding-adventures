@@ -439,7 +439,7 @@ fn a_tower_of_wrappers_does_not_exhaust_a_small_stack() {
                 .iter()
                 .map(|i| i.op.as_str())
                 .collect();
-            assert_eq!(ops, ["const", "ret_void"]);
+            assert_eq!(ops, ["const", "const", "ret"]);
         })
         .unwrap()
         .join()
