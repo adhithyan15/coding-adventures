@@ -136,8 +136,8 @@ does not gate it).
 | | `putchar` | Builtin | Exists | Low byte of the argument. |
 | | `print_str` | Op | Exists | String bytes, no newline. |
 | | `write_i64` | Builtin | PR1b | Decimal value, **no** newline (Perl `print`, Python `end=""`). |
-| | `write_f64_py` | Builtin | PR6a | **Removed by PR7e** (language-specific). Python `repr(float)` (= `str` = what `print` writes), **no** newline: shortest round-trip digits; fixed notation when the decimal exponent `e` satisfies `-4 <= e < 16`, else `d.ddde±XX` (at least two exponent digits); integral values keep `.0`; `-0.0`, `inf`, `-inf`, `nan`. |
-| | `write_f64_js` | Builtin | PR6a | **Removed by PR7e** (language-specific). JavaScript `Number.prototype.toString()` (what `console.log` writes for a number), **no** newline: the same digits; fixed when `-7 < e < 21`, else `d.ddde±X` (no padding); integral values print bare (`1`, not `1.0`); `-0` → `0`, `Infinity`, `-Infinity`, `NaN`. |
+| | `write_f64_py` | Builtin | PR6a | **Removed in PR7e** (language-specific). Python `repr(float)` (= `str` = what `print` writes), **no** newline: shortest round-trip digits; fixed notation when the decimal exponent `e` satisfies `-4 <= e < 16`, else `d.ddde±XX` (at least two exponent digits); integral values keep `.0`; `-0.0`, `inf`, `-inf`, `nan`. |
+| | `write_f64_js` | Builtin | PR6a | **Removed in PR7e** (language-specific). JavaScript `Number.prototype.toString()` (what `console.log` writes for a number), **no** newline: the same digits; fixed when `-7 < e < 21`, else `d.ddde±X` (no padding); integral values print bare (`1`, not `1.0`); `-0` → `0`, `Infinity`, `-Infinity`, `NaN`. |
 | | `write_f64_rb` | Builtin | Later | **Withdrawn by PR7**: the Ruby compiler emits a helper. Ruby `Float#to_s` (fixed when `-4 <= e < 16`, `1.0e+16` style otherwise). |
 | Strings | `str_const` `str_len` `str_index` `str_slice` `str_concat` `str_eq` `str_cmp` | Op | Exists | LANG-FULL E4 byte strings; `str_index`/`str_slice` out of range → `Trap.Bounds`. |
 | Errors | `trap` | Op | PR1b | Terminator; no dest; `srcs = [Str(kind)]` with `kind` from the closed table below. |
@@ -641,6 +641,18 @@ all of them. CLR and BEAM run in CI.
 
 ## PR6a — shortest round-trip float output
 
+> **History.** This section records what PR6a built. LANG83 PR7e removed the
+> two builtins it describes, `write_f64_py` and `write_f64_js`: each named a
+> source language and carried that language's layout into all nine backends,
+> which "PR7 — language neutrality" rules out. What survives is the digit
+> core below ("The digits", and the "Digits from" column of the per-backend
+> table). Since PR7b each backend exposes it as `f64_class`, `f64_digits` and
+> `f64_exp10`; since PR7c-js / PR7c-py the two layouts live in the compilers,
+> as javascript-iir-compiler's `__js_write_number` and python-iir-compiler's
+> `__py_write_float`. The 90-value table under "Conformance cases" stays the
+> oracle; `op_conformance` now prints it through those helpers. See "What
+> PR7e landed".
+
 Python's `print(x)` and JavaScript's `console.log(x)` for a float both print
 the **shortest** decimal string that reads back as exactly `x`. They agree on
 the digits and disagree on the layout. PR6a adds one output builtin per
@@ -780,9 +792,11 @@ Two more cases cover output that is not a table:
 - One prints computed floats (`0.1 + 0.2`, `int_to_real 7`), not only
   constants.
 
-The gate `pr6a_ops_are_lowered_on_every_backend` pins that all nine backends
-lower both builtins. It also requires both table cases to pass on every
-executable column whose toolchain is present.
+The gate `pr6a_ops_are_lowered_on_every_backend` pinned that all nine backends
+lower both builtins. It also required both table cases to pass on every
+executable column whose toolchain is present. (PR7e replaced it with
+`pr7e_float_writers_are_gone_and_the_layouts_run_everywhere`, which runs the
+same table through the compilers' helpers.)
 
 Local evidence and its limits are those of PR4: native x86-64, LLVM (clang),
 WASM, JVM (JDK 21), VM and JIT execute every case. Beyond the 90-value table,
@@ -946,7 +960,9 @@ direct `iir-to-beam` caller that skips `lang-aot` gets the same refusal.
   result printed with `write_f64_js` and — except for the NaN rows, whose
   sign is unspecified — its sign with `write_i64`: on the eight IEEE columns
   this checks `Infinity`, `-Infinity`, `NaN`, signed zeros and overflow. BEAM
-  is covered by `refused_ops_are_rejected_at_compile_time`.
+  is covered by `refused_ops_are_rejected_at_compile_time`. (Since PR7e,
+  which removed `write_f64_js`, each result is printed as `f64_class`,
+  `f64_digits` and `f64_exp10` instead; the aliasing case likewise.)
 - **Sign bit.** `f64_signbit` of `-0`, `0`, `-2.5`, `2.5`, the smallest
   subnormals of both signs and `±1.7976931348623157e308`, built from constants
   only, so the case is lowered on all nine backends (BEAM included).
@@ -1032,8 +1048,8 @@ With helpers, a new language's float output changes no backend at all.
 
 | Item | Where | Emitted by | Verdict and replacement |
 | --- | --- | --- | --- |
-| `write_f64_py` | `op_registry.rs` (PR6a, Builtin); lowered by all nine backends: `vm_core::float_format::python_repr`, jit-core `CALL_BUILTIN_F64`, `twig_runtime.c` `__twig_write_f64_py`, iir-to-llvm / iir-to-wasm `lang83_f64.rs` / iir-to-jvm-class-file / iir-to-cil-bytecode / iir-to-beam `__iir_write_f64(x, layout)` | python-iir-compiler (release path) | **Language-specific** (Python `repr` layout). Replaced by `f64_class` + `f64_digits` + `f64_exp10` and a compiler-emitted helper (below). Removed in PR7e. |
-| `write_f64_js` | same, layout 1 | javascript-iir-compiler 0.6 | **Language-specific** (`Number::toString` layout). Same replacement. |
+| `write_f64_py` | `op_registry.rs` (PR6a, Builtin); lowered by all nine backends: `vm_core::float_format::python_repr`, jit-core `CALL_BUILTIN_F64`, `twig_runtime.c` `__twig_write_f64_py`, iir-to-llvm / iir-to-wasm `lang83_f64.rs` / iir-to-jvm-class-file / iir-to-cil-bytecode / iir-to-beam `__iir_write_f64(x, layout)` | python-iir-compiler (release path) | **Language-specific** (Python `repr` layout). Replaced by `f64_class` + `f64_digits` + `f64_exp10` and a compiler-emitted helper (below). *Removed in PR7e* (registry, all nine backends, vm-core's default builtins, the harness sinks). |
+| `write_f64_js` | same, layout 1 | javascript-iir-compiler 0.6 | **Language-specific** (`Number::toString` layout). Same replacement. *Removed in PR7e.* |
 | `write_f64_rb`, `f64_to_str_py` `_js` `_rb` `_pl` | vocabulary table, `Later` | none | **Language-specific by design.** Never registered. Ruby `Float#to_s` uses the same three ops. Perl `%.15g` and Python 2 / 3.0a1 `%.12g` use `f64_digits_prec` (below, `Later`). String-producing formatting becomes a helper that appends to a runtime string once a neutral byte-append string op exists (PR5 family). |
 | `Trap.ReferenceError` (id 7) | `exception_kind.rs`, `twig_runtime.c` kind table, this spec | javascript-iir-compiler | **Language-named.** The condition, reading an unbound name, is neutral (Python `NameError`, a Lisp unbound variable). Renamed `Trap.Unbound`, keeping **id 7**, in PR7d. *Landed.* |
 | `LANGUAGE_TRAP_KINDS` (empty) | `exception_kind.rs`, "Trap semantics" above, LANG84 C7.4 | none | **A language-specific mechanism** (`Ruby.ZeroDivisionError`). Retired in PR7d. A compiler maps a language's error onto a neutral kind. A catchable language exception is a value the frontend builds once AOT00 T2 exceptions land; it is never an IIR trap kind. *Landed:* the table, `LANGUAGE_TRAP_KIND_ID_BASE` and `is_registered_trap_kind` are gone. |
@@ -1044,7 +1060,7 @@ With helpers, a new language's float output changes no backend at all.
 | `print_i64`, `putchar`, `getchar`, `print_str`, `write_i64`, `str_*`, `i64_*`, `cmp_*`, `f64_*` arithmetic and math, `int_to_real`, `real_to_int_*`, `trap`, `Trap.Bounds` … `Trap.User` | registry | many | **Neutral.** They stay. `print_i64` appends `\n`, a convenience every integer-printing frontend uses; it is not a language rule. |
 | `input_i64`, `input_more`, `input_str`, `getchar` | lang-aot harnesses, flow-matic and brainfuck compilers | flow-matic, brainfuck | **Neutral but unregistered.** Registered with honest `op_support` in PR7h. |
 | `print`, `double`, `noop`, `assert_eq` | `vm-core/src/builtins.rs` defaults | tests and doc examples | Neutral test fixtures. Out of scope: no frontend emits them and the registry does not gate them. |
-| `__twig_write_i64`, `__twig_trap`, `__twig_write_f64_*` | native runtime symbols in `twig_runtime.c` | backends, not frontends | A historical **symbol** prefix. The runtime is language-neutral. `__twig_write_f64_*` disappears in PR7e, and renaming the rest is cosmetic. |
+| `__twig_write_i64`, `__twig_trap`, `__twig_write_f64_*` | native runtime symbols in `twig_runtime.c` | backends, not frontends | A historical **symbol** prefix. The runtime is language-neutral. `__twig_write_f64_*` disappears in PR7e (*landed*), and renaming the rest is cosmetic. |
 
 ### The neutral float primitives
 
@@ -1408,6 +1424,95 @@ column.
 - The `es-number-log` corpus has no failing case, so no release-sweep
   module changed and `release_classes.csv` is unchanged.
 
+**What PR7e landed, and where it diverged from the plan above.**
+
+- *The registry.* `write_f64_py` and `write_f64_js` are gone from
+  `STANDARD_OPS`, with `LANG83_PR6A` and `OpSpec::is_pr6a`. Nothing emitted
+  them: both release frontends print with their own helpers since PR7c, and
+  no other frontend or compiler in the repository named them. (The LANG79
+  Python pilot's `py_*` builtins are separate, unregistered and PR7g's.)
+- *All nine backends.* Each drops both rows from its `OP_SUPPORT` and the
+  writer half of its float code, and keeps the PR6a digit core behind
+  `f64_digits` / `f64_exp10`. A module that still calls a writer is refused
+  at compile time on every code-generation backend (an unknown builtin) and
+  fails on the VM (no such builtin), so it never compiles into a call that
+  nothing defines.
+  - VM: vm-core's default builtins, `FloatLayout`, `format_f64`,
+    `python_repr` and `js_to_string` are removed; `shortest_digits` and the
+    three query functions stay.
+  - JIT: `CALL_BUILTIN_F64` (0x51) is removed and the byte stays unassigned,
+    so stale bytecode naming it is an unknown opcode. A `call_builtin` of a
+    float register now refuses the function like any other non-float use.
+    The layout helpers' call-free functions compile, as before.
+  - Native: `__twig_write_f64_py` / `_js` and the C layout leave
+    `twig_runtime.c`; the x86-64 and AArch64 builtin tables drop both names.
+  - LLVM / WASM: the writer halves of `lang83_f64.rs` (`@__iir_write_f64`;
+    `$__iir_write_f64` and its two `putchar` helpers) are removed. The digit
+    core never imported `putchar`, so the WASM module of a digit query
+    imports nothing for it.
+  - JVM / CLR / BEAM: `__iir_write_f64` is removed; `__iir_f64_shortest` and
+    the digit and exponent queries stay. *Divergence:* BEAM also stops
+    interning the writer's own imports (`lists:duplicate/2`,
+    `lists:nthtail/2`, `erlang:integer_to_list/1`) and literals, and the
+    shared parse's frame shrinks from 10 to 8 Y slots, the two the writer
+    alone read.
+- *The no-language-names test.* `op_registry::language_name_violation`
+  splits a name on `_` and `.` and refuses a part that is in
+  `LANGUAGE_TOKENS` (ignoring case) or ends in `error` or `exception`.
+  `no_registry_name_or_trap_kind_names_a_language` runs it over every
+  `STANDARD_OPS` name and every `exception_kind` name, and
+  `the_language_name_rule_rejects_the_retired_names` pins `write_f64_py`,
+  `write_f64_js`, `py_print_float`, `Trap.ReferenceError`,
+  `Ruby.ZeroDivisionError` and others. vm-core's
+  `default_builtins_name_no_language` covers every default builtin (through
+  the new `BuiltinRegistry::names()`), and `lang-aot`'s `lang_matrix` VM and
+  JIT runners and `op_conformance` runners check every builtin they register
+  on every run (`GenericCirJit::builtin_names()` is new for the JIT side).
+  *Divergences:* the exception-class half is a shape rule, not a list:
+  any part ending in `error` or `exception` is refused, which catches
+  `ReferenceError`, `NameError` and `ZeroDivisionError` and every class
+  named the same way, and costs nothing, since a trap kind names a
+  condition. The token list leaves out the languages whose names are
+  ordinary words (`Oct`, `Nib`, `REDUCE`, `Derive`), so that a neutral op
+  such as `i64_to_oct` or `vec_reduce` stays possible.
+- *Harnesses.* The `write_f64_js` / `write_f64_py` sinks are gone from
+  `lang_matrix`'s VM runner and both halves of its JIT runner, and from
+  `op_conformance`'s. Every `lang_matrix` row prints what it printed before.
+- *Conformance: the PR6a table stays the oracle.* The two writer table
+  cases became four helper cases: each layout's helper, taken verbatim from
+  the module its compiler produces for a one-print program, prints the
+  finite rows (all nine backends; BEAM compile-checked) and, separately,
+  `±Infinity` and NaN (the eight IEEE backends). Each expects the PR6a
+  strings, which `float_table_matches_host_python3_and_node` still re-checks
+  against host `python3` and `node`. So every value the writer tables
+  covered is still checked byte for byte, in both layouts, on every column.
+  The ordered-stream and computed-float cases print through the helpers too,
+  and so does the PR7b linked-runtime regression case. The gate
+  `pr7e_float_writers_are_gone_and_the_layouts_run_everywhere` replaces
+  `pr6a_ops_are_lowered_on_every_backend`.
+  - *Divergence: the JIT column.* A helper case's `main` makes a `call`,
+    which the generic JIT has no bytecode for, so the runner now requires
+    every **call-free** function to be JIT-compiled (`main` for every other
+    case, the digit counter and digit writer for a helper case) and, when
+    the output holds a digit, that a compiled function actually ran (its
+    `exec_count`).
+  - *Divergence: PR6c.* The IEEE cases printed their results with
+    `write_f64_js`. They now print `class digits exp10` and the sign bit
+    with `write_i64` (`-Infinity` is `2 0 0 1`, `-0` is `0 0 0 1`), which
+    keeps their `main` call-free, so the JIT column still runs the IEEE ops
+    as compiled bytecode. The backends' own PR6c tests do the same.
+- *Frontend oracles.* The JavaScript and Python crates compared their
+  helpers, over 1,200 and 1,248 values, with vm-core's `format_f64` /
+  `python_repr`. Each now carries the layout as a small Rust oracle over
+  `vm_core::float_format::shortest_digits`, pinned to host `node` /
+  `python3` strings.
+- *No IIR changed.* No frontend's output changed, so no IIR digest and no
+  `release_classes.csv` changed.
+- Only `interpreter-ir` is in `twig-vm`'s dependency graph (`cargo tree -p
+  twig-vm -i <crate>`); vm-core, jit-core and the backends are not, despite
+  the note below. The local Miri script applies because of
+  `interpreter-ir`.
+
 ### Migration, as a PR sequence
 
 Each PR keeps main green on all nine columns. None removes an op while
@@ -1449,7 +1554,8 @@ anything still emits it.
    (`ReferenceError`, `NameError`, `ZeroDivisionError`). Rewrite PR6a's
    section as history and point it here. The Lisp-vocabulary `dyn_*`
    names are unregistered until PR7f, so the test covers them when PR7f
-   registers them under their new names.
+   registers them under their new names. *Landed;* see "What PR7e landed"
+   under "Other replacements".
 7. **PR7f — Lisp-family neutrality.** Register the representation
    primitives, rename the Lisp-vocabulary `dyn_*`, and move
    truthiness/`equal?`/`not`/exit-code into compiler helpers. Move
@@ -1463,8 +1569,9 @@ anything still emits it.
 9. **PR7h — register `getchar`, `input_i64`, `input_more`, `input_str`**
    with honest `op_support`.
 
-PR7b–PR7e touch `iir-to-*`, `jit-core` and `vm-core`, which `twig-vm`
-depends on, so each runs the local Miri script per CLAUDE.md.
+PR7b–PR7e touch `interpreter-ir`, which `twig-vm` depends on, so each runs
+the local Miri script per CLAUDE.md. (`iir-to-*`, `jit-core` and `vm-core`
+are not in `twig-vm`'s graph.)
 
 ## What PR1a deliberately does not do
 

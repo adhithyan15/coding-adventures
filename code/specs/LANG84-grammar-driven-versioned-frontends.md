@@ -1627,7 +1627,8 @@ Divergences from this spec in 5b/7b slice 2:
    the JIT's interpreter tier; the JIT test above became
    `javascript_rows_run_with_their_call_free_number_helpers_compiled_by_the_jit`.
    The rows' output and columns are unchanged (LANG83 "What PR7c-js
-   landed").
+   landed"). LANG83 PR7e then removed `write_f64_js` from the registry and
+   all nine backends; the rows did not change (LANG83 "What PR7e landed").
 6. **Later.** E7 goals replace the F10 approximation for full JavaScript.
 
 ### Twig and McCarthy Lisp: rewrite to walk `GrammarASTNode`
@@ -2591,7 +2592,9 @@ their columns. A float row's `main` now calls a function, so it runs on
 the JIT's interpreter tier; the two call-free helpers compile
 (`python_float_rows_run_with_their_call_free_float_helpers_compiled_by_the_jit`).
 The release runner's step budget is now derived from the IIR limit and a
-measured 700-step dearest print (LANG83 "What PR7c-py landed").
+measured 700-step dearest print (LANG83 "What PR7c-py landed"). LANG83 PR7e
+then removed `write_f64_py` from the registry and all nine backends; no row
+and no digest changed (LANG83 "What PR7e landed").
 
 ### Wire every IIR frontend into lang-aot
 
