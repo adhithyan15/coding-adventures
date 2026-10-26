@@ -37,6 +37,7 @@ fn optimized_equal_length_scan_retains_full_volatile_loop() {
         .arg("--crate-type=lib")
         .arg("--edition=2021")
         .arg("-Copt-level=3")
+        .arg("-Csymbol-mangling-version=v0")
         .arg("--emit=llvm-ir")
         .arg(&source)
         .arg("-o")
@@ -52,11 +53,27 @@ fn optimized_equal_length_scan_retains_full_volatile_loop() {
 
     let ir = fs::read_to_string(&output).expect("rustc must emit readable LLVM IR");
     fs::remove_file(&output).expect("temporary LLVM IR should be removable");
-    let scan = function_body(&ir, "ct_eq_equal_length17h");
+    let scan = rust_function_body(&ir, "ct_compare_codegen_fixture::ct_eq_equal_length");
 
     assert_full_scan_loop(scan).unwrap_or_else(|reason| {
         panic!("optimized equality scan lost its full volatile loop: {reason}\n\n{scan}")
     });
+}
+
+#[test]
+fn rust_function_discovery_is_platform_independent() {
+    let ir = concat!(
+        "; ct_compare_codegen_fixture::ct_eq_equal_length\r\n",
+        "; Function Attrs: noinline\r\n",
+        "define i1 @__RNvCs_platform_specific_symbol(ptr %a.0, i64 %a.1, ptr %b.0, i64 %b.1) {\r\n",
+        "start:\r\n",
+        "  ret i1 true\r\n",
+        "}\r\n",
+    );
+
+    let function = rust_function_body(ir, "ct_compare_codegen_fixture::ct_eq_equal_length");
+    assert!(function.starts_with("define i1 @__RNvCs_platform_specific_symbol"));
+    assert!(function.ends_with("\n}"));
 }
 
 #[test]
@@ -330,16 +347,28 @@ fn assert_full_scan_loop(scan: &str) -> Result<(), String> {
     Ok(())
 }
 
-fn function_body<'a>(ir: &'a str, symbol_fragment: &str) -> &'a str {
-    let symbol = ir
-        .find(symbol_fragment)
-        .unwrap_or_else(|| panic!("optimized IR did not contain {symbol_fragment}"));
-    let definition = ir[..symbol]
-        .rfind("define ")
-        .expect("symbol must occur in a function definition");
-    let end = ir[symbol..]
+fn rust_function_body<'a>(ir: &'a str, rust_name: &str) -> &'a str {
+    // Rust emits a demangled source-level name immediately before each LLVM
+    // function definition. Anchor to that comment instead of to the ABI symbol:
+    // the legacy `_ZN...17h...E` and v0/platform-specific manglings differ.
+    let marker = format!("; {rust_name}");
+    let marker_start = ir
+        .match_indices(&marker)
+        .find_map(|(offset, _)| {
+            let at_line_start = offset == 0 || ir.as_bytes().get(offset - 1) == Some(&b'\n');
+            let after = offset + marker.len();
+            let at_line_end = matches!(ir.as_bytes().get(after), Some(b'\r' | b'\n'));
+            (at_line_start && at_line_end).then_some(offset)
+        })
+        .unwrap_or_else(|| panic!("optimized IR did not identify {rust_name}"));
+    let after_marker = marker_start + marker.len();
+    let definition_offset = ir[after_marker..]
+        .find("define ")
+        .unwrap_or_else(|| panic!("optimized IR did not define {rust_name}"));
+    let definition = after_marker + definition_offset;
+    let end = ir[definition..]
         .find("\n}")
-        .map(|offset| symbol + offset + 2)
+        .map(|offset| definition + offset + 2)
         .expect("function definition must have a closing brace");
     &ir[definition..end]
 }
