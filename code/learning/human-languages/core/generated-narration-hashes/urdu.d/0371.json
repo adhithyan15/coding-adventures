@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:c67a72245a59418d",
+  "lessonIds": [
+    "UR-C371-buhran",
+    "UR-C371-zahr",
+    "UR-C371-jan-leva",
+    "UR-C371-risna",
+    "UR-C371-phatna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch371.txt",
+  "json": "urdu/narration/ch371.json",
+  "textHash": "fnv1a64:47e776f5d4e28ef1",
+  "jsonHash": "fnv1a64:be47bf16471d58ef",
+  "findings": []
+}

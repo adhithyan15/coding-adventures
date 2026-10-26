@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Prizes and Rewards",
+  "label": "ch:ur-prizes-and-rewards",
+  "canDo": "I can say what someone will win if they do well.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C382-sanvarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can say what someone will win if they do well.",
+    "assesses": [
+      "UR-LEX-C382-INAM382-03",
+      "UR-LEX-C382-INAM382-04",
+      "UR-LEX-C382-INAM382-05"
+    ]
+  }
+}

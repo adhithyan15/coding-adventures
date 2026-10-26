@@ -1,0 +1,11 @@
+{
+  "id": "UR-C348-phuslana",
+  "pathSegment": "UR-PATH-348-ETIRAZ348",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-348-ETIRAZ348",
+      "order": 4
+    }
+  ]
+}

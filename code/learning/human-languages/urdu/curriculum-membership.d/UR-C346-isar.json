@@ -1,0 +1,11 @@
+{
+  "id": "UR-C346-isar",
+  "pathSegment": "UR-PATH-346-KHIDMAT346",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-346-KHIDMAT346",
+      "order": 1
+    }
+  ]
+}

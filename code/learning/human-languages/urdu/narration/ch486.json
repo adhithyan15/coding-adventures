@@ -1,0 +1,841 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 486,
+  "title": "Growing Up",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1b7790882a949568",
+  "lessons": [
+    {
+      "id": "UR-C486-umr",
+      "sequence": 28350,
+      "title": "عمر (umr) — age",
+      "headword": "عمر",
+      "romanization": "umr",
+      "gloss": "age",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c662e2c6a80cbe6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to be brought up, then the Urdu for to dress (someone)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عمر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عمر — umr — \"age\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میری بہن کی عمر دس سال ہے۔ merī bahan kī umr das sāl hai. My sister is ten years old."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عمر (umr) is usually traced, through Persian, to Arabic ʿumr, \"life, a lifetime\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī bahan kī umr das sāl hai. — My sister is ten years old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī bahan kī umr das sāl hai.* — My sister is ten years old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to be brought up, then the Urdu for to dress (someone), then say umr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to be brought up, then the Urdu for to dress (someone), then say *umr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عمر (umr) mean? (\"Age\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C486-baligh",
+      "sequence": 28360,
+      "title": "بالغ (bāligh) — of age; adult",
+      "headword": "بالغ",
+      "romanization": "bāligh",
+      "gloss": "of age; adult",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ec8e4dbe83a9eeb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to dress (someone), then the Urdu for age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بالغ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بالغ — bāligh — \"of age; adult\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اٹھارہ سال کی عمر میں انسان بالغ ہوتا ہے۔ aṭhārah sāl kī umr meṅ insān bāligh hotā hai. A person comes of age at eighteen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بالغ (bāligh) is usually traced, through Persian, to Arabic bāligh, \"reaching maturity\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāligh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāligh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāligh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāligh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭhārah sāl kī umr meṅ insān bāligh hotā hai. — A person comes of age at eighteen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭhārah sāl kī umr meṅ insān bāligh hotā hai.* — A person comes of age at eighteen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to dress (someone), then the Urdu for age, then say bāligh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to dress (someone), then the Urdu for age, then say *bāligh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بالغ (bāligh) mean? (\"Of age; adult\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C486-iklauta",
+      "sequence": 28370,
+      "title": "اکلوتا (iklautā) — only (of a child)",
+      "headword": "اکلوتا",
+      "romanization": "iklautā",
+      "gloss": "only (of a child)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33034589d844e8f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for age, then the Urdu for of age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اکلوتا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اکلوتا — iklautā — \"only (of a child)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وہ اپنے ماں باپ کا اکلوتا بیٹا ہے۔ voh apne māṅ bāp kā iklautā beṭā hai. He is his parents' only son."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اکلوتا (iklautā) is inherited from ēkkalaputra, \"an only son\", a form CDIAL reconstructs from the words for \"alone\" and \"son\" (CDIAL 2507)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iklautā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iklautā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iklautā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iklautā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voh apne māṅ bāp kā iklautā beṭā hai. — He is his parents' only son.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voh apne māṅ bāp kā iklautā beṭā hai.* — He is his parents' only son.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for age, then the Urdu for of age, then say iklautā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for age, then the Urdu for of age, then say *iklautā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اکلوتا (iklautā) mean? (\"Only (of a child)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C486-guzarna-pass",
+      "sequence": 28380,
+      "title": "گزرنا (guzarnā) — to pass (of time); to go by",
+      "headword": "گزرنا",
+      "romanization": "guzarnā",
+      "gloss": "to pass (of time); to go by",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5ec9f8b8475316e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for of age, then the Urdu for only (of a child)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گزرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گزرنا — guzarnā — \"to pass (of time); to go by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بچپن کے دن جلدی گزر گئے۔ bachpan ke din jaldī guzar gae. The days of childhood went by quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ سال جلدی گزرا, voh sāl jaldī guzrā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گزرنا (guzarnā) is usually traced to Persian guzar, \"a passing\", made into an Urdu verb; گزشتہ, \"last, previous\", is the time that has gone by."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guzarnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guzarnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guzarnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guzarnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bachpan ke din jaldī guzar gae. — The days of childhood went by quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bachpan ke din jaldī guzar gae.* — The days of childhood went by quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for of age, then the Urdu for only (of a child), then say guzarnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for of age, then the Urdu for only (of a child), then say *guzarnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گزرنا (guzarnā) mean? (\"To pass (of time); to go by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C486-shabab",
+      "sequence": 28390,
+      "title": "شباب (shabāb) — youth; the prime of life",
+      "headword": "شباب",
+      "romanization": "shabāb",
+      "gloss": "youth; the prime of life",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:183ae364f513d9ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for only (of a child), then the Urdu for to pass (of time)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شباب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شباب — shabāb — \"youth; the prime of life\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شباب کے دن جلدی گزرتے ہیں۔ shabāb ke din jaldī guzarte haiṅ. The days of youth pass quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شباب (shabāb) is usually traced, through Persian, to Arabic shabāb, \"youth\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shabāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shabāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shabāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shabāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shabāb ke din jaldī guzarte haiṅ. — The days of youth pass quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shabāb ke din jaldī guzarte haiṅ.* — The days of youth pass quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for only (of a child), then the Urdu for to pass (of time), then say shabāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for only (of a child), then the Urdu for to pass (of time), then say *shabāb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شباب (shabāb) mean? (\"Youth; the prime of life\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R486-review-480-486",
+      "sequence": 28400,
+      "title": "Looking back: from Looking After Someone to Growing Up",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Looking After Someone to Growing Up",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:345c41a61c13bb89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for to visit the sick and nursing the sick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to visit the sick, nursing the sick, looking after, to lay (someone) down, to cover someone up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to visit the sick, nursing the sick, looking after, to lay (someone) down, to cover someone up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an easing, restored, to massage, to press gently, to warm a sore place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an easing, restored, to massage, to press gently, to warm a sore place]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bathe (someone), to shave the head, a shave, to have (something) cut, to trim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bathe (someone), to shave the head, a shave, to have (something) cut, to trim]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pregnant, to give birth to, to be born, birth, a newborn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pregnant, to give birth to, to be born, birth, a newborn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to raise a child, a lullaby, to rock, to feed, to give (someone) a drink",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to raise a child, a lullaby, to rock, to feed, to give (someone) a drink]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "childhood, mischief, lisping, to be brought up, to dress (someone)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: childhood, mischief, lisping, to be brought up, to dress (someone)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "age, of age, only (of a child), to pass (of time), the prime of life",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: age, of age, only (of a child), to pass (of time), the prime of life]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To visit the sick? (عیادت کرنا, iyādat karnā.) Nursing the sick? (تیمارداری, tīmārdārī.) Looking after? (نگہداشت, nigahdāsht.) To lay (someone) down? (لٹانا, liṭānā.) To cover someone up? (اوڑھانا, oṛhānā.) An easing? (افاقہ, ifāqā.) Restored? (بحال, bahāl.) To massage? (مالش کرنا, mālish karnā.) To press gently? (دبانا, dabānā.) To warm a sore place? (سینکنا, seṅknā.) To bathe (someone)? (نہلانا, nahlānā.) To shave the head? (مونڈنا, mūṅḍnā.) A shave? (شیو, shev.) To have (something) cut? (کٹوانا, kaṭvānā.) To trim? (تراشنا, tarāshnā.) Pregnant? (حاملہ, hāmilā.) To give birth to? (جننا, jannā.) To be born? (پیدا ہونا, paidā honā.) Birth? (پیدائش, paidāish.) A newborn? (نومولود, naumaulūd.) To raise a child? (پرورش کرنا, parvarish karnā.) A lullaby? (لوری, lorī.) To rock? (جھلانا, jhulānā.) To feed? (کھلانا, khilānā.) To give (someone) a drink? (پلانا, pilānā.) Childhood? (بچپن, bachpan.) Mischief? (شرارت, sharārat.) Lisping? (توتلا, totlā.) To be brought up? (پلنا, palnā.) To dress (someone)? (پہنانا, pahnānā.) Age? (عمر, umr.) Of age? (بالغ, bāligh.) Only (of a child)? (اکلوتا, iklautā.) To pass (of time)? (گزرنا, guzarnā.) The prime of life? (شباب, shabāb.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

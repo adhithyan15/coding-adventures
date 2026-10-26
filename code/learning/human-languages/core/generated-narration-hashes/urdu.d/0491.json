@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:bc4dac692be6be63",
+  "lessonIds": [
+    "UR-C491-ranjish",
+    "UR-C491-shikva",
+    "UR-C491-tana",
+    "UR-C491-talaq",
+    "UR-C491-maf-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch491.txt",
+  "json": "urdu/narration/ch491.json",
+  "textHash": "fnv1a64:e910e61e41a28a32",
+  "jsonHash": "fnv1a64:d5b40566348d3e95",
+  "findings": []
+}

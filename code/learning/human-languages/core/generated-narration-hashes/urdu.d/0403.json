@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:afe45441591755eb",
+  "lessonIds": [
+    "UR-C403-sarae",
+    "UR-C403-qiyam",
+    "UR-C403-thikana",
+    "UR-C403-bichhana",
+    "UR-C403-lift"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch403.txt",
+  "json": "urdu/narration/ch403.json",
+  "textHash": "fnv1a64:cc9b5a89ebaea37c",
+  "jsonHash": "fnv1a64:d154f8ff92245972",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C374-ahl",
+    "language": "urdu",
+    "chapter": 374,
+    "sequence": 22220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6464c2553065ff1e"
+  },
+  "findings": []
+}

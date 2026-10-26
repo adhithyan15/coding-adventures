@@ -1,0 +1,11 @@
+{
+  "id": "UR-C298-milap",
+  "pathSegment": "UR-PATH-298-BICHHAR298",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-298-BICHHAR298",
+      "order": 4
+    }
+  ]
+}

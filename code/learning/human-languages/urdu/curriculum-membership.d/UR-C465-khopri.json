@@ -1,0 +1,11 @@
+{
+  "id": "UR-C465-khopri",
+  "pathSegment": "UR-PATH-465-BONE465",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-465-BONE465",
+      "order": 2
+    }
+  ]
+}

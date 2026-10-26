@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C318-lipatna",
+    "language": "urdu",
+    "chapter": 318,
+    "sequence": 19190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62201db4878b0a80"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Losing One's Temper",
+  "label": "ch:ur-losing-one-s-temper",
+  "canDo": "I can say that someone got cross and why.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C444-taish",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can say that someone got cross and why.",
+    "assesses": [
+      "UR-LEX-C444-ANGER444-03",
+      "UR-LEX-C444-ANGER444-04",
+      "UR-LEX-C444-ANGER444-05"
+    ]
+  }
+}

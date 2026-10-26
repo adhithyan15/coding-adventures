@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 201,
+  "output": "punjabi/book/chapters/ch201-this-is-a-class.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

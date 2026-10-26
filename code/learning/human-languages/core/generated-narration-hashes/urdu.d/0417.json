@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:1e420dbd15bfcb2c",
+  "lessonIds": [
+    "UR-C417-akaunt",
+    "UR-C417-raqam",
+    "UR-C417-naqd",
+    "UR-C417-chek",
+    "UR-C417-nikalvana",
+    "UR-R417-review-410-417"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch417.txt",
+  "json": "urdu/narration/ch417.json",
+  "textHash": "fnv1a64:af61bcd3aa970a39",
+  "jsonHash": "fnv1a64:0f514c2d46fb6aa7",
+  "findings": []
+}

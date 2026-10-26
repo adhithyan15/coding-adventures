@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C525-barqarar",
+    "language": "urdu",
+    "chapter": 525,
+    "sequence": 30610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69b66f377ca7d9e1"
+  },
+  "findings": []
+}

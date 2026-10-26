@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R268-opinion-and-reason",
+    "language": "urdu",
+    "chapter": 268,
+    "sequence": 16320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6237d6d09157174c"
+  },
+  "findings": []
+}

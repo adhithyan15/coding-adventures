@@ -1,7 +1,7 @@
 # Rust CPU Expansion Backlog
 
 **Status:** active
-**Last reprioritized:** 2026-10-24
+**Last reprioritized:** 2026-10-25
 
 This is the live expansion queue after the original 07-series architecture
 matrix. The older `RUST-CPU-SIMULATOR-BACKLOG.md` remains the audit record for
@@ -42,7 +42,7 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | Intel 8085 | merged | ready | Gate cell follows MC6800 gate start. |
 | P0 | DEC VAX-11/780 | PR #18164 | missing | Gate waits for functional oracle. |
 | P0 | Motorola 6809 | PR #18169 | missing | Gate waits for functional oracle. |
-| P0 | OpenRISC 1000 | PR #18172 | missing | Gate can reuse public RTL after functional merge. |
+| P0 | OpenRISC 1000 | merged | in progress | Gate cell uses the public mor1kx RTL boundary. |
 | P0 | OpenSPARC T1 | PR #18176 | missing | Gate can descend through public OpenSPARC RTL. |
 | P0 | Arm Cortex-M0 | PR #18177 | missing | Gate waits for the Armv6-M oracle. |
 | P0 | Arm Cortex-M3 | local complete | missing | Publish this cell; then gate waits for merge. |

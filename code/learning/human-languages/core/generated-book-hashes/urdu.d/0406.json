@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:dabb011ecf5a1e6e",
+  "lessonIds": [
+    "UR-C406-lakri",
+    "UR-C406-sulgana",
+    "UR-C406-orhna",
+    "UR-C406-shamiyana",
+    "UR-C406-basera"
+  ],
+  "tex": "urdu/book/chapters/ch406-nights-outdoors.tex"
+}

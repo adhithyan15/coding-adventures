@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:23abcff94428f6be",
+  "lessonIds": [
+    "UR-C443-gham",
+    "UR-C443-dukh",
+    "UR-C443-mayus",
+    "UR-C443-kurhna",
+    "UR-C443-afsurda"
+  ],
+  "tex": "urdu/book/chapters/ch443-sadness.tex"
+}

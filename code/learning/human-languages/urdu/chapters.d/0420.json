@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Income and Budgets",
+  "label": "ch:ur-income-and-budgets",
+  "canDo": "I can talk about what comes in, what goes out and how to make it last.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C420-bhunana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can talk about what comes in, what goes out and how to make it last.",
+    "assesses": [
+      "UR-LEX-C420-AAMDANI420-03",
+      "UR-LEX-C420-AAMDANI420-04",
+      "UR-LEX-C420-AAMDANI420-05"
+    ]
+  }
+}

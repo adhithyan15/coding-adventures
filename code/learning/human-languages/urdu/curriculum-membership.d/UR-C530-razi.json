@@ -1,0 +1,11 @@
+{
+  "id": "UR-C530-razi",
+  "pathSegment": "UR-PATH-530-MARZI530",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-530-MARZI530",
+      "order": 1
+    }
+  ]
+}

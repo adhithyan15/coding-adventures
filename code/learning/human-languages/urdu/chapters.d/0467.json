@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Taste and the Mouth",
+  "label": "ch:ur-taste-and-the-mouth",
+  "canDo": "I can talk about the mouth and tasting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C467-thukna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can talk about the mouth and tasting.",
+    "assesses": [
+      "UR-LEX-C467-MOUTH467-03",
+      "UR-LEX-C467-MOUTH467-04",
+      "UR-LEX-C467-MOUTH467-05"
+    ]
+  }
+}

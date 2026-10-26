@@ -1,0 +1,11 @@
+{
+  "id": "UR-C358-aksariyat",
+  "pathSegment": "UR-PATH-358-JALSA358",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-358-JALSA358",
+      "order": 3
+    }
+  ]
+}

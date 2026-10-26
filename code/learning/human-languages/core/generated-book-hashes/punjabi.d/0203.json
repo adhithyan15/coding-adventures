@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:6f49761fe71774d0",
+  "lessonIds": [
+    "PA-C203-book-return",
+    "PA-C203-baare",
+    "PA-C203-baare-review",
+    "PA-C203-about-the-book",
+    "PA-C203-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch203-about-the-book.tex"
+}

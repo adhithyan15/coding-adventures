@@ -1,0 +1,11 @@
+{
+  "id": "UR-C459-khud-gharaz",
+  "pathSegment": "UR-PATH-459-GIVE459",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-459-GIVE459",
+      "order": 1
+    }
+  ]
+}

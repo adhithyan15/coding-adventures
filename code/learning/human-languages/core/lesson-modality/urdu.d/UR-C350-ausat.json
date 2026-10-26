@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C350-ausat",
+    "language": "urdu",
+    "chapter": 350,
+    "sequence": 20970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f38b402a89592981"
+  },
+  "findings": []
+}

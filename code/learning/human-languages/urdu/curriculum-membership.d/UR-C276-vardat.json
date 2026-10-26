@@ -1,0 +1,11 @@
+{
+  "id": "UR-C276-vardat",
+  "pathSegment": "UR-PATH-276-CHORI276",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-276-CHORI276",
+      "order": 4
+    }
+  ]
+}

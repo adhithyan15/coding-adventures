@@ -1,0 +1,11 @@
+{
+  "id": "UR-W275-six-lines",
+  "pathSegment": "UR-PATH-275-DEPENDS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-275-DEPENDS",
+      "order": 3
+    }
+  ]
+}

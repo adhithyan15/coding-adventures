@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:24d29eed35707ddc",
+  "lessonIds": [
+    "UR-C454-fitrat",
+    "UR-C454-tabiat",
+    "UR-C454-adat",
+    "UR-C454-khubi",
+    "UR-C454-shakhsiyat"
+  ],
+  "tex": "urdu/book/chapters/ch454-character.tex"
+}

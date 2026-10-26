@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C268-ki-vajah-se",
+    "language": "urdu",
+    "chapter": 268,
+    "sequence": 16310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:611969f4ae243314"
+  },
+  "findings": []
+}

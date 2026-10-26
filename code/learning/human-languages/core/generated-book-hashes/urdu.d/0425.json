@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:eb0cda1499253b93",
+  "lessonIds": [
+    "UR-C425-tarazu",
+    "UR-C425-muft",
+    "UR-C425-baqaya",
+    "UR-C425-rezgari",
+    "UR-C425-thamana",
+    "UR-R425-review-418-425"
+  ],
+  "tex": "urdu/book/chapters/ch425-scales-and-change.tex"
+}

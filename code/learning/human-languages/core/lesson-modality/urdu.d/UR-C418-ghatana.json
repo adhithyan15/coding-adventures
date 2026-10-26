@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C418-ghatana",
+    "language": "urdu",
+    "chapter": 418,
+    "sequence": 24680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d121d8a123d63cf"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C547-sanvarna-intr",
+    "language": "urdu",
+    "chapter": 547,
+    "sequence": 31750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8b4c5a36abc9f93"
+  },
+  "findings": []
+}

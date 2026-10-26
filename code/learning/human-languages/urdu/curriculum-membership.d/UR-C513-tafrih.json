@@ -1,0 +1,11 @@
+{
+  "id": "UR-C513-tafrih",
+  "pathSegment": "UR-PATH-513-FURSAT513",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-513-FURSAT513",
+      "order": 2
+    }
+  ]
+}

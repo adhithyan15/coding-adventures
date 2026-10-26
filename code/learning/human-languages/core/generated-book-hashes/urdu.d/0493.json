@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:3ac9d65ecb805a01",
+  "lessonIds": [
+    "UR-C493-intiqal-karna",
+    "UR-C493-janaza",
+    "UR-C493-dafnana",
+    "UR-C493-taziyat-karna",
+    "UR-C493-beva",
+    "UR-R493-review-487-493",
+    "UR-R493-review-final-493"
+  ],
+  "tex": "urdu/book/chapters/ch493-mourning.tex"
+}

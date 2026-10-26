@@ -6662,6 +6662,83 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - a zero-valued checked static normalizer proves the complete
+    // sign-rooted power is exactly one.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure rightvalue; rightvalue := -3.5; real result; result := entier(sign(rightvalue()) ^ entier(0.75)); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - independently bounded dynamic sign roots remain exact when
+    // checked multiplication keeps their complete product within 2^53.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(3 * sign(leftvalue()) * sign(rightvalue()) * 2); output(result) end",
+        expect: Expect::Stdout("-6"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - independently bounded dynamic sign roots remain exact when
+    // checked addition keeps their complete sum within 2^53.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(3 * sign(leftvalue()) - 2 * sign(rightvalue()) + 45); output(result) end",
+        expect: Expect::Stdout("40"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - a multiple-sign product remains exact through ordered static
+    // integer reductions and a later bounded power.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(((12 * sign(leftvalue()) * sign(rightvalue()) div 5) mod 3) ^ 2); output(result) end",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - a checked static integer reduction may precede the first of
+    // multiple sign roots when multiplication connects the folded prefix.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(((20 div 3 * sign(leftvalue()) * sign(rightvalue())) mod 5) ^ 2); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - checked static reductions may occur between dynamic sign
+    // roots when each later root enters the ordered product by multiplication.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(((12 div 5 * sign(leftvalue()) * 15 div 5 * sign(rightvalue())) mod 5) ^ 2); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - a stable sign-product reduction retains its exact common
+    // divisor through div and mod, proving a later real quotient integral.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(((12 * sign(leftvalue()) div 5 * sign(rightvalue()) mod 3) / 2) ^ 2); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -9160,6 +9237,21 @@ fn main() { out(1, VALUE); }\n",
         ext: "bas",
         src: "10 PRINT ABS(-42)\n20 END\n",
         expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
+    },
+    // Dartmouth BASIC — negating a non-literal real. `ABS(-42)` above
+    // cannot catch a broken `neg`(f64): it negates twice, and a two's-
+    // complement negate of the raw f64 bits is its own inverse, so the wrong
+    // encoding round-trips to the right answer. 2.5 is asymmetric: an integer
+    // negate of its bits (0x4004…) gives 0xBFFC…, i.e. −1.75, not −2.5. The
+    // native backends lowered `neg_f64` that way until it flipped the sign bit.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET X = 2.5\n20 PRINT -X\n30 END\n",
+        expect: Expect::Stdout("-2.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
         release: None,
         case: None,
@@ -14526,7 +14618,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Twig, 49, 392),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
-        (Language::DartmouthBasic, 51, 408),
+        (Language::DartmouthBasic, 52, 416),
         (Language::Oct, 12, 96),
         // MacroOct: 9 rows at PREP01 slice 1 (`@include`/`@if`/`@else`/`@end`),
         // plus slice 2's five `@define` rows — object-like, function-like with
@@ -16593,6 +16685,106 @@ fn algol_multiplicative_entier_sign_widening_runs_on_every_available_standard_ba
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but multiplicative-entier-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multiple_sign_product_reductions_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "12 * sign(leftvalue()) * sign(rightvalue()) div 5) mod 3) ^ 2",
+                )
+        })
+        .expect("the ALGOL multiple-sign product reduction program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multiple-sign product reductions did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multiple_sign_product_prefix_reductions_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "20 div 3 * sign(leftvalue()) * sign(rightvalue())) mod 5) ^ 2",
+                )
+        })
+        .expect("the ALGOL multiple-sign product prefix-reduction program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multiple-sign product prefix reductions did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multiple_sign_product_inter_root_reductions_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "sign(leftvalue()) * 15 div 5 * sign(rightvalue())) mod 5) ^ 2",
+                )
+        })
+        .expect("the ALGOL multiple-sign inter-root reduction program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multiple-sign inter-root reductions did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_stable_sign_reduction_divisibility_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "sign(leftvalue()) div 5 * sign(rightvalue()) mod 3) / 2) ^ 2",
+                )
+        })
+        .expect("the ALGOL stable sign-reduction divisibility program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but stable sign-reduction divisibility did not complete"
             );
             continue;
         };

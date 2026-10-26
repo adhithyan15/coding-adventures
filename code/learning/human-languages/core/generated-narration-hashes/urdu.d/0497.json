@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:b2066fff017e8e86",
+  "lessonIds": [
+    "UR-C497-takhta",
+    "UR-C497-burada",
+    "UR-C497-randa",
+    "UR-C497-thonkna",
+    "UR-C497-retna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch497.txt",
+  "json": "urdu/narration/ch497.json",
+  "textHash": "fnv1a64:f5b6acd8069beca5",
+  "jsonHash": "fnv1a64:9474bfeae8802e58",
+  "findings": []
+}

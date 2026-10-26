@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C458-sabr-karna",
+    "language": "urdu",
+    "chapter": 458,
+    "sequence": 26920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:765798271e67c546"
+  },
+  "findings": []
+}

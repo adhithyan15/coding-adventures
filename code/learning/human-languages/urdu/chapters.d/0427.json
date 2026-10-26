@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Sizes and Outfits",
+  "label": "ch:ur-sizes-and-outfits",
+  "canDo": "I can say whether clothes fit and look good.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C427-sajna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can say whether clothes fit and look good.",
+    "assesses": [
+      "UR-LEX-C427-POSHAK427-03",
+      "UR-LEX-C427-POSHAK427-04",
+      "UR-LEX-C427-POSHAK427-05"
+    ]
+  }
+}

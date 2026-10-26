@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:0126f3722f32ded7",
+  "lessonIds": [
+    "UR-C294-qahat",
+    "UR-C294-faqa",
+    "UR-C294-vaba",
+    "UR-C294-sarna",
+    "UR-C294-haiza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch294.txt",
+  "json": "urdu/narration/ch294.json",
+  "textHash": "fnv1a64:a4d2ff8604ed2ddd",
+  "jsonHash": "fnv1a64:017362c658f414cb",
+  "findings": []
+}

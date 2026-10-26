@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:08bb1c2f5bcbdc57",
+  "lessonIds": [
+    "UR-C325-dev",
+    "UR-C325-pari",
+    "UR-C325-jadu",
+    "UR-C325-bhut",
+    "UR-C325-dain"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch325.txt",
+  "json": "urdu/narration/ch325.json",
+  "textHash": "fnv1a64:5e71504390d495f3",
+  "jsonHash": "fnv1a64:cd87888c6b41b389",
+  "findings": []
+}

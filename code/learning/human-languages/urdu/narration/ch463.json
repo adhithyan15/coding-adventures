@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 463,
+  "title": "Talkers and Quiet Ones",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:afaa79a864668e72",
+  "lessons": [
+    {
+      "id": "UR-C463-barbarana",
+      "sequence": 27170,
+      "title": "بڑبڑانا (baṛbaṛānā) — to mutter; to grumble",
+      "headword": "بڑبڑانا",
+      "romanization": "baṛbaṛānā",
+      "gloss": "to mutter; to grumble",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:491ff61a8da197e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for innocent, then the Urdu for to be led astray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بڑبڑانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بڑبڑانا — baṛbaṛānā — \"to mutter; to grumble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دادا اکیلے بیٹھ کر بڑبڑاتے ہیں۔ dādā akele baiṭh kar baṛbaṛāte haiṅ. My grandfather sits on his own and mutters."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): وہ کچھ بڑبڑایا, voh kuchh baṛbaṛāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بڑبڑانا (baṛbaṛānā) is inherited from baḍabaḍa, \"grumble, mutter\", a form CDIAL reconstructs and treats as an imitation of the sound (CDIAL 9122)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṛbaṛānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṛbaṛānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṛbaṛānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṛbaṛānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādā akele baiṭh kar baṛbaṛāte haiṅ. — My grandfather sits on his own and mutters.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādā akele baiṭh kar baṛbaṛāte haiṅ.* — My grandfather sits on his own and mutters.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for innocent, then the Urdu for to be led astray, then say baṛbaṛānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for innocent, then the Urdu for to be led astray, then say *baṛbaṛānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بڑبڑانا (baṛbaṛānā) mean? (\"To mutter; to grumble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C463-gap",
+      "sequence": 27180,
+      "title": "گپ (gap) — idle chat",
+      "headword": "گپ",
+      "romanization": "gap",
+      "gloss": "idle chat",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16fb9f1ae5056f2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to be led astray, then the Urdu for to mutter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گپ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گپ — gap — \"idle chat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "چائے پر دوستوں کی گپ دیر تک چلی۔ chāy par dostoṅ kī gap der tak chalī. Over tea the friends chatted for a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گپ (gap) is inherited from gappa, \"tittle-tattle\", a form CDIAL reconstructs (CDIAL 4022)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gap*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gap, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gap*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāy par dostoṅ kī gap der tak chalī. — Over tea the friends chatted for a long time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāy par dostoṅ kī gap der tak chalī.* — Over tea the friends chatted for a long time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to be led astray, then the Urdu for to mutter, then say gap again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to be led astray, then the Urdu for to mutter, then say *gap* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گپ (gap) mean? (\"Idle chat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C463-chup",
+      "sequence": 27190,
+      "title": "چپ (chup) — hushed; not speaking",
+      "headword": "چپ",
+      "romanization": "chup",
+      "gloss": "hushed; not speaking",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dedd10fea487da36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to mutter, then the Urdu for idle chat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چپ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چپ — chup — \"hushed; not speaking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استاد کو دیکھ کر سب بچے چپ ہو گئے۔ ustād ko dekh kar sab bachche chup ho gae. When they saw the teacher all the children fell silent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چپ (chup) is inherited from cuppa, \"silent\", a form CDIAL reconstructs (CDIAL 4864)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chup",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chup*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chup, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chup*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ustād ko dekh kar sab bachche chup ho gae. — When they saw the teacher all the children fell silent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ustād ko dekh kar sab bachche chup ho gae.* — When they saw the teacher all the children fell silent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to mutter, then the Urdu for idle chat, then say chup again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to mutter, then the Urdu for idle chat, then say *chup* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چپ (chup) mean? (\"Hushed; not speaking\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C463-sargoshi-karna",
+      "sequence": 27200,
+      "title": "سرگوشی کرنا (sargoshī karnā) — to whisper",
+      "headword": "سرگوشی کرنا",
+      "romanization": "sargoshī karnā",
+      "gloss": "to whisper",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15f4c905bb0578e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for idle chat, then the Urdu for hushed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سرگوشی کرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرگوشی کرنا — sargoshī karnā — \"to whisper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دونوں سہیلیاں کلاس میں سرگوشی کر رہی تھیں۔ donoṅ saheliyāṅ klās meṅ sargoshī kar rahī thīṅ. The two friends were whispering in class."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے کان میں سرگوشی کی, us ne kān meṅ sargoshī kī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرگوشی کرنا (sargoshī karnā) is built from سرگوشی, usually traced to Persian sargōshī, \"a whisper\", from sar, \"head\", and gōsh, \"ear\", and کرنا, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sargoshī karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sargoshī karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sargoshī karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sargoshī karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "donoṅ saheliyāṅ klās meṅ sargoshī kar rahī thīṅ. — The two friends were whispering in class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *donoṅ saheliyāṅ klās meṅ sargoshī kar rahī thīṅ.* — The two friends were whispering in class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for idle chat, then the Urdu for hushed, then say sargoshī karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for idle chat, then the Urdu for hushed, then say *sargoshī karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سرگوشی کرنا (sargoshī karnā) mean? (\"To whisper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C463-gung",
+      "sequence": 27210,
+      "title": "گنگ (gung) — speechless; struck dumb",
+      "headword": "گنگ",
+      "romanization": "gung",
+      "gloss": "speechless; struck dumb",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:975261fc29d66b7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for hushed, then the Urdu for to whisper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گنگ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گنگ — gung — \"speechless; struck dumb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خبر سن کر وہ گنگ رہ گیا۔ khabar sun kar voh gung rah gayā. He was struck dumb when he heard the news."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گنگ (gung) is usually traced to Persian gung, \"mute\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gung, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gung*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khabar sun kar voh gung rah gayā. — He was struck dumb when he heard the news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khabar sun kar voh gung rah gayā.* — He was struck dumb when he heard the news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for hushed, then the Urdu for to whisper, then say gung again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for hushed, then the Urdu for to whisper, then say *gung* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گنگ (gung) mean? (\"Speechless; struck dumb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R463-review-456-463",
+      "sequence": 27220,
+      "title": "Looking back: from Kind and Cruel to Talkers and Quiet Ones",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Kind and Cruel to Talkers and Quiet Ones",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7404ef89d6f2786f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for cruel and hard-hearted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cruel, hard-hearted, a kindness done, grace, cruelty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cruel, hard-hearted, a kindness done, grace, cruelty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sincere, crafty, to believe someone, integrity, a promise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sincere, crafty, to believe someone, integrity, a promise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be patient, forbearance, to put up with, to snap at, to bear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be patient, forbearance, to put up with, to snap at, to bear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bountiful, selfish, open-handed, miserly, alms",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bountiful, selfish, open-handed, miserly, alms]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bold, daring, a risk, to fight, valiant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bold, daring, a risk, to fight, valiant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "consideration, courteous, refinement, moral conduct, to show respect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: consideration, courteous, refinement, moral conduct, to show respect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wits, wise, naive, innocent, to be led astray",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wits, wise, naive, innocent, to be led astray]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to mutter, idle chat, hushed, to whisper, speechless",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to mutter, idle chat, hushed, to whisper, speechless]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cruel? (ظالم, zālim.) Hard-hearted? (سنگدل, sangdil.) A kindness done? (احسان, ehsān.) Grace? (کرم, karam.) Cruelty? (ستم, sitam.) Sincere? (مخلص, mukhlis.) Crafty? (مکار, makkār.) To believe someone? (اعتبار کرنا, etibār karnā.) Integrity? (دیانت, diyānat.) A promise? (وعدہ, vādā.) To be patient? (صبر کرنا, sabr karnā.) Forbearance? (تحمل, tahammul.) To put up with? (برداشت کرنا, bardāsht karnā.) To snap at? (جھڑکنا, jhiṛaknā.) To bear? (سہنا, sahnā.) Bountiful? (فیاض, fayyāz.) Selfish? (خود غرض, khud gharaz.) Open-handed? (سخی, sakhī.) Miserly? (بخیل, bakhīl.) Alms? (صدقہ, sadqā.) Bold? (دلیر, diler.) Daring? (جانباز, jānbāz.) A risk? (جوکھم, jokham.) To fight? (لڑنا, laṛnā.) Valiant? (دلاور, dilāvar.) Consideration? (لحاظ, lihāz.) Courteous? (شائستہ, shāistā.) Refinement? (تہذیب, tahzīb.) Moral conduct? (اخلاق, akhlāq.) To show respect? (احترام کرنا, ehtirām karnā.) Wits? (عقل, aql.) Wise? (دانا, dānā.) Naive? (نادان, nādān.) Innocent? (معصوم, māsūm.) To be led astray? (بہکنا, bahaknā.) To mutter? (بڑبڑانا, baṛbaṛānā.) Idle chat? (گپ, gap.) Hushed? (چپ, chup.) To whisper? (سرگوشی کرنا, sargoshī karnā.) Speechless? (گنگ, gung.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

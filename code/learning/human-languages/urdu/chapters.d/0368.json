@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Getting Out of Trouble",
+  "label": "ch:ur-getting-out-of-trouble",
+  "canDo": "I can say what to do if something gets in the way.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C368-nibtana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can say what to do if something gets in the way.",
+    "assesses": [
+      "UR-LEX-C368-HAL368-03",
+      "UR-LEX-C368-HAL368-04",
+      "UR-LEX-C368-HAL368-05"
+    ]
+  }
+}

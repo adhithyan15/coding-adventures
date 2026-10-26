@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 405,
+  "title": "At the Front Desk",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1281e65990267da0",
+  "lessons": [
+    {
+      "id": "UR-C405-rajistar",
+      "sequence": 23970,
+      "title": "رجسٹر (rajisṭar) — a register (book)",
+      "headword": "رجسٹر",
+      "romanization": "rajisṭar",
+      "gloss": "a register (book)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7da2ac092d5edc6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to drip, then the Urdu for a facility."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رجسٹر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رجسٹر — rajisṭar — \"a register (book)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ہوٹل والے نے رجسٹر میں میرا نام لکھا۔ hoṭal vāle ne rajisṭar meṅ merā nām likhā. The man at the hotel wrote my name in the register."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رجسٹر (rajisṭar) is borrowed from English register."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rajisṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rajisṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rajisṭar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rajisṭar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoṭal vāle ne rajisṭar meṅ merā nām likhā. — The man at the hotel wrote my name in the register.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoṭal vāle ne rajisṭar meṅ merā nām likhā.* — The man at the hotel wrote my name in the register.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to drip, then the Urdu for a facility, then say rajisṭar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to drip, then the Urdu for a facility, then say *rajisṭar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رجسٹر (rajisṭar) mean? (\"A register (book)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C405-shanakht",
+      "sequence": 23980,
+      "title": "شناخت (shanākht) — identification; identity",
+      "headword": "شناخت",
+      "romanization": "shanākht",
+      "gloss": "identification; identity",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69a86ec4b05d9fbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a facility, then the Urdu for a register (book)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شناخت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شناخت — shanākht — \"identification; identity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کاؤنٹر پر شناخت کے لیے پاسپورٹ دیجیے۔ kāunṭar par shanākht ke liye pāsporṭ dījiye. Please show your passport at the desk for identification."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شناخت (shanākht) is usually traced to Persian shinākht, \"knowing, recognition\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shanākht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shanākht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shanākht, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shanākht*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāunṭar par shanākht ke liye pāsporṭ dījiye. — Please show your passport at the desk for identification.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāunṭar par shanākht ke liye pāsporṭ dījiye.* — Please show your passport at the desk for identification.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a facility, then the Urdu for a register (book), then say shanākht again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a facility, then the Urdu for a register (book), then say *shanākht* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شناخت (shanākht) mean? (\"Identification; identity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C405-darban",
+      "sequence": 23990,
+      "title": "دربان (darbān) — a doorman",
+      "headword": "دربان",
+      "romanization": "darbān",
+      "gloss": "a doorman",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52c56d13e46c4b50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a register (book), then the Urdu for identification."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دربان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دربان — darbān — \"a doorman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دربان نے ہمارے لیے دروازہ کھولا۔ darbān ne hamāre liye darvāzā kholā. The doorman opened the door for us."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دربان (darbān) is built from Persian dar, \"a door\", and -bān, \"a keeper\": it is usually traced to Persian darbān, \"a doorkeeper\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darbān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darbān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darbān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darbān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darbān ne hamāre liye darvāzā kholā. — The doorman opened the door for us.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darbān ne hamāre liye darvāzā kholā.* — The doorman opened the door for us.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a register (book), then the Urdu for identification, then say darbān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a register (book), then the Urdu for identification, then say *darbān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دربان (darbān) mean? (\"A doorman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C405-mangana",
+      "sequence": 24000,
+      "title": "منگانا (mangānā) — to send for; to order (to be brought)",
+      "headword": "منگانا",
+      "romanization": "mangānā",
+      "gloss": "to send for; to order (to be brought)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d324384aac04e9a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for identification, then the Urdu for a doorman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: منگانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منگانا — mangānā — \"to send for; to order (to be brought)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ہم نے کمرے میں چائے منگائی۔ ham ne kamre meṅ chāe mangāī. We ordered tea to the room."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے کھانا منگایا, us ne khānā mangāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منگانا (mangānā) is built on مانگنا, \"to ask for\", whose Hindi cousin māgnā CDIAL lists under Sanskrit mārgati, \"seeks\" (CDIAL 10074): it is to have something brought to you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mangānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mangānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mangānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mangānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ham ne kamre meṅ chāe mangāī. — We ordered tea to the room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ham ne kamre meṅ chāe mangāī.* — We ordered tea to the room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for identification, then the Urdu for a doorman, then say mangānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for identification, then the Urdu for a doorman, then say *mangānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does منگانا (mangānā) mean? (\"To send for; to order (to be brought)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C405-bakhshish",
+      "sequence": 24010,
+      "title": "بخشش (bakhshish) — a tip (for service); a gift",
+      "headword": "بخشش",
+      "romanization": "bakhshish",
+      "gloss": "a tip (for service); a gift",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a159bda58732d60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a doorman, then the Urdu for to send for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بخشش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بخشش — bakhshish — \"a tip (for service); a gift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سارا نے بیرے کو بخشش دی۔ sārā ne bere ko bakhshish dī. Sara gave the waiter a tip."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بخشش (bakhshish) is usually traced to Persian bakhshish, \"a gift, a giving\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bakhshish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bakhshish*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bakhshish, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bakhshish*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārā ne bere ko bakhshish dī. — Sara gave the waiter a tip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārā ne bere ko bakhshish dī.* — Sara gave the waiter a tip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a doorman, then the Urdu for to send for, then say bakhshish again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a doorman, then the Urdu for to send for, then say *bakhshish* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بخشش (bakhshish) mean? (\"A tip (for service); a gift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

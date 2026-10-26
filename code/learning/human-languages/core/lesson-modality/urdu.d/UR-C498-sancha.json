@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C498-sancha",
+    "language": "urdu",
+    "chapter": 498,
+    "sequence": 29210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cec9a636f7f0ca07"
+  },
+  "findings": []
+}

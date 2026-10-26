@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:ad4de19f78001e0c",
+  "lessonIds": [
+    "UR-C421-kaghaz",
+    "UR-C421-kard",
+    "UR-C421-tokan",
+    "UR-C421-fis",
+    "UR-C421-karansi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch421.txt",
+  "json": "urdu/narration/ch421.json",
+  "textHash": "fnv1a64:73b1d45708956262",
+  "jsonHash": "fnv1a64:c17f47b07398b7db",
+  "findings": []
+}

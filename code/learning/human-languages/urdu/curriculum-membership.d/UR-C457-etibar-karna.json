@@ -1,0 +1,11 @@
+{
+  "id": "UR-C457-etibar-karna",
+  "pathSegment": "UR-PATH-457-TRUST457",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-457-TRUST457",
+      "order": 2
+    }
+  ]
+}

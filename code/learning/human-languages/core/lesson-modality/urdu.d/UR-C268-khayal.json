@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C268-khayal",
+    "language": "urdu",
+    "chapter": 268,
+    "sequence": 16270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee9c268964bb46e6"
+  },
+  "findings": []
+}

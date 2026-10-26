@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:241d24e1020c845e",
+  "lessonIds": [
+    "UR-C364-zahir",
+    "UR-C364-lazmi",
+    "UR-C364-vaqai",
+    "UR-C364-numayan",
+    "UR-C364-ubharna-emerge"
+  ],
+  "tex": "urdu/book/chapters/ch364-clearly-so.tex"
+}

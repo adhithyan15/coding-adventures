@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:bbbcad8e83280773",
+  "lessonIds": [
+    "UR-C392-istaind",
+    "UR-C392-istap",
+    "UR-C392-rah",
+    "UR-C392-tahalna",
+    "UR-C392-hanpna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch392.txt",
+  "json": "urdu/narration/ch392.json",
+  "textHash": "fnv1a64:59a3b90cf1b57ead",
+  "jsonHash": "fnv1a64:2f8de018879edc11",
+  "findings": []
+}

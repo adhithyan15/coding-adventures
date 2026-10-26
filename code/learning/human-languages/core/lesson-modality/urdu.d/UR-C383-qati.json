@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C383-qati",
+    "language": "urdu",
+    "chapter": 383,
+    "sequence": 22680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8d1c213615b7de8"
+  },
+  "findings": []
+}

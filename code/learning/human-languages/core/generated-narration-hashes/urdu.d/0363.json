@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:b29a691e4386c8bc",
+  "lessonIds": [
+    "UR-C363-andesha",
+    "UR-C363-ishara",
+    "UR-C363-alamat",
+    "UR-C363-khadsha",
+    "UR-C363-etimad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch363.txt",
+  "json": "urdu/narration/ch363.json",
+  "textHash": "fnv1a64:5262783486a89a3b",
+  "jsonHash": "fnv1a64:1de55589718471cb",
+  "findings": []
+}

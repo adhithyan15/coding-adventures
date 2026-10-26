@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:373b7e2cd8bee910",
+  "lessonIds": [
+    "UR-C461-lihaz",
+    "UR-C461-shaista",
+    "UR-C461-tahzib",
+    "UR-C461-akhlaq",
+    "UR-C461-ehtiram-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch461.txt",
+  "json": "urdu/narration/ch461.json",
+  "textHash": "fnv1a64:ac7191ea893bd563",
+  "jsonHash": "fnv1a64:6ccf410cc98cda89",
+  "findings": []
+}

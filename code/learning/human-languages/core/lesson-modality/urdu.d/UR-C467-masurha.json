@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C467-masurha",
+    "language": "urdu",
+    "chapter": 467,
+    "sequence": 27390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc6b5050841e6dd9"
+  },
+  "findings": []
+}

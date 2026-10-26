@@ -1,0 +1,11 @@
+{
+  "id": "UR-C511-pakvana",
+  "pathSegment": "UR-PATH-511-DASTARKHVAN511",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-511-DASTARKHVAN511",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:cf01451fec5864e6",
+  "lessonIds": [
+    "UR-C428-bund",
+    "UR-C428-barasna",
+    "UR-C428-jhari",
+    "UR-C428-bhap",
+    "UR-C428-umadna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch428.txt",
+  "json": "urdu/narration/ch428.json",
+  "textHash": "fnv1a64:d1837f9e102ea9b6",
+  "jsonHash": "fnv1a64:b39dae4e1b08071d",
+  "findings": []
+}

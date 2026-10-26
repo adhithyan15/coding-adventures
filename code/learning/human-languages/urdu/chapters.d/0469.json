@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Hiccups and Colds",
+  "label": "ch:ur-hiccups-and-colds",
+  "canDo": "I can talk about hiccups, coughs and colds.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C469-nazla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can talk about hiccups, coughs and colds.",
+    "assesses": [
+      "UR-LEX-C469-THROAT469-03",
+      "UR-LEX-C469-THROAT469-04",
+      "UR-LEX-C469-THROAT469-05"
+    ]
+  }
+}

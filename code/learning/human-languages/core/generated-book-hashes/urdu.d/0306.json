@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:96bad7efee535844",
+  "lessonIds": [
+    "UR-C306-dhamaka",
+    "UR-C306-bam",
+    "UR-C306-gunjna",
+    "UR-C306-tharrana",
+    "UR-C306-sadma"
+  ],
+  "tex": "urdu/book/chapters/ch306-a-blast.tex"
+}

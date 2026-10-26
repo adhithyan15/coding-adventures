@@ -1,0 +1,17 @@
+[package]
+name = "openrisc1000-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed gate-level OpenRISC 1000 ORBIS32 simulator"
+license = "MIT"
+
+[lib]
+name = "openrisc1000_gatelevel"
+path = "src/lib.rs"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+
+[dev-dependencies]
+openrisc1000-simulator = { path = "../openrisc1000-simulator" }

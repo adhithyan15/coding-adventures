@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C437-kai",
+    "language": "urdu",
+    "chapter": 437,
+    "sequence": 25640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c75a3c975c666220"
+  },
+  "findings": []
+}

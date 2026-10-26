@@ -1,0 +1,11 @@
+{
+  "id": "UR-C532-latri",
+  "pathSegment": "UR-PATH-532-QISMAT532",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-532-QISMAT532",
+      "order": 2
+    }
+  ]
+}

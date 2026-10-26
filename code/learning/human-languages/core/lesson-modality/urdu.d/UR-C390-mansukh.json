@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C390-mansukh",
+    "language": "urdu",
+    "chapter": 390,
+    "sequence": 23230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e66eb14df94b636"
+  },
+  "findings": []
+}

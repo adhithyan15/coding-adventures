@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C490-yatim",
+    "language": "urdu",
+    "chapter": 490,
+    "sequence": 28590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52b0ae91bd3f69ea"
+  },
+  "findings": []
+}

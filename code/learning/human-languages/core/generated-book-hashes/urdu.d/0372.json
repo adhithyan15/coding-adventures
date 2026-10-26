@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:505774d5eb02f458",
+  "lessonIds": [
+    "UR-C372-jamna",
+    "UR-C372-ubalna-boil-up",
+    "UR-C372-galna",
+    "UR-C372-tarakna",
+    "UR-C372-darmiyana"
+  ],
+  "tex": "urdu/book/chapters/ch372-heat-and-cold.tex"
+}

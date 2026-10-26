@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C466-panja",
+    "language": "urdu",
+    "chapter": 466,
+    "sequence": 27370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9daf8a611c1ffafd"
+  },
+  "findings": []
+}

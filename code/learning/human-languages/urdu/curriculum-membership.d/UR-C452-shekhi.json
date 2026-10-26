@@ -1,0 +1,11 @@
+{
+  "id": "UR-C452-shekhi",
+  "pathSegment": "UR-PATH-452-PRIDE452",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-452-PRIDE452",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C528-savab",
+  "pathSegment": "UR-PATH-528-BARKAT528",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-528-BARKAT528",
+      "order": 1
+    }
+  ]
+}

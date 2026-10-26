@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Group the Windows setup conditionals so repeated builds still execute tests,
+  and wire real production-only Coverlet reporting with the 95% library line
+  threshold on both platform fronts.
+
 ## [0.1.0] - 2026-04-17
 
 ### Added

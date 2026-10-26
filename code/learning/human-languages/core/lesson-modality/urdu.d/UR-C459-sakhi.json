@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C459-sakhi",
+    "language": "urdu",
+    "chapter": 459,
+    "sequence": 26990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39a9ecb7f7cce1f3"
+  },
+  "findings": []
+}

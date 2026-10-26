@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:b236c1b39e1ad1f3",
+  "lessonIds": [
+    "UR-C510-chhilna-peel",
+    "UR-C510-kutna",
+    "UR-C510-okhli",
+    "UR-C510-pisvana",
+    "UR-C510-nichorna"
+  ],
+  "tex": "urdu/book/chapters/ch510-peel-pound-squeeze.tex"
+}

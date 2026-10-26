@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:840d1218dabfca07",
+  "lessonIds": [
+    "UR-C480-iyadat-karna",
+    "UR-C480-timardari",
+    "UR-C480-nigahdasht",
+    "UR-C480-litana",
+    "UR-C480-orhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch480.txt",
+  "json": "urdu/narration/ch480.json",
+  "textHash": "fnv1a64:f46c73b30625196c",
+  "jsonHash": "fnv1a64:424559e5059eea16",
+  "findings": []
+}

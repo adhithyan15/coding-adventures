@@ -1,0 +1,11 @@
+{
+  "id": "UR-C477-phankna",
+  "pathSegment": "UR-PATH-477-MEDICINE477",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-477-MEDICINE477",
+      "order": 4
+    }
+  ]
+}

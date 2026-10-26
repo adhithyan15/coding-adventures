@@ -1,0 +1,11 @@
+{
+  "id": "UR-C369-kash",
+  "pathSegment": "UR-PATH-369-KASH369",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-369-KASH369",
+      "order": 0
+    }
+  ]
+}

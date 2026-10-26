@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R547-review-final-547",
+    "language": "urdu",
+    "chapter": 547,
+    "sequence": 31770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28725651bd3fc87e"
+  },
+  "findings": []
+}

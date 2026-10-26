@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:afe4ab0128c300b8",
+  "lessonIds": [
+    "UR-C310-talvar",
+    "UR-C310-dhal",
+    "UR-C310-bhala",
+    "UR-C310-kaman",
+    "UR-C310-lashkar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch310.txt",
+  "json": "urdu/narration/ch310.json",
+  "textHash": "fnv1a64:8febac3af54185c5",
+  "jsonHash": "fnv1a64:4efcbc160326392f",
+  "findings": []
+}

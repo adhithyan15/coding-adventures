@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C476-hakim",
+    "language": "urdu",
+    "chapter": 476,
+    "sequence": 27870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a01be0231316bde"
+  },
+  "findings": []
+}

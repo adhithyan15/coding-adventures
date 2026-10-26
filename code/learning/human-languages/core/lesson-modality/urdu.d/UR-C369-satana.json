@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C369-satana",
+    "language": "urdu",
+    "chapter": 369,
+    "sequence": 21970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d08c26995c4e3a7e"
+  },
+  "findings": []
+}

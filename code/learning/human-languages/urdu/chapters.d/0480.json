@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Looking After Someone",
+  "label": "ch:ur-looking-after-someone",
+  "canDo": "I can say how I look after someone who is ill.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C480-orhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can say how I look after someone who is ill.",
+    "assesses": [
+      "UR-LEX-C480-CARE480-03",
+      "UR-LEX-C480-CARE480-04",
+      "UR-LEX-C480-CARE480-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C411-lurhakna",
+  "pathSegment": "UR-PATH-411-DHALAN411",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-411-DHALAN411",
+      "order": 1
+    }
+  ]
+}

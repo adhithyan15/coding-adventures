@@ -1,0 +1,11 @@
+{
+  "id": "UR-C404-sahulat",
+  "pathSegment": "UR-PATH-404-GHUSL404",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-404-GHUSL404",
+      "order": 4
+    }
+  ]
+}

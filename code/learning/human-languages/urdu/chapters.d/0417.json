@@ -1,0 +1,21 @@
+{
+  "chapter": 417,
+  "title": "Accounts and Cash",
+  "label": "ch:ur-accounts-and-cash",
+  "canDo": "I can talk about my bank account, cash and cheques.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-R417-review-410-417",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can talk about my bank account, cash and cheques.",
+    "assesses": [
+      "UR-LEX-C417-RAQAM417-01",
+      "UR-LEX-C417-RAQAM417-02",
+      "UR-LEX-C417-RAQAM417-03",
+      "UR-LEX-C417-RAQAM417-04",
+      "UR-LEX-C417-RAQAM417-05"
+    ]
+  }
+}

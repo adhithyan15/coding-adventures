@@ -1,0 +1,11 @@
+{
+  "id": "UR-C517-shaiqin",
+  "pathSegment": "UR-PATH-517-STAGE517",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-517-STAGE517",
+      "order": 2
+    }
+  ]
+}
