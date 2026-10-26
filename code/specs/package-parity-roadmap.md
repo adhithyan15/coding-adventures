@@ -18110,3 +18110,22 @@ PR beside #18183 and #18293. The draft must not become ready until the
 metadata-only receipt head is independently reviewed. Auto-merge remains
 disabled until the final ready head is conflict-free and every required check
 is terminal acceptable.
+
+## October 26, 2026: post-Haskell-merge Swift hash reconciliation
+
+PR #18183 passed its exact-head checks and merged through guarded squash
+auto-merge from `17c40bca2a27f31ee1366bf123ab01978618c6fd` as
+`ab25faef874fdc7788b37eabc19b87b7c1c79835` at
+`2026-10-26T08:35:36Z`. The receipt is present on exact current origin/main
+`263e05f201003afd0395e82e6b810fe25a1260b4`, leaving #18293 and #18312 as the
+two live parity PRs.
+
+That main advance made both remaining reviewed heads conflict. The Swift hash
+branch is rebased onto exact current main while preserving the complete Haskell
+recovery history and its merge receipt. Before the rewritten #18312 head may be
+published, its focused native and metadata checks must pass again, the exact
+rebased delta must receive independent review, and the remote must still equal
+the previously reviewed `e60a15a73ed7ed2d090b996b0b184454e811b947` lease.
+Fresh hosted checks must then finish acceptably on the new head before guarded
+auto-merge is enabled. PR #18293 remains a separate owner and is not modified
+by this rebase.
