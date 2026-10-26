@@ -6,8 +6,12 @@
   drop the sign, then `(mag != 0) + (mag >= 0x7FF0…0) + (mag > 0x7FF0…0)`
   with three `setcc`s. `f64_digits` / `f64_exp10` pass the bits in the ABI's
   first integer register (`rdi` SysV, `rcx` MS x64) to the runtime's
-  `__iir_f64_digits` / `__iir_f64_exp10` and store `rax`. All three
+  `__twig_f64_digits` / `__twig_f64_exp10` and store `rax`. All three
   `Lowered` in `OP_SUPPORT`; byte-shape tests for both.
+- The runtime helpers are named `__twig_f64_digits` / `__twig_f64_exp10`, in
+  the runtime's own namespace. An `__iir_` name would have interposed on
+  iir-to-llvm's module-local 3-argument `@__iir_f64_digits` in any LLVM
+  program that links this runtime (found in security review).
 
 ## Unreleased — f64 negation flips the sign bit
 

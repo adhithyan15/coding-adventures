@@ -51,8 +51,8 @@ two translation units:
   (`int64_t bits` → Python `repr` / JavaScript `toString`, no newline): a
   self-contained Burger–Dybvig shortest-digits core over fixed 40-limb big
   integers, the commented reference the LLVM and WASM backends port. Since
-  LANG83 PR7b the same core also answers `__iir_f64_digits(bits)` /
-  `__iir_f64_exp10(bits)` (the shortest round-trip significand and the
+  LANG83 PR7b the same core also answers `__twig_f64_digits(bits)` /
+  `__twig_f64_exp10(bits)` (the shortest round-trip significand and the
   exponent of its leading digit), which the native backends call for the
   `f64_digits` / `f64_exp10` ops.
 - `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):

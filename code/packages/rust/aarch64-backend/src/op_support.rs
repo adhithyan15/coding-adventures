@@ -88,7 +88,7 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_signbit", Lowered),
     // LANG83 PR7b — the neutral float primitives: `f64_class` inline (one
     // compare and three `cset`s on the bits), `f64_digits` / `f64_exp10` via
-    // the runtime's `__iir_f64_digits` / `__iir_f64_exp10` (the PR6a C core).
+    // the runtime's `__twig_f64_digits` / `__twig_f64_exp10` (the PR6a C core).
     ("f64_class", Lowered),
     ("f64_digits", Lowered),
     ("f64_exp10", Lowered),

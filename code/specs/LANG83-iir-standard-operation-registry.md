@@ -730,7 +730,7 @@ emits itself.
 | Backend | Digits from | Layout and output |
 | --- | --- | --- |
 | x86-64 / AArch64 | `__twig_write_f64_py` / `__twig_write_f64_js` in the native runtime (`twig_runtime.c`, the same place PR1b put `__twig_write_i64`): the core above in C, on stack bignums | C; `putchar` on the same `stdout` `FILE*` as `printf`. The argument is the raw bit pattern in a GPR (`rdi` / `x0`), so the generic `call_builtin` marshalling is unchanged. |
-| LLVM | module-local `linkonce_odr` IR: `@__iir_bn_*` limb routines and `@__iir_f64_digits` (the core, bignums in `alloca [40 x i64]`) | `linkonce_odr @__iir_write_f64(double, i32 layout)`; libc `putchar` |
+| LLVM | module-local IR (`linkonce_odr` in PR6a, `internal` since PR7b): `@__iir_bn_*` limb routines and `@__iir_f64_digits` (the core, bignums in `alloca [40 x i64]`) | `@__iir_write_f64(double, i32 layout)`; libc `putchar` |
 | WASM | in-module functions: `$__iir_bn_*` limb routines and the core, bignums in a 1 664-byte region reserved at the end of the module's static data (so neither the bump allocator nor string data can overlap it) | in-module `$__iir_write_f64(f64, i32 layout)`; one `env.putchar` per byte |
 | JVM | a search in the helper, with Java 5 APIs only, so the output does not depend on the JDK. `exact = new BigDecimal(Math.abs(x))` is the double's exact value. For p = 1, 2, … 17 it computes `lo = exact.round(new MathContext(p, FLOOR))` and `hi = exact.round(new MathContext(p, CEILING))`, and stops at the first p where `lo.doubleValue()` or `hi.doubleValue()` equals `|x|`. If only one reads back, that one wins. If both do, the closer to `exact` wins, and on an exact tie the even last digit. Both neighbours are needed because the round-trip interval is lopsided at a power of two. Any p-digit decimal in the interval implies that `lo` or `hi` is in it, so the first such p is the shortest length. `Double.toString` is NOT used: it is shortest only on JDK 19+ (JDK-4511638), and CI's Windows job runs a pre-19 `java`. | synthetic private static method `__iir_write_f64(DI)V`: `picked.stripTrailingZeros()` gives `D` (`unscaledValue()`) and `e10 = len(D) - 1 - scale()`; fixed layout is `toPlainString()`, sci is built with a `StringBuilder`; one `System.out.print(String)` |
 | CLR (textual) | `Math.Abs(x).ToString("R", CultureInfo.InvariantCulture)`: shortest round-trip on .NET Core 3.0+ | IL helper `__iir_write_f64(float64, int32)` that parses the mantissa / `E` exponent with `IndexOf`, `Substring`, `Remove`, `TrimStart('0')`, `TrimEnd('0')` and `Int32.Parse`, then `Console.Write(string)` for each piece |
@@ -1067,8 +1067,8 @@ conformance cases test only the values, never how often the search runs.
 
 | Backend | `f64_class` | `f64_digits` / `f64_exp10` |
 | --- | --- | --- |
-| x86-64 / AArch64 | inline bit test on the raw pattern in a GPR (exponent field all ones → 2 or 3, all zero with zero fraction → 0) | `__iir_f64_digits(bits)` / `__iir_f64_exp10(bits)` in the native runtime: the C core, minus the layout |
-| LLVM | inline `bitcast` + integer compares | the existing `@__iir_f64_digits` core, returning `D` and `k − 1` through two `linkonce_odr` wrappers (`@__iir_f64_shortest_digits` / `@__iir_f64_shortest_exp10`) |
+| x86-64 / AArch64 | inline bit test on the raw pattern in a GPR (exponent field all ones → 2 or 3, all zero with zero fraction → 0) | `__twig_f64_digits(bits)` / `__twig_f64_exp10(bits)` in the native runtime: the C core, minus the layout. The runtime's own `__twig_` namespace: an `__iir_` name would collide with the LLVM module's core (see below). |
+| LLVM | inline `bitcast` + integer compares | the existing `@__iir_f64_digits` core, returning `D` and `k − 1` through two wrappers (`@__iir_f64_shortest_digits` / `@__iir_f64_shortest_exp10`); every float helper has `internal` linkage |
 | WASM | inline `i64.reinterpret_f64` + compares | the existing in-module core, two in-module `(f64) -> i64` wrappers |
 | JVM | `Double.doubleToRawLongBits` + compares | the existing `BigDecimal` search, now its own method `__iir_f64_shortest`: `unscaledValue().longValue()` and `len − 1 − scale()` |
 | CLR | `BitConverter.DoubleToInt64Bits` + compares | the existing `"R"` parse, minus the layout, now its own method `__iir_f64_shortest(float64, int32&)` |
@@ -1096,11 +1096,26 @@ unchanged).
   computation part (big integers, core, the two wrappers) and an output part
   (layout, `putchar`), so a module that asks for digits but prints no float
   carries no output code and, on WASM, imports no `env.putchar`. The native
-  runtime adds `__iir_f64_digits` / `__iir_f64_exp10` beside the writers.
+  runtime adds `__twig_f64_digits` / `__twig_f64_exp10` beside the writers.
   VM: `vm_core::float_format::shortest_digits` now returns `(u64, i32)`; the
   string form is private.
 - *WASM wrappers* are in-module functions, not exports (nothing outside the
   module calls them).
+- *Names and linkage (security review).* The native runtime helpers were
+  first named `__iir_f64_digits` / `__iir_f64_exp10`. The LLVM module's own
+  3-argument digit core is also `@__iir_f64_digits`, and PR6a gave it
+  `linkonce_odr` linkage, which a strong definition can interpose on. Any LLVM
+  program that also calls a `@__twig_*` helper links `twig_runtime.c`, so the
+  C function silently replaced the core: `write_f64_py 0.1` printed `0.0` and
+  `123.456` crashed. The fix has two parts. The runtime helpers are now
+  `__twig_f64_*`. Every LLVM float helper (`lang83_f64.rs`) is now
+  `define internal` and its constants `private`, so no linked object can
+  replace them; each module carries its own copy. An `op_conformance` case
+  combines a string op (which links the runtime on the LLVM column) with the
+  writers and the digit ops on every column, and
+  `llvm_float_helpers_cannot_be_interposed_by_the_native_runtime` pins the
+  linkage and the naming rule. PR1b's `@__iir_write_i64` / `@__iir_trap`
+  stay `linkonce_odr`: the runtime defines neither name.
 - *BEAM* parses the signed value (as the writer always has) rather than
   `abs(X)`: the sign is peeled off before the digits, so `D` and `e10` are the
   same.

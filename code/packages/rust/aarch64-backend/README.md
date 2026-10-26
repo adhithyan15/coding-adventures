@@ -73,4 +73,4 @@ LANG83 PR6a adds `write_f64_py` / `write_f64_js`: plain V1 builtin calls (`bl __
 
 LANG83 PR6c adds the non-trapping IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div` (`fadd` … `fdiv`) and, on the raw bits in `x0`, `f64_neg` (`eor` with the sign mask) and `f64_signbit` (`lsr` by 63).
 
-LANG83 PR7b adds `f64_class` (inline: one `cmp` with +Infinity's bits and three `cset`s summed) and `f64_digits` / `f64_exp10` (`bl __iir_f64_digits` / `__iir_f64_exp10` with the raw bits in `x0`).
+LANG83 PR7b adds `f64_class` (inline: one `cmp` with +Infinity's bits and three `cset`s summed) and `f64_digits` / `f64_exp10` (`bl __twig_f64_digits` / `__twig_f64_exp10` with the raw bits in `x0`).

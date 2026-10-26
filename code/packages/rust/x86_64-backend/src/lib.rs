@@ -965,7 +965,7 @@ fn emit_instr(
     // PR6a writers print from. The bits go in the first integer argument
     // register (`rdi` SysV / `rcx` MS x64), the result comes back in `rax`:
     //
-    //   mov rdi,[a]; call __iir_f64_digits; mov [d],rax
+    //   mov rdi,[a]; call __twig_f64_digits; mov [d],rax
     //
     // Every source is read before `[d]` is written, so `d == a` is safe.
     if op == "f64_class" {
@@ -994,7 +994,7 @@ fn emit_instr(
         let src = instr.srcs.first()
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_f64_bits(asm, alloc, abi.arg_regs()[0], src)?;   // first arg = bits
-        asm.call_rel32(&format!("__iir_{op}"), ExternalRelocKind::PltRel32);
+        asm.call_rel32(&format!("__twig_{op}"), ExternalRelocKind::PltRel32);
         let slot = alloc.slot_of(dest);
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
         return Ok(());
@@ -3564,7 +3564,7 @@ mod tests {
         assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_err(), "an integer literal is not float bits");
     }
 
-    /// `f64_digits` / `f64_exp10` call the runtime's `__iir_f64_*` with the
+    /// `f64_digits` / `f64_exp10` call the runtime's `__twig_f64_*` with the
     /// raw bits in the ABI's first integer register and store `rax`.
     #[test]
     fn f64_digits_and_exp10_call_the_runtime_with_the_bits() {
@@ -3577,7 +3577,7 @@ mod tests {
             ];
             for (abi, modrm_reg) in [(X86_64Abi::SysV, 7u8), (X86_64Abi::MsX64, 1)] {
                 let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, abi).unwrap();
-                let reloc = relocs.iter().find(|r| r.symbol == format!("__iir_{op}")).expect(op);
+                let reloc = relocs.iter().find(|r| r.symbol == format!("__twig_{op}")).expect(op);
                 let call = reloc.patch_offset - 1;
                 assert_eq!(bytes[call], 0xE8, "{op}: call rel32");
                 // mov rdi|rcx, [slot] (REX.W 8B, ModRM.reg = the arg register).

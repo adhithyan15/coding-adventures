@@ -970,7 +970,7 @@ fn emit_instr(
     // search (`twig_runtime.c`, the PR6a C core): the bits in `x0`, the
     // integer result back in `x0`:
     //
-    //   ldr x0,[a]; bl __iir_f64_digits; str x0,[d]
+    //   ldr x0,[a]; bl __twig_f64_digits; str x0,[d]
     if op == "f64_class" {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
@@ -997,7 +997,7 @@ fn emit_instr(
         let src = instr.srcs.first()
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_f64_bits(asm, alloc, Reg::X0, src)?;   // x0 = bits of a
-        asm.bl_external(format!("__iir_{op}"));
+        asm.bl_external(format!("__twig_{op}"));
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;
         return Ok(());
@@ -3783,7 +3783,7 @@ mod tests {
         assert!(compile(&ctx("f", &params, "void"), &bad).is_err(), "an integer literal is not float bits");
     }
 
-    /// `f64_digits` / `f64_exp10` are `bl __iir_f64_*` with the bits in x0,
+    /// `f64_digits` / `f64_exp10` are `bl __twig_f64_*` with the bits in x0,
     /// and the result is stored from x0 right after the call.
     #[test]
     fn f64_digits_and_exp10_call_the_runtime_with_the_bits() {
@@ -3799,7 +3799,7 @@ mod tests {
             ];
             let (bytes, relocs) = compile_with_relocs(&ctx("f", &params, "void"), &body).unwrap();
             let ws = words(&bytes);
-            let call = relocs.iter().find(|r| r.symbol == format!("__iir_{op}")).expect(op).word_idx;
+            let call = relocs.iter().find(|r| r.symbol == format!("__twig_{op}")).expect(op).word_idx;
             assert_eq!(ws[call] & 0xFC00_0000, 0x9400_0000, "{op}: bl");
             // The word after the call stores x0 (STR Xt, Rt = 0).
             assert_eq!(ws[call + 1] & 0xFFC0_001F, 0xF900_0000, "{op}: str x0, [sp, #slot]");

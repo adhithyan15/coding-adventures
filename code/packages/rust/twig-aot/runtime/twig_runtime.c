@@ -36,8 +36,8 @@
  * | `__twig_write_i64`    | LANG83: print a signed 64-bit integer, no newline. |
  * | `__twig_write_f64_py` | LANG83 PR6a: a double as Python `repr`, no newline. |
  * | `__twig_write_f64_js` | LANG83 PR6a: a double as JS `Number#toString`, no newline. |
- * | `__iir_f64_digits`    | LANG83 PR7b `f64_digits`: shortest round-trip significand D. |
- * | `__iir_f64_exp10`     | LANG83 PR7b `f64_exp10`: exponent of D's leading digit.      |
+ * | `__twig_f64_digits`   | LANG83 PR7b `f64_digits`: shortest round-trip significand D. |
+ * | `__twig_f64_exp10`    | LANG83 PR7b `f64_exp10`: exponent of D's leading digit.      |
  * | `__twig_trap`         | LANG83: flush stdout, report the trap kind on stderr, abort. |
  * | `__twig_putchar`      | Write one byte to stdout.                    |
  * | `__twig_getchar`      | Read one byte from stdin (-1 on EOF).        |
@@ -420,9 +420,9 @@ void __twig_write_f64_js(int64_t bits) {
  * backends lower to calls of these helpers (argument: the raw bits in
  * `rdi` / `x0`, as for `__twig_write_f64_*`; result in `rax` / `x0`):
  *
- *   __iir_f64_digits(bits)  D, the shortest round-trip significand of |x|,
+ *   __twig_f64_digits(bits)  D, the shortest round-trip significand of |x|,
  *                           with no trailing zeros (1 <= D < 10^17)
- *   __iir_f64_exp10(bits)   e10 = k - 1, the exponent of D's leading digit,
+ *   __twig_f64_exp10(bits)   e10 = k - 1, the exponent of D's leading digit,
  *                           so |x| = D × 10^(e10 - n + 1), n = digits of D
  *
  *      x        D                    e10
@@ -435,14 +435,20 @@ void __twig_write_f64_js(int64_t bits) {
  * no digits. The third op, f64_class, is a few compares on the bits and is
  * emitted inline by the backends. Both helpers run `twig_f64_digits`, the
  * same core `twig_write_f64` prints from, so an op and a writer can never
- * disagree on a digit. Each call runs the search once; nothing is cached. */
+ * disagree on a digit. Each call runs the search once; nothing is cached.
+ *
+ * The names follow this runtime's `__twig_` convention on purpose. They must
+ * NOT be `__iir_*`: that prefix belongs to helpers the compilers emit into
+ * their own modules (iir-to-llvm defines a module-local 3-argument
+ * `@__iir_f64_digits` core), and a strong global of the same name here would
+ * interpose on it whenever this archive is linked into an LLVM program. */
 
 /* `mag` is |x|'s bits; 1 when it has digits (finite and non-zero). */
 static int twig_f64_has_digits(uint64_t mag) {
     return mag != 0 && mag < 0x7FF0000000000000ull;
 }
 
-int64_t __iir_f64_digits(int64_t bits) {
+int64_t __twig_f64_digits(int64_t bits) {
     uint64_t mag = (uint64_t)bits & 0x7FFFFFFFFFFFFFFFull;
     if (!twig_f64_has_digits(mag)) return 0;
     unsigned char d[32];
@@ -457,7 +463,7 @@ int64_t __iir_f64_digits(int64_t bits) {
     return D;
 }
 
-int64_t __iir_f64_exp10(int64_t bits) {
+int64_t __twig_f64_exp10(int64_t bits) {
     uint64_t mag = (uint64_t)bits & 0x7FFFFFFFFFFFFFFFull;
     if (!twig_f64_has_digits(mag)) return 0;
     unsigned char d[32];

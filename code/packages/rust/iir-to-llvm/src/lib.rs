@@ -325,7 +325,7 @@ const SUPPORTED_OPS: &[&str] = &[
     "f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg", "f64_signbit",
     // LANG83 PR7b — the language-neutral float primitives. `f64_class` is a
     // `bitcast` and three integer compares inline; `f64_digits` / `f64_exp10`
-    // call the module's own `linkonce_odr` wrappers around the PR6a digit
+    // call the module's own `internal` wrappers around the PR6a digit
     // core (`lang83_f64.rs`), so they need no runtime and no `putchar`.
     "f64_class", "f64_digits", "f64_exp10",
 ];
@@ -382,7 +382,7 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "write_i64",
     // LANG83 PR6a — shortest round-trip float output, Python `repr` / JS
     // `Number#toString` layout, no newline. Both lower to the module's own
-    // `linkonce_odr` `@__iir_write_f64(double, i32 layout)` (see
+    // `internal` `@__iir_write_f64(double, i32 layout)` (see
     // `lang83_f64.rs`), which writes with libc `putchar`.
     "write_f64_py",
     "write_f64_js",
@@ -3254,7 +3254,7 @@ fn lower_f64_ieee(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Re
 ///   ±0 → 0     finite ≠ 0 → 1     ±Infinity → 2     NaN → 3
 /// ```
 ///
-/// The two wrappers are the module's own `linkonce_odr` definitions around
+/// The two wrappers are the module's own `internal` definitions around
 /// the PR6a digit core (`lang83_f64.rs`), so the digits match `write_f64_*`.
 fn lower_f64_digit_query(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
     let opname = instr.op.as_str();

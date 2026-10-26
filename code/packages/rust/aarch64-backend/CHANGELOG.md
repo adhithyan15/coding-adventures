@@ -4,9 +4,13 @@
 
 - `f64_class` lowers inline: `lsl`/`lsr` by 1 drop the sign, one `cmp`
   against +Infinity's bits feeds `cset hs` and `cset hi`, plus `cset ne`
-  against zero, summed. `f64_digits` / `f64_exp10` are `bl __iir_f64_*`
+  against zero, summed. `f64_digits` / `f64_exp10` are `bl __twig_f64_*`
   with the bits in `x0` and the result stored from `x0`. All three
   `Lowered`; word-shape tests (structural: no AArch64 host here).
+- The runtime helpers are named `__twig_f64_digits` / `__twig_f64_exp10`, in
+  the runtime's own namespace. An `__iir_` name would have interposed on
+  iir-to-llvm's module-local 3-argument `@__iir_f64_digits` in any LLVM
+  program that links this runtime (found in security review).
 
 ## Unreleased — f64 negation flips the sign bit
 

@@ -2,13 +2,20 @@
 ## Unreleased — LANG83 PR7b — the language-neutral float primitives
 
 - The module-local float IR is now two constants: `LANG83_F64_DIGITS_LL`
-  (big integers, the `@__iir_f64_digits` core and two new `linkonce_odr`
+  (big integers, the `@__iir_f64_digits` core and two new
   wrappers `@__iir_f64_shortest_digits(double)` / `@__iir_f64_shortest_exp10(double)`)
   and `LANG83_F64_WRITE_LL` (the PR6a layout and output). A module with
   `f64_digits` / `f64_exp10` gets the first only (no `putchar`); a module
   that prints a float gets both, with one copy of the core.
 - `f64_class` is inline: `bitcast`, mask, three `icmp`s `zext`ed and summed.
 - The reserved `__iir_` function-name check also covers the digit ops.
+- **Every float helper in `lang83_f64.rs` is now `define internal` (constants
+  `private`)** instead of PR6a's `linkonce_odr`. A `linkonce_odr` name is
+  global and interposable, so a strong symbol of the same name in a linked
+  runtime would replace it. That happened in review, when `twig_runtime.c`
+  defined a 1-argument `__iir_f64_digits` (since renamed `__twig_f64_digits`):
+  `write_f64_py` printed `0.0` for `0.1` and crashed on `123.456`. New
+  regression test: an LLVM program that also links the native runtime.
 - Tests: emitted shape, one core with both users, and the three ops on real
   `clang` against host `python3`. The wrappers were also checked against
   `python3` on a 122 108-value corpus at `-O0` and `-O2`.

@@ -3,10 +3,23 @@
 //!
 //! `call_builtin "write_f64_py", x` and `call_builtin "write_f64_js", x` lower
 //! to `call void @__iir_write_f64(double x, i32 0|1)`. This file holds the IR
-//! that call reaches. Like PR1b's `@__iir_write_i64`, it is emitted **into the
-//! module** as `linkonce_odr` definitions (one copy survives however many
-//! modules a link combines), so a `.ll` that prints a float needs nothing but
-//! libc's `putchar` — no harness runtime, no shared helper library.
+//! that call reaches. It is emitted **into the module**, so a `.ll` that prints
+//! a float needs nothing but libc's `putchar` — no harness runtime, no shared
+//! helper library.
+//!
+//! # Linkage: `internal`, never interposable
+//!
+//! Every function here is `define internal` and every constant `private`.
+//! PR6a used `linkonce_odr` (one copy per link), which made the names global
+//! and therefore *interposable*: a strong definition of the same name in an
+//! object linked with the module wins over a `linkonce_odr` one. The native
+//! runtime (`twig_runtime.c`), which a harness links into any LLVM program that
+//! calls a `@__twig_*` helper, briefly defined a 1-argument
+//! `int64_t __iir_f64_digits(int64_t)` (LANG83 PR7b, caught in review). The
+//! 3-argument calls below would then have run it: a wrong digit count, and a
+//! 32-byte digit buffer read before anything was written to it. `internal`
+//! binds every call to this module's own definition, whatever else is linked.
+//! Each module carries its own copy, which costs a few hundred bytes of code.
 //!
 //! # What it computes
 //!
@@ -57,7 +70,7 @@ pub(crate) const LANG83_F64_DIGITS_LL: &str = r#"
 ; ── LANG83 PR6a: shortest round-trip float output (see lang83_f64.rs) ──────
 
 ; a = v: zero all 40 limbs, then the low and high 32 bits of v.
-define linkonce_odr void @__iir_bn_set(ptr %a, i64 %v) {
+define internal void @__iir_bn_set(ptr %a, i64 %v) {
 entry:
   br label %zero
 zero:
@@ -77,7 +90,7 @@ fill:
 }
 
 ; a *= m, m < 2^32: limb * m + carry < 2^64, low half stays, high half carries.
-define linkonce_odr void @__iir_bn_mul_small(ptr %a, i64 %m) {
+define internal void @__iir_bn_mul_small(ptr %a, i64 %m) {
 entry:
   br label %loop
 loop:
@@ -98,7 +111,7 @@ exit:
 }
 
 ; a *= 2^n, at most 31 bits per pass.
-define linkonce_odr void @__iir_bn_mul_pow2(ptr %a, i64 %n) {
+define internal void @__iir_bn_mul_pow2(ptr %a, i64 %n) {
 entry:
   br label %head
 head:
@@ -117,7 +130,7 @@ exit:
 }
 
 ; a *= 10^n, at most nine decimal digits (10^9 < 2^32) per pass.
-define linkonce_odr void @__iir_bn_mul_pow10(ptr %a, i64 %n) {
+define internal void @__iir_bn_mul_pow10(ptr %a, i64 %n) {
 entry:
   br label %head
 head:
@@ -145,7 +158,7 @@ exit:
 
 ; d = a + b, limb by limb with carry. Reads index i before writing it, so
 ; d may alias a or b (`t = r + r`).
-define linkonce_odr void @__iir_bn_add(ptr %d, ptr %a, ptr %b) {
+define internal void @__iir_bn_add(ptr %d, ptr %a, ptr %b) {
 entry:
   br label %loop
 loop:
@@ -170,7 +183,7 @@ exit:
 
 ; a -= b (a >= b). t = a_i + 2^32 - b_i - borrow is never negative; bit 32 of
 ; t is set exactly when this limb did not need to borrow.
-define linkonce_odr void @__iir_bn_sub(ptr %a, ptr %b) {
+define internal void @__iir_bn_sub(ptr %a, ptr %b) {
 entry:
   br label %loop
 loop:
@@ -195,7 +208,7 @@ exit:
 }
 
 ; -1, 0, 1 as a <, ==, > b — from the most significant limb down.
-define linkonce_odr i32 @__iir_bn_cmp(ptr %a, ptr %b) {
+define internal i32 @__iir_bn_cmp(ptr %a, ptr %b) {
 entry:
   br label %loop
 loop:
@@ -220,7 +233,7 @@ equal:
 
 ; The shortest digits of the finite positive double with bits %mag: digit
 ; values 0..9 into %out, their count returned, k (x = 0.D * 10^k) to %kout.
-define linkonce_odr i32 @__iir_f64_digits(i64 %mag, ptr %out, ptr %kout) {
+define internal i32 @__iir_f64_digits(i64 %mag, ptr %out, ptr %kout) {
 entry:
   %r = alloca [40 x i64]
   %s = alloca [40 x i64]
@@ -386,7 +399,7 @@ finish:
 ; D: the digit values folded into one integer (at most 17 digits, so it fits),
 ; then any trailing zero divided away (the shortest search never leaves one;
 ; the loop keeps the "no trailing zeros" contract explicit).
-define linkonce_odr i64 @__iir_f64_shortest_digits(double %x) {
+define internal i64 @__iir_f64_shortest_digits(double %x) {
 entry:
   %digits = alloca [32 x i8]
   %kslot = alloca i64
@@ -430,7 +443,7 @@ done:
 }
 
 ; e10 = k - 1, the exponent of D's leading digit.
-define linkonce_odr i64 @__iir_f64_shortest_exp10(double %x) {
+define internal i64 @__iir_f64_shortest_exp10(double %x) {
 entry:
   %digits = alloca [32 x i8]
   %kslot = alloca i64
@@ -456,7 +469,7 @@ search:
 /// module may already declare it for the `putchar` builtin).
 pub(crate) const LANG83_F64_WRITE_LL: &str = r#"
 ; putchar('0' + d[i]) for i in [from, to).
-define linkonce_odr void @__iir_put_digits(ptr %d, i64 %from, i64 %to) {
+define internal void @__iir_put_digits(ptr %d, i64 %from, i64 %to) {
 entry:
   br label %head
 head:
@@ -476,7 +489,7 @@ exit:
 }
 
 ; putchar(c) n times (n <= 0: nothing).
-define linkonce_odr void @__iir_put_repeat(i32 %c, i64 %n) {
+define internal void @__iir_put_repeat(i32 %c, i64 %n) {
 entry:
   br label %head
 head:
@@ -492,7 +505,7 @@ exit:
 }
 
 ; Every byte of the n-byte constant at %p.
-define linkonce_odr void @__iir_put_text(ptr %p, i64 %n) {
+define internal void @__iir_put_text(ptr %p, i64 %n) {
 entry:
   br label %head
 head:
@@ -510,16 +523,16 @@ exit:
   ret void
 }
 
-@__iir_f64_nan_py = linkonce_odr unnamed_addr constant [3 x i8] c"nan"
-@__iir_f64_nan_js = linkonce_odr unnamed_addr constant [3 x i8] c"NaN"
-@__iir_f64_inf_py = linkonce_odr unnamed_addr constant [3 x i8] c"inf"
-@__iir_f64_inf_js = linkonce_odr unnamed_addr constant [8 x i8] c"Infinity"
-@__iir_f64_zero_py = linkonce_odr unnamed_addr constant [3 x i8] c"0.0"
+@__iir_f64_nan_py = private unnamed_addr constant [3 x i8] c"nan"
+@__iir_f64_nan_js = private unnamed_addr constant [3 x i8] c"NaN"
+@__iir_f64_inf_py = private unnamed_addr constant [3 x i8] c"inf"
+@__iir_f64_inf_js = private unnamed_addr constant [8 x i8] c"Infinity"
+@__iir_f64_zero_py = private unnamed_addr constant [3 x i8] c"0.0"
 
 ; Print x as Python repr (%js = 0) or JavaScript toString (%js != 0), no
 ; newline. e = k - 1 is the exponent of the first digit; fixed notation when
 ; -4 <= e < 16 (Python) / -6 <= e < 21 (JavaScript), else d[.ddd]e+-X.
-define linkonce_odr void @__iir_write_f64(double %x, i32 %js) {
+define internal void @__iir_write_f64(double %x, i32 %js) {
 entry:
   %digits = alloca [32 x i8]
   %kslot = alloca i64

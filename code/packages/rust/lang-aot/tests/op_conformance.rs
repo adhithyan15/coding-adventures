@@ -949,6 +949,42 @@ fn cases() -> Vec<Case> {
             },
             expect: Expect::Stdout("2 0 0\n2 0 0\n3 0 0"),
         },
+        // Security-review regression (PR7b): a string op makes the LLVM column
+        // link the native runtime (`twig_runtime.c`, via `@__twig_str_eq`) into
+        // the same program as the module's own float helpers. A runtime symbol
+        // that shared a name with one of them (PR7b first named its C helper
+        // `__iir_f64_digits`, the LLVM core's name) would interpose on it:
+        // `write_f64_py 0.1` printed `0.0` and `123.456` crashed. The LLVM
+        // helpers are now `internal` and the C ones `__twig_*`.
+        Case {
+            name: "float digits and writers survive a linked native runtime (PR7b review)",
+            build: || {
+                program(vec![
+                    text("a", "xy"),
+                    text("b", "xy"),
+                    int("sp", 32),
+                    real("x", 123.456),
+                    real("y", 0.1),
+                    real("h", 1.5),
+                    op("str_eq", "e", &["a", "b"], "i64"),
+                    builtin("write_i64", "e"),
+                    builtin("putchar", "sp"),
+                    builtin("write_f64_py", "x"),
+                    builtin("putchar", "sp"),
+                    builtin("write_f64_py", "y"),
+                    builtin("putchar", "sp"),
+                    op("f64_digits", "d", &["x"], "i64"),
+                    builtin("write_i64", "d"),
+                    builtin("putchar", "sp"),
+                    op("f64_exp10", "k", &["x"], "i64"),
+                    builtin("write_i64", "k"),
+                    builtin("putchar", "sp"),
+                    op("f64_digits", "d2", &["h"], "i64"),
+                    builtin("write_i64", "d2"),
+                ])
+            },
+            expect: Expect::Stdout("1 123.456 0.1 123456 2 15"),
+        },
         // ── LANG83 PR4: overflow-checked arithmetic ─────────────────────────
         //
         // Exact results right at the i64 bounds, then one step past them,
@@ -1958,6 +1994,36 @@ fn pr7b_ops_are_lowered_on_every_backend() {
             (_, other) => panic!("{}: BEAM gave {other:?}", case.name),
         }
         eprintln!("LANG83 PR7b `{}` proven on {ran:?}", case.name);
+    }
+}
+
+/// The PR7b review regression really exercises the hazard: its LLVM module
+/// references the native runtime (so `run_llvm` links `twig_runtime.c` into
+/// it), and every float helper the module defines is `internal`, never an
+/// interposable global; and the case runs on the LLVM column when `clang` is
+/// present.
+#[test]
+fn llvm_float_helpers_cannot_be_interposed_by_the_native_runtime() {
+    let corpus = cases();
+    let case = corpus.iter().find(|c| c.name.ends_with("(PR7b review)")).expect("the regression case");
+    let ll = lang_aot::compile_iir_to_llvm(case.module(), "opconf", "x86_64-unknown-linux-gnu").expect("compiles");
+    assert!(ll.contains("@__twig_"), "the module must make run_llvm link the native runtime");
+    for name in ["__iir_f64_digits", "__iir_f64_shortest_digits", "__iir_f64_shortest_exp10", "__iir_write_f64"] {
+        let def = ll.lines().find(|l| l.starts_with("define") && l.contains(&format!("@{name}("))).unwrap_or_else(|| panic!("{name} defined"));
+        assert!(def.starts_with("define internal "), "{name} must not be interposable: {def}");
+    }
+    // No runtime symbol may take a name the LLVM module defines.
+    let runtime = include_str!("../../twig-aot/runtime/twig_runtime.c");
+    let code_lines = runtime.lines().filter(|l| {
+        let t = l.trim_start();
+        !(t.starts_with('*') || t.starts_with("/*") || t.starts_with("//"))
+    });
+    for line in code_lines {
+        assert!(!line.contains("__iir_"), "twig_runtime.c must not define `__iir_*` names: {line}");
+    }
+    let ran = execute_everywhere(case);
+    if clang_ok() {
+        assert!(ran.contains(&"Llvm"), "ran on {ran:?}");
     }
 }
 

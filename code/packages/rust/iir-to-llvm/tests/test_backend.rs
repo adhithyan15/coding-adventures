@@ -3728,8 +3728,8 @@ fn float_writers_call_one_module_local_routine_with_a_layout_flag() {
     let ll = lower(&float_program("write_f64_py", &[1.5]));
     assert!(ll.contains("call void @__iir_write_f64(double "), "{ll}");
     assert!(ll.contains(", i32 0)"), "Python layout is 0");
-    assert_eq!(ll.matches("define linkonce_odr void @__iir_write_f64(").count(), 1);
-    assert_eq!(ll.matches("define linkonce_odr i32 @__iir_f64_digits(").count(), 1);
+    assert_eq!(ll.matches("define internal void @__iir_write_f64(").count(), 1);
+    assert_eq!(ll.matches("define internal i32 @__iir_f64_digits(").count(), 1);
     assert_eq!(ll.matches("declare i32 @putchar(i32)").count(), 1, "putchar declared once");
     // Self-contained: no harness runtime and no libc formatter.
     assert!(!ll.contains("@printf") && !ll.contains("@__twig_") && !ll.contains("@snprintf"));
@@ -3807,8 +3807,8 @@ fn digit_ops_emit_the_core_and_wrappers_but_not_the_writer() {
     }
     assert!(ll.contains("= call i64 @__iir_f64_shortest_digits(double 0x3FF8000000000000)"), "{ll}");
     assert!(ll.contains("= call i64 @__iir_f64_shortest_exp10(double 0x3FF8000000000000)"), "{ll}");
-    assert_eq!(ll.matches("define linkonce_odr i32 @__iir_f64_digits(").count(), 1);
-    assert_eq!(ll.matches("define linkonce_odr i64 @__iir_f64_shortest_digits(").count(), 1);
+    assert_eq!(ll.matches("define internal i32 @__iir_f64_digits(").count(), 1);
+    assert_eq!(ll.matches("define internal i64 @__iir_f64_shortest_digits(").count(), 1);
     // No layout code, and nothing that writes a byte: the digits are pure.
     assert!(!ll.contains("@__iir_write_f64") && !ll.contains("@putchar"), "{ll}");
     // A module that both prints a float and asks for its digits carries ONE core.
@@ -3818,8 +3818,8 @@ fn digit_ops_emit_the_core_and_wrappers_but_not_the_writer() {
     both.functions[0].instructions.push(IIRInstr::new("call_builtin", None, vec![v("write_f64_py"), v("c0")], "void"));
     both.functions[0].instructions.extend(ret);
     let ll = lower(&both);
-    assert_eq!(ll.matches("define linkonce_odr i32 @__iir_f64_digits(").count(), 1, "{ll}");
-    assert_eq!(ll.matches("define linkonce_odr void @__iir_write_f64(").count(), 1);
+    assert_eq!(ll.matches("define internal i32 @__iir_f64_digits(").count(), 1, "{ll}");
+    assert_eq!(ll.matches("define internal void @__iir_write_f64(").count(), 1);
     assert_eq!(ll.matches("declare i32 @putchar(i32)").count(), 1);
     assert!(validate_for_llvm(&digit_program(&[1.5], true)).is_empty());
     // The reserved namespace is refused for the digit ops too.
