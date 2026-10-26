@@ -947,4 +947,27 @@ mod tests {
             Err(FlatteningError::BudgetExceeded)
         );
     }
+
+    #[test]
+    fn flattening_error_messages_and_scaled_distance_boundaries() {
+        assert_eq!(
+            FlatteningError::InvalidTolerance.to_string(),
+            "tolerance must be finite and positive"
+        );
+        assert_eq!(
+            FlatteningError::NonFiniteGeometry.to_string(),
+            "non-finite geometry"
+        );
+        assert_eq!(
+            FlatteningError::BudgetExceeded.to_string(),
+            "flattening budget exceeded"
+        );
+
+        let origin = Point::new(0.0, 0.0);
+        assert_eq!(point_to_segment_distance(origin, origin, origin), Ok(0.0));
+        assert_eq!(
+            point_to_segment_distance(Point::new(f64::MAX, f64::MAX), origin, origin),
+            Err(FlatteningError::NonFiniteGeometry)
+        );
+    }
 }
