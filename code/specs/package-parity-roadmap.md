@@ -18136,7 +18136,7 @@ PR #18312 completed every reported final-head check acceptably and merged from
 exact head `b804a122612f4ae64d967efbff454af771bf6130` as
 `0be03745d775ffa9ee8c66ffda1700baa76ba58f` at
 `2026-10-26T11:52:29Z`. That receipt is an ancestor of the reconciled selection
-base, exact origin/main `eb5ff8791b4bcd2118f1c6b8060f01c804ed5fa1`, so the live
+base, exact origin/main `9dce8120cfc6ed37c205d7a03f35de40b509260a`, so the live
 parity PR set is now #18293 and #18324.
 
 The refreshed ready-owner prioritization selects

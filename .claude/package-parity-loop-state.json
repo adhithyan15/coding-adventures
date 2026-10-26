@@ -24,7 +24,7 @@
   "last_ci_action": {
     "pr_number": 18312,
     "head": "b804a122612f4ae64d967efbff454af771bf6130",
-    "action": "GitHub reports every final-head check terminal acceptable and PR #18312 merged at 2026-10-26T11:52:29Z as 0be03745d775ffa9ee8c66ffda1700baa76ba58f. The exact merge receipt is an ancestor of reconciled origin/main eb5ff8791b4bcd2118f1c6b8060f01c804ed5fa1."
+    "action": "GitHub reports every final-head check terminal acceptable and PR #18312 merged at 2026-10-26T11:52:29Z as 0be03745d775ffa9ee8c66ffda1700baa76ba58f. The exact merge receipt is an ancestor of reconciled origin/main 9dce8120cfc6ed37c205d7a03f35de40b509260a."
   },
   "last_inventory": {
     "revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
@@ -14216,7 +14216,7 @@
       "merged_head_revision": "b804a122612f4ae64d967efbff454af771bf6130",
       "merged_at": "2026-10-26T11:52:29Z",
       "merge_revision": "0be03745d775ffa9ee8c66ffda1700baa76ba58f",
-      "merge_notes": "GitHub reports PR #18312 merged from exact head b804a122612f4ae64d967efbff454af771bf6130 as 0be03745d775ffa9ee8c66ffda1700baa76ba58f after every reported check was terminal acceptable. The merge commit is an ancestor of origin/main eb5ff8791b4bcd2118f1c6b8060f01c804ed5fa1.",
+      "merge_notes": "GitHub reports PR #18312 merged from exact head b804a122612f4ae64d967efbff454af771bf6130 as 0be03745d775ffa9ee8c66ffda1700baa76ba58f after every reported check was terminal acceptable. The merge commit is an ancestor of origin/main 9dce8120cfc6ed37c205d7a03f35de40b509260a.",
       "selection_revision": "20ba82cbe644174616d85b05a314c8395772ad8f",
       "selection_notes": "Selected from exact origin/main 20ba82cbe644174616d85b05a314c8395772ad8f after the refreshed ready-owner prioritization placed it ahead of the independent Python gradient-descent build-front and Swift paint-vm capability-manifest leaves. Its sole prerequisite is merged, and one bounded pure Swift package unlocks the explicit Swift hash-map, Bloom-filter, and HyperLogLog children before the hash-set/store chain. Preparation remains local-only while the operator-authorized three-PR ceiling is full. The implementation owns the four DT17 families, the established polynomial-rolling compatibility extension, all 64 upstream SipHash-2-4 vectors, caller-supplied deterministic avalanche samples, empty capabilities, native SwiftPM tests and coverage, and truthful Unix and Windows fronts. It claims no ambient entropy, filesystem, network, process, environment, clock, credential, or downstream execution authority.",
       "reconciled_main_revision": "263e05f201003afd0395e82e6b810fe25a1260b4",
@@ -16426,15 +16426,15 @@
       "branch": "codex/parity-kotlin-micro-qr-build-front-20261026",
       "pr_number": null,
       "selected_at": "2026-10-26T12:35:04Z",
-      "base_revision": "eb5ff8791b4bcd2118f1c6b8060f01c804ed5fa1",
+      "base_revision": "9dce8120cfc6ed37c205d7a03f35de40b509260a",
       "implementation_revision": "28a9c35b08fe59795913b3076e47b422df3de6d6",
       "public_dependency_fix_revision": "dbf2b2f4c1b6255b5bdbcdef64e3aca7468f09cb",
-      "reconciled_main_revision": "eb5ff8791b4bcd2118f1c6b8060f01c804ed5fa1",
+      "reconciled_main_revision": "9dce8120cfc6ed37c205d7a03f35de40b509260a",
       "package_paths": [
         "code/packages/kotlin/micro-qr"
       ],
       "selection_notes": "Selected after verified guarded merge of PR #18312 opened a publication slot. This bounded build-front and Gradle-metadata repair restores an existing 123-test Kotlin package to repository discovery and scheduling and proves its public transitive ModuleGrid API from an external Gradle consumer, so it ranks ahead of the capability-only Swift PaintVmAscii repair. Prepared Bezier successors remain blocked on live selector dependency PR #18293. The only live parity PRs are #18293 and #18324; neither overlaps this Kotlin production/package root. PR #18324 also removes its own distinct code/BUILD-EXEMPTIONS line, so later append-only reconciliation must preserve both removals plus both owners' state/roadmap receipts.",
-      "reconciliation_notes": "Rebased the two local implementation commits conflict-free onto exact origin/main eb5ff8791b4bcd2118f1c6b8060f01c804ed5fa1. Preserved main's intervening package, roadmap, and lifecycle history, including the unrelated Rust System/360 gate-routing commit; repaired the inherited duplicate merged_at key on the CommonMark fixture owner without changing its value; reconciled live PRs to {18293, 18324}; and recorded the verified #18312 final head, merge timestamp, merge commit, and acceptable terminal checks.",
+      "reconciliation_notes": "Rebased the two local implementation commits conflict-free onto exact origin/main 9dce8120cfc6ed37c205d7a03f35de40b509260a. Preserved main's intervening package, roadmap, and lifecycle history; repaired the inherited duplicate merged_at key on the CommonMark fixture owner without changing its value; reconciled live PRs to {18293, 18324}; and recorded the verified #18312 final head, merge timestamp, merge commit, and acceptable terminal checks.",
       "validation_notes": "A clean package BUILD under Gradle 9.4.1 and JDK 25/JVM target 21 passes all 123 existing tests with zero failures, errors, or skips. A temporary external Gradle consumer depending only on com.codingadventures:micro-qr compiles while importing the public com.codingadventures.barcode2d.ModuleGrid return type, proving barcode-2d is correctly exposed as an api dependency; gf256 remains an implementation dependency. The production Go planner discovers 20 sparse-worktree packages, selects exactly one changed package and the four-package Kotlin closure {barcode-2d, gf256, micro-qr, paint-instructions}, reports only the Kotlin toolchain and no special suites, and executes exactly those four BUILD fronts successfully from the emitted plan. Go vet and build pass; the full Go test inventory is intentionally not a sparse-worktree gate because its cross-language source-reference tests require absent native roots and PowerShell. Capability schema validation passes for the empty authority declaration. The root changelog shard has the required level-3 heading, canonical 60-character slug, and exact SHA-256 heading digest 0ceccd50. lessons.py validates 1,587 unique shards with zero problems. Strict duplicate-key JSON parsing, 1,547 unique owners, dependency completeness, acyclicity, zero merged-to-unfinished edges, exactly one in-progress owner, exactly two pr-open owners {18293, 18324}, and diff hygiene pass. No encoder production source changed.",
       "notes": "Discovered by the post-PR #16133 structural package-root audit. `code/packages/kotlin/micro-qr` has production and test sources plus package documentation but no Gradle package metadata and no BUILD front, so established-lane discovery cannot schedule or validate it. Add lane-consistent Gradle metadata, fail-closed cross-platform BUILD fronts, execution of the existing test suite, capability metadata, and documentation without widening the portable Micro QR contract."
     },
