@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:3d94933b1e538cb7",
+  "lessonIds": [
+    "GU-C410-bathrum",
+    "GU-C410-sandas",
+    "GU-C410-gijhar",
+    "GU-C410-ulecvu",
+    "GU-C410-nicovvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch410.txt",
+  "json": "gujarati/narration/ch410.json",
+  "textHash": "fnv1a64:f39335edd68ad063",
+  "jsonHash": "fnv1a64:2f66b7353efeb0a1",
+  "findings": []
+}

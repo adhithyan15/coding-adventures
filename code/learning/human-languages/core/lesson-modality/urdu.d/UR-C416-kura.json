@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C416-kura",
+    "language": "urdu",
+    "chapter": 416,
+    "sequence": 24530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f65333edbea92153"
+  },
+  "findings": []
+}

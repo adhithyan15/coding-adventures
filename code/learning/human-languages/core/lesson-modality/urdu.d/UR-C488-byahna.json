@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C488-byahna",
+    "language": "urdu",
+    "chapter": 488,
+    "sequence": 28500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ffb498c737c0685"
+  },
+  "findings": []
+}

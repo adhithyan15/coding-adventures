@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C400-guzarna",
+    "language": "urdu",
+    "chapter": 400,
+    "sequence": 23740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6931e6c522011bf0"
+  },
+  "findings": []
+}

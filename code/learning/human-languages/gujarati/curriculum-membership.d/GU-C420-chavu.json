@@ -1,0 +1,11 @@
+{
+  "id": "GU-C420-chavu",
+  "pathSegment": "GU-PATH-420-HOUSE420",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-420-HOUSE420",
+      "order": 4
+    }
+  ]
+}

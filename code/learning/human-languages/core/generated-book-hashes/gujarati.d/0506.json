@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:2ead0adb62f332cb",
+  "lessonIds": [
+    "GU-C506-vankar",
+    "GU-C506-tatno",
+    "GU-C506-vanat",
+    "GU-C506-tanvu",
+    "GU-C506-vintvu"
+  ],
+  "tex": "gujarati/book/chapters/ch506-at-the-loom.tex"
+}

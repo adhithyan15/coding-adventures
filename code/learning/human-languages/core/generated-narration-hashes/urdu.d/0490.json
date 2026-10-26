@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:fbdb413e83c48160",
+  "lessonIds": [
+    "UR-C490-taya",
+    "UR-C490-khalu",
+    "UR-C490-sautela",
+    "UR-C490-yatim",
+    "UR-C490-god-lena"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch490.txt",
+  "json": "urdu/narration/ch490.json",
+  "textHash": "fnv1a64:0d07db9c1c7bde3b",
+  "jsonHash": "fnv1a64:1672dd78665bebbc",
+  "findings": []
+}

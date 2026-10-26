@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Tyres and Punctures",
+  "label": "ch:ur-tyres-and-punctures",
+  "canDo": "I can deal with a flat tyre, a knock and a dent, and a helmet for the ride.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C395-pichakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can deal with a flat tyre, a knock and a dent, and a helmet for the ride.",
+    "assesses": [
+      "UR-LEX-C395-TAYAR395-03",
+      "UR-LEX-C395-TAYAR395-04",
+      "UR-LEX-C395-TAYAR395-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C273-gayo-che",
+  "pathSegment": "GU-PATH-273-PAST-DOER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-273-PAST-DOER",
+      "order": 1
+    }
+  ]
+}

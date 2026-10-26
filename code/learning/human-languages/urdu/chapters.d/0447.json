@@ -1,0 +1,21 @@
+{
+  "chapter": 447,
+  "title": "Calm Again",
+  "label": "ch:ur-calm-again",
+  "canDo": "I can say that someone felt calm and content.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R447-review-440-447",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can say that someone felt calm and content.",
+    "assesses": [
+      "UR-LEX-C447-CALM447-01",
+      "UR-LEX-C447-CALM447-02",
+      "UR-LEX-C447-CALM447-03",
+      "UR-LEX-C447-CALM447-04",
+      "UR-LEX-C447-CALM447-05"
+    ]
+  }
+}

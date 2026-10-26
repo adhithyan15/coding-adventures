@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:851040a9cea3b3da",
+  "lessonIds": [
+    "GU-C322-humlo",
+    "GU-C322-ladai",
+    "GU-C322-yoddho",
+    "GU-C322-hanvu",
+    "GU-C322-jhajhumvu"
+  ],
+  "tex": "gujarati/book/chapters/ch322-the-attack-at-dawn.tex"
+}

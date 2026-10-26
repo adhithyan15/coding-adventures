@@ -48,6 +48,12 @@ This spec defines the AST produced by both phases. The parsing algorithm and its
 connection to the state-machine library (`@coding-adventures/state-machine`) are
 specified in TE02. The HTML renderer is specified in TE03.
 
+The shared executable corpus and its bounded, provenance-pinned validation
+rules are defined separately in
+[TE01 portable CommonMark 0.31.2 conformance](TE01-commonmark-portable-conformance.md).
+That profile preserves the official fixture bytes and keeps native reader
+migrations separate from the neutral foundation.
+
 ---
 
 ## Layer Position

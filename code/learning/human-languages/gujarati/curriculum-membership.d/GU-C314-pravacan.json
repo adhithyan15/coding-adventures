@@ -1,0 +1,11 @@
+{
+  "id": "GU-C314-pravacan",
+  "pathSegment": "GU-PATH-314-HADTAL314",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-314-HADTAL314",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:31be16dfaf3d7d5f",
+  "lessonIds": [
+    "UR-C547-tasavvur",
+    "UR-C547-niyyat",
+    "UR-C547-muhim",
+    "UR-C547-peshkash",
+    "UR-C547-sanvarna-intr",
+    "UR-R547-review-541-547",
+    "UR-R547-review-final-547"
+  ],
+  "tex": "urdu/book/chapters/ch547-looking-ahead.tex"
+}

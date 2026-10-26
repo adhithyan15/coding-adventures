@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C306-rahat",
+    "language": "gujarati",
+    "chapter": 306,
+    "sequence": 17080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1dafb7af01eb6e01"
+  },
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 433,
+  "title": "Mounds, Heaps and Caves",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3052c3f2200fe0ae",
+  "lessons": [
+    {
+      "id": "UR-C433-tila",
+      "sequence": 25410,
+      "title": "ٹیلا (ṭīlā) — a mound; a dune",
+      "headword": "ٹیلا",
+      "romanization": "ṭīlā",
+      "gloss": "a mound; a dune",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d3ec53987b53d5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for the glow of sunset, then the Urdu for daylight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ٹیلا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹیلا — ṭīlā — \"a mound; a dune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ریگستان میں ریت کے ٹیلے ہیں۔ registān meṅ ret ke ṭīle haiṅ. There are sand dunes in the desert."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹیلا (ṭīlā) is inherited: CDIAL lists the Hindi cousin ṭīlā, \"a hillock, a mound\", under ṭalla and its variant ṭilla, \"a heap\" (CDIAL 5451)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭīlā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭīlā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭīlā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭīlā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "registān meṅ ret ke ṭīle haiṅ. — There are sand dunes in the desert.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *registān meṅ ret ke ṭīle haiṅ.* — There are sand dunes in the desert.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for the glow of sunset, then the Urdu for daylight, then say ṭīlā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for the glow of sunset, then the Urdu for daylight, then say *ṭīlā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ٹیلا (ṭīlā) mean? (\"A mound; a dune\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C433-dher",
+      "sequence": 25420,
+      "title": "ڈھیر (ḍher) — a heap; a pile",
+      "headword": "ڈھیر",
+      "romanization": "ḍher",
+      "gloss": "a heap; a pile",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4044fe1c82ff843",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for daylight, then the Urdu for a mound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ڈھیر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ڈھیر — ḍher — \"a heap; a pile\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کسان کے پاس گندم کا ڈھیر ہے۔ kisān ke pās gandum kā ḍher hai. The farmer has a heap of wheat."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ڈھیر (ḍher) is inherited: CDIAL lists the Hindi cousin ḍher, \"a heap\", under ḍhēra, a form it reconstructs (CDIAL 5599)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍher*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍher, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍher*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kisān ke pās gandum kā ḍher hai. — The farmer has a heap of wheat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kisān ke pās gandum kā ḍher hai.* — The farmer has a heap of wheat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for daylight, then the Urdu for a mound, then say ḍher again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for daylight, then the Urdu for a mound, then say *ḍher* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ڈھیر (ḍher) mean? (\"A heap; a pile\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C433-ghar",
+      "sequence": 25430,
+      "title": "غار (ghār) — a cave",
+      "headword": "غار",
+      "romanization": "ghār",
+      "gloss": "a cave",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c929411f78a9cea8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a mound, then the Urdu for a heap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غار — ghār — \"a cave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پہاڑ میں ایک پرانا غار ہے۔ pahāṛ meṅ ek purānā ghār hai. There is an old cave in the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غار (ghār) is usually traced, through Persian, to Arabic ghār, \"a cave, a grotto\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahāṛ meṅ ek purānā ghār hai. — There is an old cave in the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahāṛ meṅ ek purānā ghār hai.* — There is an old cave in the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a mound, then the Urdu for a heap, then say ghār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a mound, then the Urdu for a heap, then say *ghār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غار (ghār) mean? (\"A cave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C433-tinka",
+      "sequence": 25440,
+      "title": "تنکا (tinkā) — a straw; a blade of grass",
+      "headword": "تنکا",
+      "romanization": "tinkā",
+      "gloss": "a straw; a blade of grass",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:889a5fe48e660b96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a heap, then the Urdu for a cave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تنکا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تنکا — tinkā — \"a straw; a blade of grass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ہوا میں تنکے اڑ رہے تھے۔ hawā meṅ tinke uṛ rahe the. Bits of straw were blowing about in the wind."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تنکا (tinkā) is inherited: CDIAL lists the Hindi cousin tinkā, \"a blade of grass, a straw\", under Sanskrit tṛṇa, \"grass\" (CDIAL 5906)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tinkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tinkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tinkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tinkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hawā meṅ tinke uṛ rahe the. — Bits of straw were blowing about in the wind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hawā meṅ tinke uṛ rahe the.* — Bits of straw were blowing about in the wind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a heap, then the Urdu for a cave, then say tinkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a heap, then the Urdu for a cave, then say *tinkā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تنکا (tinkā) mean? (\"A straw; a blade of grass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C433-ukharna",
+      "sequence": 25450,
+      "title": "اکھڑنا (ukhaṛnā) — to be uprooted; to come loose",
+      "headword": "اکھڑنا",
+      "romanization": "ukhaṛnā",
+      "gloss": "to be uprooted; to come loose",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:935a9f3e689e0861",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a cave, then the Urdu for a straw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اکھڑنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اکھڑنا — ukhaṛnā — \"to be uprooted; to come loose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "طوفان میں ایک پرانا درخت اکھڑ گیا۔ tūfān meṅ ek purānā darakht ukhaṛ gayā. An old tree was uprooted in the storm."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ پودا اکھڑ گیا, voh paudā ukhaṛ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اکھڑنا (ukhaṛnā) is inherited: CDIAL lists the Hindi cousin ukhaṛnā, \"to be rooted up\", under utskarati, a form it reconstructs (CDIAL 1895)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukhaṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukhaṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukhaṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukhaṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūfān meṅ ek purānā darakht ukhaṛ gayā. — An old tree was uprooted in the storm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūfān meṅ ek purānā darakht ukhaṛ gayā.* — An old tree was uprooted in the storm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a cave, then the Urdu for a straw, then say ukhaṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a cave, then the Urdu for a straw, then say *ukhaṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اکھڑنا (ukhaṛnā) mean? (\"To be uprooted; to come loose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

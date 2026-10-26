@@ -1,0 +1,11 @@
+{
+  "id": "GU-C411-osiku",
+  "pathSegment": "GU-PATH-411-QUILT411",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-411-QUILT411",
+      "order": 1
+    }
+  ]
+}

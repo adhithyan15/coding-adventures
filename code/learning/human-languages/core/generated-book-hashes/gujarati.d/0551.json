@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:692c3eaa2c470081",
+  "lessonIds": [
+    "GU-C551-talim",
+    "GU-C551-koc",
+    "GU-C551-riyajh",
+    "GU-C551-dodavvu",
+    "GU-C551-trophi"
+  ],
+  "tex": "gujarati/book/chapters/ch551-training-for-the-big-day.tex"
+}

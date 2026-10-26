@@ -1,0 +1,11 @@
+{
+  "id": "UR-C433-tinka",
+  "pathSegment": "UR-PATH-433-TILA433",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-433-TILA433",
+      "order": 3
+    }
+  ]
+}

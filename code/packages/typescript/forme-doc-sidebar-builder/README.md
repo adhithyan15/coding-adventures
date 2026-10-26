@@ -208,9 +208,9 @@ page-shell:
                                                             page-shell renders HTML
 ```
 
-Next DOC00 v0 packages: `forme-doc-page-shell`,
-`forme-doc-search-tokenizer`, `forme-doc-search-index-builder`,
-`forme-doc-search-client-js`, `forme-doc-site-emitter`.
+The complete DOC00 v0 cluster now ships. The page shell renders
+this tree, and the site emitter can serialize it alongside the
+finished pages and search assets.
 
 ## v0 simplifications (documented)
 

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:194eea3fac45918e",
+  "lessonIds": [
+    "GU-C452-khijavu",
+    "GU-C452-krodh",
+    "GU-C452-mijaj",
+    "GU-C452-ukalvu-seethe",
+    "GU-C452-kalah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch452.txt",
+  "json": "gujarati/narration/ch452.json",
+  "textHash": "fnv1a64:a644555d3fab0d26",
+  "jsonHash": "fnv1a64:96898402c6fde95d",
+  "findings": []
+}

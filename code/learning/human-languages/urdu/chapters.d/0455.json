@@ -1,0 +1,21 @@
+{
+  "chapter": 455,
+  "title": "Faults and Flaws",
+  "label": "ch:ur-faults-and-flaws",
+  "canDo": "I can talk about someone's faults.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R455-review-448-455",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can talk about someone's faults.",
+    "assesses": [
+      "UR-LEX-C455-FLAW455-01",
+      "UR-LEX-C455-FLAW455-02",
+      "UR-LEX-C455-FLAW455-03",
+      "UR-LEX-C455-FLAW455-04",
+      "UR-LEX-C455-FLAW455-05"
+    ]
+  }
+}

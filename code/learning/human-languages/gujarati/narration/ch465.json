@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 465,
+  "title": "Strict and Proud",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f0774943c17a37d8",
+  "lessons": [
+    {
+      "id": "GU-C465-sakhat",
+      "sequence": 25920,
+      "title": "સખત (sakhat) — strict; severe",
+      "headword": "સખત",
+      "romanization": "sakhat",
+      "gloss": "strict; severe",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b639462f9c015d8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for composed, then the Gujarati for to heed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સખત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સખત — sakhat — \"strict; severe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમારા આચાર્ય ઘણા સખત છે. amārā ācārya ghaṇā sakhat che. Our principal is very strict."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સખત (sakhat) is usually traced to Persian saxt, \"hard, firm\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakhat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakhat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakhat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakhat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amārā ācārya ghaṇā sakhat che. — Our principal is very strict.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amārā ācārya ghaṇā sakhat che.* — Our principal is very strict.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for composed, then the Gujarati for to heed, then say sakhat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for composed, then the Gujarati for to heed, then say *sakhat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સખત (sakhat) mean? (\"Strict; severe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C465-ciknu",
+      "sequence": 25930,
+      "title": "ચીકણું (cīkṇũ) — fussy; sticky",
+      "headword": "ચીકણું",
+      "romanization": "cīkṇũ",
+      "gloss": "fussy; sticky",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44cd8239d75b3e09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to heed, then the Gujarati for strict."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચીકણું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચીકણું — cīkṇũ — \"fussy; sticky\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારી સાસુ ઘરકામમાં ઘણી ચીકણી છે. mārī sāsu gharkāmmā̃ ghaṇī cīkṇī che. My mother-in-law is very fussy about the housework."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચીકણું (cīkṇũ) goes back to Sanskrit cikkaṇa, \"slippery, unctuous\"; CDIAL lists the Gujarati word, \"sticky\" (CDIAL 4782), and Gujarati also uses it for a fussy person."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīkṇũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīkṇũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīkṇũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīkṇũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārī sāsu gharkāmmā̃ ghaṇī cīkṇī che. — My mother-in-law is very fussy about the housework.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārī sāsu gharkāmmā̃ ghaṇī cīkṇī che.* — My mother-in-law is very fussy about the housework.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to heed, then the Gujarati for strict, then say cīkṇũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to heed, then the Gujarati for strict, then say *cīkṇũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચીકણું (cīkṇũ) mean? (\"Fussy; sticky\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C465-uddhat",
+      "sequence": 25940,
+      "title": "ઉદ્ધત (uddhat) — insolent; rude",
+      "headword": "ઉદ્ધત",
+      "romanization": "uddhat",
+      "gloss": "insolent; rude",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3137e401eba7bab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for strict, then the Gujarati for fussy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉદ્ધત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉદ્ધત — uddhat — \"insolent; rude\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ઉદ્ધત છોકરાએ ગુરુને ખરાબ જવાબ આપ્યો. uddhat chokrāe gurune kharāb javāb āpyo. The insolent boy gave the teacher a rude answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉદ્ધત (uddhat) is a tatsama, Sanskrit uddhata, \"raised, lifted up\", as Monier-Williams records it; the sense \"haughty, insolent\" grew from holding one's head too high."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddhat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddhat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddhat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddhat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddhat chokrāe gurune kharāb javāb āpyo. — The insolent boy gave the teacher a rude answer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddhat chokrāe gurune kharāb javāb āpyo.* — The insolent boy gave the teacher a rude answer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for strict, then the Gujarati for fussy, then say uddhat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for strict, then the Gujarati for fussy, then say *uddhat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઉદ્ધત (uddhat) mean? (\"Insolent; rude\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C465-ahankar",
+      "sequence": 25950,
+      "title": "અહંકાર (ahankār) — egotism; conceit",
+      "headword": "અહંકાર",
+      "romanization": "ahankār",
+      "gloss": "egotism; conceit",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68087a8fc24815b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for fussy, then the Gujarati for insolent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અહંકાર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અહંકાર — ahankār — \"egotism; conceit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પૈસાનો અહંકાર સારો નથી. paisāno ahankār sāro nathī. Pride in money is not good."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અહંકાર (ahankār) is a tatsama, Sanskrit ahaṃkāra, the making of an \"I\", egotism, as Monier-Williams records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahankār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahankār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahankār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahankār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paisāno ahankār sāro nathī. — Pride in money is not good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paisāno ahankār sāro nathī.* — Pride in money is not good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for fussy, then the Gujarati for insolent, then say ahankār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for fussy, then the Gujarati for insolent, then say *ahankār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અહંકાર (ahankār) mean? (\"Egotism; conceit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C465-tevavu",
+      "sequence": 25960,
+      "title": "ટેવાવું (ṭevāvũ) — to get used to",
+      "headword": "ટેવાવું",
+      "romanization": "ṭevāvũ",
+      "gloss": "to get used to",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b61ef90298724f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for insolent, then the Gujarati for egotism."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટેવાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટેવાવું — ṭevāvũ — \"to get used to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "નવા ઘરમાં બાળકો જલદી ટેવાઈ ગયાં. navā gharmā̃ bāḷko jaldī ṭevāī gayā̃. The children quickly got used to the new house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે ટેવાઈ ગયો, te ṭevāī gayo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટેવાવું (ṭevāvũ) is built on ટેવ (ṭev), \"a habit\", which CDIAL traces to a reconstructed ṭēv-, \"appoint, fix\" (CDIAL 5475), with the verb ending -āvũ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭevāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭevāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭevāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭevāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navā gharmā̃ bāḷko jaldī ṭevāī gayā̃. — The children quickly got used to the new house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navā gharmā̃ bāḷko jaldī ṭevāī gayā̃.* — The children quickly got used to the new house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for insolent, then the Gujarati for egotism, then say ṭevāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for insolent, then the Gujarati for egotism, then say *ṭevāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટેવાવું (ṭevāvũ) mean? (\"To get used to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

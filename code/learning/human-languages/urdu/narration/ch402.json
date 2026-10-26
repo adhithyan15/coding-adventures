@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 402,
+  "title": "Long Journeys",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ac5397afd10fd3d5",
+  "lessons": [
+    {
+      "id": "UR-C402-masafat",
+      "sequence": 23820,
+      "title": "مسافت (masāfat) — a distance travelled; a long way",
+      "headword": "مسافت",
+      "romanization": "masāfat",
+      "gloss": "a distance travelled; a long way",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b102ecc220b30046",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a bouquet, then the Urdu for to wave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مسافت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسافت — masāfat — \"a distance travelled; a long way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پہاڑوں تک کی مسافت لمبی ہے۔ pahāṛoṅ tak kī masāfat lambī hai. It is a long way to the mountains."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسافت (masāfat) is usually traced, through Persian, to Arabic masāfa, \"a distance\"; it is a cousin of مسافر and سفر."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masāfat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masāfat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masāfat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masāfat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahāṛoṅ tak kī masāfat lambī hai. — It is a long way to the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahāṛoṅ tak kī masāfat lambī hai.* — It is a long way to the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a bouquet, then the Urdu for to wave, then say masāfat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a bouquet, then the Urdu for to wave, then say *masāfat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مسافت (masāfat) mean? (\"A distance travelled; a long way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C402-rahnuma",
+      "sequence": 23830,
+      "title": "رہنما (rahnumā) — a guide; a leader",
+      "headword": "رہنما",
+      "romanization": "rahnumā",
+      "gloss": "a guide; a leader",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebd87b6edb0340b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to wave, then the Urdu for a distance travelled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رہنما",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رہنما — rahnumā — \"a guide; a leader\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پہاڑوں میں ایک رہنما ہمارے ساتھ تھا۔ pahāṛoṅ meṅ ek rahnumā hamāre sāth thā. In the mountains a guide went with us."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رہنما (rahnumā) is usually traced to Persian rahnumā, \"one who shows the way\", built from rah, \"a way\" (a short form of راہ), and numā, \"showing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rahnumā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rahnumā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rahnumā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rahnumā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahāṛoṅ meṅ ek rahnumā hamāre sāth thā. — In the mountains a guide went with us.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahāṛoṅ meṅ ek rahnumā hamāre sāth thā.* — In the mountains a guide went with us.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to wave, then the Urdu for a distance travelled, then say rahnumā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to wave, then the Urdu for a distance travelled, then say *rahnumā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رہنما (rahnumā) mean? (\"A guide; a leader\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C402-thakana",
+      "sequence": 23840,
+      "title": "تھکانا (thakānā) — to tire (someone) out",
+      "headword": "تھکانا",
+      "romanization": "thakānā",
+      "gloss": "to tire (someone) out",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57edf6137353681c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a distance travelled, then the Urdu for a guide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تھکانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تھکانا — thakānā — \"to tire (someone) out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لمبے سفر نے سارا کو تھکا دیا۔ lambe safar ne sārā ko thakā diyā. The long journey wore Sara out."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے گھوڑے کو تھکایا, us ne ghoṛe ko thakāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تھکانا (thakānā) is built on تھکنا, \"to get tired\", which comes from sthakk, \"stop, halt\", a form CDIAL reconstructs (CDIAL 13737): this is the form for tiring someone else."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thakānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thakānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thakānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thakānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lambe safar ne sārā ko thakā diyā. — The long journey wore Sara out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lambe safar ne sārā ko thakā diyā.* — The long journey wore Sara out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a distance travelled, then the Urdu for a guide, then say thakānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a distance travelled, then the Urdu for a guide, then say *thakānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تھکانا (thakānā) mean? (\"To tire (someone) out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C402-sulana",
+      "sequence": 23850,
+      "title": "سلانا (sulānā) — to put (someone) to sleep",
+      "headword": "سلانا",
+      "romanization": "sulānā",
+      "gloss": "to put (someone) to sleep",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d5497a6ab90b98a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a guide, then the Urdu for to tire (someone) out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سلانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سلانا — sulānā — \"to put (someone) to sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ماں نے گاڑی میں بچے کو سلایا۔ māṅ ne gāṛī meṅ bachche ko sulāyā. The mother got the child off to sleep in the car."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے بچے کو سلایا, us ne bachche ko sulāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سلانا (sulānā) is inherited: CDIAL lists the Hindi cousin sulānā, \"lulls to sleep\", under Sanskrit svāpáyati (CDIAL 13928); it is the making-sleep partner of سونا."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sulānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sulānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sulānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sulānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṅ ne gāṛī meṅ bachche ko sulāyā. — The mother got the child off to sleep in the car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṅ ne gāṛī meṅ bachche ko sulāyā.* — The mother got the child off to sleep in the car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a guide, then the Urdu for to tire (someone) out, then say sulānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a guide, then the Urdu for to tire (someone) out, then say *sulānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سلانا (sulānā) mean? (\"To put (someone) to sleep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C402-jagana",
+      "sequence": 23860,
+      "title": "جگانا (jagānā) — to wake (someone) up",
+      "headword": "جگانا",
+      "romanization": "jagānā",
+      "gloss": "to wake (someone) up",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:314fbb3308e468aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to tire (someone) out, then the Urdu for to put (someone) to sleep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جگانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جگانا — jagānā — \"to wake (someone) up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کنڈکٹر نے صبح سب مسافروں کو جگایا۔ kanḍakṭar ne subah sab musāfiroṅ ko jagāyā. In the morning the conductor woke all the passengers."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے سارا کو جگایا, us ne sārā ko jagāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جگانا (jagānā) is inherited: CDIAL lists Hindi jagānā beside jāgnā, \"to wake\", under Sanskrit jāgrati, \"are awake\" (CDIAL 5175)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jagānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jagānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jagānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jagānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanḍakṭar ne subah sab musāfiroṅ ko jagāyā. — In the morning the conductor woke all the passengers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanḍakṭar ne subah sab musāfiroṅ ko jagāyā.* — In the morning the conductor woke all the passengers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to tire (someone) out, then the Urdu for to put (someone) to sleep, then say jagānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to tire (someone) out, then the Urdu for to put (someone) to sleep, then say *jagānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جگانا (jagānā) mean? (\"To wake (someone) up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

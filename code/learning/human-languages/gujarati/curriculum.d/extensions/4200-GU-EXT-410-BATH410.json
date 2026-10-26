@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-410-BATH410",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask about the bathroom and the hot water.",
+  "prerequisites": []
+}

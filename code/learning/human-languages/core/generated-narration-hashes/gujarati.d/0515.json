@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:7aa324e1fd80470c",
+  "lessonIds": [
+    "GU-C515-popdo",
+    "GU-C515-ukhadvu",
+    "GU-C515-kanu",
+    "GU-C515-paip",
+    "GU-C515-plambar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch515.txt",
+  "json": "gujarati/narration/ch515.json",
+  "textHash": "fnv1a64:2e6f0993a48802c5",
+  "jsonHash": "fnv1a64:0235fe4f49daac05",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C515-plambar",
+    "language": "gujarati",
+    "chapter": 515,
+    "sequence": 28750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:850d2b8f4925f49a"
+  },
+  "findings": []
+}

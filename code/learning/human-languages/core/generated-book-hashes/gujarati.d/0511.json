@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:0ddb2d073f61d38a",
+  "lessonIds": [
+    "GU-C511-majur",
+    "GU-C511-mukadam",
+    "GU-C511-kadiyo",
+    "GU-C511-mistri",
+    "GU-C511-karkun"
+  ],
+  "tex": "gujarati/book/chapters/ch511-people-at-work.tex"
+}

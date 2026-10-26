@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:b588872e323dd4a0",
+  "lessonIds": [
+    "UR-C336-sabit-karna",
+    "UR-C336-pukhta",
+    "UR-C336-ilzam",
+    "UR-C336-dastavez",
+    "UR-C336-khara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch336.txt",
+  "json": "urdu/narration/ch336.json",
+  "textHash": "fnv1a64:6482cbffad15ba1f",
+  "jsonHash": "fnv1a64:af96f16501a86d2e",
+  "findings": []
+}

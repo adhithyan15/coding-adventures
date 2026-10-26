@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:accff1ceab8e2452",
+  "lessonIds": [
+    "GU-C527-akhado",
+    "GU-C527-pahelvan",
+    "GU-C527-hariph",
+    "GU-C527-pachadvu",
+    "GU-C527-hamphavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch527-in-the-wrestling-ring.tex"
+}

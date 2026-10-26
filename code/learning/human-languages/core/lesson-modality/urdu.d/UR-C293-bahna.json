@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C293-bahna",
+    "language": "urdu",
+    "chapter": 293,
+    "sequence": 17880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e80b5656f3646f5d"
+  },
+  "findings": []
+}

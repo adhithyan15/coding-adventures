@@ -1,0 +1,11 @@
+{
+  "id": "UR-C302-avam",
+  "pathSegment": "UR-PATH-302-AFWAH302",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-302-AFWAH302",
+      "order": 4
+    }
+  ]
+}

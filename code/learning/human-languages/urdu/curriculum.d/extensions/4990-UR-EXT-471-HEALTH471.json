@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-471-HEALTH471",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about health and seeing a doctor.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C518-phug",
+  "pathSegment": "GU-PATH-518-PASTI518",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-518-PASTI518",
+      "order": 3
+    }
+  ]
+}

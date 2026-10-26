@@ -1,5 +1,16 @@
 # Changelog — interpreter-ir
 
+## [0.15.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
+
+- **Registry:** six new type-first Ops, `introduced_by: "LANG83 PR6c"`
+  (`LANG83_PR6C`, `OpSpec::is_pr6c`): `f64_add`, `f64_sub`, `f64_mul`,
+  `f64_div` (arity 2), `f64_neg` (arity 1) — IEEE-754 binary64 that never
+  traps (`1/0` is `+Infinity`, `0/0` is `NaN`, `-0` survives, overflow is
+  `±Infinity`) — and `f64_signbit` (arity 1, integer 0/1 result). All six
+  have `may_trap: []`, so they are pure. A shared `BIN_F64` operand list
+  (also used by `f64_pow` now).
+- **New test `pr6c_set_is_exactly_the_ieee_f64_family`.**
+
 ## Unreleased (LANG84 phase 4b — module release provenance)
 
 - **`IIRModule::release: Option<String>`** (LANG84 C4.1): the exact

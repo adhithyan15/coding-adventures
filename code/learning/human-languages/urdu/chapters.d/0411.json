@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Slopes, Verandas and Cellars",
+  "label": "ch:ur-slopes-verandas-and-cellars",
+  "canDo": "I can describe the lie of a place: what slopes, what is beside it, what is below.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C411-baghal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can describe the lie of a place: what slopes, what is beside it, what is below.",
+    "assesses": [
+      "UR-LEX-C411-DHALAN411-03",
+      "UR-LEX-C411-DHALAN411-04",
+      "UR-LEX-C411-DHALAN411-05"
+    ]
+  }
+}

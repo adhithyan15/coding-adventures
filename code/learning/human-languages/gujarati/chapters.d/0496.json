@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "A New Baby",
+  "label": "ch:gu-a-new-baby",
+  "canDo": "I can talk about the first days of a new baby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C496-balotiyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can talk about the first days of a new baby.",
+    "assesses": [
+      "GU-LEX-C496-DHAVVU496-03",
+      "GU-LEX-C496-DHAVVU496-04",
+      "GU-LEX-C496-DHAVVU496-05"
+    ]
+  }
+}

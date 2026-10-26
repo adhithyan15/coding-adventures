@@ -1,0 +1,11 @@
+{
+  "id": "UR-C500-rafu-karna",
+  "pathSegment": "UR-PATH-500-SILAI500",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-500-SILAI500",
+      "order": 3
+    }
+  ]
+}

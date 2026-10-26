@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "An Upset Stomach",
+  "label": "ch:ur-an-upset-stomach",
+  "canDo": "I can say that someone has an upset stomach.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C472-ghiza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can say that someone has an upset stomach.",
+    "assesses": [
+      "UR-LEX-C472-STOMACH472-03",
+      "UR-LEX-C472-STOMACH472-04",
+      "UR-LEX-C472-STOMACH472-05"
+    ]
+  }
+}

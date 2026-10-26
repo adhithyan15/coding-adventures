@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:11ea2186effcf95a",
+  "lessonIds": [
+    "UR-C278-darogha",
+    "UR-C278-riport",
+    "UR-C278-darj-karna",
+    "UR-C278-havalat",
+    "UR-C278-bayan"
+  ],
+  "tex": "urdu/book/chapters/ch278-at-the-police-station.tex"
+}

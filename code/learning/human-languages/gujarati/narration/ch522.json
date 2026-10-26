@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 522,
+  "title": "Pound, Grate and Soak",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c4ee38e0ec9a55cc",
+  "lessons": [
+    {
+      "id": "GU-C522-khayni",
+      "sequence": 29070,
+      "title": "ખાયણી (khāyṇī) — a mortar (for pounding)",
+      "headword": "ખાયણી",
+      "romanization": "khāyṇī",
+      "gloss": "a mortar (for pounding)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acd0b4ce765b32bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to boil over, then the Gujarati for to whisk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ખાયણી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખાયણી — khāyṇī — \"a mortar (for pounding)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદીની ખાયણી પથ્થરની છે. dādīnī khāyṇī paththarnī che. Grandmother's mortar is made of stone."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખાયણી (khāyṇī) is filed by CDIAL under Sanskrit khaṇḍana, \"breaking\", with the Gujarati word for a mortar (CDIAL 3796)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāyṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāyṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāyṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāyṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādīnī khāyṇī paththarnī che. — Grandmother's mortar is made of stone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādīnī khāyṇī paththarnī che.* — Grandmother's mortar is made of stone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to boil over, then the Gujarati for to whisk, then say khāyṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to boil over, then the Gujarati for to whisk, then say *khāyṇī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ખાયણી (khāyṇī) mean? (\"A mortar (for pounding)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C522-khadvu",
+      "sequence": 29080,
+      "title": "ખાંડવું (khā̃ḍvũ) — to pound",
+      "headword": "ખાંડવું",
+      "romanization": "khā̃ḍvũ",
+      "gloss": "to pound",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e16b54a5cab210bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to whisk, then the Gujarati for a mortar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ખાંડવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખાંડવું — khā̃ḍvũ — \"to pound\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદીએ ખાયણીમાં આદુ ખાંડ્યું. dādīe khāyṇīmā̃ ādu khā̃ḍyũ. Grandmother pounded the ginger in the mortar."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે આદુ ખાંડ્યું, teṇe ādu khā̃ḍyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખાંડવું (khā̃ḍvũ) is inherited from Sanskrit kháṇḍatē, \"breaks\", and CDIAL lists the Gujarati verb, \"to break, pound\" (CDIAL 3795). Sugar, ખાંડ, comes from the same root: sugar in pieces."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khā̃ḍvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khā̃ḍvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khā̃ḍvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khā̃ḍvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādīe khāyṇīmā̃ ādu khā̃ḍyũ. — Grandmother pounded the ginger in the mortar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādīe khāyṇīmā̃ ādu khā̃ḍyũ.* — Grandmother pounded the ginger in the mortar.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to whisk, then the Gujarati for a mortar, then say khā̃ḍvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to whisk, then the Gujarati for a mortar, then say *khā̃ḍvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ખાંડવું (khā̃ḍvũ) mean? (\"To pound\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C522-chinvu",
+      "sequence": 29090,
+      "title": "છીણવું (chīṇvũ) — to grate",
+      "headword": "છીણવું",
+      "romanization": "chīṇvũ",
+      "gloss": "to grate",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a08013aae3e6b70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a mortar, then the Gujarati for to pound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: છીણવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છીણવું — chīṇvũ — \"to grate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરાએ ગાજર છીણ્યું. Mīrāe gājar chīṇyũ. Mira grated the carrot."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ગાજર છીણ્યું, teṇe gājar chīṇyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છીણવું (chīṇvũ) is filed by CDIAL under Sanskrit chinátti, \"cuts off\", with a Gujarati chiṇvũ, \"to slit, peel\" (CDIAL 5045); grating is probably the same cutting, into fine shreds."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chīṇvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chīṇvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chīṇvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chīṇvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrāe gājar chīṇyũ. — Mira grated the carrot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrāe gājar chīṇyũ.* — Mira grated the carrot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a mortar, then the Gujarati for to pound, then say chīṇvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a mortar, then the Gujarati for to pound, then say *chīṇvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does છીણવું (chīṇvũ) mean? (\"To grate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C522-palaalvu",
+      "sequence": 29100,
+      "title": "પલાળવું (palāḷvũ) — to soak",
+      "headword": "પલાળવું",
+      "romanization": "palāḷvũ",
+      "gloss": "to soak",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10fbea2eee9d86b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to pound, then the Gujarati for to grate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પલાળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પલાળવું — palāḷvũ — \"to soak\"."
+            },
+            {
+              "kind": "speech",
+              "text": "રાત્રે મગ પાણીમાં પલાળો. rātre mag pāṇīmā̃ palāḷo. Soak the mung beans in water overnight."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે મગ પલાળ્યા, teṇe mag palāḷyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પલાળવું (palāḷvũ) is the causative partner of પલળવું, \"to get soaked\", and CDIAL lists it under pralālayatē as \"to make wet, soak\" (CDIAL 8759)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palāḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palāḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palāḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palāḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātre mag pāṇīmā̃ palāḷo. — Soak the mung beans in water overnight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātre mag pāṇīmā̃ palāḷo.* — Soak the mung beans in water overnight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to pound, then the Gujarati for to grate, then say palāḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to pound, then the Gujarati for to grate, then say *palāḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પલાળવું (palāḷvũ) mean? (\"To soak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C522-dalvu",
+      "sequence": 29110,
+      "title": "દળવું (daḷvũ) — to mill grain",
+      "headword": "દળવું",
+      "romanization": "daḷvũ",
+      "gloss": "to mill grain",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ceb83c6f61d53c47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to grate, then the Gujarati for to soak."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: દળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દળવું — daḷvũ — \"to mill grain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદી ઘઉં દળીને લોટ બનાવતી હતી. dādī ghaũ daḷīne loṭ banāvtī hatī. Grandmother used to grind wheat into flour."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ઘઉં દળ્યા, teṇe ghaũ daḷyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દળવું (daḷvũ) is inherited from Sanskrit dálati, \"bursts, splits\", and CDIAL lists the Gujarati verb, \"to crush, grind\" (CDIAL 6216)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī ghaũ daḷīne loṭ banāvtī hatī. — Grandmother used to grind wheat into flour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī ghaũ daḷīne loṭ banāvtī hatī.* — Grandmother used to grind wheat into flour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to grate, then the Gujarati for to soak, then say daḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to grate, then the Gujarati for to soak, then say *daḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does દળવું (daḷvũ) mean? (\"To mill grain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

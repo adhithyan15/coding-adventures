@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:e2fbd999bf9bb0f6",
+  "lessonIds": [
+    "UR-C470-phulna",
+    "UR-C470-dam",
+    "UR-C470-pasijna",
+    "UR-C470-ghash",
+    "UR-C470-naqahat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch470.txt",
+  "json": "urdu/narration/ch470.json",
+  "textHash": "fnv1a64:c0cd8fb5e9809657",
+  "jsonHash": "fnv1a64:5fbb0719ce5605a4",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C385-tarjih-dena",
+  "pathSegment": "UR-PATH-385-DAKHILA385",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-385-DAKHILA385",
+      "order": 4
+    }
+  ]
+}

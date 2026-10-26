@@ -5,6 +5,20 @@ All notable changes to the Ruby matrix package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- Retire the matrix PENDING orphan exemption now that BUILD fronts cover it;
+  regression-test that metadata boundary so repository CI planning can run.
+
+- Package existing 0.2.0 pure-Ruby arithmetic as `coding_adventures_matrix`,
+  with explicit gem files/license and no runtime dependencies. Retain matrix_ml
+  and its public Matrix API rather than substituting a backend.
+- Add both BUILD fronts, package-local Bundler/Rake/Standard/SimpleCov setup,
+  a 95% coverage floor and actual isolated gem build/install/dot-product smoke.
+- Extend boundary and metadata/build-front tests, retain constructor aliasing
+  explicitly, and apply Standard formatting without arithmetic changes.
+- Separate this NN44 prerequisite from native neural training/conformance.
+
 ## [0.2.0] - 2026-04-04
 
 ### Added

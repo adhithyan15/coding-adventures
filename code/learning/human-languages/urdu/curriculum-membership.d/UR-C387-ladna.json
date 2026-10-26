@@ -1,0 +1,11 @@
+{
+  "id": "UR-C387-ladna",
+  "pathSegment": "UR-PATH-387-QULI387",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-387-QULI387",
+      "order": 2
+    }
+  ]
+}

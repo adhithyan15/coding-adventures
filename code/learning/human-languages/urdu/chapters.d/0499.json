@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Cotton and Thread",
+  "label": "ch:ur-cotton-and-thread",
+  "canDo": "I can say how cotton becomes thread.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C499-ganth",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can say how cotton becomes thread.",
+    "assesses": [
+      "UR-LEX-C499-CHARKHA499-03",
+      "UR-LEX-C499-CHARKHA499-04",
+      "UR-LEX-C499-CHARKHA499-05"
+    ]
+  }
+}

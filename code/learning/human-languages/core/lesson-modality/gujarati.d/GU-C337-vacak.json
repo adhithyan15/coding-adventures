@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C337-vacak",
+    "language": "gujarati",
+    "chapter": 337,
+    "sequence": 18700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4dee1b4dc0a0879"
+  },
+  "findings": []
+}

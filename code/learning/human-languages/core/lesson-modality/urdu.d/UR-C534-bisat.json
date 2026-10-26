@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C534-bisat",
+    "language": "urdu",
+    "chapter": 534,
+    "sequence": 31050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2665244f36e9c32c"
+  },
+  "findings": []
+}

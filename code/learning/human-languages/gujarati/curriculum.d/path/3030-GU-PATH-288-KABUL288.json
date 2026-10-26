@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-288-KABUL288",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-288-KABUL288"
+  ],
+  "after": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:52a67a45648c5f37",
+  "lessonIds": [
+    "GU-C324-samrajya",
+    "GU-C324-samrat",
+    "GU-C324-vans",
+    "GU-C324-kabjo",
+    "GU-C324-uthlavvu",
+    "GU-R324-review-317-324"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch324.txt",
+  "json": "gujarati/narration/ch324.json",
+  "textHash": "fnv1a64:b7a94baf1dc7133f",
+  "jsonHash": "fnv1a64:8735aa242f59be5f",
+  "findings": []
+}

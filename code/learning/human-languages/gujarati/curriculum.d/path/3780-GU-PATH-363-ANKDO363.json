@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-363-ANKDO363",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GU-EXT-363-ANKDO363"
+  ],
+  "after": []
+}

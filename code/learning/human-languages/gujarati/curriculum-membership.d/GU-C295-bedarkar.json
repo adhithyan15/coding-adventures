@@ -1,0 +1,11 @@
+{
+  "id": "GU-C295-bedarkar",
+  "pathSegment": "GU-PATH-295-VALANK295",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-295-VALANK295",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:e8ae12099fa4e9f3",
+  "lessonIds": [
+    "UR-C275-munhasir",
+    "UR-C275-par-munhasir-hai",
+    "UR-C275-agar-vaqt-hota",
+    "UR-W275-six-lines",
+    "UR-R275-depends-and-would"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "urdu/narration/ch275.txt",
+  "json": "urdu/narration/ch275.json",
+  "textHash": "fnv1a64:eb942b47a759bc70",
+  "jsonHash": "fnv1a64:09764687cc71352a",
+  "findings": []
+}

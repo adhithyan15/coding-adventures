@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:73ccb4ee2f50d6f2",
+  "lessonIds": [
+    "GU-C486-arogya",
+    "GU-C486-svasth",
+    "GU-C486-sphurti",
+    "GU-C486-khorak",
+    "GU-C486-sukavu",
+    "GU-R486-review-479-486"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch486.txt",
+  "json": "gujarati/narration/ch486.json",
+  "textHash": "fnv1a64:5d7d011e0bfc9f9d",
+  "jsonHash": "fnv1a64:a6b4ac81b54e3312",
+  "findings": []
+}

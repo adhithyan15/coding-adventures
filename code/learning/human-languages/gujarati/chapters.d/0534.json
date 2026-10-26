@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Bets and Lotteries",
+  "label": "ch:gu-bets-and-lotteries",
+  "canDo": "I can talk about gambling, bets and lucky chances.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C534-joganujog",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can talk about gambling, bets and lucky chances.",
+    "assesses": [
+      "GU-LEX-C534-JUGAR534-03",
+      "GU-LEX-C534-JUGAR534-04",
+      "GU-LEX-C534-JUGAR534-05"
+    ]
+  }
+}

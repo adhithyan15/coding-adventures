@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:fe71848e0e9d04e4",
+  "lessonIds": [
+    "GU-C359-ijjat",
+    "GU-C359-gaurav",
+    "GU-C359-saram",
+    "GU-C359-abhiman",
+    "GU-C359-namvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch359.txt",
+  "json": "gujarati/narration/ch359.json",
+  "textHash": "fnv1a64:c5bd2a55226e51a4",
+  "jsonHash": "fnv1a64:6da99cafe069702e",
+  "findings": []
+}

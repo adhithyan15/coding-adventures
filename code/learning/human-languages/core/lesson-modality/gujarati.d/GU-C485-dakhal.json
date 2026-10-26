@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C485-dakhal",
+    "language": "gujarati",
+    "chapter": 485,
+    "sequence": 26950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38d7676b2eadb9d6"
+  },
+  "findings": []
+}

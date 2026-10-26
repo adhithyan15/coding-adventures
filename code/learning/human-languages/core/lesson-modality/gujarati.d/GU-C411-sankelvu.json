@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C411-sankelvu",
+    "language": "gujarati",
+    "chapter": 411,
+    "sequence": 22950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04951439e023eb3d"
+  },
+  "findings": []
+}

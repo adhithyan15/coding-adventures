@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "level": "pre-A1",
+  "mockId": "pre-a1-mock-1",
+  "sections": [
+    { "skill": "reading", "minutes": 5, "partIds": ["prea1-reading-kana-and-doorway-words"] },
+    { "skill": "listening", "minutes": 5, "partIds": ["prea1-listening-greetings-and-one-turn-details"] },
+    { "skill": "writing", "minutes": 10, "partIds": ["prea1-writing-delayed-kana-recall", "prea1-writing-dictation", "prea1-writing-bounded-production"] },
+    { "skill": "speaking", "minutes": 5, "partIds": ["prea1-speaking-doorway-exchange"] }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C401-trak",
+    "language": "gujarati",
+    "chapter": 401,
+    "sequence": 22430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:653fef5f2c10dc7c"
+  },
+  "findings": []
+}

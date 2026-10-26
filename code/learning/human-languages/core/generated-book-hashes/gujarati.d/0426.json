@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:0548b1b08802a9b8",
+  "lessonIds": [
+    "GU-C426-lakh",
+    "GU-C426-karod",
+    "GU-C426-badbaki",
+    "GU-C426-gunvu",
+    "GU-C426-vadharvu"
+  ],
+  "tex": "gujarati/book/chapters/ch426-lakhs-and-crores.tex"
+}

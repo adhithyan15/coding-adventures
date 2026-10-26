@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Waves and Marshes",
+  "label": "ch:ur-waves-and-marshes",
+  "canDo": "I can talk about rough water, a marsh and a river landing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C434-dubona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can talk about rough water, a marsh and a river landing.",
+    "assesses": [
+      "UR-LEX-C434-MAUJ434-03",
+      "UR-LEX-C434-MAUJ434-04",
+      "UR-LEX-C434-MAUJ434-05"
+    ]
+  }
+}

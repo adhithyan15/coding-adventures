@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:f333b0ba5b82c052",
+  "lessonIds": [
+    "GU-C399-vilamb",
+    "GU-C399-sambhlavu",
+    "GU-C399-elan",
+    "GU-C399-talvu",
+    "GU-C399-dokiyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch399.txt",
+  "json": "gujarati/narration/ch399.json",
+  "textHash": "fnv1a64:451e854bbc55396c",
+  "jsonHash": "fnv1a64:467aa45cf0cfaf0f",
+  "findings": []
+}

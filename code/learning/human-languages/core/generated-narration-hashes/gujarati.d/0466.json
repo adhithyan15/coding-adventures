@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:214e51ac89aae744",
+  "lessonIds": [
+    "GU-C466-kayar",
+    "GU-C466-nidar",
+    "GU-C466-saurya",
+    "GU-C466-khamir",
+    "GU-C466-dagmagvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch466.txt",
+  "json": "gujarati/narration/ch466.json",
+  "textHash": "fnv1a64:21fa7f002d6e8836",
+  "jsonHash": "fnv1a64:506754fb281e4ed7",
+  "findings": []
+}

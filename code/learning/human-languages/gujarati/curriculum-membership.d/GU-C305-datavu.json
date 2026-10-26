@@ -1,0 +1,11 @@
+{
+  "id": "GU-C305-datavu",
+  "pathSegment": "GU-PATH-305-BHUKAMP305",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-305-BHUKAMP305",
+      "order": 3
+    }
+  ]
+}

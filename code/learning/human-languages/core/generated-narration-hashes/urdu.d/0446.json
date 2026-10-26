@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:89b324761e7bd09f",
+  "lessonIds": [
+    "UR-C446-fikr-karna",
+    "UR-C446-tashvish",
+    "UR-C446-bojh",
+    "UR-C446-tarapna",
+    "UR-C446-dharakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch446.txt",
+  "json": "urdu/narration/ch446.json",
+  "textHash": "fnv1a64:5ecbee1f9078ca5c",
+  "jsonHash": "fnv1a64:203da9961c1ea6b9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "The Morning News",
+  "label": "ch:ur-the-morning-news",
+  "canDo": "I can say what the news reported.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C300-sansani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can say what the news reported.",
+    "assesses": [
+      "UR-LEX-C300-KHABAR300-03",
+      "UR-LEX-C300-KHABAR300-04",
+      "UR-LEX-C300-KHABAR300-05"
+    ]
+  }
+}

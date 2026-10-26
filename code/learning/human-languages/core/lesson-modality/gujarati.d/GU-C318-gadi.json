@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C318-gadi",
+    "language": "gujarati",
+    "chapter": 318,
+    "sequence": 17730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e03821f52fb914ff"
+  },
+  "findings": []
+}

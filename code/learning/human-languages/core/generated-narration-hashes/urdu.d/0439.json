@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:df4648c64d8ee3ef",
+  "lessonIds": [
+    "UR-C439-gidar",
+    "UR-C439-jhingur",
+    "UR-C439-maveshi",
+    "UR-C439-charna",
+    "UR-C439-jotna",
+    "UR-R439-review-433-439",
+    "UR-R439-review-final-439"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch439.txt",
+  "json": "urdu/narration/ch439.json",
+  "textHash": "fnv1a64:58fab219d3223735",
+  "jsonHash": "fnv1a64:9569d3d8bb7ffdef",
+  "findings": []
+}

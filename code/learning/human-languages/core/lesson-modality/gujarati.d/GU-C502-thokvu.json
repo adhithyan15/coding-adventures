@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C502-thokvu",
+    "language": "gujarati",
+    "chapter": 502,
+    "sequence": 28090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:beb1b7741d36d437"
+  },
+  "findings": []
+}

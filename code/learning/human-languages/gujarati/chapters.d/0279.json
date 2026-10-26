@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Asking the way",
+  "label": "ch:gu-asking-the-way",
+  "canDo": "I can ask where a place is, how far it is and how to get there (sṭeśan kevī rīte javũ?), ask someone to show me the way, and follow and give simple directions.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-R279-asking-the-way",
+    "kind": "production",
+    "summary": "Complete GU-R279-asking-the-way: ask the way, and give it.",
+    "assesses": [
+      "GU-LEX-C279-RIT-01",
+      "GU-GRAMMAR-C279-WAY-ASK-01",
+      "GU-GRAMMAR-C279-WAY-GIVE-01"
+    ]
+  }
+}

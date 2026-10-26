@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:0e26cf809463083f",
+  "lessonIds": [
+    "UR-C290-afat",
+    "UR-C290-elan",
+    "UR-C290-khatra",
+    "UR-C290-ttalna",
+    "UR-C290-ehtiyat"
+  ],
+  "tex": "urdu/book/chapters/ch290-a-warning.tex"
+}

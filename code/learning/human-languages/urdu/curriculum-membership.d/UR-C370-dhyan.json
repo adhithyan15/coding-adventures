@@ -1,0 +1,11 @@
+{
+  "id": "UR-C370-dhyan",
+  "pathSegment": "UR-PATH-370-JALDBAZI370",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-370-JALDBAZI370",
+      "order": 1
+    }
+  ]
+}

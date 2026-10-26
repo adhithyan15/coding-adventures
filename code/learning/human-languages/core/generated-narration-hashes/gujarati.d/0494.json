@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:200091b5b9be4372",
+  "lessonIds": [
+    "GU-C494-balpan",
+    "GU-C494-ucharvu",
+    "GU-C494-kisor",
+    "GU-C494-vrddh",
+    "GU-C494-vrddhasram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch494.txt",
+  "json": "gujarati/narration/ch494.json",
+  "textHash": "fnv1a64:c675ee71df75f299",
+  "jsonHash": "fnv1a64:99a33f016acc7301",
+  "findings": []
+}

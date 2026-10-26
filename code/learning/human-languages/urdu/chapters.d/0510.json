@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Peel, Pound, Squeeze",
+  "label": "ch:ur-peel-pound-squeeze",
+  "canDo": "I can describe getting food ready to cook.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C510-nichorna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can describe getting food ready to cook.",
+    "assesses": [
+      "UR-LEX-C510-CHHALNI510-03",
+      "UR-LEX-C510-CHHALNI510-04",
+      "UR-LEX-C510-CHHALNI510-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C418-banglo",
+    "language": "gujarati",
+    "chapter": 418,
+    "sequence": 23300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73b8f0e70284f860"
+  },
+  "findings": []
+}

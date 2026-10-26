@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Joy and Delight",
+  "label": "ch:ur-joy-and-delight",
+  "canDo": "I can say how glad someone was.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C441-umang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can say how glad someone was.",
+    "assesses": [
+      "UR-LEX-C441-JOY441-03",
+      "UR-LEX-C441-JOY441-04",
+      "UR-LEX-C441-JOY441-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-523-STADIUM523",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-523-STADIUM523"
+  ],
+  "after": []
+}

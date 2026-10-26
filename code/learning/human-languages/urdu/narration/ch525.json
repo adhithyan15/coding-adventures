@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 525,
+  "title": "Putting Things Off",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8f01ece63b5e78bb",
+  "lessons": [
+    {
+      "id": "UR-C525-mohlat",
+      "sequence": 30580,
+      "title": "مہلت (mohlat) — extra time; a respite",
+      "headword": "مہلت",
+      "romanization": "mohlat",
+      "gloss": "extra time; a respite",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59d7b9683afd67ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a way out, then the Urdu for to have (something) made or built."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مہلت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مہلت — mohlat — \"extra time; a respite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر ایک ہفتے کی مہلت ملی تو کام ہو گا۔ agar ek hafte kī mohlat milī to kām ho gā. If I get a week's grace, the work will be finished."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مہلت (mohlat) is usually traced, through Persian, to Arabic muhla, \"a delay, a respite\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mohlat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mohlat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mohlat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mohlat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar ek hafte kī mohlat milī to kām ho gā. — If I get a week's grace, the work will be finished.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar ek hafte kī mohlat milī to kām ho gā.* — If I get a week's grace, the work will be finished.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a way out, then the Urdu for to have (something) made or built, then say mohlat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a way out, then the Urdu for to have (something) made or built, then say *mohlat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مہلت (mohlat) mean? (\"Extra time; a respite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C525-iltiva",
+      "sequence": 30590,
+      "title": "التوا (iltivā) — a postponement",
+      "headword": "التوا",
+      "romanization": "iltivā",
+      "gloss": "a postponement",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1575cd287eaeb4cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to have (something) made or built, then the Urdu for extra time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: التوا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "التوا — iltivā — \"a postponement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر التوا نہیں ہوا تو امتحان کل ہو گا۔ agar iltivā nahīṅ huā to imtihān kal ho gā. If it is not postponed, the exam will be tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "التوا (iltivā) is usually traced, through Persian, to Arabic iltiwāʾ, \"a bending, a turning aside\"; the sense \"putting off\" came later, and the sources we use do not show how it arose."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iltivā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iltivā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iltivā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iltivā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar iltivā nahīṅ huā to imtihān kal ho gā. — If it is not postponed, the exam will be tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar iltivā nahīṅ huā to imtihān kal ho gā.* — If it is not postponed, the exam will be tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to have (something) made or built, then the Urdu for extra time, then say iltivā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to have (something) made or built, then the Urdu for extra time, then say *iltivā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does التوا (iltivā) mean? (\"A postponement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C525-muattal",
+      "sequence": 30600,
+      "title": "معطل (muattal) — suspended (for now)",
+      "headword": "معطل",
+      "romanization": "muattal",
+      "gloss": "suspended (for now)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:612390ff0b3040a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for extra time, then the Urdu for a postponement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: معطل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معطل — muattal — \"suspended (for now)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر طوفان آیا تو ریل گاڑیاں معطل ہوں گی۔ agar tūfān āyā to rel gāṛiyāṅ muattal hoṅ gī. If a storm comes, the trains will be suspended."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معطل (muattal) is usually traced, through Persian, to Arabic muʿaṭṭal, \"left idle, put out of use\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muattal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muattal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muattal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muattal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tūfān āyā to rel gāṛiyāṅ muattal hoṅ gī. — If a storm comes, the trains will be suspended.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tūfān āyā to rel gāṛiyāṅ muattal hoṅ gī.* — If a storm comes, the trains will be suspended.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for extra time, then the Urdu for a postponement, then say muattal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for extra time, then the Urdu for a postponement, then say *muattal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does معطل (muattal) mean? (\"Suspended (for now)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C525-barqarar",
+      "sequence": 30610,
+      "title": "برقرار (barqarār) — still standing; unchanged",
+      "headword": "برقرار",
+      "romanization": "barqarār",
+      "gloss": "still standing; unchanged",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69b66f377ca7d9e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a postponement, then the Urdu for suspended."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: برقرار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "برقرار — barqarār — \"still standing; unchanged\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر موسم ٹھیک رہا تو پروگرام برقرار رہے گا۔ agar mausam ṭhīk rahā to progrām barqarār rahe gā. If the weather stays fine, the plan will stand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "برقرار (barqarār) is usually traced to Persian barqarār, \"firm, established\", built from bar, \"on\", and Arabic qarār, \"rest, firmness\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barqarār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barqarār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barqarār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barqarār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar mausam ṭhīk rahā to progrām barqarār rahe gā. — If the weather stays fine, the plan will stand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar mausam ṭhīk rahā to progrām barqarār rahe gā.* — If the weather stays fine, the plan will stand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a postponement, then the Urdu for suspended, then say barqarār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a postponement, then the Urdu for suspended, then say *barqarār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does برقرار (barqarār) mean? (\"Still standing; unchanged\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C525-atkana",
+      "sequence": 30620,
+      "title": "اٹکانا (aṭkānā) — to keep (something) pending; to hold up",
+      "headword": "اٹکانا",
+      "romanization": "aṭkānā",
+      "gloss": "to keep (something) pending; to hold up",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa3994e1e07f4720",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for suspended, then the Urdu for still standing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اٹکانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اٹکانا — aṭkānā — \"to keep (something) pending; to hold up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر افسر نے فائل اٹکائی تو کام رک جائے گا۔ agar afsar ne fāil aṭkāī to kām ruk jāe gā. If the officer holds up the file, the work will stop."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے میری فائل اٹکائی, us ne merī fāil aṭkāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اٹکانا (aṭkānā) is the causative of aṭaknā, \"to get stuck\", which CDIAL lists under aṭṭakk, a form it reconstructs (CDIAL 182)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭkānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭkānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭkānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭkānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar afsar ne fāil aṭkāī to kām ruk jāe gā. — If the officer holds up the file, the work will stop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar afsar ne fāil aṭkāī to kām ruk jāe gā.* — If the officer holds up the file, the work will stop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for suspended, then the Urdu for still standing, then say aṭkānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for suspended, then the Urdu for still standing, then say *aṭkānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اٹکانا (aṭkānā) mean? (\"To keep (something) pending; to hold up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R525-review-518-525",
+      "sequence": 30630,
+      "title": "Looking back: from Learning to Sing to Putting Things Off",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Learning to Sing to Putting Things Off",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c43236f8f47db0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for a voice and melodious."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a voice, melodious, a raga, practice (in music), to hum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a voice, melodious, a raga, practice (in music), to hum]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a drum, a musical instrument, qawwali, a gathering (for music or poetry), to make (someone) dance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a drum, a musical instrument, qawwali, a gathering (for music or poetry), to make (someone) dance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wrestler, an Indian club (for exercise), a move (in wrestling), to pit against each other, a loincloth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wrestler, an Indian club (for exercise), a move (in wrestling), to pit against each other, a loincloth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a match (a game), a tournament, a captain (of a team), a winner, a defeat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a match (a game), a tournament, a captain (of a team), a winner, a defeat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agility, to bend without breaking, to roll (something) along, to make (someone) run, a trophy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: agility, to bend without breaking, to roll (something) along, to make (someone) run, a trophy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stadium, an umpire, a score, a cheer, to leap over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stadium, an umpire, a score, a cheer, to leap over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a list, a draft, to have (something) printed, a way out, to have (something) made or built",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a list, a draft, to have (something) printed, a way out, to have (something) made or built]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "extra time, a postponement, suspended, still standing, to keep (something) pending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: extra time, a postponement, suspended, still standing, to keep (something) pending]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A voice? (آواز, āvāz.) Melodious? (سریلا, surīlā.) A raga? (راگ, rāg.) Practice (in music)? (ریاض, riyāz.) To hum? (گنگنانا, gungunānā.) A drum? (ڈھول, ḍhol.) A musical instrument? (ساز, sāz.) Qawwali? (قوالی, qavvālī.) A gathering (for music or poetry)? (محفل, mahfil.) To make (someone) dance? (نچانا, nachānā.) A wrestler? (پہلوان, pahalvān.) An Indian club (for exercise)? (مگدر, mugdar.) A move (in wrestling)? (داؤ, dāo.) To pit against each other? (بھڑانا, bhiṛānā.) A loincloth? (لنگوٹ, langoṭ.) A match (a game)? (میچ, maich.) A tournament? (ٹورنامنٹ, ṭūrnāmenṭ.) A captain (of a team)? (کپتان, kaptān.) A winner? (فاتح, fātih.) A defeat? (شکست, shikast.) Agility? (پھرتی, phurtī.) To bend without breaking? (لچکنا, lachaknā.) To roll (something) along? (لڑھکانا, luṛhkānā.) To make (someone) run? (دوڑانا, dauṛānā.) A trophy? (ٹرافی, ṭrāfī.) A stadium? (اسٹیڈیم, isṭeḍiyam.) An umpire? (امپائر, ampāyar.) A score? (اسکور, iskor.) A cheer? (نعرہ, nārā.) To leap over? (پھاندنا, phāṅdnā.) A list? (فہرست, fehrist.) A draft? (مسودہ, musavvadā.) To have (something) printed? (چھپوانا, chhapvānā.) A way out? (تدبیر, tadbīr.) To have (something) made or built? (بنوانا, banvānā.) Extra time? (مہلت, mohlat.) A postponement? (التوا, iltivā.) Suspended? (معطل, muattal.) Still standing? (برقرار, barqarār.) To keep (something) pending? (اٹکانا, aṭkānā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

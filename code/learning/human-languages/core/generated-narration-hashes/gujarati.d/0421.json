@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:029662136632a239",
+  "lessonIds": [
+    "GU-C421-ghoghat",
+    "GU-C421-hobalo",
+    "GU-C421-dhor",
+    "GU-C421-ghurakvu",
+    "GU-C421-bhagadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch421.txt",
+  "json": "gujarati/narration/ch421.json",
+  "textHash": "fnv1a64:ee928e466165dca2",
+  "jsonHash": "fnv1a64:495c499c7a6526ad",
+  "findings": []
+}

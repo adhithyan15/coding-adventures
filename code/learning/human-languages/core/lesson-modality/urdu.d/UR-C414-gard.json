@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C414-gard",
+    "language": "urdu",
+    "chapter": 414,
+    "sequence": 24430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be21015e3ebe5c82"
+  },
+  "findings": []
+}

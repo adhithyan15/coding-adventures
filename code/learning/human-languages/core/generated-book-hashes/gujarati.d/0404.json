@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:bc2ae80c99d4f654",
+  "lessonIds": [
+    "GU-C404-phutpath",
+    "GU-C404-kedi",
+    "GU-C404-sakdu",
+    "GU-C404-cadhan",
+    "GU-C404-tapvu-leap"
+  ],
+  "tex": "gujarati/book/chapters/ch404-pavements-and-paths.tex"
+}

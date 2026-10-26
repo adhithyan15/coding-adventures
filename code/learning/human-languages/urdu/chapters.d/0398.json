@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Flights",
+  "label": "ch:ur-flights",
+  "canDo": "I can talk about a flight: the aircraft, my seat, the belt and a delay.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C398-multavi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about a flight: the aircraft, my seat, the belt and a delay.",
+    "assesses": [
+      "UR-LEX-C398-PARVAZ398-03",
+      "UR-LEX-C398-PARVAZ398-04",
+      "UR-LEX-C398-PARVAZ398-05"
+    ]
+  }
+}

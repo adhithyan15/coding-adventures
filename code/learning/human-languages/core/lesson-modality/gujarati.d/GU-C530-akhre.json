@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C530-akhre",
+    "language": "gujarati",
+    "chapter": 530,
+    "sequence": 29520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4efcfba5524af49f"
+  },
+  "findings": []
+}

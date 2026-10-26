@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C470-dam",
+    "language": "urdu",
+    "chapter": 470,
+    "sequence": 27540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cb7ff0f520ed8f1"
+  },
+  "findings": []
+}

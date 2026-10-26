@@ -1,0 +1,11 @@
+{
+  "id": "UR-C378-mansuba",
+  "pathSegment": "UR-PATH-378-HADAF378",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-378-HADAF378",
+      "order": 3
+    }
+  ]
+}

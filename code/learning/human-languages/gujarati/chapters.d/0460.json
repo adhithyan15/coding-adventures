@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Innocent or Sly",
+  "label": "ch:gu-innocent-or-sly",
+  "canDo": "I can say whether someone is easily fooled.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C460-phoslavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can say whether someone is easily fooled.",
+    "assesses": [
+      "GU-LEX-C460-BHOLU460-03",
+      "GU-LEX-C460-BHOLU460-04",
+      "GU-LEX-C460-BHOLU460-05"
+    ]
+  }
+}

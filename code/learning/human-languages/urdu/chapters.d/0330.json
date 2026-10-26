@@ -1,0 +1,21 @@
+{
+  "chapter": 330,
+  "title": "Turning the Pages",
+  "label": "ch:ur-turning-the-pages",
+  "canDo": "I can describe a book and say how well it sold.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-R330-review-final-330",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can describe a book and say how well it sold.",
+    "assesses": [
+      "UR-LEX-C330-SAFHA330-01",
+      "UR-LEX-C330-SAFHA330-02",
+      "UR-LEX-C330-SAFHA330-03",
+      "UR-LEX-C330-SAFHA330-04",
+      "UR-LEX-C330-SAFHA330-05"
+    ]
+  }
+}

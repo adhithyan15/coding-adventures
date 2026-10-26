@@ -1,0 +1,11 @@
+{
+  "id": "UR-C267-bad",
+  "pathSegment": "UR-PATH-267-STORY",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-267-STORY",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C462-bahakna",
+    "language": "urdu",
+    "chapter": 462,
+    "sequence": 27160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d774dd63580a449"
+  },
+  "findings": []
+}

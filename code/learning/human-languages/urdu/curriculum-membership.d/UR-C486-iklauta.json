@@ -1,0 +1,11 @@
+{
+  "id": "UR-C486-iklauta",
+  "pathSegment": "UR-PATH-486-GROWUP486",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-486-GROWUP486",
+      "order": 2
+    }
+  ]
+}

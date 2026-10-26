@@ -1,0 +1,17 @@
+{
+  "glyph": "ث",
+  "sound": "s",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ث",
+    "initial": "ثـ",
+    "medial": "ـثـ",
+    "final": "ـث"
+  },
+  "components": [
+    "be-series bowl",
+    "three dots above"
+  ],
+  "strokeOrder": [],
+  "notes": "Se is written like te with three dots above in place of two; it spells s in words of Arabic origin and sounds the same as sīn and suād. Recognition only: its stroke order is deliberately left empty, because no Urdu-scoped stroke-order source has been verified for it yet (a Persian or Arabic row's order is not borrowed)."
+}

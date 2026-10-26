@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:d02d7aa7a37db471",
+  "lessonIds": [
+    "GU-C369-bhay",
+    "GU-C369-dahesat",
+    "GU-C369-nirat",
+    "GU-C369-asanka",
+    "GU-C369-daravvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch369.txt",
+  "json": "gujarati/narration/ch369.json",
+  "textHash": "fnv1a64:f600a3f8de6516ef",
+  "jsonHash": "fnv1a64:9ff4bd5a44d3a230",
+  "findings": []
+}

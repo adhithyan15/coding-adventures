@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C348-nuqta-e-nazar",
+    "language": "urdu",
+    "chapter": 348,
+    "sequence": 20890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75a598c7bc520c92"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:1a0dd710c094fd36",
+  "lessonIds": [
+    "GU-C431-godam",
+    "GU-C431-puravtho",
+    "GU-C431-unap",
+    "GU-C431-jaththabandh",
+    "GU-C431-sangharvu"
+  ],
+  "tex": "gujarati/book/chapters/ch431-stock-and-shortages.tex"
+}

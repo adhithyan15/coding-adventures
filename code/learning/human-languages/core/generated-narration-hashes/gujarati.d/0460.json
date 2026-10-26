@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:8582314eb7680862",
+  "lessonIds": [
+    "GU-C460-bholu",
+    "GU-C460-luccu",
+    "GU-C460-calak",
+    "GU-C460-kapat",
+    "GU-C460-phoslavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch460.txt",
+  "json": "gujarati/narration/ch460.json",
+  "textHash": "fnv1a64:b00082aef77d1359",
+  "jsonHash": "fnv1a64:185c58e837c15b21",
+  "findings": []
+}

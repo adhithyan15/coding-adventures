@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "Words of Love",
+  "label": "ch:gu-words-of-love",
+  "canDo": "I can talk about love in a family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C450-lad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can talk about love in a family.",
+    "assesses": [
+      "GU-LEX-C450-VAHAL450-03",
+      "GU-LEX-C450-VAHAL450-04",
+      "GU-LEX-C450-VAHAL450-05"
+    ]
+  }
+}

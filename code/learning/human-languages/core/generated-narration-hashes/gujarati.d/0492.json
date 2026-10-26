@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:a2fcf420991209a4",
+  "lessonIds": [
+    "GU-C492-piyar",
+    "GU-C492-sasru",
+    "GU-C492-bhanej",
+    "GU-C492-pautra",
+    "GU-C492-pitrai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch492.txt",
+  "json": "gujarati/narration/ch492.json",
+  "textHash": "fnv1a64:52be64e7dd32fe3c",
+  "jsonHash": "fnv1a64:6f436df070f6126b",
+  "findings": []
+}

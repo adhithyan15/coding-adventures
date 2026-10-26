@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 468,
+  "title": "Lies and Boasts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fcffb7423ca1f12d",
+  "lessons": [
+    {
+      "id": "GU-C468-juthu",
+      "sequence": 26070,
+      "title": "જૂઠું (jūṭhũ) — untruthful; lying",
+      "headword": "જૂઠું",
+      "romanization": "jūṭhũ",
+      "gloss": "untruthful; lying",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:690d57b6c10f4cae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for moral character, then the Gujarati for to be ashamed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: જૂઠું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જૂઠું — jūṭhũ — \"untruthful; lying\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જૂઠું બોલવું સારું નથી. jūṭhũ bolvũ sārũ nathī. Telling lies is not good."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જૂઠું (jūṭhũ) goes back to a reconstructed jhūṭṭha-, \"false\"; CDIAL lists the Gujarati word, \"false\" (CDIAL 5407)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūṭhũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūṭhũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūṭhũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūṭhũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūṭhũ bolvũ sārũ nathī. — Telling lies is not good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūṭhũ bolvũ sārũ nathī.* — Telling lies is not good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for moral character, then the Gujarati for to be ashamed, then say jūṭhũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for moral character, then the Gujarati for to be ashamed, then say *jūṭhũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does જૂઠું (jūṭhũ) mean? (\"Untruthful; lying\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C468-gappu",
+      "sequence": 26080,
+      "title": "ગપ્પું (gappũ) — a tall tale",
+      "headword": "ગપ્પું",
+      "romanization": "gappũ",
+      "gloss": "a tall tale",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:542cc11dc2bc8617",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to be ashamed, then the Gujarati for untruthful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગપ્પું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગપ્પું — gappũ — \"a tall tale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદાનાં ગપ્પાં સાંભળીને બધા હસ્યા. dādānā̃ gappā̃ sā̃bhḷīne badhā hasyā. Everyone laughed at my grandfather's tall tales."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગપ્પું (gappũ) goes back to a reconstructed gappa-, \"talk\", probably an imitative word; CDIAL lists the Gujarati gap, \"tittle-tattle\" (CDIAL 4022)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gappũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gappũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gappũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gappũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādānā̃ gappā̃ sā̃bhḷīne badhā hasyā. — Everyone laughed at my grandfather's tall tales.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādānā̃ gappā̃ sā̃bhḷīne badhā hasyā.* — Everyone laughed at my grandfather's tall tales.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to be ashamed, then the Gujarati for untruthful, then say gappũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to be ashamed, then the Gujarati for untruthful, then say *gappũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગપ્પું (gappũ) mean? (\"A tall tale\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C468-dambh",
+      "sequence": 26090,
+      "title": "દંભ (dambh) — hypocrisy; pretence",
+      "headword": "દંભ",
+      "romanization": "dambh",
+      "gloss": "hypocrisy; pretence",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd86db24324e06fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for untruthful, then the Gujarati for a tall tale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: દંભ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દંભ — dambh — \"hypocrisy; pretence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તેનું સ્મિત ફક્ત દંભ હતું. tenũ smit phakt dambh hatũ. His smile was nothing but pretence."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દંભ (dambh) is a tatsama, Sanskrit dambha, \"deceit, feigning, hypocrisy\", as Monier-Williams records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dambh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dambh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dambh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dambh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenũ smit phakt dambh hatũ. — His smile was nothing but pretence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenũ smit phakt dambh hatũ.* — His smile was nothing but pretence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for untruthful, then the Gujarati for a tall tale, then say dambh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for untruthful, then the Gujarati for a tall tale, then say *dambh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does દંભ (dambh) mean? (\"Hypocrisy; pretence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C468-sekhi",
+      "sequence": 26100,
+      "title": "શેખી (śekhī) — boasting",
+      "headword": "શેખી",
+      "romanization": "śekhī",
+      "gloss": "boasting",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ac79383d529dd09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a tall tale, then the Gujarati for hypocrisy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: શેખી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શેખી — śekhī — \"boasting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અરુણ પોતાની નવી ગાડીની શેખી મારે છે. Aruṇ potānī navī gāḍīnī śekhī māre che. Arun boasts about his new car."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શેખી (śekhī) is usually traced to Persian šēxī, \"pride, boasting\", built on šēx, \"an elder, a chief\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śekhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śekhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śekhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śekhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ potānī navī gāḍīnī śekhī māre che. — Arun boasts about his new car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ potānī navī gāḍīnī śekhī māre che.* — Arun boasts about his new car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a tall tale, then the Gujarati for hypocrisy, then say śekhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a tall tale, then the Gujarati for hypocrisy, then say *śekhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does શેખી (śekhī) mean? (\"Boasting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C468-bholavvu",
+      "sequence": 26110,
+      "title": "ભોળવવું (bhoḷavvũ) — to beguile; to mislead",
+      "headword": "ભોળવવું",
+      "romanization": "bhoḷavvũ",
+      "gloss": "to beguile; to mislead",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:695a3363c52bbcb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for hypocrisy, then the Gujarati for boasting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભોળવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભોળવવું — bhoḷavvũ — \"to beguile; to mislead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "લુચ્ચો વેપારી ગ્રાહકોને ખોટા વચનથી ભોળવે છે. lucco vepārī grāhkone khoṭā vacanthī bhoḷve che. The sly trader beguiles customers with false promises."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે બાળકને ભોળવ્યું, teṇe bāḷakne bhoḷavyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભોળવવું (bhoḷavvũ) is built on ભોળું (bhoḷũ), \"trusting\", which goes back to a reconstructed bhulla- (CDIAL 9539): to make someone trusting, and so to fool them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhoḷavvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhoḷavvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhoḷavvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhoḷavvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lucco vepārī grāhkone khoṭā vacanthī bhoḷve che. — The sly trader beguiles customers with false promises.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lucco vepārī grāhkone khoṭā vacanthī bhoḷve che.* — The sly trader beguiles customers with false promises.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for hypocrisy, then the Gujarati for boasting, then say bhoḷavvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for hypocrisy, then the Gujarati for boasting, then say *bhoḷavvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભોળવવું (bhoḷavvũ) mean? (\"To beguile; to mislead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

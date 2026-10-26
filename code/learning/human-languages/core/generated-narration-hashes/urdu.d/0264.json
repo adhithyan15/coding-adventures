@@ -1,0 +1,17 @@
+{
+  "language": "urdu",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:4560986c84a9c445",
+  "lessonIds": [
+    "UR-C264-voh-gaya",
+    "UR-C264-voh-yahan-tha",
+    "UR-R264-where-i-went"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "urdu/narration/ch264.txt",
+  "json": "urdu/narration/ch264.json",
+  "textHash": "fnv1a64:d0df544613a69e05",
+  "jsonHash": "fnv1a64:df45f06da719440a",
+  "findings": []
+}

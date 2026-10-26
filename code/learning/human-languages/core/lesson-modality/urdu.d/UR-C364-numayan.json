@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C364-numayan",
+    "language": "urdu",
+    "chapter": 364,
+    "sequence": 21720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a00f3e64d92dff4b"
+  },
+  "findings": []
+}

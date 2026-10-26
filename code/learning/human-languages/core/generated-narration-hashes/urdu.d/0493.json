@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:8592980af9cb8d55",
+  "lessonIds": [
+    "UR-C493-intiqal-karna",
+    "UR-C493-janaza",
+    "UR-C493-dafnana",
+    "UR-C493-taziyat-karna",
+    "UR-C493-beva",
+    "UR-R493-review-487-493",
+    "UR-R493-review-final-493"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch493.txt",
+  "json": "urdu/narration/ch493.json",
+  "textHash": "fnv1a64:539a98337b882803",
+  "jsonHash": "fnv1a64:13560d46cc949f9b",
+  "findings": []
+}

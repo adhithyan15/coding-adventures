@@ -1,0 +1,11 @@
+{
+  "id": "UR-C380-mashq",
+  "pathSegment": "UR-PATH-380-MASHQ380",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-380-MASHQ380",
+      "order": 1
+    }
+  ]
+}

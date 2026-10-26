@@ -1,0 +1,11 @@
+{
+  "id": "GU-C357-pratha",
+  "pathSegment": "GU-PATH-357-MULYA357",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-357-MULYA357",
+      "order": 3
+    }
+  ]
+}

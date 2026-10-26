@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:95a545b37bbfe0db",
+  "lessonIds": [
+    "UR-C466-bazu",
+    "UR-C466-ran",
+    "UR-C466-pindli",
+    "UR-C466-talva",
+    "UR-C466-panja"
+  ],
+  "tex": "urdu/book/chapters/ch466-arms-and-legs.tex"
+}

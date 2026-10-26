@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:cba13fa003ccc291",
+  "lessonIds": [
+    "GU-C309-sabha",
+    "GU-C309-sanman",
+    "GU-C309-inam",
+    "GU-C309-birdavvu",
+    "GU-C309-garva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch309.txt",
+  "json": "gujarati/narration/ch309.json",
+  "textHash": "fnv1a64:5e599f52791c240b",
+  "jsonHash": "fnv1a64:d08a114bfe8001b5",
+  "findings": []
+}

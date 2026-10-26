@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:903df950748c6911",
+  "lessonIds": [
+    "UR-C308-shahanshah",
+    "UR-C308-takht",
+    "UR-C308-taj",
+    "UR-C308-darbar",
+    "UR-C308-varis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch308.txt",
+  "json": "urdu/narration/ch308.json",
+  "textHash": "fnv1a64:6a9b10eb26b77f92",
+  "jsonHash": "fnv1a64:301826ed948d2229",
+  "findings": []
+}

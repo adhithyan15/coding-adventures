@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:8923380b9822aaa9",
+  "lessonIds": [
+    "UR-C485-bachpan",
+    "UR-C485-shararat",
+    "UR-C485-totla",
+    "UR-C485-palna-reared",
+    "UR-C485-pahnana"
+  ],
+  "tex": "urdu/book/chapters/ch485-childhood.tex"
+}

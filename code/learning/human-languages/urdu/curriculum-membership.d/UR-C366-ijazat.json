@@ -1,0 +1,11 @@
+{
+  "id": "UR-C366-ijazat",
+  "pathSegment": "UR-PATH-366-IJAZAT366",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-366-IJAZAT366",
+      "order": 2
+    }
+  ]
+}

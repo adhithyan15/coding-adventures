@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:31b2c6a7c8ebd3ee",
+  "lessonIds": [
+    "GU-C426-lakh",
+    "GU-C426-karod",
+    "GU-C426-badbaki",
+    "GU-C426-gunvu",
+    "GU-C426-vadharvu"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "gujarati/narration/ch426.txt",
+  "json": "gujarati/narration/ch426.json",
+  "textHash": "fnv1a64:ba05c3e2ded195ce",
+  "jsonHash": "fnv1a64:18da2151917aacb4",
+  "findings": []
+}

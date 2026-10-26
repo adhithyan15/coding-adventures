@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 307,
+  "title": "A Fight in the Market",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d17051659a912513",
+  "lessons": [
+    {
+      "id": "UR-C307-pitna",
+      "sequence": 18580,
+      "title": "پیٹنا (pīṭnā) — to beat",
+      "headword": "پیٹنا",
+      "romanization": "pīṭnā",
+      "gloss": "to beat",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6e29b95b802c080",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to shudder, then the Urdu for a shock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پیٹنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیٹنا — pīṭnā — \"to beat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لوگوں نے چور کو پیٹا۔ logoṅ ne chor ko pīṭā. People beat the thief."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے دروازہ پیٹا, us ne darvāzā pīṭā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is inherited: CDIAL lists the Hindi cousin pīṭnā, \"to beat\", under piṭṭayati, \"pounds\" (CDIAL 8165). You can پیٹنا a person, a drum or a door."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṭnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṭnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "logoṅ ne chor ko pīṭā. — People beat the thief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *logoṅ ne chor ko pīṭā.* — People beat the thief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to shudder, then the Urdu for a shock, then say pīṭnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to shudder, then the Urdu for a shock, then say *pīṭnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پیٹنا (pīṭnā) mean? (\"To beat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C307-jharap",
+      "sequence": 18590,
+      "title": "جھڑپ (jhaṛap) — a scuffle; a clash",
+      "headword": "جھڑپ",
+      "romanization": "jhaṛap",
+      "gloss": "a scuffle; a clash",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:507fb26180a86807",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a shock, then the Urdu for to beat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جھڑپ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھڑپ — jhaṛap — \"a scuffle; a clash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بازار میں جھڑپ ہوئی۔ bāzār meṅ jhaṛap huī. There was a scuffle in the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھڑپ (jhaṛap) is inherited: CDIAL lists the Hindi cousin jhaṛap, \"a fight\", under jhaṭ (CDIAL 5327), the entry that also holds جھٹکا."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṛap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṛap*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṛap, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṛap*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāzār meṅ jhaṛap huī. — There was a scuffle in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāzār meṅ jhaṛap huī.* — There was a scuffle in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a shock, then the Urdu for to beat, then say jhaṛap again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a shock, then the Urdu for to beat, then say *jhaṛap* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جھڑپ (jhaṛap) mean? (\"A scuffle; a clash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C307-ghunsa",
+      "sequence": 18600,
+      "title": "گھونسا (ghūnsā) — a punch",
+      "headword": "گھونسا",
+      "romanization": "ghūnsā",
+      "gloss": "a punch",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c55aedd597e34acd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to beat, then the Urdu for a scuffle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گھونسا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گھونسا — ghūnsā — \"a punch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "گھونسا اس کے منہ پر لگا۔ ghūnsā us ke muṅh par lagā. The punch landed on his mouth."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گھونسا (ghūnsā) is inherited: CDIAL lists the Hindi cousin ghūsā, \"a fist\", under a form it reconstructs (CDIAL 4498)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghūnsā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghūnsā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghūnsā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghūnsā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghūnsā us ke muṅh par lagā. — The punch landed on his mouth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghūnsā us ke muṅh par lagā.* — The punch landed on his mouth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to beat, then the Urdu for a scuffle, then say ghūnsā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to beat, then the Urdu for a scuffle, then say *ghūnsā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گھونسا (ghūnsā) mean? (\"A punch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C307-thappar",
+      "sequence": 18610,
+      "title": "تھپڑ (thappaṛ) — a slap",
+      "headword": "تھپڑ",
+      "romanization": "thappaṛ",
+      "gloss": "a slap",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d3b35a05402de78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a scuffle, then the Urdu for a punch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تھپڑ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تھپڑ — thappaṛ — \"a slap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اسے ایک تھپڑ لگا۔ use ek thappaṛ lagā. He got a slap."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تھپڑ (thappaṛ) is inherited: CDIAL lists the Hindi cousin thappaṛ, \"a slap\", under a form it reconstructs (CDIAL 6091)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thappaṛ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thappaṛ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thappaṛ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thappaṛ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "use ek thappaṛ lagā. — He got a slap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *use ek thappaṛ lagā.* — He got a slap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a scuffle, then the Urdu for a punch, then say thappaṛ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a scuffle, then the Urdu for a punch, then say *thappaṛ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تھپڑ (thappaṛ) mean? (\"A slap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C307-ainthna",
+      "sequence": 18620,
+      "title": "اینٹھنا (ainṭhnā) — to twist; to wring",
+      "headword": "اینٹھنا",
+      "romanization": "ainṭhnā",
+      "gloss": "to twist; to wring",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4517b3b726c5399b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a punch, then the Urdu for a slap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اینٹھنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اینٹھنا — ainṭhnā — \"to twist; to wring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے چور کا ہاتھ اینٹھا۔ us ne chor kā hāth ainṭhā. He twisted the thief's arm."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے رسی اینٹھی, us ne rassī ainṭhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اینٹھنا (ainṭhnā) is inherited: CDIAL lists the Hindi cousin aĩṭhnā, \"to twist\", under Sanskrit āvēṣṭatē, \"wraps round\" (CDIAL 1448)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ainṭhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ainṭhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ainṭhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ainṭhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us ne chor kā hāth ainṭhā. — He twisted the thief's arm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us ne chor kā hāth ainṭhā.* — He twisted the thief's arm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a punch, then the Urdu for a slap, then say ainṭhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a punch, then the Urdu for a slap, then say *ainṭhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اینٹھنا (ainṭhnā) mean? (\"To twist; to wring\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R307-review-300-307",
+      "sequence": 18630,
+      "title": "Looking back: from The Morning News to A Fight in the Market",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from The Morning News to A Fight in the Market",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f679775d323dffb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for a radio and to broadcast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a radio, to broadcast, a headline, an official notice, a sensation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a radio, to broadcast, a headline, an official notice, a sensation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a journalist, the scene of an event, an editor, a detail, to have written down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a journalist, the scene of an event, an editor, a detail, to have written down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rumour, talk of the town, terror, to stir up, the public",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rumour, talk of the town, terror, to stir up, the public]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to deny, an admission, to put off, information, the reality",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to deny, an admission, to put off, information, the reality]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a riot, an uproar, to break out, a police baton, a curfew",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a riot, an uproar, to break out, a police baton, a curfew]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mystery, an informer, a guess, to be startled, a revelation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mystery, an informer, a guess, to be startled, a revelation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a blast, a bomb, to echo, to shudder, a shock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a blast, a bomb, to echo, to shudder, a shock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to beat, a scuffle, a punch, a slap, to twist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to beat, a scuffle, a punch, a slap, to twist]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A radio? (ریڈیو, reḍiyo.) To broadcast? (نشر کرنا, nashr karnā.) A headline? (سرخی, surkhī.) An official notice? (اطلاع, ittilā.) A sensation? (سنسنی, sansanī.) A journalist? (صحافی, sahāfī.) The scene of an event? (موقع, mauqa.) An editor? (ایڈیٹر, eḍīṭar.) A detail? (تفصیل, tafsīl.) To have written down? (لکھوانا, likhvānā.) A rumour? (افواہ, afvāh.) Talk of the town? (چرچا, charchā.) Terror? (دہشت, dahshat.) To stir up? (بھڑکانا, bhaṛkānā.) The public? (عوام, avām.) To deny? (انکار کرنا, inkār karnā.) An admission? (اقرار, iqrār.) To put off? (ٹالنا, ṭālnā.) Information? (معلومات, mālūmāt.) The reality? (حقیقت, haqīqat.) A riot? (فساد, fasād.) An uproar? (ہنگامہ, hangāmā.) To break out? (پھوٹنا, phūṭnā.) A police baton? (لاٹھی, lāṭhī.) A curfew? (کرفیو, karfyū.) A mystery? (معمہ, muammā.) An informer? (مخبر, mukhbir.) A guess? (اندازہ, andāzā.) To be startled? (چونکنا, chaunknā.) A revelation? (انکشاف, inkishāf.) A blast? (دھماکا, dhamākā.) A bomb? (بم, bam.) To echo? (گونجنا, gūnjnā.) To shudder? (تھرانا, tharrānā.) A shock? (صدمہ, sadmā.) To beat? (پیٹنا, pīṭnā.) A scuffle? (جھڑپ, jhaṛap.) A punch? (گھونسا, ghūnsā.) A slap? (تھپڑ, thappaṛ.) To twist? (اینٹھنا, ainṭhnā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

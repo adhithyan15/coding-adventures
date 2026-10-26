@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:ac7327a6777d3792",
+  "lessonIds": [
+    "UR-C287-angara",
+    "UR-C287-sulagna",
+    "UR-C287-sharara",
+    "UR-C287-bharakna",
+    "UR-C287-jalna"
+  ],
+  "tex": "urdu/book/chapters/ch287-fire.tex"
+}

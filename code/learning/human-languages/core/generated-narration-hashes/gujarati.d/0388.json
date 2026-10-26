@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:06e0d90e15c3524b",
+  "lessonIds": [
+    "GU-C388-ruprekha",
+    "GU-C388-upakram",
+    "GU-C388-abhiyan",
+    "GU-C388-arambhvu",
+    "GU-C388-adarvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch388.txt",
+  "json": "gujarati/narration/ch388.json",
+  "textHash": "fnv1a64:840865b40323c572",
+  "jsonHash": "fnv1a64:7e2f3d22ad0ec89a",
+  "findings": []
+}

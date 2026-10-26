@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 381,
+  "output": "urdu/book/chapters/ch381-success.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

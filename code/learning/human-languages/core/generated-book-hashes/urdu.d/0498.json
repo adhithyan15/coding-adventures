@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:d9d60e19bc5382f6",
+  "lessonIds": [
+    "UR-C498-chak",
+    "UR-C498-sancha",
+    "UR-C498-ava",
+    "UR-C498-matka",
+    "UR-C498-tapana"
+  ],
+  "tex": "urdu/book/chapters/ch498-clay-and-the-kiln.tex"
+}

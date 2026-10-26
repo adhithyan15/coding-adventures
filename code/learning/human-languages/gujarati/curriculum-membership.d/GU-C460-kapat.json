@@ -1,0 +1,11 @@
+{
+  "id": "GU-C460-kapat",
+  "pathSegment": "GU-PATH-460-BHOLU460",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-460-BHOLU460",
+      "order": 3
+    }
+  ]
+}

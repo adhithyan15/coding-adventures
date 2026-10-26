@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:128be4c136db8049",
+  "lessonIds": [
+    "GU-C391-gadbad",
+    "GU-C391-avyavastha",
+    "GU-C391-bhangvu",
+    "GU-C391-veravu",
+    "GU-C391-bhusavu"
+  ],
+  "tex": "gujarati/book/chapters/ch391-when-things-go-wrong.tex"
+}

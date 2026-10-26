@@ -1,0 +1,21 @@
+{
+  "chapter": 299,
+  "title": "Lending a Hand",
+  "label": "ch:ur-lending-a-hand",
+  "canDo": "I can say who helped and what they collected.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-R299-review-292-299",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can say who helped and what they collected.",
+    "assesses": [
+      "UR-LEX-C299-IMDAD299-01",
+      "UR-LEX-C299-IMDAD299-02",
+      "UR-LEX-C299-IMDAD299-03",
+      "UR-LEX-C299-IMDAD299-04",
+      "UR-LEX-C299-IMDAD299-05"
+    ]
+  }
+}

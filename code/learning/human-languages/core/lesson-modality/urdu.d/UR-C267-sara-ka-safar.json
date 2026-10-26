@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "UR-C267-sara-ka-safar",
+    "language": "urdu",
+    "chapter": 267,
+    "sequence": 16240,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3ca102f43e25faac"
+  },
+  "findings": []
+}

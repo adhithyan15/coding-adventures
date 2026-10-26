@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C419-khasara",
+    "language": "urdu",
+    "chapter": 419,
+    "sequence": 24700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:003a302a830bb059"
+  },
+  "findings": []
+}

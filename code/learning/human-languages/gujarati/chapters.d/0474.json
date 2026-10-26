@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Eating Slowly",
+  "label": "ch:gu-eating-slowly",
+  "canDo": "I can talk about chewing and swallowing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C474-talvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can talk about chewing and swallowing.",
+    "assesses": [
+      "GU-LEX-C474-CAVVU474-03",
+      "GU-LEX-C474-CAVVU474-04",
+      "GU-LEX-C474-CAVVU474-05"
+    ]
+  }
+}

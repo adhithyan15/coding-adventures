@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Loyalty and Betrayal",
+  "label": "ch:gu-loyalty-and-betrayal",
+  "canDo": "I can talk about honesty, temptation and betrayal.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C360-phasavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can talk about honesty, temptation and betrayal.",
+    "assesses": [
+      "GU-LEX-C360-IMAN360-03",
+      "GU-LEX-C360-IMAN360-04",
+      "GU-LEX-C360-IMAN360-05"
+    ]
+  }
+}

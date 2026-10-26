@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Good Manners",
+  "label": "ch:gu-good-manners",
+  "canDo": "I can talk about good and bad behaviour.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C467-lajvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can talk about good and bad behaviour.",
+    "assesses": [
+      "GU-LEX-C467-VARTAN467-03",
+      "GU-LEX-C467-VARTAN467-04",
+      "GU-LEX-C467-VARTAN467-05"
+    ]
+  }
+}

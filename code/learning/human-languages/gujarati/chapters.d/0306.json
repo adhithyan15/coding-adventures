@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "The Relief Camp",
+  "label": "ch:gu-the-relief-camp",
+  "canDo": "I can say who came to help and what they brought.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C306-umatvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can say who came to help and what they brought.",
+    "assesses": [
+      "GU-LEX-C306-RAHAT306-03",
+      "GU-LEX-C306-RAHAT306-04",
+      "GU-LEX-C306-RAHAT306-05"
+    ]
+  }
+}

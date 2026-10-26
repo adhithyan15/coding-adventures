@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:6a9ede33f4ed7704",
+  "lessonIds": [
+    "GU-C454-ucat",
+    "GU-C454-phikar",
+    "GU-C454-becen",
+    "GU-C454-vyakul",
+    "GU-C454-salvalvu",
+    "GU-R454-review-447-454"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch454.txt",
+  "json": "gujarati/narration/ch454.json",
+  "textHash": "fnv1a64:9905f18c2b04ea9f",
+  "jsonHash": "fnv1a64:ac4978a42b055fb9",
+  "findings": []
+}

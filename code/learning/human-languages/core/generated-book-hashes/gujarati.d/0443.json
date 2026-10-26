@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:7af81451c5312b8e",
+  "lessonIds": [
+    "GU-C443-jhad",
+    "GU-C443-vad",
+    "GU-C443-piplo",
+    "GU-C443-abo",
+    "GU-C443-phutvu"
+  ],
+  "tex": "gujarati/book/chapters/ch443-trees.tex"
+}

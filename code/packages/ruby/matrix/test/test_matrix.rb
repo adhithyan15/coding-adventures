@@ -1,5 +1,4 @@
-require "minitest/autorun"
-require_relative "../lib/matrix_ml"
+require_relative "test_helper"
 
 class MatrixTest < Minitest::Test
   # ====================================================================

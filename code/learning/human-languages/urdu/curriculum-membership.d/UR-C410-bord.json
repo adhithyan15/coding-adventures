@@ -1,0 +1,11 @@
+{
+  "id": "UR-C410-bord",
+  "pathSegment": "UR-PATH-410-IMARAT410",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-410-IMARAT410",
+      "order": 2
+    }
+  ]
+}

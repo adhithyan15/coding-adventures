@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 499,
+  "title": "Cotton and Thread",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cd36959452379005",
+  "lessons": [
+    {
+      "id": "UR-C499-kapas",
+      "sequence": 29250,
+      "title": "کپاس (kapās) — cotton (the plant)",
+      "headword": "کپاس",
+      "romanization": "kapās",
+      "gloss": "cotton (the plant)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e119650b4b56e8db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a large clay pot, then the Urdu for to heat in a fire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کپاس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کپاس — kapās — \"cotton (the plant)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کسان نے اس سال کپاس بوئی۔ kisān ne is sāl kapās boī. The farmer sowed cotton this year."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کپاس (kapās) is inherited from Sanskrit karpāsa, \"the cotton plant\" (CDIAL 2877)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kisān ne is sāl kapās boī. — The farmer sowed cotton this year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kisān ne is sāl kapās boī.* — The farmer sowed cotton this year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a large clay pot, then the Urdu for to heat in a fire, then say kapās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a large clay pot, then the Urdu for to heat in a fire, then say *kapās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کپاس (kapās) mean? (\"Cotton (the plant)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C499-dhunna",
+      "sequence": 29260,
+      "title": "دھننا (dhunnā) — to card (cotton)",
+      "headword": "دھننا",
+      "romanization": "dhunnā",
+      "gloss": "to card (cotton)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ff46c4c40cd81c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to heat in a fire, then the Urdu for cotton (the plant)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دھننا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دھننا — dhunnā — \"to card (cotton)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دادی نے رضائی کے لیے کپاس دھنی۔ dādī ne razāī ke liye kapās dhunī. Grandmother carded cotton for the quilt."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے کپاس دھنی, us ne kapās dhunī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دھننا (dhunnā) is inherited: CDIAL lists the Hindi cousin dhunnā, \"to beat, to scutch cotton\", under Sanskrit dhūnōti, \"shakes\" (CDIAL 6846)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhunnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhunnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhunnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhunnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī ne razāī ke liye kapās dhunī. — Grandmother carded cotton for the quilt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī ne razāī ke liye kapās dhunī.* — Grandmother carded cotton for the quilt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to heat in a fire, then the Urdu for cotton (the plant), then say dhunnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to heat in a fire, then the Urdu for cotton (the plant), then say *dhunnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دھننا (dhunnā) mean? (\"To card (cotton)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C499-charkha",
+      "sequence": 29270,
+      "title": "چرخہ (charkhā) — a spinning wheel",
+      "headword": "چرخہ",
+      "romanization": "charkhā",
+      "gloss": "a spinning wheel",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73c631657a91d398",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for cotton (the plant), then the Urdu for to card (cotton)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چرخہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چرخہ — charkhā — \"a spinning wheel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نانی شام کو چرخہ چلاتی تھیں۔ nānī shām ko charkhā chalātī thīṅ. Grandmother used to work the spinning wheel in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چرخہ (charkhā) is usually traced to Persian charkha, \"a wheel\", built on charkh, \"a wheel; the turning sky\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charkhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *charkhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charkhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *charkhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānī shām ko charkhā chalātī thīṅ. — Grandmother used to work the spinning wheel in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānī shām ko charkhā chalātī thīṅ.* — Grandmother used to work the spinning wheel in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for cotton (the plant), then the Urdu for to card (cotton), then say charkhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for cotton (the plant), then the Urdu for to card (cotton), then say *charkhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چرخہ (charkhā) mean? (\"A spinning wheel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C499-katna-spin",
+      "sequence": 29280,
+      "title": "کاتنا (kātnā) — to spin (thread)",
+      "headword": "کاتنا",
+      "romanization": "kātnā",
+      "gloss": "to spin (thread)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64252565202912c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to card (cotton), then the Urdu for a spinning wheel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کاتنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کاتنا — kātnā — \"to spin (thread)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وہ چرخے پر دھاگا کاتتی ہے۔ voh charkhe par dhāgā kāttī hai. She spins thread on the spinning wheel."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے دھاگا کاتا, us ne dhāgā kātā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کاتنا (kātnā) is inherited: CDIAL lists the Hindi cousin kātnā, \"spins\", under kartati, a form it reconstructs (CDIAL 2855)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kātnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kātnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kātnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kātnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voh charkhe par dhāgā kāttī hai. — She spins thread on the spinning wheel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voh charkhe par dhāgā kāttī hai.* — She spins thread on the spinning wheel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to card (cotton), then the Urdu for a spinning wheel, then say kātnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to card (cotton), then the Urdu for a spinning wheel, then say *kātnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کاتنا (kātnā) mean? (\"To spin (thread)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C499-ganth",
+      "sequence": 29290,
+      "title": "گانٹھ (gāṅṭh) — a knot",
+      "headword": "گانٹھ",
+      "romanization": "gāṅṭh",
+      "gloss": "a knot",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9221b944fbb08210",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a spinning wheel, then the Urdu for to spin (thread)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گانٹھ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گانٹھ — gāṅṭh — \"a knot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس رسی میں ایک گانٹھ ہے۔ is rassī meṅ ek gāṅṭh hai. There is a knot in this rope."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گانٹھ (gāṅṭh) is inherited from Sanskrit granthi, \"a knot\" (CDIAL 4354)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṅṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṅṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṅṭh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṅṭh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is rassī meṅ ek gāṅṭh hai. — There is a knot in this rope.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *is rassī meṅ ek gāṅṭh hai.* — There is a knot in this rope.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a spinning wheel, then the Urdu for to spin (thread), then say gāṅṭh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a spinning wheel, then the Urdu for to spin (thread), then say *gāṅṭh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گانٹھ (gāṅṭh) mean? (\"A knot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

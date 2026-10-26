@@ -1,0 +1,19 @@
+{
+  "chapter": 541,
+  "title": "Promises and Trust",
+  "label": "ch:gu-promises-and-trust",
+  "canDo": "I can talk about oaths, promises, trust and loopholes.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C541-prastav",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can talk about oaths, promises, trust and loopholes.",
+    "assesses": [
+      "GU-LEX-C541-SHAPATH541-03",
+      "GU-LEX-C541-SHAPATH541-04",
+      "GU-LEX-C541-SHAPATH541-05"
+    ]
+  }
+}

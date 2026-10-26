@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C363-taran",
+    "language": "gujarati",
+    "chapter": 363,
+    "sequence": 20250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c49b3ad6041d0d5"
+  },
+  "findings": []
+}

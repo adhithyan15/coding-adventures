@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Washing and Grooming",
+  "label": "ch:ur-washing-and-grooming",
+  "canDo": "I can talk about washing and grooming.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C482-tarashna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can talk about washing and grooming.",
+    "assesses": [
+      "UR-LEX-C482-GROOM482-03",
+      "UR-LEX-C482-GROOM482-04",
+      "UR-LEX-C482-GROOM482-05"
+    ]
+  }
+}

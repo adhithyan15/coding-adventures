@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:dc3724c72effcd2b",
+  "lessonIds": [
+    "GU-C457-naphrat",
+    "GU-C457-dhikkarvu",
+    "GU-C457-tiraskar",
+    "GU-C457-adekhai",
+    "GU-C457-angamo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch457.txt",
+  "json": "gujarati/narration/ch457.json",
+  "textHash": "fnv1a64:9bef6b031bfdd562",
+  "jsonHash": "fnv1a64:935703071bc057f0",
+  "findings": []
+}

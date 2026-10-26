@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C380-thodu",
+    "language": "gujarati",
+    "chapter": 380,
+    "sequence": 21120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09fb59753dccef6c"
+  },
+  "findings": []
+}

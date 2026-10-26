@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:0c14e98f29c24b53",
+  "lessonIds": [
+    "GU-C385-puraskar",
+    "GU-C385-kadar",
+    "GU-C385-mahentanu",
+    "GU-C385-pamvu",
+    "GU-C385-navajvu",
+    "GU-R385-review-379-385"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch385.txt",
+  "json": "gujarati/narration/ch385.json",
+  "textHash": "fnv1a64:fe109849e3b3f54e",
+  "jsonHash": "fnv1a64:455eb0e56c7d7b0b",
+  "findings": []
+}

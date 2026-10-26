@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:67e7796b96ac9a4d",
+  "lessonIds": [
+    "UR-C531-amanat",
+    "UR-C531-qaul",
+    "UR-C531-pasdari",
+    "UR-C531-sakh",
+    "UR-C531-nibhna"
+  ],
+  "tex": "urdu/book/chapters/ch531-trust-and-a-good-name.tex"
+}

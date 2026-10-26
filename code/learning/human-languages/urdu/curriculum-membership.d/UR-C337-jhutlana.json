@@ -1,0 +1,11 @@
+{
+  "id": "UR-C337-jhutlana",
+  "pathSegment": "UR-PATH-337-TASDIQ337",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-337-TASDIQ337",
+      "order": 2
+    }
+  ]
+}

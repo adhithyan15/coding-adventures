@@ -1,0 +1,11 @@
+{
+  "id": "UR-C357-pabandi",
+  "pathSegment": "UR-PATH-357-BADUNVANI357",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-357-BADUNVANI357",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:a549d8e84131c662",
+  "lessonIds": [
+    "UR-C320-atish-bazi",
+    "UR-C320-patakha",
+    "UR-C320-chhirakna",
+    "UR-C320-bhigona",
+    "UR-C320-jhumna"
+  ],
+  "tex": "urdu/book/chapters/ch320-fireworks.tex"
+}

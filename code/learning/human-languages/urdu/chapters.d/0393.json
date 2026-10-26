@@ -1,0 +1,21 @@
+{
+  "chapter": 393,
+  "title": "Traffic Jams",
+  "label": "ch:ur-traffic-jams",
+  "canDo": "I can talk about a traffic jam: horns, conductors and buses that barely move.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-R393-review-386-393",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can talk about a traffic jam: horns, conductors and buses that barely move.",
+    "assesses": [
+      "UR-LEX-C393-JAM393-01",
+      "UR-LEX-C393-JAM393-02",
+      "UR-LEX-C393-JAM393-03",
+      "UR-LEX-C393-JAM393-04",
+      "UR-LEX-C393-JAM393-05"
+    ]
+  }
+}

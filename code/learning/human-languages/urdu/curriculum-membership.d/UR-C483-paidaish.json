@@ -1,0 +1,11 @@
+{
+  "id": "UR-C483-paidaish",
+  "pathSegment": "UR-PATH-483-BABY483",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-483-BABY483",
+      "order": 3
+    }
+  ]
+}

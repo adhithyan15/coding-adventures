@@ -1,0 +1,11 @@
+{
+  "id": "GU-C455-rudan",
+  "pathSegment": "GU-PATH-455-GAMGIN455",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-455-GAMGIN455",
+      "order": 4
+    }
+  ]
+}

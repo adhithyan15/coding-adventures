@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:036deb7cc9c185cf",
+  "lessonIds": [
+    "UR-C530-marzi",
+    "UR-C530-razi",
+    "UR-C530-ikhtilaf",
+    "UR-C530-mustarad",
+    "UR-C530-palatna"
+  ],
+  "tex": "urdu/book/chapters/ch530-yes-or-no.tex"
+}

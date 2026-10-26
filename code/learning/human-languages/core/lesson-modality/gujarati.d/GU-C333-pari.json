@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C333-pari",
+    "language": "gujarati",
+    "chapter": 333,
+    "sequence": 18460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b6be216a1f3c9c2"
+  },
+  "findings": []
+}

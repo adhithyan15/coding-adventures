@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Lies and Boasts",
+  "label": "ch:gu-lies-and-boasts",
+  "canDo": "I can say when someone is not telling the truth.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C468-bholavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can say when someone is not telling the truth.",
+    "assesses": [
+      "GU-LEX-C468-JUTHU468-03",
+      "GU-LEX-C468-JUTHU468-04",
+      "GU-LEX-C468-JUTHU468-05"
+    ]
+  }
+}

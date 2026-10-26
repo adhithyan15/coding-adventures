@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Delays and Announcements",
+  "label": "ch:gu-delays-and-announcements",
+  "canDo": "I can understand an announcement about a late train.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C399-dokiyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can understand an announcement about a late train.",
+    "assesses": [
+      "GU-LEX-C399-DELAY399-03",
+      "GU-LEX-C399-DELAY399-04",
+      "GU-LEX-C399-DELAY399-05"
+    ]
+  }
+}

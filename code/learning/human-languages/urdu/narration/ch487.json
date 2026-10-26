@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 487,
+  "title": "A Wedding",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5e1a54155a035101",
+  "lessons": [
+    {
+      "id": "UR-C487-mangni",
+      "sequence": 28410,
+      "title": "منگنی (mangnī) — an engagement to marry",
+      "headword": "منگنی",
+      "romanization": "mangnī",
+      "gloss": "an engagement to marry",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ef3b5f527c99d1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to pass (of time), then the Urdu for the prime of life."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: منگنی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منگنی — mangnī — \"an engagement to marry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میرے بھائی کی منگنی ہو گئی۔ mere bhāī kī mangnī ho gaī. My brother has got engaged."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منگنی (mangnī) is inherited: CDIAL lists the Hindi cousin maṅgnī, \"betrothal\", under Sanskrit mārgaṇa, \"asking\" (CDIAL 10073): the asking for a bride."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mangnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mangnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mangnī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mangnī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mere bhāī kī mangnī ho gaī. — My brother has got engaged.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mere bhāī kī mangnī ho gaī.* — My brother has got engaged.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to pass (of time), then the Urdu for the prime of life, then say mangnī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to pass (of time), then the Urdu for the prime of life, then say *mangnī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does منگنی (mangnī) mean? (\"An engagement to marry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C487-nikah",
+      "sequence": 28420,
+      "title": "نکاح (nikāh) — the marriage contract",
+      "headword": "نکاح",
+      "romanization": "nikāh",
+      "gloss": "the marriage contract",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c21394b75a482d46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for the prime of life, then the Urdu for an engagement to marry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نکاح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نکاح — nikāh — \"the marriage contract\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مسجد میں ان کا نکاح ہوا۔ masjid meṅ un kā nikāh huā. They were married at the mosque."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نکاح (nikāh) is usually traced, through Persian, to Arabic nikāḥ, \"marriage\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masjid meṅ un kā nikāh huā. — They were married at the mosque.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masjid meṅ un kā nikāh huā.* — They were married at the mosque.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for the prime of life, then the Urdu for an engagement to marry, then say nikāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for the prime of life, then the Urdu for an engagement to marry, then say *nikāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نکاح (nikāh) mean? (\"The marriage contract\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C487-barat",
+      "sequence": 28430,
+      "title": "بارات (bārāt) — the wedding procession",
+      "headword": "بارات",
+      "romanization": "bārāt",
+      "gloss": "the wedding procession",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:915515969e133efa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an engagement to marry, then the Urdu for the marriage contract."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بارات",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بارات — bārāt — \"the wedding procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شام کو دولہا کی بارات آئی۔ shām ko dūlhā kī bārāt āī. In the evening the bridegroom's procession arrived."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بارات (bārāt) is inherited from Sanskrit varayātrā, \"the bridegroom's procession\" (CDIAL 11322)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shām ko dūlhā kī bārāt āī. — In the evening the bridegroom's procession arrived.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shām ko dūlhā kī bārāt āī.* — In the evening the bridegroom's procession arrived.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an engagement to marry, then the Urdu for the marriage contract, then say bārāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an engagement to marry, then the Urdu for the marriage contract, then say *bārāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بارات (bārāt) mean? (\"The wedding procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C487-sehra",
+      "sequence": 28440,
+      "title": "سہرا (sehrā) — a bridegroom's veil of flowers",
+      "headword": "سہرا",
+      "romanization": "sehrā",
+      "gloss": "a bridegroom's veil of flowers",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95223a500385a8ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for the marriage contract, then the Urdu for the wedding procession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سہرا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سہرا — sehrā — \"a bridegroom's veil of flowers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دولہا کے سر پر پھولوں کا سہرا تھا۔ dūlhā ke sar par phūloṅ kā sehrā thā. The bridegroom wore a veil of flowers on his head."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سہرا (sehrā) is inherited: CDIAL lists the Hindi cousin sehrā, \"a garland worn at a wedding\", under Sanskrit śēkhara, \"the top of the head, a chaplet\" (CDIAL 12604)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sehrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sehrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sehrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sehrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūlhā ke sar par phūloṅ kā sehrā thā. — The bridegroom wore a veil of flowers on his head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūlhā ke sar par phūloṅ kā sehrā thā.* — The bridegroom wore a veil of flowers on his head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for the marriage contract, then the Urdu for the wedding procession, then say sehrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for the marriage contract, then the Urdu for the wedding procession, then say *sehrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سہرا (sehrā) mean? (\"A bridegroom's veil of flowers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C487-rukhsat-karna",
+      "sequence": 28450,
+      "title": "رخصت کرنا (rukhsat karnā) — to see off; to send off (a bride)",
+      "headword": "رخصت کرنا",
+      "romanization": "rukhsat karnā",
+      "gloss": "to see off; to send off (a bride)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03efd235d088cf6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for the wedding procession, then the Urdu for a bridegroom's veil of flowers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رخصت کرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رخصت کرنا — rukhsat karnā — \"to see off; to send off (a bride)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "رات کو سب نے دلہن کو رخصت کیا۔ rāt ko sab ne dulhan ko rukhsat kiyā. At night everyone saw the bride off."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے مہمانوں کو رخصت کیا, us ne mehmānoṅ ko rukhsat kiyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رخصت کرنا (rukhsat karnā) is built from رخصت, usually traced, through Persian, to Arabic rukhṣa, \"leave, permission\", and کرنا, \"to do\": to give someone leave to go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rukhsat karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rukhsat karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rukhsat karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rukhsat karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt ko sab ne dulhan ko rukhsat kiyā. — At night everyone saw the bride off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt ko sab ne dulhan ko rukhsat kiyā.* — At night everyone saw the bride off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for the wedding procession, then the Urdu for a bridegroom's veil of flowers, then say rukhsat karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for the wedding procession, then the Urdu for a bridegroom's veil of flowers, then say *rukhsat karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رخصت کرنا (rukhsat karnā) mean? (\"To see off; to send off (a bride)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

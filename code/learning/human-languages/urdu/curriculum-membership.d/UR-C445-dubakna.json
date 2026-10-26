@@ -1,0 +1,11 @@
+{
+  "id": "UR-C445-dubakna",
+  "pathSegment": "UR-PATH-445-FEAR445",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-445-FEAR445",
+      "order": 3
+    }
+  ]
+}

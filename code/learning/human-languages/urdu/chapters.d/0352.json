@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Ask an Expert",
+  "label": "ch:ur-ask-an-expert",
+  "canDo": "I can say who knows best and where they said it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C352-chhantna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can say who knows best and where they said it.",
+    "assesses": [
+      "UR-LEX-C352-MAZMUN352-03",
+      "UR-LEX-C352-MAZMUN352-04",
+      "UR-LEX-C352-MAZMUN352-05"
+    ]
+  }
+}

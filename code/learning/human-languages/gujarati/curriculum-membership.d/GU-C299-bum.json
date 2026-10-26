@@ -1,0 +1,11 @@
+{
+  "id": "GU-C299-bum",
+  "pathSegment": "GU-PATH-299-BUM299",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-299-BUM299",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:f0774943c17a37d8",
+  "lessonIds": [
+    "GU-C465-sakhat",
+    "GU-C465-ciknu",
+    "GU-C465-uddhat",
+    "GU-C465-ahankar",
+    "GU-C465-tevavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch465.txt",
+  "json": "gujarati/narration/ch465.json",
+  "textHash": "fnv1a64:472abcf214c3c8e9",
+  "jsonHash": "fnv1a64:aae0c8ff9ae5e6bc",
+  "findings": []
+}

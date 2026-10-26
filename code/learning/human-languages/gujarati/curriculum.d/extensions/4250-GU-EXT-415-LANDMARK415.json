@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-415-LANDMARK415",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can give directions by landmarks.",
+  "prerequisites": []
+}

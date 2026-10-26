@@ -433,6 +433,195 @@ deliberately ugly to make accidental use show up in code review.
 
 ---
 
+## Repository-Owned TLS 1.3 Prerequisites
+
+The OAuth HTTPS boundary may not use the initial `rustls` backend as its
+production implementation. Repository-owned TLS is being assembled as small,
+independently reviewable protocol packages before a native connector is added.
+
+The first such package is `tls13-record`. It owns only RFC 8446 outer-record
+framing:
+
+- the exact five-byte `ContentType` / `legacy_record_version` / `length`
+  header;
+- plaintext decoding that retains but, as RFC 8446 requires, does not interpret
+  the deprecated legacy record version;
+- caller-policy-bounded plaintext fragments with the protocol maximum of
+  `2^14` bytes;
+- ciphertext records whose outer content type is exactly `application_data`
+  and whose legacy version is exactly `0x0303`, with a non-empty fragment no
+  larger than `2^14 + 256` bytes;
+- exact decoding that rejects trailing bytes and prefix decoding that returns
+  the remaining stream without allocating; and
+- encoding into caller-provided storage only after the record and output
+  capacity have been fully validated.
+
+Plaintext content types are caller policy data because the future handshake
+state machine, not the framing layer, decides which record types are legal at
+each epoch. The policy must be non-empty and duplicate-free. Empty plaintext
+fragments are rejected for `change_cipher_spec`, `alert`, and `handshake` but
+remain representable for `application_data`; a later state machine must decide
+whether an application-data record is legal at that point. The framing layer
+accepts and retains every plaintext legacy-version value without using it for
+policy, including the `0x0301` value recommended for an initial ClientHello.
+Its encoders emit `0x0303`; choosing a different initial-ClientHello wire value
+is a later handshake-state concern.
+
+Validated record values borrow their fragments and have no public unchecked
+construction path. Stable errors expose only categories, not record contents.
+The package performs no allocation, handshake parsing, `TLSInnerPlaintext`
+decoding, sequencing, version or cipher-suite negotiation, key derivation,
+encryption, decryption, authentication, entropy or clock access, certificate
+validation, trust-root selection, revocation, I/O, socket access, HTTP, or
+OAuth authorization. It is not a TLS connector and does not make concrete
+HTTPS available.
+
+The next package is `tls13-inner-plaintext`. It owns only the authenticated
+cleartext syntax carried inside a protected TLS 1.3 record:
+
+- decoding scans only the caller-supplied authenticated cleartext, from its
+  end toward its beginning, and treats the final nonzero octet as the inner
+  content type;
+- the complete encoded value (`content || type || zero padding`) is bounded by
+  a caller-selected ceiling from 1 through the RFC 8446 maximum of `2^14 + 1`
+  bytes, so a negotiated `record_size_limit` can reduce the boundary;
+- the caller supplies a non-empty, duplicate-free allowlist of protected
+  content types; only `handshake`, `alert`, and `application_data` can enter
+  that policy because RFC 8446 forbids protected ChangeCipherSpec records;
+- empty application data remains representable, while empty handshake and
+  alert content fail closed; and
+- encoding validates the type, content, padding length, complete encoded
+  length, and caller-owned output capacity before mutating the output, then
+  writes only zero-valued padding.
+
+Validated values borrow the content and retain only the padding length, while
+stable errors retain no cleartext bytes, content type value, or lengths. The
+package performs no allocation, AEAD encryption or authentication, decryption,
+nonce or sequence-number management, padding selection, handshake or alert
+processing, version or cipher-suite negotiation, key derivation, entropy or
+clock access, certificate validation, trust-root selection, revocation, I/O,
+socket access, HTTP, or OAuth authorization. Its decoder may be called only on
+cleartext already authenticated by a future AEAD boundary. It is not a TLS
+connector and does not make concrete HTTPS available.
+
+The next package is `tls13-record-nonce`. It owns only the monotonically
+consumed record sequence and RFC 8446 per-record nonce construction for one
+traffic key in one direction:
+
+- a caller-selected policy fixes the exact static-IV length from 8 through 255
+  bytes and an inclusive resource ceiling of 1 through `u64::MAX` records;
+- a fresh sequence starts at zero, has no reset operation, and yields at most
+  the configured number of records, so callers must create distinct state for
+  reading and writing and fresh state after every key change;
+- reserving a nonce encodes the current 64-bit sequence in network byte order,
+  pads it on the left with zeros to the policy-selected IV length, XORs it with
+  the caller-borrowed static IV, and advances the sequence before returning to
+  the caller that will perform AEAD processing;
+- the maximum configured ceiling deliberately yields sequence values only
+  through `u64::MAX - 1`, conservatively refusing the final theoretical value
+  rather than needing an increment that would wrap; negotiated cipher suites
+  must configure their much lower cryptographic usage limit; and
+- static-IV and output lengths are validated before output or sequence state
+  changes, while exhaustion also leaves both untouched.
+
+The 255-byte IV ceiling is this package's explicit work bound, not a claim that
+RFC 8446 grants every such length to every AEAD. Cipher-suite policy must select
+an IV length permitted by its AEAD and a record limit no greater than that
+algorithm's confidentiality and integrity limits. The package stores no IV,
+key, nonce, plaintext, or ciphertext bytes; stable failures expose only
+categories. It performs no allocation, AEAD encryption or authentication,
+decryption, key derivation, cipher-suite selection, key update, handshake or
+alert processing, certificate validation, trust-root selection, revocation,
+I/O, socket access, HTTP, or OAuth authorization. It is not a TLS connector and
+does not make concrete HTTPS available.
+
+The next package is `tls13-cipher-suite-policy`. It is an allocation-free,
+immutable registry and caller allowlist for the three RFC 8446 suites targeted
+by the current repository-owned primitives:
+
+| Wire ID | Cipher suite | AEAD | HKDF hash | Key | IV | Tag | Maximum records per traffic key |
+|---------|--------------|------|-----------|-----|----|-----|---------------------------------|
+| `0x1301` | `TLS_AES_128_GCM_SHA256` | AES-128-GCM | SHA-256 | 16 bytes | 12 bytes | 16 bytes | `2^24` |
+| `0x1302` | `TLS_AES_256_GCM_SHA384` | AES-256-GCM | SHA-384 | 32 bytes | 12 bytes | 16 bytes | `2^24` |
+| `0x1303` | `TLS_CHACHA20_POLY1305_SHA256` | ChaCha20-Poly1305 | SHA-256 | 32 bytes | 12 bytes | 16 bytes | `u64::MAX` |
+
+RFC 8446 appendix B.4 supplies the exact suite identifiers and the AEAD/hash
+pairing. The algorithm specifications supply the fixed key, nonce, and tag
+lengths. The AES-GCM ceiling is a conservative integer bound below RFC 8446
+section 5.5's `2^24.5` full-size-record limit. RFC 8446 states that the TLS
+record sequence wraps before ChaCha20-Poly1305 reaches its safety limit, so the
+registry uses the nonce package's conservative maximum record count and never
+permits an increment to wrap.
+
+The standard descriptors cannot be caller-modified. The caller instead
+constructs policy from a non-empty, duplicate-free list of `(suite, record
+limit)` entries. Every limit is nonzero and no greater than its descriptor's
+maximum. Exact wire selection must name both a known suite and a suite allowed
+by that policy. Success returns one validated selection that retains the suite,
+AEAD, hash, key length, IV length, tag length, and caller-selected record limit
+together. Later composition must consume that one selection for key derivation,
+`tls13-record-nonce` policy, and AEAD routing rather than accepting detached
+caller-provided parameters.
+
+This package is algorithm and key *policy*, not an algorithm implementation or
+handshake. It does not inspect repository crypto crates, assert their production
+suitability, negotiate a suite, derive or store key material, create nonce
+state, encrypt, authenticate, decrypt, update traffic keys, parse handshake or
+alert messages, validate certificates, select roots, check revocation, perform
+I/O, open sockets, authorize HTTP or OAuth, or make concrete HTTPS available.
+The RFC 8446 CCM suites remain unsupported until separately reviewed
+repository-owned AEAD implementations and record limits are available.
+
+The next package is `tls13-hkdf-label`. It owns only the allocation-free RFC
+8446 section 7.1 serialization of the public information passed to
+`HKDF-Expand`:
+
+- a validated value binds one `uint16` requested output length, one caller
+  label from 1 through 249 bytes, and one context from 0 through 255 bytes;
+- encoding always prepends the exact six bytes `"tls13 "`, so the encoded
+  label length is 7 through 255 bytes and cannot escape the TLS 1.3 namespace;
+- the wire value is exactly the two-byte network-order output length, one-byte
+  prefixed-label length and bytes, and one-byte context length and bytes;
+- the complete encoding is bounded by 514 bytes; and
+- output capacity and every input bound are checked before caller-owned output
+  is modified, while stable errors retain no caller bytes or lengths.
+
+The package intentionally has no secret input and invokes no cryptography. It
+does not call HKDF, select a hash, inspect or harden the generic repository
+HKDF implementation, derive traffic keys or IVs, select a cipher suite, manage
+nonces, protect records, update keys, process a handshake, validate
+certificates, establish trust, check revocation, perform I/O, authorize HTTP or
+OAuth, or make concrete HTTPS available. A later secret-bearing composition
+must consume one selected cipher-suite value and reviewed repository-owned HKDF
+execution when applying the RFC 8446 section 7.3 `"key"` and `"iv"` labels
+with empty context.
+
+The next package is `sha384`. It supplies the repository-owned FIPS 180-4 hash
+route named by `TLS_AES_256_GCM_SHA384` without widening the existing
+cross-language SHA-512 package contract:
+
+- the one-shot and streaming APIs use SHA-384's distinct eight-word initial
+  state, the shared SHA-512-family 80-round compression function, the 1024-bit
+  message block and 128-bit big-endian bit-length field, and the leftmost six
+  final state words;
+- streaming state retains one fixed 128-byte partial block and a checked
+  128-bit byte count, rejects an unencodable message length before mutation,
+  and never allocates;
+- digest snapshots are non-destructive and use at most two fixed stack blocks
+  for final padding; and
+- temporary and retained chaining state and partial blocks are scrubbed through
+  the repository-owned volatile zeroization primitive, while errors retain no
+  caller bytes or lengths.
+
+SHA-384 is only a digest primitive. It does not add HMAC-SHA-384, HKDF,
+`HKDF-Expand-Label`, a TLS key schedule, transcript sequencing, negotiation,
+AEAD, record protection, handshake processing, certificate validation, trust,
+revocation, I/O, HTTP, OAuth transport, or network authority. The existing
+generic HKDF is not thereby approved for production TLS secrets, and concrete
+HTTPS remains unavailable.
+
+---
+
 ## Test Strategy
 
 ### Unit Tests (per backend)
@@ -481,12 +670,12 @@ servers). `>=95%` for the trait wrappers and the config types.
 
 ## Trade-Offs
 
-**No protocol implementation in this crate.** We rely on three
-different OS implementations with three different bug surfaces. A
-single underlying TLS bug therefore affects only one OS in our
-codebase. This is also a downside: cipher lists, session resumption
-behavior, and TLS 1.3 0-RTT semantics may differ subtly across
-backends. We document known divergences as we find them.
+**The platform trait and initial backend do not implement the protocol.** The
+initial backend relies on an external implementation, while the separately
+reviewed repository-owned TLS 1.3 packages remain prerequisites rather than a
+connector. Until those packages are composed and tested end to end, the
+repository-owned path is unavailable and the initial backend is not acceptable
+for the concrete OAuth HTTPS boundary.
 
 **OpenSSL ABI compatibility on Linux.** Different distributions
 ship different OpenSSL major versions (1.0, 1.1, 3.x). We probe at
@@ -524,9 +713,9 @@ debugging.
 
 ## Future Extensions
 
-- **Native Rust TLS backend** (`tls-platform-rust`) implementing
-  TLS 1.3 from RFC 8446. A genuine engineering project; satisfies
-  the same trait.
+- **Complete native TLS backend** (`tls-platform-rust`) composing the
+  independently reviewed repository-owned RFC 8446 packages behind the same
+  trait.
 - **Async trait** (`AsyncTlsConnector`, `AsyncTlsStream`) for
   high-concurrency servers.
 - **OCSP stapling** support, surfaced as a method on `TlsStream`.

@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:9e64f5d74e5bc419",
+  "lessonIds": [
+    "UR-C378-hadaf",
+    "UR-C378-azm",
+    "UR-C378-qadam",
+    "UR-C378-mansuba",
+    "UR-C378-hasil-karna",
+    "UR-R378-review-371-378"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch378.txt",
+  "json": "urdu/narration/ch378.json",
+  "textHash": "fnv1a64:89562fd13d151afa",
+  "jsonHash": "fnv1a64:8bb3fbfe4296ef05",
+  "findings": []
+}

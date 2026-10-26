@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Drops and Showers",
+  "label": "ch:ur-drops-and-showers",
+  "canDo": "I can describe rain, from the first drop to a steady downpour.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C428-umadna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can describe rain, from the first drop to a steady downpour.",
+    "assesses": [
+      "UR-LEX-C428-BOOND428-03",
+      "UR-LEX-C428-BOOND428-04",
+      "UR-LEX-C428-BOOND428-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:e54d543c3405d737",
+  "lessonIds": [
+    "UR-C403-sarae",
+    "UR-C403-qiyam",
+    "UR-C403-thikana",
+    "UR-C403-bichhana",
+    "UR-C403-lift"
+  ],
+  "tex": "urdu/book/chapters/ch403-inns-and-lodgings.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:1da8953b075e168e",
+  "lessonIds": [
+    "UR-C389-savar",
+    "UR-C389-gathri",
+    "UR-C389-sarkana",
+    "UR-C389-jamahi",
+    "UR-C389-unghna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch389.txt",
+  "json": "urdu/narration/ch389.json",
+  "textHash": "fnv1a64:52e3eae14937dc63",
+  "jsonHash": "fnv1a64:5ef2a66d318923f6",
+  "findings": []
+}

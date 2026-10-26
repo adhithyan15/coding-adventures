@@ -1,0 +1,11 @@
+{
+  "id": "UR-C541-mashrut",
+  "pathSegment": "UR-PATH-541-SURAT541",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-541-SURAT541",
+      "order": 2
+    }
+  ]
+}

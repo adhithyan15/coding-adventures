@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Safes and Currency",
+  "label": "ch:gu-safes-and-currency",
+  "canDo": "I can talk about keeping money safe at home and abroad.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C429-parvadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can talk about keeping money safe at home and abroad.",
+    "assesses": [
+      "GU-LEX-C429-SAFE429-03",
+      "GU-LEX-C429-SAFE429-04",
+      "GU-LEX-C429-SAFE429-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:f35fcde2d0fba032",
+  "lessonIds": [
+    "UR-C456-zalim",
+    "UR-C456-sangdil",
+    "UR-C456-ehsan",
+    "UR-C456-karam",
+    "UR-C456-sitam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch456.txt",
+  "json": "urdu/narration/ch456.json",
+  "textHash": "fnv1a64:8a28df130975f838",
+  "jsonHash": "fnv1a64:e2869e605c518ac8",
+  "findings": []
+}

@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "UR-W270-zal",
+    "language": "urdu",
+    "chapter": 270,
+    "sequence": 16390,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:19a9d8ad355c1b2a",
+    "detachableSegments": [
+      "Script you'll notice: ذ",
+      "Writing: ذ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

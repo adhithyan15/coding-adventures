@@ -1,0 +1,11 @@
+{
+  "id": "GU-C534-hod",
+  "pathSegment": "GU-PATH-534-JUGAR534",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-534-JUGAR534",
+      "order": 2
+    }
+  ]
+}

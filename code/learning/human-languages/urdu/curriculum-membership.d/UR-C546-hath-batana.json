@@ -1,0 +1,11 @@
+{
+  "id": "UR-C546-hath-batana",
+  "pathSegment": "UR-PATH-546-MASHAQQAT546",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-546-MASHAQQAT546",
+      "order": 1
+    }
+  ]
+}

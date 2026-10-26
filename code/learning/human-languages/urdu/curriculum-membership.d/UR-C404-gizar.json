@@ -1,0 +1,11 @@
+{
+  "id": "UR-C404-gizar",
+  "pathSegment": "UR-PATH-404-GHUSL404",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-404-GHUSL404",
+      "order": 2
+    }
+  ]
+}

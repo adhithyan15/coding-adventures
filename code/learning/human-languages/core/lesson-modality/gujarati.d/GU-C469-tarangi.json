@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C469-tarangi",
+    "language": "gujarati",
+    "chapter": 469,
+    "sequence": 26130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d1f04194c5626b0"
+  },
+  "findings": []
+}

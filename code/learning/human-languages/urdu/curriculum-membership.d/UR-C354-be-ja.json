@@ -1,0 +1,11 @@
+{
+  "id": "UR-C354-be-ja",
+  "pathSegment": "UR-PATH-354-MAQUL354",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-354-MAQUL354",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:3ac21af6ffdb51d0",
+  "lessonIds": [
+    "UR-C478-chubhna",
+    "UR-C478-chira",
+    "UR-C478-tanka",
+    "UR-C478-pip",
+    "UR-C478-kuredna"
+  ],
+  "tex": "urdu/book/chapters/ch478-cuts-and-stitches.tex"
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 361,
+  "title": "Criticism and Pleading",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f62e0691f2c51f7e",
+  "lessons": [
+    {
+      "id": "GU-C361-ninda",
+      "sequence": 20120,
+      "title": "નિંદા (nindā) — speaking ill of someone",
+      "headword": "નિંદા",
+      "romanization": "nindā",
+      "gloss": "speaking ill of someone",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81624e05047ab46f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a betrayal, then the Gujarati for to entrap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નિંદા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નિંદા — nindā — \"speaking ill of someone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "બીજાની નિંદા કરવી સારી વાત નથી. bījānī nindā karvī sārī vāt nathī. It isn't good to speak ill of others."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નિંદા (nindā) is a tatsama, borrowed from Sanskrit nindā, \"blame, censure, reproach\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nindā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nindā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nindā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nindā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bījānī nindā karvī sārī vāt nathī. — It isn't good to speak ill of others.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bījānī nindā karvī sārī vāt nathī.* — It isn't good to speak ill of others.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a betrayal, then the Gujarati for to entrap, then say nindā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a betrayal, then the Gujarati for to entrap, then say *nindā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નિંદા (nindā) mean? (\"Speaking ill of someone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C361-tika",
+      "sequence": 20130,
+      "title": "ટીકા (ṭīkā) — criticism",
+      "headword": "ટીકા",
+      "romanization": "ṭīkā",
+      "gloss": "criticism",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ea9e57118a52705",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to entrap, then the Gujarati for speaking ill of someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટીકા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટીકા — ṭīkā — \"criticism\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જનતાએ સરકારની નવી નીતિની ટીકા કરી. jantāe sarkārnī navī nītinī ṭīkā karī. The public criticised the government's new policy."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટીકા (ṭīkā) is a tatsama, borrowed from Sanskrit ṭīkā, \"a commentary\" (Monier-Williams); Gujarati has moved it from comment to criticism."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭīkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭīkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭīkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭīkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jantāe sarkārnī navī nītinī ṭīkā karī. — The public criticised the government's new policy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jantāe sarkārnī navī nītinī ṭīkā karī.* — The public criticised the government's new policy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to entrap, then the Gujarati for speaking ill of someone, then say ṭīkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to entrap, then the Gujarati for speaking ill of someone, then say *ṭīkā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટીકા (ṭīkā) mean? (\"Criticism\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C361-thapko",
+      "sequence": 20140,
+      "title": "ઠપકો (ṭhapko) — a telling-off",
+      "headword": "ઠપકો",
+      "romanization": "ṭhapko",
+      "gloss": "a telling-off",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73838cb82cbf07ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for speaking ill of someone, then the Gujarati for criticism."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઠપકો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઠપકો — ṭhapko — \"a telling-off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હું મોડો આવ્યો એટલે ગુરુએ મને ઠપકો આપ્યો. hũ moḍo āvyo eṭle gurue mane ṭhapko āpyo. I came late, so the teacher told me off."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઠપકો (ṭhapko) CDIAL lists the Gujarati noun, \"a rebuke\", under a reconstructed ṭhapp, \"strike, press\" (CDIAL 5495)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhapko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhapko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhapko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhapko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ moḍo āvyo eṭle gurue mane ṭhapko āpyo. — I came late, so the teacher told me off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ moḍo āvyo eṭle gurue mane ṭhapko āpyo.* — I came late, so the teacher told me off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for speaking ill of someone, then the Gujarati for criticism, then say ṭhapko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for speaking ill of someone, then the Gujarati for criticism, then say *ṭhapko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઠપકો (ṭhapko) mean? (\"A telling-off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C361-vagovvu",
+      "sequence": 20150,
+      "title": "વગોવવું (vagovvũ) — to run down (to defame)",
+      "headword": "વગોવવું",
+      "romanization": "vagovvũ",
+      "gloss": "to run down (to defame)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb537514491fec5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for criticism, then the Gujarati for a telling-off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વગોવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વગોવવું — vagovvũ — \"to run down (to defame)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તે બધાની સામે પોતાના ભાઈને વગોવે છે. te badhānī sāme potānā bhāīne vagove che. He runs his brother down in front of everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે પોતાના પડોશીને વગોવ્યો, teṇe potānā paḍośīne vagovyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વગોવવું (vagovvũ) CDIAL lists the Gujarati verb, \"to revile\", under a reconstructed vigrōcati, \"robs\" (CDIAL 11671): to rob someone of a good name."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vagovvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vagovvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vagovvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vagovvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te badhānī sāme potānā bhāīne vagove che. — He runs his brother down in front of everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te badhānī sāme potānā bhāīne vagove che.* — He runs his brother down in front of everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for criticism, then the Gujarati for a telling-off, then say vagovvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for criticism, then the Gujarati for a telling-off, then say *vagovvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વગોવવું (vagovvũ) mean? (\"To run down (to defame)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C361-vinavvu",
+      "sequence": 20160,
+      "title": "વીનવવું (vīnavvũ) — to entreat",
+      "headword": "વીનવવું",
+      "romanization": "vīnavvũ",
+      "gloss": "to entreat",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6531308d5347e41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a telling-off, then the Gujarati for to run down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વીનવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વીનવવું — vīnavvũ — \"to entreat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મીરા દાક્તરને વહેલા આવવા વીનવે છે. Mīrā dāktarne vahelā āvvā vīnve che. Mira is pleading with the doctor to come early."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ઘણું વીનવ્યું, teṇe ghaṇũ vīnavyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વીનવવું (vīnavvũ) is inherited from Sanskrit víjñapayati, \"makes known, begs\"; CDIAL lists the Gujarati verb, \"to entreat\" (CDIAL 11705)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīnavvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīnavvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīnavvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīnavvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā dāktarne vahelā āvvā vīnve che. — Mira is pleading with the doctor to come early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā dāktarne vahelā āvvā vīnve che.* — Mira is pleading with the doctor to come early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a telling-off, then the Gujarati for to run down, then say vīnavvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a telling-off, then the Gujarati for to run down, then say *vīnavvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વીનવવું (vīnavvũ) mean? (\"To entreat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

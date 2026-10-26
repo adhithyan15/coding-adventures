@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 387,
+  "title": "Better and Worse",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4b9e101112f97f1f",
+  "lessons": [
+    {
+      "id": "GU-C387-bahetar",
+      "sequence": 21460,
+      "title": "બહેતર (bahetar) — better",
+      "headword": "બહેતર",
+      "romanization": "bahetar",
+      "gloss": "better",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9739a53d40e29ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for subject to, then the Gujarati for to give in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બહેતર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બહેતર — bahetar — \"better\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે વહેલા સૂશો તો તમારી તબિયત બહેતર થશે. jo tame vahelā sūśo to tamārī tabiyat bahetar thaśe. If you go to bed early, your health will improve."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બહેતર (bahetar) is usually traced to Persian behtar, \"better\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahetar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahetar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahetar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahetar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame vahelā sūśo to tamārī tabiyat bahetar thaśe. — If you go to bed early, your health will improve.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame vahelā sūśo to tamārī tabiyat bahetar thaśe.* — If you go to bed early, your health will improve.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for subject to, then the Gujarati for to give in, then say bahetar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for subject to, then the Gujarati for to give in, then say *bahetar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બહેતર (bahetar) mean? (\"Better\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C387-uttam",
+      "sequence": 21470,
+      "title": "ઉત્તમ (uttam) — excellent",
+      "headword": "ઉત્તમ",
+      "romanization": "uttam",
+      "gloss": "excellent",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b05cfadb97b6202",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to give in, then the Gujarati for better."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉત્તમ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉત્તમ — uttam — \"excellent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે તાજું શાક વાપરશો તો દાળ ઉત્તમ બનશે. jo tame tājũ śāk vāparśo to dāḷ uttam banśe. If you use fresh vegetables, the dal will turn out excellent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉત્તમ (uttam) is a tatsama, borrowed from Sanskrit uttama, \"uppermost, highest, best\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame tājũ śāk vāparśo to dāḷ uttam banśe. — If you use fresh vegetables, the dal will turn out excellent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame tājũ śāk vāparśo to dāḷ uttam banśe.* — If you use fresh vegetables, the dal will turn out excellent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to give in, then the Gujarati for better, then say uttam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to give in, then the Gujarati for better, then say *uttam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઉત્તમ (uttam) mean? (\"Excellent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C387-cadiyatu",
+      "sequence": 21480,
+      "title": "ચડિયાતું (caḍiyātũ) — superior",
+      "headword": "ચડિયાતું",
+      "romanization": "caḍiyātũ",
+      "gloss": "superior",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05fc0e81f168c937",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for better, then the Gujarati for excellent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચડિયાતું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચડિયાતું — caḍiyātũ — \"superior\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે રોજ કસરત કરશો તો તમે બીજા ખેલાડીઓ કરતાં ચડિયાતા થશો. jo tame roj kasrat karśo to tame bījā khelāḍīo kartā̃ caḍiyātā thaśo. If you exercise every day, you will be better than the other players."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચડિયાતું (caḍiyātũ) is built on caḍvũ, \"to climb, to rise\", the same verb as ચઢવું (caḍhvũ), from a reconstructed caḍhati, \"rises\" (CDIAL 4578): one who has climbed higher."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caḍiyātũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caḍiyātũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caḍiyātũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caḍiyātũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame roj kasrat karśo to tame bījā khelāḍīo kartā̃ caḍiyātā thaśo. — If you exercise every day, you will be better than the other players.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame roj kasrat karśo to tame bījā khelāḍīo kartā̃ caḍiyātā thaśo.* — If you exercise every day, you will be better than the other players.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for better, then the Gujarati for excellent, then say caḍiyātũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for better, then the Gujarati for excellent, then say *caḍiyātũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચડિયાતું (caḍiyātũ) mean? (\"Superior\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C387-saras",
+      "sequence": 21490,
+      "title": "સરસ (saras) — lovely; fine",
+      "headword": "સરસ",
+      "romanization": "saras",
+      "gloss": "lovely; fine",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2cb7daa0c8f8b9ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for excellent, then the Gujarati for superior."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સરસ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સરસ — saras — \"lovely; fine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો કાલે તડકો હશે તો ઉજાણીનો સરસ દિવસ હશે. jo kāle taḍko haśe to ujāṇīno saras divas haśe. If it is sunny tomorrow, it will be a lovely day for a picnic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સરસ (saras) is inherited from Sanskrit sárasa, \"juicy; moist, beautiful\"; CDIAL lists the Gujarati word, \"juicy, excellent\" (CDIAL 13255)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saras",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saras*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saras, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saras*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo kāle taḍko haśe to ujāṇīno saras divas haśe. — If it is sunny tomorrow, it will be a lovely day for a picnic.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo kāle taḍko haśe to ujāṇīno saras divas haśe.* — If it is sunny tomorrow, it will be a lovely day for a picnic.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for excellent, then the Gujarati for superior, then say saras again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for excellent, then the Gujarati for superior, then say *saras* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સરસ (saras) mean? (\"Lovely; fine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C387-kathalvu",
+      "sequence": 21500,
+      "title": "કથળવું (kathaḷvũ) — to deteriorate",
+      "headword": "કથળવું",
+      "romanization": "kathaḷvũ",
+      "gloss": "to deteriorate",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f44fe91fd6e2b6d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for superior, then the Gujarati for lovely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કથળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કથળવું — kathaḷvũ — \"to deteriorate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો ખોટ વધશે તો ધંધો કથળશે. jo khoṭ vadhśe to dhandho kathaḷśe. If the losses grow, the business will go downhill."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે ધંધો કથળ્યો, te dhandho kathaḷyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કથળવું (kathaḷvũ) CDIAL lists the Gujarati verb, \"to be put out of order, to be spoilt\", under a reconstructed kusthala, \"a bad place\" (CDIAL 3383)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathaḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathaḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathaḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathaḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo khoṭ vadhśe to dhandho kathaḷśe. — If the losses grow, the business will go downhill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo khoṭ vadhśe to dhandho kathaḷśe.* — If the losses grow, the business will go downhill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for superior, then the Gujarati for lovely, then say kathaḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for superior, then the Gujarati for lovely, then say *kathaḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કથળવું (kathaḷvũ) mean? (\"To deteriorate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

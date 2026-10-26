@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 515,
+  "title": "Pictures and Painters",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:35ff732cf44dbcde",
+  "lessons": [
+    {
+      "id": "UR-C515-tasvir",
+      "sequence": 30070,
+      "title": "تصویر (tasvīr) — a picture",
+      "headword": "تصویر",
+      "romanization": "tasvīr",
+      "gloss": "a picture",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:690bf38f045ddfd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a thimble, then the Urdu for a fringe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تصویر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تصویر — tasvīr — \"a picture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دیوار پر دادا کی ایک پرانی تصویر ہے۔ dīvār par dādā kī ek purānī tasvīr hai. There is an old picture of grandfather on the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تصویر (tasvīr) is usually traced, through Persian, to Arabic taṣwīr, \"a picturing, a portrait\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasvīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasvīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasvīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasvīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīvār par dādā kī ek purānī tasvīr hai. — There is an old picture of grandfather on the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīvār par dādā kī ek purānī tasvīr hai.* — There is an old picture of grandfather on the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a thimble, then the Urdu for a fringe, then say tasvīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a thimble, then the Urdu for a fringe, then say *tasvīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تصویر (tasvīr) mean? (\"A picture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C515-musavvir",
+      "sequence": 30080,
+      "title": "مصور (musavvir) — a painter (an artist)",
+      "headword": "مصور",
+      "romanization": "musavvir",
+      "gloss": "a painter (an artist)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8126ffebc43f444",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a fringe, then the Urdu for a picture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مصور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصور — musavvir — \"a painter (an artist)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس مصور نے پہاڑوں کی تصویریں بنائیں۔ is musavvir ne pahāṛoṅ kī tasvīreṅ banāīṅ. This painter made pictures of the mountains."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصور (musavvir) is usually traced, through Persian, to Arabic muṣawwir, \"one who gives form\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musavvir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musavvir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musavvir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musavvir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is musavvir ne pahāṛoṅ kī tasvīreṅ banāīṅ. — This painter made pictures of the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *is musavvir ne pahāṛoṅ kī tasvīreṅ banāīṅ.* — This painter made pictures of the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a fringe, then the Urdu for a picture, then say musavvir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a fringe, then the Urdu for a picture, then say *musavvir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مصور (musavvir) mean? (\"A painter (an artist)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C515-khaka",
+      "sequence": 30090,
+      "title": "خاکہ (khākā) — a sketch; an outline",
+      "headword": "خاکہ",
+      "romanization": "khākā",
+      "gloss": "a sketch; an outline",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac171e192d89a9db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a picture, then the Urdu for a painter (an artist)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خاکہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خاکہ — khākā — \"a sketch; an outline\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مصور نے پہلے پنسل سے خاکہ بنایا۔ musavvir ne pehle pensil se khākā banāyā. The painter first made a sketch in pencil."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خاکہ (khākā) is usually traced to Persian khāka, \"a sketch, an outline\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khākā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khākā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khākā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khākā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musavvir ne pehle pensil se khākā banāyā. — The painter first made a sketch in pencil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musavvir ne pehle pensil se khākā banāyā.* — The painter first made a sketch in pencil.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a picture, then the Urdu for a painter (an artist), then say khākā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a picture, then the Urdu for a painter (an artist), then say *khākā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خاکہ (khākā) mean? (\"A sketch; an outline\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C515-shahkar",
+      "sequence": 30100,
+      "title": "شاہکار (shāhkār) — a masterpiece",
+      "headword": "شاہکار",
+      "romanization": "shāhkār",
+      "gloss": "a masterpiece",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:275ef9862a26b3cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a painter (an artist), then the Urdu for a sketch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شاہکار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شاہکار — shāhkār — \"a masterpiece\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ تصویر اس مصور کا شاہکار ہے۔ yih tasvīr is musavvir kā shāhkār hai. This picture is the painter's masterpiece."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شاہکار (shāhkār) is usually traced to Persian shāhkār, built from shāh, \"a king\", and kār, \"work\": a work fit for a king."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāhkār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāhkār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāhkār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāhkār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih tasvīr is musavvir kā shāhkār hai. — This picture is the painter's masterpiece.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih tasvīr is musavvir kā shāhkār hai.* — This picture is the painter's masterpiece.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a painter (an artist), then the Urdu for a sketch, then say shāhkār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a painter (an artist), then the Urdu for a sketch, then say *shāhkār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شاہکار (shāhkār) mean? (\"A masterpiece\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C515-jhalakna",
+      "sequence": 30110,
+      "title": "جھلکنا (jhalaknā) — to show through; to glint",
+      "headword": "جھلکنا",
+      "romanization": "jhalaknā",
+      "gloss": "to show through; to glint",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:739f66cc86b6a752",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a sketch, then the Urdu for a masterpiece."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جھلکنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھلکنا — jhalaknā — \"to show through; to glint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پانی میں چاند جھلکتا ہے۔ pānī meṅ chā̃d jhalaktā hai. The moon glints in the water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ چاند پانی میں جھلکا, voh chā̃d pānī meṅ jhalkā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھلکنا (jhalaknā) is inherited: CDIAL lists the Hindi cousin jhalaknā, \"to sparkle\", under jhal, \"flash\", a form it reconstructs (CDIAL 5352)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhalaknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhalaknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhalaknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhalaknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānī meṅ chā̃d jhalaktā hai. — The moon glints in the water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānī meṅ chā̃d jhalaktā hai.* — The moon glints in the water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a sketch, then the Urdu for a masterpiece, then say jhalaknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a sketch, then the Urdu for a masterpiece, then say *jhalaknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جھلکنا (jhalaknā) mean? (\"To show through; to glint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

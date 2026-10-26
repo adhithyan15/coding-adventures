@@ -1,0 +1,21 @@
+{
+  "chapter": 385,
+  "title": "Rewards",
+  "label": "ch:gu-rewards",
+  "canDo": "I can say what someone will get if they do well.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-R385-review-379-385",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can say what someone will get if they do well.",
+    "assesses": [
+      "GU-LEX-C385-PURASKAR385-01",
+      "GU-LEX-C385-PURASKAR385-02",
+      "GU-LEX-C385-PURASKAR385-03",
+      "GU-LEX-C385-PURASKAR385-04",
+      "GU-LEX-C385-PURASKAR385-05"
+    ]
+  }
+}

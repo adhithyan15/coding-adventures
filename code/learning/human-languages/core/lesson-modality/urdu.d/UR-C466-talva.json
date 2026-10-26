@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C466-talva",
+    "language": "urdu",
+    "chapter": 466,
+    "sequence": 27360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49ecc3f35a5d2904"
+  },
+  "findings": []
+}

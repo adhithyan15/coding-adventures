@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:f1b5ab0fb0e3ce41",
+  "lessonIds": [
+    "UR-C321-jhulna",
+    "UR-C321-julus",
+    "UR-C321-hujum",
+    "UR-C321-ikattha",
+    "UR-C321-tamasha"
+  ],
+  "tex": "urdu/book/chapters/ch321-at-the-fair.tex"
+}

@@ -36,8 +36,12 @@ context wrappers can be opened without recursion or allocation. Every
 constructed cursor shares the same depth and total-element budget. Errors
 contain only a category and local byte offset. A schema can frame an exact DER
 document embedded inside an existing element while deriving its root depth
-from that container and retaining the decoder's total-element count; the
-schema remains responsible for binding the embedded input to the container.
+from that container and retaining the decoder's total-element count. A checked
+element can also yield a compact opaque container context for schemas that
+must retain this authority without retaining the complete framing element;
+context creation fails closed if the element depth cannot fit its fixed-width
+representation. The schema remains responsible for binding the embedded input
+to the container.
 
 This crate does not parse X.509 fields, time or string semantics, PEM, paths,
 signatures, trust roots, TLS, or network traffic. Successful decoding proves

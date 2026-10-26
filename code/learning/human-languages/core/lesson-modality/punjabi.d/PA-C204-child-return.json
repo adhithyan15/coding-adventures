@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C204-child-return",
+    "language": "punjabi",
+    "chapter": 204,
+    "sequence": 11070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:625e4c29a5693d24"
+  },
+  "findings": []
+}

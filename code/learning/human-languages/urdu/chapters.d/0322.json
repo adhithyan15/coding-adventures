@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "The Month of Fasting",
+  "label": "ch:ur-the-month-of-fasting",
+  "canDo": "I can tell how a family kept the month of fasting.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C322-khairat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can tell how a family kept the month of fasting.",
+    "assesses": [
+      "UR-LEX-C322-ROZA322-03",
+      "UR-LEX-C322-ROZA322-04",
+      "UR-LEX-C322-ROZA322-05"
+    ]
+  }
+}

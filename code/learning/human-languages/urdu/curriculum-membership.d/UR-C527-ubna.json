@@ -1,0 +1,11 @@
+{
+  "id": "UR-C527-ubna",
+  "pathSegment": "UR-PATH-527-MASRUF527",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-527-MASRUF527",
+      "order": 4
+    }
+  ]
+}

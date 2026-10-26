@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:c5b7034f4d6f670b",
+  "lessonIds": [
+    "GU-C552-manc",
+    "GU-C552-abhinay",
+    "GU-C552-darsak",
+    "GU-C552-gajavvu",
+    "GU-C552-jaamvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch552.txt",
+  "json": "gujarati/narration/ch552.json",
+  "textHash": "fnv1a64:65f712c73a2a0e59",
+  "jsonHash": "fnv1a64:4ae64042d008430e",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C327-parampara",
+  "pathSegment": "GU-PATH-327-UTSAV327",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-327-UTSAV327",
+      "order": 2
+    }
+  ]
+}

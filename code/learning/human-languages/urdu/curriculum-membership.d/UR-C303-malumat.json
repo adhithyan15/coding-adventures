@@ -1,0 +1,11 @@
+{
+  "id": "UR-C303-malumat",
+  "pathSegment": "UR-PATH-303-INKAR303",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-303-INKAR303",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:a55ca7aad7c5eae0",
+  "lessonIds": [
+    "GU-C446-dhan",
+    "GU-C446-bharvad",
+    "GU-C446-goval",
+    "GU-C446-nes",
+    "GU-C446-caravvu",
+    "GU-R446-review-440-446",
+    "GU-R446-review-final-446"
+  ],
+  "tex": "gujarati/book/chapters/ch446-herds-and-herders.tex"
+}
