@@ -184,6 +184,51 @@ fn inherited_instructions_preserve_cortex_m7_only_state() {
 }
 
 #[test]
+fn ge_round_trips_through_every_apsr_special_register_alias() {
+    for sysm in 0..=3 {
+        let write = msr(0, sysm);
+        let read = mrs(1, sysm);
+        let mut simulator = loaded(&[write[0], write[1], read[0], read[1]]);
+        simulator.write_register(0, 0xa80b_0000).unwrap();
+
+        assert_eq!(simulator.step().unwrap().mnemonic, "msr");
+        assert_eq!(simulator.get_state().core.apsr, 0xa800_0000);
+        assert_eq!(simulator.get_state().ge, 0b1011);
+
+        assert_eq!(simulator.step().unwrap().mnemonic, "mrs");
+        assert_eq!(simulator.read_register(1).unwrap(), 0xa80b_0000);
+        assert_eq!(simulator.get_state().ge, 0b1011);
+    }
+}
+
+#[test]
+fn false_it_conditions_skip_ge_special_register_transport() {
+    let read = mrs(1, 0);
+    let mut reader = loaded(&read);
+    let mut state = reader.get_state();
+    state.core.itstate = 0x08;
+    state.core.apsr = 0;
+    state.core.registers[1] = 0xdead_beef;
+    state.ge = 0b1011;
+    reader.restore(state).unwrap();
+    assert_eq!(reader.step().unwrap().mnemonic, "it-skip");
+    assert_eq!(reader.read_register(1).unwrap(), 0xdead_beef);
+    assert_eq!(reader.get_state().ge, 0b1011);
+
+    let write = msr(0, 0);
+    let mut writer = loaded(&write);
+    let mut state = writer.get_state();
+    state.core.itstate = 0x08;
+    state.core.apsr = 0;
+    state.core.registers[0] = 0xa805_0000;
+    state.ge = 0b1011;
+    writer.restore(state).unwrap();
+    assert_eq!(writer.step().unwrap().mnemonic, "it-skip");
+    assert_eq!(writer.get_state().core.apsr, 0);
+    assert_eq!(writer.get_state().ge, 0b1011);
+}
+
+#[test]
 fn dsp_members_obey_and_advance_it_state() {
     let encoded = qadd(0, 1, 2);
     let mut words = vec![movs(3, 1), it(0, 8)];
@@ -285,6 +330,35 @@ fn dsp_fetch_and_reserved_register_failures_are_typed_and_atomic() {
             ..
         }))
     ));
+}
+
+#[test]
+fn false_it_conditions_still_reject_every_reserved_dsp_operand() {
+    type DspEncoder = fn(u8, u8, u8) -> [u16; 2];
+    let encoders: [DspEncoder; 4] = [qadd, qsub, sadd8, uadd8];
+    for encode in encoders {
+        for operand in 0..3 {
+            for reserved in [13, 15] {
+                let mut registers = [0, 1, 2];
+                registers[operand] = reserved;
+                let encoded = encode(registers[0], registers[1], registers[2]);
+                let mut simulator = loaded(&encoded);
+                let mut state = simulator.get_state();
+                state.core.itstate = 0x08;
+                state.core.apsr = 0;
+                simulator.restore(state).unwrap();
+                let before = simulator.get_state();
+
+                assert!(matches!(
+                    simulator.step(),
+                    Err(CortexM7Error::Core(
+                        CortexM3Error::UnknownInstruction32 { .. }
+                    ))
+                ));
+                assert_eq!(simulator.get_state(), before);
+            }
+        }
+    }
 }
 
 #[test]

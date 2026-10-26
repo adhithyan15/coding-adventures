@@ -11,6 +11,10 @@ Every successful step retains exact little-endian instruction bytes, width,
 mnemonic, and complete before/after state. The public snapshot includes all
 inherited registers, status and privilege state, local exclusive monitor,
 power/event state, installed-image metadata, owned 64 KiB memory, and GE.
+`try_get_state` provides a fallible complete snapshot for callers that require
+typed allocation errors. Checked execution uses that path internally and
+rolls back if a post-transition snapshot cannot be retained. MRS/MSR transport
+GE in architectural APSR bits 19:16, including the composite APSR aliases.
 
 ```rust
 use cortex_m7_simulator::{encoding, CortexM7Simulator};
@@ -42,9 +46,10 @@ also named follow-up cells.
 The completion suite covers inherited decode and execution, every added DSP
 family, saturation and sticky-Q edges, every parallel lane and GE rule,
 IT-block behavior, exact traces, complete-state restore, typed atomic failures,
-bounded rollback, and the documented SoC boundary. Release tests, strict
+false-IT reserved-operand rejection, MRS/MSR GE transport, deterministic
+allocation-failure rollback, bounded rollback, and the documented SoC boundary. Release tests, strict
 Clippy, rustdoc warnings, BUILD integration, and line coverage above 80% are
 required before publication.
 
-The completion baseline is **98.47% line coverage (258/262 lines)** under the
+The completion baseline is **97.29% line coverage (323/332 lines)** under the
 LLVM coverage engine.

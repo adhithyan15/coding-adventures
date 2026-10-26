@@ -24,6 +24,7 @@ bounded Cortex-M7/Armv7E-M surface:
   privilege and masks, IT state, local exclusive monitor, power/event state,
   installed-image metadata, and 64 KiB little-endian teaching memory;
 - APSR GE[3:0] state in addition to the inherited N/Z/C/V/Q flags;
+- architected GE transport through every APSR-family MRS/MSR alias;
 - signed saturating QADD and QSUB instructions, including sticky APSR.Q; and
 - signed and unsigned four-lane byte addition (SADD8 and UADD8), including
   the architected per-lane GE results.
@@ -61,6 +62,9 @@ Restore validates the complete inherited state and rejects GE values outside
 four bits before committing. Register and memory access errors, invalid restore,
 invalid program installation, fetch/decode faults, halted/sleeping state, SVC,
 breakpoint boundaries, and retention exhaustion are typed and atomic.
+Fallible complete-state snapshots report allocation exhaustion without mutation.
+Reserved DSP operands are rejected before IT-condition evaluation, so a false
+condition cannot turn an invalid encoding into a successful skip.
 
 `step` executes against a candidate complete state and commits only after a
 complete trace exists. DSP saturation clamps to signed 32-bit range and sets
@@ -81,11 +85,12 @@ The cell is complete only when it has:
    bounded Cortex-M7 DSP family and reserved-neighbor witnesses;
 2. behavioral tests for inherited execution and lifecycle, saturating QADD and
    QSUB, sticky Q, signed/unsigned parallel byte addition, GE flags, exact
-   traces, and cache/bus boundary documentation;
+   traces, MRS/MSR GE transport, false-IT reserved operands, allocation-failure
+   rollback, and cache/bus boundary documentation;
 3. transactional load, restore, step, run, execute, fetch, bounds, and
    retention tests;
-4. release line coverage above 80 percent (completion baseline: 98.47%,
-   258/262 lines); and
+4. release line coverage above 80 percent (completion baseline: 97.29%,
+   323/332 lines); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and independent security review before
    publication.

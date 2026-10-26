@@ -8,6 +8,10 @@
   GE[3:0], IT-block behavior, and complete traces.
 - Add typed transactional load, restore, step, bounded run, and execute
   lifecycle operations.
+- Transport GE through APSR-family MRS/MSR operations and reject reserved DSP
+  operands even on a false IT path.
+- Add fallible complete-state snapshots and typed rollback for allocation
+  failures after an inherited transition.
 - Keep caches, TCM, branch prediction, buses, and timing at an explicit later
   SoC/gate-level composition boundary.
-- Cover 258 of 262 executable source lines (98.47%) in the completion suite.
+- Cover 323 of 332 executable source lines (97.29%) in the completion suite.

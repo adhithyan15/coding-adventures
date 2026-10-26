@@ -12,6 +12,8 @@
 //! contract. They can be composed around it by later SoC and gate models
 //! without making architectural instruction results depend on invented timing.
 
+#[cfg(test)]
+use core::cell::Cell;
 use core::fmt;
 
 pub use cortex_m3_simulator::{CortexM3Error, CortexM3State, MEMORY_SIZE};
@@ -109,6 +111,8 @@ pub struct ExecutionResult {
 pub struct CortexM7Simulator {
     core: cortex_m3_simulator::CortexM3Simulator,
     ge: u8,
+    #[cfg(test)]
+    snapshot_failure_after: Cell<Option<usize>>,
 }
 
 impl CortexM7Simulator {
@@ -132,6 +136,14 @@ impl CortexM7Simulator {
         }
     }
 
+    /// Fallibly snapshot all programmer-visible state and owned memory.
+    ///
+    /// Checked execution uses this path so allocation exhaustion is reported
+    /// as a typed failure without committing a partial transition.
+    pub fn try_get_state(&self) -> Result<CortexM7State, CortexM7Error> {
+        self.try_snapshot()
+    }
+
     /// Atomically validate and install a complete snapshot.
     pub fn restore(&mut self, state: CortexM7State) -> Result<(), CortexM7Error> {
         if state.ge & !0x0f != 0 {
@@ -139,9 +151,7 @@ impl CortexM7Simulator {
                 reason: "GE contains reserved bits",
             });
         }
-        let mut candidate = cortex_m3_simulator::CortexM3Simulator::new();
-        candidate.restore(state.core)?;
-        self.core = candidate;
+        self.core.restore(state.core)?;
         self.ge = state.ge;
         Ok(())
     }
@@ -188,36 +198,42 @@ impl CortexM7Simulator {
 
     /// Execute one checked, atomic instruction.
     pub fn step(&mut self) -> Result<StepTrace, CortexM7Error> {
-        let state = self.core.get_state();
-        if state.halted {
+        let before = self.try_snapshot()?;
+        if before.core.halted {
             return Err(CortexM3Error::Halted.into());
         }
-        if state.sleeping {
+        if before.core.sleeping {
             return Err(CortexM3Error::Sleeping.into());
         }
-        let first = fetch16(&state, state.pc)?;
+        let first = fetch16(&before.core, before.core.pc)?;
         if first & 0xfff0 == 0xfa80 {
-            let second = fetch16(&state, state.pc.wrapping_add(2)).map_err(|error| {
-                if matches!(error, CortexM3Error::FetchOutsideProgram { .. }) {
-                    CortexM3Error::FetchOutsideProgram {
-                        pc: state.pc,
-                        width: 4,
+            let second =
+                fetch16(&before.core, before.core.pc.wrapping_add(2)).map_err(|error| {
+                    if matches!(error, CortexM3Error::FetchOutsideProgram { .. }) {
+                        CortexM3Error::FetchOutsideProgram {
+                            pc: before.core.pc,
+                            width: 4,
+                        }
+                    } else {
+                        error
                     }
-                } else {
-                    error
-                }
-            })?;
+                })?;
             if let Some(class) = classify_dsp(first, second) {
-                return self.step_dsp(first, second, class);
+                return self.step_dsp(before, first, second, class);
             }
         }
-        self.step_inherited()
+        self.step_inherited(before)
     }
 
-    fn step_inherited(&mut self) -> Result<StepTrace, CortexM7Error> {
-        let before = self.get_state();
+    fn step_inherited(&mut self, before: CortexM7State) -> Result<StepTrace, CortexM7Error> {
         let trace = self.core.step()?;
-        let after = self.get_state();
+        if let Err(error) = self.apply_ge_transport(&trace) {
+            return Err(self.rollback_error(before, error));
+        }
+        let after = match self.try_snapshot() {
+            Ok(state) => state,
+            Err(error) => return Err(self.rollback_error(before, error)),
+        };
         Ok(StepTrace {
             pc_before: trace.pc_before,
             pc_after: trace.pc_after,
@@ -231,13 +247,14 @@ impl CortexM7Simulator {
 
     fn step_dsp(
         &mut self,
+        before: CortexM7State,
         first: u16,
         second: u16,
         class: InstructionClass,
     ) -> Result<StepTrace, CortexM7Error> {
-        let before = self.get_state();
-        let mut after = before.clone();
         let pc = before.core.pc;
+        validate_dsp_operands(first, second, class, pc)?;
+        let mut after = self.try_snapshot()?;
         after.core.pc = pc.wrapping_add(4);
 
         let mnemonic = if before.core.itstate != 0 {
@@ -254,10 +271,8 @@ impl CortexM7Simulator {
             after.core.itstate = advance_itstate(before.core.itstate);
         }
 
-        let mut candidate = cortex_m3_simulator::CortexM3Simulator::new();
-        candidate.restore(after.core.clone())?;
-        self.core = candidate;
-        self.ge = after.ge;
+        let committed = try_clone_state(&after)?;
+        self.restore(committed)?;
 
         Ok(StepTrace {
             pc_before: pc,
@@ -278,7 +293,7 @@ impl CortexM7Simulator {
     /// Execute until halt/sleep, rolling back the whole run on any failure.
     pub fn run(&mut self, max_steps: usize) -> Result<ExecutionResult, CortexM7Error> {
         check_retention(max_steps)?;
-        let before = self.clone();
+        let before = self.try_snapshot()?;
         let mut traces = Vec::new();
         traces
             .try_reserve_exact(max_steps)
@@ -287,22 +302,29 @@ impl CortexM7Simulator {
             match self.step() {
                 Ok(trace) => traces.push(trace),
                 Err(error) => {
-                    *self = before;
-                    return Err(error);
+                    return Err(self.rollback_error(before, error));
                 }
             }
-            let state = self.core.get_state();
-            if state.halted || state.sleeping {
+            let stopped = traces.last().is_some_and(|trace| {
+                trace.state_after.core.halted || trace.state_after.core.sleeping
+            });
+            if stopped {
+                let final_state = match self.try_snapshot() {
+                    Ok(state) => state,
+                    Err(error) => return Err(self.rollback_error(before, error)),
+                };
                 return Ok(ExecutionResult {
                     stopped: true,
                     steps: traces.len(),
                     traces,
-                    final_state: self.get_state(),
+                    final_state,
                 });
             }
         }
-        *self = before;
-        Err(CortexM7Error::StepLimitExceeded { limit: max_steps })
+        Err(self.rollback_error(
+            before,
+            CortexM7Error::StepLimitExceeded { limit: max_steps },
+        ))
     }
 
     /// Atomically load and run a program under the trace-retention bound.
@@ -313,15 +335,70 @@ impl CortexM7Simulator {
         max_steps: usize,
     ) -> Result<ExecutionResult, CortexM7Error> {
         check_retention(max_steps)?;
-        let before = self.clone();
+        let before = self.try_snapshot()?;
         self.load(program, origin)?;
         match self.run(max_steps) {
             Ok(result) => Ok(result),
-            Err(error) => {
-                *self = before;
-                Err(error)
-            }
+            Err(error) => Err(self.rollback_error(before, error)),
         }
+    }
+
+    fn try_snapshot(&self) -> Result<CortexM7State, CortexM7Error> {
+        #[cfg(test)]
+        if let Some(remaining) = self.snapshot_failure_after.get() {
+            if remaining == 0 {
+                self.snapshot_failure_after.set(None);
+                return Err(CortexM7Error::AllocationFailed);
+            }
+            self.snapshot_failure_after.set(Some(remaining - 1));
+        }
+        let core = self.core.try_get_state().map_err(|error| match error {
+            CortexM3Error::AllocationFailed => CortexM7Error::AllocationFailed,
+            other => CortexM7Error::Core(other),
+        })?;
+        Ok(CortexM7State { core, ge: self.ge })
+    }
+
+    fn rollback_error(&mut self, before: CortexM7State, original: CortexM7Error) -> CortexM7Error {
+        match self.restore(before) {
+            Ok(()) => original,
+            Err(rollback) => rollback,
+        }
+    }
+
+    fn apply_ge_transport(
+        &mut self,
+        trace: &cortex_m3_simulator::StepTrace,
+    ) -> Result<(), CortexM7Error> {
+        if trace.mnemonic == "it-skip" {
+            return Ok(());
+        }
+        let first = u16::from_le_bytes([trace.raw[0], trace.raw[1]]);
+        let second = u16::from_le_bytes([trace.raw[2], trace.raw[3]]);
+        let sysm = second as u8;
+        if !matches!(sysm, 0..=3) {
+            return Ok(());
+        }
+        match trace.mnemonic {
+            "mrs" if first == 0xf3ef => {
+                let rd = ((second >> 8) & 0xf) as u8;
+                let value = self.core.read_register(rd)?;
+                self.core
+                    .write_register(rd, value | (u32::from(self.ge) << 16))?;
+            }
+            "msr" if first & 0xfff0 == 0xf380 => {
+                let rn = (first & 0xf) as u8;
+                let value = self.core.read_register(rn)?;
+                self.ge = ((value >> 16) & 0xf) as u8;
+            }
+            _ => {}
+        }
+        Ok(())
+    }
+
+    #[cfg(test)]
+    fn fail_snapshot_after(&self, successful_snapshots: usize) {
+        self.snapshot_failure_after.set(Some(successful_snapshots));
     }
 }
 
@@ -360,19 +437,7 @@ fn execute_dsp(
     class: InstructionClass,
     pc: u32,
 ) -> Result<&'static str, CortexM7Error> {
-    let rd = ((second >> 8) & 0xf) as usize;
-    let (rn, rm) = match class {
-        InstructionClass::Qadd | InstructionClass::Qsub => {
-            ((second & 0xf) as usize, (first & 0xf) as usize)
-        }
-        InstructionClass::Sadd8 | InstructionClass::Uadd8 => {
-            ((first & 0xf) as usize, (second & 0xf) as usize)
-        }
-        InstructionClass::Inherited(_) => unreachable!("DSP dispatcher received inherited class"),
-    };
-    if rd > 12 || rn > 12 || rm > 12 {
-        return Err(CortexM3Error::UnknownInstruction32 { first, second, pc }.into());
-    }
+    let (rd, rn, rm) = validate_dsp_operands(first, second, class, pc)?;
 
     let left = state.core.registers[rn];
     let right = state.core.registers[rm];
@@ -431,6 +496,60 @@ fn execute_dsp(
         }
         InstructionClass::Inherited(_) => unreachable!("DSP dispatcher received inherited class"),
     }
+}
+
+fn validate_dsp_operands(
+    first: u16,
+    second: u16,
+    class: InstructionClass,
+    pc: u32,
+) -> Result<(usize, usize, usize), CortexM7Error> {
+    let rd = ((second >> 8) & 0xf) as usize;
+    let (rn, rm) = match class {
+        InstructionClass::Qadd | InstructionClass::Qsub => {
+            ((second & 0xf) as usize, (first & 0xf) as usize)
+        }
+        InstructionClass::Sadd8 | InstructionClass::Uadd8 => {
+            ((first & 0xf) as usize, (second & 0xf) as usize)
+        }
+        InstructionClass::Inherited(_) => unreachable!("DSP dispatcher received inherited class"),
+    };
+    if rd > 12 || rn > 12 || rm > 12 {
+        return Err(CortexM3Error::UnknownInstruction32 { first, second, pc }.into());
+    }
+    Ok((rd, rn, rm))
+}
+
+fn try_clone_state(state: &CortexM7State) -> Result<CortexM7State, CortexM7Error> {
+    let mut memory = Vec::new();
+    memory
+        .try_reserve_exact(state.core.memory.len())
+        .map_err(|_| CortexM7Error::AllocationFailed)?;
+    memory.extend_from_slice(&state.core.memory);
+    let core = CortexM3State {
+        registers: state.core.registers,
+        msp: state.core.msp,
+        psp: state.core.psp,
+        lr: state.core.lr,
+        pc: state.core.pc,
+        apsr: state.core.apsr,
+        ipsr: state.core.ipsr,
+        itstate: state.core.itstate,
+        primask: state.core.primask,
+        basepri: state.core.basepri,
+        faultmask: state.core.faultmask,
+        control: state.core.control,
+        handler_mode: state.core.handler_mode,
+        memory,
+        halted: state.core.halted,
+        sleeping: state.core.sleeping,
+        waiting_for_event: state.core.waiting_for_event,
+        event_registered: state.core.event_registered,
+        exclusive_address: state.core.exclusive_address,
+        loaded_origin: state.core.loaded_origin,
+        loaded_len: state.core.loaded_len,
+    };
+    Ok(CortexM7State { core, ge: state.ge })
 }
 
 fn saturating_i32(value: i64) -> (i32, bool) {
@@ -542,5 +661,77 @@ pub mod encoding {
             0xfa80 | ((rn as u16) & 0xf),
             0xf040 | (((rd as u16) & 0xf) << 8) | ((rm as u16) & 0xf),
         ]
+    }
+}
+
+#[cfg(test)]
+mod allocation_regressions {
+    use super::{encoding, CortexM7Error, CortexM7Simulator};
+
+    fn load_words(simulator: &mut CortexM7Simulator, words: &[u16]) {
+        let mut program = Vec::with_capacity(words.len() * 2);
+        for word in words {
+            program.extend_from_slice(&word.to_le_bytes());
+        }
+        simulator.load(&program, 0x100).unwrap();
+    }
+
+    #[test]
+    fn fallible_snapshot_reports_typed_allocation_failure() {
+        let simulator = CortexM7Simulator::new();
+        simulator.fail_snapshot_after(0);
+        assert_eq!(
+            simulator.try_get_state(),
+            Err(CortexM7Error::AllocationFailed)
+        );
+    }
+
+    #[test]
+    fn inherited_post_step_snapshot_failure_rolls_back() {
+        let mut simulator = CortexM7Simulator::new();
+        load_words(&mut simulator, &[encoding::movs(0, 7)]);
+        let before = simulator.get_state();
+        simulator.fail_snapshot_after(1);
+
+        assert_eq!(simulator.step(), Err(CortexM7Error::AllocationFailed));
+        assert_eq!(simulator.get_state(), before);
+    }
+
+    #[test]
+    fn ge_transport_post_step_snapshot_failure_rolls_back() {
+        let mut simulator = CortexM7Simulator::new();
+        load_words(&mut simulator, &encoding::mrs(0, 0));
+        let mut state = simulator.get_state();
+        state.ge = 0b1011;
+        simulator.restore(state).unwrap();
+        let before = simulator.get_state();
+        simulator.fail_snapshot_after(1);
+
+        assert_eq!(simulator.step(), Err(CortexM7Error::AllocationFailed));
+        assert_eq!(simulator.get_state(), before);
+    }
+
+    #[test]
+    fn dsp_candidate_snapshot_failure_is_atomic() {
+        let mut simulator = CortexM7Simulator::new();
+        load_words(&mut simulator, &encoding::qadd(0, 1, 2));
+        simulator.write_register(1, 4).unwrap();
+        simulator.write_register(2, 5).unwrap();
+        let before = simulator.get_state();
+        simulator.fail_snapshot_after(1);
+
+        assert_eq!(simulator.step(), Err(CortexM7Error::AllocationFailed));
+        assert_eq!(simulator.get_state(), before);
+    }
+
+    #[test]
+    fn final_run_snapshot_failure_restores_the_whole_run() {
+        let mut simulator = CortexM7Simulator::new();
+        load_words(&mut simulator, &[encoding::bkpt(0)]);
+        let before = simulator.get_state();
+        simulator.fail_snapshot_after(3);
+
+        assert_eq!(simulator.run(1), Err(CortexM7Error::AllocationFailed));
+        assert_eq!(simulator.get_state(), before);
     }
 }
