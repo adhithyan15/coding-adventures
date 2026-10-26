@@ -56,7 +56,7 @@ already public.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
-| P0 in progress | x86-64 multiply/divide qualification | The fixed-round gate multiplier and divider produce the wide arithmetic result, but `execution.rs` still uses host `i128`/`u128` comparisons to set IMUL/MUL overflow flags and to raise signed/unsigned divide overflow. Move product truncation and quotient-fit decisions into repository-gate reductions and selections; retain host values only for transport. Add exact signed/unsigned boundary differentials, atomic divide-fault witnesses, non-tautological gate-network tests, and a structural execution guard against reintroducing host-wide qualification. |
+| P0 complete locally | x86-64 multiply/divide qualification | The fixed-round multiplier/divider now return gate-qualified wide results: an OR reduction of the unsigned high half, a sign-extension mismatch reduction for signed products/quotients, and the divider's gate zero reduction decide all modeled IMUL/MUL and DIV/IDIV flags or faults. Exact signed/unsigned fit boundaries, atomic divide faults, every discarded high wire, and a structural execution guard cover the repair. Release tests include 18 unit cases, the structural target, three lifecycle cases, and the 262-row Python differential; strict formatting/lints/docs and all six affected builds pass. Package-source line coverage is 87.88% (732/833). |
 | P1 audit | Remaining completed gate packages | Search architecturally visible arithmetic, flags, fault qualification, decode, and state selection for host-language shortcuts; record and repair one bounded cell at a time. Address/control bookkeeping permitted by the educational boundary is not itself a defect. |
 
 ## Independent functional queue
