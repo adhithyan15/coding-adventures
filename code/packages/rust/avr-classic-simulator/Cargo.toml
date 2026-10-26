@@ -8,4 +8,3 @@ license = "MIT"
 [lib]
 name = "avr_classic_simulator"
 path = "src/lib.rs"
-
