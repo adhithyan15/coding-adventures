@@ -1010,7 +1010,7 @@ noted.
 | MacroOct, MacroNib | GL + Oct/Nib GP | GP | CST | — | Base parse compliant; directive layer is a preprocessor | See [Preprocessor dialects](#preprocessor-dialects) |
 | McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
 | Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
-| JavaScript | GL with the F10 regex/division table (es2015–es2025; es3/es5 pending) | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_bounded`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; `releases.csv` 29 rows, es2016–es2025 at stage P; `compile_source_at` selects any claiming edition (default es2020) | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). The runtime `REGEX` deletion is gone since 6a (`javascript-lexer` 0.10.0). Still non-compliant under C2: `asi.rs`, which is longer than a small hook, remains until 6b replaces it | Phases 6a, 6c and 6d done (6d: es2016–es2025 claim `es-number-log` at stages P and I); 6b (needs `@asi`) and 6e remain; es3/es5 need F10 in Swift grammar-tools before they can claim |
+| JavaScript | GL with the F10 regex/division table (es2015–es2025; es3/es5 pending) | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_bounded`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; `releases.csv` 29 rows, es2016–es2025 at stage P, I and B(`es-number-log`); `compile_source_at` selects any claiming edition (default es2020), and `--lang javascript@<edition>` reaches it from `lang-aot` | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). The runtime `REGEX` deletion is gone since 6a (`javascript-lexer` 0.10.0). Still non-compliant under C2: `asi.rs`, which is longer than a small hook, remains until 6b replaces it | Phases 6a, 6c, 6d and 6e done (6d: es2016–es2025 claim `es-number-log` at stages P and I; 6e: `Language::JavaScript` on all nine backends, B for es2016–es2025); 6b (needs `@asi`) remains; es3/es5 need F10 in Swift grammar-tools before they can claim |
 | Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends, `--lang ruby@<release>` since 5b slice 1; release sweep and B for 3.3.5 and 3.3.7 in 5b slice 2. The hand-written lexer remains only for non-IIR consumers | R1–R7 (phase 3) |
 
 ### Ruby: port the lexer to `ruby<release>.tokens`
@@ -1465,6 +1465,127 @@ Divergences from this spec in 5b/7b slice 2:
    are `f64`, so B(S) for a printing subset depends on LANG83's `f64`
    formatting ops (`f64_to_str_js` / `write_f64_js`, LANG83 PR6). Until then,
    subsets are limited to what LANG83 has registered.
+
+   **6e plan (2026-10-24): blocked on a LANG83 slice, recorded here.**
+   `write_f64_js` (PR6a) landed, but it is not enough for B(`es-number-log`).
+   Two of the subset's twelve accepted cases need behaviour no registered op
+   gives on every backend:
+
+   | Case | Output (node v22) | Blocker |
+   | --- | --- | --- |
+   | `negative_zero`: `console.log(-0, 0 * -1, 5 - 5)` | `-0 -0 0` | `console.log` formats with `util.inspect`, which keeps the sign of zero. `write_f64_js` is `String(x)`, which prints `-0` as `0`. Telling `-0` from `0` needs the sign bit, and the usual `1 / x < 0` test divides by zero |
+   | `infinities_and_nan`: `console.log(1 / 0, -1 / 0, 0 / 0)` | `Infinity -Infinity NaN` | BEAM has no non-finite float: `erlang:'/'/2`, `'*'/2` and `'+'/2` raise `badarith` before one exists (`iir-to-beam` notes this beside its PR6a writer). The registry's `div` is also `DIV_ZERO_ONLY`, with edges that differ by backend (LANG83 "Legacy edge behaviour") |
+
+   B(S) allows a backend to refuse a module at compile time with
+   `UnsupportedOps`, but not at run time. A JavaScript module that emits the
+   classic `add`/`sub`/`mul`/`div` therefore fails B on BEAM as soon as any
+   case overflows to infinity or divides by zero, and `1e308 * 10` makes this
+   reachable for every arithmetic operator, not only `/`.
+
+   **Prerequisite (a LANG83 slice, "PR6c"):**
+   - **IEEE-754 binary64 ops with defined edges.** Type-first, like
+     `i64_*_ovf`: `f64_add`, `f64_sub`, `f64_mul`, `f64_div` and `f64_neg`.
+     Each returns the IEEE result, `±Infinity` or `NaN` included, and never
+     traps.
+     - Every backend whose floats are IEEE lowers them to its native float
+       op: LLVM `fadd` and friends, WASM `f64.*`, JVM `d*`, CLR `add`/`div`
+       on `float64`, x86-64 SSE2, AArch64 `fadd`, and vm-core and the JIT
+       on `f64`.
+     - BEAM declares them `Refused` until it has a non-finite
+       representation, so BEAM rejects a JavaScript module at compile time,
+       which B allows.
+     - The classic ops keep their legacy edges, as PR1b kept `div`'s.
+   - **`f64_signbit`** (one `f64`, `int` result 0/1). The frontend then
+     prints `-` before `write_f64_js` when a zero's sign bit is set, which
+     reproduces `util.inspect`'s `-0`. It is Lowered everywhere, including
+     BEAM (OTP 27 keeps `-0.0` distinct; test with a `<<S:1, _/bits>>` binary
+     match).
+
+   **Then 6e itself:**
+   - **Lowering.** `javascript-iir-compiler` lowers `console.log(a, …)` to
+     the ops below, in place of the VM-only `call_builtin js_console_log`:
+     each argument through `f64_signbit` and `write_f64_js`, `putchar 32`
+     between arguments, and `putchar 10` at the end. Arithmetic uses the
+     `f64_*` ops. The ReferenceError builtins become
+     `trap "Trap.ReferenceError"`, a new closed kind, so rows use
+     `StdoutThenTrap` for the TDZ and not-defined cases.
+   - **`run_module`** keeps its captured sink by registering `write_f64_js`
+     and `putchar` into the same buffer.
+   - **lang-aot.** `Language::JavaScript` (`javascript`, `js`, `.js`)
+     resolves `--lang javascript@<edition>` through 6d's
+     `compile_source_at` and `resolve_release`. `has_release_inventory` and
+     `MATRIX_LANGUAGES` gain JavaScript.
+   - **Rows.** `lang_matrix` gets a row for each case on each of 6d's two
+     IIR-identity class representatives, es2016 and es2021, checked against
+     host node v22.
+   - **Claim.** B(`es-number-log`) for es2016–es2025 only when every row
+     passes on all nine backends, with BEAM's compile-time refusal counting
+     as allowed.
+
+   **6e result (2026-10-25).** Landed, with these divergences from the plan:
+   - **Printing `-0` needs a zero test, not only the sign bit.** The plan
+     said "each argument through `f64_signbit` and `write_f64_js`", but
+     `-` belongs only before a *zero* whose sign bit is set (`-2.5` already
+     prints its own `-`). No registry op compares floats on every backend:
+     the JIT keeps float registers away from `cmp_*` (the function would
+     silently fall back to the interpreter) and BEAM's `cmp_eq` is exact.
+     So the test reads two sign bits, as integers: `s = f64_signbit x`,
+     `t = f64_signbit (f64_add x, 0.0)`, and `putchar '-'` behind
+     `jmp_if_false (cmp_gt s, t)`. IEEE rounds `-0 + +0` to `+0` and keeps
+     every other non-NaN value, so `s > t` holds for `-0` alone; a NaN's
+     sign is not observable (LANG83 PR6c) and every IEEE backend returns
+     `x + 0`'s NaN operand unchanged, so no `-NaN` appears. A literal is
+     never `-0`, so a literal, or a binding initialized straight from one,
+     skips the test.
+   - **BEAM runs the literal-only modules.** Because of that skip,
+     `console.log(42)` emits no `f64_*` arithmetic, and BEAM lowers it
+     (`f64_signbit`, `write_f64_js`, `putchar` are all lowered there). Of the
+     38 rows, the 11 literal-only rows declare all eight columns; the 27
+     with arithmetic declare the seven IEEE columns, and BEAM refuses them
+     at compile time with `UnsupportedOps` naming only `f64_*` arithmetic
+     (`javascript_rows_pass_the_lang83_check_on_all_nine_backends`).
+     A literal can still be non-finite: `1e999` is `Infinity`. An Erlang
+     float cannot hold that, so the BEAM validator refuses a non-finite
+     `f64` constant at compile time. It used to accept the constant and
+     leave the failure to the loader. This came from the 6e security review.
+     The same review closed a second gap: `decode_number` now refuses
+     spellings that Rust's float parser would accept but no edition can lex,
+     such as `-0`, `inf` and `NaN`. Those could only arrive in a tree forged
+     through `compile_ast`.
+   - **`Trap.ReferenceError` is a built-in `Trap.*` leaf, id 7**, not a
+     `LANGUAGE_TRAP_KINDS` entry: an unbound name is not JavaScript's alone
+     (Python's `NameError`, a Lisp's unbound variable). `twig_runtime.c`'s
+     kind table gains it. A trap ends straight-line code, so the compiler
+     drops every instruction after it (the function still ends with its
+     exit status, `const 0` and an `i64` `ret`; a `ret_void` `main` read
+     back as `[]` on BEAM, which CI caught), and records V8's message (`ReferenceError: z is not
+     defined`) for `run_source`, since the IIR does not name the binding;
+     `run_module` alone reports `trap: Trap.ReferenceError`.
+   - **No `StdoutThenTrap` rows in `PROGRAMS`.** The `es-number-log` corpus
+     has no failing case, and the rows are exactly the sweep's boundary
+     set, so the two ReferenceError programs (undeclared, TDZ) are checked
+     on every column by a separate test,
+     `javascript_reference_errors_trap_after_output_on_every_available_backend`.
+   - **Rows include the default edition.** The boundary set is every case on
+     each class representative (es2016: 12, es2021: 14) plus every case on
+     the default es2020 (12), as for Ruby and Python: 38 rows, 277 cells.
+   - **No display-range refusal.** The VM-only builtin refused numbers
+     outside `1e-6..1e21`; `write_f64_js` is `String(x)`, so `1e21` prints
+     `1e+21` as node does.
+   - **Bindings take their value without a `mov`.** `let x = 2` renames the
+     `const` to write `js.x` directly; the JIT keeps float registers away
+     from `mov`, so a copy would send the script to the interpreter tier.
+     Every row's `main` compiles to JIT bytecode and, run compiled, prints
+     the expected line
+     (`javascript_rows_compile_and_run_on_the_jit_without_its_interpreter_fallback`).
+
+   *Evidence.* On this host the 38 rows ran on native x86-64, LLVM (clang),
+   WASM, JVM (JDK 21), VM and JIT, 228 cells, all agreeing with host node
+   v22.22.0. CLR and BEAM have no toolchain here: every row's textual IL is
+   emitted, every literal-only row lowers to BEAM bytes and every other row
+   is refused by BEAM at compile time; CI executes both columns. Following
+   the Ruby and Python precedent, `backend_status` claims `es-number-log`
+   for es2016–es2025 (`check --matrix`: 38 cells direct, 92 by IIR class).
 6. **Later.** E7 goals replace the F10 approximation for full JavaScript.
 
 ### Twig and McCarthy Lisp: rewrite to walk `GrammarASTNode`
