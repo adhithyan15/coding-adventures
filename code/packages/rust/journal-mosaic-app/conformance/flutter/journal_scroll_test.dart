@@ -29,6 +29,8 @@
 //
 // When that lane exists it should run this file too.
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mosaic_journal_app/main.dart';
@@ -43,8 +45,23 @@ Future<void> _send(MosaicHost host, String name, [Map<String, Object?> payload =
   await host.handleEvent({'name': name, 'payload': payload});
 }
 
+/// The test writes entries through the real runtime, so it must never run
+/// against a real journal: without MOSAIC_APP_STATE_PATH the host falls back
+/// to the app's per-user data file. Require a fresh, isolated state file.
+void _requireIsolatedState() {
+  final statePath = Platform.environment['MOSAIC_APP_STATE_PATH'];
+  if (statePath == null || statePath.trim().isEmpty) {
+    fail('set MOSAIC_APP_STATE_PATH to a fresh temporary file; this test writes entries');
+  }
+  final file = File(statePath);
+  if (file.existsSync() && file.lengthSync() > 0) {
+    fail('MOSAIC_APP_STATE_PATH ($statePath) already holds state; point it at a fresh file');
+  }
+}
+
 void main() {
   testWidgets('an entry below the fold can be scrolled to and opened', (tester) async {
+    _requireIsolatedState();
     tester.view.physicalSize = _window;
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);

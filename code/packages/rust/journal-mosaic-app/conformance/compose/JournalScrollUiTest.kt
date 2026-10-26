@@ -88,6 +88,16 @@ class JournalScrollUiTest {
     fun anEntryBelowTheFoldCanBeScrolledToAndOpened() = runSkikoComposeUiTest(
         size = ACCEPTANCE_VIEWPORT,
     ) {
+        // This test writes entries through the real runtime, so it must never
+        // touch a real journal: without MOSAIC_APP_STATE_PATH the host falls
+        // back to the app's per-user data file. Require a fresh, isolated one.
+        val statePath = checkNotNull(System.getenv("MOSAIC_APP_STATE_PATH")?.takeIf { it.isNotBlank() }) {
+            "set MOSAIC_APP_STATE_PATH to a fresh temporary file; this test writes entries"
+        }
+        val stateFile = java.io.File(statePath)
+        check(!stateFile.exists() || stateFile.length() == 0L) {
+            "MOSAIC_APP_STATE_PATH ($statePath) already holds state; point it at a fresh file"
+        }
         val host = checkNotNull(MosaicRuntimeHost.load()) {
             "standard Compose binding did not load the Journal Rust runtime"
         }
