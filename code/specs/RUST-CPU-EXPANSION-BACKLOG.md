@@ -1,7 +1,7 @@
 # Rust CPU Expansion Backlog
 
 **Status:** active
-**Last reprioritized:** 2026-10-25
+**Last reprioritized:** 2026-10-26
 
 This is the live expansion queue after the original 07-series architecture
 matrix. The older `RUST-CPU-SIMULATOR-BACKLOG.md` remains the audit record for
@@ -57,7 +57,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 1 | Arm Cortex-M4 | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
 | 2 | Arm Cortex-M7 | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
 | 3 | Arm Cortex-M23 | Armv8-M manuals | Baseline profile and security-state boundary. |
-| 4 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
+| 4 | Arm Cortex-M33 | Armv8-M manuals | Functional cell complete locally: bounded Mainline integer core, optional Security Extension, banked control/stack-limit state, eight-region SAU, checked transition hooks, and exact inherited-family differential witnesses. Publish after independent review; encoded security instructions, DSP/FPU, exceptions, MPU/NVIC/SoC, and evidence-backed gate topology remain separate cells. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
 | 7 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
@@ -75,6 +75,11 @@ architecture/core introduction era, not a claim about a particular chip.
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
   composition boundary, but it precedes declaring full Armv7-M ISA coverage.
+- Extend Cortex-M33 only through separate witnessed cells: encoded
+  SG/BXNS/BLXNS/TT transitions, Armv8-M-exclusive integer and DSP operations,
+  optional FPU, exception entry/return and interrupt targeting, MPU/IDAU/NVIC,
+  and a source-backed or explicitly educational gate-level topology. The
+  bounded functional cell does not imply proprietary Cortex-M33 RTL.
 - Build reusable SoC primitives after the initial missing-core wave: clock and
   reset domains, address-decoded buses, arbitration/backpressure, interrupt
   routing, DMA movement, timers, memory-mapped peripherals, and deterministic
