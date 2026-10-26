@@ -45,9 +45,9 @@ The included instruction families are:
 - `CMP/EQ`, `CMP/HS`, `CMP/GE`, `CMP/HI`, `CMP/GT`, `CMP/PZ`, `CMP/PL`,
   `CMP/STR`, and immediate compare;
 - logical/arithmetic shifts and rotates, with and without transfer through T;
-- `MULU.W`, `MULS.W`, `DMULU.L`, `DMULS.L`, `MAC.W`, `MAC.L`, `DIV0U`,
-  `DIV0S`, and `DIV1` with exact `MACH`, `MACL`, `M`, `Q`, `S`, and `T`
-  behavior;
+- `MULU.W`, `MULS.W`, `MUL.L`, `DMULU.L`, `DMULS.L`, `MAC.W`, `MAC.L`,
+  `DIV0U`, `DIV0S`, and `DIV1` with exact `MACH`, `MACL`, `M`, `Q`, `S`,
+  and `T` behavior;
 - `CLRT`, `SETT`, `CLRMAC`, and transfers to/from `MACH`, `MACL`, `PR`, and
   `GBR`; and
 - `BT`, `BF`, `BT/S`, `BF/S`, `BRA`, `BSR`, `BRAF`, `BSRF`, `JMP`, `JSR`,
@@ -68,21 +68,29 @@ field.
 
 Byte loads sign-extend, word loads sign-extend, and long loads preserve all
 bits. Stores use the low 8, 16, or 32 bits. Word and long accesses must be
-naturally aligned. Post-increment does not increment when source and
-destination are the same register; pre-decrement computes the address before
-the store. All addressing forms compute a full 32-bit architectural address
-before checked conversion to owned memory.
+naturally aligned. A `MOV.{B,W,L} @Rm+,Rn` does not increment Rm when `m == n`;
+that suppression does not apply to other post-incrementing families.
+Pre-decrement computes the address before the store. All addressing forms
+compute a full 32-bit architectural address before checked conversion to owned
+memory.
 
-PC-relative word addresses use the instruction's aligned PC basis; PC-relative
-long addresses use the required four-byte-aligned basis. `MOVA` uses the same
-four-byte-aligned basis and writes R0. GBR-relative byte, word, and long
-displacements are scaled by one, two, and four respectively. Indexed forms use
-R0 plus the named base register.
+For ordinary execution, the PC-relative basis is the current instruction
+address plus four. In a live delay slot, `MOV.W @(disp,PC)`,
+`MOV.L @(disp,PC)`, and `MOVA` instead use the pending branch destination plus
+two. `MOV.W` adds `disp * 2` to that basis. `MOV.L` and `MOVA` first clear the
+basis's low two bits and then add `disp * 4`; `MOVA` writes R0. Direct,
+register-target, and taken conditional delayed branches all use this same
+rule. GBR-relative byte, word, and long displacements are scaled by one, two,
+and four respectively. Indexed forms use R0 plus the named base register.
 
-Unsigned and signed word multiplication write MACL. Double-word multiplication
-writes the exact 64-bit product across MACH:MACL. Multiply-accumulate uses
-checked source reads before mutation, updates address registers only after all
-reads succeed, and applies the manual's S-controlled saturation boundary.
+Unsigned and signed word multiplication and `MUL.L` write MACL; `MUL.L`
+preserves MACH. Double-word multiplication writes the exact 64-bit product
+across MACH:MACL. Multiply-accumulate derives and preflights every source before
+mutation while preserving the manual's logical sequence: read `@Rn`, increment
+Rn, then read `@Rm`, increment Rm. When `m == n`, the operands therefore come
+from consecutive width-sized addresses and the shared register advances twice.
+Only after both reads succeed may the register increments and accumulator update
+commit. The result applies the manual's S-controlled saturation boundary.
 `DIV0U`, `DIV0S`, and each `DIV1` step expose the documented M/Q/T state so a
 software division sequence is reproducible instruction by instruction.
 
@@ -99,11 +107,15 @@ architectural PC basis. Register targets must be half-word aligned. A target
 is validated when it becomes the next fetch; this preserves the architectural
 delay-slot effect while keeping faults atomic.
 
-A control-transfer instruction, `SLEEP`, or any instruction the manual marks
-illegal in a live delay slot returns `IllegalDelaySlot` without mutation. A
-fault in a delay-slot instruction rolls back both that instruction and the
-pending transfer. Successful traces identify whether the instruction was a
-delay slot and expose the pending target in the complete post-state.
+A control-transfer instruction or any other instruction on the manual's
+exhaustive illegal-slot list returns `IllegalDelaySlot` without mutation.
+`SLEEP` is not on that architectural list, but `SLEEP` in a live delay slot is
+explicitly deferred by this bounded cell and returns `UnsupportedDelaySlot`
+without mutation. A fault in a delay-slot step preserves the exact pre-step
+pending-transfer record and does not commit its target; whole-run rollback may
+instead restore the earlier pre-run state. Successful traces identify whether
+the instruction was a delay slot and expose the pending target in the complete
+post-state.
 
 `SLEEP` emits a successful trace and enters deterministic halt because external
 interrupt wake-up is outside this cell. A later `step` returns `Halted` without
@@ -129,12 +141,15 @@ preflighted and bounded to 64 complete-state traces.
 Typed errors distinguish invalid programs and restored states, misaligned and
 out-of-range instruction or data accesses, fetch outside the installed image,
 unknown and unsupported instructions, illegal delay slots, halted execution,
-excessive trace retention, allocation failure, and exhausted step budgets.
+bounded unsupported delay-slot combinations, excessive trace retention,
+allocation failure, and exhausted step budgets.
 Every error has stable nonempty display text.
 
 ## 6. Explicit exclusions and follow-up backlog
 
-This cell excludes privileged SR/VBR loads, `RTE`, traps and exception entry,
+SH-2 has no user/supervisor MD state. This cell nevertheless excludes every
+SR/VBR `LDC`, `LDC.L`, `STC`, and `STC.L` form and its documented
+interrupt-inhibition behavior, along with `RTE`, traps and exception entry,
 interrupt arbitration, reset vectors, on-chip peripheral registers, MMU or
 protection behavior, caches, external buses, DMA, timers, serial devices,
 watchdogs, debug mode, implementation-specific power states, pipeline timing,
@@ -143,9 +158,10 @@ until a memory-ordering cell can state them honestly.
 
 FPU, SH-DSP, SH-2A, SH-3, and SH-4 instructions and state are separate
 architectures. Little-endian transport, external interrupt wake from `SLEEP`,
-privileged exception return, and a complete SoC integration remain explicit
-follow-up work. The README and changelog must call this a bounded SH-2 integer
-core, not a complete chip or complete SuperH-family simulator.
+interrupt-disabled system-register transfers, exception return, and a complete
+SoC integration remain explicit follow-up work. The README and changelog must
+call this a bounded SH-2 integer core, not a complete chip or complete
+SuperH-family simulator.
 
 ## 7. Completion gate
 
@@ -154,8 +170,8 @@ The cell is complete only when it has:
 1. independent table-driven classification tests covering every admitted
    encoding family and its reserved/unsupported neighbors;
 2. behavioral witnesses for every addressing mode, transfer width, alignment
-   boundary, T/S/Q/M transition, multiply/divide result, compare, and branch
-   sense;
+   boundary, T/S/Q/M transition, multiply/divide result, compare, branch sense,
+   MAC source-alias sequence, and normal/delay-slot PC-relative basis;
 3. forward/backward and register-target delay-slot witnesses, PR linkage,
    illegal-slot rejection, delayed target faults, sleep/halt, and full rollback;
 4. complete-state load, restore, step, run, execute, trace-retention, malformed
